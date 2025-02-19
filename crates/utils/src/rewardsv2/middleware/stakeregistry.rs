@@ -2,7 +2,8 @@
 /**
 
 ```solidity
-library IStakeRegistry {
+library IStakeRegistryTypes {
+    type StakeType is uint8;
     struct StakeUpdate { uint32 updateBlockNumber; uint32 nextUpdateBlockNumber; uint96 stake; }
     struct StrategyParams { address strategy; uint96 multiplier; }
 }
@@ -14,9 +15,118 @@ library IStakeRegistry {
     clippy::style,
     clippy::empty_structs_with_brackets
 )]
-pub mod IStakeRegistry {
+pub mod IStakeRegistryTypes {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct StakeType(u8);
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::private::SolTypeValue<StakeType> for u8 {
+            #[inline]
+            fn stv_to_tokens(
+                &self,
+            ) -> <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::Token<'_>
+            {
+                alloy_sol_types::private::SolTypeValue::<
+                    alloy::sol_types::sol_data::Uint<8>,
+                >::stv_to_tokens(self)
+            }
+            #[inline]
+            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(self).0
+            }
+            #[inline]
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::SolType>::abi_encode_packed_to(self, out)
+            }
+            #[inline]
+            fn stv_abi_packed_encoded_size(&self) -> usize {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::abi_encoded_size(
+                    self,
+                )
+            }
+        }
+        #[automatically_derived]
+        impl StakeType {
+            /// The Solidity type name.
+            pub const NAME: &'static str = stringify!(@ name);
+            /// Convert from the underlying value type.
+            #[inline]
+            pub const fn from(value: u8) -> Self {
+                Self(value)
+            }
+            /// Return the underlying value.
+            #[inline]
+            pub const fn into(self) -> u8 {
+                self.0
+            }
+            /// Return the single encoding of this value, delegating to the
+            /// underlying type.
+            #[inline]
+            pub fn abi_encode(&self) -> alloy_sol_types::private::Vec<u8> {
+                <Self as alloy_sol_types::SolType>::abi_encode(&self.0)
+            }
+            /// Return the packed encoding of this value, delegating to the
+            /// underlying type.
+            #[inline]
+            pub fn abi_encode_packed(&self) -> alloy_sol_types::private::Vec<u8> {
+                <Self as alloy_sol_types::SolType>::abi_encode_packed(&self.0)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolType for StakeType {
+            type RustType = u8;
+            type Token<'a> =
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::Token<'a>;
+            const SOL_NAME: &'static str = Self::NAME;
+            const ENCODED_SIZE: Option<usize> =
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> = <alloy::sol_types::sol_data::Uint<
+                8,
+            > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            #[inline]
+            fn valid_token(token: &Self::Token<'_>) -> bool {
+                Self::type_check(token).is_ok()
+            }
+            #[inline]
+            fn type_check(token: &Self::Token<'_>) -> alloy_sol_types::Result<()> {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::type_check(token)
+            }
+            #[inline]
+            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::detokenize(token)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::EventTopic for StakeType {
+            #[inline]
+            fn topic_preimage_length(rust: &Self::RustType) -> usize {
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::EventTopic>::topic_preimage_length(rust)
+            }
+            #[inline]
+            fn encode_topic_preimage(
+                rust: &Self::RustType,
+                out: &mut alloy_sol_types::private::Vec<u8>,
+            ) {
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, out)
+            }
+            #[inline]
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::EventTopic>::encode_topic(
+                    rust,
+                )
+            }
+        }
+    };
     /**```solidity
     struct StakeUpdate { uint32 updateBlockNumber; uint32 nextUpdateBlockNumber; uint96 stake; }
     ```*/
@@ -440,9 +550,9 @@ pub mod IStakeRegistry {
         }
     };
     use alloy::contract as alloy_contract;
-    /**Creates a new wrapper around an on-chain [`IStakeRegistry`](self) contract instance.
+    /**Creates a new wrapper around an on-chain [`IStakeRegistryTypes`](self) contract instance.
 
-    See the [wrapper's documentation](`IStakeRegistryInstance`) for more details.*/
+    See the [wrapper's documentation](`IStakeRegistryTypesInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -451,13 +561,13 @@ pub mod IStakeRegistry {
     >(
         address: alloy_sol_types::private::Address,
         provider: P,
-    ) -> IStakeRegistryInstance<T, P, N> {
-        IStakeRegistryInstance::<T, P, N>::new(address, provider)
+    ) -> IStakeRegistryTypesInstance<T, P, N> {
+        IStakeRegistryTypesInstance::<T, P, N>::new(address, provider)
     }
-    /**A [`IStakeRegistry`](self) instance.
+    /**A [`IStakeRegistryTypes`](self) instance.
 
     Contains type-safe methods for interacting with an on-chain instance of the
-    [`IStakeRegistry`](self) contract located at a given `address`, using a given
+    [`IStakeRegistryTypes`](self) contract located at a given `address`, using a given
     provider `P`.
 
     If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
@@ -466,16 +576,16 @@ pub mod IStakeRegistry {
 
     See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IStakeRegistryInstance<T, P, N = alloy_contract::private::Ethereum> {
+    pub struct IStakeRegistryTypesInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
     }
     #[automatically_derived]
-    impl<T, P, N> ::core::fmt::Debug for IStakeRegistryInstance<T, P, N> {
+    impl<T, P, N> ::core::fmt::Debug for IStakeRegistryTypesInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IStakeRegistryInstance")
+            f.debug_tuple("IStakeRegistryTypesInstance")
                 .field(&self.address)
                 .finish()
         }
@@ -486,11 +596,11 @@ pub mod IStakeRegistry {
             T: alloy_contract::private::Transport + ::core::clone::Clone,
             P: alloy_contract::private::Provider<T, N>,
             N: alloy_contract::private::Network,
-        > IStakeRegistryInstance<T, P, N>
+        > IStakeRegistryTypesInstance<T, P, N>
     {
-        /**Creates a new wrapper around an on-chain [`IStakeRegistry`](self) contract instance.
+        /**Creates a new wrapper around an on-chain [`IStakeRegistryTypes`](self) contract instance.
 
-        See the [wrapper's documentation](`IStakeRegistryInstance`) for more details.*/
+        See the [wrapper's documentation](`IStakeRegistryTypesInstance`) for more details.*/
         #[inline]
         pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
@@ -520,11 +630,11 @@ pub mod IStakeRegistry {
             &self.provider
         }
     }
-    impl<T, P: ::core::clone::Clone, N> IStakeRegistryInstance<T, &P, N> {
+    impl<T, P: ::core::clone::Clone, N> IStakeRegistryTypesInstance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
-        pub fn with_cloned_provider(self) -> IStakeRegistryInstance<T, P, N> {
-            IStakeRegistryInstance {
+        pub fn with_cloned_provider(self) -> IStakeRegistryTypesInstance<T, P, N> {
+            IStakeRegistryTypesInstance {
                 address: self.address,
                 provider: ::core::clone::Clone::clone(&self.provider),
                 _network_transport: ::core::marker::PhantomData,
@@ -537,7 +647,7 @@ pub mod IStakeRegistry {
             T: alloy_contract::private::Transport + ::core::clone::Clone,
             P: alloy_contract::private::Provider<T, N>,
             N: alloy_contract::private::Network,
-        > IStakeRegistryInstance<T, P, N>
+        > IStakeRegistryTypesInstance<T, P, N>
     {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
@@ -556,7 +666,7 @@ pub mod IStakeRegistry {
             T: alloy_contract::private::Transport + ::core::clone::Clone,
             P: alloy_contract::private::Provider<T, N>,
             N: alloy_contract::private::Network,
-        > IStakeRegistryInstance<T, P, N>
+        > IStakeRegistryTypesInstance<T, P, N>
     {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
@@ -573,7 +683,8 @@ pub mod IStakeRegistry {
 
 Generated by the following Solidity interface...
 ```solidity
-library IStakeRegistry {
+library IStakeRegistryTypes {
+    type StakeType is uint8;
     struct StakeUpdate {
         uint32 updateBlockNumber;
         uint32 nextUpdateBlockNumber;
@@ -586,45 +697,66 @@ library IStakeRegistry {
 }
 
 interface StakeRegistry {
+    error BelowMinimumStakeRequirement();
+    error EmptyStakeHistory();
+    error InputArrayLengthMismatch();
+    error InputArrayLengthZero();
+    error InputDuplicateStrategy();
+    error InputMultiplierZero();
+    error InvalidBlockNumber();
+    error OnlySlashingRegistryCoordinator();
+    error OnlySlashingRegistryCoordinatorOwner();
+    error QuorumAlreadyExists();
+    error QuorumDoesNotExist();
+    error QuorumNotSlashable();
+
+    event LookAheadPeriodChanged(uint32 oldLookAheadBlocks, uint32 newLookAheadBlocks);
     event MinimumStakeForQuorumUpdated(uint8 indexed quorumNumber, uint96 minimumStake);
     event OperatorStakeUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint96 stake);
     event QuorumCreated(uint8 indexed quorumNumber);
+    event StakeTypeSet(IStakeRegistryTypes.StakeType newStakeType);
     event StrategyAddedToQuorum(uint8 indexed quorumNumber, address strategy);
     event StrategyMultiplierUpdated(uint8 indexed quorumNumber, address strategy, uint256 multiplier);
     event StrategyRemovedFromQuorum(uint8 indexed quorumNumber, address strategy);
 
-    constructor(address _registryCoordinator, address _delegationManager);
+    constructor(address _slashingRegistryCoordinator, address _delegationManager, address _avsDirectory, address _allocationManager);
 
     function MAX_WEIGHING_FUNCTION_LENGTH() external view returns (uint8);
     function WEIGHTING_DIVISOR() external view returns (uint256);
-    function addStrategies(uint8 quorumNumber, IStakeRegistry.StrategyParams[] memory _strategyParams) external;
+    function addStrategies(uint8 quorumNumber, IStakeRegistryTypes.StrategyParams[] memory _strategyParams) external;
+    function allocationManager() external view returns (address);
+    function avsDirectory() external view returns (address);
     function delegation() external view returns (address);
     function deregisterOperator(bytes32 operatorId, bytes memory quorumNumbers) external;
     function getCurrentStake(bytes32 operatorId, uint8 quorumNumber) external view returns (uint96);
     function getCurrentTotalStake(uint8 quorumNumber) external view returns (uint96);
-    function getLatestStakeUpdate(bytes32 operatorId, uint8 quorumNumber) external view returns (IStakeRegistry.StakeUpdate memory);
+    function getLatestStakeUpdate(bytes32 operatorId, uint8 quorumNumber) external view returns (IStakeRegistryTypes.StakeUpdate memory);
     function getStakeAtBlockNumber(bytes32 operatorId, uint8 quorumNumber, uint32 blockNumber) external view returns (uint96);
     function getStakeAtBlockNumberAndIndex(uint8 quorumNumber, uint32 blockNumber, bytes32 operatorId, uint256 index) external view returns (uint96);
-    function getStakeHistory(bytes32 operatorId, uint8 quorumNumber) external view returns (IStakeRegistry.StakeUpdate[] memory);
+    function getStakeHistory(bytes32 operatorId, uint8 quorumNumber) external view returns (IStakeRegistryTypes.StakeUpdate[] memory);
     function getStakeHistoryLength(bytes32 operatorId, uint8 quorumNumber) external view returns (uint256);
-    function getStakeUpdateAtIndex(uint8 quorumNumber, bytes32 operatorId, uint256 index) external view returns (IStakeRegistry.StakeUpdate memory);
+    function getStakeUpdateAtIndex(uint8 quorumNumber, bytes32 operatorId, uint256 index) external view returns (IStakeRegistryTypes.StakeUpdate memory);
     function getStakeUpdateIndexAtBlockNumber(bytes32 operatorId, uint8 quorumNumber, uint32 blockNumber) external view returns (uint32);
     function getTotalStakeAtBlockNumberFromIndex(uint8 quorumNumber, uint32 blockNumber, uint256 index) external view returns (uint96);
     function getTotalStakeHistoryLength(uint8 quorumNumber) external view returns (uint256);
     function getTotalStakeIndicesAtBlockNumber(uint32 blockNumber, bytes memory quorumNumbers) external view returns (uint32[] memory);
-    function getTotalStakeUpdateAtIndex(uint8 quorumNumber, uint256 index) external view returns (IStakeRegistry.StakeUpdate memory);
-    function initializeQuorum(uint8 quorumNumber, uint96 minimumStake, IStakeRegistry.StrategyParams[] memory _strategyParams) external;
+    function getTotalStakeUpdateAtIndex(uint8 quorumNumber, uint256 index) external view returns (IStakeRegistryTypes.StakeUpdate memory);
+    function initializeDelegatedStakeQuorum(uint8 quorumNumber, uint96 minimumStake, IStakeRegistryTypes.StrategyParams[] memory _strategyParams) external;
+    function initializeSlashableStakeQuorum(uint8 quorumNumber, uint96 minimumStake, uint32 lookAheadPeriod, IStakeRegistryTypes.StrategyParams[] memory _strategyParams) external;
     function minimumStakeForQuorum(uint8) external view returns (uint96);
     function modifyStrategyParams(uint8 quorumNumber, uint256[] memory strategyIndices, uint96[] memory newMultipliers) external;
     function registerOperator(address operator, bytes32 operatorId, bytes memory quorumNumbers) external returns (uint96[] memory, uint96[] memory);
     function registryCoordinator() external view returns (address);
     function removeStrategies(uint8 quorumNumber, uint256[] memory indicesToRemove) external;
     function setMinimumStakeForQuorum(uint8 quorumNumber, uint96 minimumStake) external;
-    function strategiesPerQuorum(uint8, uint256) external view returns (address);
-    function strategyParams(uint8, uint256) external view returns (address strategy, uint96 multiplier);
-    function strategyParamsByIndex(uint8 quorumNumber, uint256 index) external view returns (IStakeRegistry.StrategyParams memory);
+    function setSlashableStakeLookahead(uint8 quorumNumber, uint32 _lookAheadBlocks) external;
+    function slashableStakeLookAheadPerQuorum(uint8 quorumNumber) external view returns (uint32);
+    function stakeTypePerQuorum(uint8 quorumNumber) external view returns (IStakeRegistryTypes.StakeType);
+    function strategiesPerQuorum(uint8 quorumNumber, uint256) external view returns (address);
+    function strategyParams(uint8 quorumNumber, uint256) external view returns (address strategy, uint96 multiplier);
+    function strategyParamsByIndex(uint8 quorumNumber, uint256 index) external view returns (IStakeRegistryTypes.StrategyParams memory);
     function strategyParamsLength(uint8 quorumNumber) external view returns (uint256);
-    function updateOperatorStake(address operator, bytes32 operatorId, bytes memory quorumNumbers) external returns (uint192);
+    function updateOperatorsStake(address[] memory operators, bytes32[] memory operatorIds, uint8 quorumNumber) external returns (bool[] memory);
     function weightOfOperatorForQuorum(uint8 quorumNumber, address operator) external view returns (uint96);
 }
 ```
@@ -636,14 +768,24 @@ interface StakeRegistry {
     "type": "constructor",
     "inputs": [
       {
-        "name": "_registryCoordinator",
+        "name": "_slashingRegistryCoordinator",
         "type": "address",
-        "internalType": "contract IRegistryCoordinator"
+        "internalType": "contract ISlashingRegistryCoordinator"
       },
       {
         "name": "_delegationManager",
         "type": "address",
         "internalType": "contract IDelegationManager"
+      },
+      {
+        "name": "_avsDirectory",
+        "type": "address",
+        "internalType": "contract IAVSDirectory"
+      },
+      {
+        "name": "_allocationManager",
+        "type": "address",
+        "internalType": "contract IAllocationManager"
       }
     ],
     "stateMutability": "nonpayable"
@@ -686,7 +828,7 @@ interface StakeRegistry {
       {
         "name": "_strategyParams",
         "type": "tuple[]",
-        "internalType": "struct IStakeRegistry.StrategyParams[]",
+        "internalType": "struct IStakeRegistryTypes.StrategyParams[]",
         "components": [
           {
             "name": "strategy",
@@ -703,6 +845,32 @@ interface StakeRegistry {
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "allocationManager",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IAllocationManager"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "avsDirectory",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IAVSDirectory"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -797,7 +965,7 @@ interface StakeRegistry {
       {
         "name": "",
         "type": "tuple",
-        "internalType": "struct IStakeRegistry.StakeUpdate",
+        "internalType": "struct IStakeRegistryTypes.StakeUpdate",
         "components": [
           {
             "name": "updateBlockNumber",
@@ -901,7 +1069,7 @@ interface StakeRegistry {
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct IStakeRegistry.StakeUpdate[]",
+        "internalType": "struct IStakeRegistryTypes.StakeUpdate[]",
         "components": [
           {
             "name": "updateBlockNumber",
@@ -971,7 +1139,7 @@ interface StakeRegistry {
       {
         "name": "",
         "type": "tuple",
-        "internalType": "struct IStakeRegistry.StakeUpdate",
+        "internalType": "struct IStakeRegistryTypes.StakeUpdate",
         "components": [
           {
             "name": "updateBlockNumber",
@@ -1113,7 +1281,7 @@ interface StakeRegistry {
       {
         "name": "",
         "type": "tuple",
-        "internalType": "struct IStakeRegistry.StakeUpdate",
+        "internalType": "struct IStakeRegistryTypes.StakeUpdate",
         "components": [
           {
             "name": "updateBlockNumber",
@@ -1137,7 +1305,7 @@ interface StakeRegistry {
   },
   {
     "type": "function",
-    "name": "initializeQuorum",
+    "name": "initializeDelegatedStakeQuorum",
     "inputs": [
       {
         "name": "quorumNumber",
@@ -1152,7 +1320,47 @@ interface StakeRegistry {
       {
         "name": "_strategyParams",
         "type": "tuple[]",
-        "internalType": "struct IStakeRegistry.StrategyParams[]",
+        "internalType": "struct IStakeRegistryTypes.StrategyParams[]",
+        "components": [
+          {
+            "name": "strategy",
+            "type": "address",
+            "internalType": "contract IStrategy"
+          },
+          {
+            "name": "multiplier",
+            "type": "uint96",
+            "internalType": "uint96"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "initializeSlashableStakeQuorum",
+    "inputs": [
+      {
+        "name": "quorumNumber",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "minimumStake",
+        "type": "uint96",
+        "internalType": "uint96"
+      },
+      {
+        "name": "lookAheadPeriod",
+        "type": "uint32",
+        "internalType": "uint32"
+      },
+      {
+        "name": "_strategyParams",
+        "type": "tuple[]",
+        "internalType": "struct IStakeRegistryTypes.StrategyParams[]",
         "components": [
           {
             "name": "strategy",
@@ -1254,7 +1462,7 @@ interface StakeRegistry {
       {
         "name": "",
         "type": "address",
-        "internalType": "address"
+        "internalType": "contract ISlashingRegistryCoordinator"
       }
     ],
     "stateMutability": "view"
@@ -1297,10 +1505,66 @@ interface StakeRegistry {
   },
   {
     "type": "function",
+    "name": "setSlashableStakeLookahead",
+    "inputs": [
+      {
+        "name": "quorumNumber",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "_lookAheadBlocks",
+        "type": "uint32",
+        "internalType": "uint32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "slashableStakeLookAheadPerQuorum",
+    "inputs": [
+      {
+        "name": "quorumNumber",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint32",
+        "internalType": "uint32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "stakeTypePerQuorum",
+    "inputs": [
+      {
+        "name": "quorumNumber",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "enum IStakeRegistryTypes.StakeType"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "strategiesPerQuorum",
     "inputs": [
       {
-        "name": "",
+        "name": "quorumNumber",
         "type": "uint8",
         "internalType": "uint8"
       },
@@ -1324,7 +1588,7 @@ interface StakeRegistry {
     "name": "strategyParams",
     "inputs": [
       {
-        "name": "",
+        "name": "quorumNumber",
         "type": "uint8",
         "internalType": "uint8"
       },
@@ -1367,7 +1631,7 @@ interface StakeRegistry {
       {
         "name": "",
         "type": "tuple",
-        "internalType": "struct IStakeRegistry.StrategyParams",
+        "internalType": "struct IStakeRegistryTypes.StrategyParams",
         "components": [
           {
             "name": "strategy",
@@ -1405,29 +1669,29 @@ interface StakeRegistry {
   },
   {
     "type": "function",
-    "name": "updateOperatorStake",
+    "name": "updateOperatorsStake",
     "inputs": [
       {
-        "name": "operator",
-        "type": "address",
-        "internalType": "address"
+        "name": "operators",
+        "type": "address[]",
+        "internalType": "address[]"
       },
       {
-        "name": "operatorId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "name": "operatorIds",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
       },
       {
-        "name": "quorumNumbers",
-        "type": "bytes",
-        "internalType": "bytes"
+        "name": "quorumNumber",
+        "type": "uint8",
+        "internalType": "uint8"
       }
     ],
     "outputs": [
       {
         "name": "",
-        "type": "uint192",
-        "internalType": "uint192"
+        "type": "bool[]",
+        "internalType": "bool[]"
       }
     ],
     "stateMutability": "nonpayable"
@@ -1455,6 +1719,25 @@ interface StakeRegistry {
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "LookAheadPeriodChanged",
+    "inputs": [
+      {
+        "name": "oldLookAheadBlocks",
+        "type": "uint32",
+        "indexed": false,
+        "internalType": "uint32"
+      },
+      {
+        "name": "newLookAheadBlocks",
+        "type": "uint32",
+        "indexed": false,
+        "internalType": "uint32"
+      }
+    ],
+    "anonymous": false
   },
   {
     "type": "event",
@@ -1509,6 +1792,19 @@ interface StakeRegistry {
         "type": "uint8",
         "indexed": true,
         "internalType": "uint8"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "StakeTypeSet",
+    "inputs": [
+      {
+        "name": "newStakeType",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "enum IStakeRegistryTypes.StakeType"
       }
     ],
     "anonymous": false
@@ -1575,6 +1871,66 @@ interface StakeRegistry {
       }
     ],
     "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "BelowMinimumStakeRequirement",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "EmptyStakeHistory",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InputArrayLengthMismatch",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InputArrayLengthZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InputDuplicateStrategy",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InputMultiplierZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidBlockNumber",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlySlashingRegistryCoordinator",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlySlashingRegistryCoordinatorOwner",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "QuorumAlreadyExists",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "QuorumDoesNotExist",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "QuorumNotSlashable",
+    "inputs": []
   }
 ]
 ```*/
@@ -1591,23 +1947,852 @@ pub mod StakeRegistry {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60c06040523480156200001157600080fd5b50604051620033c8380380620033c8833981016040819052620000349162000065565b6001600160a01b0391821660a05216608052620000a4565b6001600160a01b03811681146200006257600080fd5b50565b600080604083850312156200007957600080fd5b825162000086816200004c565b602084015190925062000099816200004c565b809150509250929050565b60805160a0516132e9620000df6000396000818161037a01528181611a470152611b7901526000818161052901526118a801526132e96000f3fe608060405234801561001057600080fd5b50600436106101e55760003560e01c80639f3ccf651161010f578063c8294c56116100a2578063f2be94ae11610071578063f2be94ae1461054b578063f851e1981461055e578063fa28c62714610571578063ff694a771461058457600080fd5b8063c8294c56146104d6578063d5eccc05146104e9578063dd9846b9146104fc578063df5cf7231461052457600080fd5b8063bc9a40c3116100de578063bc9a40c314610474578063bd29b8cd14610487578063c46778a51461049a578063c601527d146104c357600080fd5b80639f3ccf65146103ee578063ac6bfb0314610401578063adc804da14610421578063b6904b781461046157600080fd5b80634bd26e091161018757806366acfefe1161015657806366acfefe1461034a5780636d14a987146103755780637c172347146103b457806381c07502146103ce57600080fd5b80634bd26e09146102e55780635401ed27146103155780635e5a6775146103285780635f1f2d771461033757600080fd5b806320b66298116101c357806320b662981461026c57806325504777146102815780632cd95940146102a25780633ca5a5f5146102c257600080fd5b80630491b41c146101ea57806308732461146102205780631f9b74e014610241575b600080fd5b61020d6101f8366004612803565b60ff1660009081526001602052604090205490565b6040519081526020015b60405180910390f35b61023361022e36600461281e565b610597565b604051610217929190612848565b61025461024f36600461287f565b6105e0565b6040516001600160601b039091168152602001610217565b61027f61027a3660046128fa565b610602565b005b61029461028f3660046129bb565b610860565b604051610217929190612a5a565b6102b56102b0366004612a7f565b610a78565b6040516102179190612aab565b61020d6102d0366004612803565b60ff1660009081526003602052604090205490565b61020d6102f3366004612a7f565b600091825260026020908152604080842060ff93909316845291905290205490565b610254610323366004612a7f565b610b17565b61020d670de0b6b3a764000081565b61027f610345366004612bb4565b610b30565b61035d6103583660046129bb565b610e78565b6040516001600160c01b039091168152602001610217565b61039c7f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b039091168152602001610217565b6103bc602081565b60405160ff9091168152602001610217565b6103e16103dc366004612c70565b610f17565b6040516102179190612cc2565b61039c6103fc36600461281e565b611157565b61041461040f366004612d00565b61118f565b6040516102179190612d33565b61043461042f36600461281e565b611227565b6040805182516001600160a01b031681526020928301516001600160601b03169281019290925201610217565b61041461046f36600461281e565b6112a1565b61027f610482366004612d7f565b611330565b61027f610495366004612da9565b611351565b6102546104a8366004612803565b6000602081905290815260409020546001600160601b031681565b61027f6104d1366004612e75565b6113c3565b6102546104e4366004612ec2565b6113df565b6102546104f7366004612803565b61145d565b61050f61050a366004612efe565b6114b0565b60405163ffffffff9091168152602001610217565b61039c7f000000000000000000000000000000000000000000000000000000000000000081565b610254610559366004612f3a565b6114c5565b61041461056c366004612a7f565b61155a565b61025461057f366004612efe565b61163f565b61027f610592366004612f7c565b6116a0565b600360205281600052604060002081815481106105b357600080fd5b6000918252602090912001546001600160a01b0381169250600160a01b90046001600160601b0316905082565b6000826105ec816117cb565b60006105f88585611847565b5095945050505050565b61060a611a45565b84610614816117cb565b838061068f576040805162461bcd60e51b81526020600482015260248101919091527f5374616b6552656769737472792e6d6f6469667953747261746567795061726160448201527f6d733a206e6f20737472617465677920696e64696365732070726f766964656460648201526084015b60405180910390fd5b8281146107045760405162461bcd60e51b815260206004820152603960248201527f5374616b6552656769737472792e6d6f6469667953747261746567795061726160448201527f6d733a20696e707574206c656e677468206d69736d61746368000000000000006064820152608401610686565b60ff87166000908152600360205260408120905b828110156108555785858281811061073257610732612fd9565b90506020020160208101906107479190612fef565b8289898481811061075a5761075a612fd9565b905060200201358154811061077157610771612fd9565b9060005260206000200160000160146101000a8154816001600160601b0302191690836001600160601b031602179055508860ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a75838a8a858181106107da576107da612fd9565b90506020020135815481106107f1576107f1612fd9565b6000918252602090912001546001600160a01b031688888581811061081857610818612fd9565b905060200201602081019061082d9190612fef565b60405161083b929190612848565b60405180910390a28061084d81613020565b915050610718565b505050505050505050565b60608061086b611b6e565b6000836001600160401b0381111561088557610885612b23565b6040519080825280602002602001820160405280156108ae578160200160208202803683370190505b5090506000846001600160401b038111156108cb576108cb612b23565b6040519080825280602002602001820160405280156108f4578160200160208202803683370190505b50905060005b85811015610a6a57600087878381811061091657610916612fd9565b919091013560f81c915061092b9050816117cb565b600080610938838d611847565b91509150806109d55760405162461bcd60e51b815260206004820152605b60248201527f5374616b6552656769737472792e72656769737465724f70657261746f723a2060448201527f4f70657261746f7220646f6573206e6f74206d656574206d696e696d756d207360648201527f74616b6520726571756972656d656e7420666f722071756f72756d0000000000608482015260a401610686565b60006109e28c8585611c21565b9050828786815181106109f7576109f7612fd9565b60200260200101906001600160601b031690816001600160601b031681525050610a218482611ea1565b868681518110610a3357610a33612fd9565b60200260200101906001600160601b031690816001600160601b031681525050505050508080610a6290613020565b9150506108fa565b509097909650945050505050565b600082815260026020908152604080832060ff851684528252808320805482518185028101850190935280835260609492939192909184015b82821015610b0a576000848152602090819020604080516060810182529185015463ffffffff8082168452600160201b82041683850152600160401b90046001600160601b031690820152825260019092019101610ab1565b5050505090505b92915050565b600080610b24848461155a565b60400151949350505050565b610b38611a45565b81610b42816117cb565b815180610bb75760405162461bcd60e51b815260206004820152603d60248201527f5374616b6552656769737472792e72656d6f7665537472617465676965733a2060448201527f6e6f20696e646963657320746f2072656d6f76652070726f76696465640000006064820152608401610686565b60ff841660009081526003602090815260408083206004909252822090915b83811015610e6f578660ff167f31fa2e2cd280c9375e13ffcf3d81e2378100186e4058f8d3ddb690b82dcd31f784888481518110610c1657610c16612fd9565b602002602001015181548110610c2e57610c2e612fd9565b600091825260209182902001546040516001600160a01b0390911681520160405180910390a28660ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a7584888481518110610c8c57610c8c612fd9565b602002602001015181548110610ca457610ca4612fd9565b600091825260208083209190910154604080516001600160a01b039092168252918101929092520160405180910390a282548390610ce49060019061303b565b81548110610cf457610cf4612fd9565b9060005260206000200183878381518110610d1157610d11612fd9565b602002602001015181548110610d2957610d29612fd9565b600091825260209091208254910180546001600160a01b0319166001600160a01b03909216918217815591546001600160601b03600160a01b9182900416021790558254839080610d7c57610d7c613052565b60008281526020812082016000199081019190915501905581548290610da49060019061303b565b81548110610db457610db4612fd9565b9060005260206000200160009054906101000a90046001600160a01b031682878381518110610de557610de5612fd9565b602002602001015181548110610dfd57610dfd612fd9565b9060005260206000200160006101000a8154816001600160a01b0302191690836001600160a01b0316021790555081805480610e3b57610e3b613052565b600082815260209020810160001990810180546001600160a01b031916905501905580610e6781613020565b915050610bd6565b50505050505050565b6000610e82611b6e565b6000805b838110156105f8576000858583818110610ea257610ea2612fd9565b919091013560f81c9150610eb79050816117cb565b600080610ec4838b611847565b9150915080610ee65760009150600160ff84161b6001600160c01b0386161794505b6000610ef38a8585611c21565b9050610eff8482611ea1565b50505050508080610f0f90613020565b915050610e86565b60606000826001600160401b03811115610f3357610f33612b23565b604051908082528060200260200182016040528015610f5c578160200160208202803683370190505b50905060005b8381101561114c576000858583818110610f7e57610f7e612fd9565b919091013560f81c9150610f939050816117cb565b60ff81166000908152600160205260408120805463ffffffff8a169290610fbc57610fbc612fd9565b60009182526020909120015463ffffffff1611156110685760405162461bcd60e51b815260206004820152605b60248201527f5374616b6552656769737472792e676574546f74616c5374616b65496e64696360448201527f65734174426c6f636b4e756d6265723a2071756f72756d20686173206e6f207360648201527f74616b6520686973746f727920617420626c6f636b4e756d6265720000000000608482015260a401610686565b60ff8116600090815260016020526040812054905b818110156111365760ff8316600090815260016020819052604090912063ffffffff8b16916110ac848661303b565b6110b6919061303b565b815481106110c6576110c6612fd9565b60009182526020909120015463ffffffff16116111245760016110e9828461303b565b6110f3919061303b565b85858151811061110557611105612fd9565b602002602001019063ffffffff16908163ffffffff1681525050611136565b8061112e81613020565b91505061107d565b505050808061114490613020565b915050610f62565b5090505b9392505050565b6004602052816000526040600020818154811061117357600080fd5b6000918252602090912001546001600160a01b03169150829050565b60408051606081018252600080825260208083018290528284018290528582526002815283822060ff881683529052919091208054839081106111d4576111d4612fd9565b600091825260209182902060408051606081018252929091015463ffffffff8082168452600160201b82041693830193909352600160401b9092046001600160601b031691810191909152949350505050565b604080518082019091526000808252602082015260ff8316600090815260036020526040902080548390811061125f5761125f612fd9565b6000918252602091829020604080518082019091529101546001600160a01b0381168252600160a01b90046001600160601b0316918101919091529392505050565b604080516060810182526000808252602080830182905282840182905260ff8616825260019052919091208054839081106112de576112de612fd9565b600091825260209182902060408051606081018252929091015463ffffffff8082168452600160201b82041693830193909352600160401b9092046001600160601b0316918101919091529392505050565b611338611a45565b81611342816117cb565b61134c838361201b565b505050565b611359611b6e565b60005b818110156113bd57600083838381811061137857611378612fd9565b919091013560f81c915061138d9050816117cb565b600061139b86836000611c21565b90506113a78282611ea1565b50505080806113b590613020565b91505061135c565b50505050565b6113cb611a45565b816113d5816117cb565b61134c8383612084565b60ff8316600090815260016020526040812080548291908490811061140657611406612fd9565b600091825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b90930492909216908201529050610b2481856124c7565b60ff8116600090815260016020819052604082208054909161147e9161303b565b8154811061148e5761148e612fd9565b600091825260209091200154600160401b90046001600160601b031692915050565b60006114bd848484612641565b949350505050565b600082815260026020908152604080832060ff8816845290915281208054829190849081106114f6576114f6612fd9565b600091825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b9093049290921690820152905061154d81866124c7565b6040015195945050505050565b6040805160608082018352600080835260208084018290528385018290528682526002815284822060ff871683528152848220548551938401865282845290830182905293820152909190816115b3579150610b119050565b600085815260026020908152604080832060ff8816845290915290206115da60018461303b565b815481106115ea576115ea612fd9565b600091825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b90930492909216908201529250610b11915050565b600083815260026020908152604080832060ff861684529091528120611666858585612641565b63ffffffff168154811061167c5761167c612fd9565b600091825260209091200154600160401b90046001600160601b0316949350505050565b6116a8611b6e565b60ff8316600090815260016020526040902054156117265760405162461bcd60e51b815260206004820152603560248201527f5374616b6552656769737472792e696e697469616c697a6551756f72756d3a2060448201527471756f72756d20616c72656164792065786973747360581b6064820152608401610686565b6117308382612084565b61173a838361201b565b505060ff166000908152600160208181526040808420815160608101835263ffffffff438116825281850187815293820187815283549687018455928752939095209451949093018054915193516001600160601b0316600160401b02600160401b600160a01b0319948416600160201b0267ffffffffffffffff1990931695909316949094171791909116179055565b60ff81166000908152600160205260409020546118445760405162461bcd60e51b815260206004820152603160248201527f5374616b6552656769737472792e71756f72756d4578697374733a2071756f726044820152701d5b48191bd95cc81b9bdd08195e1a5cdd607a1b6064820152608401610686565b50565b6000806000806118668660ff1660009081526003602052604090205490565b604080518082019091526000808252602082015290915060ff871660009081526004602081905260408083209051639004134760e01b81526001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016926390041347926118db928c9201613068565b600060405180830381865afa1580156118f8573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261192091908101906130c7565b905060005b83811015611a115760ff8916600090815260036020526040902080548290811061195157611951612fd9565b60009182526020808320604080518082019091529201546001600160a01b0381168352600160a01b90046001600160601b031690820152835190945083908390811061199f5761199f612fd9565b602002602001015111156119ff57670de0b6b3a764000083602001516001600160601b03168383815181106119d6576119d6612fd9565b60200260200101516119e89190613157565b6119f29190613176565b6119fc9086613198565b94505b80611a0981613020565b915050611925565b50505060ff8616600090815260208190526040902054919350506001600160601b03908116908316101590505b9250929050565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316638da5cb5b6040518163ffffffff1660e01b8152600401602060405180830381865afa158015611aa3573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611ac791906131c3565b6001600160a01b0316336001600160a01b031614611b6c5760405162461bcd60e51b815260206004820152605660248201527f5374616b6552656769737472792e6f6e6c79436f6f7264696e61746f724f776e60448201527f65723a2063616c6c6572206973206e6f7420746865206f776e6572206f6620746064820152753432903932b3b4b9ba393ca1b7b7b93234b730ba37b960511b608482015260a401610686565b565b336001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001614611b6c5760405162461bcd60e51b815260206004820152604c60248201527f5374616b6552656769737472792e6f6e6c795265676973747279436f6f72646960448201527f6e61746f723a2063616c6c6572206973206e6f7420746865205265676973747260648201526b3ca1b7b7b93234b730ba37b960a11b608482015260a401610686565b600083815260026020908152604080832060ff86168452909152812054819080611ce557600086815260026020908152604080832060ff891684528252808320815160608101835263ffffffff43811682528185018681526001600160601b03808c16958401958652845460018101865594885295909620915191909201805495519351909416600160401b02600160401b600160a01b0319938316600160201b0267ffffffffffffffff1990961691909216179390931716919091179055611e47565b600086815260026020908152604080832060ff891684529091528120611d0c60018461303b565b81548110611d1c57611d1c612fd9565b600091825260209091200180546001600160601b03600160401b909104811694509091508516831415611d555760009350505050611150565b80544363ffffffff90811691161415611d8f578054600160401b600160a01b031916600160401b6001600160601b03871602178155611e45565b805467ffffffff000000001916600160201b4363ffffffff90811682810293909317845560008a815260026020908152604080832060ff8d168452825280832081516060810183529687528683018481526001600160601b038d81169389019384528254600181018455928652939094209651960180549351915196851667ffffffffffffffff1990941693909317931690930291909117600160401b600160a01b031916600160401b93909216929092021790555b505b6040805160ff871681526001600160601b038616602082015287917f2f527d527e95d8fe40aec55377743bb779087da3f6d0d08f12e36444da62327d910160405180910390a2611e9782856127a7565b9695505050505050565b60ff821660009081526001602081905260408220805491839190611ec5908461303b565b81548110611ed557611ed5612fd9565b9060005260206000200190508360001415611f045754600160401b90046001600160601b03169150610b119050565b8054600090611f2390600160401b90046001600160601b0316866127bf565b82549091504363ffffffff90811691161415611f60578154600160401b600160a01b031916600160401b6001600160601b03831602178255612012565b815463ffffffff438116600160201b81810267ffffffff000000001990941693909317855560ff8916600090815260016020818152604080842081516060810183529586528583018581526001600160601b03808b169388019384528254958601835591865292909420945194909201805491519251909316600160401b02600160401b600160a01b031992861690960267ffffffffffffffff19909116939094169290921792909217169190911790555b95945050505050565b60ff82166000818152602081815260409182902080546bffffffffffffffffffffffff19166001600160601b03861690811790915591519182527f26eecff2b70b0a71104ff4d940ba7162d23a95c248771fc487a7be17a596b3cf910160405180910390a25050565b60008151116120e95760405162461bcd60e51b8152602060048201526038602482015260008051602061329483398151915260448201527f3a206e6f20737472617465676965732070726f766964656400000000000000006064820152608401610686565b805160ff83166000908152600360209081526040909120549061210c83836131e0565b111561217c5760405162461bcd60e51b8152602060048201526045602482015260008051602061329483398151915260448201527f3a20657863656564204d41585f5745494748494e475f46554e4354494f4e5f4c60648201526408a9c8ea8960db1b608482015260a401610686565b60005b828110156124c05760005b61219482846131e0565b811015612275578482815181106121ad576121ad612fd9565b6020026020010151600001516001600160a01b0316600360008860ff1660ff16815260200190815260200160002082815481106121ec576121ec612fd9565b6000918252602090912001546001600160a01b031614156122635760405162461bcd60e51b815260206004820152603d602482015260008051602061329483398151915260448201527f3a2063616e6e6f74206164642073616d652073747261746567792032780000006064820152608401610686565b8061226d81613020565b91505061218a565b50600084828151811061228a5761228a612fd9565b6020026020010151602001516001600160601b03161161230f5760405162461bcd60e51b8152602060048201526046602482015260008051602061329483398151915260448201527f3a2063616e6e6f74206164642073747261746567792077697468207a65726f206064820152651dd95a59da1d60d21b608482015260a401610686565b60ff85166000908152600360205260409020845185908390811061233557612335612fd9565b602090810291909101810151825460018101845560009384528284208251928401516001600160601b0316600160a01b026001600160a01b039093169290921791015560ff871682526004905260409020845185908390811061239a5761239a612fd9565b6020908102919091018101515182546001810184556000938452919092200180546001600160a01b0319166001600160a01b03909216919091179055835160ff8616907f10565e56cacbf32eca267945f054fec02e59750032d113d3302182ad967f54049086908490811061241157612411612fd9565b602090810291909101810151516040516001600160a01b0390911681520160405180910390a28460ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a7585838151811061246e5761246e612fd9565b60200260200101516000015186848151811061248c5761248c612fd9565b6020026020010151602001516040516124a6929190612848565b60405180910390a2806124b881613020565b91505061217f565b5050505050565b816000015163ffffffff168163ffffffff16101561256c5760405162461bcd60e51b815260206004820152605660248201527f5374616b6552656769737472792e5f76616c69646174655374616b655570646160448201527f74654174426c6f636b4e756d6265723a207374616b6555706461746520697320606482015275333937b69030b33a32b910313637b1b5a73ab6b132b960511b608482015260a401610686565b602082015163ffffffff1615806125925750816020015163ffffffff168163ffffffff16105b61263d5760405162461bcd60e51b815260206004820152606a60248201527f5374616b6552656769737472792e5f76616c69646174655374616b655570646160448201527f74654174426c6f636b4e756d6265723a2074686572652069732061206e65776560648201527f72207374616b6555706461746520617661696c61626c65206265666f726520626084820152693637b1b5a73ab6b132b960b11b60a482015260c401610686565b5050565b600083815260026020908152604080832060ff86168452909152812054805b80156126e257600086815260026020908152604080832060ff89168452909152902063ffffffff85169061269560018461303b565b815481106126a5576126a5612fd9565b60009182526020909120015463ffffffff16116126d0576126c760018261303b565b92505050611150565b806126da816131f8565b915050612660565b5060405162461bcd60e51b815260206004820152608160248201527f5374616b6552656769737472792e5f6765745374616b65557064617465496e6460448201527f6578466f724f70657261746f724174426c6f636b4e756d6265723a206e6f207360648201527f74616b652075706461746520666f756e6420666f72206f70657261746f72496460848201527f20616e642071756f72756d4e756d62657220617420626c6f636b206e756d626560a4820152603960f91b60c482015260e401610686565b60006111506001600160601b0380851690841661320f565b6000808212156127e3576127d28261324e565b6127dc908461326b565b9050610b11565b6127dc8284613198565b803560ff811681146127fe57600080fd5b919050565b60006020828403121561281557600080fd5b611150826127ed565b6000806040838503121561283157600080fd5b61283a836127ed565b946020939093013593505050565b6001600160a01b039290921682526001600160601b0316602082015260400190565b6001600160a01b038116811461184457600080fd5b6000806040838503121561289257600080fd5b61289b836127ed565b915060208301356128ab8161286a565b809150509250929050565b60008083601f8401126128c857600080fd5b5081356001600160401b038111156128df57600080fd5b6020830191508360208260051b8501011115611a3e57600080fd5b60008060008060006060868803121561291257600080fd5b61291b866127ed565b945060208601356001600160401b038082111561293757600080fd5b61294389838a016128b6565b9096509450604088013591508082111561295c57600080fd5b50612969888289016128b6565b969995985093965092949392505050565b60008083601f84011261298c57600080fd5b5081356001600160401b038111156129a357600080fd5b602083019150836020828501011115611a3e57600080fd5b600080600080606085870312156129d157600080fd5b84356129dc8161286a565b93506020850135925060408501356001600160401b038111156129fe57600080fd5b612a0a8782880161297a565b95989497509550505050565b600081518084526020808501945080840160005b83811015612a4f5781516001600160601b031687529582019590820190600101612a2a565b509495945050505050565b604081526000612a6d6040830185612a16565b82810360208401526120128185612a16565b60008060408385031215612a9257600080fd5b82359150612aa2602084016127ed565b90509250929050565b6020808252825182820181905260009190848201906040850190845b81811015612b1757612b0483855163ffffffff808251168352806020830151166020840152506001600160601b0360408201511660408301525050565b9284019260609290920191600101612ac7565b50909695505050505050565b634e487b7160e01b600052604160045260246000fd5b604080519081016001600160401b0381118282101715612b5b57612b5b612b23565b60405290565b604051601f8201601f191681016001600160401b0381118282101715612b8957612b89612b23565b604052919050565b60006001600160401b03821115612baa57612baa612b23565b5060051b60200190565b60008060408385031215612bc757600080fd5b612bd0836127ed565b91506020808401356001600160401b03811115612bec57600080fd5b8401601f81018613612bfd57600080fd5b8035612c10612c0b82612b91565b612b61565b81815260059190911b82018301908381019088831115612c2f57600080fd5b928401925b82841015612c4d57833582529284019290840190612c34565b80955050505050509250929050565b803563ffffffff811681146127fe57600080fd5b600080600060408486031215612c8557600080fd5b612c8e84612c5c565b925060208401356001600160401b03811115612ca957600080fd5b612cb58682870161297a565b9497909650939450505050565b6020808252825182820181905260009190848201906040850190845b81811015612b1757835163ffffffff1683529284019291840191600101612cde565b600080600060608486031215612d1557600080fd5b612d1e846127ed565b95602085013595506040909401359392505050565b815163ffffffff9081168252602080840151909116908201526040808301516001600160601b03169082015260608101610b11565b80356001600160601b03811681146127fe57600080fd5b60008060408385031215612d9257600080fd5b612d9b836127ed565b9150612aa260208401612d68565b600080600060408486031215612dbe57600080fd5b8335925060208401356001600160401b03811115612ca957600080fd5b600082601f830112612dec57600080fd5b81356020612dfc612c0b83612b91565b82815260069290921b84018101918181019086841115612e1b57600080fd5b8286015b84811015612e6a5760408189031215612e385760008081fd5b612e40612b39565b8135612e4b8161286a565b8152612e58828601612d68565b81860152835291830191604001612e1f565b509695505050505050565b60008060408385031215612e8857600080fd5b612e91836127ed565b915060208301356001600160401b03811115612eac57600080fd5b612eb885828601612ddb565b9150509250929050565b600080600060608486031215612ed757600080fd5b612ee0846127ed565b9250612eee60208501612c5c565b9150604084013590509250925092565b600080600060608486031215612f1357600080fd5b83359250612f23602085016127ed565b9150612f3160408501612c5c565b90509250925092565b60008060008060808587031215612f5057600080fd5b612f59856127ed565b9350612f6760208601612c5c565b93969395505050506040820135916060013590565b600080600060608486031215612f9157600080fd5b612f9a846127ed565b9250612fa860208501612d68565b915060408401356001600160401b03811115612fc357600080fd5b612fcf86828701612ddb565b9150509250925092565b634e487b7160e01b600052603260045260246000fd5b60006020828403121561300157600080fd5b61115082612d68565b634e487b7160e01b600052601160045260246000fd5b60006000198214156130345761303461300a565b5060010190565b60008282101561304d5761304d61300a565b500390565b634e487b7160e01b600052603160045260246000fd5b60006040820160018060a01b03808616845260206040818601528286548085526060870191508760005282600020945060005b818110156130b957855485168352600195860195928401920161309b565b509098975050505050505050565b600060208083850312156130da57600080fd5b82516001600160401b038111156130f057600080fd5b8301601f8101851361310157600080fd5b805161310f612c0b82612b91565b81815260059190911b8201830190838101908783111561312e57600080fd5b928401925b8284101561314c57835182529284019290840190613133565b979650505050505050565b60008160001904831182151516156131715761317161300a565b500290565b60008261319357634e487b7160e01b600052601260045260246000fd5b500490565b60006001600160601b038083168185168083038211156131ba576131ba61300a565b01949350505050565b6000602082840312156131d557600080fd5b81516111508161286a565b600082198211156131f3576131f361300a565b500190565b6000816132075761320761300a565b506000190190565b60008083128015600160ff1b85018412161561322d5761322d61300a565b6001600160ff1b03840183138116156132485761324861300a565b50500390565b6000600160ff1b8214156132645761326461300a565b5060000390565b60006001600160601b038381169083168181101561328b5761328b61300a565b03939250505056fe5374616b6552656769737472792e5f6164645374726174656779506172616d73a2646970667358221220917a1b70375c0f80661be231d4fa91ad79e385c50ec1433637cbf1097b5b984d64736f6c634300080c0033
+    ///0x610100604052348015610010575f5ffd5b50604051613d75380380613d7583398101604081905261002f91610068565b6001600160a01b0393841660e052918316608052821660a0521660c0526100c4565b6001600160a01b0381168114610065575f5ffd5b50565b5f5f5f5f6080858703121561007b575f5ffd5b845161008681610051565b602086015190945061009781610051565b60408601519093506100a881610051565b60608601519092506100b981610051565b939692955090935050565b60805160a05160c05160e051613c316101445f395f818161041201528181610e590152818161166501528181611d5f01528181611e1b0152612ce701525f81816105ba01528181610f0701528181610f9701528181611713015281816118420152612cad01525f6103b301525f818161061a01526123eb0152613c315ff3fe608060405234801561000f575f5ffd5b506004361061021e575f3560e01c80639ab4d6ff1161012a578063c8294c56116100b4578063df5cf72311610079578063df5cf72314610615578063e086adb31461063c578063f2be94ae1461064f578063f851e19814610662578063fa28c62714610675575f5ffd5b8063c8294c56146105a2578063ca8aa7c7146105b5578063cc5a7c20146105dc578063d5eccc05146105ef578063dd9846b914610602575f5ffd5b8063b6904b78116100fa578063b6904b781461052e578063bc9a40c314610541578063bd29b8cd14610554578063c46778a514610567578063c601527d1461058f575f5ffd5b80639ab4d6ff146104815780639f3ccf65146104bb578063ac6bfb03146104ce578063adc804da146104ee575f5ffd5b80635e5a6775116101ab5780636c3fb4bf1161017b5780636c3fb4bf146103ed5780636d14a9871461040d57806375d4173a146104345780637c1723471461044757806381c0750214610461575f5ffd5b80635e5a67751461035d5780635f1f2d771461036c578063697fbd931461037f5780636b3aa72e146103ae575f5ffd5b806325504777116101f157806325504777146102b85780632cd95940146102d95780633ca5a5f5146102f95780634bd26e091461031b5780635401ed271461034a575f5ffd5b80630491b41c1461022257806308732461146102575780631f9b74e01461027857806320b66298146102a3575b5f5ffd5b610244610230366004612e05565b60ff165f9081526001602052604090205490565b6040519081526020015b60405180910390f35b61026a610265366004612e1e565b610688565b60405161024e929190612e46565b61028b610286366004612e7c565b6106cd565b6040516001600160601b03909116815260200161024e565b6102b66102b1366004612ef1565b6106ef565b005b6102cb6102c6366004612fac565b61088d565b60405161024e929190613046565b6102ec6102e736600461306a565b610a15565b60405161024e9190613094565b610244610307366004612e05565b60ff165f9081526003602052604090205490565b61024461032936600461306a565b5f91825260026020908152604080842060ff93909316845291905290205490565b61028b61035836600461306a565b610ab2565b610244670de0b6b3a764000081565b6102b661037a36600461319b565b610aca565b6103a161038d366004612e05565b60056020525f908152604090205460ff1681565b60405161024e9190613257565b6103d57f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b03909116815260200161024e565b6104006103fb3660046132e2565b611008565b60405161024e91906133b4565b6103d57f000000000000000000000000000000000000000000000000000000000000000081565b6102b6610442366004613498565b611163565b61044f602081565b60405160ff909116815260200161024e565b61047461046f366004613504565b611249565b60405161024e9190613552565b6104a661048f366004612e05565b60066020525f908152604090205463ffffffff1681565b60405163ffffffff909116815260200161024e565b6103d56104c9366004612e1e565b6113ef565b6104e16104dc36600461358f565b611423565b60405161024e91906135bf565b6105016104fc366004612e1e565b6114b9565b6040805182516001600160a01b031681526020928301516001600160601b0316928101929092520161024e565b6104e161053c366004612e1e565b611530565b6102b661054f3660046135f9565b6115bd565b6102b6610562366004613621565b6115de565b61028b610575366004612e05565b5f602081905290815260409020546001600160601b031681565b6102b661059d36600461364f565b611641565b61028b6105b0366004613699565b6118b1565b6103d57f000000000000000000000000000000000000000000000000000000000000000081565b6102b66105ea3660046136d3565b61192d565b61028b6105fd366004612e05565b611a1f565b6104a661061036600461373d565b611a70565b6103d57f000000000000000000000000000000000000000000000000000000000000000081565b6102b661064a36600461376d565b611a84565b61028b61065d366004613795565b611aa0565b6104e161067036600461306a565b611b33565b61028b61068336600461373d565b611c21565b6003602052815f5260405f2081815481106106a1575f80fd5b5f918252602090912001546001600160a01b0381169250600160a01b90046001600160601b0316905082565b5f826106d881611c80565b5f6106e38585611cb2565b509250505b5092915050565b6106f7611d5d565b8461070181611c80565b83806107205760405163796cc52560e01b815260040160405180910390fd5b828114610740576040516343714afd60e01b815260040160405180910390fd5b60ff87165f908152600360205260408120905b828110156108825785858281811061076d5761076d6137d4565b905060200201602081019061078291906137e8565b82898984818110610795576107956137d4565b90506020020135815481106107ac576107ac6137d4565b905f5260205f20015f0160146101000a8154816001600160601b0302191690836001600160601b031602179055508860ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a75838a8a85818110610812576108126137d4565b9050602002013581548110610829576108296137d4565b5f918252602090912001546001600160a01b031688888581811061084f5761084f6137d4565b905060200201602081019061086491906137e8565b604051610872929190612e46565b60405180910390a2600101610753565b505050505050505050565b606080610898611e10565b5f836001600160401b038111156108b1576108b161310d565b6040519080825280602002602001820160405280156108da578160200160208202803683370190505b5090505f846001600160401b038111156108f6576108f661310d565b60405190808252806020026020018201604052801561091f578160200160208202803683370190505b5090505f5b85811015610a07575f87878381811061093f5761093f6137d4565b919091013560f81c9150610954905081611c80565b5f5f610960838d611cb2565b91509150806109825760405163207f13e360e11b815260040160405180910390fd5b5f61098e8c8585611e59565b9050828786815181106109a3576109a36137d4565b60200260200101906001600160601b031690816001600160601b0316815250506109cd84826120d2565b8686815181106109df576109df6137d4565b6001600160601b03909216602092830291909101909101525050600190920191506109249050565b509097909650945050505050565b5f82815260026020908152604080832060ff851684528252808320805482518185028101850190935280835260609492939192909184015b82821015610aa5575f848152602090819020604080516060810182529185015463ffffffff8082168452600160201b82041683850152600160401b90046001600160601b031690820152825260019092019101610a4d565b5050505090505b92915050565b5f5f610abe8484611b33565b60400151949350505050565b610ad2611d5d565b81610adc81611c80565b815180610afc5760405163796cc52560e01b815260040160405180910390fd5b60ff84165f908152600360209081526040808320600490925282209091836001600160401b03811115610b3157610b3161310d565b604051908082528060200260200182016040528015610b5a578160200160208202803683370190505b5090505f5b84811015610e555783878281518110610b7a57610b7a6137d4565b602002602001015181548110610b9257610b926137d4565b5f9182526020909120015482516001600160a01b0390911690839083908110610bbd57610bbd6137d4565b60200260200101906001600160a01b031690816001600160a01b0316815250508760ff167f31fa2e2cd280c9375e13ffcf3d81e2378100186e4058f8d3ddb690b82dcd31f785898481518110610c1557610c156137d4565b602002602001015181548110610c2d57610c2d6137d4565b5f91825260209182902001546040516001600160a01b0390911681520160405180910390a28760ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a7585898481518110610c8a57610c8a6137d4565b602002602001015181548110610ca257610ca26137d4565b5f91825260208083209190910154604080516001600160a01b039092168252918101929092520160405180910390a283548490610ce190600190613815565b81548110610cf157610cf16137d4565b905f5260205f200184888381518110610d0c57610d0c6137d4565b602002602001015181548110610d2457610d246137d4565b5f91825260209091208254910180546001600160a01b0319166001600160a01b03909216918217815591546001600160601b03600160a01b9182900416021790558354849080610d7657610d76613828565b5f8281526020812082015f199081019190915501905582548390610d9c90600190613815565b81548110610dac57610dac6137d4565b905f5260205f20015f9054906101000a90046001600160a01b031683888381518110610dda57610dda6137d4565b602002602001015181548110610df257610df26137d4565b905f5260205f20015f6101000a8154816001600160a01b0302191690836001600160a01b0316021790555082805480610e2d57610e2d613828565b5f8281526020902081015f1990810180546001600160a01b0319169055019055600101610b5f565b505f7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663de1164bb6040518163ffffffff1660e01b8152600401602060405180830381865afa158015610eb3573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190610ed7919061383c565b6040805180820182526001600160a01b03838116825260ff8c16602083015291516304c1b8eb60e31b81529293507f00000000000000000000000000000000000000000000000000000000000000009091169163260dc75891610f3c91600401613857565b602060405180830381865afa158015610f57573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190610f7b919061387d565b15610ffe5760405163b66bd98960e01b81526001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063b66bd98990610fd09084908c90879060040161389c565b5f604051808303815f87803b158015610fe7575f5ffd5b505af1158015610ff9573d5f5f3e3d5ffd5b505050505b5050505050505050565b6060611012611e10565b5f84516001600160401b0381111561102c5761102c61310d565b604051908082528060200260200182016040528015611055578160200160208202803683370190505b50905061106183611c80565b5f5f61106d8588612243565b90925090505f805b885181101561114957828181518110611090576110906137d4565b60200260200101516110f4575f8482815181106110af576110af6137d4565b60200260200101906001600160601b031690816001600160601b03168152505060018582815181106110e3576110e36137d4565b911515602092830291909101909101525b5f61113289838151811061110a5761110a6137d4565b602002602001015189878581518110611125576111256137d4565b6020026020010151611e59565b905061113e8184613906565b925050600101611075565b5061115486826120d2565b509293505050505b9392505050565b61116b611e10565b60ff83165f908152600160205260409020541561119b576040516310cda51760e21b815260040160405180910390fd5b6111a583826125e9565b6111af83836128da565b6111b9835f612942565b505060ff165f908152600160208181526040808420815160608101835263ffffffff438116825281850187815293820187815283549687018455928752939095209451949093018054915193516001600160601b0316600160401b02600160401b600160a01b0319948416600160201b0267ffffffffffffffff1990931695909316949094171791909116179055565b60605f826001600160401b038111156112645761126461310d565b60405190808252806020026020018201604052801561128d578160200160208202803683370190505b5090505f5b838110156113e6575f8585838181106112ad576112ad6137d4565b919091013560f81c91506112c2905081611c80565b60ff81165f908152600160205260408120805463ffffffff8a1692906112ea576112ea6137d4565b5f9182526020909120015463ffffffff16111561131a5760405163cc64657360e01b815260040160405180910390fd5b60ff81165f90815260016020526040812054905b818110156113db5760ff83165f90815260016020819052604090912063ffffffff8b169161135c8486613815565b6113669190613815565b81548110611376576113766137d4565b5f9182526020909120015463ffffffff16116113d35760016113988284613815565b6113a29190613815565b8585815181106113b4576113b46137d4565b602002602001019063ffffffff16908163ffffffff16815250506113db565b60010161132e565b505050600101611292565b50949350505050565b6004602052815f5260405f208181548110611408575f80fd5b5f918252602090912001546001600160a01b03169150829050565b604080516060810182525f80825260208083018290528284018290528582526002815283822060ff88168352905291909120805483908110611467576114676137d4565b5f91825260209182902060408051606081018252929091015463ffffffff8082168452600160201b82041693830193909352600160401b9092046001600160601b031691810191909152949350505050565b604080518082019091525f808252602082015260ff83165f9081526003602052604090208054839081106114ef576114ef6137d4565b5f918252602091829020604080518082019091529101546001600160a01b0381168252600160a01b90046001600160601b0316918101919091529392505050565b604080516060810182525f808252602080830182905282840182905260ff86168252600190529190912080548390811061156c5761156c6137d4565b5f91825260209182902060408051606081018252929091015463ffffffff8082168452600160201b82041693830193909352600160401b9092046001600160601b0316918101919091529392505050565b6115c5611d5d565b816115cf81611c80565b6115d983836128da565b505050565b6115e6611e10565b5f5b8181101561163b575f838383818110611603576116036137d4565b919091013560f81c9150611618905081611c80565b5f61162486835f611e59565b905061163082826120d2565b5050506001016115e8565b50505050565b611649611d5d565b8161165381611c80565b61165d83836125e9565b5f825190505f7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663de1164bb6040518163ffffffff1660e01b8152600401602060405180830381865afa1580156116bf573d5f5f3e3d5ffd5b505050506040513d601f19601f820116820180604052508101906116e3919061383c565b6040805180820182526001600160a01b03838116825260ff8916602083015291516304c1b8eb60e31b81529293507f00000000000000000000000000000000000000000000000000000000000000009091169163260dc7589161174891600401613857565b602060405180830381865afa158015611763573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190611787919061387d565b156118aa575f826001600160401b038111156117a5576117a561310d565b6040519080825280602002602001820160405280156117ce578160200160208202803683370190505b5090505f5b8381101561182a578581815181106117ed576117ed6137d4565b60200260200101515f015182828151811061180a5761180a6137d4565b6001600160a01b03909216602092830291909101909101526001016117d3565b50604051630287f75160e51b81526001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016906350feea209061187b9085908a90869060040161389c565b5f604051808303815f87803b158015611892575f5ffd5b505af11580156118a4573d5f5f3e3d5ffd5b50505050505b5050505050565b60ff83165f9081526001602052604081208054829190849081106118d7576118d76137d4565b5f91825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b90930492909216908201529050610abe81856129af565b611935611e10565b60ff84165f9081526001602052604090205415611965576040516310cda51760e21b815260040160405180910390fd5b61196f84826125e9565b61197984846128da565b611984846001612942565b61198e8483612a26565b50505060ff165f908152600160208181526040808420815160608101835263ffffffff438116825281850187815293820187815283549687018455928752939095209451949093018054915193516001600160601b0316600160401b02600160401b600160a01b0319948416600160201b0267ffffffffffffffff1990931695909316949094171791909116179055565b60ff81165f908152600160208190526040822080549091611a3f91613815565b81548110611a4f57611a4f6137d4565b5f91825260209091200154600160401b90046001600160601b031692915050565b5f611a7c848484612ad7565b949350505050565b611a8c611d5d565b81611a9681611c80565b6115d98383612a26565b5f82815260026020908152604080832060ff881684529091528120805482919084908110611ad057611ad06137d4565b5f91825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b90930492909216908201529050611b2681866129af565b6040015195945050505050565b60408051606080820183525f80835260208084018290528385018290528682526002815284822060ff8716835281528482205485519384018652828452908301829052938201819052919291829003611b8f579150610aac9050565b5f85815260026020908152604080832060ff881684529091529020611bb5600184613815565b81548110611bc557611bc56137d4565b5f91825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b90930492909216908201529250610aac915050565b505092915050565b5f83815260026020908152604080832060ff861684529091528120611c47858585612ad7565b63ffffffff1681548110611c5d57611c5d6137d4565b5f91825260209091200154600160401b90046001600160601b0316949350505050565b60ff81165f90815260016020526040902054611caf57604051637310cff560e11b815260040160405180910390fd5b50565b6040805160018082528183019092525f91829182916020808301908036833701905050905083815f81518110611cea57611cea6137d4565b60200260200101906001600160a01b031690816001600160a01b0316815250505f5f611d168784612243565b91509150815f81518110611d2c57611d2c6137d4565b6020026020010151815f81518110611d4657611d466137d4565b6020026020010151945094505050505b9250929050565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316638da5cb5b6040518163ffffffff1660e01b8152600401602060405180830381865afa158015611db9573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190611ddd919061383c565b6001600160a01b0316336001600160a01b031614611e0e5760405163ce98c24b60e01b815260040160405180910390fd5b565b336001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001614611e0e57604051632c01b20560e21b815260040160405180910390fd5b5f83815260026020908152604080832060ff861684529091528120548190808203611f1d575f86815260026020908152604080832060ff891684528252808320815160608101835263ffffffff43811682528185018681526001600160601b03808c16958401958652845460018101865594885295909620915191909201805495519351909416600160401b02600160401b600160a01b0319938316600160201b0267ffffffffffffffff1990961691909216179390931716919091179055612078565b5f86815260026020908152604080832060ff891684529091528120611f43600184613815565b81548110611f5357611f536137d4565b5f91825260209091200180546001600160601b03600160401b9091048116945090915085168303611f89575f935050505061115c565b805463ffffffff438116911603611fc1578054600160401b600160a01b031916600160401b6001600160601b03871602178155612076565b805467ffffffff000000001916600160201b4363ffffffff9081168281029390931784555f8a815260026020908152604080832060ff8d168452825280832081516060810183529687528683018481526001600160601b038d81169389019384528254600181018455928652939094209651960180549351915196851667ffffffffffffffff1990941693909317931690930291909117600160401b600160a01b031916600160401b93909216929092021790555b505b6040805160ff871681526001600160601b038616602082015287917f2f527d527e95d8fe40aec55377743bb779087da3f6d0d08f12e36444da62327d910160405180910390a26120c88285612c3e565b9695505050505050565b60ff82165f90815260016020819052604082208054918391906120f59084613815565b81548110612105576121056137d4565b905f5260205f20019050835f036121305754600160401b90046001600160601b03169150610aac9050565b80545f9061214e90600160401b90046001600160601b031686612c55565b825490915063ffffffff438116911603612189578154600160401b600160a01b031916600160401b6001600160601b0383160217825561223a565b815463ffffffff438116600160201b81810267ffffffff000000001990941693909317855560ff89165f90815260016020818152604080842081516060810183529586528583018581526001600160601b03808b169388019384528254958601835591865292909420945194909201805491519251909316600160401b02600160401b600160a01b031992861690960267ffffffffffffffff19909116939094169290921792909217169190911790555b95945050505050565b6060805f83516001600160401b038111156122605761226061310d565b604051908082528060200260200182016040528015612289578160200160208202803683370190505b5090505f84516001600160401b038111156122a6576122a661310d565b6040519080825280602002602001820160405280156122cf578160200160208202803683370190505b5090505f6122eb8760ff165f9081526003602052604090205490565b60ff88165f90815260036020908152604080832080548251818502810185019093528083529495509293909291849084015b8282101561236b575f84815260209081902060408051808201909152908401546001600160a01b0381168252600160a01b90046001600160601b03168183015282526001909201910161231d565b505050509050606060018081111561238557612385613243565b60ff808b165f908152600560205260409020541660018111156123aa576123aa613243565b036123c0576123b98989612c82565b9050612463565b60ff89165f908152600460208190526040918290209151637870733b60e11b81526001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169263f0e0e6769261241f928d92910161399a565b5f60405180830381865afa158015612439573d5f5f3e3d5ffd5b505050506040513d5f823e601f3d908101601f1916820160405261246091908101906139be565b90505b5f5b88518110156125d9575f5b84811015612569575f84828151811061248b5761248b6137d4565b602002602001015190505f8484815181106124a8576124a86137d4565b602002602001015183815181106124c1576124c16137d4565b6020026020010151111561256057670de0b6b3a764000081602001516001600160601b03168585815181106124f8576124f86137d4565b60200260200101518481518110612511576125116137d4565b60200260200101516125239190613aca565b61252d9190613ae1565b88848151811061253f5761253f6137d4565b602002602001018181516125539190613b00565b6001600160601b03169052505b50600101612470565b5060ff8a165f9081526020819052604090205486516001600160601b039091169087908390811061259c5761259c6137d4565b60200260200101516001600160601b031610158582815181106125c1576125c16137d4565b91151560209283029190910190910152600101612465565b5093989297509195505050505050565b5f81511161260a5760405163796cc52560e01b815260040160405180910390fd5b805160ff83165f908152600360209081526040909120549061262c8383613b1f565b111561264b576040516343714afd60e01b815260040160405180910390fd5b5f5b828110156118aa575f5b6126618284613b1f565b8110156126f05784828151811061267a5761267a6137d4565b60200260200101515f01516001600160a01b031660035f8860ff1660ff1681526020019081526020015f2082815481106126b6576126b66137d4565b5f918252602090912001546001600160a01b0316036126e857604051637b74340b60e01b815260040160405180910390fd5b600101612657565b505f848281518110612704576127046137d4565b6020026020010151602001516001600160601b03161161273757604051637257125160e01b815260040160405180910390fd5b60ff85165f908152600360205260409020845185908390811061275c5761275c6137d4565b60209081029190910181015182546001810184555f9384528284208251928401516001600160601b0316600160a01b026001600160a01b039093169290921791015560ff87168252600490526040902084518590839081106127c0576127c06137d4565b6020908102919091018101515182546001810184555f938452919092200180546001600160a01b0319166001600160a01b03909216919091179055835160ff8616907f10565e56cacbf32eca267945f054fec02e59750032d113d3302182ad967f540490869084908110612836576128366137d4565b602090810291909101810151516040516001600160a01b0390911681520160405180910390a28460ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a75858381518110612893576128936137d4565b60200260200101515f01518684815181106128b0576128b06137d4565b6020026020010151602001516040516128ca929190612e46565b60405180910390a260010161264d565b60ff82165f818152602081815260409182902080546bffffffffffffffffffffffff19166001600160601b03861690811790915591519182527f26eecff2b70b0a71104ff4d940ba7162d23a95c248771fc487a7be17a596b3cf910160405180910390a25050565b60ff82165f908152600560205260409020805482919060ff19166001838181111561296f5761296f613243565b02179055507f7c112e863ccf007862e2c9e25819c933fedbc9350a6443423b4a8599c2e8a52d816040516129a39190613257565b60405180910390a15050565b815f015163ffffffff168163ffffffff1610156129df57604051631391e11b60e21b815260040160405180910390fd5b602082015163ffffffff161580612a055750816020015163ffffffff168163ffffffff16105b612a2257604051631391e11b60e21b815260040160405180910390fd5b5050565b600160ff8084165f90815260056020526040902054166001811115612a4d57612a4d613243565b14612a6b5760405163a3be258360e01b815260040160405180910390fd5b60ff82165f90815260066020908152604091829020805463ffffffff19811663ffffffff8681169182179093558451929091168083529282015290917f28d7358b79f02d21b8b7e17aefc4185a64308aa37406fa5befc05b91932c39c7910160405180910390a1505050565b5f83815260026020908152604080832060ff86168452909152812054805b8015612b75575f86815260026020908152604080832060ff89168452909152902063ffffffff851690612b29600184613815565b81548110612b3957612b396137d4565b5f9182526020909120015463ffffffff1611612b6357612b5a600182613815565b9250505061115c565b80612b6d81613b32565b915050612af5565b5060405162461bcd60e51b815260206004820152608160248201527f5374616b6552656769737472792e5f6765745374616b65557064617465496e6460448201527f6578466f724f70657261746f724174426c6f636b4e756d6265723a206e6f207360648201527f74616b652075706461746520666f756e6420666f72206f70657261746f72496460848201527f20616e642071756f72756d4e756d62657220617420626c6f636b206e756d626560a4820152603960f91b60c482015260e40160405180910390fd5b5f61115c6001600160601b03808516908416613b47565b5f5f821215612c7857612c6782613b66565b612c719084613b80565b9050610aac565b612c718284613b00565b60ff82165f9081526006602052604081205460609190612ca89063ffffffff1643613b1f565b90505f7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316632bab2c4a60405180604001604052807f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663de1164bb6040518163ffffffff1660e01b8152600401602060405180830381865afa158015612d41573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190612d65919061383c565b6001600160a01b0316815260ff891660209182018190525f90815260049182905260409081902090516001600160e01b031960e086901b168152612daf93928a9291899101613b9f565b5f60405180830381865afa158015612dc9573d5f5f3e3d5ffd5b505050506040513d5f823e601f3d908101601f1916820160405261223a91908101906139be565b803560ff81168114612e00575f5ffd5b919050565b5f60208284031215612e15575f5ffd5b61115c82612df0565b5f5f60408385031215612e2f575f5ffd5b612e3883612df0565b946020939093013593505050565b6001600160a01b039290921682526001600160601b0316602082015260400190565b6001600160a01b0381168114611caf575f5ffd5b5f5f60408385031215612e8d575f5ffd5b612e9683612df0565b91506020830135612ea681612e68565b809150509250929050565b5f5f83601f840112612ec1575f5ffd5b5081356001600160401b03811115612ed7575f5ffd5b6020830191508360208260051b8501011115611d56575f5ffd5b5f5f5f5f5f60608688031215612f05575f5ffd5b612f0e86612df0565b945060208601356001600160401b03811115612f28575f5ffd5b612f3488828901612eb1565b90955093505060408601356001600160401b03811115612f52575f5ffd5b612f5e88828901612eb1565b969995985093965092949392505050565b5f5f83601f840112612f7f575f5ffd5b5081356001600160401b03811115612f95575f5ffd5b602083019150836020828501011115611d56575f5ffd5b5f5f5f5f60608587031215612fbf575f5ffd5b8435612fca81612e68565b93506020850135925060408501356001600160401b03811115612feb575f5ffd5b612ff787828801612f6f565b95989497509550505050565b5f8151808452602084019350602083015f5b8281101561303c5781516001600160601b0316865260209586019590910190600101613015565b5093949350505050565b604081525f6130586040830185613003565b828103602084015261223a8185613003565b5f5f6040838503121561307b575f5ffd5b8235915061308b60208401612df0565b90509250929050565b602080825282518282018190525f918401906040840190835b81811015613102576130ec83855163ffffffff815116825263ffffffff60208201511660208301526001600160601b0360408201511660408301525050565b60209390930192606092909201916001016130ad565b509095945050505050565b634e487b7160e01b5f52604160045260245ffd5b604080519081016001600160401b03811182821017156131435761314361310d565b60405290565b604051601f8201601f191681016001600160401b03811182821017156131715761317161310d565b604052919050565b5f6001600160401b038211156131915761319161310d565b5060051b60200190565b5f5f604083850312156131ac575f5ffd5b6131b583612df0565b915060208301356001600160401b038111156131cf575f5ffd5b8301601f810185136131df575f5ffd5b80356131f26131ed82613179565b613149565b8082825260208201915060208360051b850101925087831115613213575f5ffd5b6020840193505b8284101561323557833582526020938401939091019061321a565b809450505050509250929050565b634e487b7160e01b5f52602160045260245ffd5b602081016002831061327757634e487b7160e01b5f52602160045260245ffd5b91905290565b5f82601f83011261328c575f5ffd5b813561329a6131ed82613179565b8082825260208201915060208360051b8601019250858311156132bb575f5ffd5b602085015b838110156132d85780358352602092830192016132c0565b5095945050505050565b5f5f5f606084860312156132f4575f5ffd5b83356001600160401b03811115613309575f5ffd5b8401601f81018613613319575f5ffd5b80356133276131ed82613179565b8082825260208201915060208360051b850101925088831115613348575f5ffd5b6020840193505b8284101561337357833561336281612e68565b82526020938401939091019061334f565b955050505060208401356001600160401b03811115613390575f5ffd5b61339c8682870161327d565b9250506133ab60408501612df0565b90509250925092565b602080825282518282018190525f918401906040840190835b8181101561310257835115158352602093840193909201916001016133cd565b80356001600160601b0381168114612e00575f5ffd5b5f82601f830112613412575f5ffd5b81356134206131ed82613179565b8082825260208201915060208360061b860101925085831115613441575f5ffd5b602085015b838110156132d8576040818803121561345d575f5ffd5b613465613121565b813561347081612e68565b815261347e602083016133ed565b602082015280845250602083019250604081019050613446565b5f5f5f606084860312156134aa575f5ffd5b6134b384612df0565b92506134c1602085016133ed565b915060408401356001600160401b038111156134db575f5ffd5b6134e786828701613403565b9150509250925092565b803563ffffffff81168114612e00575f5ffd5b5f5f5f60408486031215613516575f5ffd5b61351f846134f1565b925060208401356001600160401b03811115613539575f5ffd5b61354586828701612f6f565b9497909650939450505050565b602080825282518282018190525f918401906040840190835b8181101561310257835163ffffffff1683526020938401939092019160010161356b565b5f5f5f606084860312156135a1575f5ffd5b6135aa84612df0565b95602085013595506040909401359392505050565b60608101610aac828463ffffffff815116825263ffffffff60208201511660208301526001600160601b0360408201511660408301525050565b5f5f6040838503121561360a575f5ffd5b61361383612df0565b915061308b602084016133ed565b5f5f5f60408486031215613633575f5ffd5b8335925060208401356001600160401b03811115613539575f5ffd5b5f5f60408385031215613660575f5ffd5b61366983612df0565b915060208301356001600160401b03811115613683575f5ffd5b61368f85828601613403565b9150509250929050565b5f5f5f606084860312156136ab575f5ffd5b6136b484612df0565b92506136c2602085016134f1565b929592945050506040919091013590565b5f5f5f5f608085870312156136e6575f5ffd5b6136ef85612df0565b93506136fd602086016133ed565b925061370b604086016134f1565b915060608501356001600160401b03811115613725575f5ffd5b61373187828801613403565b91505092959194509250565b5f5f5f6060848603121561374f575f5ffd5b8335925061375f60208501612df0565b91506133ab604085016134f1565b5f5f6040838503121561377e575f5ffd5b61378783612df0565b915061308b602084016134f1565b5f5f5f5f608085870312156137a8575f5ffd5b6137b185612df0565b93506137bf602086016134f1565b93969395505050506040820135916060013590565b634e487b7160e01b5f52603260045260245ffd5b5f602082840312156137f8575f5ffd5b61115c826133ed565b634e487b7160e01b5f52601160045260245ffd5b81810381811115610aac57610aac613801565b634e487b7160e01b5f52603160045260245ffd5b5f6020828403121561384c575f5ffd5b815161115c81612e68565b81516001600160a01b0316815260208083015163ffffffff169082015260408101610aac565b5f6020828403121561388d575f5ffd5b8151801515811461115c575f5ffd5b6001600160a01b038416815260ff831660208083019190915260606040830181905283519083018190525f918401906080840190835b818110156138f95783516001600160a01b03168352602093840193909201916001016138d2565b5090979650505050505050565b8082018281125f831280158216821582161715611c1957611c19613801565b5f8151808452602084019350602083015f5b8281101561303c5781516001600160a01b0316865260209586019590910190600101613937565b5f8154808452602084019350825f5260205f205f5b8281101561303c5781546001600160a01b0316865260209095019460019182019101613973565b604081525f6139ac6040830185613925565b828103602084015261223a818561395e565b5f602082840312156139ce575f5ffd5b81516001600160401b038111156139e3575f5ffd5b8201601f810184136139f3575f5ffd5b8051613a016131ed82613179565b8082825260208201915060208360051b850101925086831115613a22575f5ffd5b602084015b83811015613abf5780516001600160401b03811115613a44575f5ffd5b8501603f81018913613a54575f5ffd5b6020810151613a656131ed82613179565b808282526020820191506020808460051b8601010192508b831115613a88575f5ffd5b6040840193505b82841015613aaa578351825260209384019390910190613a8f565b86525050602093840193919091019050613a27565b509695505050505050565b8082028115828204841417610aac57610aac613801565b5f82613afb57634e487b7160e01b5f52601260045260245ffd5b500490565b6001600160601b038181168382160190811115610aac57610aac613801565b80820180821115610aac57610aac613801565b5f81613b4057613b40613801565b505f190190565b8181035f8312801583831316838312821617156106e8576106e8613801565b5f600160ff1b8201613b7a57613b7a613801565b505f0390565b6001600160601b038281168282160390811115610aac57610aac613801565b84516001600160a01b0316815260208086015163ffffffff169082015260a060408201525f613bd160a0830186613925565b8281036060840152613be3818661395e565b91505063ffffffff831660808301529594505050505056fea26469706673582212204b6f050edec86a77697ad4997d6e809eddad8eeda99907e48e2fbb5f90d8e0e164736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\xC0`@R4\x80\x15b\0\0\x11W`\0\x80\xFD[P`@Qb\x003\xC88\x03\x80b\x003\xC8\x839\x81\x01`@\x81\x90Rb\0\x004\x91b\0\0eV[`\x01`\x01`\xA0\x1B\x03\x91\x82\x16`\xA0R\x16`\x80Rb\0\0\xA4V[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14b\0\0bW`\0\x80\xFD[PV[`\0\x80`@\x83\x85\x03\x12\x15b\0\0yW`\0\x80\xFD[\x82Qb\0\0\x86\x81b\0\0LV[` \x84\x01Q\x90\x92Pb\0\0\x99\x81b\0\0LV[\x80\x91PP\x92P\x92\x90PV[`\x80Q`\xA0Qa2\xE9b\0\0\xDF`\09`\0\x81\x81a\x03z\x01R\x81\x81a\x1AG\x01Ra\x1By\x01R`\0\x81\x81a\x05)\x01Ra\x18\xA8\x01Ra2\xE9`\0\xF3\xFE`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\x01\xE5W`\x005`\xE0\x1C\x80c\x9F<\xCFe\x11a\x01\x0FW\x80c\xC8)LV\x11a\0\xA2W\x80c\xF2\xBE\x94\xAE\x11a\0qW\x80c\xF2\xBE\x94\xAE\x14a\x05KW\x80c\xF8Q\xE1\x98\x14a\x05^W\x80c\xFA(\xC6'\x14a\x05qW\x80c\xFFiJw\x14a\x05\x84W`\0\x80\xFD[\x80c\xC8)LV\x14a\x04\xD6W\x80c\xD5\xEC\xCC\x05\x14a\x04\xE9W\x80c\xDD\x98F\xB9\x14a\x04\xFCW\x80c\xDF\\\xF7#\x14a\x05$W`\0\x80\xFD[\x80c\xBC\x9A@\xC3\x11a\0\xDEW\x80c\xBC\x9A@\xC3\x14a\x04tW\x80c\xBD)\xB8\xCD\x14a\x04\x87W\x80c\xC4gx\xA5\x14a\x04\x9AW\x80c\xC6\x01R}\x14a\x04\xC3W`\0\x80\xFD[\x80c\x9F<\xCFe\x14a\x03\xEEW\x80c\xACk\xFB\x03\x14a\x04\x01W\x80c\xAD\xC8\x04\xDA\x14a\x04!W\x80c\xB6\x90Kx\x14a\x04aW`\0\x80\xFD[\x80cK\xD2n\t\x11a\x01\x87W\x80cf\xAC\xFE\xFE\x11a\x01VW\x80cf\xAC\xFE\xFE\x14a\x03JW\x80cm\x14\xA9\x87\x14a\x03uW\x80c|\x17#G\x14a\x03\xB4W\x80c\x81\xC0u\x02\x14a\x03\xCEW`\0\x80\xFD[\x80cK\xD2n\t\x14a\x02\xE5W\x80cT\x01\xED'\x14a\x03\x15W\x80c^Zgu\x14a\x03(W\x80c_\x1F-w\x14a\x037W`\0\x80\xFD[\x80c \xB6b\x98\x11a\x01\xC3W\x80c \xB6b\x98\x14a\x02lW\x80c%PGw\x14a\x02\x81W\x80c,\xD9Y@\x14a\x02\xA2W\x80c<\xA5\xA5\xF5\x14a\x02\xC2W`\0\x80\xFD[\x80c\x04\x91\xB4\x1C\x14a\x01\xEAW\x80c\x08s$a\x14a\x02 W\x80c\x1F\x9Bt\xE0\x14a\x02AW[`\0\x80\xFD[a\x02\ra\x01\xF86`\x04a(\x03V[`\xFF\x16`\0\x90\x81R`\x01` R`@\x90 T\x90V[`@Q\x90\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\x023a\x02.6`\x04a(\x1EV[a\x05\x97V[`@Qa\x02\x17\x92\x91\x90a(HV[a\x02Ta\x02O6`\x04a(\x7FV[a\x05\xE0V[`@Q`\x01`\x01``\x1B\x03\x90\x91\x16\x81R` \x01a\x02\x17V[a\x02\x7Fa\x02z6`\x04a(\xFAV[a\x06\x02V[\0[a\x02\x94a\x02\x8F6`\x04a)\xBBV[a\x08`V[`@Qa\x02\x17\x92\x91\x90a*ZV[a\x02\xB5a\x02\xB06`\x04a*\x7FV[a\nxV[`@Qa\x02\x17\x91\x90a*\xABV[a\x02\ra\x02\xD06`\x04a(\x03V[`\xFF\x16`\0\x90\x81R`\x03` R`@\x90 T\x90V[a\x02\ra\x02\xF36`\x04a*\x7FV[`\0\x91\x82R`\x02` \x90\x81R`@\x80\x84 `\xFF\x93\x90\x93\x16\x84R\x91\x90R\x90 T\x90V[a\x02Ta\x03#6`\x04a*\x7FV[a\x0B\x17V[a\x02\rg\r\xE0\xB6\xB3\xA7d\0\0\x81V[a\x02\x7Fa\x03E6`\x04a+\xB4V[a\x0B0V[a\x03]a\x03X6`\x04a)\xBBV[a\x0ExV[`@Q`\x01`\x01`\xC0\x1B\x03\x90\x91\x16\x81R` \x01a\x02\x17V[a\x03\x9C\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01a\x02\x17V[a\x03\xBC` \x81V[`@Q`\xFF\x90\x91\x16\x81R` \x01a\x02\x17V[a\x03\xE1a\x03\xDC6`\x04a,pV[a\x0F\x17V[`@Qa\x02\x17\x91\x90a,\xC2V[a\x03\x9Ca\x03\xFC6`\x04a(\x1EV[a\x11WV[a\x04\x14a\x04\x0F6`\x04a-\0V[a\x11\x8FV[`@Qa\x02\x17\x91\x90a-3V[a\x044a\x04/6`\x04a(\x1EV[a\x12'V[`@\x80Q\x82Q`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x92\x83\x01Q`\x01`\x01``\x1B\x03\x16\x92\x81\x01\x92\x90\x92R\x01a\x02\x17V[a\x04\x14a\x04o6`\x04a(\x1EV[a\x12\xA1V[a\x02\x7Fa\x04\x826`\x04a-\x7FV[a\x130V[a\x02\x7Fa\x04\x956`\x04a-\xA9V[a\x13QV[a\x02Ta\x04\xA86`\x04a(\x03V[`\0` \x81\x90R\x90\x81R`@\x90 T`\x01`\x01``\x1B\x03\x16\x81V[a\x02\x7Fa\x04\xD16`\x04a.uV[a\x13\xC3V[a\x02Ta\x04\xE46`\x04a.\xC2V[a\x13\xDFV[a\x02Ta\x04\xF76`\x04a(\x03V[a\x14]V[a\x05\x0Fa\x05\n6`\x04a.\xFEV[a\x14\xB0V[`@Qc\xFF\xFF\xFF\xFF\x90\x91\x16\x81R` \x01a\x02\x17V[a\x03\x9C\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x02Ta\x05Y6`\x04a/:V[a\x14\xC5V[a\x04\x14a\x05l6`\x04a*\x7FV[a\x15ZV[a\x02Ta\x05\x7F6`\x04a.\xFEV[a\x16?V[a\x02\x7Fa\x05\x926`\x04a/|V[a\x16\xA0V[`\x03` R\x81`\0R`@`\0 \x81\x81T\x81\x10a\x05\xB3W`\0\x80\xFD[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x92P`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x90P\x82V[`\0\x82a\x05\xEC\x81a\x17\xCBV[`\0a\x05\xF8\x85\x85a\x18GV[P\x95\x94PPPPPV[a\x06\na\x1AEV[\x84a\x06\x14\x81a\x17\xCBV[\x83\x80a\x06\x8FW`@\x80QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`$\x81\x01\x91\x90\x91R\x7FStakeRegistry.modifyStrategyPara`D\x82\x01R\x7Fms: no strategy indices provided`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[\x82\x81\x14a\x07\x04W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`9`$\x82\x01R\x7FStakeRegistry.modifyStrategyPara`D\x82\x01R\x7Fms: input length mismatch\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x06\x86V[`\xFF\x87\x16`\0\x90\x81R`\x03` R`@\x81 \x90[\x82\x81\x10\x15a\x08UW\x85\x85\x82\x81\x81\x10a\x072Wa\x072a/\xD9V[\x90P` \x02\x01` \x81\x01\x90a\x07G\x91\x90a/\xEFV[\x82\x89\x89\x84\x81\x81\x10a\x07ZWa\x07Za/\xD9V[\x90P` \x02\x015\x81T\x81\x10a\x07qWa\x07qa/\xD9V[\x90`\0R` `\0 \x01`\0\x01`\x14a\x01\0\n\x81T\x81`\x01`\x01``\x1B\x03\x02\x19\x16\x90\x83`\x01`\x01``\x1B\x03\x16\x02\x17\x90UP\x88`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x83\x8A\x8A\x85\x81\x81\x10a\x07\xDAWa\x07\xDAa/\xD9V[\x90P` \x02\x015\x81T\x81\x10a\x07\xF1Wa\x07\xF1a/\xD9V[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x88\x88\x85\x81\x81\x10a\x08\x18Wa\x08\x18a/\xD9V[\x90P` \x02\x01` \x81\x01\x90a\x08-\x91\x90a/\xEFV[`@Qa\x08;\x92\x91\x90a(HV[`@Q\x80\x91\x03\x90\xA2\x80a\x08M\x81a0 V[\x91PPa\x07\x18V[PPPPPPPPPV[``\x80a\x08ka\x1BnV[`\0\x83`\x01`\x01`@\x1B\x03\x81\x11\x15a\x08\x85Wa\x08\x85a+#V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x08\xAEW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P`\0\x84`\x01`\x01`@\x1B\x03\x81\x11\x15a\x08\xCBWa\x08\xCBa+#V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x08\xF4W\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P`\0[\x85\x81\x10\x15a\njW`\0\x87\x87\x83\x81\x81\x10a\t\x16Wa\t\x16a/\xD9V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\t+\x90P\x81a\x17\xCBV[`\0\x80a\t8\x83\x8Da\x18GV[\x91P\x91P\x80a\t\xD5W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`[`$\x82\x01R\x7FStakeRegistry.registerOperator: `D\x82\x01R\x7FOperator does not meet minimum s`d\x82\x01R\x7Ftake requirement for quorum\0\0\0\0\0`\x84\x82\x01R`\xA4\x01a\x06\x86V[`\0a\t\xE2\x8C\x85\x85a\x1C!V[\x90P\x82\x87\x86\x81Q\x81\x10a\t\xF7Wa\t\xF7a/\xD9V[` \x02` \x01\x01\x90`\x01`\x01``\x1B\x03\x16\x90\x81`\x01`\x01``\x1B\x03\x16\x81RPPa\n!\x84\x82a\x1E\xA1V[\x86\x86\x81Q\x81\x10a\n3Wa\n3a/\xD9V[` \x02` \x01\x01\x90`\x01`\x01``\x1B\x03\x16\x90\x81`\x01`\x01``\x1B\x03\x16\x81RPPPPPP\x80\x80a\nb\x90a0 V[\x91PPa\x08\xFAV[P\x90\x97\x90\x96P\x94PPPPPV[`\0\x82\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x85\x16\x84R\x82R\x80\x83 \x80T\x82Q\x81\x85\x02\x81\x01\x85\x01\x90\x93R\x80\x83R``\x94\x92\x93\x91\x92\x90\x91\x84\x01[\x82\x82\x10\x15a\x0B\nW`\0\x84\x81R` \x90\x81\x90 `@\x80Q``\x81\x01\x82R\x91\x85\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x83\x85\x01R`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x90\x82\x01R\x82R`\x01\x90\x92\x01\x91\x01a\n\xB1V[PPPP\x90P[\x92\x91PPV[`\0\x80a\x0B$\x84\x84a\x15ZV[`@\x01Q\x94\x93PPPPV[a\x0B8a\x1AEV[\x81a\x0BB\x81a\x17\xCBV[\x81Q\x80a\x0B\xB7W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`=`$\x82\x01R\x7FStakeRegistry.removeStrategies: `D\x82\x01R\x7Fno indices to remove provided\0\0\0`d\x82\x01R`\x84\x01a\x06\x86V[`\xFF\x84\x16`\0\x90\x81R`\x03` \x90\x81R`@\x80\x83 `\x04\x90\x92R\x82 \x90\x91[\x83\x81\x10\x15a\x0EoW\x86`\xFF\x16\x7F1\xFA.,\xD2\x80\xC97^\x13\xFF\xCF=\x81\xE27\x81\0\x18n@X\xF8\xD3\xDD\xB6\x90\xB8-\xCD1\xF7\x84\x88\x84\x81Q\x81\x10a\x0C\x16Wa\x0C\x16a/\xD9V[` \x02` \x01\x01Q\x81T\x81\x10a\x0C.Wa\x0C.a/\xD9V[`\0\x91\x82R` \x91\x82\x90 \x01T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R\x01`@Q\x80\x91\x03\x90\xA2\x86`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x84\x88\x84\x81Q\x81\x10a\x0C\x8CWa\x0C\x8Ca/\xD9V[` \x02` \x01\x01Q\x81T\x81\x10a\x0C\xA4Wa\x0C\xA4a/\xD9V[`\0\x91\x82R` \x80\x83 \x91\x90\x91\x01T`@\x80Q`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x82R\x91\x81\x01\x92\x90\x92R\x01`@Q\x80\x91\x03\x90\xA2\x82T\x83\x90a\x0C\xE4\x90`\x01\x90a0;V[\x81T\x81\x10a\x0C\xF4Wa\x0C\xF4a/\xD9V[\x90`\0R` `\0 \x01\x83\x87\x83\x81Q\x81\x10a\r\x11Wa\r\x11a/\xD9V[` \x02` \x01\x01Q\x81T\x81\x10a\r)Wa\r)a/\xD9V[`\0\x91\x82R` \x90\x91 \x82T\x91\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x91\x82\x17\x81U\x91T`\x01`\x01``\x1B\x03`\x01`\xA0\x1B\x91\x82\x90\x04\x16\x02\x17\x90U\x82T\x83\x90\x80a\r|Wa\r|a0RV[`\0\x82\x81R` \x81 \x82\x01`\0\x19\x90\x81\x01\x91\x90\x91U\x01\x90U\x81T\x82\x90a\r\xA4\x90`\x01\x90a0;V[\x81T\x81\x10a\r\xB4Wa\r\xB4a/\xD9V[\x90`\0R` `\0 \x01`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16\x82\x87\x83\x81Q\x81\x10a\r\xE5Wa\r\xE5a/\xD9V[` \x02` \x01\x01Q\x81T\x81\x10a\r\xFDWa\r\xFDa/\xD9V[\x90`\0R` `\0 \x01`\0a\x01\0\n\x81T\x81`\x01`\x01`\xA0\x1B\x03\x02\x19\x16\x90\x83`\x01`\x01`\xA0\x1B\x03\x16\x02\x17\x90UP\x81\x80T\x80a\x0E;Wa\x0E;a0RV[`\0\x82\x81R` \x90 \x81\x01`\0\x19\x90\x81\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x90U\x01\x90U\x80a\x0Eg\x81a0 V[\x91PPa\x0B\xD6V[PPPPPPPV[`\0a\x0E\x82a\x1BnV[`\0\x80[\x83\x81\x10\x15a\x05\xF8W`\0\x85\x85\x83\x81\x81\x10a\x0E\xA2Wa\x0E\xA2a/\xD9V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\x0E\xB7\x90P\x81a\x17\xCBV[`\0\x80a\x0E\xC4\x83\x8Ba\x18GV[\x91P\x91P\x80a\x0E\xE6W`\0\x91P`\x01`\xFF\x84\x16\x1B`\x01`\x01`\xC0\x1B\x03\x86\x16\x17\x94P[`\0a\x0E\xF3\x8A\x85\x85a\x1C!V[\x90Pa\x0E\xFF\x84\x82a\x1E\xA1V[PPPPP\x80\x80a\x0F\x0F\x90a0 V[\x91PPa\x0E\x86V[```\0\x82`\x01`\x01`@\x1B\x03\x81\x11\x15a\x0F3Wa\x0F3a+#V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x0F\\W\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P`\0[\x83\x81\x10\x15a\x11LW`\0\x85\x85\x83\x81\x81\x10a\x0F~Wa\x0F~a/\xD9V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\x0F\x93\x90P\x81a\x17\xCBV[`\xFF\x81\x16`\0\x90\x81R`\x01` R`@\x81 \x80Tc\xFF\xFF\xFF\xFF\x8A\x16\x92\x90a\x0F\xBCWa\x0F\xBCa/\xD9V[`\0\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11\x15a\x10hW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`[`$\x82\x01R\x7FStakeRegistry.getTotalStakeIndic`D\x82\x01R\x7FesAtBlockNumber: quorum has no s`d\x82\x01R\x7Ftake history at blockNumber\0\0\0\0\0`\x84\x82\x01R`\xA4\x01a\x06\x86V[`\xFF\x81\x16`\0\x90\x81R`\x01` R`@\x81 T\x90[\x81\x81\x10\x15a\x116W`\xFF\x83\x16`\0\x90\x81R`\x01` \x81\x90R`@\x90\x91 c\xFF\xFF\xFF\xFF\x8B\x16\x91a\x10\xAC\x84\x86a0;V[a\x10\xB6\x91\x90a0;V[\x81T\x81\x10a\x10\xC6Wa\x10\xC6a/\xD9V[`\0\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11a\x11$W`\x01a\x10\xE9\x82\x84a0;V[a\x10\xF3\x91\x90a0;V[\x85\x85\x81Q\x81\x10a\x11\x05Wa\x11\x05a/\xD9V[` \x02` \x01\x01\x90c\xFF\xFF\xFF\xFF\x16\x90\x81c\xFF\xFF\xFF\xFF\x16\x81RPPa\x116V[\x80a\x11.\x81a0 V[\x91PPa\x10}V[PPP\x80\x80a\x11D\x90a0 V[\x91PPa\x0FbV[P\x90P[\x93\x92PPPV[`\x04` R\x81`\0R`@`\0 \x81\x81T\x81\x10a\x11sW`\0\x80\xFD[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x91P\x82\x90PV[`@\x80Q``\x81\x01\x82R`\0\x80\x82R` \x80\x83\x01\x82\x90R\x82\x84\x01\x82\x90R\x85\x82R`\x02\x81R\x83\x82 `\xFF\x88\x16\x83R\x90R\x91\x90\x91 \x80T\x83\x90\x81\x10a\x11\xD4Wa\x11\xD4a/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x92\x90\x91\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x93\x83\x01\x93\x90\x93R`\x01`@\x1B\x90\x92\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x94\x93PPPPV[`@\x80Q\x80\x82\x01\x90\x91R`\0\x80\x82R` \x82\x01R`\xFF\x83\x16`\0\x90\x81R`\x03` R`@\x90 \x80T\x83\x90\x81\x10a\x12_Wa\x12_a/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q\x80\x82\x01\x90\x91R\x91\x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x82R`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x93\x92PPPV[`@\x80Q``\x81\x01\x82R`\0\x80\x82R` \x80\x83\x01\x82\x90R\x82\x84\x01\x82\x90R`\xFF\x86\x16\x82R`\x01\x90R\x91\x90\x91 \x80T\x83\x90\x81\x10a\x12\xDEWa\x12\xDEa/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x92\x90\x91\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x93\x83\x01\x93\x90\x93R`\x01`@\x1B\x90\x92\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x93\x92PPPV[a\x138a\x1AEV[\x81a\x13B\x81a\x17\xCBV[a\x13L\x83\x83a \x1BV[PPPV[a\x13Ya\x1BnV[`\0[\x81\x81\x10\x15a\x13\xBDW`\0\x83\x83\x83\x81\x81\x10a\x13xWa\x13xa/\xD9V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\x13\x8D\x90P\x81a\x17\xCBV[`\0a\x13\x9B\x86\x83`\0a\x1C!V[\x90Pa\x13\xA7\x82\x82a\x1E\xA1V[PPP\x80\x80a\x13\xB5\x90a0 V[\x91PPa\x13\\V[PPPPV[a\x13\xCBa\x1AEV[\x81a\x13\xD5\x81a\x17\xCBV[a\x13L\x83\x83a \x84V[`\xFF\x83\x16`\0\x90\x81R`\x01` R`@\x81 \x80T\x82\x91\x90\x84\x90\x81\x10a\x14\x06Wa\x14\x06a/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x90Pa\x0B$\x81\x85a$\xC7V[`\xFF\x81\x16`\0\x90\x81R`\x01` \x81\x90R`@\x82 \x80T\x90\x91a\x14~\x91a0;V[\x81T\x81\x10a\x14\x8EWa\x14\x8Ea/\xD9V[`\0\x91\x82R` \x90\x91 \x01T`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x92\x91PPV[`\0a\x14\xBD\x84\x84\x84a&AV[\x94\x93PPPPV[`\0\x82\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x88\x16\x84R\x90\x91R\x81 \x80T\x82\x91\x90\x84\x90\x81\x10a\x14\xF6Wa\x14\xF6a/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x90Pa\x15M\x81\x86a$\xC7V[`@\x01Q\x95\x94PPPPPV[`@\x80Q``\x80\x82\x01\x83R`\0\x80\x83R` \x80\x84\x01\x82\x90R\x83\x85\x01\x82\x90R\x86\x82R`\x02\x81R\x84\x82 `\xFF\x87\x16\x83R\x81R\x84\x82 T\x85Q\x93\x84\x01\x86R\x82\x84R\x90\x83\x01\x82\x90R\x93\x82\x01R\x90\x91\x90\x81a\x15\xB3W\x91Pa\x0B\x11\x90PV[`\0\x85\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x88\x16\x84R\x90\x91R\x90 a\x15\xDA`\x01\x84a0;V[\x81T\x81\x10a\x15\xEAWa\x15\xEAa/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x92Pa\x0B\x11\x91PPV[`\0\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 a\x16f\x85\x85\x85a&AV[c\xFF\xFF\xFF\xFF\x16\x81T\x81\x10a\x16|Wa\x16|a/\xD9V[`\0\x91\x82R` \x90\x91 \x01T`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x94\x93PPPPV[a\x16\xA8a\x1BnV[`\xFF\x83\x16`\0\x90\x81R`\x01` R`@\x90 T\x15a\x17&W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`5`$\x82\x01R\x7FStakeRegistry.initializeQuorum: `D\x82\x01Rtquorum already exists`X\x1B`d\x82\x01R`\x84\x01a\x06\x86V[a\x170\x83\x82a \x84V[a\x17:\x83\x83a \x1BV[PP`\xFF\x16`\0\x90\x81R`\x01` \x81\x81R`@\x80\x84 \x81Q``\x81\x01\x83Rc\xFF\xFF\xFF\xFFC\x81\x16\x82R\x81\x85\x01\x87\x81R\x93\x82\x01\x87\x81R\x83T\x96\x87\x01\x84U\x92\x87R\x93\x90\x95 \x94Q\x94\x90\x93\x01\x80T\x91Q\x93Q`\x01`\x01``\x1B\x03\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x94\x84\x16`\x01` \x1B\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x93\x16\x95\x90\x93\x16\x94\x90\x94\x17\x17\x91\x90\x91\x16\x17\x90UV[`\xFF\x81\x16`\0\x90\x81R`\x01` R`@\x90 Ta\x18DW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`1`$\x82\x01R\x7FStakeRegistry.quorumExists: quor`D\x82\x01Rp\x1D[H\x19\x1B\xD9\\\xC8\x1B\x9B\xDD\x08\x19^\x1A\\\xDD`z\x1B`d\x82\x01R`\x84\x01a\x06\x86V[PV[`\0\x80`\0\x80a\x18f\x86`\xFF\x16`\0\x90\x81R`\x03` R`@\x90 T\x90V[`@\x80Q\x80\x82\x01\x90\x91R`\0\x80\x82R` \x82\x01R\x90\x91P`\xFF\x87\x16`\0\x90\x81R`\x04` \x81\x90R`@\x80\x83 \x90Qc\x90\x04\x13G`\xE0\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x92c\x90\x04\x13G\x92a\x18\xDB\x92\x8C\x92\x01a0hV[`\0`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x18\xF8W=`\0\x80>=`\0\xFD[PPPP`@Q=`\0\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\x19 \x91\x90\x81\x01\x90a0\xC7V[\x90P`\0[\x83\x81\x10\x15a\x1A\x11W`\xFF\x89\x16`\0\x90\x81R`\x03` R`@\x90 \x80T\x82\x90\x81\x10a\x19QWa\x19Qa/\xD9V[`\0\x91\x82R` \x80\x83 `@\x80Q\x80\x82\x01\x90\x91R\x92\x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x83R`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x90\x82\x01R\x83Q\x90\x94P\x83\x90\x83\x90\x81\x10a\x19\x9FWa\x19\x9Fa/\xD9V[` \x02` \x01\x01Q\x11\x15a\x19\xFFWg\r\xE0\xB6\xB3\xA7d\0\0\x83` \x01Q`\x01`\x01``\x1B\x03\x16\x83\x83\x81Q\x81\x10a\x19\xD6Wa\x19\xD6a/\xD9V[` \x02` \x01\x01Qa\x19\xE8\x91\x90a1WV[a\x19\xF2\x91\x90a1vV[a\x19\xFC\x90\x86a1\x98V[\x94P[\x80a\x1A\t\x81a0 V[\x91PPa\x19%V[PPP`\xFF\x86\x16`\0\x90\x81R` \x81\x90R`@\x90 T\x91\x93PP`\x01`\x01``\x1B\x03\x90\x81\x16\x90\x83\x16\x10\x15\x90P[\x92P\x92\x90PV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\x8D\xA5\xCB[`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x1A\xA3W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x1A\xC7\x91\x90a1\xC3V[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x1BlW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`V`$\x82\x01R\x7FStakeRegistry.onlyCoordinatorOwn`D\x82\x01R\x7Fer: caller is not the owner of t`d\x82\x01Ru42\x9092\xB3\xB4\xB9\xBA9<\xA1\xB7\xB7\xB924\xB70\xBA7\xB9`Q\x1B`\x84\x82\x01R`\xA4\x01a\x06\x86V[V[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14a\x1BlW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`L`$\x82\x01R\x7FStakeRegistry.onlyRegistryCoordi`D\x82\x01R\x7Fnator: caller is not the Registr`d\x82\x01Rk<\xA1\xB7\xB7\xB924\xB70\xBA7\xB9`\xA1\x1B`\x84\x82\x01R`\xA4\x01a\x06\x86V[`\0\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 T\x81\x90\x80a\x1C\xE5W`\0\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x82R\x80\x83 \x81Q``\x81\x01\x83Rc\xFF\xFF\xFF\xFFC\x81\x16\x82R\x81\x85\x01\x86\x81R`\x01`\x01``\x1B\x03\x80\x8C\x16\x95\x84\x01\x95\x86R\x84T`\x01\x81\x01\x86U\x94\x88R\x95\x90\x96 \x91Q\x91\x90\x92\x01\x80T\x95Q\x93Q\x90\x94\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x93\x83\x16`\x01` \x1B\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x96\x16\x91\x90\x92\x16\x17\x93\x90\x93\x17\x16\x91\x90\x91\x17\x90Ua\x1EGV[`\0\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x90\x91R\x81 a\x1D\x0C`\x01\x84a0;V[\x81T\x81\x10a\x1D\x1CWa\x1D\x1Ca/\xD9V[`\0\x91\x82R` \x90\x91 \x01\x80T`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x91\x04\x81\x16\x94P\x90\x91P\x85\x16\x83\x14\x15a\x1DUW`\0\x93PPPPa\x11PV[\x80TCc\xFF\xFF\xFF\xFF\x90\x81\x16\x91\x16\x14\x15a\x1D\x8FW\x80T`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B`\x01`\x01``\x1B\x03\x87\x16\x02\x17\x81Ua\x1EEV[\x80Tg\xFF\xFF\xFF\xFF\0\0\0\0\x19\x16`\x01` \x1BCc\xFF\xFF\xFF\xFF\x90\x81\x16\x82\x81\x02\x93\x90\x93\x17\x84U`\0\x8A\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x8D\x16\x84R\x82R\x80\x83 \x81Q``\x81\x01\x83R\x96\x87R\x86\x83\x01\x84\x81R`\x01`\x01``\x1B\x03\x8D\x81\x16\x93\x89\x01\x93\x84R\x82T`\x01\x81\x01\x84U\x92\x86R\x93\x90\x94 \x96Q\x96\x01\x80T\x93Q\x91Q\x96\x85\x16g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x94\x16\x93\x90\x93\x17\x93\x16\x90\x93\x02\x91\x90\x91\x17`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B\x93\x90\x92\x16\x92\x90\x92\x02\x17\x90U[P[`@\x80Q`\xFF\x87\x16\x81R`\x01`\x01``\x1B\x03\x86\x16` \x82\x01R\x87\x91\x7F/R}R~\x95\xD8\xFE@\xAE\xC5Swt;\xB7y\x08}\xA3\xF6\xD0\xD0\x8F\x12\xE3dD\xDAb2}\x91\x01`@Q\x80\x91\x03\x90\xA2a\x1E\x97\x82\x85a'\xA7V[\x96\x95PPPPPPV[`\xFF\x82\x16`\0\x90\x81R`\x01` \x81\x90R`@\x82 \x80T\x91\x83\x91\x90a\x1E\xC5\x90\x84a0;V[\x81T\x81\x10a\x1E\xD5Wa\x1E\xD5a/\xD9V[\x90`\0R` `\0 \x01\x90P\x83`\0\x14\x15a\x1F\x04WT`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x91Pa\x0B\x11\x90PV[\x80T`\0\x90a\x1F#\x90`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x86a'\xBFV[\x82T\x90\x91PCc\xFF\xFF\xFF\xFF\x90\x81\x16\x91\x16\x14\x15a\x1F`W\x81T`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B`\x01`\x01``\x1B\x03\x83\x16\x02\x17\x82Ua \x12V[\x81Tc\xFF\xFF\xFF\xFFC\x81\x16`\x01` \x1B\x81\x81\x02g\xFF\xFF\xFF\xFF\0\0\0\0\x19\x90\x94\x16\x93\x90\x93\x17\x85U`\xFF\x89\x16`\0\x90\x81R`\x01` \x81\x81R`@\x80\x84 \x81Q``\x81\x01\x83R\x95\x86R\x85\x83\x01\x85\x81R`\x01`\x01``\x1B\x03\x80\x8B\x16\x93\x88\x01\x93\x84R\x82T\x95\x86\x01\x83U\x91\x86R\x92\x90\x94 \x94Q\x94\x90\x92\x01\x80T\x91Q\x92Q\x90\x93\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x92\x86\x16\x90\x96\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x91\x16\x93\x90\x94\x16\x92\x90\x92\x17\x92\x90\x92\x17\x16\x91\x90\x91\x17\x90U[\x95\x94PPPPPV[`\xFF\x82\x16`\0\x81\x81R` \x81\x81R`@\x91\x82\x90 \x80Tk\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x16`\x01`\x01``\x1B\x03\x86\x16\x90\x81\x17\x90\x91U\x91Q\x91\x82R\x7F&\xEE\xCF\xF2\xB7\x0B\nq\x10O\xF4\xD9@\xBAqb\xD2:\x95\xC2Hw\x1F\xC4\x87\xA7\xBE\x17\xA5\x96\xB3\xCF\x91\x01`@Q\x80\x91\x03\x90\xA2PPV[`\0\x81Q\x11a \xE9W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R`\0\x80Q` a2\x94\x839\x81Q\x91R`D\x82\x01R\x7F: no strategies provided\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x06\x86V[\x80Q`\xFF\x83\x16`\0\x90\x81R`\x03` \x90\x81R`@\x90\x91 T\x90a!\x0C\x83\x83a1\xE0V[\x11\x15a!|W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`E`$\x82\x01R`\0\x80Q` a2\x94\x839\x81Q\x91R`D\x82\x01R\x7F: exceed MAX_WEIGHING_FUNCTION_L`d\x82\x01Rd\x08\xA9\xC8\xEA\x89`\xDB\x1B`\x84\x82\x01R`\xA4\x01a\x06\x86V[`\0[\x82\x81\x10\x15a$\xC0W`\0[a!\x94\x82\x84a1\xE0V[\x81\x10\x15a\"uW\x84\x82\x81Q\x81\x10a!\xADWa!\xADa/\xD9V[` \x02` \x01\x01Q`\0\x01Q`\x01`\x01`\xA0\x1B\x03\x16`\x03`\0\x88`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01`\0 \x82\x81T\x81\x10a!\xECWa!\xECa/\xD9V[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x14\x15a\"cW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`=`$\x82\x01R`\0\x80Q` a2\x94\x839\x81Q\x91R`D\x82\x01R\x7F: cannot add same strategy 2x\0\0\0`d\x82\x01R`\x84\x01a\x06\x86V[\x80a\"m\x81a0 V[\x91PPa!\x8AV[P`\0\x84\x82\x81Q\x81\x10a\"\x8AWa\"\x8Aa/\xD9V[` \x02` \x01\x01Q` \x01Q`\x01`\x01``\x1B\x03\x16\x11a#\x0FW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`F`$\x82\x01R`\0\x80Q` a2\x94\x839\x81Q\x91R`D\x82\x01R\x7F: cannot add strategy with zero `d\x82\x01Re\x1D\xD9ZY\xDA\x1D`\xD2\x1B`\x84\x82\x01R`\xA4\x01a\x06\x86V[`\xFF\x85\x16`\0\x90\x81R`\x03` R`@\x90 \x84Q\x85\x90\x83\x90\x81\x10a#5Wa#5a/\xD9V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01Q\x82T`\x01\x81\x01\x84U`\0\x93\x84R\x82\x84 \x82Q\x92\x84\x01Q`\x01`\x01``\x1B\x03\x16`\x01`\xA0\x1B\x02`\x01`\x01`\xA0\x1B\x03\x90\x93\x16\x92\x90\x92\x17\x91\x01U`\xFF\x87\x16\x82R`\x04\x90R`@\x90 \x84Q\x85\x90\x83\x90\x81\x10a#\x9AWa#\x9Aa/\xD9V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01QQ\x82T`\x01\x81\x01\x84U`\0\x93\x84R\x91\x90\x92 \x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x91\x90\x91\x17\x90U\x83Q`\xFF\x86\x16\x90\x7F\x10V^V\xCA\xCB\xF3.\xCA&yE\xF0T\xFE\xC0.Yu\x002\xD1\x13\xD30!\x82\xAD\x96\x7FT\x04\x90\x86\x90\x84\x90\x81\x10a$\x11Wa$\x11a/\xD9V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01QQ`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R\x01`@Q\x80\x91\x03\x90\xA2\x84`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x85\x83\x81Q\x81\x10a$nWa$na/\xD9V[` \x02` \x01\x01Q`\0\x01Q\x86\x84\x81Q\x81\x10a$\x8CWa$\x8Ca/\xD9V[` \x02` \x01\x01Q` \x01Q`@Qa$\xA6\x92\x91\x90a(HV[`@Q\x80\x91\x03\x90\xA2\x80a$\xB8\x81a0 V[\x91PPa!\x7FV[PPPPPV[\x81`\0\x01Qc\xFF\xFF\xFF\xFF\x16\x81c\xFF\xFF\xFF\xFF\x16\x10\x15a%lW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`V`$\x82\x01R\x7FStakeRegistry._validateStakeUpda`D\x82\x01R\x7FteAtBlockNumber: stakeUpdate is `d\x82\x01Ru397\xB6\x900\xB3:2\xB9\x10167\xB1\xB5\xA7:\xB6\xB12\xB9`Q\x1B`\x84\x82\x01R`\xA4\x01a\x06\x86V[` \x82\x01Qc\xFF\xFF\xFF\xFF\x16\x15\x80a%\x92WP\x81` \x01Qc\xFF\xFF\xFF\xFF\x16\x81c\xFF\xFF\xFF\xFF\x16\x10[a&=W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`j`$\x82\x01R\x7FStakeRegistry._validateStakeUpda`D\x82\x01R\x7FteAtBlockNumber: there is a newe`d\x82\x01R\x7Fr stakeUpdate available before b`\x84\x82\x01Ri67\xB1\xB5\xA7:\xB6\xB12\xB9`\xB1\x1B`\xA4\x82\x01R`\xC4\x01a\x06\x86V[PPV[`\0\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 T\x80[\x80\x15a&\xE2W`\0\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x90\x91R\x90 c\xFF\xFF\xFF\xFF\x85\x16\x90a&\x95`\x01\x84a0;V[\x81T\x81\x10a&\xA5Wa&\xA5a/\xD9V[`\0\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11a&\xD0Wa&\xC7`\x01\x82a0;V[\x92PPPa\x11PV[\x80a&\xDA\x81a1\xF8V[\x91PPa&`V[P`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x81`$\x82\x01R\x7FStakeRegistry._getStakeUpdateInd`D\x82\x01R\x7FexForOperatorAtBlockNumber: no s`d\x82\x01R\x7Ftake update found for operatorId`\x84\x82\x01R\x7F and quorumNumber at block numbe`\xA4\x82\x01R`9`\xF9\x1B`\xC4\x82\x01R`\xE4\x01a\x06\x86V[`\0a\x11P`\x01`\x01``\x1B\x03\x80\x85\x16\x90\x84\x16a2\x0FV[`\0\x80\x82\x12\x15a'\xE3Wa'\xD2\x82a2NV[a'\xDC\x90\x84a2kV[\x90Pa\x0B\x11V[a'\xDC\x82\x84a1\x98V[\x805`\xFF\x81\x16\x81\x14a'\xFEW`\0\x80\xFD[\x91\x90PV[`\0` \x82\x84\x03\x12\x15a(\x15W`\0\x80\xFD[a\x11P\x82a'\xEDV[`\0\x80`@\x83\x85\x03\x12\x15a(1W`\0\x80\xFD[a(:\x83a'\xEDV[\x94` \x93\x90\x93\x015\x93PPPV[`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x82R`\x01`\x01``\x1B\x03\x16` \x82\x01R`@\x01\x90V[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x18DW`\0\x80\xFD[`\0\x80`@\x83\x85\x03\x12\x15a(\x92W`\0\x80\xFD[a(\x9B\x83a'\xEDV[\x91P` \x83\x015a(\xAB\x81a(jV[\x80\x91PP\x92P\x92\x90PV[`\0\x80\x83`\x1F\x84\x01\x12a(\xC8W`\0\x80\xFD[P\x815`\x01`\x01`@\x1B\x03\x81\x11\x15a(\xDFW`\0\x80\xFD[` \x83\x01\x91P\x83` \x82`\x05\x1B\x85\x01\x01\x11\x15a\x1A>W`\0\x80\xFD[`\0\x80`\0\x80`\0``\x86\x88\x03\x12\x15a)\x12W`\0\x80\xFD[a)\x1B\x86a'\xEDV[\x94P` \x86\x015`\x01`\x01`@\x1B\x03\x80\x82\x11\x15a)7W`\0\x80\xFD[a)C\x89\x83\x8A\x01a(\xB6V[\x90\x96P\x94P`@\x88\x015\x91P\x80\x82\x11\x15a)\\W`\0\x80\xFD[Pa)i\x88\x82\x89\x01a(\xB6V[\x96\x99\x95\x98P\x93\x96P\x92\x94\x93\x92PPPV[`\0\x80\x83`\x1F\x84\x01\x12a)\x8CW`\0\x80\xFD[P\x815`\x01`\x01`@\x1B\x03\x81\x11\x15a)\xA3W`\0\x80\xFD[` \x83\x01\x91P\x83` \x82\x85\x01\x01\x11\x15a\x1A>W`\0\x80\xFD[`\0\x80`\0\x80``\x85\x87\x03\x12\x15a)\xD1W`\0\x80\xFD[\x845a)\xDC\x81a(jV[\x93P` \x85\x015\x92P`@\x85\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a)\xFEW`\0\x80\xFD[a*\n\x87\x82\x88\x01a)zV[\x95\x98\x94\x97P\x95PPPPV[`\0\x81Q\x80\x84R` \x80\x85\x01\x94P\x80\x84\x01`\0[\x83\x81\x10\x15a*OW\x81Q`\x01`\x01``\x1B\x03\x16\x87R\x95\x82\x01\x95\x90\x82\x01\x90`\x01\x01a**V[P\x94\x95\x94PPPPPV[`@\x81R`\0a*m`@\x83\x01\x85a*\x16V[\x82\x81\x03` \x84\x01Ra \x12\x81\x85a*\x16V[`\0\x80`@\x83\x85\x03\x12\x15a*\x92W`\0\x80\xFD[\x825\x91Pa*\xA2` \x84\x01a'\xEDV[\x90P\x92P\x92\x90PV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R`\0\x91\x90\x84\x82\x01\x90`@\x85\x01\x90\x84[\x81\x81\x10\x15a+\x17Wa+\x04\x83\x85Qc\xFF\xFF\xFF\xFF\x80\x82Q\x16\x83R\x80` \x83\x01Q\x16` \x84\x01RP`\x01`\x01``\x1B\x03`@\x82\x01Q\x16`@\x83\x01RPPV[\x92\x84\x01\x92``\x92\x90\x92\x01\x91`\x01\x01a*\xC7V[P\x90\x96\x95PPPPPPV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`@\x80Q\x90\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a+[Wa+[a+#V[`@R\x90V[`@Q`\x1F\x82\x01`\x1F\x19\x16\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a+\x89Wa+\x89a+#V[`@R\x91\x90PV[`\0`\x01`\x01`@\x1B\x03\x82\x11\x15a+\xAAWa+\xAAa+#V[P`\x05\x1B` \x01\x90V[`\0\x80`@\x83\x85\x03\x12\x15a+\xC7W`\0\x80\xFD[a+\xD0\x83a'\xEDV[\x91P` \x80\x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a+\xECW`\0\x80\xFD[\x84\x01`\x1F\x81\x01\x86\x13a+\xFDW`\0\x80\xFD[\x805a,\x10a,\x0B\x82a+\x91V[a+aV[\x81\x81R`\x05\x91\x90\x91\x1B\x82\x01\x83\x01\x90\x83\x81\x01\x90\x88\x83\x11\x15a,/W`\0\x80\xFD[\x92\x84\x01\x92[\x82\x84\x10\x15a,MW\x835\x82R\x92\x84\x01\x92\x90\x84\x01\x90a,4V[\x80\x95PPPPPP\x92P\x92\x90PV[\x805c\xFF\xFF\xFF\xFF\x81\x16\x81\x14a'\xFEW`\0\x80\xFD[`\0\x80`\0`@\x84\x86\x03\x12\x15a,\x85W`\0\x80\xFD[a,\x8E\x84a,\\V[\x92P` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a,\xA9W`\0\x80\xFD[a,\xB5\x86\x82\x87\x01a)zV[\x94\x97\x90\x96P\x93\x94PPPPV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R`\0\x91\x90\x84\x82\x01\x90`@\x85\x01\x90\x84[\x81\x81\x10\x15a+\x17W\x83Qc\xFF\xFF\xFF\xFF\x16\x83R\x92\x84\x01\x92\x91\x84\x01\x91`\x01\x01a,\xDEV[`\0\x80`\0``\x84\x86\x03\x12\x15a-\x15W`\0\x80\xFD[a-\x1E\x84a'\xEDV[\x95` \x85\x015\x95P`@\x90\x94\x015\x93\x92PPPV[\x81Qc\xFF\xFF\xFF\xFF\x90\x81\x16\x82R` \x80\x84\x01Q\x90\x91\x16\x90\x82\x01R`@\x80\x83\x01Q`\x01`\x01``\x1B\x03\x16\x90\x82\x01R``\x81\x01a\x0B\x11V[\x805`\x01`\x01``\x1B\x03\x81\x16\x81\x14a'\xFEW`\0\x80\xFD[`\0\x80`@\x83\x85\x03\x12\x15a-\x92W`\0\x80\xFD[a-\x9B\x83a'\xEDV[\x91Pa*\xA2` \x84\x01a-hV[`\0\x80`\0`@\x84\x86\x03\x12\x15a-\xBEW`\0\x80\xFD[\x835\x92P` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a,\xA9W`\0\x80\xFD[`\0\x82`\x1F\x83\x01\x12a-\xECW`\0\x80\xFD[\x815` a-\xFCa,\x0B\x83a+\x91V[\x82\x81R`\x06\x92\x90\x92\x1B\x84\x01\x81\x01\x91\x81\x81\x01\x90\x86\x84\x11\x15a.\x1BW`\0\x80\xFD[\x82\x86\x01[\x84\x81\x10\x15a.jW`@\x81\x89\x03\x12\x15a.8W`\0\x80\x81\xFD[a.@a+9V[\x815a.K\x81a(jV[\x81Ra.X\x82\x86\x01a-hV[\x81\x86\x01R\x83R\x91\x83\x01\x91`@\x01a.\x1FV[P\x96\x95PPPPPPV[`\0\x80`@\x83\x85\x03\x12\x15a.\x88W`\0\x80\xFD[a.\x91\x83a'\xEDV[\x91P` \x83\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a.\xACW`\0\x80\xFD[a.\xB8\x85\x82\x86\x01a-\xDBV[\x91PP\x92P\x92\x90PV[`\0\x80`\0``\x84\x86\x03\x12\x15a.\xD7W`\0\x80\xFD[a.\xE0\x84a'\xEDV[\x92Pa.\xEE` \x85\x01a,\\V[\x91P`@\x84\x015\x90P\x92P\x92P\x92V[`\0\x80`\0``\x84\x86\x03\x12\x15a/\x13W`\0\x80\xFD[\x835\x92Pa/#` \x85\x01a'\xEDV[\x91Pa/1`@\x85\x01a,\\V[\x90P\x92P\x92P\x92V[`\0\x80`\0\x80`\x80\x85\x87\x03\x12\x15a/PW`\0\x80\xFD[a/Y\x85a'\xEDV[\x93Pa/g` \x86\x01a,\\V[\x93\x96\x93\x95PPPP`@\x82\x015\x91``\x015\x90V[`\0\x80`\0``\x84\x86\x03\x12\x15a/\x91W`\0\x80\xFD[a/\x9A\x84a'\xEDV[\x92Pa/\xA8` \x85\x01a-hV[\x91P`@\x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a/\xC3W`\0\x80\xFD[a/\xCF\x86\x82\x87\x01a-\xDBV[\x91PP\x92P\x92P\x92V[cNH{q`\xE0\x1B`\0R`2`\x04R`$`\0\xFD[`\0` \x82\x84\x03\x12\x15a0\x01W`\0\x80\xFD[a\x11P\x82a-hV[cNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[`\0`\0\x19\x82\x14\x15a04Wa04a0\nV[P`\x01\x01\x90V[`\0\x82\x82\x10\x15a0MWa0Ma0\nV[P\x03\x90V[cNH{q`\xE0\x1B`\0R`1`\x04R`$`\0\xFD[`\0`@\x82\x01`\x01\x80`\xA0\x1B\x03\x80\x86\x16\x84R` `@\x81\x86\x01R\x82\x86T\x80\x85R``\x87\x01\x91P\x87`\0R\x82`\0 \x94P`\0[\x81\x81\x10\x15a0\xB9W\x85T\x85\x16\x83R`\x01\x95\x86\x01\x95\x92\x84\x01\x92\x01a0\x9BV[P\x90\x98\x97PPPPPPPPV[`\0` \x80\x83\x85\x03\x12\x15a0\xDAW`\0\x80\xFD[\x82Q`\x01`\x01`@\x1B\x03\x81\x11\x15a0\xF0W`\0\x80\xFD[\x83\x01`\x1F\x81\x01\x85\x13a1\x01W`\0\x80\xFD[\x80Qa1\x0Fa,\x0B\x82a+\x91V[\x81\x81R`\x05\x91\x90\x91\x1B\x82\x01\x83\x01\x90\x83\x81\x01\x90\x87\x83\x11\x15a1.W`\0\x80\xFD[\x92\x84\x01\x92[\x82\x84\x10\x15a1LW\x83Q\x82R\x92\x84\x01\x92\x90\x84\x01\x90a13V[\x97\x96PPPPPPPV[`\0\x81`\0\x19\x04\x83\x11\x82\x15\x15\x16\x15a1qWa1qa0\nV[P\x02\x90V[`\0\x82a1\x93WcNH{q`\xE0\x1B`\0R`\x12`\x04R`$`\0\xFD[P\x04\x90V[`\0`\x01`\x01``\x1B\x03\x80\x83\x16\x81\x85\x16\x80\x83\x03\x82\x11\x15a1\xBAWa1\xBAa0\nV[\x01\x94\x93PPPPV[`\0` \x82\x84\x03\x12\x15a1\xD5W`\0\x80\xFD[\x81Qa\x11P\x81a(jV[`\0\x82\x19\x82\x11\x15a1\xF3Wa1\xF3a0\nV[P\x01\x90V[`\0\x81a2\x07Wa2\x07a0\nV[P`\0\x19\x01\x90V[`\0\x80\x83\x12\x80\x15`\x01`\xFF\x1B\x85\x01\x84\x12\x16\x15a2-Wa2-a0\nV[`\x01`\x01`\xFF\x1B\x03\x84\x01\x83\x13\x81\x16\x15a2HWa2Ha0\nV[PP\x03\x90V[`\0`\x01`\xFF\x1B\x82\x14\x15a2dWa2da0\nV[P`\0\x03\x90V[`\0`\x01`\x01``\x1B\x03\x83\x81\x16\x90\x83\x16\x81\x81\x10\x15a2\x8BWa2\x8Ba0\nV[\x03\x93\x92PPPV\xFEStakeRegistry._addStrategyParams\xA2dipfsX\"\x12 \x91z\x1Bp7\\\x0F\x80f\x1B\xE21\xD4\xFA\x91\xADy\xE3\x85\xC5\x0E\xC1C67\xCB\xF1\t{[\x98MdsolcC\0\x08\x0C\x003",
+        b"a\x01\0`@R4\x80\x15a\0\x10W__\xFD[P`@Qa=u8\x03\x80a=u\x839\x81\x01`@\x81\x90Ra\0/\x91a\0hV[`\x01`\x01`\xA0\x1B\x03\x93\x84\x16`\xE0R\x91\x83\x16`\x80R\x82\x16`\xA0R\x16`\xC0Ra\0\xC4V[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\0eW__\xFD[PV[____`\x80\x85\x87\x03\x12\x15a\0{W__\xFD[\x84Qa\0\x86\x81a\0QV[` \x86\x01Q\x90\x94Pa\0\x97\x81a\0QV[`@\x86\x01Q\x90\x93Pa\0\xA8\x81a\0QV[``\x86\x01Q\x90\x92Pa\0\xB9\x81a\0QV[\x93\x96\x92\x95P\x90\x93PPV[`\x80Q`\xA0Q`\xC0Q`\xE0Qa<1a\x01D_9_\x81\x81a\x04\x12\x01R\x81\x81a\x0EY\x01R\x81\x81a\x16e\x01R\x81\x81a\x1D_\x01R\x81\x81a\x1E\x1B\x01Ra,\xE7\x01R_\x81\x81a\x05\xBA\x01R\x81\x81a\x0F\x07\x01R\x81\x81a\x0F\x97\x01R\x81\x81a\x17\x13\x01R\x81\x81a\x18B\x01Ra,\xAD\x01R_a\x03\xB3\x01R_\x81\x81a\x06\x1A\x01Ra#\xEB\x01Ra<1_\xF3\xFE`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\x02\x1EW_5`\xE0\x1C\x80c\x9A\xB4\xD6\xFF\x11a\x01*W\x80c\xC8)LV\x11a\0\xB4W\x80c\xDF\\\xF7#\x11a\0yW\x80c\xDF\\\xF7#\x14a\x06\x15W\x80c\xE0\x86\xAD\xB3\x14a\x06<W\x80c\xF2\xBE\x94\xAE\x14a\x06OW\x80c\xF8Q\xE1\x98\x14a\x06bW\x80c\xFA(\xC6'\x14a\x06uW__\xFD[\x80c\xC8)LV\x14a\x05\xA2W\x80c\xCA\x8A\xA7\xC7\x14a\x05\xB5W\x80c\xCCZ| \x14a\x05\xDCW\x80c\xD5\xEC\xCC\x05\x14a\x05\xEFW\x80c\xDD\x98F\xB9\x14a\x06\x02W__\xFD[\x80c\xB6\x90Kx\x11a\0\xFAW\x80c\xB6\x90Kx\x14a\x05.W\x80c\xBC\x9A@\xC3\x14a\x05AW\x80c\xBD)\xB8\xCD\x14a\x05TW\x80c\xC4gx\xA5\x14a\x05gW\x80c\xC6\x01R}\x14a\x05\x8FW__\xFD[\x80c\x9A\xB4\xD6\xFF\x14a\x04\x81W\x80c\x9F<\xCFe\x14a\x04\xBBW\x80c\xACk\xFB\x03\x14a\x04\xCEW\x80c\xAD\xC8\x04\xDA\x14a\x04\xEEW__\xFD[\x80c^Zgu\x11a\x01\xABW\x80cl?\xB4\xBF\x11a\x01{W\x80cl?\xB4\xBF\x14a\x03\xEDW\x80cm\x14\xA9\x87\x14a\x04\rW\x80cu\xD4\x17:\x14a\x044W\x80c|\x17#G\x14a\x04GW\x80c\x81\xC0u\x02\x14a\x04aW__\xFD[\x80c^Zgu\x14a\x03]W\x80c_\x1F-w\x14a\x03lW\x80ci\x7F\xBD\x93\x14a\x03\x7FW\x80ck:\xA7.\x14a\x03\xAEW__\xFD[\x80c%PGw\x11a\x01\xF1W\x80c%PGw\x14a\x02\xB8W\x80c,\xD9Y@\x14a\x02\xD9W\x80c<\xA5\xA5\xF5\x14a\x02\xF9W\x80cK\xD2n\t\x14a\x03\x1BW\x80cT\x01\xED'\x14a\x03JW__\xFD[\x80c\x04\x91\xB4\x1C\x14a\x02\"W\x80c\x08s$a\x14a\x02WW\x80c\x1F\x9Bt\xE0\x14a\x02xW\x80c \xB6b\x98\x14a\x02\xA3W[__\xFD[a\x02Da\x0206`\x04a.\x05V[`\xFF\x16_\x90\x81R`\x01` R`@\x90 T\x90V[`@Q\x90\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\x02ja\x02e6`\x04a.\x1EV[a\x06\x88V[`@Qa\x02N\x92\x91\x90a.FV[a\x02\x8Ba\x02\x866`\x04a.|V[a\x06\xCDV[`@Q`\x01`\x01``\x1B\x03\x90\x91\x16\x81R` \x01a\x02NV[a\x02\xB6a\x02\xB16`\x04a.\xF1V[a\x06\xEFV[\0[a\x02\xCBa\x02\xC66`\x04a/\xACV[a\x08\x8DV[`@Qa\x02N\x92\x91\x90a0FV[a\x02\xECa\x02\xE76`\x04a0jV[a\n\x15V[`@Qa\x02N\x91\x90a0\x94V[a\x02Da\x03\x076`\x04a.\x05V[`\xFF\x16_\x90\x81R`\x03` R`@\x90 T\x90V[a\x02Da\x03)6`\x04a0jV[_\x91\x82R`\x02` \x90\x81R`@\x80\x84 `\xFF\x93\x90\x93\x16\x84R\x91\x90R\x90 T\x90V[a\x02\x8Ba\x03X6`\x04a0jV[a\n\xB2V[a\x02Dg\r\xE0\xB6\xB3\xA7d\0\0\x81V[a\x02\xB6a\x03z6`\x04a1\x9BV[a\n\xCAV[a\x03\xA1a\x03\x8D6`\x04a.\x05V[`\x05` R_\x90\x81R`@\x90 T`\xFF\x16\x81V[`@Qa\x02N\x91\x90a2WV[a\x03\xD5\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01a\x02NV[a\x04\0a\x03\xFB6`\x04a2\xE2V[a\x10\x08V[`@Qa\x02N\x91\x90a3\xB4V[a\x03\xD5\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x02\xB6a\x04B6`\x04a4\x98V[a\x11cV[a\x04O` \x81V[`@Q`\xFF\x90\x91\x16\x81R` \x01a\x02NV[a\x04ta\x04o6`\x04a5\x04V[a\x12IV[`@Qa\x02N\x91\x90a5RV[a\x04\xA6a\x04\x8F6`\x04a.\x05V[`\x06` R_\x90\x81R`@\x90 Tc\xFF\xFF\xFF\xFF\x16\x81V[`@Qc\xFF\xFF\xFF\xFF\x90\x91\x16\x81R` \x01a\x02NV[a\x03\xD5a\x04\xC96`\x04a.\x1EV[a\x13\xEFV[a\x04\xE1a\x04\xDC6`\x04a5\x8FV[a\x14#V[`@Qa\x02N\x91\x90a5\xBFV[a\x05\x01a\x04\xFC6`\x04a.\x1EV[a\x14\xB9V[`@\x80Q\x82Q`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x92\x83\x01Q`\x01`\x01``\x1B\x03\x16\x92\x81\x01\x92\x90\x92R\x01a\x02NV[a\x04\xE1a\x05<6`\x04a.\x1EV[a\x150V[a\x02\xB6a\x05O6`\x04a5\xF9V[a\x15\xBDV[a\x02\xB6a\x05b6`\x04a6!V[a\x15\xDEV[a\x02\x8Ba\x05u6`\x04a.\x05V[_` \x81\x90R\x90\x81R`@\x90 T`\x01`\x01``\x1B\x03\x16\x81V[a\x02\xB6a\x05\x9D6`\x04a6OV[a\x16AV[a\x02\x8Ba\x05\xB06`\x04a6\x99V[a\x18\xB1V[a\x03\xD5\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x02\xB6a\x05\xEA6`\x04a6\xD3V[a\x19-V[a\x02\x8Ba\x05\xFD6`\x04a.\x05V[a\x1A\x1FV[a\x04\xA6a\x06\x106`\x04a7=V[a\x1ApV[a\x03\xD5\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x02\xB6a\x06J6`\x04a7mV[a\x1A\x84V[a\x02\x8Ba\x06]6`\x04a7\x95V[a\x1A\xA0V[a\x04\xE1a\x06p6`\x04a0jV[a\x1B3V[a\x02\x8Ba\x06\x836`\x04a7=V[a\x1C!V[`\x03` R\x81_R`@_ \x81\x81T\x81\x10a\x06\xA1W_\x80\xFD[_\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x92P`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x90P\x82V[_\x82a\x06\xD8\x81a\x1C\x80V[_a\x06\xE3\x85\x85a\x1C\xB2V[P\x92PP[P\x92\x91PPV[a\x06\xF7a\x1D]V[\x84a\x07\x01\x81a\x1C\x80V[\x83\x80a\x07 W`@Qcyl\xC5%`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[\x82\x81\x14a\x07@W`@QcCqJ\xFD`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\xFF\x87\x16_\x90\x81R`\x03` R`@\x81 \x90[\x82\x81\x10\x15a\x08\x82W\x85\x85\x82\x81\x81\x10a\x07mWa\x07ma7\xD4V[\x90P` \x02\x01` \x81\x01\x90a\x07\x82\x91\x90a7\xE8V[\x82\x89\x89\x84\x81\x81\x10a\x07\x95Wa\x07\x95a7\xD4V[\x90P` \x02\x015\x81T\x81\x10a\x07\xACWa\x07\xACa7\xD4V[\x90_R` _ \x01_\x01`\x14a\x01\0\n\x81T\x81`\x01`\x01``\x1B\x03\x02\x19\x16\x90\x83`\x01`\x01``\x1B\x03\x16\x02\x17\x90UP\x88`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x83\x8A\x8A\x85\x81\x81\x10a\x08\x12Wa\x08\x12a7\xD4V[\x90P` \x02\x015\x81T\x81\x10a\x08)Wa\x08)a7\xD4V[_\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x88\x88\x85\x81\x81\x10a\x08OWa\x08Oa7\xD4V[\x90P` \x02\x01` \x81\x01\x90a\x08d\x91\x90a7\xE8V[`@Qa\x08r\x92\x91\x90a.FV[`@Q\x80\x91\x03\x90\xA2`\x01\x01a\x07SV[PPPPPPPPPV[``\x80a\x08\x98a\x1E\x10V[_\x83`\x01`\x01`@\x1B\x03\x81\x11\x15a\x08\xB1Wa\x08\xB1a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x08\xDAW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_\x84`\x01`\x01`@\x1B\x03\x81\x11\x15a\x08\xF6Wa\x08\xF6a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\t\x1FW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[\x85\x81\x10\x15a\n\x07W_\x87\x87\x83\x81\x81\x10a\t?Wa\t?a7\xD4V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\tT\x90P\x81a\x1C\x80V[__a\t`\x83\x8Da\x1C\xB2V[\x91P\x91P\x80a\t\x82W`@Qc \x7F\x13\xE3`\xE1\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[_a\t\x8E\x8C\x85\x85a\x1EYV[\x90P\x82\x87\x86\x81Q\x81\x10a\t\xA3Wa\t\xA3a7\xD4V[` \x02` \x01\x01\x90`\x01`\x01``\x1B\x03\x16\x90\x81`\x01`\x01``\x1B\x03\x16\x81RPPa\t\xCD\x84\x82a \xD2V[\x86\x86\x81Q\x81\x10a\t\xDFWa\t\xDFa7\xD4V[`\x01`\x01``\x1B\x03\x90\x92\x16` \x92\x83\x02\x91\x90\x91\x01\x90\x91\x01RPP`\x01\x90\x92\x01\x91Pa\t$\x90PV[P\x90\x97\x90\x96P\x94PPPPPV[_\x82\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x85\x16\x84R\x82R\x80\x83 \x80T\x82Q\x81\x85\x02\x81\x01\x85\x01\x90\x93R\x80\x83R``\x94\x92\x93\x91\x92\x90\x91\x84\x01[\x82\x82\x10\x15a\n\xA5W_\x84\x81R` \x90\x81\x90 `@\x80Q``\x81\x01\x82R\x91\x85\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x83\x85\x01R`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x90\x82\x01R\x82R`\x01\x90\x92\x01\x91\x01a\nMV[PPPP\x90P[\x92\x91PPV[__a\n\xBE\x84\x84a\x1B3V[`@\x01Q\x94\x93PPPPV[a\n\xD2a\x1D]V[\x81a\n\xDC\x81a\x1C\x80V[\x81Q\x80a\n\xFCW`@Qcyl\xC5%`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\xFF\x84\x16_\x90\x81R`\x03` \x90\x81R`@\x80\x83 `\x04\x90\x92R\x82 \x90\x91\x83`\x01`\x01`@\x1B\x03\x81\x11\x15a\x0B1Wa\x0B1a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x0BZW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[\x84\x81\x10\x15a\x0EUW\x83\x87\x82\x81Q\x81\x10a\x0BzWa\x0Bza7\xD4V[` \x02` \x01\x01Q\x81T\x81\x10a\x0B\x92Wa\x0B\x92a7\xD4V[_\x91\x82R` \x90\x91 \x01T\x82Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90\x83\x90\x83\x90\x81\x10a\x0B\xBDWa\x0B\xBDa7\xD4V[` \x02` \x01\x01\x90`\x01`\x01`\xA0\x1B\x03\x16\x90\x81`\x01`\x01`\xA0\x1B\x03\x16\x81RPP\x87`\xFF\x16\x7F1\xFA.,\xD2\x80\xC97^\x13\xFF\xCF=\x81\xE27\x81\0\x18n@X\xF8\xD3\xDD\xB6\x90\xB8-\xCD1\xF7\x85\x89\x84\x81Q\x81\x10a\x0C\x15Wa\x0C\x15a7\xD4V[` \x02` \x01\x01Q\x81T\x81\x10a\x0C-Wa\x0C-a7\xD4V[_\x91\x82R` \x91\x82\x90 \x01T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R\x01`@Q\x80\x91\x03\x90\xA2\x87`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x85\x89\x84\x81Q\x81\x10a\x0C\x8AWa\x0C\x8Aa7\xD4V[` \x02` \x01\x01Q\x81T\x81\x10a\x0C\xA2Wa\x0C\xA2a7\xD4V[_\x91\x82R` \x80\x83 \x91\x90\x91\x01T`@\x80Q`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x82R\x91\x81\x01\x92\x90\x92R\x01`@Q\x80\x91\x03\x90\xA2\x83T\x84\x90a\x0C\xE1\x90`\x01\x90a8\x15V[\x81T\x81\x10a\x0C\xF1Wa\x0C\xF1a7\xD4V[\x90_R` _ \x01\x84\x88\x83\x81Q\x81\x10a\r\x0CWa\r\x0Ca7\xD4V[` \x02` \x01\x01Q\x81T\x81\x10a\r$Wa\r$a7\xD4V[_\x91\x82R` \x90\x91 \x82T\x91\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x91\x82\x17\x81U\x91T`\x01`\x01``\x1B\x03`\x01`\xA0\x1B\x91\x82\x90\x04\x16\x02\x17\x90U\x83T\x84\x90\x80a\rvWa\rva8(V[_\x82\x81R` \x81 \x82\x01_\x19\x90\x81\x01\x91\x90\x91U\x01\x90U\x82T\x83\x90a\r\x9C\x90`\x01\x90a8\x15V[\x81T\x81\x10a\r\xACWa\r\xACa7\xD4V[\x90_R` _ \x01_\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16\x83\x88\x83\x81Q\x81\x10a\r\xDAWa\r\xDAa7\xD4V[` \x02` \x01\x01Q\x81T\x81\x10a\r\xF2Wa\r\xF2a7\xD4V[\x90_R` _ \x01_a\x01\0\n\x81T\x81`\x01`\x01`\xA0\x1B\x03\x02\x19\x16\x90\x83`\x01`\x01`\xA0\x1B\x03\x16\x02\x17\x90UP\x82\x80T\x80a\x0E-Wa\x0E-a8(V[_\x82\x81R` \x90 \x81\x01_\x19\x90\x81\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x90U\x01\x90U`\x01\x01a\x0B_V[P_\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\xDE\x11d\xBB`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0E\xB3W=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0E\xD7\x91\x90a8<V[`@\x80Q\x80\x82\x01\x82R`\x01`\x01`\xA0\x1B\x03\x83\x81\x16\x82R`\xFF\x8C\x16` \x83\x01R\x91Qc\x04\xC1\xB8\xEB`\xE3\x1B\x81R\x92\x93P\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x90\x91\x16\x91c&\r\xC7X\x91a\x0F<\x91`\x04\x01a8WV[` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0FWW=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0F{\x91\x90a8}V[\x15a\x0F\xFEW`@Qc\xB6k\xD9\x89`\xE0\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x90c\xB6k\xD9\x89\x90a\x0F\xD0\x90\x84\x90\x8C\x90\x87\x90`\x04\x01a8\x9CV[_`@Q\x80\x83\x03\x81_\x87\x80;\x15\x80\x15a\x0F\xE7W__\xFD[PZ\xF1\x15\x80\x15a\x0F\xF9W=__>=_\xFD[PPPP[PPPPPPPPV[``a\x10\x12a\x1E\x10V[_\x84Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\x10,Wa\x10,a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x10UW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90Pa\x10a\x83a\x1C\x80V[__a\x10m\x85\x88a\"CV[\x90\x92P\x90P_\x80[\x88Q\x81\x10\x15a\x11IW\x82\x81\x81Q\x81\x10a\x10\x90Wa\x10\x90a7\xD4V[` \x02` \x01\x01Qa\x10\xF4W_\x84\x82\x81Q\x81\x10a\x10\xAFWa\x10\xAFa7\xD4V[` \x02` \x01\x01\x90`\x01`\x01``\x1B\x03\x16\x90\x81`\x01`\x01``\x1B\x03\x16\x81RPP`\x01\x85\x82\x81Q\x81\x10a\x10\xE3Wa\x10\xE3a7\xD4V[\x91\x15\x15` \x92\x83\x02\x91\x90\x91\x01\x90\x91\x01R[_a\x112\x89\x83\x81Q\x81\x10a\x11\nWa\x11\na7\xD4V[` \x02` \x01\x01Q\x89\x87\x85\x81Q\x81\x10a\x11%Wa\x11%a7\xD4V[` \x02` \x01\x01Qa\x1EYV[\x90Pa\x11>\x81\x84a9\x06V[\x92PP`\x01\x01a\x10uV[Pa\x11T\x86\x82a \xD2V[P\x92\x93PPPP[\x93\x92PPPV[a\x11ka\x1E\x10V[`\xFF\x83\x16_\x90\x81R`\x01` R`@\x90 T\x15a\x11\x9BW`@Qc\x10\xCD\xA5\x17`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\x11\xA5\x83\x82a%\xE9V[a\x11\xAF\x83\x83a(\xDAV[a\x11\xB9\x83_a)BV[PP`\xFF\x16_\x90\x81R`\x01` \x81\x81R`@\x80\x84 \x81Q``\x81\x01\x83Rc\xFF\xFF\xFF\xFFC\x81\x16\x82R\x81\x85\x01\x87\x81R\x93\x82\x01\x87\x81R\x83T\x96\x87\x01\x84U\x92\x87R\x93\x90\x95 \x94Q\x94\x90\x93\x01\x80T\x91Q\x93Q`\x01`\x01``\x1B\x03\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x94\x84\x16`\x01` \x1B\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x93\x16\x95\x90\x93\x16\x94\x90\x94\x17\x17\x91\x90\x91\x16\x17\x90UV[``_\x82`\x01`\x01`@\x1B\x03\x81\x11\x15a\x12dWa\x12da1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x12\x8DW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[\x83\x81\x10\x15a\x13\xE6W_\x85\x85\x83\x81\x81\x10a\x12\xADWa\x12\xADa7\xD4V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\x12\xC2\x90P\x81a\x1C\x80V[`\xFF\x81\x16_\x90\x81R`\x01` R`@\x81 \x80Tc\xFF\xFF\xFF\xFF\x8A\x16\x92\x90a\x12\xEAWa\x12\xEAa7\xD4V[_\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11\x15a\x13\x1AW`@Qc\xCCdes`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\xFF\x81\x16_\x90\x81R`\x01` R`@\x81 T\x90[\x81\x81\x10\x15a\x13\xDBW`\xFF\x83\x16_\x90\x81R`\x01` \x81\x90R`@\x90\x91 c\xFF\xFF\xFF\xFF\x8B\x16\x91a\x13\\\x84\x86a8\x15V[a\x13f\x91\x90a8\x15V[\x81T\x81\x10a\x13vWa\x13va7\xD4V[_\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11a\x13\xD3W`\x01a\x13\x98\x82\x84a8\x15V[a\x13\xA2\x91\x90a8\x15V[\x85\x85\x81Q\x81\x10a\x13\xB4Wa\x13\xB4a7\xD4V[` \x02` \x01\x01\x90c\xFF\xFF\xFF\xFF\x16\x90\x81c\xFF\xFF\xFF\xFF\x16\x81RPPa\x13\xDBV[`\x01\x01a\x13.V[PPP`\x01\x01a\x12\x92V[P\x94\x93PPPPV[`\x04` R\x81_R`@_ \x81\x81T\x81\x10a\x14\x08W_\x80\xFD[_\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x91P\x82\x90PV[`@\x80Q``\x81\x01\x82R_\x80\x82R` \x80\x83\x01\x82\x90R\x82\x84\x01\x82\x90R\x85\x82R`\x02\x81R\x83\x82 `\xFF\x88\x16\x83R\x90R\x91\x90\x91 \x80T\x83\x90\x81\x10a\x14gWa\x14ga7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x92\x90\x91\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x93\x83\x01\x93\x90\x93R`\x01`@\x1B\x90\x92\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x94\x93PPPPV[`@\x80Q\x80\x82\x01\x90\x91R_\x80\x82R` \x82\x01R`\xFF\x83\x16_\x90\x81R`\x03` R`@\x90 \x80T\x83\x90\x81\x10a\x14\xEFWa\x14\xEFa7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q\x80\x82\x01\x90\x91R\x91\x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x82R`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x93\x92PPPV[`@\x80Q``\x81\x01\x82R_\x80\x82R` \x80\x83\x01\x82\x90R\x82\x84\x01\x82\x90R`\xFF\x86\x16\x82R`\x01\x90R\x91\x90\x91 \x80T\x83\x90\x81\x10a\x15lWa\x15la7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x92\x90\x91\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x93\x83\x01\x93\x90\x93R`\x01`@\x1B\x90\x92\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x93\x92PPPV[a\x15\xC5a\x1D]V[\x81a\x15\xCF\x81a\x1C\x80V[a\x15\xD9\x83\x83a(\xDAV[PPPV[a\x15\xE6a\x1E\x10V[_[\x81\x81\x10\x15a\x16;W_\x83\x83\x83\x81\x81\x10a\x16\x03Wa\x16\x03a7\xD4V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\x16\x18\x90P\x81a\x1C\x80V[_a\x16$\x86\x83_a\x1EYV[\x90Pa\x160\x82\x82a \xD2V[PPP`\x01\x01a\x15\xE8V[PPPPV[a\x16Ia\x1D]V[\x81a\x16S\x81a\x1C\x80V[a\x16]\x83\x83a%\xE9V[_\x82Q\x90P_\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\xDE\x11d\xBB`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x16\xBFW=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x16\xE3\x91\x90a8<V[`@\x80Q\x80\x82\x01\x82R`\x01`\x01`\xA0\x1B\x03\x83\x81\x16\x82R`\xFF\x89\x16` \x83\x01R\x91Qc\x04\xC1\xB8\xEB`\xE3\x1B\x81R\x92\x93P\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x90\x91\x16\x91c&\r\xC7X\x91a\x17H\x91`\x04\x01a8WV[` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x17cW=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x17\x87\x91\x90a8}V[\x15a\x18\xAAW_\x82`\x01`\x01`@\x1B\x03\x81\x11\x15a\x17\xA5Wa\x17\xA5a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x17\xCEW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[\x83\x81\x10\x15a\x18*W\x85\x81\x81Q\x81\x10a\x17\xEDWa\x17\xEDa7\xD4V[` \x02` \x01\x01Q_\x01Q\x82\x82\x81Q\x81\x10a\x18\nWa\x18\na7\xD4V[`\x01`\x01`\xA0\x1B\x03\x90\x92\x16` \x92\x83\x02\x91\x90\x91\x01\x90\x91\x01R`\x01\x01a\x17\xD3V[P`@Qc\x02\x87\xF7Q`\xE5\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x90cP\xFE\xEA \x90a\x18{\x90\x85\x90\x8A\x90\x86\x90`\x04\x01a8\x9CV[_`@Q\x80\x83\x03\x81_\x87\x80;\x15\x80\x15a\x18\x92W__\xFD[PZ\xF1\x15\x80\x15a\x18\xA4W=__>=_\xFD[PPPPP[PPPPPV[`\xFF\x83\x16_\x90\x81R`\x01` R`@\x81 \x80T\x82\x91\x90\x84\x90\x81\x10a\x18\xD7Wa\x18\xD7a7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x90Pa\n\xBE\x81\x85a)\xAFV[a\x195a\x1E\x10V[`\xFF\x84\x16_\x90\x81R`\x01` R`@\x90 T\x15a\x19eW`@Qc\x10\xCD\xA5\x17`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\x19o\x84\x82a%\xE9V[a\x19y\x84\x84a(\xDAV[a\x19\x84\x84`\x01a)BV[a\x19\x8E\x84\x83a*&V[PPP`\xFF\x16_\x90\x81R`\x01` \x81\x81R`@\x80\x84 \x81Q``\x81\x01\x83Rc\xFF\xFF\xFF\xFFC\x81\x16\x82R\x81\x85\x01\x87\x81R\x93\x82\x01\x87\x81R\x83T\x96\x87\x01\x84U\x92\x87R\x93\x90\x95 \x94Q\x94\x90\x93\x01\x80T\x91Q\x93Q`\x01`\x01``\x1B\x03\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x94\x84\x16`\x01` \x1B\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x93\x16\x95\x90\x93\x16\x94\x90\x94\x17\x17\x91\x90\x91\x16\x17\x90UV[`\xFF\x81\x16_\x90\x81R`\x01` \x81\x90R`@\x82 \x80T\x90\x91a\x1A?\x91a8\x15V[\x81T\x81\x10a\x1AOWa\x1AOa7\xD4V[_\x91\x82R` \x90\x91 \x01T`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x92\x91PPV[_a\x1A|\x84\x84\x84a*\xD7V[\x94\x93PPPPV[a\x1A\x8Ca\x1D]V[\x81a\x1A\x96\x81a\x1C\x80V[a\x15\xD9\x83\x83a*&V[_\x82\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x88\x16\x84R\x90\x91R\x81 \x80T\x82\x91\x90\x84\x90\x81\x10a\x1A\xD0Wa\x1A\xD0a7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x90Pa\x1B&\x81\x86a)\xAFV[`@\x01Q\x95\x94PPPPPV[`@\x80Q``\x80\x82\x01\x83R_\x80\x83R` \x80\x84\x01\x82\x90R\x83\x85\x01\x82\x90R\x86\x82R`\x02\x81R\x84\x82 `\xFF\x87\x16\x83R\x81R\x84\x82 T\x85Q\x93\x84\x01\x86R\x82\x84R\x90\x83\x01\x82\x90R\x93\x82\x01\x81\x90R\x91\x92\x91\x82\x90\x03a\x1B\x8FW\x91Pa\n\xAC\x90PV[_\x85\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x88\x16\x84R\x90\x91R\x90 a\x1B\xB5`\x01\x84a8\x15V[\x81T\x81\x10a\x1B\xC5Wa\x1B\xC5a7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x92Pa\n\xAC\x91PPV[PP\x92\x91PPV[_\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 a\x1CG\x85\x85\x85a*\xD7V[c\xFF\xFF\xFF\xFF\x16\x81T\x81\x10a\x1C]Wa\x1C]a7\xD4V[_\x91\x82R` \x90\x91 \x01T`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x94\x93PPPPV[`\xFF\x81\x16_\x90\x81R`\x01` R`@\x90 Ta\x1C\xAFW`@Qcs\x10\xCF\xF5`\xE1\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[PV[`@\x80Q`\x01\x80\x82R\x81\x83\x01\x90\x92R_\x91\x82\x91\x82\x91` \x80\x83\x01\x90\x806\x837\x01\x90PP\x90P\x83\x81_\x81Q\x81\x10a\x1C\xEAWa\x1C\xEAa7\xD4V[` \x02` \x01\x01\x90`\x01`\x01`\xA0\x1B\x03\x16\x90\x81`\x01`\x01`\xA0\x1B\x03\x16\x81RPP__a\x1D\x16\x87\x84a\"CV[\x91P\x91P\x81_\x81Q\x81\x10a\x1D,Wa\x1D,a7\xD4V[` \x02` \x01\x01Q\x81_\x81Q\x81\x10a\x1DFWa\x1DFa7\xD4V[` \x02` \x01\x01Q\x94P\x94PPPP[\x92P\x92\x90PV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\x8D\xA5\xCB[`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x1D\xB9W=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x1D\xDD\x91\x90a8<V[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x1E\x0EW`@Qc\xCE\x98\xC2K`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[V[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14a\x1E\x0EW`@Qc,\x01\xB2\x05`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[_\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 T\x81\x90\x80\x82\x03a\x1F\x1DW_\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x82R\x80\x83 \x81Q``\x81\x01\x83Rc\xFF\xFF\xFF\xFFC\x81\x16\x82R\x81\x85\x01\x86\x81R`\x01`\x01``\x1B\x03\x80\x8C\x16\x95\x84\x01\x95\x86R\x84T`\x01\x81\x01\x86U\x94\x88R\x95\x90\x96 \x91Q\x91\x90\x92\x01\x80T\x95Q\x93Q\x90\x94\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x93\x83\x16`\x01` \x1B\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x96\x16\x91\x90\x92\x16\x17\x93\x90\x93\x17\x16\x91\x90\x91\x17\x90Ua xV[_\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x90\x91R\x81 a\x1FC`\x01\x84a8\x15V[\x81T\x81\x10a\x1FSWa\x1FSa7\xD4V[_\x91\x82R` \x90\x91 \x01\x80T`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x91\x04\x81\x16\x94P\x90\x91P\x85\x16\x83\x03a\x1F\x89W_\x93PPPPa\x11\\V[\x80Tc\xFF\xFF\xFF\xFFC\x81\x16\x91\x16\x03a\x1F\xC1W\x80T`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B`\x01`\x01``\x1B\x03\x87\x16\x02\x17\x81Ua vV[\x80Tg\xFF\xFF\xFF\xFF\0\0\0\0\x19\x16`\x01` \x1BCc\xFF\xFF\xFF\xFF\x90\x81\x16\x82\x81\x02\x93\x90\x93\x17\x84U_\x8A\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x8D\x16\x84R\x82R\x80\x83 \x81Q``\x81\x01\x83R\x96\x87R\x86\x83\x01\x84\x81R`\x01`\x01``\x1B\x03\x8D\x81\x16\x93\x89\x01\x93\x84R\x82T`\x01\x81\x01\x84U\x92\x86R\x93\x90\x94 \x96Q\x96\x01\x80T\x93Q\x91Q\x96\x85\x16g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x94\x16\x93\x90\x93\x17\x93\x16\x90\x93\x02\x91\x90\x91\x17`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B\x93\x90\x92\x16\x92\x90\x92\x02\x17\x90U[P[`@\x80Q`\xFF\x87\x16\x81R`\x01`\x01``\x1B\x03\x86\x16` \x82\x01R\x87\x91\x7F/R}R~\x95\xD8\xFE@\xAE\xC5Swt;\xB7y\x08}\xA3\xF6\xD0\xD0\x8F\x12\xE3dD\xDAb2}\x91\x01`@Q\x80\x91\x03\x90\xA2a \xC8\x82\x85a,>V[\x96\x95PPPPPPV[`\xFF\x82\x16_\x90\x81R`\x01` \x81\x90R`@\x82 \x80T\x91\x83\x91\x90a \xF5\x90\x84a8\x15V[\x81T\x81\x10a!\x05Wa!\x05a7\xD4V[\x90_R` _ \x01\x90P\x83_\x03a!0WT`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x91Pa\n\xAC\x90PV[\x80T_\x90a!N\x90`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x86a,UV[\x82T\x90\x91Pc\xFF\xFF\xFF\xFFC\x81\x16\x91\x16\x03a!\x89W\x81T`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B`\x01`\x01``\x1B\x03\x83\x16\x02\x17\x82Ua\":V[\x81Tc\xFF\xFF\xFF\xFFC\x81\x16`\x01` \x1B\x81\x81\x02g\xFF\xFF\xFF\xFF\0\0\0\0\x19\x90\x94\x16\x93\x90\x93\x17\x85U`\xFF\x89\x16_\x90\x81R`\x01` \x81\x81R`@\x80\x84 \x81Q``\x81\x01\x83R\x95\x86R\x85\x83\x01\x85\x81R`\x01`\x01``\x1B\x03\x80\x8B\x16\x93\x88\x01\x93\x84R\x82T\x95\x86\x01\x83U\x91\x86R\x92\x90\x94 \x94Q\x94\x90\x92\x01\x80T\x91Q\x92Q\x90\x93\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x92\x86\x16\x90\x96\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x91\x16\x93\x90\x94\x16\x92\x90\x92\x17\x92\x90\x92\x17\x16\x91\x90\x91\x17\x90U[\x95\x94PPPPPV[``\x80_\x83Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\"`Wa\"`a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\"\x89W\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_\x84Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\"\xA6Wa\"\xA6a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\"\xCFW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_a\"\xEB\x87`\xFF\x16_\x90\x81R`\x03` R`@\x90 T\x90V[`\xFF\x88\x16_\x90\x81R`\x03` \x90\x81R`@\x80\x83 \x80T\x82Q\x81\x85\x02\x81\x01\x85\x01\x90\x93R\x80\x83R\x94\x95P\x92\x93\x90\x92\x91\x84\x90\x84\x01[\x82\x82\x10\x15a#kW_\x84\x81R` \x90\x81\x90 `@\x80Q\x80\x82\x01\x90\x91R\x90\x84\x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x82R`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x81\x83\x01R\x82R`\x01\x90\x92\x01\x91\x01a#\x1DV[PPPP\x90P```\x01\x80\x81\x11\x15a#\x85Wa#\x85a2CV[`\xFF\x80\x8B\x16_\x90\x81R`\x05` R`@\x90 T\x16`\x01\x81\x11\x15a#\xAAWa#\xAAa2CV[\x03a#\xC0Wa#\xB9\x89\x89a,\x82V[\x90Pa$cV[`\xFF\x89\x16_\x90\x81R`\x04` \x81\x90R`@\x91\x82\x90 \x91Qcxps;`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x92c\xF0\xE0\xE6v\x92a$\x1F\x92\x8D\x92\x91\x01a9\x9AV[_`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a$9W=__>=_\xFD[PPPP`@Q=_\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra$`\x91\x90\x81\x01\x90a9\xBEV[\x90P[_[\x88Q\x81\x10\x15a%\xD9W_[\x84\x81\x10\x15a%iW_\x84\x82\x81Q\x81\x10a$\x8BWa$\x8Ba7\xD4V[` \x02` \x01\x01Q\x90P_\x84\x84\x81Q\x81\x10a$\xA8Wa$\xA8a7\xD4V[` \x02` \x01\x01Q\x83\x81Q\x81\x10a$\xC1Wa$\xC1a7\xD4V[` \x02` \x01\x01Q\x11\x15a%`Wg\r\xE0\xB6\xB3\xA7d\0\0\x81` \x01Q`\x01`\x01``\x1B\x03\x16\x85\x85\x81Q\x81\x10a$\xF8Wa$\xF8a7\xD4V[` \x02` \x01\x01Q\x84\x81Q\x81\x10a%\x11Wa%\x11a7\xD4V[` \x02` \x01\x01Qa%#\x91\x90a:\xCAV[a%-\x91\x90a:\xE1V[\x88\x84\x81Q\x81\x10a%?Wa%?a7\xD4V[` \x02` \x01\x01\x81\x81Qa%S\x91\x90a;\0V[`\x01`\x01``\x1B\x03\x16\x90RP[P`\x01\x01a$pV[P`\xFF\x8A\x16_\x90\x81R` \x81\x90R`@\x90 T\x86Q`\x01`\x01``\x1B\x03\x90\x91\x16\x90\x87\x90\x83\x90\x81\x10a%\x9CWa%\x9Ca7\xD4V[` \x02` \x01\x01Q`\x01`\x01``\x1B\x03\x16\x10\x15\x85\x82\x81Q\x81\x10a%\xC1Wa%\xC1a7\xD4V[\x91\x15\x15` \x92\x83\x02\x91\x90\x91\x01\x90\x91\x01R`\x01\x01a$eV[P\x93\x98\x92\x97P\x91\x95PPPPPPV[_\x81Q\x11a&\nW`@Qcyl\xC5%`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[\x80Q`\xFF\x83\x16_\x90\x81R`\x03` \x90\x81R`@\x90\x91 T\x90a&,\x83\x83a;\x1FV[\x11\x15a&KW`@QcCqJ\xFD`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[_[\x82\x81\x10\x15a\x18\xAAW_[a&a\x82\x84a;\x1FV[\x81\x10\x15a&\xF0W\x84\x82\x81Q\x81\x10a&zWa&za7\xD4V[` \x02` \x01\x01Q_\x01Q`\x01`\x01`\xA0\x1B\x03\x16`\x03_\x88`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x82\x81T\x81\x10a&\xB6Wa&\xB6a7\xD4V[_\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x03a&\xE8W`@Qc{t4\x0B`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\x01\x01a&WV[P_\x84\x82\x81Q\x81\x10a'\x04Wa'\x04a7\xD4V[` \x02` \x01\x01Q` \x01Q`\x01`\x01``\x1B\x03\x16\x11a'7W`@QcrW\x12Q`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\xFF\x85\x16_\x90\x81R`\x03` R`@\x90 \x84Q\x85\x90\x83\x90\x81\x10a'\\Wa'\\a7\xD4V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01Q\x82T`\x01\x81\x01\x84U_\x93\x84R\x82\x84 \x82Q\x92\x84\x01Q`\x01`\x01``\x1B\x03\x16`\x01`\xA0\x1B\x02`\x01`\x01`\xA0\x1B\x03\x90\x93\x16\x92\x90\x92\x17\x91\x01U`\xFF\x87\x16\x82R`\x04\x90R`@\x90 \x84Q\x85\x90\x83\x90\x81\x10a'\xC0Wa'\xC0a7\xD4V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01QQ\x82T`\x01\x81\x01\x84U_\x93\x84R\x91\x90\x92 \x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x91\x90\x91\x17\x90U\x83Q`\xFF\x86\x16\x90\x7F\x10V^V\xCA\xCB\xF3.\xCA&yE\xF0T\xFE\xC0.Yu\x002\xD1\x13\xD30!\x82\xAD\x96\x7FT\x04\x90\x86\x90\x84\x90\x81\x10a(6Wa(6a7\xD4V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01QQ`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R\x01`@Q\x80\x91\x03\x90\xA2\x84`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x85\x83\x81Q\x81\x10a(\x93Wa(\x93a7\xD4V[` \x02` \x01\x01Q_\x01Q\x86\x84\x81Q\x81\x10a(\xB0Wa(\xB0a7\xD4V[` \x02` \x01\x01Q` \x01Q`@Qa(\xCA\x92\x91\x90a.FV[`@Q\x80\x91\x03\x90\xA2`\x01\x01a&MV[`\xFF\x82\x16_\x81\x81R` \x81\x81R`@\x91\x82\x90 \x80Tk\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x16`\x01`\x01``\x1B\x03\x86\x16\x90\x81\x17\x90\x91U\x91Q\x91\x82R\x7F&\xEE\xCF\xF2\xB7\x0B\nq\x10O\xF4\xD9@\xBAqb\xD2:\x95\xC2Hw\x1F\xC4\x87\xA7\xBE\x17\xA5\x96\xB3\xCF\x91\x01`@Q\x80\x91\x03\x90\xA2PPV[`\xFF\x82\x16_\x90\x81R`\x05` R`@\x90 \x80T\x82\x91\x90`\xFF\x19\x16`\x01\x83\x81\x81\x11\x15a)oWa)oa2CV[\x02\x17\x90UP\x7F|\x11.\x86<\xCF\0xb\xE2\xC9\xE2X\x19\xC93\xFE\xDB\xC95\ndCB;J\x85\x99\xC2\xE8\xA5-\x81`@Qa)\xA3\x91\x90a2WV[`@Q\x80\x91\x03\x90\xA1PPV[\x81_\x01Qc\xFF\xFF\xFF\xFF\x16\x81c\xFF\xFF\xFF\xFF\x16\x10\x15a)\xDFW`@Qc\x13\x91\xE1\x1B`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[` \x82\x01Qc\xFF\xFF\xFF\xFF\x16\x15\x80a*\x05WP\x81` \x01Qc\xFF\xFF\xFF\xFF\x16\x81c\xFF\xFF\xFF\xFF\x16\x10[a*\"W`@Qc\x13\x91\xE1\x1B`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[PPV[`\x01`\xFF\x80\x84\x16_\x90\x81R`\x05` R`@\x90 T\x16`\x01\x81\x11\x15a*MWa*Ma2CV[\x14a*kW`@Qc\xA3\xBE%\x83`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\xFF\x82\x16_\x90\x81R`\x06` \x90\x81R`@\x91\x82\x90 \x80Tc\xFF\xFF\xFF\xFF\x19\x81\x16c\xFF\xFF\xFF\xFF\x86\x81\x16\x91\x82\x17\x90\x93U\x84Q\x92\x90\x91\x16\x80\x83R\x92\x82\x01R\x90\x91\x7F(\xD75\x8By\xF0-!\xB8\xB7\xE1z\xEF\xC4\x18Zd0\x8A\xA3t\x06\xFA[\xEF\xC0[\x91\x93,9\xC7\x91\x01`@Q\x80\x91\x03\x90\xA1PPPV[_\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 T\x80[\x80\x15a+uW_\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x90\x91R\x90 c\xFF\xFF\xFF\xFF\x85\x16\x90a+)`\x01\x84a8\x15V[\x81T\x81\x10a+9Wa+9a7\xD4V[_\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11a+cWa+Z`\x01\x82a8\x15V[\x92PPPa\x11\\V[\x80a+m\x81a;2V[\x91PPa*\xF5V[P`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x81`$\x82\x01R\x7FStakeRegistry._getStakeUpdateInd`D\x82\x01R\x7FexForOperatorAtBlockNumber: no s`d\x82\x01R\x7Ftake update found for operatorId`\x84\x82\x01R\x7F and quorumNumber at block numbe`\xA4\x82\x01R`9`\xF9\x1B`\xC4\x82\x01R`\xE4\x01`@Q\x80\x91\x03\x90\xFD[_a\x11\\`\x01`\x01``\x1B\x03\x80\x85\x16\x90\x84\x16a;GV[__\x82\x12\x15a,xWa,g\x82a;fV[a,q\x90\x84a;\x80V[\x90Pa\n\xACV[a,q\x82\x84a;\0V[`\xFF\x82\x16_\x90\x81R`\x06` R`@\x81 T``\x91\x90a,\xA8\x90c\xFF\xFF\xFF\xFF\x16Ca;\x1FV[\x90P_\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c+\xAB,J`@Q\x80`@\x01`@R\x80\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\xDE\x11d\xBB`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a-AW=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a-e\x91\x90a8<V[`\x01`\x01`\xA0\x1B\x03\x16\x81R`\xFF\x89\x16` \x91\x82\x01\x81\x90R_\x90\x81R`\x04\x91\x82\x90R`@\x90\x81\x90 \x90Q`\x01`\x01`\xE0\x1B\x03\x19`\xE0\x86\x90\x1B\x16\x81Ra-\xAF\x93\x92\x8A\x92\x91\x89\x91\x01a;\x9FV[_`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a-\xC9W=__>=_\xFD[PPPP`@Q=_\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\":\x91\x90\x81\x01\x90a9\xBEV[\x805`\xFF\x81\x16\x81\x14a.\0W__\xFD[\x91\x90PV[_` \x82\x84\x03\x12\x15a.\x15W__\xFD[a\x11\\\x82a-\xF0V[__`@\x83\x85\x03\x12\x15a./W__\xFD[a.8\x83a-\xF0V[\x94` \x93\x90\x93\x015\x93PPPV[`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x82R`\x01`\x01``\x1B\x03\x16` \x82\x01R`@\x01\x90V[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x1C\xAFW__\xFD[__`@\x83\x85\x03\x12\x15a.\x8DW__\xFD[a.\x96\x83a-\xF0V[\x91P` \x83\x015a.\xA6\x81a.hV[\x80\x91PP\x92P\x92\x90PV[__\x83`\x1F\x84\x01\x12a.\xC1W__\xFD[P\x815`\x01`\x01`@\x1B\x03\x81\x11\x15a.\xD7W__\xFD[` \x83\x01\x91P\x83` \x82`\x05\x1B\x85\x01\x01\x11\x15a\x1DVW__\xFD[_____``\x86\x88\x03\x12\x15a/\x05W__\xFD[a/\x0E\x86a-\xF0V[\x94P` \x86\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a/(W__\xFD[a/4\x88\x82\x89\x01a.\xB1V[\x90\x95P\x93PP`@\x86\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a/RW__\xFD[a/^\x88\x82\x89\x01a.\xB1V[\x96\x99\x95\x98P\x93\x96P\x92\x94\x93\x92PPPV[__\x83`\x1F\x84\x01\x12a/\x7FW__\xFD[P\x815`\x01`\x01`@\x1B\x03\x81\x11\x15a/\x95W__\xFD[` \x83\x01\x91P\x83` \x82\x85\x01\x01\x11\x15a\x1DVW__\xFD[____``\x85\x87\x03\x12\x15a/\xBFW__\xFD[\x845a/\xCA\x81a.hV[\x93P` \x85\x015\x92P`@\x85\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a/\xEBW__\xFD[a/\xF7\x87\x82\x88\x01a/oV[\x95\x98\x94\x97P\x95PPPPV[_\x81Q\x80\x84R` \x84\x01\x93P` \x83\x01_[\x82\x81\x10\x15a0<W\x81Q`\x01`\x01``\x1B\x03\x16\x86R` \x95\x86\x01\x95\x90\x91\x01\x90`\x01\x01a0\x15V[P\x93\x94\x93PPPPV[`@\x81R_a0X`@\x83\x01\x85a0\x03V[\x82\x81\x03` \x84\x01Ra\":\x81\x85a0\x03V[__`@\x83\x85\x03\x12\x15a0{W__\xFD[\x825\x91Pa0\x8B` \x84\x01a-\xF0V[\x90P\x92P\x92\x90PV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R_\x91\x84\x01\x90`@\x84\x01\x90\x83[\x81\x81\x10\x15a1\x02Wa0\xEC\x83\x85Qc\xFF\xFF\xFF\xFF\x81Q\x16\x82Rc\xFF\xFF\xFF\xFF` \x82\x01Q\x16` \x83\x01R`\x01`\x01``\x1B\x03`@\x82\x01Q\x16`@\x83\x01RPPV[` \x93\x90\x93\x01\x92``\x92\x90\x92\x01\x91`\x01\x01a0\xADV[P\x90\x95\x94PPPPPV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[`@\x80Q\x90\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a1CWa1Ca1\rV[`@R\x90V[`@Q`\x1F\x82\x01`\x1F\x19\x16\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a1qWa1qa1\rV[`@R\x91\x90PV[_`\x01`\x01`@\x1B\x03\x82\x11\x15a1\x91Wa1\x91a1\rV[P`\x05\x1B` \x01\x90V[__`@\x83\x85\x03\x12\x15a1\xACW__\xFD[a1\xB5\x83a-\xF0V[\x91P` \x83\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a1\xCFW__\xFD[\x83\x01`\x1F\x81\x01\x85\x13a1\xDFW__\xFD[\x805a1\xF2a1\xED\x82a1yV[a1IV[\x80\x82\x82R` \x82\x01\x91P` \x83`\x05\x1B\x85\x01\x01\x92P\x87\x83\x11\x15a2\x13W__\xFD[` \x84\x01\x93P[\x82\x84\x10\x15a25W\x835\x82R` \x93\x84\x01\x93\x90\x91\x01\x90a2\x1AV[\x80\x94PPPPP\x92P\x92\x90PV[cNH{q`\xE0\x1B_R`!`\x04R`$_\xFD[` \x81\x01`\x02\x83\x10a2wWcNH{q`\xE0\x1B_R`!`\x04R`$_\xFD[\x91\x90R\x90V[_\x82`\x1F\x83\x01\x12a2\x8CW__\xFD[\x815a2\x9Aa1\xED\x82a1yV[\x80\x82\x82R` \x82\x01\x91P` \x83`\x05\x1B\x86\x01\x01\x92P\x85\x83\x11\x15a2\xBBW__\xFD[` \x85\x01[\x83\x81\x10\x15a2\xD8W\x805\x83R` \x92\x83\x01\x92\x01a2\xC0V[P\x95\x94PPPPPV[___``\x84\x86\x03\x12\x15a2\xF4W__\xFD[\x835`\x01`\x01`@\x1B\x03\x81\x11\x15a3\tW__\xFD[\x84\x01`\x1F\x81\x01\x86\x13a3\x19W__\xFD[\x805a3'a1\xED\x82a1yV[\x80\x82\x82R` \x82\x01\x91P` \x83`\x05\x1B\x85\x01\x01\x92P\x88\x83\x11\x15a3HW__\xFD[` \x84\x01\x93P[\x82\x84\x10\x15a3sW\x835a3b\x81a.hV[\x82R` \x93\x84\x01\x93\x90\x91\x01\x90a3OV[\x95PPPP` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a3\x90W__\xFD[a3\x9C\x86\x82\x87\x01a2}V[\x92PPa3\xAB`@\x85\x01a-\xF0V[\x90P\x92P\x92P\x92V[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R_\x91\x84\x01\x90`@\x84\x01\x90\x83[\x81\x81\x10\x15a1\x02W\x83Q\x15\x15\x83R` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a3\xCDV[\x805`\x01`\x01``\x1B\x03\x81\x16\x81\x14a.\0W__\xFD[_\x82`\x1F\x83\x01\x12a4\x12W__\xFD[\x815a4 a1\xED\x82a1yV[\x80\x82\x82R` \x82\x01\x91P` \x83`\x06\x1B\x86\x01\x01\x92P\x85\x83\x11\x15a4AW__\xFD[` \x85\x01[\x83\x81\x10\x15a2\xD8W`@\x81\x88\x03\x12\x15a4]W__\xFD[a4ea1!V[\x815a4p\x81a.hV[\x81Ra4~` \x83\x01a3\xEDV[` \x82\x01R\x80\x84RP` \x83\x01\x92P`@\x81\x01\x90Pa4FV[___``\x84\x86\x03\x12\x15a4\xAAW__\xFD[a4\xB3\x84a-\xF0V[\x92Pa4\xC1` \x85\x01a3\xEDV[\x91P`@\x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a4\xDBW__\xFD[a4\xE7\x86\x82\x87\x01a4\x03V[\x91PP\x92P\x92P\x92V[\x805c\xFF\xFF\xFF\xFF\x81\x16\x81\x14a.\0W__\xFD[___`@\x84\x86\x03\x12\x15a5\x16W__\xFD[a5\x1F\x84a4\xF1V[\x92P` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a59W__\xFD[a5E\x86\x82\x87\x01a/oV[\x94\x97\x90\x96P\x93\x94PPPPV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R_\x91\x84\x01\x90`@\x84\x01\x90\x83[\x81\x81\x10\x15a1\x02W\x83Qc\xFF\xFF\xFF\xFF\x16\x83R` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a5kV[___``\x84\x86\x03\x12\x15a5\xA1W__\xFD[a5\xAA\x84a-\xF0V[\x95` \x85\x015\x95P`@\x90\x94\x015\x93\x92PPPV[``\x81\x01a\n\xAC\x82\x84c\xFF\xFF\xFF\xFF\x81Q\x16\x82Rc\xFF\xFF\xFF\xFF` \x82\x01Q\x16` \x83\x01R`\x01`\x01``\x1B\x03`@\x82\x01Q\x16`@\x83\x01RPPV[__`@\x83\x85\x03\x12\x15a6\nW__\xFD[a6\x13\x83a-\xF0V[\x91Pa0\x8B` \x84\x01a3\xEDV[___`@\x84\x86\x03\x12\x15a63W__\xFD[\x835\x92P` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a59W__\xFD[__`@\x83\x85\x03\x12\x15a6`W__\xFD[a6i\x83a-\xF0V[\x91P` \x83\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a6\x83W__\xFD[a6\x8F\x85\x82\x86\x01a4\x03V[\x91PP\x92P\x92\x90PV[___``\x84\x86\x03\x12\x15a6\xABW__\xFD[a6\xB4\x84a-\xF0V[\x92Pa6\xC2` \x85\x01a4\xF1V[\x92\x95\x92\x94PPP`@\x91\x90\x91\x015\x90V[____`\x80\x85\x87\x03\x12\x15a6\xE6W__\xFD[a6\xEF\x85a-\xF0V[\x93Pa6\xFD` \x86\x01a3\xEDV[\x92Pa7\x0B`@\x86\x01a4\xF1V[\x91P``\x85\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a7%W__\xFD[a71\x87\x82\x88\x01a4\x03V[\x91PP\x92\x95\x91\x94P\x92PV[___``\x84\x86\x03\x12\x15a7OW__\xFD[\x835\x92Pa7_` \x85\x01a-\xF0V[\x91Pa3\xAB`@\x85\x01a4\xF1V[__`@\x83\x85\x03\x12\x15a7~W__\xFD[a7\x87\x83a-\xF0V[\x91Pa0\x8B` \x84\x01a4\xF1V[____`\x80\x85\x87\x03\x12\x15a7\xA8W__\xFD[a7\xB1\x85a-\xF0V[\x93Pa7\xBF` \x86\x01a4\xF1V[\x93\x96\x93\x95PPPP`@\x82\x015\x91``\x015\x90V[cNH{q`\xE0\x1B_R`2`\x04R`$_\xFD[_` \x82\x84\x03\x12\x15a7\xF8W__\xFD[a\x11\\\x82a3\xEDV[cNH{q`\xE0\x1B_R`\x11`\x04R`$_\xFD[\x81\x81\x03\x81\x81\x11\x15a\n\xACWa\n\xACa8\x01V[cNH{q`\xE0\x1B_R`1`\x04R`$_\xFD[_` \x82\x84\x03\x12\x15a8LW__\xFD[\x81Qa\x11\\\x81a.hV[\x81Q`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x80\x83\x01Qc\xFF\xFF\xFF\xFF\x16\x90\x82\x01R`@\x81\x01a\n\xACV[_` \x82\x84\x03\x12\x15a8\x8DW__\xFD[\x81Q\x80\x15\x15\x81\x14a\x11\\W__\xFD[`\x01`\x01`\xA0\x1B\x03\x84\x16\x81R`\xFF\x83\x16` \x80\x83\x01\x91\x90\x91R```@\x83\x01\x81\x90R\x83Q\x90\x83\x01\x81\x90R_\x91\x84\x01\x90`\x80\x84\x01\x90\x83[\x81\x81\x10\x15a8\xF9W\x83Q`\x01`\x01`\xA0\x1B\x03\x16\x83R` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a8\xD2V[P\x90\x97\x96PPPPPPPV[\x80\x82\x01\x82\x81\x12_\x83\x12\x80\x15\x82\x16\x82\x15\x82\x16\x17\x15a\x1C\x19Wa\x1C\x19a8\x01V[_\x81Q\x80\x84R` \x84\x01\x93P` \x83\x01_[\x82\x81\x10\x15a0<W\x81Q`\x01`\x01`\xA0\x1B\x03\x16\x86R` \x95\x86\x01\x95\x90\x91\x01\x90`\x01\x01a97V[_\x81T\x80\x84R` \x84\x01\x93P\x82_R` _ _[\x82\x81\x10\x15a0<W\x81T`\x01`\x01`\xA0\x1B\x03\x16\x86R` \x90\x95\x01\x94`\x01\x91\x82\x01\x91\x01a9sV[`@\x81R_a9\xAC`@\x83\x01\x85a9%V[\x82\x81\x03` \x84\x01Ra\":\x81\x85a9^V[_` \x82\x84\x03\x12\x15a9\xCEW__\xFD[\x81Q`\x01`\x01`@\x1B\x03\x81\x11\x15a9\xE3W__\xFD[\x82\x01`\x1F\x81\x01\x84\x13a9\xF3W__\xFD[\x80Qa:\x01a1\xED\x82a1yV[\x80\x82\x82R` \x82\x01\x91P` \x83`\x05\x1B\x85\x01\x01\x92P\x86\x83\x11\x15a:\"W__\xFD[` \x84\x01[\x83\x81\x10\x15a:\xBFW\x80Q`\x01`\x01`@\x1B\x03\x81\x11\x15a:DW__\xFD[\x85\x01`?\x81\x01\x89\x13a:TW__\xFD[` \x81\x01Qa:ea1\xED\x82a1yV[\x80\x82\x82R` \x82\x01\x91P` \x80\x84`\x05\x1B\x86\x01\x01\x01\x92P\x8B\x83\x11\x15a:\x88W__\xFD[`@\x84\x01\x93P[\x82\x84\x10\x15a:\xAAW\x83Q\x82R` \x93\x84\x01\x93\x90\x91\x01\x90a:\x8FV[\x86RPP` \x93\x84\x01\x93\x91\x90\x91\x01\x90Pa:'V[P\x96\x95PPPPPPV[\x80\x82\x02\x81\x15\x82\x82\x04\x84\x14\x17a\n\xACWa\n\xACa8\x01V[_\x82a:\xFBWcNH{q`\xE0\x1B_R`\x12`\x04R`$_\xFD[P\x04\x90V[`\x01`\x01``\x1B\x03\x81\x81\x16\x83\x82\x16\x01\x90\x81\x11\x15a\n\xACWa\n\xACa8\x01V[\x80\x82\x01\x80\x82\x11\x15a\n\xACWa\n\xACa8\x01V[_\x81a;@Wa;@a8\x01V[P_\x19\x01\x90V[\x81\x81\x03_\x83\x12\x80\x15\x83\x83\x13\x16\x83\x83\x12\x82\x16\x17\x15a\x06\xE8Wa\x06\xE8a8\x01V[_`\x01`\xFF\x1B\x82\x01a;zWa;za8\x01V[P_\x03\x90V[`\x01`\x01``\x1B\x03\x82\x81\x16\x82\x82\x16\x03\x90\x81\x11\x15a\n\xACWa\n\xACa8\x01V[\x84Q`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x80\x86\x01Qc\xFF\xFF\xFF\xFF\x16\x90\x82\x01R`\xA0`@\x82\x01R_a;\xD1`\xA0\x83\x01\x86a9%V[\x82\x81\x03``\x84\x01Ra;\xE3\x81\x86a9^V[\x91PPc\xFF\xFF\xFF\xFF\x83\x16`\x80\x83\x01R\x95\x94PPPPPV\xFE\xA2dipfsX\"\x12 Ko\x05\x0E\xDE\xC8jwiz\xD4\x99}n\x80\x9E\xDD\xAD\x8E\xED\xA9\x99\x07\xE4\x8E/\xBB_\x90\xD8\xE0\xE1dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x608060405234801561001057600080fd5b50600436106101e55760003560e01c80639f3ccf651161010f578063c8294c56116100a2578063f2be94ae11610071578063f2be94ae1461054b578063f851e1981461055e578063fa28c62714610571578063ff694a771461058457600080fd5b8063c8294c56146104d6578063d5eccc05146104e9578063dd9846b9146104fc578063df5cf7231461052457600080fd5b8063bc9a40c3116100de578063bc9a40c314610474578063bd29b8cd14610487578063c46778a51461049a578063c601527d146104c357600080fd5b80639f3ccf65146103ee578063ac6bfb0314610401578063adc804da14610421578063b6904b781461046157600080fd5b80634bd26e091161018757806366acfefe1161015657806366acfefe1461034a5780636d14a987146103755780637c172347146103b457806381c07502146103ce57600080fd5b80634bd26e09146102e55780635401ed27146103155780635e5a6775146103285780635f1f2d771461033757600080fd5b806320b66298116101c357806320b662981461026c57806325504777146102815780632cd95940146102a25780633ca5a5f5146102c257600080fd5b80630491b41c146101ea57806308732461146102205780631f9b74e014610241575b600080fd5b61020d6101f8366004612803565b60ff1660009081526001602052604090205490565b6040519081526020015b60405180910390f35b61023361022e36600461281e565b610597565b604051610217929190612848565b61025461024f36600461287f565b6105e0565b6040516001600160601b039091168152602001610217565b61027f61027a3660046128fa565b610602565b005b61029461028f3660046129bb565b610860565b604051610217929190612a5a565b6102b56102b0366004612a7f565b610a78565b6040516102179190612aab565b61020d6102d0366004612803565b60ff1660009081526003602052604090205490565b61020d6102f3366004612a7f565b600091825260026020908152604080842060ff93909316845291905290205490565b610254610323366004612a7f565b610b17565b61020d670de0b6b3a764000081565b61027f610345366004612bb4565b610b30565b61035d6103583660046129bb565b610e78565b6040516001600160c01b039091168152602001610217565b61039c7f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b039091168152602001610217565b6103bc602081565b60405160ff9091168152602001610217565b6103e16103dc366004612c70565b610f17565b6040516102179190612cc2565b61039c6103fc36600461281e565b611157565b61041461040f366004612d00565b61118f565b6040516102179190612d33565b61043461042f36600461281e565b611227565b6040805182516001600160a01b031681526020928301516001600160601b03169281019290925201610217565b61041461046f36600461281e565b6112a1565b61027f610482366004612d7f565b611330565b61027f610495366004612da9565b611351565b6102546104a8366004612803565b6000602081905290815260409020546001600160601b031681565b61027f6104d1366004612e75565b6113c3565b6102546104e4366004612ec2565b6113df565b6102546104f7366004612803565b61145d565b61050f61050a366004612efe565b6114b0565b60405163ffffffff9091168152602001610217565b61039c7f000000000000000000000000000000000000000000000000000000000000000081565b610254610559366004612f3a565b6114c5565b61041461056c366004612a7f565b61155a565b61025461057f366004612efe565b61163f565b61027f610592366004612f7c565b6116a0565b600360205281600052604060002081815481106105b357600080fd5b6000918252602090912001546001600160a01b0381169250600160a01b90046001600160601b0316905082565b6000826105ec816117cb565b60006105f88585611847565b5095945050505050565b61060a611a45565b84610614816117cb565b838061068f576040805162461bcd60e51b81526020600482015260248101919091527f5374616b6552656769737472792e6d6f6469667953747261746567795061726160448201527f6d733a206e6f20737472617465677920696e64696365732070726f766964656460648201526084015b60405180910390fd5b8281146107045760405162461bcd60e51b815260206004820152603960248201527f5374616b6552656769737472792e6d6f6469667953747261746567795061726160448201527f6d733a20696e707574206c656e677468206d69736d61746368000000000000006064820152608401610686565b60ff87166000908152600360205260408120905b828110156108555785858281811061073257610732612fd9565b90506020020160208101906107479190612fef565b8289898481811061075a5761075a612fd9565b905060200201358154811061077157610771612fd9565b9060005260206000200160000160146101000a8154816001600160601b0302191690836001600160601b031602179055508860ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a75838a8a858181106107da576107da612fd9565b90506020020135815481106107f1576107f1612fd9565b6000918252602090912001546001600160a01b031688888581811061081857610818612fd9565b905060200201602081019061082d9190612fef565b60405161083b929190612848565b60405180910390a28061084d81613020565b915050610718565b505050505050505050565b60608061086b611b6e565b6000836001600160401b0381111561088557610885612b23565b6040519080825280602002602001820160405280156108ae578160200160208202803683370190505b5090506000846001600160401b038111156108cb576108cb612b23565b6040519080825280602002602001820160405280156108f4578160200160208202803683370190505b50905060005b85811015610a6a57600087878381811061091657610916612fd9565b919091013560f81c915061092b9050816117cb565b600080610938838d611847565b91509150806109d55760405162461bcd60e51b815260206004820152605b60248201527f5374616b6552656769737472792e72656769737465724f70657261746f723a2060448201527f4f70657261746f7220646f6573206e6f74206d656574206d696e696d756d207360648201527f74616b6520726571756972656d656e7420666f722071756f72756d0000000000608482015260a401610686565b60006109e28c8585611c21565b9050828786815181106109f7576109f7612fd9565b60200260200101906001600160601b031690816001600160601b031681525050610a218482611ea1565b868681518110610a3357610a33612fd9565b60200260200101906001600160601b031690816001600160601b031681525050505050508080610a6290613020565b9150506108fa565b509097909650945050505050565b600082815260026020908152604080832060ff851684528252808320805482518185028101850190935280835260609492939192909184015b82821015610b0a576000848152602090819020604080516060810182529185015463ffffffff8082168452600160201b82041683850152600160401b90046001600160601b031690820152825260019092019101610ab1565b5050505090505b92915050565b600080610b24848461155a565b60400151949350505050565b610b38611a45565b81610b42816117cb565b815180610bb75760405162461bcd60e51b815260206004820152603d60248201527f5374616b6552656769737472792e72656d6f7665537472617465676965733a2060448201527f6e6f20696e646963657320746f2072656d6f76652070726f76696465640000006064820152608401610686565b60ff841660009081526003602090815260408083206004909252822090915b83811015610e6f578660ff167f31fa2e2cd280c9375e13ffcf3d81e2378100186e4058f8d3ddb690b82dcd31f784888481518110610c1657610c16612fd9565b602002602001015181548110610c2e57610c2e612fd9565b600091825260209182902001546040516001600160a01b0390911681520160405180910390a28660ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a7584888481518110610c8c57610c8c612fd9565b602002602001015181548110610ca457610ca4612fd9565b600091825260208083209190910154604080516001600160a01b039092168252918101929092520160405180910390a282548390610ce49060019061303b565b81548110610cf457610cf4612fd9565b9060005260206000200183878381518110610d1157610d11612fd9565b602002602001015181548110610d2957610d29612fd9565b600091825260209091208254910180546001600160a01b0319166001600160a01b03909216918217815591546001600160601b03600160a01b9182900416021790558254839080610d7c57610d7c613052565b60008281526020812082016000199081019190915501905581548290610da49060019061303b565b81548110610db457610db4612fd9565b9060005260206000200160009054906101000a90046001600160a01b031682878381518110610de557610de5612fd9565b602002602001015181548110610dfd57610dfd612fd9565b9060005260206000200160006101000a8154816001600160a01b0302191690836001600160a01b0316021790555081805480610e3b57610e3b613052565b600082815260209020810160001990810180546001600160a01b031916905501905580610e6781613020565b915050610bd6565b50505050505050565b6000610e82611b6e565b6000805b838110156105f8576000858583818110610ea257610ea2612fd9565b919091013560f81c9150610eb79050816117cb565b600080610ec4838b611847565b9150915080610ee65760009150600160ff84161b6001600160c01b0386161794505b6000610ef38a8585611c21565b9050610eff8482611ea1565b50505050508080610f0f90613020565b915050610e86565b60606000826001600160401b03811115610f3357610f33612b23565b604051908082528060200260200182016040528015610f5c578160200160208202803683370190505b50905060005b8381101561114c576000858583818110610f7e57610f7e612fd9565b919091013560f81c9150610f939050816117cb565b60ff81166000908152600160205260408120805463ffffffff8a169290610fbc57610fbc612fd9565b60009182526020909120015463ffffffff1611156110685760405162461bcd60e51b815260206004820152605b60248201527f5374616b6552656769737472792e676574546f74616c5374616b65496e64696360448201527f65734174426c6f636b4e756d6265723a2071756f72756d20686173206e6f207360648201527f74616b6520686973746f727920617420626c6f636b4e756d6265720000000000608482015260a401610686565b60ff8116600090815260016020526040812054905b818110156111365760ff8316600090815260016020819052604090912063ffffffff8b16916110ac848661303b565b6110b6919061303b565b815481106110c6576110c6612fd9565b60009182526020909120015463ffffffff16116111245760016110e9828461303b565b6110f3919061303b565b85858151811061110557611105612fd9565b602002602001019063ffffffff16908163ffffffff1681525050611136565b8061112e81613020565b91505061107d565b505050808061114490613020565b915050610f62565b5090505b9392505050565b6004602052816000526040600020818154811061117357600080fd5b6000918252602090912001546001600160a01b03169150829050565b60408051606081018252600080825260208083018290528284018290528582526002815283822060ff881683529052919091208054839081106111d4576111d4612fd9565b600091825260209182902060408051606081018252929091015463ffffffff8082168452600160201b82041693830193909352600160401b9092046001600160601b031691810191909152949350505050565b604080518082019091526000808252602082015260ff8316600090815260036020526040902080548390811061125f5761125f612fd9565b6000918252602091829020604080518082019091529101546001600160a01b0381168252600160a01b90046001600160601b0316918101919091529392505050565b604080516060810182526000808252602080830182905282840182905260ff8616825260019052919091208054839081106112de576112de612fd9565b600091825260209182902060408051606081018252929091015463ffffffff8082168452600160201b82041693830193909352600160401b9092046001600160601b0316918101919091529392505050565b611338611a45565b81611342816117cb565b61134c838361201b565b505050565b611359611b6e565b60005b818110156113bd57600083838381811061137857611378612fd9565b919091013560f81c915061138d9050816117cb565b600061139b86836000611c21565b90506113a78282611ea1565b50505080806113b590613020565b91505061135c565b50505050565b6113cb611a45565b816113d5816117cb565b61134c8383612084565b60ff8316600090815260016020526040812080548291908490811061140657611406612fd9565b600091825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b90930492909216908201529050610b2481856124c7565b60ff8116600090815260016020819052604082208054909161147e9161303b565b8154811061148e5761148e612fd9565b600091825260209091200154600160401b90046001600160601b031692915050565b60006114bd848484612641565b949350505050565b600082815260026020908152604080832060ff8816845290915281208054829190849081106114f6576114f6612fd9565b600091825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b9093049290921690820152905061154d81866124c7565b6040015195945050505050565b6040805160608082018352600080835260208084018290528385018290528682526002815284822060ff871683528152848220548551938401865282845290830182905293820152909190816115b3579150610b119050565b600085815260026020908152604080832060ff8816845290915290206115da60018461303b565b815481106115ea576115ea612fd9565b600091825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b90930492909216908201529250610b11915050565b600083815260026020908152604080832060ff861684529091528120611666858585612641565b63ffffffff168154811061167c5761167c612fd9565b600091825260209091200154600160401b90046001600160601b0316949350505050565b6116a8611b6e565b60ff8316600090815260016020526040902054156117265760405162461bcd60e51b815260206004820152603560248201527f5374616b6552656769737472792e696e697469616c697a6551756f72756d3a2060448201527471756f72756d20616c72656164792065786973747360581b6064820152608401610686565b6117308382612084565b61173a838361201b565b505060ff166000908152600160208181526040808420815160608101835263ffffffff438116825281850187815293820187815283549687018455928752939095209451949093018054915193516001600160601b0316600160401b02600160401b600160a01b0319948416600160201b0267ffffffffffffffff1990931695909316949094171791909116179055565b60ff81166000908152600160205260409020546118445760405162461bcd60e51b815260206004820152603160248201527f5374616b6552656769737472792e71756f72756d4578697374733a2071756f726044820152701d5b48191bd95cc81b9bdd08195e1a5cdd607a1b6064820152608401610686565b50565b6000806000806118668660ff1660009081526003602052604090205490565b604080518082019091526000808252602082015290915060ff871660009081526004602081905260408083209051639004134760e01b81526001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016926390041347926118db928c9201613068565b600060405180830381865afa1580156118f8573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261192091908101906130c7565b905060005b83811015611a115760ff8916600090815260036020526040902080548290811061195157611951612fd9565b60009182526020808320604080518082019091529201546001600160a01b0381168352600160a01b90046001600160601b031690820152835190945083908390811061199f5761199f612fd9565b602002602001015111156119ff57670de0b6b3a764000083602001516001600160601b03168383815181106119d6576119d6612fd9565b60200260200101516119e89190613157565b6119f29190613176565b6119fc9086613198565b94505b80611a0981613020565b915050611925565b50505060ff8616600090815260208190526040902054919350506001600160601b03908116908316101590505b9250929050565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316638da5cb5b6040518163ffffffff1660e01b8152600401602060405180830381865afa158015611aa3573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611ac791906131c3565b6001600160a01b0316336001600160a01b031614611b6c5760405162461bcd60e51b815260206004820152605660248201527f5374616b6552656769737472792e6f6e6c79436f6f7264696e61746f724f776e60448201527f65723a2063616c6c6572206973206e6f7420746865206f776e6572206f6620746064820152753432903932b3b4b9ba393ca1b7b7b93234b730ba37b960511b608482015260a401610686565b565b336001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001614611b6c5760405162461bcd60e51b815260206004820152604c60248201527f5374616b6552656769737472792e6f6e6c795265676973747279436f6f72646960448201527f6e61746f723a2063616c6c6572206973206e6f7420746865205265676973747260648201526b3ca1b7b7b93234b730ba37b960a11b608482015260a401610686565b600083815260026020908152604080832060ff86168452909152812054819080611ce557600086815260026020908152604080832060ff891684528252808320815160608101835263ffffffff43811682528185018681526001600160601b03808c16958401958652845460018101865594885295909620915191909201805495519351909416600160401b02600160401b600160a01b0319938316600160201b0267ffffffffffffffff1990961691909216179390931716919091179055611e47565b600086815260026020908152604080832060ff891684529091528120611d0c60018461303b565b81548110611d1c57611d1c612fd9565b600091825260209091200180546001600160601b03600160401b909104811694509091508516831415611d555760009350505050611150565b80544363ffffffff90811691161415611d8f578054600160401b600160a01b031916600160401b6001600160601b03871602178155611e45565b805467ffffffff000000001916600160201b4363ffffffff90811682810293909317845560008a815260026020908152604080832060ff8d168452825280832081516060810183529687528683018481526001600160601b038d81169389019384528254600181018455928652939094209651960180549351915196851667ffffffffffffffff1990941693909317931690930291909117600160401b600160a01b031916600160401b93909216929092021790555b505b6040805160ff871681526001600160601b038616602082015287917f2f527d527e95d8fe40aec55377743bb779087da3f6d0d08f12e36444da62327d910160405180910390a2611e9782856127a7565b9695505050505050565b60ff821660009081526001602081905260408220805491839190611ec5908461303b565b81548110611ed557611ed5612fd9565b9060005260206000200190508360001415611f045754600160401b90046001600160601b03169150610b119050565b8054600090611f2390600160401b90046001600160601b0316866127bf565b82549091504363ffffffff90811691161415611f60578154600160401b600160a01b031916600160401b6001600160601b03831602178255612012565b815463ffffffff438116600160201b81810267ffffffff000000001990941693909317855560ff8916600090815260016020818152604080842081516060810183529586528583018581526001600160601b03808b169388019384528254958601835591865292909420945194909201805491519251909316600160401b02600160401b600160a01b031992861690960267ffffffffffffffff19909116939094169290921792909217169190911790555b95945050505050565b60ff82166000818152602081815260409182902080546bffffffffffffffffffffffff19166001600160601b03861690811790915591519182527f26eecff2b70b0a71104ff4d940ba7162d23a95c248771fc487a7be17a596b3cf910160405180910390a25050565b60008151116120e95760405162461bcd60e51b8152602060048201526038602482015260008051602061329483398151915260448201527f3a206e6f20737472617465676965732070726f766964656400000000000000006064820152608401610686565b805160ff83166000908152600360209081526040909120549061210c83836131e0565b111561217c5760405162461bcd60e51b8152602060048201526045602482015260008051602061329483398151915260448201527f3a20657863656564204d41585f5745494748494e475f46554e4354494f4e5f4c60648201526408a9c8ea8960db1b608482015260a401610686565b60005b828110156124c05760005b61219482846131e0565b811015612275578482815181106121ad576121ad612fd9565b6020026020010151600001516001600160a01b0316600360008860ff1660ff16815260200190815260200160002082815481106121ec576121ec612fd9565b6000918252602090912001546001600160a01b031614156122635760405162461bcd60e51b815260206004820152603d602482015260008051602061329483398151915260448201527f3a2063616e6e6f74206164642073616d652073747261746567792032780000006064820152608401610686565b8061226d81613020565b91505061218a565b50600084828151811061228a5761228a612fd9565b6020026020010151602001516001600160601b03161161230f5760405162461bcd60e51b8152602060048201526046602482015260008051602061329483398151915260448201527f3a2063616e6e6f74206164642073747261746567792077697468207a65726f206064820152651dd95a59da1d60d21b608482015260a401610686565b60ff85166000908152600360205260409020845185908390811061233557612335612fd9565b602090810291909101810151825460018101845560009384528284208251928401516001600160601b0316600160a01b026001600160a01b039093169290921791015560ff871682526004905260409020845185908390811061239a5761239a612fd9565b6020908102919091018101515182546001810184556000938452919092200180546001600160a01b0319166001600160a01b03909216919091179055835160ff8616907f10565e56cacbf32eca267945f054fec02e59750032d113d3302182ad967f54049086908490811061241157612411612fd9565b602090810291909101810151516040516001600160a01b0390911681520160405180910390a28460ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a7585838151811061246e5761246e612fd9565b60200260200101516000015186848151811061248c5761248c612fd9565b6020026020010151602001516040516124a6929190612848565b60405180910390a2806124b881613020565b91505061217f565b5050505050565b816000015163ffffffff168163ffffffff16101561256c5760405162461bcd60e51b815260206004820152605660248201527f5374616b6552656769737472792e5f76616c69646174655374616b655570646160448201527f74654174426c6f636b4e756d6265723a207374616b6555706461746520697320606482015275333937b69030b33a32b910313637b1b5a73ab6b132b960511b608482015260a401610686565b602082015163ffffffff1615806125925750816020015163ffffffff168163ffffffff16105b61263d5760405162461bcd60e51b815260206004820152606a60248201527f5374616b6552656769737472792e5f76616c69646174655374616b655570646160448201527f74654174426c6f636b4e756d6265723a2074686572652069732061206e65776560648201527f72207374616b6555706461746520617661696c61626c65206265666f726520626084820152693637b1b5a73ab6b132b960b11b60a482015260c401610686565b5050565b600083815260026020908152604080832060ff86168452909152812054805b80156126e257600086815260026020908152604080832060ff89168452909152902063ffffffff85169061269560018461303b565b815481106126a5576126a5612fd9565b60009182526020909120015463ffffffff16116126d0576126c760018261303b565b92505050611150565b806126da816131f8565b915050612660565b5060405162461bcd60e51b815260206004820152608160248201527f5374616b6552656769737472792e5f6765745374616b65557064617465496e6460448201527f6578466f724f70657261746f724174426c6f636b4e756d6265723a206e6f207360648201527f74616b652075706461746520666f756e6420666f72206f70657261746f72496460848201527f20616e642071756f72756d4e756d62657220617420626c6f636b206e756d626560a4820152603960f91b60c482015260e401610686565b60006111506001600160601b0380851690841661320f565b6000808212156127e3576127d28261324e565b6127dc908461326b565b9050610b11565b6127dc8284613198565b803560ff811681146127fe57600080fd5b919050565b60006020828403121561281557600080fd5b611150826127ed565b6000806040838503121561283157600080fd5b61283a836127ed565b946020939093013593505050565b6001600160a01b039290921682526001600160601b0316602082015260400190565b6001600160a01b038116811461184457600080fd5b6000806040838503121561289257600080fd5b61289b836127ed565b915060208301356128ab8161286a565b809150509250929050565b60008083601f8401126128c857600080fd5b5081356001600160401b038111156128df57600080fd5b6020830191508360208260051b8501011115611a3e57600080fd5b60008060008060006060868803121561291257600080fd5b61291b866127ed565b945060208601356001600160401b038082111561293757600080fd5b61294389838a016128b6565b9096509450604088013591508082111561295c57600080fd5b50612969888289016128b6565b969995985093965092949392505050565b60008083601f84011261298c57600080fd5b5081356001600160401b038111156129a357600080fd5b602083019150836020828501011115611a3e57600080fd5b600080600080606085870312156129d157600080fd5b84356129dc8161286a565b93506020850135925060408501356001600160401b038111156129fe57600080fd5b612a0a8782880161297a565b95989497509550505050565b600081518084526020808501945080840160005b83811015612a4f5781516001600160601b031687529582019590820190600101612a2a565b509495945050505050565b604081526000612a6d6040830185612a16565b82810360208401526120128185612a16565b60008060408385031215612a9257600080fd5b82359150612aa2602084016127ed565b90509250929050565b6020808252825182820181905260009190848201906040850190845b81811015612b1757612b0483855163ffffffff808251168352806020830151166020840152506001600160601b0360408201511660408301525050565b9284019260609290920191600101612ac7565b50909695505050505050565b634e487b7160e01b600052604160045260246000fd5b604080519081016001600160401b0381118282101715612b5b57612b5b612b23565b60405290565b604051601f8201601f191681016001600160401b0381118282101715612b8957612b89612b23565b604052919050565b60006001600160401b03821115612baa57612baa612b23565b5060051b60200190565b60008060408385031215612bc757600080fd5b612bd0836127ed565b91506020808401356001600160401b03811115612bec57600080fd5b8401601f81018613612bfd57600080fd5b8035612c10612c0b82612b91565b612b61565b81815260059190911b82018301908381019088831115612c2f57600080fd5b928401925b82841015612c4d57833582529284019290840190612c34565b80955050505050509250929050565b803563ffffffff811681146127fe57600080fd5b600080600060408486031215612c8557600080fd5b612c8e84612c5c565b925060208401356001600160401b03811115612ca957600080fd5b612cb58682870161297a565b9497909650939450505050565b6020808252825182820181905260009190848201906040850190845b81811015612b1757835163ffffffff1683529284019291840191600101612cde565b600080600060608486031215612d1557600080fd5b612d1e846127ed565b95602085013595506040909401359392505050565b815163ffffffff9081168252602080840151909116908201526040808301516001600160601b03169082015260608101610b11565b80356001600160601b03811681146127fe57600080fd5b60008060408385031215612d9257600080fd5b612d9b836127ed565b9150612aa260208401612d68565b600080600060408486031215612dbe57600080fd5b8335925060208401356001600160401b03811115612ca957600080fd5b600082601f830112612dec57600080fd5b81356020612dfc612c0b83612b91565b82815260069290921b84018101918181019086841115612e1b57600080fd5b8286015b84811015612e6a5760408189031215612e385760008081fd5b612e40612b39565b8135612e4b8161286a565b8152612e58828601612d68565b81860152835291830191604001612e1f565b509695505050505050565b60008060408385031215612e8857600080fd5b612e91836127ed565b915060208301356001600160401b03811115612eac57600080fd5b612eb885828601612ddb565b9150509250929050565b600080600060608486031215612ed757600080fd5b612ee0846127ed565b9250612eee60208501612c5c565b9150604084013590509250925092565b600080600060608486031215612f1357600080fd5b83359250612f23602085016127ed565b9150612f3160408501612c5c565b90509250925092565b60008060008060808587031215612f5057600080fd5b612f59856127ed565b9350612f6760208601612c5c565b93969395505050506040820135916060013590565b600080600060608486031215612f9157600080fd5b612f9a846127ed565b9250612fa860208501612d68565b915060408401356001600160401b03811115612fc357600080fd5b612fcf86828701612ddb565b9150509250925092565b634e487b7160e01b600052603260045260246000fd5b60006020828403121561300157600080fd5b61115082612d68565b634e487b7160e01b600052601160045260246000fd5b60006000198214156130345761303461300a565b5060010190565b60008282101561304d5761304d61300a565b500390565b634e487b7160e01b600052603160045260246000fd5b60006040820160018060a01b03808616845260206040818601528286548085526060870191508760005282600020945060005b818110156130b957855485168352600195860195928401920161309b565b509098975050505050505050565b600060208083850312156130da57600080fd5b82516001600160401b038111156130f057600080fd5b8301601f8101851361310157600080fd5b805161310f612c0b82612b91565b81815260059190911b8201830190838101908783111561312e57600080fd5b928401925b8284101561314c57835182529284019290840190613133565b979650505050505050565b60008160001904831182151516156131715761317161300a565b500290565b60008261319357634e487b7160e01b600052601260045260246000fd5b500490565b60006001600160601b038083168185168083038211156131ba576131ba61300a565b01949350505050565b6000602082840312156131d557600080fd5b81516111508161286a565b600082198211156131f3576131f361300a565b500190565b6000816132075761320761300a565b506000190190565b60008083128015600160ff1b85018412161561322d5761322d61300a565b6001600160ff1b03840183138116156132485761324861300a565b50500390565b6000600160ff1b8214156132645761326461300a565b5060000390565b60006001600160601b038381169083168181101561328b5761328b61300a565b03939250505056fe5374616b6552656769737472792e5f6164645374726174656779506172616d73a2646970667358221220917a1b70375c0f80661be231d4fa91ad79e385c50ec1433637cbf1097b5b984d64736f6c634300080c0033
+    ///0x608060405234801561000f575f5ffd5b506004361061021e575f3560e01c80639ab4d6ff1161012a578063c8294c56116100b4578063df5cf72311610079578063df5cf72314610615578063e086adb31461063c578063f2be94ae1461064f578063f851e19814610662578063fa28c62714610675575f5ffd5b8063c8294c56146105a2578063ca8aa7c7146105b5578063cc5a7c20146105dc578063d5eccc05146105ef578063dd9846b914610602575f5ffd5b8063b6904b78116100fa578063b6904b781461052e578063bc9a40c314610541578063bd29b8cd14610554578063c46778a514610567578063c601527d1461058f575f5ffd5b80639ab4d6ff146104815780639f3ccf65146104bb578063ac6bfb03146104ce578063adc804da146104ee575f5ffd5b80635e5a6775116101ab5780636c3fb4bf1161017b5780636c3fb4bf146103ed5780636d14a9871461040d57806375d4173a146104345780637c1723471461044757806381c0750214610461575f5ffd5b80635e5a67751461035d5780635f1f2d771461036c578063697fbd931461037f5780636b3aa72e146103ae575f5ffd5b806325504777116101f157806325504777146102b85780632cd95940146102d95780633ca5a5f5146102f95780634bd26e091461031b5780635401ed271461034a575f5ffd5b80630491b41c1461022257806308732461146102575780631f9b74e01461027857806320b66298146102a3575b5f5ffd5b610244610230366004612e05565b60ff165f9081526001602052604090205490565b6040519081526020015b60405180910390f35b61026a610265366004612e1e565b610688565b60405161024e929190612e46565b61028b610286366004612e7c565b6106cd565b6040516001600160601b03909116815260200161024e565b6102b66102b1366004612ef1565b6106ef565b005b6102cb6102c6366004612fac565b61088d565b60405161024e929190613046565b6102ec6102e736600461306a565b610a15565b60405161024e9190613094565b610244610307366004612e05565b60ff165f9081526003602052604090205490565b61024461032936600461306a565b5f91825260026020908152604080842060ff93909316845291905290205490565b61028b61035836600461306a565b610ab2565b610244670de0b6b3a764000081565b6102b661037a36600461319b565b610aca565b6103a161038d366004612e05565b60056020525f908152604090205460ff1681565b60405161024e9190613257565b6103d57f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b03909116815260200161024e565b6104006103fb3660046132e2565b611008565b60405161024e91906133b4565b6103d57f000000000000000000000000000000000000000000000000000000000000000081565b6102b6610442366004613498565b611163565b61044f602081565b60405160ff909116815260200161024e565b61047461046f366004613504565b611249565b60405161024e9190613552565b6104a661048f366004612e05565b60066020525f908152604090205463ffffffff1681565b60405163ffffffff909116815260200161024e565b6103d56104c9366004612e1e565b6113ef565b6104e16104dc36600461358f565b611423565b60405161024e91906135bf565b6105016104fc366004612e1e565b6114b9565b6040805182516001600160a01b031681526020928301516001600160601b0316928101929092520161024e565b6104e161053c366004612e1e565b611530565b6102b661054f3660046135f9565b6115bd565b6102b6610562366004613621565b6115de565b61028b610575366004612e05565b5f602081905290815260409020546001600160601b031681565b6102b661059d36600461364f565b611641565b61028b6105b0366004613699565b6118b1565b6103d57f000000000000000000000000000000000000000000000000000000000000000081565b6102b66105ea3660046136d3565b61192d565b61028b6105fd366004612e05565b611a1f565b6104a661061036600461373d565b611a70565b6103d57f000000000000000000000000000000000000000000000000000000000000000081565b6102b661064a36600461376d565b611a84565b61028b61065d366004613795565b611aa0565b6104e161067036600461306a565b611b33565b61028b61068336600461373d565b611c21565b6003602052815f5260405f2081815481106106a1575f80fd5b5f918252602090912001546001600160a01b0381169250600160a01b90046001600160601b0316905082565b5f826106d881611c80565b5f6106e38585611cb2565b509250505b5092915050565b6106f7611d5d565b8461070181611c80565b83806107205760405163796cc52560e01b815260040160405180910390fd5b828114610740576040516343714afd60e01b815260040160405180910390fd5b60ff87165f908152600360205260408120905b828110156108825785858281811061076d5761076d6137d4565b905060200201602081019061078291906137e8565b82898984818110610795576107956137d4565b90506020020135815481106107ac576107ac6137d4565b905f5260205f20015f0160146101000a8154816001600160601b0302191690836001600160601b031602179055508860ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a75838a8a85818110610812576108126137d4565b9050602002013581548110610829576108296137d4565b5f918252602090912001546001600160a01b031688888581811061084f5761084f6137d4565b905060200201602081019061086491906137e8565b604051610872929190612e46565b60405180910390a2600101610753565b505050505050505050565b606080610898611e10565b5f836001600160401b038111156108b1576108b161310d565b6040519080825280602002602001820160405280156108da578160200160208202803683370190505b5090505f846001600160401b038111156108f6576108f661310d565b60405190808252806020026020018201604052801561091f578160200160208202803683370190505b5090505f5b85811015610a07575f87878381811061093f5761093f6137d4565b919091013560f81c9150610954905081611c80565b5f5f610960838d611cb2565b91509150806109825760405163207f13e360e11b815260040160405180910390fd5b5f61098e8c8585611e59565b9050828786815181106109a3576109a36137d4565b60200260200101906001600160601b031690816001600160601b0316815250506109cd84826120d2565b8686815181106109df576109df6137d4565b6001600160601b03909216602092830291909101909101525050600190920191506109249050565b509097909650945050505050565b5f82815260026020908152604080832060ff851684528252808320805482518185028101850190935280835260609492939192909184015b82821015610aa5575f848152602090819020604080516060810182529185015463ffffffff8082168452600160201b82041683850152600160401b90046001600160601b031690820152825260019092019101610a4d565b5050505090505b92915050565b5f5f610abe8484611b33565b60400151949350505050565b610ad2611d5d565b81610adc81611c80565b815180610afc5760405163796cc52560e01b815260040160405180910390fd5b60ff84165f908152600360209081526040808320600490925282209091836001600160401b03811115610b3157610b3161310d565b604051908082528060200260200182016040528015610b5a578160200160208202803683370190505b5090505f5b84811015610e555783878281518110610b7a57610b7a6137d4565b602002602001015181548110610b9257610b926137d4565b5f9182526020909120015482516001600160a01b0390911690839083908110610bbd57610bbd6137d4565b60200260200101906001600160a01b031690816001600160a01b0316815250508760ff167f31fa2e2cd280c9375e13ffcf3d81e2378100186e4058f8d3ddb690b82dcd31f785898481518110610c1557610c156137d4565b602002602001015181548110610c2d57610c2d6137d4565b5f91825260209182902001546040516001600160a01b0390911681520160405180910390a28760ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a7585898481518110610c8a57610c8a6137d4565b602002602001015181548110610ca257610ca26137d4565b5f91825260208083209190910154604080516001600160a01b039092168252918101929092520160405180910390a283548490610ce190600190613815565b81548110610cf157610cf16137d4565b905f5260205f200184888381518110610d0c57610d0c6137d4565b602002602001015181548110610d2457610d246137d4565b5f91825260209091208254910180546001600160a01b0319166001600160a01b03909216918217815591546001600160601b03600160a01b9182900416021790558354849080610d7657610d76613828565b5f8281526020812082015f199081019190915501905582548390610d9c90600190613815565b81548110610dac57610dac6137d4565b905f5260205f20015f9054906101000a90046001600160a01b031683888381518110610dda57610dda6137d4565b602002602001015181548110610df257610df26137d4565b905f5260205f20015f6101000a8154816001600160a01b0302191690836001600160a01b0316021790555082805480610e2d57610e2d613828565b5f8281526020902081015f1990810180546001600160a01b0319169055019055600101610b5f565b505f7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663de1164bb6040518163ffffffff1660e01b8152600401602060405180830381865afa158015610eb3573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190610ed7919061383c565b6040805180820182526001600160a01b03838116825260ff8c16602083015291516304c1b8eb60e31b81529293507f00000000000000000000000000000000000000000000000000000000000000009091169163260dc75891610f3c91600401613857565b602060405180830381865afa158015610f57573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190610f7b919061387d565b15610ffe5760405163b66bd98960e01b81526001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063b66bd98990610fd09084908c90879060040161389c565b5f604051808303815f87803b158015610fe7575f5ffd5b505af1158015610ff9573d5f5f3e3d5ffd5b505050505b5050505050505050565b6060611012611e10565b5f84516001600160401b0381111561102c5761102c61310d565b604051908082528060200260200182016040528015611055578160200160208202803683370190505b50905061106183611c80565b5f5f61106d8588612243565b90925090505f805b885181101561114957828181518110611090576110906137d4565b60200260200101516110f4575f8482815181106110af576110af6137d4565b60200260200101906001600160601b031690816001600160601b03168152505060018582815181106110e3576110e36137d4565b911515602092830291909101909101525b5f61113289838151811061110a5761110a6137d4565b602002602001015189878581518110611125576111256137d4565b6020026020010151611e59565b905061113e8184613906565b925050600101611075565b5061115486826120d2565b509293505050505b9392505050565b61116b611e10565b60ff83165f908152600160205260409020541561119b576040516310cda51760e21b815260040160405180910390fd5b6111a583826125e9565b6111af83836128da565b6111b9835f612942565b505060ff165f908152600160208181526040808420815160608101835263ffffffff438116825281850187815293820187815283549687018455928752939095209451949093018054915193516001600160601b0316600160401b02600160401b600160a01b0319948416600160201b0267ffffffffffffffff1990931695909316949094171791909116179055565b60605f826001600160401b038111156112645761126461310d565b60405190808252806020026020018201604052801561128d578160200160208202803683370190505b5090505f5b838110156113e6575f8585838181106112ad576112ad6137d4565b919091013560f81c91506112c2905081611c80565b60ff81165f908152600160205260408120805463ffffffff8a1692906112ea576112ea6137d4565b5f9182526020909120015463ffffffff16111561131a5760405163cc64657360e01b815260040160405180910390fd5b60ff81165f90815260016020526040812054905b818110156113db5760ff83165f90815260016020819052604090912063ffffffff8b169161135c8486613815565b6113669190613815565b81548110611376576113766137d4565b5f9182526020909120015463ffffffff16116113d35760016113988284613815565b6113a29190613815565b8585815181106113b4576113b46137d4565b602002602001019063ffffffff16908163ffffffff16815250506113db565b60010161132e565b505050600101611292565b50949350505050565b6004602052815f5260405f208181548110611408575f80fd5b5f918252602090912001546001600160a01b03169150829050565b604080516060810182525f80825260208083018290528284018290528582526002815283822060ff88168352905291909120805483908110611467576114676137d4565b5f91825260209182902060408051606081018252929091015463ffffffff8082168452600160201b82041693830193909352600160401b9092046001600160601b031691810191909152949350505050565b604080518082019091525f808252602082015260ff83165f9081526003602052604090208054839081106114ef576114ef6137d4565b5f918252602091829020604080518082019091529101546001600160a01b0381168252600160a01b90046001600160601b0316918101919091529392505050565b604080516060810182525f808252602080830182905282840182905260ff86168252600190529190912080548390811061156c5761156c6137d4565b5f91825260209182902060408051606081018252929091015463ffffffff8082168452600160201b82041693830193909352600160401b9092046001600160601b0316918101919091529392505050565b6115c5611d5d565b816115cf81611c80565b6115d983836128da565b505050565b6115e6611e10565b5f5b8181101561163b575f838383818110611603576116036137d4565b919091013560f81c9150611618905081611c80565b5f61162486835f611e59565b905061163082826120d2565b5050506001016115e8565b50505050565b611649611d5d565b8161165381611c80565b61165d83836125e9565b5f825190505f7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663de1164bb6040518163ffffffff1660e01b8152600401602060405180830381865afa1580156116bf573d5f5f3e3d5ffd5b505050506040513d601f19601f820116820180604052508101906116e3919061383c565b6040805180820182526001600160a01b03838116825260ff8916602083015291516304c1b8eb60e31b81529293507f00000000000000000000000000000000000000000000000000000000000000009091169163260dc7589161174891600401613857565b602060405180830381865afa158015611763573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190611787919061387d565b156118aa575f826001600160401b038111156117a5576117a561310d565b6040519080825280602002602001820160405280156117ce578160200160208202803683370190505b5090505f5b8381101561182a578581815181106117ed576117ed6137d4565b60200260200101515f015182828151811061180a5761180a6137d4565b6001600160a01b03909216602092830291909101909101526001016117d3565b50604051630287f75160e51b81526001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016906350feea209061187b9085908a90869060040161389c565b5f604051808303815f87803b158015611892575f5ffd5b505af11580156118a4573d5f5f3e3d5ffd5b50505050505b5050505050565b60ff83165f9081526001602052604081208054829190849081106118d7576118d76137d4565b5f91825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b90930492909216908201529050610abe81856129af565b611935611e10565b60ff84165f9081526001602052604090205415611965576040516310cda51760e21b815260040160405180910390fd5b61196f84826125e9565b61197984846128da565b611984846001612942565b61198e8483612a26565b50505060ff165f908152600160208181526040808420815160608101835263ffffffff438116825281850187815293820187815283549687018455928752939095209451949093018054915193516001600160601b0316600160401b02600160401b600160a01b0319948416600160201b0267ffffffffffffffff1990931695909316949094171791909116179055565b60ff81165f908152600160208190526040822080549091611a3f91613815565b81548110611a4f57611a4f6137d4565b5f91825260209091200154600160401b90046001600160601b031692915050565b5f611a7c848484612ad7565b949350505050565b611a8c611d5d565b81611a9681611c80565b6115d98383612a26565b5f82815260026020908152604080832060ff881684529091528120805482919084908110611ad057611ad06137d4565b5f91825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b90930492909216908201529050611b2681866129af565b6040015195945050505050565b60408051606080820183525f80835260208084018290528385018290528682526002815284822060ff8716835281528482205485519384018652828452908301829052938201819052919291829003611b8f579150610aac9050565b5f85815260026020908152604080832060ff881684529091529020611bb5600184613815565b81548110611bc557611bc56137d4565b5f91825260209182902060408051606081018252919092015463ffffffff8082168352600160201b820416938201939093526001600160601b03600160401b90930492909216908201529250610aac915050565b505092915050565b5f83815260026020908152604080832060ff861684529091528120611c47858585612ad7565b63ffffffff1681548110611c5d57611c5d6137d4565b5f91825260209091200154600160401b90046001600160601b0316949350505050565b60ff81165f90815260016020526040902054611caf57604051637310cff560e11b815260040160405180910390fd5b50565b6040805160018082528183019092525f91829182916020808301908036833701905050905083815f81518110611cea57611cea6137d4565b60200260200101906001600160a01b031690816001600160a01b0316815250505f5f611d168784612243565b91509150815f81518110611d2c57611d2c6137d4565b6020026020010151815f81518110611d4657611d466137d4565b6020026020010151945094505050505b9250929050565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316638da5cb5b6040518163ffffffff1660e01b8152600401602060405180830381865afa158015611db9573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190611ddd919061383c565b6001600160a01b0316336001600160a01b031614611e0e5760405163ce98c24b60e01b815260040160405180910390fd5b565b336001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001614611e0e57604051632c01b20560e21b815260040160405180910390fd5b5f83815260026020908152604080832060ff861684529091528120548190808203611f1d575f86815260026020908152604080832060ff891684528252808320815160608101835263ffffffff43811682528185018681526001600160601b03808c16958401958652845460018101865594885295909620915191909201805495519351909416600160401b02600160401b600160a01b0319938316600160201b0267ffffffffffffffff1990961691909216179390931716919091179055612078565b5f86815260026020908152604080832060ff891684529091528120611f43600184613815565b81548110611f5357611f536137d4565b5f91825260209091200180546001600160601b03600160401b9091048116945090915085168303611f89575f935050505061115c565b805463ffffffff438116911603611fc1578054600160401b600160a01b031916600160401b6001600160601b03871602178155612076565b805467ffffffff000000001916600160201b4363ffffffff9081168281029390931784555f8a815260026020908152604080832060ff8d168452825280832081516060810183529687528683018481526001600160601b038d81169389019384528254600181018455928652939094209651960180549351915196851667ffffffffffffffff1990941693909317931690930291909117600160401b600160a01b031916600160401b93909216929092021790555b505b6040805160ff871681526001600160601b038616602082015287917f2f527d527e95d8fe40aec55377743bb779087da3f6d0d08f12e36444da62327d910160405180910390a26120c88285612c3e565b9695505050505050565b60ff82165f90815260016020819052604082208054918391906120f59084613815565b81548110612105576121056137d4565b905f5260205f20019050835f036121305754600160401b90046001600160601b03169150610aac9050565b80545f9061214e90600160401b90046001600160601b031686612c55565b825490915063ffffffff438116911603612189578154600160401b600160a01b031916600160401b6001600160601b0383160217825561223a565b815463ffffffff438116600160201b81810267ffffffff000000001990941693909317855560ff89165f90815260016020818152604080842081516060810183529586528583018581526001600160601b03808b169388019384528254958601835591865292909420945194909201805491519251909316600160401b02600160401b600160a01b031992861690960267ffffffffffffffff19909116939094169290921792909217169190911790555b95945050505050565b6060805f83516001600160401b038111156122605761226061310d565b604051908082528060200260200182016040528015612289578160200160208202803683370190505b5090505f84516001600160401b038111156122a6576122a661310d565b6040519080825280602002602001820160405280156122cf578160200160208202803683370190505b5090505f6122eb8760ff165f9081526003602052604090205490565b60ff88165f90815260036020908152604080832080548251818502810185019093528083529495509293909291849084015b8282101561236b575f84815260209081902060408051808201909152908401546001600160a01b0381168252600160a01b90046001600160601b03168183015282526001909201910161231d565b505050509050606060018081111561238557612385613243565b60ff808b165f908152600560205260409020541660018111156123aa576123aa613243565b036123c0576123b98989612c82565b9050612463565b60ff89165f908152600460208190526040918290209151637870733b60e11b81526001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169263f0e0e6769261241f928d92910161399a565b5f60405180830381865afa158015612439573d5f5f3e3d5ffd5b505050506040513d5f823e601f3d908101601f1916820160405261246091908101906139be565b90505b5f5b88518110156125d9575f5b84811015612569575f84828151811061248b5761248b6137d4565b602002602001015190505f8484815181106124a8576124a86137d4565b602002602001015183815181106124c1576124c16137d4565b6020026020010151111561256057670de0b6b3a764000081602001516001600160601b03168585815181106124f8576124f86137d4565b60200260200101518481518110612511576125116137d4565b60200260200101516125239190613aca565b61252d9190613ae1565b88848151811061253f5761253f6137d4565b602002602001018181516125539190613b00565b6001600160601b03169052505b50600101612470565b5060ff8a165f9081526020819052604090205486516001600160601b039091169087908390811061259c5761259c6137d4565b60200260200101516001600160601b031610158582815181106125c1576125c16137d4565b91151560209283029190910190910152600101612465565b5093989297509195505050505050565b5f81511161260a5760405163796cc52560e01b815260040160405180910390fd5b805160ff83165f908152600360209081526040909120549061262c8383613b1f565b111561264b576040516343714afd60e01b815260040160405180910390fd5b5f5b828110156118aa575f5b6126618284613b1f565b8110156126f05784828151811061267a5761267a6137d4565b60200260200101515f01516001600160a01b031660035f8860ff1660ff1681526020019081526020015f2082815481106126b6576126b66137d4565b5f918252602090912001546001600160a01b0316036126e857604051637b74340b60e01b815260040160405180910390fd5b600101612657565b505f848281518110612704576127046137d4565b6020026020010151602001516001600160601b03161161273757604051637257125160e01b815260040160405180910390fd5b60ff85165f908152600360205260409020845185908390811061275c5761275c6137d4565b60209081029190910181015182546001810184555f9384528284208251928401516001600160601b0316600160a01b026001600160a01b039093169290921791015560ff87168252600490526040902084518590839081106127c0576127c06137d4565b6020908102919091018101515182546001810184555f938452919092200180546001600160a01b0319166001600160a01b03909216919091179055835160ff8616907f10565e56cacbf32eca267945f054fec02e59750032d113d3302182ad967f540490869084908110612836576128366137d4565b602090810291909101810151516040516001600160a01b0390911681520160405180910390a28460ff167f11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a75858381518110612893576128936137d4565b60200260200101515f01518684815181106128b0576128b06137d4565b6020026020010151602001516040516128ca929190612e46565b60405180910390a260010161264d565b60ff82165f818152602081815260409182902080546bffffffffffffffffffffffff19166001600160601b03861690811790915591519182527f26eecff2b70b0a71104ff4d940ba7162d23a95c248771fc487a7be17a596b3cf910160405180910390a25050565b60ff82165f908152600560205260409020805482919060ff19166001838181111561296f5761296f613243565b02179055507f7c112e863ccf007862e2c9e25819c933fedbc9350a6443423b4a8599c2e8a52d816040516129a39190613257565b60405180910390a15050565b815f015163ffffffff168163ffffffff1610156129df57604051631391e11b60e21b815260040160405180910390fd5b602082015163ffffffff161580612a055750816020015163ffffffff168163ffffffff16105b612a2257604051631391e11b60e21b815260040160405180910390fd5b5050565b600160ff8084165f90815260056020526040902054166001811115612a4d57612a4d613243565b14612a6b5760405163a3be258360e01b815260040160405180910390fd5b60ff82165f90815260066020908152604091829020805463ffffffff19811663ffffffff8681169182179093558451929091168083529282015290917f28d7358b79f02d21b8b7e17aefc4185a64308aa37406fa5befc05b91932c39c7910160405180910390a1505050565b5f83815260026020908152604080832060ff86168452909152812054805b8015612b75575f86815260026020908152604080832060ff89168452909152902063ffffffff851690612b29600184613815565b81548110612b3957612b396137d4565b5f9182526020909120015463ffffffff1611612b6357612b5a600182613815565b9250505061115c565b80612b6d81613b32565b915050612af5565b5060405162461bcd60e51b815260206004820152608160248201527f5374616b6552656769737472792e5f6765745374616b65557064617465496e6460448201527f6578466f724f70657261746f724174426c6f636b4e756d6265723a206e6f207360648201527f74616b652075706461746520666f756e6420666f72206f70657261746f72496460848201527f20616e642071756f72756d4e756d62657220617420626c6f636b206e756d626560a4820152603960f91b60c482015260e40160405180910390fd5b5f61115c6001600160601b03808516908416613b47565b5f5f821215612c7857612c6782613b66565b612c719084613b80565b9050610aac565b612c718284613b00565b60ff82165f9081526006602052604081205460609190612ca89063ffffffff1643613b1f565b90505f7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316632bab2c4a60405180604001604052807f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663de1164bb6040518163ffffffff1660e01b8152600401602060405180830381865afa158015612d41573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190612d65919061383c565b6001600160a01b0316815260ff891660209182018190525f90815260049182905260409081902090516001600160e01b031960e086901b168152612daf93928a9291899101613b9f565b5f60405180830381865afa158015612dc9573d5f5f3e3d5ffd5b505050506040513d5f823e601f3d908101601f1916820160405261223a91908101906139be565b803560ff81168114612e00575f5ffd5b919050565b5f60208284031215612e15575f5ffd5b61115c82612df0565b5f5f60408385031215612e2f575f5ffd5b612e3883612df0565b946020939093013593505050565b6001600160a01b039290921682526001600160601b0316602082015260400190565b6001600160a01b0381168114611caf575f5ffd5b5f5f60408385031215612e8d575f5ffd5b612e9683612df0565b91506020830135612ea681612e68565b809150509250929050565b5f5f83601f840112612ec1575f5ffd5b5081356001600160401b03811115612ed7575f5ffd5b6020830191508360208260051b8501011115611d56575f5ffd5b5f5f5f5f5f60608688031215612f05575f5ffd5b612f0e86612df0565b945060208601356001600160401b03811115612f28575f5ffd5b612f3488828901612eb1565b90955093505060408601356001600160401b03811115612f52575f5ffd5b612f5e88828901612eb1565b969995985093965092949392505050565b5f5f83601f840112612f7f575f5ffd5b5081356001600160401b03811115612f95575f5ffd5b602083019150836020828501011115611d56575f5ffd5b5f5f5f5f60608587031215612fbf575f5ffd5b8435612fca81612e68565b93506020850135925060408501356001600160401b03811115612feb575f5ffd5b612ff787828801612f6f565b95989497509550505050565b5f8151808452602084019350602083015f5b8281101561303c5781516001600160601b0316865260209586019590910190600101613015565b5093949350505050565b604081525f6130586040830185613003565b828103602084015261223a8185613003565b5f5f6040838503121561307b575f5ffd5b8235915061308b60208401612df0565b90509250929050565b602080825282518282018190525f918401906040840190835b81811015613102576130ec83855163ffffffff815116825263ffffffff60208201511660208301526001600160601b0360408201511660408301525050565b60209390930192606092909201916001016130ad565b509095945050505050565b634e487b7160e01b5f52604160045260245ffd5b604080519081016001600160401b03811182821017156131435761314361310d565b60405290565b604051601f8201601f191681016001600160401b03811182821017156131715761317161310d565b604052919050565b5f6001600160401b038211156131915761319161310d565b5060051b60200190565b5f5f604083850312156131ac575f5ffd5b6131b583612df0565b915060208301356001600160401b038111156131cf575f5ffd5b8301601f810185136131df575f5ffd5b80356131f26131ed82613179565b613149565b8082825260208201915060208360051b850101925087831115613213575f5ffd5b6020840193505b8284101561323557833582526020938401939091019061321a565b809450505050509250929050565b634e487b7160e01b5f52602160045260245ffd5b602081016002831061327757634e487b7160e01b5f52602160045260245ffd5b91905290565b5f82601f83011261328c575f5ffd5b813561329a6131ed82613179565b8082825260208201915060208360051b8601019250858311156132bb575f5ffd5b602085015b838110156132d85780358352602092830192016132c0565b5095945050505050565b5f5f5f606084860312156132f4575f5ffd5b83356001600160401b03811115613309575f5ffd5b8401601f81018613613319575f5ffd5b80356133276131ed82613179565b8082825260208201915060208360051b850101925088831115613348575f5ffd5b6020840193505b8284101561337357833561336281612e68565b82526020938401939091019061334f565b955050505060208401356001600160401b03811115613390575f5ffd5b61339c8682870161327d565b9250506133ab60408501612df0565b90509250925092565b602080825282518282018190525f918401906040840190835b8181101561310257835115158352602093840193909201916001016133cd565b80356001600160601b0381168114612e00575f5ffd5b5f82601f830112613412575f5ffd5b81356134206131ed82613179565b8082825260208201915060208360061b860101925085831115613441575f5ffd5b602085015b838110156132d8576040818803121561345d575f5ffd5b613465613121565b813561347081612e68565b815261347e602083016133ed565b602082015280845250602083019250604081019050613446565b5f5f5f606084860312156134aa575f5ffd5b6134b384612df0565b92506134c1602085016133ed565b915060408401356001600160401b038111156134db575f5ffd5b6134e786828701613403565b9150509250925092565b803563ffffffff81168114612e00575f5ffd5b5f5f5f60408486031215613516575f5ffd5b61351f846134f1565b925060208401356001600160401b03811115613539575f5ffd5b61354586828701612f6f565b9497909650939450505050565b602080825282518282018190525f918401906040840190835b8181101561310257835163ffffffff1683526020938401939092019160010161356b565b5f5f5f606084860312156135a1575f5ffd5b6135aa84612df0565b95602085013595506040909401359392505050565b60608101610aac828463ffffffff815116825263ffffffff60208201511660208301526001600160601b0360408201511660408301525050565b5f5f6040838503121561360a575f5ffd5b61361383612df0565b915061308b602084016133ed565b5f5f5f60408486031215613633575f5ffd5b8335925060208401356001600160401b03811115613539575f5ffd5b5f5f60408385031215613660575f5ffd5b61366983612df0565b915060208301356001600160401b03811115613683575f5ffd5b61368f85828601613403565b9150509250929050565b5f5f5f606084860312156136ab575f5ffd5b6136b484612df0565b92506136c2602085016134f1565b929592945050506040919091013590565b5f5f5f5f608085870312156136e6575f5ffd5b6136ef85612df0565b93506136fd602086016133ed565b925061370b604086016134f1565b915060608501356001600160401b03811115613725575f5ffd5b61373187828801613403565b91505092959194509250565b5f5f5f6060848603121561374f575f5ffd5b8335925061375f60208501612df0565b91506133ab604085016134f1565b5f5f6040838503121561377e575f5ffd5b61378783612df0565b915061308b602084016134f1565b5f5f5f5f608085870312156137a8575f5ffd5b6137b185612df0565b93506137bf602086016134f1565b93969395505050506040820135916060013590565b634e487b7160e01b5f52603260045260245ffd5b5f602082840312156137f8575f5ffd5b61115c826133ed565b634e487b7160e01b5f52601160045260245ffd5b81810381811115610aac57610aac613801565b634e487b7160e01b5f52603160045260245ffd5b5f6020828403121561384c575f5ffd5b815161115c81612e68565b81516001600160a01b0316815260208083015163ffffffff169082015260408101610aac565b5f6020828403121561388d575f5ffd5b8151801515811461115c575f5ffd5b6001600160a01b038416815260ff831660208083019190915260606040830181905283519083018190525f918401906080840190835b818110156138f95783516001600160a01b03168352602093840193909201916001016138d2565b5090979650505050505050565b8082018281125f831280158216821582161715611c1957611c19613801565b5f8151808452602084019350602083015f5b8281101561303c5781516001600160a01b0316865260209586019590910190600101613937565b5f8154808452602084019350825f5260205f205f5b8281101561303c5781546001600160a01b0316865260209095019460019182019101613973565b604081525f6139ac6040830185613925565b828103602084015261223a818561395e565b5f602082840312156139ce575f5ffd5b81516001600160401b038111156139e3575f5ffd5b8201601f810184136139f3575f5ffd5b8051613a016131ed82613179565b8082825260208201915060208360051b850101925086831115613a22575f5ffd5b602084015b83811015613abf5780516001600160401b03811115613a44575f5ffd5b8501603f81018913613a54575f5ffd5b6020810151613a656131ed82613179565b808282526020820191506020808460051b8601010192508b831115613a88575f5ffd5b6040840193505b82841015613aaa578351825260209384019390910190613a8f565b86525050602093840193919091019050613a27565b509695505050505050565b8082028115828204841417610aac57610aac613801565b5f82613afb57634e487b7160e01b5f52601260045260245ffd5b500490565b6001600160601b038181168382160190811115610aac57610aac613801565b80820180821115610aac57610aac613801565b5f81613b4057613b40613801565b505f190190565b8181035f8312801583831316838312821617156106e8576106e8613801565b5f600160ff1b8201613b7a57613b7a613801565b505f0390565b6001600160601b038281168282160390811115610aac57610aac613801565b84516001600160a01b0316815260208086015163ffffffff169082015260a060408201525f613bd160a0830186613925565b8281036060840152613be3818661395e565b91505063ffffffff831660808301529594505050505056fea26469706673582212204b6f050edec86a77697ad4997d6e809eddad8eeda99907e48e2fbb5f90d8e0e164736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\x01\xE5W`\x005`\xE0\x1C\x80c\x9F<\xCFe\x11a\x01\x0FW\x80c\xC8)LV\x11a\0\xA2W\x80c\xF2\xBE\x94\xAE\x11a\0qW\x80c\xF2\xBE\x94\xAE\x14a\x05KW\x80c\xF8Q\xE1\x98\x14a\x05^W\x80c\xFA(\xC6'\x14a\x05qW\x80c\xFFiJw\x14a\x05\x84W`\0\x80\xFD[\x80c\xC8)LV\x14a\x04\xD6W\x80c\xD5\xEC\xCC\x05\x14a\x04\xE9W\x80c\xDD\x98F\xB9\x14a\x04\xFCW\x80c\xDF\\\xF7#\x14a\x05$W`\0\x80\xFD[\x80c\xBC\x9A@\xC3\x11a\0\xDEW\x80c\xBC\x9A@\xC3\x14a\x04tW\x80c\xBD)\xB8\xCD\x14a\x04\x87W\x80c\xC4gx\xA5\x14a\x04\x9AW\x80c\xC6\x01R}\x14a\x04\xC3W`\0\x80\xFD[\x80c\x9F<\xCFe\x14a\x03\xEEW\x80c\xACk\xFB\x03\x14a\x04\x01W\x80c\xAD\xC8\x04\xDA\x14a\x04!W\x80c\xB6\x90Kx\x14a\x04aW`\0\x80\xFD[\x80cK\xD2n\t\x11a\x01\x87W\x80cf\xAC\xFE\xFE\x11a\x01VW\x80cf\xAC\xFE\xFE\x14a\x03JW\x80cm\x14\xA9\x87\x14a\x03uW\x80c|\x17#G\x14a\x03\xB4W\x80c\x81\xC0u\x02\x14a\x03\xCEW`\0\x80\xFD[\x80cK\xD2n\t\x14a\x02\xE5W\x80cT\x01\xED'\x14a\x03\x15W\x80c^Zgu\x14a\x03(W\x80c_\x1F-w\x14a\x037W`\0\x80\xFD[\x80c \xB6b\x98\x11a\x01\xC3W\x80c \xB6b\x98\x14a\x02lW\x80c%PGw\x14a\x02\x81W\x80c,\xD9Y@\x14a\x02\xA2W\x80c<\xA5\xA5\xF5\x14a\x02\xC2W`\0\x80\xFD[\x80c\x04\x91\xB4\x1C\x14a\x01\xEAW\x80c\x08s$a\x14a\x02 W\x80c\x1F\x9Bt\xE0\x14a\x02AW[`\0\x80\xFD[a\x02\ra\x01\xF86`\x04a(\x03V[`\xFF\x16`\0\x90\x81R`\x01` R`@\x90 T\x90V[`@Q\x90\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\x023a\x02.6`\x04a(\x1EV[a\x05\x97V[`@Qa\x02\x17\x92\x91\x90a(HV[a\x02Ta\x02O6`\x04a(\x7FV[a\x05\xE0V[`@Q`\x01`\x01``\x1B\x03\x90\x91\x16\x81R` \x01a\x02\x17V[a\x02\x7Fa\x02z6`\x04a(\xFAV[a\x06\x02V[\0[a\x02\x94a\x02\x8F6`\x04a)\xBBV[a\x08`V[`@Qa\x02\x17\x92\x91\x90a*ZV[a\x02\xB5a\x02\xB06`\x04a*\x7FV[a\nxV[`@Qa\x02\x17\x91\x90a*\xABV[a\x02\ra\x02\xD06`\x04a(\x03V[`\xFF\x16`\0\x90\x81R`\x03` R`@\x90 T\x90V[a\x02\ra\x02\xF36`\x04a*\x7FV[`\0\x91\x82R`\x02` \x90\x81R`@\x80\x84 `\xFF\x93\x90\x93\x16\x84R\x91\x90R\x90 T\x90V[a\x02Ta\x03#6`\x04a*\x7FV[a\x0B\x17V[a\x02\rg\r\xE0\xB6\xB3\xA7d\0\0\x81V[a\x02\x7Fa\x03E6`\x04a+\xB4V[a\x0B0V[a\x03]a\x03X6`\x04a)\xBBV[a\x0ExV[`@Q`\x01`\x01`\xC0\x1B\x03\x90\x91\x16\x81R` \x01a\x02\x17V[a\x03\x9C\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01a\x02\x17V[a\x03\xBC` \x81V[`@Q`\xFF\x90\x91\x16\x81R` \x01a\x02\x17V[a\x03\xE1a\x03\xDC6`\x04a,pV[a\x0F\x17V[`@Qa\x02\x17\x91\x90a,\xC2V[a\x03\x9Ca\x03\xFC6`\x04a(\x1EV[a\x11WV[a\x04\x14a\x04\x0F6`\x04a-\0V[a\x11\x8FV[`@Qa\x02\x17\x91\x90a-3V[a\x044a\x04/6`\x04a(\x1EV[a\x12'V[`@\x80Q\x82Q`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x92\x83\x01Q`\x01`\x01``\x1B\x03\x16\x92\x81\x01\x92\x90\x92R\x01a\x02\x17V[a\x04\x14a\x04o6`\x04a(\x1EV[a\x12\xA1V[a\x02\x7Fa\x04\x826`\x04a-\x7FV[a\x130V[a\x02\x7Fa\x04\x956`\x04a-\xA9V[a\x13QV[a\x02Ta\x04\xA86`\x04a(\x03V[`\0` \x81\x90R\x90\x81R`@\x90 T`\x01`\x01``\x1B\x03\x16\x81V[a\x02\x7Fa\x04\xD16`\x04a.uV[a\x13\xC3V[a\x02Ta\x04\xE46`\x04a.\xC2V[a\x13\xDFV[a\x02Ta\x04\xF76`\x04a(\x03V[a\x14]V[a\x05\x0Fa\x05\n6`\x04a.\xFEV[a\x14\xB0V[`@Qc\xFF\xFF\xFF\xFF\x90\x91\x16\x81R` \x01a\x02\x17V[a\x03\x9C\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x02Ta\x05Y6`\x04a/:V[a\x14\xC5V[a\x04\x14a\x05l6`\x04a*\x7FV[a\x15ZV[a\x02Ta\x05\x7F6`\x04a.\xFEV[a\x16?V[a\x02\x7Fa\x05\x926`\x04a/|V[a\x16\xA0V[`\x03` R\x81`\0R`@`\0 \x81\x81T\x81\x10a\x05\xB3W`\0\x80\xFD[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x92P`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x90P\x82V[`\0\x82a\x05\xEC\x81a\x17\xCBV[`\0a\x05\xF8\x85\x85a\x18GV[P\x95\x94PPPPPV[a\x06\na\x1AEV[\x84a\x06\x14\x81a\x17\xCBV[\x83\x80a\x06\x8FW`@\x80QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`$\x81\x01\x91\x90\x91R\x7FStakeRegistry.modifyStrategyPara`D\x82\x01R\x7Fms: no strategy indices provided`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[\x82\x81\x14a\x07\x04W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`9`$\x82\x01R\x7FStakeRegistry.modifyStrategyPara`D\x82\x01R\x7Fms: input length mismatch\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x06\x86V[`\xFF\x87\x16`\0\x90\x81R`\x03` R`@\x81 \x90[\x82\x81\x10\x15a\x08UW\x85\x85\x82\x81\x81\x10a\x072Wa\x072a/\xD9V[\x90P` \x02\x01` \x81\x01\x90a\x07G\x91\x90a/\xEFV[\x82\x89\x89\x84\x81\x81\x10a\x07ZWa\x07Za/\xD9V[\x90P` \x02\x015\x81T\x81\x10a\x07qWa\x07qa/\xD9V[\x90`\0R` `\0 \x01`\0\x01`\x14a\x01\0\n\x81T\x81`\x01`\x01``\x1B\x03\x02\x19\x16\x90\x83`\x01`\x01``\x1B\x03\x16\x02\x17\x90UP\x88`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x83\x8A\x8A\x85\x81\x81\x10a\x07\xDAWa\x07\xDAa/\xD9V[\x90P` \x02\x015\x81T\x81\x10a\x07\xF1Wa\x07\xF1a/\xD9V[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x88\x88\x85\x81\x81\x10a\x08\x18Wa\x08\x18a/\xD9V[\x90P` \x02\x01` \x81\x01\x90a\x08-\x91\x90a/\xEFV[`@Qa\x08;\x92\x91\x90a(HV[`@Q\x80\x91\x03\x90\xA2\x80a\x08M\x81a0 V[\x91PPa\x07\x18V[PPPPPPPPPV[``\x80a\x08ka\x1BnV[`\0\x83`\x01`\x01`@\x1B\x03\x81\x11\x15a\x08\x85Wa\x08\x85a+#V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x08\xAEW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P`\0\x84`\x01`\x01`@\x1B\x03\x81\x11\x15a\x08\xCBWa\x08\xCBa+#V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x08\xF4W\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P`\0[\x85\x81\x10\x15a\njW`\0\x87\x87\x83\x81\x81\x10a\t\x16Wa\t\x16a/\xD9V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\t+\x90P\x81a\x17\xCBV[`\0\x80a\t8\x83\x8Da\x18GV[\x91P\x91P\x80a\t\xD5W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`[`$\x82\x01R\x7FStakeRegistry.registerOperator: `D\x82\x01R\x7FOperator does not meet minimum s`d\x82\x01R\x7Ftake requirement for quorum\0\0\0\0\0`\x84\x82\x01R`\xA4\x01a\x06\x86V[`\0a\t\xE2\x8C\x85\x85a\x1C!V[\x90P\x82\x87\x86\x81Q\x81\x10a\t\xF7Wa\t\xF7a/\xD9V[` \x02` \x01\x01\x90`\x01`\x01``\x1B\x03\x16\x90\x81`\x01`\x01``\x1B\x03\x16\x81RPPa\n!\x84\x82a\x1E\xA1V[\x86\x86\x81Q\x81\x10a\n3Wa\n3a/\xD9V[` \x02` \x01\x01\x90`\x01`\x01``\x1B\x03\x16\x90\x81`\x01`\x01``\x1B\x03\x16\x81RPPPPPP\x80\x80a\nb\x90a0 V[\x91PPa\x08\xFAV[P\x90\x97\x90\x96P\x94PPPPPV[`\0\x82\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x85\x16\x84R\x82R\x80\x83 \x80T\x82Q\x81\x85\x02\x81\x01\x85\x01\x90\x93R\x80\x83R``\x94\x92\x93\x91\x92\x90\x91\x84\x01[\x82\x82\x10\x15a\x0B\nW`\0\x84\x81R` \x90\x81\x90 `@\x80Q``\x81\x01\x82R\x91\x85\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x83\x85\x01R`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x90\x82\x01R\x82R`\x01\x90\x92\x01\x91\x01a\n\xB1V[PPPP\x90P[\x92\x91PPV[`\0\x80a\x0B$\x84\x84a\x15ZV[`@\x01Q\x94\x93PPPPV[a\x0B8a\x1AEV[\x81a\x0BB\x81a\x17\xCBV[\x81Q\x80a\x0B\xB7W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`=`$\x82\x01R\x7FStakeRegistry.removeStrategies: `D\x82\x01R\x7Fno indices to remove provided\0\0\0`d\x82\x01R`\x84\x01a\x06\x86V[`\xFF\x84\x16`\0\x90\x81R`\x03` \x90\x81R`@\x80\x83 `\x04\x90\x92R\x82 \x90\x91[\x83\x81\x10\x15a\x0EoW\x86`\xFF\x16\x7F1\xFA.,\xD2\x80\xC97^\x13\xFF\xCF=\x81\xE27\x81\0\x18n@X\xF8\xD3\xDD\xB6\x90\xB8-\xCD1\xF7\x84\x88\x84\x81Q\x81\x10a\x0C\x16Wa\x0C\x16a/\xD9V[` \x02` \x01\x01Q\x81T\x81\x10a\x0C.Wa\x0C.a/\xD9V[`\0\x91\x82R` \x91\x82\x90 \x01T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R\x01`@Q\x80\x91\x03\x90\xA2\x86`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x84\x88\x84\x81Q\x81\x10a\x0C\x8CWa\x0C\x8Ca/\xD9V[` \x02` \x01\x01Q\x81T\x81\x10a\x0C\xA4Wa\x0C\xA4a/\xD9V[`\0\x91\x82R` \x80\x83 \x91\x90\x91\x01T`@\x80Q`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x82R\x91\x81\x01\x92\x90\x92R\x01`@Q\x80\x91\x03\x90\xA2\x82T\x83\x90a\x0C\xE4\x90`\x01\x90a0;V[\x81T\x81\x10a\x0C\xF4Wa\x0C\xF4a/\xD9V[\x90`\0R` `\0 \x01\x83\x87\x83\x81Q\x81\x10a\r\x11Wa\r\x11a/\xD9V[` \x02` \x01\x01Q\x81T\x81\x10a\r)Wa\r)a/\xD9V[`\0\x91\x82R` \x90\x91 \x82T\x91\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x91\x82\x17\x81U\x91T`\x01`\x01``\x1B\x03`\x01`\xA0\x1B\x91\x82\x90\x04\x16\x02\x17\x90U\x82T\x83\x90\x80a\r|Wa\r|a0RV[`\0\x82\x81R` \x81 \x82\x01`\0\x19\x90\x81\x01\x91\x90\x91U\x01\x90U\x81T\x82\x90a\r\xA4\x90`\x01\x90a0;V[\x81T\x81\x10a\r\xB4Wa\r\xB4a/\xD9V[\x90`\0R` `\0 \x01`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16\x82\x87\x83\x81Q\x81\x10a\r\xE5Wa\r\xE5a/\xD9V[` \x02` \x01\x01Q\x81T\x81\x10a\r\xFDWa\r\xFDa/\xD9V[\x90`\0R` `\0 \x01`\0a\x01\0\n\x81T\x81`\x01`\x01`\xA0\x1B\x03\x02\x19\x16\x90\x83`\x01`\x01`\xA0\x1B\x03\x16\x02\x17\x90UP\x81\x80T\x80a\x0E;Wa\x0E;a0RV[`\0\x82\x81R` \x90 \x81\x01`\0\x19\x90\x81\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x90U\x01\x90U\x80a\x0Eg\x81a0 V[\x91PPa\x0B\xD6V[PPPPPPPV[`\0a\x0E\x82a\x1BnV[`\0\x80[\x83\x81\x10\x15a\x05\xF8W`\0\x85\x85\x83\x81\x81\x10a\x0E\xA2Wa\x0E\xA2a/\xD9V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\x0E\xB7\x90P\x81a\x17\xCBV[`\0\x80a\x0E\xC4\x83\x8Ba\x18GV[\x91P\x91P\x80a\x0E\xE6W`\0\x91P`\x01`\xFF\x84\x16\x1B`\x01`\x01`\xC0\x1B\x03\x86\x16\x17\x94P[`\0a\x0E\xF3\x8A\x85\x85a\x1C!V[\x90Pa\x0E\xFF\x84\x82a\x1E\xA1V[PPPPP\x80\x80a\x0F\x0F\x90a0 V[\x91PPa\x0E\x86V[```\0\x82`\x01`\x01`@\x1B\x03\x81\x11\x15a\x0F3Wa\x0F3a+#V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x0F\\W\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P`\0[\x83\x81\x10\x15a\x11LW`\0\x85\x85\x83\x81\x81\x10a\x0F~Wa\x0F~a/\xD9V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\x0F\x93\x90P\x81a\x17\xCBV[`\xFF\x81\x16`\0\x90\x81R`\x01` R`@\x81 \x80Tc\xFF\xFF\xFF\xFF\x8A\x16\x92\x90a\x0F\xBCWa\x0F\xBCa/\xD9V[`\0\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11\x15a\x10hW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`[`$\x82\x01R\x7FStakeRegistry.getTotalStakeIndic`D\x82\x01R\x7FesAtBlockNumber: quorum has no s`d\x82\x01R\x7Ftake history at blockNumber\0\0\0\0\0`\x84\x82\x01R`\xA4\x01a\x06\x86V[`\xFF\x81\x16`\0\x90\x81R`\x01` R`@\x81 T\x90[\x81\x81\x10\x15a\x116W`\xFF\x83\x16`\0\x90\x81R`\x01` \x81\x90R`@\x90\x91 c\xFF\xFF\xFF\xFF\x8B\x16\x91a\x10\xAC\x84\x86a0;V[a\x10\xB6\x91\x90a0;V[\x81T\x81\x10a\x10\xC6Wa\x10\xC6a/\xD9V[`\0\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11a\x11$W`\x01a\x10\xE9\x82\x84a0;V[a\x10\xF3\x91\x90a0;V[\x85\x85\x81Q\x81\x10a\x11\x05Wa\x11\x05a/\xD9V[` \x02` \x01\x01\x90c\xFF\xFF\xFF\xFF\x16\x90\x81c\xFF\xFF\xFF\xFF\x16\x81RPPa\x116V[\x80a\x11.\x81a0 V[\x91PPa\x10}V[PPP\x80\x80a\x11D\x90a0 V[\x91PPa\x0FbV[P\x90P[\x93\x92PPPV[`\x04` R\x81`\0R`@`\0 \x81\x81T\x81\x10a\x11sW`\0\x80\xFD[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x91P\x82\x90PV[`@\x80Q``\x81\x01\x82R`\0\x80\x82R` \x80\x83\x01\x82\x90R\x82\x84\x01\x82\x90R\x85\x82R`\x02\x81R\x83\x82 `\xFF\x88\x16\x83R\x90R\x91\x90\x91 \x80T\x83\x90\x81\x10a\x11\xD4Wa\x11\xD4a/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x92\x90\x91\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x93\x83\x01\x93\x90\x93R`\x01`@\x1B\x90\x92\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x94\x93PPPPV[`@\x80Q\x80\x82\x01\x90\x91R`\0\x80\x82R` \x82\x01R`\xFF\x83\x16`\0\x90\x81R`\x03` R`@\x90 \x80T\x83\x90\x81\x10a\x12_Wa\x12_a/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q\x80\x82\x01\x90\x91R\x91\x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x82R`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x93\x92PPPV[`@\x80Q``\x81\x01\x82R`\0\x80\x82R` \x80\x83\x01\x82\x90R\x82\x84\x01\x82\x90R`\xFF\x86\x16\x82R`\x01\x90R\x91\x90\x91 \x80T\x83\x90\x81\x10a\x12\xDEWa\x12\xDEa/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x92\x90\x91\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x93\x83\x01\x93\x90\x93R`\x01`@\x1B\x90\x92\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x93\x92PPPV[a\x138a\x1AEV[\x81a\x13B\x81a\x17\xCBV[a\x13L\x83\x83a \x1BV[PPPV[a\x13Ya\x1BnV[`\0[\x81\x81\x10\x15a\x13\xBDW`\0\x83\x83\x83\x81\x81\x10a\x13xWa\x13xa/\xD9V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\x13\x8D\x90P\x81a\x17\xCBV[`\0a\x13\x9B\x86\x83`\0a\x1C!V[\x90Pa\x13\xA7\x82\x82a\x1E\xA1V[PPP\x80\x80a\x13\xB5\x90a0 V[\x91PPa\x13\\V[PPPPV[a\x13\xCBa\x1AEV[\x81a\x13\xD5\x81a\x17\xCBV[a\x13L\x83\x83a \x84V[`\xFF\x83\x16`\0\x90\x81R`\x01` R`@\x81 \x80T\x82\x91\x90\x84\x90\x81\x10a\x14\x06Wa\x14\x06a/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x90Pa\x0B$\x81\x85a$\xC7V[`\xFF\x81\x16`\0\x90\x81R`\x01` \x81\x90R`@\x82 \x80T\x90\x91a\x14~\x91a0;V[\x81T\x81\x10a\x14\x8EWa\x14\x8Ea/\xD9V[`\0\x91\x82R` \x90\x91 \x01T`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x92\x91PPV[`\0a\x14\xBD\x84\x84\x84a&AV[\x94\x93PPPPV[`\0\x82\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x88\x16\x84R\x90\x91R\x81 \x80T\x82\x91\x90\x84\x90\x81\x10a\x14\xF6Wa\x14\xF6a/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x90Pa\x15M\x81\x86a$\xC7V[`@\x01Q\x95\x94PPPPPV[`@\x80Q``\x80\x82\x01\x83R`\0\x80\x83R` \x80\x84\x01\x82\x90R\x83\x85\x01\x82\x90R\x86\x82R`\x02\x81R\x84\x82 `\xFF\x87\x16\x83R\x81R\x84\x82 T\x85Q\x93\x84\x01\x86R\x82\x84R\x90\x83\x01\x82\x90R\x93\x82\x01R\x90\x91\x90\x81a\x15\xB3W\x91Pa\x0B\x11\x90PV[`\0\x85\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x88\x16\x84R\x90\x91R\x90 a\x15\xDA`\x01\x84a0;V[\x81T\x81\x10a\x15\xEAWa\x15\xEAa/\xD9V[`\0\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x92Pa\x0B\x11\x91PPV[`\0\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 a\x16f\x85\x85\x85a&AV[c\xFF\xFF\xFF\xFF\x16\x81T\x81\x10a\x16|Wa\x16|a/\xD9V[`\0\x91\x82R` \x90\x91 \x01T`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x94\x93PPPPV[a\x16\xA8a\x1BnV[`\xFF\x83\x16`\0\x90\x81R`\x01` R`@\x90 T\x15a\x17&W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`5`$\x82\x01R\x7FStakeRegistry.initializeQuorum: `D\x82\x01Rtquorum already exists`X\x1B`d\x82\x01R`\x84\x01a\x06\x86V[a\x170\x83\x82a \x84V[a\x17:\x83\x83a \x1BV[PP`\xFF\x16`\0\x90\x81R`\x01` \x81\x81R`@\x80\x84 \x81Q``\x81\x01\x83Rc\xFF\xFF\xFF\xFFC\x81\x16\x82R\x81\x85\x01\x87\x81R\x93\x82\x01\x87\x81R\x83T\x96\x87\x01\x84U\x92\x87R\x93\x90\x95 \x94Q\x94\x90\x93\x01\x80T\x91Q\x93Q`\x01`\x01``\x1B\x03\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x94\x84\x16`\x01` \x1B\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x93\x16\x95\x90\x93\x16\x94\x90\x94\x17\x17\x91\x90\x91\x16\x17\x90UV[`\xFF\x81\x16`\0\x90\x81R`\x01` R`@\x90 Ta\x18DW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`1`$\x82\x01R\x7FStakeRegistry.quorumExists: quor`D\x82\x01Rp\x1D[H\x19\x1B\xD9\\\xC8\x1B\x9B\xDD\x08\x19^\x1A\\\xDD`z\x1B`d\x82\x01R`\x84\x01a\x06\x86V[PV[`\0\x80`\0\x80a\x18f\x86`\xFF\x16`\0\x90\x81R`\x03` R`@\x90 T\x90V[`@\x80Q\x80\x82\x01\x90\x91R`\0\x80\x82R` \x82\x01R\x90\x91P`\xFF\x87\x16`\0\x90\x81R`\x04` \x81\x90R`@\x80\x83 \x90Qc\x90\x04\x13G`\xE0\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x92c\x90\x04\x13G\x92a\x18\xDB\x92\x8C\x92\x01a0hV[`\0`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x18\xF8W=`\0\x80>=`\0\xFD[PPPP`@Q=`\0\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\x19 \x91\x90\x81\x01\x90a0\xC7V[\x90P`\0[\x83\x81\x10\x15a\x1A\x11W`\xFF\x89\x16`\0\x90\x81R`\x03` R`@\x90 \x80T\x82\x90\x81\x10a\x19QWa\x19Qa/\xD9V[`\0\x91\x82R` \x80\x83 `@\x80Q\x80\x82\x01\x90\x91R\x92\x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x83R`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x90\x82\x01R\x83Q\x90\x94P\x83\x90\x83\x90\x81\x10a\x19\x9FWa\x19\x9Fa/\xD9V[` \x02` \x01\x01Q\x11\x15a\x19\xFFWg\r\xE0\xB6\xB3\xA7d\0\0\x83` \x01Q`\x01`\x01``\x1B\x03\x16\x83\x83\x81Q\x81\x10a\x19\xD6Wa\x19\xD6a/\xD9V[` \x02` \x01\x01Qa\x19\xE8\x91\x90a1WV[a\x19\xF2\x91\x90a1vV[a\x19\xFC\x90\x86a1\x98V[\x94P[\x80a\x1A\t\x81a0 V[\x91PPa\x19%V[PPP`\xFF\x86\x16`\0\x90\x81R` \x81\x90R`@\x90 T\x91\x93PP`\x01`\x01``\x1B\x03\x90\x81\x16\x90\x83\x16\x10\x15\x90P[\x92P\x92\x90PV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\x8D\xA5\xCB[`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x1A\xA3W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x1A\xC7\x91\x90a1\xC3V[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x1BlW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`V`$\x82\x01R\x7FStakeRegistry.onlyCoordinatorOwn`D\x82\x01R\x7Fer: caller is not the owner of t`d\x82\x01Ru42\x9092\xB3\xB4\xB9\xBA9<\xA1\xB7\xB7\xB924\xB70\xBA7\xB9`Q\x1B`\x84\x82\x01R`\xA4\x01a\x06\x86V[V[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14a\x1BlW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`L`$\x82\x01R\x7FStakeRegistry.onlyRegistryCoordi`D\x82\x01R\x7Fnator: caller is not the Registr`d\x82\x01Rk<\xA1\xB7\xB7\xB924\xB70\xBA7\xB9`\xA1\x1B`\x84\x82\x01R`\xA4\x01a\x06\x86V[`\0\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 T\x81\x90\x80a\x1C\xE5W`\0\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x82R\x80\x83 \x81Q``\x81\x01\x83Rc\xFF\xFF\xFF\xFFC\x81\x16\x82R\x81\x85\x01\x86\x81R`\x01`\x01``\x1B\x03\x80\x8C\x16\x95\x84\x01\x95\x86R\x84T`\x01\x81\x01\x86U\x94\x88R\x95\x90\x96 \x91Q\x91\x90\x92\x01\x80T\x95Q\x93Q\x90\x94\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x93\x83\x16`\x01` \x1B\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x96\x16\x91\x90\x92\x16\x17\x93\x90\x93\x17\x16\x91\x90\x91\x17\x90Ua\x1EGV[`\0\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x90\x91R\x81 a\x1D\x0C`\x01\x84a0;V[\x81T\x81\x10a\x1D\x1CWa\x1D\x1Ca/\xD9V[`\0\x91\x82R` \x90\x91 \x01\x80T`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x91\x04\x81\x16\x94P\x90\x91P\x85\x16\x83\x14\x15a\x1DUW`\0\x93PPPPa\x11PV[\x80TCc\xFF\xFF\xFF\xFF\x90\x81\x16\x91\x16\x14\x15a\x1D\x8FW\x80T`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B`\x01`\x01``\x1B\x03\x87\x16\x02\x17\x81Ua\x1EEV[\x80Tg\xFF\xFF\xFF\xFF\0\0\0\0\x19\x16`\x01` \x1BCc\xFF\xFF\xFF\xFF\x90\x81\x16\x82\x81\x02\x93\x90\x93\x17\x84U`\0\x8A\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x8D\x16\x84R\x82R\x80\x83 \x81Q``\x81\x01\x83R\x96\x87R\x86\x83\x01\x84\x81R`\x01`\x01``\x1B\x03\x8D\x81\x16\x93\x89\x01\x93\x84R\x82T`\x01\x81\x01\x84U\x92\x86R\x93\x90\x94 \x96Q\x96\x01\x80T\x93Q\x91Q\x96\x85\x16g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x94\x16\x93\x90\x93\x17\x93\x16\x90\x93\x02\x91\x90\x91\x17`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B\x93\x90\x92\x16\x92\x90\x92\x02\x17\x90U[P[`@\x80Q`\xFF\x87\x16\x81R`\x01`\x01``\x1B\x03\x86\x16` \x82\x01R\x87\x91\x7F/R}R~\x95\xD8\xFE@\xAE\xC5Swt;\xB7y\x08}\xA3\xF6\xD0\xD0\x8F\x12\xE3dD\xDAb2}\x91\x01`@Q\x80\x91\x03\x90\xA2a\x1E\x97\x82\x85a'\xA7V[\x96\x95PPPPPPV[`\xFF\x82\x16`\0\x90\x81R`\x01` \x81\x90R`@\x82 \x80T\x91\x83\x91\x90a\x1E\xC5\x90\x84a0;V[\x81T\x81\x10a\x1E\xD5Wa\x1E\xD5a/\xD9V[\x90`\0R` `\0 \x01\x90P\x83`\0\x14\x15a\x1F\x04WT`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x91Pa\x0B\x11\x90PV[\x80T`\0\x90a\x1F#\x90`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x86a'\xBFV[\x82T\x90\x91PCc\xFF\xFF\xFF\xFF\x90\x81\x16\x91\x16\x14\x15a\x1F`W\x81T`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B`\x01`\x01``\x1B\x03\x83\x16\x02\x17\x82Ua \x12V[\x81Tc\xFF\xFF\xFF\xFFC\x81\x16`\x01` \x1B\x81\x81\x02g\xFF\xFF\xFF\xFF\0\0\0\0\x19\x90\x94\x16\x93\x90\x93\x17\x85U`\xFF\x89\x16`\0\x90\x81R`\x01` \x81\x81R`@\x80\x84 \x81Q``\x81\x01\x83R\x95\x86R\x85\x83\x01\x85\x81R`\x01`\x01``\x1B\x03\x80\x8B\x16\x93\x88\x01\x93\x84R\x82T\x95\x86\x01\x83U\x91\x86R\x92\x90\x94 \x94Q\x94\x90\x92\x01\x80T\x91Q\x92Q\x90\x93\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x92\x86\x16\x90\x96\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x91\x16\x93\x90\x94\x16\x92\x90\x92\x17\x92\x90\x92\x17\x16\x91\x90\x91\x17\x90U[\x95\x94PPPPPV[`\xFF\x82\x16`\0\x81\x81R` \x81\x81R`@\x91\x82\x90 \x80Tk\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x16`\x01`\x01``\x1B\x03\x86\x16\x90\x81\x17\x90\x91U\x91Q\x91\x82R\x7F&\xEE\xCF\xF2\xB7\x0B\nq\x10O\xF4\xD9@\xBAqb\xD2:\x95\xC2Hw\x1F\xC4\x87\xA7\xBE\x17\xA5\x96\xB3\xCF\x91\x01`@Q\x80\x91\x03\x90\xA2PPV[`\0\x81Q\x11a \xE9W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R`\0\x80Q` a2\x94\x839\x81Q\x91R`D\x82\x01R\x7F: no strategies provided\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x06\x86V[\x80Q`\xFF\x83\x16`\0\x90\x81R`\x03` \x90\x81R`@\x90\x91 T\x90a!\x0C\x83\x83a1\xE0V[\x11\x15a!|W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`E`$\x82\x01R`\0\x80Q` a2\x94\x839\x81Q\x91R`D\x82\x01R\x7F: exceed MAX_WEIGHING_FUNCTION_L`d\x82\x01Rd\x08\xA9\xC8\xEA\x89`\xDB\x1B`\x84\x82\x01R`\xA4\x01a\x06\x86V[`\0[\x82\x81\x10\x15a$\xC0W`\0[a!\x94\x82\x84a1\xE0V[\x81\x10\x15a\"uW\x84\x82\x81Q\x81\x10a!\xADWa!\xADa/\xD9V[` \x02` \x01\x01Q`\0\x01Q`\x01`\x01`\xA0\x1B\x03\x16`\x03`\0\x88`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01`\0 \x82\x81T\x81\x10a!\xECWa!\xECa/\xD9V[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x14\x15a\"cW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`=`$\x82\x01R`\0\x80Q` a2\x94\x839\x81Q\x91R`D\x82\x01R\x7F: cannot add same strategy 2x\0\0\0`d\x82\x01R`\x84\x01a\x06\x86V[\x80a\"m\x81a0 V[\x91PPa!\x8AV[P`\0\x84\x82\x81Q\x81\x10a\"\x8AWa\"\x8Aa/\xD9V[` \x02` \x01\x01Q` \x01Q`\x01`\x01``\x1B\x03\x16\x11a#\x0FW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`F`$\x82\x01R`\0\x80Q` a2\x94\x839\x81Q\x91R`D\x82\x01R\x7F: cannot add strategy with zero `d\x82\x01Re\x1D\xD9ZY\xDA\x1D`\xD2\x1B`\x84\x82\x01R`\xA4\x01a\x06\x86V[`\xFF\x85\x16`\0\x90\x81R`\x03` R`@\x90 \x84Q\x85\x90\x83\x90\x81\x10a#5Wa#5a/\xD9V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01Q\x82T`\x01\x81\x01\x84U`\0\x93\x84R\x82\x84 \x82Q\x92\x84\x01Q`\x01`\x01``\x1B\x03\x16`\x01`\xA0\x1B\x02`\x01`\x01`\xA0\x1B\x03\x90\x93\x16\x92\x90\x92\x17\x91\x01U`\xFF\x87\x16\x82R`\x04\x90R`@\x90 \x84Q\x85\x90\x83\x90\x81\x10a#\x9AWa#\x9Aa/\xD9V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01QQ\x82T`\x01\x81\x01\x84U`\0\x93\x84R\x91\x90\x92 \x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x91\x90\x91\x17\x90U\x83Q`\xFF\x86\x16\x90\x7F\x10V^V\xCA\xCB\xF3.\xCA&yE\xF0T\xFE\xC0.Yu\x002\xD1\x13\xD30!\x82\xAD\x96\x7FT\x04\x90\x86\x90\x84\x90\x81\x10a$\x11Wa$\x11a/\xD9V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01QQ`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R\x01`@Q\x80\x91\x03\x90\xA2\x84`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x85\x83\x81Q\x81\x10a$nWa$na/\xD9V[` \x02` \x01\x01Q`\0\x01Q\x86\x84\x81Q\x81\x10a$\x8CWa$\x8Ca/\xD9V[` \x02` \x01\x01Q` \x01Q`@Qa$\xA6\x92\x91\x90a(HV[`@Q\x80\x91\x03\x90\xA2\x80a$\xB8\x81a0 V[\x91PPa!\x7FV[PPPPPV[\x81`\0\x01Qc\xFF\xFF\xFF\xFF\x16\x81c\xFF\xFF\xFF\xFF\x16\x10\x15a%lW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`V`$\x82\x01R\x7FStakeRegistry._validateStakeUpda`D\x82\x01R\x7FteAtBlockNumber: stakeUpdate is `d\x82\x01Ru397\xB6\x900\xB3:2\xB9\x10167\xB1\xB5\xA7:\xB6\xB12\xB9`Q\x1B`\x84\x82\x01R`\xA4\x01a\x06\x86V[` \x82\x01Qc\xFF\xFF\xFF\xFF\x16\x15\x80a%\x92WP\x81` \x01Qc\xFF\xFF\xFF\xFF\x16\x81c\xFF\xFF\xFF\xFF\x16\x10[a&=W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`j`$\x82\x01R\x7FStakeRegistry._validateStakeUpda`D\x82\x01R\x7FteAtBlockNumber: there is a newe`d\x82\x01R\x7Fr stakeUpdate available before b`\x84\x82\x01Ri67\xB1\xB5\xA7:\xB6\xB12\xB9`\xB1\x1B`\xA4\x82\x01R`\xC4\x01a\x06\x86V[PPV[`\0\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 T\x80[\x80\x15a&\xE2W`\0\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x90\x91R\x90 c\xFF\xFF\xFF\xFF\x85\x16\x90a&\x95`\x01\x84a0;V[\x81T\x81\x10a&\xA5Wa&\xA5a/\xD9V[`\0\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11a&\xD0Wa&\xC7`\x01\x82a0;V[\x92PPPa\x11PV[\x80a&\xDA\x81a1\xF8V[\x91PPa&`V[P`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x81`$\x82\x01R\x7FStakeRegistry._getStakeUpdateInd`D\x82\x01R\x7FexForOperatorAtBlockNumber: no s`d\x82\x01R\x7Ftake update found for operatorId`\x84\x82\x01R\x7F and quorumNumber at block numbe`\xA4\x82\x01R`9`\xF9\x1B`\xC4\x82\x01R`\xE4\x01a\x06\x86V[`\0a\x11P`\x01`\x01``\x1B\x03\x80\x85\x16\x90\x84\x16a2\x0FV[`\0\x80\x82\x12\x15a'\xE3Wa'\xD2\x82a2NV[a'\xDC\x90\x84a2kV[\x90Pa\x0B\x11V[a'\xDC\x82\x84a1\x98V[\x805`\xFF\x81\x16\x81\x14a'\xFEW`\0\x80\xFD[\x91\x90PV[`\0` \x82\x84\x03\x12\x15a(\x15W`\0\x80\xFD[a\x11P\x82a'\xEDV[`\0\x80`@\x83\x85\x03\x12\x15a(1W`\0\x80\xFD[a(:\x83a'\xEDV[\x94` \x93\x90\x93\x015\x93PPPV[`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x82R`\x01`\x01``\x1B\x03\x16` \x82\x01R`@\x01\x90V[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x18DW`\0\x80\xFD[`\0\x80`@\x83\x85\x03\x12\x15a(\x92W`\0\x80\xFD[a(\x9B\x83a'\xEDV[\x91P` \x83\x015a(\xAB\x81a(jV[\x80\x91PP\x92P\x92\x90PV[`\0\x80\x83`\x1F\x84\x01\x12a(\xC8W`\0\x80\xFD[P\x815`\x01`\x01`@\x1B\x03\x81\x11\x15a(\xDFW`\0\x80\xFD[` \x83\x01\x91P\x83` \x82`\x05\x1B\x85\x01\x01\x11\x15a\x1A>W`\0\x80\xFD[`\0\x80`\0\x80`\0``\x86\x88\x03\x12\x15a)\x12W`\0\x80\xFD[a)\x1B\x86a'\xEDV[\x94P` \x86\x015`\x01`\x01`@\x1B\x03\x80\x82\x11\x15a)7W`\0\x80\xFD[a)C\x89\x83\x8A\x01a(\xB6V[\x90\x96P\x94P`@\x88\x015\x91P\x80\x82\x11\x15a)\\W`\0\x80\xFD[Pa)i\x88\x82\x89\x01a(\xB6V[\x96\x99\x95\x98P\x93\x96P\x92\x94\x93\x92PPPV[`\0\x80\x83`\x1F\x84\x01\x12a)\x8CW`\0\x80\xFD[P\x815`\x01`\x01`@\x1B\x03\x81\x11\x15a)\xA3W`\0\x80\xFD[` \x83\x01\x91P\x83` \x82\x85\x01\x01\x11\x15a\x1A>W`\0\x80\xFD[`\0\x80`\0\x80``\x85\x87\x03\x12\x15a)\xD1W`\0\x80\xFD[\x845a)\xDC\x81a(jV[\x93P` \x85\x015\x92P`@\x85\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a)\xFEW`\0\x80\xFD[a*\n\x87\x82\x88\x01a)zV[\x95\x98\x94\x97P\x95PPPPV[`\0\x81Q\x80\x84R` \x80\x85\x01\x94P\x80\x84\x01`\0[\x83\x81\x10\x15a*OW\x81Q`\x01`\x01``\x1B\x03\x16\x87R\x95\x82\x01\x95\x90\x82\x01\x90`\x01\x01a**V[P\x94\x95\x94PPPPPV[`@\x81R`\0a*m`@\x83\x01\x85a*\x16V[\x82\x81\x03` \x84\x01Ra \x12\x81\x85a*\x16V[`\0\x80`@\x83\x85\x03\x12\x15a*\x92W`\0\x80\xFD[\x825\x91Pa*\xA2` \x84\x01a'\xEDV[\x90P\x92P\x92\x90PV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R`\0\x91\x90\x84\x82\x01\x90`@\x85\x01\x90\x84[\x81\x81\x10\x15a+\x17Wa+\x04\x83\x85Qc\xFF\xFF\xFF\xFF\x80\x82Q\x16\x83R\x80` \x83\x01Q\x16` \x84\x01RP`\x01`\x01``\x1B\x03`@\x82\x01Q\x16`@\x83\x01RPPV[\x92\x84\x01\x92``\x92\x90\x92\x01\x91`\x01\x01a*\xC7V[P\x90\x96\x95PPPPPPV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`@\x80Q\x90\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a+[Wa+[a+#V[`@R\x90V[`@Q`\x1F\x82\x01`\x1F\x19\x16\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a+\x89Wa+\x89a+#V[`@R\x91\x90PV[`\0`\x01`\x01`@\x1B\x03\x82\x11\x15a+\xAAWa+\xAAa+#V[P`\x05\x1B` \x01\x90V[`\0\x80`@\x83\x85\x03\x12\x15a+\xC7W`\0\x80\xFD[a+\xD0\x83a'\xEDV[\x91P` \x80\x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a+\xECW`\0\x80\xFD[\x84\x01`\x1F\x81\x01\x86\x13a+\xFDW`\0\x80\xFD[\x805a,\x10a,\x0B\x82a+\x91V[a+aV[\x81\x81R`\x05\x91\x90\x91\x1B\x82\x01\x83\x01\x90\x83\x81\x01\x90\x88\x83\x11\x15a,/W`\0\x80\xFD[\x92\x84\x01\x92[\x82\x84\x10\x15a,MW\x835\x82R\x92\x84\x01\x92\x90\x84\x01\x90a,4V[\x80\x95PPPPPP\x92P\x92\x90PV[\x805c\xFF\xFF\xFF\xFF\x81\x16\x81\x14a'\xFEW`\0\x80\xFD[`\0\x80`\0`@\x84\x86\x03\x12\x15a,\x85W`\0\x80\xFD[a,\x8E\x84a,\\V[\x92P` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a,\xA9W`\0\x80\xFD[a,\xB5\x86\x82\x87\x01a)zV[\x94\x97\x90\x96P\x93\x94PPPPV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R`\0\x91\x90\x84\x82\x01\x90`@\x85\x01\x90\x84[\x81\x81\x10\x15a+\x17W\x83Qc\xFF\xFF\xFF\xFF\x16\x83R\x92\x84\x01\x92\x91\x84\x01\x91`\x01\x01a,\xDEV[`\0\x80`\0``\x84\x86\x03\x12\x15a-\x15W`\0\x80\xFD[a-\x1E\x84a'\xEDV[\x95` \x85\x015\x95P`@\x90\x94\x015\x93\x92PPPV[\x81Qc\xFF\xFF\xFF\xFF\x90\x81\x16\x82R` \x80\x84\x01Q\x90\x91\x16\x90\x82\x01R`@\x80\x83\x01Q`\x01`\x01``\x1B\x03\x16\x90\x82\x01R``\x81\x01a\x0B\x11V[\x805`\x01`\x01``\x1B\x03\x81\x16\x81\x14a'\xFEW`\0\x80\xFD[`\0\x80`@\x83\x85\x03\x12\x15a-\x92W`\0\x80\xFD[a-\x9B\x83a'\xEDV[\x91Pa*\xA2` \x84\x01a-hV[`\0\x80`\0`@\x84\x86\x03\x12\x15a-\xBEW`\0\x80\xFD[\x835\x92P` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a,\xA9W`\0\x80\xFD[`\0\x82`\x1F\x83\x01\x12a-\xECW`\0\x80\xFD[\x815` a-\xFCa,\x0B\x83a+\x91V[\x82\x81R`\x06\x92\x90\x92\x1B\x84\x01\x81\x01\x91\x81\x81\x01\x90\x86\x84\x11\x15a.\x1BW`\0\x80\xFD[\x82\x86\x01[\x84\x81\x10\x15a.jW`@\x81\x89\x03\x12\x15a.8W`\0\x80\x81\xFD[a.@a+9V[\x815a.K\x81a(jV[\x81Ra.X\x82\x86\x01a-hV[\x81\x86\x01R\x83R\x91\x83\x01\x91`@\x01a.\x1FV[P\x96\x95PPPPPPV[`\0\x80`@\x83\x85\x03\x12\x15a.\x88W`\0\x80\xFD[a.\x91\x83a'\xEDV[\x91P` \x83\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a.\xACW`\0\x80\xFD[a.\xB8\x85\x82\x86\x01a-\xDBV[\x91PP\x92P\x92\x90PV[`\0\x80`\0``\x84\x86\x03\x12\x15a.\xD7W`\0\x80\xFD[a.\xE0\x84a'\xEDV[\x92Pa.\xEE` \x85\x01a,\\V[\x91P`@\x84\x015\x90P\x92P\x92P\x92V[`\0\x80`\0``\x84\x86\x03\x12\x15a/\x13W`\0\x80\xFD[\x835\x92Pa/#` \x85\x01a'\xEDV[\x91Pa/1`@\x85\x01a,\\V[\x90P\x92P\x92P\x92V[`\0\x80`\0\x80`\x80\x85\x87\x03\x12\x15a/PW`\0\x80\xFD[a/Y\x85a'\xEDV[\x93Pa/g` \x86\x01a,\\V[\x93\x96\x93\x95PPPP`@\x82\x015\x91``\x015\x90V[`\0\x80`\0``\x84\x86\x03\x12\x15a/\x91W`\0\x80\xFD[a/\x9A\x84a'\xEDV[\x92Pa/\xA8` \x85\x01a-hV[\x91P`@\x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a/\xC3W`\0\x80\xFD[a/\xCF\x86\x82\x87\x01a-\xDBV[\x91PP\x92P\x92P\x92V[cNH{q`\xE0\x1B`\0R`2`\x04R`$`\0\xFD[`\0` \x82\x84\x03\x12\x15a0\x01W`\0\x80\xFD[a\x11P\x82a-hV[cNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[`\0`\0\x19\x82\x14\x15a04Wa04a0\nV[P`\x01\x01\x90V[`\0\x82\x82\x10\x15a0MWa0Ma0\nV[P\x03\x90V[cNH{q`\xE0\x1B`\0R`1`\x04R`$`\0\xFD[`\0`@\x82\x01`\x01\x80`\xA0\x1B\x03\x80\x86\x16\x84R` `@\x81\x86\x01R\x82\x86T\x80\x85R``\x87\x01\x91P\x87`\0R\x82`\0 \x94P`\0[\x81\x81\x10\x15a0\xB9W\x85T\x85\x16\x83R`\x01\x95\x86\x01\x95\x92\x84\x01\x92\x01a0\x9BV[P\x90\x98\x97PPPPPPPPV[`\0` \x80\x83\x85\x03\x12\x15a0\xDAW`\0\x80\xFD[\x82Q`\x01`\x01`@\x1B\x03\x81\x11\x15a0\xF0W`\0\x80\xFD[\x83\x01`\x1F\x81\x01\x85\x13a1\x01W`\0\x80\xFD[\x80Qa1\x0Fa,\x0B\x82a+\x91V[\x81\x81R`\x05\x91\x90\x91\x1B\x82\x01\x83\x01\x90\x83\x81\x01\x90\x87\x83\x11\x15a1.W`\0\x80\xFD[\x92\x84\x01\x92[\x82\x84\x10\x15a1LW\x83Q\x82R\x92\x84\x01\x92\x90\x84\x01\x90a13V[\x97\x96PPPPPPPV[`\0\x81`\0\x19\x04\x83\x11\x82\x15\x15\x16\x15a1qWa1qa0\nV[P\x02\x90V[`\0\x82a1\x93WcNH{q`\xE0\x1B`\0R`\x12`\x04R`$`\0\xFD[P\x04\x90V[`\0`\x01`\x01``\x1B\x03\x80\x83\x16\x81\x85\x16\x80\x83\x03\x82\x11\x15a1\xBAWa1\xBAa0\nV[\x01\x94\x93PPPPV[`\0` \x82\x84\x03\x12\x15a1\xD5W`\0\x80\xFD[\x81Qa\x11P\x81a(jV[`\0\x82\x19\x82\x11\x15a1\xF3Wa1\xF3a0\nV[P\x01\x90V[`\0\x81a2\x07Wa2\x07a0\nV[P`\0\x19\x01\x90V[`\0\x80\x83\x12\x80\x15`\x01`\xFF\x1B\x85\x01\x84\x12\x16\x15a2-Wa2-a0\nV[`\x01`\x01`\xFF\x1B\x03\x84\x01\x83\x13\x81\x16\x15a2HWa2Ha0\nV[PP\x03\x90V[`\0`\x01`\xFF\x1B\x82\x14\x15a2dWa2da0\nV[P`\0\x03\x90V[`\0`\x01`\x01``\x1B\x03\x83\x81\x16\x90\x83\x16\x81\x81\x10\x15a2\x8BWa2\x8Ba0\nV[\x03\x93\x92PPPV\xFEStakeRegistry._addStrategyParams\xA2dipfsX\"\x12 \x91z\x1Bp7\\\x0F\x80f\x1B\xE21\xD4\xFA\x91\xADy\xE3\x85\xC5\x0E\xC1C67\xCB\xF1\t{[\x98MdsolcC\0\x08\x0C\x003",
+        b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\x02\x1EW_5`\xE0\x1C\x80c\x9A\xB4\xD6\xFF\x11a\x01*W\x80c\xC8)LV\x11a\0\xB4W\x80c\xDF\\\xF7#\x11a\0yW\x80c\xDF\\\xF7#\x14a\x06\x15W\x80c\xE0\x86\xAD\xB3\x14a\x06<W\x80c\xF2\xBE\x94\xAE\x14a\x06OW\x80c\xF8Q\xE1\x98\x14a\x06bW\x80c\xFA(\xC6'\x14a\x06uW__\xFD[\x80c\xC8)LV\x14a\x05\xA2W\x80c\xCA\x8A\xA7\xC7\x14a\x05\xB5W\x80c\xCCZ| \x14a\x05\xDCW\x80c\xD5\xEC\xCC\x05\x14a\x05\xEFW\x80c\xDD\x98F\xB9\x14a\x06\x02W__\xFD[\x80c\xB6\x90Kx\x11a\0\xFAW\x80c\xB6\x90Kx\x14a\x05.W\x80c\xBC\x9A@\xC3\x14a\x05AW\x80c\xBD)\xB8\xCD\x14a\x05TW\x80c\xC4gx\xA5\x14a\x05gW\x80c\xC6\x01R}\x14a\x05\x8FW__\xFD[\x80c\x9A\xB4\xD6\xFF\x14a\x04\x81W\x80c\x9F<\xCFe\x14a\x04\xBBW\x80c\xACk\xFB\x03\x14a\x04\xCEW\x80c\xAD\xC8\x04\xDA\x14a\x04\xEEW__\xFD[\x80c^Zgu\x11a\x01\xABW\x80cl?\xB4\xBF\x11a\x01{W\x80cl?\xB4\xBF\x14a\x03\xEDW\x80cm\x14\xA9\x87\x14a\x04\rW\x80cu\xD4\x17:\x14a\x044W\x80c|\x17#G\x14a\x04GW\x80c\x81\xC0u\x02\x14a\x04aW__\xFD[\x80c^Zgu\x14a\x03]W\x80c_\x1F-w\x14a\x03lW\x80ci\x7F\xBD\x93\x14a\x03\x7FW\x80ck:\xA7.\x14a\x03\xAEW__\xFD[\x80c%PGw\x11a\x01\xF1W\x80c%PGw\x14a\x02\xB8W\x80c,\xD9Y@\x14a\x02\xD9W\x80c<\xA5\xA5\xF5\x14a\x02\xF9W\x80cK\xD2n\t\x14a\x03\x1BW\x80cT\x01\xED'\x14a\x03JW__\xFD[\x80c\x04\x91\xB4\x1C\x14a\x02\"W\x80c\x08s$a\x14a\x02WW\x80c\x1F\x9Bt\xE0\x14a\x02xW\x80c \xB6b\x98\x14a\x02\xA3W[__\xFD[a\x02Da\x0206`\x04a.\x05V[`\xFF\x16_\x90\x81R`\x01` R`@\x90 T\x90V[`@Q\x90\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\x02ja\x02e6`\x04a.\x1EV[a\x06\x88V[`@Qa\x02N\x92\x91\x90a.FV[a\x02\x8Ba\x02\x866`\x04a.|V[a\x06\xCDV[`@Q`\x01`\x01``\x1B\x03\x90\x91\x16\x81R` \x01a\x02NV[a\x02\xB6a\x02\xB16`\x04a.\xF1V[a\x06\xEFV[\0[a\x02\xCBa\x02\xC66`\x04a/\xACV[a\x08\x8DV[`@Qa\x02N\x92\x91\x90a0FV[a\x02\xECa\x02\xE76`\x04a0jV[a\n\x15V[`@Qa\x02N\x91\x90a0\x94V[a\x02Da\x03\x076`\x04a.\x05V[`\xFF\x16_\x90\x81R`\x03` R`@\x90 T\x90V[a\x02Da\x03)6`\x04a0jV[_\x91\x82R`\x02` \x90\x81R`@\x80\x84 `\xFF\x93\x90\x93\x16\x84R\x91\x90R\x90 T\x90V[a\x02\x8Ba\x03X6`\x04a0jV[a\n\xB2V[a\x02Dg\r\xE0\xB6\xB3\xA7d\0\0\x81V[a\x02\xB6a\x03z6`\x04a1\x9BV[a\n\xCAV[a\x03\xA1a\x03\x8D6`\x04a.\x05V[`\x05` R_\x90\x81R`@\x90 T`\xFF\x16\x81V[`@Qa\x02N\x91\x90a2WV[a\x03\xD5\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01a\x02NV[a\x04\0a\x03\xFB6`\x04a2\xE2V[a\x10\x08V[`@Qa\x02N\x91\x90a3\xB4V[a\x03\xD5\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x02\xB6a\x04B6`\x04a4\x98V[a\x11cV[a\x04O` \x81V[`@Q`\xFF\x90\x91\x16\x81R` \x01a\x02NV[a\x04ta\x04o6`\x04a5\x04V[a\x12IV[`@Qa\x02N\x91\x90a5RV[a\x04\xA6a\x04\x8F6`\x04a.\x05V[`\x06` R_\x90\x81R`@\x90 Tc\xFF\xFF\xFF\xFF\x16\x81V[`@Qc\xFF\xFF\xFF\xFF\x90\x91\x16\x81R` \x01a\x02NV[a\x03\xD5a\x04\xC96`\x04a.\x1EV[a\x13\xEFV[a\x04\xE1a\x04\xDC6`\x04a5\x8FV[a\x14#V[`@Qa\x02N\x91\x90a5\xBFV[a\x05\x01a\x04\xFC6`\x04a.\x1EV[a\x14\xB9V[`@\x80Q\x82Q`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x92\x83\x01Q`\x01`\x01``\x1B\x03\x16\x92\x81\x01\x92\x90\x92R\x01a\x02NV[a\x04\xE1a\x05<6`\x04a.\x1EV[a\x150V[a\x02\xB6a\x05O6`\x04a5\xF9V[a\x15\xBDV[a\x02\xB6a\x05b6`\x04a6!V[a\x15\xDEV[a\x02\x8Ba\x05u6`\x04a.\x05V[_` \x81\x90R\x90\x81R`@\x90 T`\x01`\x01``\x1B\x03\x16\x81V[a\x02\xB6a\x05\x9D6`\x04a6OV[a\x16AV[a\x02\x8Ba\x05\xB06`\x04a6\x99V[a\x18\xB1V[a\x03\xD5\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x02\xB6a\x05\xEA6`\x04a6\xD3V[a\x19-V[a\x02\x8Ba\x05\xFD6`\x04a.\x05V[a\x1A\x1FV[a\x04\xA6a\x06\x106`\x04a7=V[a\x1ApV[a\x03\xD5\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x02\xB6a\x06J6`\x04a7mV[a\x1A\x84V[a\x02\x8Ba\x06]6`\x04a7\x95V[a\x1A\xA0V[a\x04\xE1a\x06p6`\x04a0jV[a\x1B3V[a\x02\x8Ba\x06\x836`\x04a7=V[a\x1C!V[`\x03` R\x81_R`@_ \x81\x81T\x81\x10a\x06\xA1W_\x80\xFD[_\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x92P`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x90P\x82V[_\x82a\x06\xD8\x81a\x1C\x80V[_a\x06\xE3\x85\x85a\x1C\xB2V[P\x92PP[P\x92\x91PPV[a\x06\xF7a\x1D]V[\x84a\x07\x01\x81a\x1C\x80V[\x83\x80a\x07 W`@Qcyl\xC5%`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[\x82\x81\x14a\x07@W`@QcCqJ\xFD`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\xFF\x87\x16_\x90\x81R`\x03` R`@\x81 \x90[\x82\x81\x10\x15a\x08\x82W\x85\x85\x82\x81\x81\x10a\x07mWa\x07ma7\xD4V[\x90P` \x02\x01` \x81\x01\x90a\x07\x82\x91\x90a7\xE8V[\x82\x89\x89\x84\x81\x81\x10a\x07\x95Wa\x07\x95a7\xD4V[\x90P` \x02\x015\x81T\x81\x10a\x07\xACWa\x07\xACa7\xD4V[\x90_R` _ \x01_\x01`\x14a\x01\0\n\x81T\x81`\x01`\x01``\x1B\x03\x02\x19\x16\x90\x83`\x01`\x01``\x1B\x03\x16\x02\x17\x90UP\x88`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x83\x8A\x8A\x85\x81\x81\x10a\x08\x12Wa\x08\x12a7\xD4V[\x90P` \x02\x015\x81T\x81\x10a\x08)Wa\x08)a7\xD4V[_\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x88\x88\x85\x81\x81\x10a\x08OWa\x08Oa7\xD4V[\x90P` \x02\x01` \x81\x01\x90a\x08d\x91\x90a7\xE8V[`@Qa\x08r\x92\x91\x90a.FV[`@Q\x80\x91\x03\x90\xA2`\x01\x01a\x07SV[PPPPPPPPPV[``\x80a\x08\x98a\x1E\x10V[_\x83`\x01`\x01`@\x1B\x03\x81\x11\x15a\x08\xB1Wa\x08\xB1a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x08\xDAW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_\x84`\x01`\x01`@\x1B\x03\x81\x11\x15a\x08\xF6Wa\x08\xF6a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\t\x1FW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[\x85\x81\x10\x15a\n\x07W_\x87\x87\x83\x81\x81\x10a\t?Wa\t?a7\xD4V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\tT\x90P\x81a\x1C\x80V[__a\t`\x83\x8Da\x1C\xB2V[\x91P\x91P\x80a\t\x82W`@Qc \x7F\x13\xE3`\xE1\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[_a\t\x8E\x8C\x85\x85a\x1EYV[\x90P\x82\x87\x86\x81Q\x81\x10a\t\xA3Wa\t\xA3a7\xD4V[` \x02` \x01\x01\x90`\x01`\x01``\x1B\x03\x16\x90\x81`\x01`\x01``\x1B\x03\x16\x81RPPa\t\xCD\x84\x82a \xD2V[\x86\x86\x81Q\x81\x10a\t\xDFWa\t\xDFa7\xD4V[`\x01`\x01``\x1B\x03\x90\x92\x16` \x92\x83\x02\x91\x90\x91\x01\x90\x91\x01RPP`\x01\x90\x92\x01\x91Pa\t$\x90PV[P\x90\x97\x90\x96P\x94PPPPPV[_\x82\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x85\x16\x84R\x82R\x80\x83 \x80T\x82Q\x81\x85\x02\x81\x01\x85\x01\x90\x93R\x80\x83R``\x94\x92\x93\x91\x92\x90\x91\x84\x01[\x82\x82\x10\x15a\n\xA5W_\x84\x81R` \x90\x81\x90 `@\x80Q``\x81\x01\x82R\x91\x85\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x83\x85\x01R`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x90\x82\x01R\x82R`\x01\x90\x92\x01\x91\x01a\nMV[PPPP\x90P[\x92\x91PPV[__a\n\xBE\x84\x84a\x1B3V[`@\x01Q\x94\x93PPPPV[a\n\xD2a\x1D]V[\x81a\n\xDC\x81a\x1C\x80V[\x81Q\x80a\n\xFCW`@Qcyl\xC5%`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\xFF\x84\x16_\x90\x81R`\x03` \x90\x81R`@\x80\x83 `\x04\x90\x92R\x82 \x90\x91\x83`\x01`\x01`@\x1B\x03\x81\x11\x15a\x0B1Wa\x0B1a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x0BZW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[\x84\x81\x10\x15a\x0EUW\x83\x87\x82\x81Q\x81\x10a\x0BzWa\x0Bza7\xD4V[` \x02` \x01\x01Q\x81T\x81\x10a\x0B\x92Wa\x0B\x92a7\xD4V[_\x91\x82R` \x90\x91 \x01T\x82Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90\x83\x90\x83\x90\x81\x10a\x0B\xBDWa\x0B\xBDa7\xD4V[` \x02` \x01\x01\x90`\x01`\x01`\xA0\x1B\x03\x16\x90\x81`\x01`\x01`\xA0\x1B\x03\x16\x81RPP\x87`\xFF\x16\x7F1\xFA.,\xD2\x80\xC97^\x13\xFF\xCF=\x81\xE27\x81\0\x18n@X\xF8\xD3\xDD\xB6\x90\xB8-\xCD1\xF7\x85\x89\x84\x81Q\x81\x10a\x0C\x15Wa\x0C\x15a7\xD4V[` \x02` \x01\x01Q\x81T\x81\x10a\x0C-Wa\x0C-a7\xD4V[_\x91\x82R` \x91\x82\x90 \x01T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R\x01`@Q\x80\x91\x03\x90\xA2\x87`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x85\x89\x84\x81Q\x81\x10a\x0C\x8AWa\x0C\x8Aa7\xD4V[` \x02` \x01\x01Q\x81T\x81\x10a\x0C\xA2Wa\x0C\xA2a7\xD4V[_\x91\x82R` \x80\x83 \x91\x90\x91\x01T`@\x80Q`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x82R\x91\x81\x01\x92\x90\x92R\x01`@Q\x80\x91\x03\x90\xA2\x83T\x84\x90a\x0C\xE1\x90`\x01\x90a8\x15V[\x81T\x81\x10a\x0C\xF1Wa\x0C\xF1a7\xD4V[\x90_R` _ \x01\x84\x88\x83\x81Q\x81\x10a\r\x0CWa\r\x0Ca7\xD4V[` \x02` \x01\x01Q\x81T\x81\x10a\r$Wa\r$a7\xD4V[_\x91\x82R` \x90\x91 \x82T\x91\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x91\x82\x17\x81U\x91T`\x01`\x01``\x1B\x03`\x01`\xA0\x1B\x91\x82\x90\x04\x16\x02\x17\x90U\x83T\x84\x90\x80a\rvWa\rva8(V[_\x82\x81R` \x81 \x82\x01_\x19\x90\x81\x01\x91\x90\x91U\x01\x90U\x82T\x83\x90a\r\x9C\x90`\x01\x90a8\x15V[\x81T\x81\x10a\r\xACWa\r\xACa7\xD4V[\x90_R` _ \x01_\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16\x83\x88\x83\x81Q\x81\x10a\r\xDAWa\r\xDAa7\xD4V[` \x02` \x01\x01Q\x81T\x81\x10a\r\xF2Wa\r\xF2a7\xD4V[\x90_R` _ \x01_a\x01\0\n\x81T\x81`\x01`\x01`\xA0\x1B\x03\x02\x19\x16\x90\x83`\x01`\x01`\xA0\x1B\x03\x16\x02\x17\x90UP\x82\x80T\x80a\x0E-Wa\x0E-a8(V[_\x82\x81R` \x90 \x81\x01_\x19\x90\x81\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x90U\x01\x90U`\x01\x01a\x0B_V[P_\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\xDE\x11d\xBB`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0E\xB3W=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0E\xD7\x91\x90a8<V[`@\x80Q\x80\x82\x01\x82R`\x01`\x01`\xA0\x1B\x03\x83\x81\x16\x82R`\xFF\x8C\x16` \x83\x01R\x91Qc\x04\xC1\xB8\xEB`\xE3\x1B\x81R\x92\x93P\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x90\x91\x16\x91c&\r\xC7X\x91a\x0F<\x91`\x04\x01a8WV[` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0FWW=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0F{\x91\x90a8}V[\x15a\x0F\xFEW`@Qc\xB6k\xD9\x89`\xE0\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x90c\xB6k\xD9\x89\x90a\x0F\xD0\x90\x84\x90\x8C\x90\x87\x90`\x04\x01a8\x9CV[_`@Q\x80\x83\x03\x81_\x87\x80;\x15\x80\x15a\x0F\xE7W__\xFD[PZ\xF1\x15\x80\x15a\x0F\xF9W=__>=_\xFD[PPPP[PPPPPPPPV[``a\x10\x12a\x1E\x10V[_\x84Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\x10,Wa\x10,a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x10UW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90Pa\x10a\x83a\x1C\x80V[__a\x10m\x85\x88a\"CV[\x90\x92P\x90P_\x80[\x88Q\x81\x10\x15a\x11IW\x82\x81\x81Q\x81\x10a\x10\x90Wa\x10\x90a7\xD4V[` \x02` \x01\x01Qa\x10\xF4W_\x84\x82\x81Q\x81\x10a\x10\xAFWa\x10\xAFa7\xD4V[` \x02` \x01\x01\x90`\x01`\x01``\x1B\x03\x16\x90\x81`\x01`\x01``\x1B\x03\x16\x81RPP`\x01\x85\x82\x81Q\x81\x10a\x10\xE3Wa\x10\xE3a7\xD4V[\x91\x15\x15` \x92\x83\x02\x91\x90\x91\x01\x90\x91\x01R[_a\x112\x89\x83\x81Q\x81\x10a\x11\nWa\x11\na7\xD4V[` \x02` \x01\x01Q\x89\x87\x85\x81Q\x81\x10a\x11%Wa\x11%a7\xD4V[` \x02` \x01\x01Qa\x1EYV[\x90Pa\x11>\x81\x84a9\x06V[\x92PP`\x01\x01a\x10uV[Pa\x11T\x86\x82a \xD2V[P\x92\x93PPPP[\x93\x92PPPV[a\x11ka\x1E\x10V[`\xFF\x83\x16_\x90\x81R`\x01` R`@\x90 T\x15a\x11\x9BW`@Qc\x10\xCD\xA5\x17`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\x11\xA5\x83\x82a%\xE9V[a\x11\xAF\x83\x83a(\xDAV[a\x11\xB9\x83_a)BV[PP`\xFF\x16_\x90\x81R`\x01` \x81\x81R`@\x80\x84 \x81Q``\x81\x01\x83Rc\xFF\xFF\xFF\xFFC\x81\x16\x82R\x81\x85\x01\x87\x81R\x93\x82\x01\x87\x81R\x83T\x96\x87\x01\x84U\x92\x87R\x93\x90\x95 \x94Q\x94\x90\x93\x01\x80T\x91Q\x93Q`\x01`\x01``\x1B\x03\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x94\x84\x16`\x01` \x1B\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x93\x16\x95\x90\x93\x16\x94\x90\x94\x17\x17\x91\x90\x91\x16\x17\x90UV[``_\x82`\x01`\x01`@\x1B\x03\x81\x11\x15a\x12dWa\x12da1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x12\x8DW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[\x83\x81\x10\x15a\x13\xE6W_\x85\x85\x83\x81\x81\x10a\x12\xADWa\x12\xADa7\xD4V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\x12\xC2\x90P\x81a\x1C\x80V[`\xFF\x81\x16_\x90\x81R`\x01` R`@\x81 \x80Tc\xFF\xFF\xFF\xFF\x8A\x16\x92\x90a\x12\xEAWa\x12\xEAa7\xD4V[_\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11\x15a\x13\x1AW`@Qc\xCCdes`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\xFF\x81\x16_\x90\x81R`\x01` R`@\x81 T\x90[\x81\x81\x10\x15a\x13\xDBW`\xFF\x83\x16_\x90\x81R`\x01` \x81\x90R`@\x90\x91 c\xFF\xFF\xFF\xFF\x8B\x16\x91a\x13\\\x84\x86a8\x15V[a\x13f\x91\x90a8\x15V[\x81T\x81\x10a\x13vWa\x13va7\xD4V[_\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11a\x13\xD3W`\x01a\x13\x98\x82\x84a8\x15V[a\x13\xA2\x91\x90a8\x15V[\x85\x85\x81Q\x81\x10a\x13\xB4Wa\x13\xB4a7\xD4V[` \x02` \x01\x01\x90c\xFF\xFF\xFF\xFF\x16\x90\x81c\xFF\xFF\xFF\xFF\x16\x81RPPa\x13\xDBV[`\x01\x01a\x13.V[PPP`\x01\x01a\x12\x92V[P\x94\x93PPPPV[`\x04` R\x81_R`@_ \x81\x81T\x81\x10a\x14\x08W_\x80\xFD[_\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x91P\x82\x90PV[`@\x80Q``\x81\x01\x82R_\x80\x82R` \x80\x83\x01\x82\x90R\x82\x84\x01\x82\x90R\x85\x82R`\x02\x81R\x83\x82 `\xFF\x88\x16\x83R\x90R\x91\x90\x91 \x80T\x83\x90\x81\x10a\x14gWa\x14ga7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x92\x90\x91\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x93\x83\x01\x93\x90\x93R`\x01`@\x1B\x90\x92\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x94\x93PPPPV[`@\x80Q\x80\x82\x01\x90\x91R_\x80\x82R` \x82\x01R`\xFF\x83\x16_\x90\x81R`\x03` R`@\x90 \x80T\x83\x90\x81\x10a\x14\xEFWa\x14\xEFa7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q\x80\x82\x01\x90\x91R\x91\x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x82R`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x93\x92PPPV[`@\x80Q``\x81\x01\x82R_\x80\x82R` \x80\x83\x01\x82\x90R\x82\x84\x01\x82\x90R`\xFF\x86\x16\x82R`\x01\x90R\x91\x90\x91 \x80T\x83\x90\x81\x10a\x15lWa\x15la7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x92\x90\x91\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x84R`\x01` \x1B\x82\x04\x16\x93\x83\x01\x93\x90\x93R`\x01`@\x1B\x90\x92\x04`\x01`\x01``\x1B\x03\x16\x91\x81\x01\x91\x90\x91R\x93\x92PPPV[a\x15\xC5a\x1D]V[\x81a\x15\xCF\x81a\x1C\x80V[a\x15\xD9\x83\x83a(\xDAV[PPPV[a\x15\xE6a\x1E\x10V[_[\x81\x81\x10\x15a\x16;W_\x83\x83\x83\x81\x81\x10a\x16\x03Wa\x16\x03a7\xD4V[\x91\x90\x91\x015`\xF8\x1C\x91Pa\x16\x18\x90P\x81a\x1C\x80V[_a\x16$\x86\x83_a\x1EYV[\x90Pa\x160\x82\x82a \xD2V[PPP`\x01\x01a\x15\xE8V[PPPPV[a\x16Ia\x1D]V[\x81a\x16S\x81a\x1C\x80V[a\x16]\x83\x83a%\xE9V[_\x82Q\x90P_\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\xDE\x11d\xBB`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x16\xBFW=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x16\xE3\x91\x90a8<V[`@\x80Q\x80\x82\x01\x82R`\x01`\x01`\xA0\x1B\x03\x83\x81\x16\x82R`\xFF\x89\x16` \x83\x01R\x91Qc\x04\xC1\xB8\xEB`\xE3\x1B\x81R\x92\x93P\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x90\x91\x16\x91c&\r\xC7X\x91a\x17H\x91`\x04\x01a8WV[` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x17cW=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x17\x87\x91\x90a8}V[\x15a\x18\xAAW_\x82`\x01`\x01`@\x1B\x03\x81\x11\x15a\x17\xA5Wa\x17\xA5a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x17\xCEW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[\x83\x81\x10\x15a\x18*W\x85\x81\x81Q\x81\x10a\x17\xEDWa\x17\xEDa7\xD4V[` \x02` \x01\x01Q_\x01Q\x82\x82\x81Q\x81\x10a\x18\nWa\x18\na7\xD4V[`\x01`\x01`\xA0\x1B\x03\x90\x92\x16` \x92\x83\x02\x91\x90\x91\x01\x90\x91\x01R`\x01\x01a\x17\xD3V[P`@Qc\x02\x87\xF7Q`\xE5\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x90cP\xFE\xEA \x90a\x18{\x90\x85\x90\x8A\x90\x86\x90`\x04\x01a8\x9CV[_`@Q\x80\x83\x03\x81_\x87\x80;\x15\x80\x15a\x18\x92W__\xFD[PZ\xF1\x15\x80\x15a\x18\xA4W=__>=_\xFD[PPPPP[PPPPPV[`\xFF\x83\x16_\x90\x81R`\x01` R`@\x81 \x80T\x82\x91\x90\x84\x90\x81\x10a\x18\xD7Wa\x18\xD7a7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x90Pa\n\xBE\x81\x85a)\xAFV[a\x195a\x1E\x10V[`\xFF\x84\x16_\x90\x81R`\x01` R`@\x90 T\x15a\x19eW`@Qc\x10\xCD\xA5\x17`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\x19o\x84\x82a%\xE9V[a\x19y\x84\x84a(\xDAV[a\x19\x84\x84`\x01a)BV[a\x19\x8E\x84\x83a*&V[PPP`\xFF\x16_\x90\x81R`\x01` \x81\x81R`@\x80\x84 \x81Q``\x81\x01\x83Rc\xFF\xFF\xFF\xFFC\x81\x16\x82R\x81\x85\x01\x87\x81R\x93\x82\x01\x87\x81R\x83T\x96\x87\x01\x84U\x92\x87R\x93\x90\x95 \x94Q\x94\x90\x93\x01\x80T\x91Q\x93Q`\x01`\x01``\x1B\x03\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x94\x84\x16`\x01` \x1B\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x93\x16\x95\x90\x93\x16\x94\x90\x94\x17\x17\x91\x90\x91\x16\x17\x90UV[`\xFF\x81\x16_\x90\x81R`\x01` \x81\x90R`@\x82 \x80T\x90\x91a\x1A?\x91a8\x15V[\x81T\x81\x10a\x1AOWa\x1AOa7\xD4V[_\x91\x82R` \x90\x91 \x01T`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x92\x91PPV[_a\x1A|\x84\x84\x84a*\xD7V[\x94\x93PPPPV[a\x1A\x8Ca\x1D]V[\x81a\x1A\x96\x81a\x1C\x80V[a\x15\xD9\x83\x83a*&V[_\x82\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x88\x16\x84R\x90\x91R\x81 \x80T\x82\x91\x90\x84\x90\x81\x10a\x1A\xD0Wa\x1A\xD0a7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x90Pa\x1B&\x81\x86a)\xAFV[`@\x01Q\x95\x94PPPPPV[`@\x80Q``\x80\x82\x01\x83R_\x80\x83R` \x80\x84\x01\x82\x90R\x83\x85\x01\x82\x90R\x86\x82R`\x02\x81R\x84\x82 `\xFF\x87\x16\x83R\x81R\x84\x82 T\x85Q\x93\x84\x01\x86R\x82\x84R\x90\x83\x01\x82\x90R\x93\x82\x01\x81\x90R\x91\x92\x91\x82\x90\x03a\x1B\x8FW\x91Pa\n\xAC\x90PV[_\x85\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x88\x16\x84R\x90\x91R\x90 a\x1B\xB5`\x01\x84a8\x15V[\x81T\x81\x10a\x1B\xC5Wa\x1B\xC5a7\xD4V[_\x91\x82R` \x91\x82\x90 `@\x80Q``\x81\x01\x82R\x91\x90\x92\x01Tc\xFF\xFF\xFF\xFF\x80\x82\x16\x83R`\x01` \x1B\x82\x04\x16\x93\x82\x01\x93\x90\x93R`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x93\x04\x92\x90\x92\x16\x90\x82\x01R\x92Pa\n\xAC\x91PPV[PP\x92\x91PPV[_\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 a\x1CG\x85\x85\x85a*\xD7V[c\xFF\xFF\xFF\xFF\x16\x81T\x81\x10a\x1C]Wa\x1C]a7\xD4V[_\x91\x82R` \x90\x91 \x01T`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x94\x93PPPPV[`\xFF\x81\x16_\x90\x81R`\x01` R`@\x90 Ta\x1C\xAFW`@Qcs\x10\xCF\xF5`\xE1\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[PV[`@\x80Q`\x01\x80\x82R\x81\x83\x01\x90\x92R_\x91\x82\x91\x82\x91` \x80\x83\x01\x90\x806\x837\x01\x90PP\x90P\x83\x81_\x81Q\x81\x10a\x1C\xEAWa\x1C\xEAa7\xD4V[` \x02` \x01\x01\x90`\x01`\x01`\xA0\x1B\x03\x16\x90\x81`\x01`\x01`\xA0\x1B\x03\x16\x81RPP__a\x1D\x16\x87\x84a\"CV[\x91P\x91P\x81_\x81Q\x81\x10a\x1D,Wa\x1D,a7\xD4V[` \x02` \x01\x01Q\x81_\x81Q\x81\x10a\x1DFWa\x1DFa7\xD4V[` \x02` \x01\x01Q\x94P\x94PPPP[\x92P\x92\x90PV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\x8D\xA5\xCB[`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x1D\xB9W=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x1D\xDD\x91\x90a8<V[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x1E\x0EW`@Qc\xCE\x98\xC2K`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[V[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14a\x1E\x0EW`@Qc,\x01\xB2\x05`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[_\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 T\x81\x90\x80\x82\x03a\x1F\x1DW_\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x82R\x80\x83 \x81Q``\x81\x01\x83Rc\xFF\xFF\xFF\xFFC\x81\x16\x82R\x81\x85\x01\x86\x81R`\x01`\x01``\x1B\x03\x80\x8C\x16\x95\x84\x01\x95\x86R\x84T`\x01\x81\x01\x86U\x94\x88R\x95\x90\x96 \x91Q\x91\x90\x92\x01\x80T\x95Q\x93Q\x90\x94\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x93\x83\x16`\x01` \x1B\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x96\x16\x91\x90\x92\x16\x17\x93\x90\x93\x17\x16\x91\x90\x91\x17\x90Ua xV[_\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x90\x91R\x81 a\x1FC`\x01\x84a8\x15V[\x81T\x81\x10a\x1FSWa\x1FSa7\xD4V[_\x91\x82R` \x90\x91 \x01\x80T`\x01`\x01``\x1B\x03`\x01`@\x1B\x90\x91\x04\x81\x16\x94P\x90\x91P\x85\x16\x83\x03a\x1F\x89W_\x93PPPPa\x11\\V[\x80Tc\xFF\xFF\xFF\xFFC\x81\x16\x91\x16\x03a\x1F\xC1W\x80T`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B`\x01`\x01``\x1B\x03\x87\x16\x02\x17\x81Ua vV[\x80Tg\xFF\xFF\xFF\xFF\0\0\0\0\x19\x16`\x01` \x1BCc\xFF\xFF\xFF\xFF\x90\x81\x16\x82\x81\x02\x93\x90\x93\x17\x84U_\x8A\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x8D\x16\x84R\x82R\x80\x83 \x81Q``\x81\x01\x83R\x96\x87R\x86\x83\x01\x84\x81R`\x01`\x01``\x1B\x03\x8D\x81\x16\x93\x89\x01\x93\x84R\x82T`\x01\x81\x01\x84U\x92\x86R\x93\x90\x94 \x96Q\x96\x01\x80T\x93Q\x91Q\x96\x85\x16g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x94\x16\x93\x90\x93\x17\x93\x16\x90\x93\x02\x91\x90\x91\x17`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B\x93\x90\x92\x16\x92\x90\x92\x02\x17\x90U[P[`@\x80Q`\xFF\x87\x16\x81R`\x01`\x01``\x1B\x03\x86\x16` \x82\x01R\x87\x91\x7F/R}R~\x95\xD8\xFE@\xAE\xC5Swt;\xB7y\x08}\xA3\xF6\xD0\xD0\x8F\x12\xE3dD\xDAb2}\x91\x01`@Q\x80\x91\x03\x90\xA2a \xC8\x82\x85a,>V[\x96\x95PPPPPPV[`\xFF\x82\x16_\x90\x81R`\x01` \x81\x90R`@\x82 \x80T\x91\x83\x91\x90a \xF5\x90\x84a8\x15V[\x81T\x81\x10a!\x05Wa!\x05a7\xD4V[\x90_R` _ \x01\x90P\x83_\x03a!0WT`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x91Pa\n\xAC\x90PV[\x80T_\x90a!N\x90`\x01`@\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x86a,UV[\x82T\x90\x91Pc\xFF\xFF\xFF\xFFC\x81\x16\x91\x16\x03a!\x89W\x81T`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x16`\x01`@\x1B`\x01`\x01``\x1B\x03\x83\x16\x02\x17\x82Ua\":V[\x81Tc\xFF\xFF\xFF\xFFC\x81\x16`\x01` \x1B\x81\x81\x02g\xFF\xFF\xFF\xFF\0\0\0\0\x19\x90\x94\x16\x93\x90\x93\x17\x85U`\xFF\x89\x16_\x90\x81R`\x01` \x81\x81R`@\x80\x84 \x81Q``\x81\x01\x83R\x95\x86R\x85\x83\x01\x85\x81R`\x01`\x01``\x1B\x03\x80\x8B\x16\x93\x88\x01\x93\x84R\x82T\x95\x86\x01\x83U\x91\x86R\x92\x90\x94 \x94Q\x94\x90\x92\x01\x80T\x91Q\x92Q\x90\x93\x16`\x01`@\x1B\x02`\x01`@\x1B`\x01`\xA0\x1B\x03\x19\x92\x86\x16\x90\x96\x02g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x91\x16\x93\x90\x94\x16\x92\x90\x92\x17\x92\x90\x92\x17\x16\x91\x90\x91\x17\x90U[\x95\x94PPPPPV[``\x80_\x83Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\"`Wa\"`a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\"\x89W\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_\x84Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\"\xA6Wa\"\xA6a1\rV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\"\xCFW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_a\"\xEB\x87`\xFF\x16_\x90\x81R`\x03` R`@\x90 T\x90V[`\xFF\x88\x16_\x90\x81R`\x03` \x90\x81R`@\x80\x83 \x80T\x82Q\x81\x85\x02\x81\x01\x85\x01\x90\x93R\x80\x83R\x94\x95P\x92\x93\x90\x92\x91\x84\x90\x84\x01[\x82\x82\x10\x15a#kW_\x84\x81R` \x90\x81\x90 `@\x80Q\x80\x82\x01\x90\x91R\x90\x84\x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x82R`\x01`\xA0\x1B\x90\x04`\x01`\x01``\x1B\x03\x16\x81\x83\x01R\x82R`\x01\x90\x92\x01\x91\x01a#\x1DV[PPPP\x90P```\x01\x80\x81\x11\x15a#\x85Wa#\x85a2CV[`\xFF\x80\x8B\x16_\x90\x81R`\x05` R`@\x90 T\x16`\x01\x81\x11\x15a#\xAAWa#\xAAa2CV[\x03a#\xC0Wa#\xB9\x89\x89a,\x82V[\x90Pa$cV[`\xFF\x89\x16_\x90\x81R`\x04` \x81\x90R`@\x91\x82\x90 \x91Qcxps;`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x92c\xF0\xE0\xE6v\x92a$\x1F\x92\x8D\x92\x91\x01a9\x9AV[_`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a$9W=__>=_\xFD[PPPP`@Q=_\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra$`\x91\x90\x81\x01\x90a9\xBEV[\x90P[_[\x88Q\x81\x10\x15a%\xD9W_[\x84\x81\x10\x15a%iW_\x84\x82\x81Q\x81\x10a$\x8BWa$\x8Ba7\xD4V[` \x02` \x01\x01Q\x90P_\x84\x84\x81Q\x81\x10a$\xA8Wa$\xA8a7\xD4V[` \x02` \x01\x01Q\x83\x81Q\x81\x10a$\xC1Wa$\xC1a7\xD4V[` \x02` \x01\x01Q\x11\x15a%`Wg\r\xE0\xB6\xB3\xA7d\0\0\x81` \x01Q`\x01`\x01``\x1B\x03\x16\x85\x85\x81Q\x81\x10a$\xF8Wa$\xF8a7\xD4V[` \x02` \x01\x01Q\x84\x81Q\x81\x10a%\x11Wa%\x11a7\xD4V[` \x02` \x01\x01Qa%#\x91\x90a:\xCAV[a%-\x91\x90a:\xE1V[\x88\x84\x81Q\x81\x10a%?Wa%?a7\xD4V[` \x02` \x01\x01\x81\x81Qa%S\x91\x90a;\0V[`\x01`\x01``\x1B\x03\x16\x90RP[P`\x01\x01a$pV[P`\xFF\x8A\x16_\x90\x81R` \x81\x90R`@\x90 T\x86Q`\x01`\x01``\x1B\x03\x90\x91\x16\x90\x87\x90\x83\x90\x81\x10a%\x9CWa%\x9Ca7\xD4V[` \x02` \x01\x01Q`\x01`\x01``\x1B\x03\x16\x10\x15\x85\x82\x81Q\x81\x10a%\xC1Wa%\xC1a7\xD4V[\x91\x15\x15` \x92\x83\x02\x91\x90\x91\x01\x90\x91\x01R`\x01\x01a$eV[P\x93\x98\x92\x97P\x91\x95PPPPPPV[_\x81Q\x11a&\nW`@Qcyl\xC5%`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[\x80Q`\xFF\x83\x16_\x90\x81R`\x03` \x90\x81R`@\x90\x91 T\x90a&,\x83\x83a;\x1FV[\x11\x15a&KW`@QcCqJ\xFD`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[_[\x82\x81\x10\x15a\x18\xAAW_[a&a\x82\x84a;\x1FV[\x81\x10\x15a&\xF0W\x84\x82\x81Q\x81\x10a&zWa&za7\xD4V[` \x02` \x01\x01Q_\x01Q`\x01`\x01`\xA0\x1B\x03\x16`\x03_\x88`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x82\x81T\x81\x10a&\xB6Wa&\xB6a7\xD4V[_\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x03a&\xE8W`@Qc{t4\x0B`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\x01\x01a&WV[P_\x84\x82\x81Q\x81\x10a'\x04Wa'\x04a7\xD4V[` \x02` \x01\x01Q` \x01Q`\x01`\x01``\x1B\x03\x16\x11a'7W`@QcrW\x12Q`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\xFF\x85\x16_\x90\x81R`\x03` R`@\x90 \x84Q\x85\x90\x83\x90\x81\x10a'\\Wa'\\a7\xD4V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01Q\x82T`\x01\x81\x01\x84U_\x93\x84R\x82\x84 \x82Q\x92\x84\x01Q`\x01`\x01``\x1B\x03\x16`\x01`\xA0\x1B\x02`\x01`\x01`\xA0\x1B\x03\x90\x93\x16\x92\x90\x92\x17\x91\x01U`\xFF\x87\x16\x82R`\x04\x90R`@\x90 \x84Q\x85\x90\x83\x90\x81\x10a'\xC0Wa'\xC0a7\xD4V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01QQ\x82T`\x01\x81\x01\x84U_\x93\x84R\x91\x90\x92 \x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x90\x92\x16\x91\x90\x91\x17\x90U\x83Q`\xFF\x86\x16\x90\x7F\x10V^V\xCA\xCB\xF3.\xCA&yE\xF0T\xFE\xC0.Yu\x002\xD1\x13\xD30!\x82\xAD\x96\x7FT\x04\x90\x86\x90\x84\x90\x81\x10a(6Wa(6a7\xD4V[` \x90\x81\x02\x91\x90\x91\x01\x81\x01QQ`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R\x01`@Q\x80\x91\x03\x90\xA2\x84`\xFF\x16\x7F\x11\xA5d\x13\"\xDA\x1D\xFFV\xA4\xB6n\xAA\xC3\x1F\xFAFR\x95\xEC\xE9\x07\xCD\x1647y;M\0\x9Au\x85\x83\x81Q\x81\x10a(\x93Wa(\x93a7\xD4V[` \x02` \x01\x01Q_\x01Q\x86\x84\x81Q\x81\x10a(\xB0Wa(\xB0a7\xD4V[` \x02` \x01\x01Q` \x01Q`@Qa(\xCA\x92\x91\x90a.FV[`@Q\x80\x91\x03\x90\xA2`\x01\x01a&MV[`\xFF\x82\x16_\x81\x81R` \x81\x81R`@\x91\x82\x90 \x80Tk\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x16`\x01`\x01``\x1B\x03\x86\x16\x90\x81\x17\x90\x91U\x91Q\x91\x82R\x7F&\xEE\xCF\xF2\xB7\x0B\nq\x10O\xF4\xD9@\xBAqb\xD2:\x95\xC2Hw\x1F\xC4\x87\xA7\xBE\x17\xA5\x96\xB3\xCF\x91\x01`@Q\x80\x91\x03\x90\xA2PPV[`\xFF\x82\x16_\x90\x81R`\x05` R`@\x90 \x80T\x82\x91\x90`\xFF\x19\x16`\x01\x83\x81\x81\x11\x15a)oWa)oa2CV[\x02\x17\x90UP\x7F|\x11.\x86<\xCF\0xb\xE2\xC9\xE2X\x19\xC93\xFE\xDB\xC95\ndCB;J\x85\x99\xC2\xE8\xA5-\x81`@Qa)\xA3\x91\x90a2WV[`@Q\x80\x91\x03\x90\xA1PPV[\x81_\x01Qc\xFF\xFF\xFF\xFF\x16\x81c\xFF\xFF\xFF\xFF\x16\x10\x15a)\xDFW`@Qc\x13\x91\xE1\x1B`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[` \x82\x01Qc\xFF\xFF\xFF\xFF\x16\x15\x80a*\x05WP\x81` \x01Qc\xFF\xFF\xFF\xFF\x16\x81c\xFF\xFF\xFF\xFF\x16\x10[a*\"W`@Qc\x13\x91\xE1\x1B`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[PPV[`\x01`\xFF\x80\x84\x16_\x90\x81R`\x05` R`@\x90 T\x16`\x01\x81\x11\x15a*MWa*Ma2CV[\x14a*kW`@Qc\xA3\xBE%\x83`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\xFF\x82\x16_\x90\x81R`\x06` \x90\x81R`@\x91\x82\x90 \x80Tc\xFF\xFF\xFF\xFF\x19\x81\x16c\xFF\xFF\xFF\xFF\x86\x81\x16\x91\x82\x17\x90\x93U\x84Q\x92\x90\x91\x16\x80\x83R\x92\x82\x01R\x90\x91\x7F(\xD75\x8By\xF0-!\xB8\xB7\xE1z\xEF\xC4\x18Zd0\x8A\xA3t\x06\xFA[\xEF\xC0[\x91\x93,9\xC7\x91\x01`@Q\x80\x91\x03\x90\xA1PPPV[_\x83\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x86\x16\x84R\x90\x91R\x81 T\x80[\x80\x15a+uW_\x86\x81R`\x02` \x90\x81R`@\x80\x83 `\xFF\x89\x16\x84R\x90\x91R\x90 c\xFF\xFF\xFF\xFF\x85\x16\x90a+)`\x01\x84a8\x15V[\x81T\x81\x10a+9Wa+9a7\xD4V[_\x91\x82R` \x90\x91 \x01Tc\xFF\xFF\xFF\xFF\x16\x11a+cWa+Z`\x01\x82a8\x15V[\x92PPPa\x11\\V[\x80a+m\x81a;2V[\x91PPa*\xF5V[P`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x81`$\x82\x01R\x7FStakeRegistry._getStakeUpdateInd`D\x82\x01R\x7FexForOperatorAtBlockNumber: no s`d\x82\x01R\x7Ftake update found for operatorId`\x84\x82\x01R\x7F and quorumNumber at block numbe`\xA4\x82\x01R`9`\xF9\x1B`\xC4\x82\x01R`\xE4\x01`@Q\x80\x91\x03\x90\xFD[_a\x11\\`\x01`\x01``\x1B\x03\x80\x85\x16\x90\x84\x16a;GV[__\x82\x12\x15a,xWa,g\x82a;fV[a,q\x90\x84a;\x80V[\x90Pa\n\xACV[a,q\x82\x84a;\0V[`\xFF\x82\x16_\x90\x81R`\x06` R`@\x81 T``\x91\x90a,\xA8\x90c\xFF\xFF\xFF\xFF\x16Ca;\x1FV[\x90P_\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c+\xAB,J`@Q\x80`@\x01`@R\x80\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\xDE\x11d\xBB`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a-AW=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a-e\x91\x90a8<V[`\x01`\x01`\xA0\x1B\x03\x16\x81R`\xFF\x89\x16` \x91\x82\x01\x81\x90R_\x90\x81R`\x04\x91\x82\x90R`@\x90\x81\x90 \x90Q`\x01`\x01`\xE0\x1B\x03\x19`\xE0\x86\x90\x1B\x16\x81Ra-\xAF\x93\x92\x8A\x92\x91\x89\x91\x01a;\x9FV[_`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a-\xC9W=__>=_\xFD[PPPP`@Q=_\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\":\x91\x90\x81\x01\x90a9\xBEV[\x805`\xFF\x81\x16\x81\x14a.\0W__\xFD[\x91\x90PV[_` \x82\x84\x03\x12\x15a.\x15W__\xFD[a\x11\\\x82a-\xF0V[__`@\x83\x85\x03\x12\x15a./W__\xFD[a.8\x83a-\xF0V[\x94` \x93\x90\x93\x015\x93PPPV[`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x82R`\x01`\x01``\x1B\x03\x16` \x82\x01R`@\x01\x90V[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x1C\xAFW__\xFD[__`@\x83\x85\x03\x12\x15a.\x8DW__\xFD[a.\x96\x83a-\xF0V[\x91P` \x83\x015a.\xA6\x81a.hV[\x80\x91PP\x92P\x92\x90PV[__\x83`\x1F\x84\x01\x12a.\xC1W__\xFD[P\x815`\x01`\x01`@\x1B\x03\x81\x11\x15a.\xD7W__\xFD[` \x83\x01\x91P\x83` \x82`\x05\x1B\x85\x01\x01\x11\x15a\x1DVW__\xFD[_____``\x86\x88\x03\x12\x15a/\x05W__\xFD[a/\x0E\x86a-\xF0V[\x94P` \x86\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a/(W__\xFD[a/4\x88\x82\x89\x01a.\xB1V[\x90\x95P\x93PP`@\x86\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a/RW__\xFD[a/^\x88\x82\x89\x01a.\xB1V[\x96\x99\x95\x98P\x93\x96P\x92\x94\x93\x92PPPV[__\x83`\x1F\x84\x01\x12a/\x7FW__\xFD[P\x815`\x01`\x01`@\x1B\x03\x81\x11\x15a/\x95W__\xFD[` \x83\x01\x91P\x83` \x82\x85\x01\x01\x11\x15a\x1DVW__\xFD[____``\x85\x87\x03\x12\x15a/\xBFW__\xFD[\x845a/\xCA\x81a.hV[\x93P` \x85\x015\x92P`@\x85\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a/\xEBW__\xFD[a/\xF7\x87\x82\x88\x01a/oV[\x95\x98\x94\x97P\x95PPPPV[_\x81Q\x80\x84R` \x84\x01\x93P` \x83\x01_[\x82\x81\x10\x15a0<W\x81Q`\x01`\x01``\x1B\x03\x16\x86R` \x95\x86\x01\x95\x90\x91\x01\x90`\x01\x01a0\x15V[P\x93\x94\x93PPPPV[`@\x81R_a0X`@\x83\x01\x85a0\x03V[\x82\x81\x03` \x84\x01Ra\":\x81\x85a0\x03V[__`@\x83\x85\x03\x12\x15a0{W__\xFD[\x825\x91Pa0\x8B` \x84\x01a-\xF0V[\x90P\x92P\x92\x90PV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R_\x91\x84\x01\x90`@\x84\x01\x90\x83[\x81\x81\x10\x15a1\x02Wa0\xEC\x83\x85Qc\xFF\xFF\xFF\xFF\x81Q\x16\x82Rc\xFF\xFF\xFF\xFF` \x82\x01Q\x16` \x83\x01R`\x01`\x01``\x1B\x03`@\x82\x01Q\x16`@\x83\x01RPPV[` \x93\x90\x93\x01\x92``\x92\x90\x92\x01\x91`\x01\x01a0\xADV[P\x90\x95\x94PPPPPV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[`@\x80Q\x90\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a1CWa1Ca1\rV[`@R\x90V[`@Q`\x1F\x82\x01`\x1F\x19\x16\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a1qWa1qa1\rV[`@R\x91\x90PV[_`\x01`\x01`@\x1B\x03\x82\x11\x15a1\x91Wa1\x91a1\rV[P`\x05\x1B` \x01\x90V[__`@\x83\x85\x03\x12\x15a1\xACW__\xFD[a1\xB5\x83a-\xF0V[\x91P` \x83\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a1\xCFW__\xFD[\x83\x01`\x1F\x81\x01\x85\x13a1\xDFW__\xFD[\x805a1\xF2a1\xED\x82a1yV[a1IV[\x80\x82\x82R` \x82\x01\x91P` \x83`\x05\x1B\x85\x01\x01\x92P\x87\x83\x11\x15a2\x13W__\xFD[` \x84\x01\x93P[\x82\x84\x10\x15a25W\x835\x82R` \x93\x84\x01\x93\x90\x91\x01\x90a2\x1AV[\x80\x94PPPPP\x92P\x92\x90PV[cNH{q`\xE0\x1B_R`!`\x04R`$_\xFD[` \x81\x01`\x02\x83\x10a2wWcNH{q`\xE0\x1B_R`!`\x04R`$_\xFD[\x91\x90R\x90V[_\x82`\x1F\x83\x01\x12a2\x8CW__\xFD[\x815a2\x9Aa1\xED\x82a1yV[\x80\x82\x82R` \x82\x01\x91P` \x83`\x05\x1B\x86\x01\x01\x92P\x85\x83\x11\x15a2\xBBW__\xFD[` \x85\x01[\x83\x81\x10\x15a2\xD8W\x805\x83R` \x92\x83\x01\x92\x01a2\xC0V[P\x95\x94PPPPPV[___``\x84\x86\x03\x12\x15a2\xF4W__\xFD[\x835`\x01`\x01`@\x1B\x03\x81\x11\x15a3\tW__\xFD[\x84\x01`\x1F\x81\x01\x86\x13a3\x19W__\xFD[\x805a3'a1\xED\x82a1yV[\x80\x82\x82R` \x82\x01\x91P` \x83`\x05\x1B\x85\x01\x01\x92P\x88\x83\x11\x15a3HW__\xFD[` \x84\x01\x93P[\x82\x84\x10\x15a3sW\x835a3b\x81a.hV[\x82R` \x93\x84\x01\x93\x90\x91\x01\x90a3OV[\x95PPPP` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a3\x90W__\xFD[a3\x9C\x86\x82\x87\x01a2}V[\x92PPa3\xAB`@\x85\x01a-\xF0V[\x90P\x92P\x92P\x92V[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R_\x91\x84\x01\x90`@\x84\x01\x90\x83[\x81\x81\x10\x15a1\x02W\x83Q\x15\x15\x83R` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a3\xCDV[\x805`\x01`\x01``\x1B\x03\x81\x16\x81\x14a.\0W__\xFD[_\x82`\x1F\x83\x01\x12a4\x12W__\xFD[\x815a4 a1\xED\x82a1yV[\x80\x82\x82R` \x82\x01\x91P` \x83`\x06\x1B\x86\x01\x01\x92P\x85\x83\x11\x15a4AW__\xFD[` \x85\x01[\x83\x81\x10\x15a2\xD8W`@\x81\x88\x03\x12\x15a4]W__\xFD[a4ea1!V[\x815a4p\x81a.hV[\x81Ra4~` \x83\x01a3\xEDV[` \x82\x01R\x80\x84RP` \x83\x01\x92P`@\x81\x01\x90Pa4FV[___``\x84\x86\x03\x12\x15a4\xAAW__\xFD[a4\xB3\x84a-\xF0V[\x92Pa4\xC1` \x85\x01a3\xEDV[\x91P`@\x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a4\xDBW__\xFD[a4\xE7\x86\x82\x87\x01a4\x03V[\x91PP\x92P\x92P\x92V[\x805c\xFF\xFF\xFF\xFF\x81\x16\x81\x14a.\0W__\xFD[___`@\x84\x86\x03\x12\x15a5\x16W__\xFD[a5\x1F\x84a4\xF1V[\x92P` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a59W__\xFD[a5E\x86\x82\x87\x01a/oV[\x94\x97\x90\x96P\x93\x94PPPPV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R_\x91\x84\x01\x90`@\x84\x01\x90\x83[\x81\x81\x10\x15a1\x02W\x83Qc\xFF\xFF\xFF\xFF\x16\x83R` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a5kV[___``\x84\x86\x03\x12\x15a5\xA1W__\xFD[a5\xAA\x84a-\xF0V[\x95` \x85\x015\x95P`@\x90\x94\x015\x93\x92PPPV[``\x81\x01a\n\xAC\x82\x84c\xFF\xFF\xFF\xFF\x81Q\x16\x82Rc\xFF\xFF\xFF\xFF` \x82\x01Q\x16` \x83\x01R`\x01`\x01``\x1B\x03`@\x82\x01Q\x16`@\x83\x01RPPV[__`@\x83\x85\x03\x12\x15a6\nW__\xFD[a6\x13\x83a-\xF0V[\x91Pa0\x8B` \x84\x01a3\xEDV[___`@\x84\x86\x03\x12\x15a63W__\xFD[\x835\x92P` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a59W__\xFD[__`@\x83\x85\x03\x12\x15a6`W__\xFD[a6i\x83a-\xF0V[\x91P` \x83\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a6\x83W__\xFD[a6\x8F\x85\x82\x86\x01a4\x03V[\x91PP\x92P\x92\x90PV[___``\x84\x86\x03\x12\x15a6\xABW__\xFD[a6\xB4\x84a-\xF0V[\x92Pa6\xC2` \x85\x01a4\xF1V[\x92\x95\x92\x94PPP`@\x91\x90\x91\x015\x90V[____`\x80\x85\x87\x03\x12\x15a6\xE6W__\xFD[a6\xEF\x85a-\xF0V[\x93Pa6\xFD` \x86\x01a3\xEDV[\x92Pa7\x0B`@\x86\x01a4\xF1V[\x91P``\x85\x015`\x01`\x01`@\x1B\x03\x81\x11\x15a7%W__\xFD[a71\x87\x82\x88\x01a4\x03V[\x91PP\x92\x95\x91\x94P\x92PV[___``\x84\x86\x03\x12\x15a7OW__\xFD[\x835\x92Pa7_` \x85\x01a-\xF0V[\x91Pa3\xAB`@\x85\x01a4\xF1V[__`@\x83\x85\x03\x12\x15a7~W__\xFD[a7\x87\x83a-\xF0V[\x91Pa0\x8B` \x84\x01a4\xF1V[____`\x80\x85\x87\x03\x12\x15a7\xA8W__\xFD[a7\xB1\x85a-\xF0V[\x93Pa7\xBF` \x86\x01a4\xF1V[\x93\x96\x93\x95PPPP`@\x82\x015\x91``\x015\x90V[cNH{q`\xE0\x1B_R`2`\x04R`$_\xFD[_` \x82\x84\x03\x12\x15a7\xF8W__\xFD[a\x11\\\x82a3\xEDV[cNH{q`\xE0\x1B_R`\x11`\x04R`$_\xFD[\x81\x81\x03\x81\x81\x11\x15a\n\xACWa\n\xACa8\x01V[cNH{q`\xE0\x1B_R`1`\x04R`$_\xFD[_` \x82\x84\x03\x12\x15a8LW__\xFD[\x81Qa\x11\\\x81a.hV[\x81Q`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x80\x83\x01Qc\xFF\xFF\xFF\xFF\x16\x90\x82\x01R`@\x81\x01a\n\xACV[_` \x82\x84\x03\x12\x15a8\x8DW__\xFD[\x81Q\x80\x15\x15\x81\x14a\x11\\W__\xFD[`\x01`\x01`\xA0\x1B\x03\x84\x16\x81R`\xFF\x83\x16` \x80\x83\x01\x91\x90\x91R```@\x83\x01\x81\x90R\x83Q\x90\x83\x01\x81\x90R_\x91\x84\x01\x90`\x80\x84\x01\x90\x83[\x81\x81\x10\x15a8\xF9W\x83Q`\x01`\x01`\xA0\x1B\x03\x16\x83R` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a8\xD2V[P\x90\x97\x96PPPPPPPV[\x80\x82\x01\x82\x81\x12_\x83\x12\x80\x15\x82\x16\x82\x15\x82\x16\x17\x15a\x1C\x19Wa\x1C\x19a8\x01V[_\x81Q\x80\x84R` \x84\x01\x93P` \x83\x01_[\x82\x81\x10\x15a0<W\x81Q`\x01`\x01`\xA0\x1B\x03\x16\x86R` \x95\x86\x01\x95\x90\x91\x01\x90`\x01\x01a97V[_\x81T\x80\x84R` \x84\x01\x93P\x82_R` _ _[\x82\x81\x10\x15a0<W\x81T`\x01`\x01`\xA0\x1B\x03\x16\x86R` \x90\x95\x01\x94`\x01\x91\x82\x01\x91\x01a9sV[`@\x81R_a9\xAC`@\x83\x01\x85a9%V[\x82\x81\x03` \x84\x01Ra\":\x81\x85a9^V[_` \x82\x84\x03\x12\x15a9\xCEW__\xFD[\x81Q`\x01`\x01`@\x1B\x03\x81\x11\x15a9\xE3W__\xFD[\x82\x01`\x1F\x81\x01\x84\x13a9\xF3W__\xFD[\x80Qa:\x01a1\xED\x82a1yV[\x80\x82\x82R` \x82\x01\x91P` \x83`\x05\x1B\x85\x01\x01\x92P\x86\x83\x11\x15a:\"W__\xFD[` \x84\x01[\x83\x81\x10\x15a:\xBFW\x80Q`\x01`\x01`@\x1B\x03\x81\x11\x15a:DW__\xFD[\x85\x01`?\x81\x01\x89\x13a:TW__\xFD[` \x81\x01Qa:ea1\xED\x82a1yV[\x80\x82\x82R` \x82\x01\x91P` \x80\x84`\x05\x1B\x86\x01\x01\x01\x92P\x8B\x83\x11\x15a:\x88W__\xFD[`@\x84\x01\x93P[\x82\x84\x10\x15a:\xAAW\x83Q\x82R` \x93\x84\x01\x93\x90\x91\x01\x90a:\x8FV[\x86RPP` \x93\x84\x01\x93\x91\x90\x91\x01\x90Pa:'V[P\x96\x95PPPPPPV[\x80\x82\x02\x81\x15\x82\x82\x04\x84\x14\x17a\n\xACWa\n\xACa8\x01V[_\x82a:\xFBWcNH{q`\xE0\x1B_R`\x12`\x04R`$_\xFD[P\x04\x90V[`\x01`\x01``\x1B\x03\x81\x81\x16\x83\x82\x16\x01\x90\x81\x11\x15a\n\xACWa\n\xACa8\x01V[\x80\x82\x01\x80\x82\x11\x15a\n\xACWa\n\xACa8\x01V[_\x81a;@Wa;@a8\x01V[P_\x19\x01\x90V[\x81\x81\x03_\x83\x12\x80\x15\x83\x83\x13\x16\x83\x83\x12\x82\x16\x17\x15a\x06\xE8Wa\x06\xE8a8\x01V[_`\x01`\xFF\x1B\x82\x01a;zWa;za8\x01V[P_\x03\x90V[`\x01`\x01``\x1B\x03\x82\x81\x16\x82\x82\x16\x03\x90\x81\x11\x15a\n\xACWa\n\xACa8\x01V[\x84Q`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x80\x86\x01Qc\xFF\xFF\xFF\xFF\x16\x90\x82\x01R`\xA0`@\x82\x01R_a;\xD1`\xA0\x83\x01\x86a9%V[\x82\x81\x03``\x84\x01Ra;\xE3\x81\x86a9^V[\x91PPc\xFF\xFF\xFF\xFF\x83\x16`\x80\x83\x01R\x95\x94PPPPPV\xFE\xA2dipfsX\"\x12 Ko\x05\x0E\xDE\xC8jwiz\xD4\x99}n\x80\x9E\xDD\xAD\x8E\xED\xA9\x99\x07\xE4\x8E/\xBB_\x90\xD8\xE0\xE1dsolcC\0\x08\x1B\x003",
     );
+    /**Custom error with signature `BelowMinimumStakeRequirement()` and selector `0x40fe27c6`.
+    ```solidity
+    error BelowMinimumStakeRequirement();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct BelowMinimumStakeRequirement {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<BelowMinimumStakeRequirement> for UnderlyingRustTuple<'_> {
+            fn from(value: BelowMinimumStakeRequirement) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for BelowMinimumStakeRequirement {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for BelowMinimumStakeRequirement {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "BelowMinimumStakeRequirement()";
+            const SELECTOR: [u8; 4] = [64u8, 254u8, 39u8, 198u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `EmptyStakeHistory()` and selector `0xcc646573`.
+    ```solidity
+    error EmptyStakeHistory();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct EmptyStakeHistory {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<EmptyStakeHistory> for UnderlyingRustTuple<'_> {
+            fn from(value: EmptyStakeHistory) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for EmptyStakeHistory {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for EmptyStakeHistory {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "EmptyStakeHistory()";
+            const SELECTOR: [u8; 4] = [204u8, 100u8, 101u8, 115u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InputArrayLengthMismatch()` and selector `0x43714afd`.
+    ```solidity
+    error InputArrayLengthMismatch();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InputArrayLengthMismatch {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InputArrayLengthMismatch> for UnderlyingRustTuple<'_> {
+            fn from(value: InputArrayLengthMismatch) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputArrayLengthMismatch {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InputArrayLengthMismatch {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InputArrayLengthMismatch()";
+            const SELECTOR: [u8; 4] = [67u8, 113u8, 74u8, 253u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InputArrayLengthZero()` and selector `0x796cc525`.
+    ```solidity
+    error InputArrayLengthZero();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InputArrayLengthZero {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InputArrayLengthZero> for UnderlyingRustTuple<'_> {
+            fn from(value: InputArrayLengthZero) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputArrayLengthZero {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InputArrayLengthZero {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InputArrayLengthZero()";
+            const SELECTOR: [u8; 4] = [121u8, 108u8, 197u8, 37u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InputDuplicateStrategy()` and selector `0x7b74340b`.
+    ```solidity
+    error InputDuplicateStrategy();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InputDuplicateStrategy {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InputDuplicateStrategy> for UnderlyingRustTuple<'_> {
+            fn from(value: InputDuplicateStrategy) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputDuplicateStrategy {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InputDuplicateStrategy {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InputDuplicateStrategy()";
+            const SELECTOR: [u8; 4] = [123u8, 116u8, 52u8, 11u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InputMultiplierZero()` and selector `0x72571251`.
+    ```solidity
+    error InputMultiplierZero();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InputMultiplierZero {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InputMultiplierZero> for UnderlyingRustTuple<'_> {
+            fn from(value: InputMultiplierZero) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputMultiplierZero {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InputMultiplierZero {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InputMultiplierZero()";
+            const SELECTOR: [u8; 4] = [114u8, 87u8, 18u8, 81u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InvalidBlockNumber()` and selector `0x4e47846c`.
+    ```solidity
+    error InvalidBlockNumber();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InvalidBlockNumber {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InvalidBlockNumber> for UnderlyingRustTuple<'_> {
+            fn from(value: InvalidBlockNumber) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidBlockNumber {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InvalidBlockNumber {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InvalidBlockNumber()";
+            const SELECTOR: [u8; 4] = [78u8, 71u8, 132u8, 108u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OnlySlashingRegistryCoordinator()` and selector `0xb006c814`.
+    ```solidity
+    error OnlySlashingRegistryCoordinator();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OnlySlashingRegistryCoordinator {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OnlySlashingRegistryCoordinator> for UnderlyingRustTuple<'_> {
+            fn from(value: OnlySlashingRegistryCoordinator) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlySlashingRegistryCoordinator {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OnlySlashingRegistryCoordinator {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OnlySlashingRegistryCoordinator()";
+            const SELECTOR: [u8; 4] = [176u8, 6u8, 200u8, 20u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OnlySlashingRegistryCoordinatorOwner()` and selector `0xce98c24b`.
+    ```solidity
+    error OnlySlashingRegistryCoordinatorOwner();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OnlySlashingRegistryCoordinatorOwner {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OnlySlashingRegistryCoordinatorOwner> for UnderlyingRustTuple<'_> {
+            fn from(value: OnlySlashingRegistryCoordinatorOwner) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlySlashingRegistryCoordinatorOwner {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OnlySlashingRegistryCoordinatorOwner {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OnlySlashingRegistryCoordinatorOwner()";
+            const SELECTOR: [u8; 4] = [206u8, 152u8, 194u8, 75u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `QuorumAlreadyExists()` and selector `0x4336945c`.
+    ```solidity
+    error QuorumAlreadyExists();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct QuorumAlreadyExists {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<QuorumAlreadyExists> for UnderlyingRustTuple<'_> {
+            fn from(value: QuorumAlreadyExists) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for QuorumAlreadyExists {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for QuorumAlreadyExists {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "QuorumAlreadyExists()";
+            const SELECTOR: [u8; 4] = [67u8, 54u8, 148u8, 92u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `QuorumDoesNotExist()` and selector `0xe6219fea`.
+    ```solidity
+    error QuorumDoesNotExist();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct QuorumDoesNotExist {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<QuorumDoesNotExist> for UnderlyingRustTuple<'_> {
+            fn from(value: QuorumDoesNotExist) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for QuorumDoesNotExist {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for QuorumDoesNotExist {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "QuorumDoesNotExist()";
+            const SELECTOR: [u8; 4] = [230u8, 33u8, 159u8, 234u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `QuorumNotSlashable()` and selector `0xa3be2583`.
+    ```solidity
+    error QuorumNotSlashable();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct QuorumNotSlashable {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<QuorumNotSlashable> for UnderlyingRustTuple<'_> {
+            fn from(value: QuorumNotSlashable) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for QuorumNotSlashable {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for QuorumNotSlashable {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "QuorumNotSlashable()";
+            const SELECTOR: [u8; 4] = [163u8, 190u8, 37u8, 131u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Event with signature `LookAheadPeriodChanged(uint32,uint32)` and selector `0x28d7358b79f02d21b8b7e17aefc4185a64308aa37406fa5befc05b91932c39c7`.
+    ```solidity
+    event LookAheadPeriodChanged(uint32 oldLookAheadBlocks, uint32 newLookAheadBlocks);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct LookAheadPeriodChanged {
+        #[allow(missing_docs)]
+        pub oldLookAheadBlocks: u32,
+        #[allow(missing_docs)]
+        pub newLookAheadBlocks: u32,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for LookAheadPeriodChanged {
+            type DataTuple<'a> = (
+                alloy::sol_types::sol_data::Uint<32>,
+                alloy::sol_types::sol_data::Uint<32>,
+            );
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
+            const SIGNATURE: &'static str = "LookAheadPeriodChanged(uint32,uint32)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    40u8, 215u8, 53u8, 139u8, 121u8, 240u8, 45u8, 33u8, 184u8, 183u8, 225u8, 122u8,
+                    239u8, 196u8, 24u8, 90u8, 100u8, 48u8, 138u8, 163u8, 116u8, 6u8, 250u8, 91u8,
+                    239u8, 192u8, 91u8, 145u8, 147u8, 44u8, 57u8, 199u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    oldLookAheadBlocks: data.0,
+                    newLookAheadBlocks: data.1,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.oldLookAheadBlocks,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.newLookAheadBlocks,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (Self::SIGNATURE_HASH.into(),)
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for LookAheadPeriodChanged {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&LookAheadPeriodChanged> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(this: &LookAheadPeriodChanged) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
     /**Event with signature `MinimumStakeForQuorumUpdated(uint8,uint96)` and selector `0x26eecff2b70b0a71104ff4d940ba7162d23a95c248771fc487a7be17a596b3cf`.
     ```solidity
     event MinimumStakeForQuorumUpdated(uint8 indexed quorumNumber, uint96 minimumStake);
@@ -1933,6 +3118,106 @@ pub mod StakeRegistry {
         impl From<&QuorumCreated> for alloy_sol_types::private::LogData {
             #[inline]
             fn from(this: &QuorumCreated) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
+    /**Event with signature `StakeTypeSet(uint8)` and selector `0x7c112e863ccf007862e2c9e25819c933fedbc9350a6443423b4a8599c2e8a52d`.
+    ```solidity
+    event StakeTypeSet(IStakeRegistryTypes.StakeType newStakeType);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct StakeTypeSet {
+        #[allow(missing_docs)]
+        pub newStakeType: <IStakeRegistryTypes::StakeType as alloy::sol_types::SolType>::RustType,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for StakeTypeSet {
+            type DataTuple<'a> = (IStakeRegistryTypes::StakeType,);
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
+            const SIGNATURE: &'static str = "StakeTypeSet(uint8)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    124u8, 17u8, 46u8, 134u8, 60u8, 207u8, 0u8, 120u8, 98u8, 226u8, 201u8, 226u8,
+                    88u8, 25u8, 201u8, 51u8, 254u8, 219u8, 201u8, 53u8, 10u8, 100u8, 67u8, 66u8,
+                    59u8, 74u8, 133u8, 153u8, 194u8, 232u8, 165u8, 45u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    newStakeType: data.0,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <IStakeRegistryTypes::StakeType as alloy_sol_types::SolType>::tokenize(
+                        &self.newStakeType,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (Self::SIGNATURE_HASH.into(),)
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for StakeTypeSet {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&StakeTypeSet> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(this: &StakeTypeSet) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
@@ -2275,13 +3560,15 @@ pub mod StakeRegistry {
     };
     /**Constructor`.
     ```solidity
-    constructor(address _registryCoordinator, address _delegationManager);
+    constructor(address _slashingRegistryCoordinator, address _delegationManager, address _avsDirectory, address _allocationManager);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
-        pub _registryCoordinator: alloy::sol_types::private::Address,
+        pub _slashingRegistryCoordinator: alloy::sol_types::private::Address,
         pub _delegationManager: alloy::sol_types::private::Address,
+        pub _avsDirectory: alloy::sol_types::private::Address,
+        pub _allocationManager: alloy::sol_types::private::Address,
     }
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
@@ -2290,9 +3577,13 @@ pub mod StakeRegistry {
             type UnderlyingSolTuple<'a> = (
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
+                alloy::sol_types::private::Address,
                 alloy::sol_types::private::Address,
                 alloy::sol_types::private::Address,
             );
@@ -2309,7 +3600,12 @@ pub mod StakeRegistry {
             #[doc(hidden)]
             impl ::core::convert::From<constructorCall> for UnderlyingRustTuple<'_> {
                 fn from(value: constructorCall) -> Self {
-                    (value._registryCoordinator, value._delegationManager)
+                    (
+                        value._slashingRegistryCoordinator,
+                        value._delegationManager,
+                        value._avsDirectory,
+                        value._allocationManager,
+                    )
                 }
             }
             #[automatically_derived]
@@ -2317,8 +3613,10 @@ pub mod StakeRegistry {
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for constructorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
-                        _registryCoordinator: tuple.0,
+                        _slashingRegistryCoordinator: tuple.0,
                         _delegationManager: tuple.1,
+                        _avsDirectory: tuple.2,
+                        _allocationManager: tuple.3,
                     }
                 }
             }
@@ -2326,6 +3624,8 @@ pub mod StakeRegistry {
         #[automatically_derived]
         impl alloy_sol_types::SolConstructor for constructorCall {
             type Parameters<'a> = (
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
@@ -2340,10 +3640,16 @@ pub mod StakeRegistry {
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self._registryCoordinator,
+                        &self._slashingRegistryCoordinator,
                     ),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self._delegationManager,
+                    ),
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self._avsDirectory,
+                    ),
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self._allocationManager,
                     ),
                 )
             }
@@ -2571,14 +3877,14 @@ pub mod StakeRegistry {
     };
     /**Function with signature `addStrategies(uint8,(address,uint96)[])` and selector `0xc601527d`.
     ```solidity
-    function addStrategies(uint8 quorumNumber, IStakeRegistry.StrategyParams[] memory _strategyParams) external;
+    function addStrategies(uint8 quorumNumber, IStakeRegistryTypes.StrategyParams[] memory _strategyParams) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addStrategiesCall {
         pub quorumNumber: u8,
         pub _strategyParams: alloy::sol_types::private::Vec<
-            <IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,
+            <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
         >,
     }
     ///Container type for the return parameters of the [`addStrategies(uint8,(address,uint96)[])`](addStrategiesCall) function.
@@ -2597,13 +3903,13 @@ pub mod StakeRegistry {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (
                 alloy::sol_types::sol_data::Uint<8>,
-                alloy::sol_types::sol_data::Array<IStakeRegistry::StrategyParams>,
+                alloy::sol_types::sol_data::Array<IStakeRegistryTypes::StrategyParams>,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
                 u8,
                 alloy::sol_types::private::Vec<
-                    <IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,
+                    <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
                 >,
             );
             #[cfg(test)]
@@ -2666,7 +3972,7 @@ pub mod StakeRegistry {
         impl alloy_sol_types::SolCall for addStrategiesCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Uint<8>,
-                alloy::sol_types::sol_data::Array<IStakeRegistry::StrategyParams>,
+                alloy::sol_types::sol_data::Array<IStakeRegistryTypes::StrategyParams>,
             );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = addStrategiesReturn;
@@ -2687,9 +3993,229 @@ pub mod StakeRegistry {
                         8,
                     > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
                     <alloy::sol_types::sol_data::Array<
-                        IStakeRegistry::StrategyParams,
+                        IStakeRegistryTypes::StrategyParams,
                     > as alloy_sol_types::SolType>::tokenize(&self._strategyParams),
                 )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
+    /**Function with signature `allocationManager()` and selector `0xca8aa7c7`.
+    ```solidity
+    function allocationManager() external view returns (address);
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct allocationManagerCall {}
+    ///Container type for the return parameters of the [`allocationManager()`](allocationManagerCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct allocationManagerReturn {
+        pub _0: alloy::sol_types::private::Address,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = ();
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = ();
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<allocationManagerCall> for UnderlyingRustTuple<'_> {
+                fn from(value: allocationManagerCall) -> Self {
+                    ()
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for allocationManagerCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {}
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Address,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<allocationManagerReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: allocationManagerReturn) -> Self {
+                    (value._0,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for allocationManagerReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { _0: tuple.0 }
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for allocationManagerCall {
+            type Parameters<'a> = ();
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = allocationManagerReturn;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "allocationManager()";
+            const SELECTOR: [u8; 4] = [202u8, 138u8, 167u8, 199u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
+    /**Function with signature `avsDirectory()` and selector `0x6b3aa72e`.
+    ```solidity
+    function avsDirectory() external view returns (address);
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct avsDirectoryCall {}
+    ///Container type for the return parameters of the [`avsDirectory()`](avsDirectoryCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct avsDirectoryReturn {
+        pub _0: alloy::sol_types::private::Address,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = ();
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = ();
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<avsDirectoryCall> for UnderlyingRustTuple<'_> {
+                fn from(value: avsDirectoryCall) -> Self {
+                    ()
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for avsDirectoryCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {}
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Address,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<avsDirectoryReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: avsDirectoryReturn) -> Self {
+                    (value._0,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for avsDirectoryReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { _0: tuple.0 }
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for avsDirectoryCall {
+            type Parameters<'a> = ();
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = avsDirectoryReturn;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "avsDirectory()";
+            const SELECTOR: [u8; 4] = [107u8, 58u8, 167u8, 46u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
             }
             #[inline]
             fn abi_decode_returns(
@@ -3192,7 +4718,7 @@ pub mod StakeRegistry {
     };
     /**Function with signature `getLatestStakeUpdate(bytes32,uint8)` and selector `0xf851e198`.
     ```solidity
-    function getLatestStakeUpdate(bytes32 operatorId, uint8 quorumNumber) external view returns (IStakeRegistry.StakeUpdate memory);
+    function getLatestStakeUpdate(bytes32 operatorId, uint8 quorumNumber) external view returns (IStakeRegistryTypes.StakeUpdate memory);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3204,7 +4730,7 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLatestStakeUpdateReturn {
-        pub _0: <IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,
+        pub _0: <IStakeRegistryTypes::StakeUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
         non_camel_case_types,
@@ -3251,10 +4777,10 @@ pub mod StakeRegistry {
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (IStakeRegistry::StakeUpdate,);
+            type UnderlyingSolTuple<'a> = (IStakeRegistryTypes::StakeUpdate,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> =
-                (<IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,);
+                (<IStakeRegistryTypes::StakeUpdate as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -3287,7 +4813,7 @@ pub mod StakeRegistry {
             );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getLatestStakeUpdateReturn;
-            type ReturnTuple<'a> = (IStakeRegistry::StakeUpdate,);
+            type ReturnTuple<'a> = (IStakeRegistryTypes::StakeUpdate,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getLatestStakeUpdate(bytes32,uint8)";
             const SELECTOR: [u8; 4] = [248u8, 81u8, 225u8, 152u8];
@@ -3612,7 +5138,7 @@ pub mod StakeRegistry {
     };
     /**Function with signature `getStakeHistory(bytes32,uint8)` and selector `0x2cd95940`.
     ```solidity
-    function getStakeHistory(bytes32 operatorId, uint8 quorumNumber) external view returns (IStakeRegistry.StakeUpdate[] memory);
+    function getStakeHistory(bytes32 operatorId, uint8 quorumNumber) external view returns (IStakeRegistryTypes.StakeUpdate[] memory);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3625,7 +5151,7 @@ pub mod StakeRegistry {
     #[derive(Clone)]
     pub struct getStakeHistoryReturn {
         pub _0: alloy::sol_types::private::Vec<
-            <IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,
+            <IStakeRegistryTypes::StakeUpdate as alloy::sol_types::SolType>::RustType,
         >,
     }
     #[allow(
@@ -3674,11 +5200,11 @@ pub mod StakeRegistry {
         {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> =
-                (alloy::sol_types::sol_data::Array<IStakeRegistry::StakeUpdate>,);
+                (alloy::sol_types::sol_data::Array<IStakeRegistryTypes::StakeUpdate>,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
                 alloy::sol_types::private::Vec<
-                    <IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,
+                    <IStakeRegistryTypes::StakeUpdate as alloy::sol_types::SolType>::RustType,
                 >,
             );
             #[cfg(test)]
@@ -3714,7 +5240,7 @@ pub mod StakeRegistry {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getStakeHistoryReturn;
             type ReturnTuple<'a> =
-                (alloy::sol_types::sol_data::Array<IStakeRegistry::StakeUpdate>,);
+                (alloy::sol_types::sol_data::Array<IStakeRegistryTypes::StakeUpdate>,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getStakeHistory(bytes32,uint8)";
             const SELECTOR: [u8; 4] = [44u8, 217u8, 89u8, 64u8];
@@ -3878,7 +5404,7 @@ pub mod StakeRegistry {
     };
     /**Function with signature `getStakeUpdateAtIndex(uint8,bytes32,uint256)` and selector `0xac6bfb03`.
     ```solidity
-    function getStakeUpdateAtIndex(uint8 quorumNumber, bytes32 operatorId, uint256 index) external view returns (IStakeRegistry.StakeUpdate memory);
+    function getStakeUpdateAtIndex(uint8 quorumNumber, bytes32 operatorId, uint256 index) external view returns (IStakeRegistryTypes.StakeUpdate memory);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3891,7 +5417,7 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeUpdateAtIndexReturn {
-        pub _0: <IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,
+        pub _0: <IStakeRegistryTypes::StakeUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
         non_camel_case_types,
@@ -3944,10 +5470,10 @@ pub mod StakeRegistry {
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (IStakeRegistry::StakeUpdate,);
+            type UnderlyingSolTuple<'a> = (IStakeRegistryTypes::StakeUpdate,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> =
-                (<IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,);
+                (<IStakeRegistryTypes::StakeUpdate as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -3981,7 +5507,7 @@ pub mod StakeRegistry {
             );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getStakeUpdateAtIndexReturn;
-            type ReturnTuple<'a> = (IStakeRegistry::StakeUpdate,);
+            type ReturnTuple<'a> = (IStakeRegistryTypes::StakeUpdate,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getStakeUpdateAtIndex(uint8,bytes32,uint256)";
             const SELECTOR: [u8; 4] = [172u8, 107u8, 251u8, 3u8];
@@ -4546,7 +6072,7 @@ pub mod StakeRegistry {
     };
     /**Function with signature `getTotalStakeUpdateAtIndex(uint8,uint256)` and selector `0xb6904b78`.
     ```solidity
-    function getTotalStakeUpdateAtIndex(uint8 quorumNumber, uint256 index) external view returns (IStakeRegistry.StakeUpdate memory);
+    function getTotalStakeUpdateAtIndex(uint8 quorumNumber, uint256 index) external view returns (IStakeRegistryTypes.StakeUpdate memory);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4558,7 +6084,7 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getTotalStakeUpdateAtIndexReturn {
-        pub _0: <IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,
+        pub _0: <IStakeRegistryTypes::StakeUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
         non_camel_case_types,
@@ -4606,10 +6132,10 @@ pub mod StakeRegistry {
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (IStakeRegistry::StakeUpdate,);
+            type UnderlyingSolTuple<'a> = (IStakeRegistryTypes::StakeUpdate,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> =
-                (<IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,);
+                (<IStakeRegistryTypes::StakeUpdate as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -4642,7 +6168,7 @@ pub mod StakeRegistry {
             );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getTotalStakeUpdateAtIndexReturn;
-            type ReturnTuple<'a> = (IStakeRegistry::StakeUpdate,);
+            type ReturnTuple<'a> = (IStakeRegistryTypes::StakeUpdate,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getTotalStakeUpdateAtIndex(uint8,uint256)";
             const SELECTOR: [u8; 4] = [182u8, 144u8, 75u8, 120u8];
@@ -4675,23 +6201,23 @@ pub mod StakeRegistry {
             }
         }
     };
-    /**Function with signature `initializeQuorum(uint8,uint96,(address,uint96)[])` and selector `0xff694a77`.
+    /**Function with signature `initializeDelegatedStakeQuorum(uint8,uint96,(address,uint96)[])` and selector `0x75d4173a`.
     ```solidity
-    function initializeQuorum(uint8 quorumNumber, uint96 minimumStake, IStakeRegistry.StrategyParams[] memory _strategyParams) external;
+    function initializeDelegatedStakeQuorum(uint8 quorumNumber, uint96 minimumStake, IStakeRegistryTypes.StrategyParams[] memory _strategyParams) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
-    pub struct initializeQuorumCall {
+    pub struct initializeDelegatedStakeQuorumCall {
         pub quorumNumber: u8,
         pub minimumStake: alloy::sol_types::private::primitives::aliases::U96,
         pub _strategyParams: alloy::sol_types::private::Vec<
-            <IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,
+            <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
         >,
     }
-    ///Container type for the return parameters of the [`initializeQuorum(uint8,uint96,(address,uint96)[])`](initializeQuorumCall) function.
+    ///Container type for the return parameters of the [`initializeDelegatedStakeQuorum(uint8,uint96,(address,uint96)[])`](initializeDelegatedStakeQuorumCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
-    pub struct initializeQuorumReturn {}
+    pub struct initializeDelegatedStakeQuorumReturn {}
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -4705,14 +6231,14 @@ pub mod StakeRegistry {
             type UnderlyingSolTuple<'a> = (
                 alloy::sol_types::sol_data::Uint<8>,
                 alloy::sol_types::sol_data::Uint<96>,
-                alloy::sol_types::sol_data::Array<IStakeRegistry::StrategyParams>,
+                alloy::sol_types::sol_data::Array<IStakeRegistryTypes::StrategyParams>,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
                 u8,
                 alloy::sol_types::private::primitives::aliases::U96,
                 alloy::sol_types::private::Vec<
-                    <IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,
+                    <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
                 >,
             );
             #[cfg(test)]
@@ -4726,8 +6252,8 @@ pub mod StakeRegistry {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<initializeQuorumCall> for UnderlyingRustTuple<'_> {
-                fn from(value: initializeQuorumCall) -> Self {
+            impl ::core::convert::From<initializeDelegatedStakeQuorumCall> for UnderlyingRustTuple<'_> {
+                fn from(value: initializeDelegatedStakeQuorumCall) -> Self {
                     (
                         value.quorumNumber,
                         value.minimumStake,
@@ -4737,7 +6263,7 @@ pub mod StakeRegistry {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for initializeQuorumCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for initializeDelegatedStakeQuorumCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         quorumNumber: tuple.0,
@@ -4763,32 +6289,33 @@ pub mod StakeRegistry {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<initializeQuorumReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: initializeQuorumReturn) -> Self {
+            impl ::core::convert::From<initializeDelegatedStakeQuorumReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: initializeDelegatedStakeQuorumReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for initializeQuorumReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for initializeDelegatedStakeQuorumReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::SolCall for initializeQuorumCall {
+        impl alloy_sol_types::SolCall for initializeDelegatedStakeQuorumCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Uint<8>,
                 alloy::sol_types::sol_data::Uint<96>,
-                alloy::sol_types::sol_data::Array<IStakeRegistry::StrategyParams>,
+                alloy::sol_types::sol_data::Array<IStakeRegistryTypes::StrategyParams>,
             );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = initializeQuorumReturn;
+            type Return = initializeDelegatedStakeQuorumReturn;
             type ReturnTuple<'a> = ();
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "initializeQuorum(uint8,uint96,(address,uint96)[])";
-            const SELECTOR: [u8; 4] = [255u8, 105u8, 74u8, 119u8];
+            const SIGNATURE: &'static str =
+                "initializeDelegatedStakeQuorum(uint8,uint96,(address,uint96)[])";
+            const SELECTOR: [u8; 4] = [117u8, 212u8, 23u8, 58u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -4805,7 +6332,163 @@ pub mod StakeRegistry {
                         96,
                     > as alloy_sol_types::SolType>::tokenize(&self.minimumStake),
                     <alloy::sol_types::sol_data::Array<
-                        IStakeRegistry::StrategyParams,
+                        IStakeRegistryTypes::StrategyParams,
+                    > as alloy_sol_types::SolType>::tokenize(&self._strategyParams),
+                )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
+    /**Function with signature `initializeSlashableStakeQuorum(uint8,uint96,uint32,(address,uint96)[])` and selector `0xcc5a7c20`.
+    ```solidity
+    function initializeSlashableStakeQuorum(uint8 quorumNumber, uint96 minimumStake, uint32 lookAheadPeriod, IStakeRegistryTypes.StrategyParams[] memory _strategyParams) external;
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct initializeSlashableStakeQuorumCall {
+        pub quorumNumber: u8,
+        pub minimumStake: alloy::sol_types::private::primitives::aliases::U96,
+        pub lookAheadPeriod: u32,
+        pub _strategyParams: alloy::sol_types::private::Vec<
+            <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
+        >,
+    }
+    ///Container type for the return parameters of the [`initializeSlashableStakeQuorum(uint8,uint96,uint32,(address,uint96)[])`](initializeSlashableStakeQuorumCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct initializeSlashableStakeQuorumReturn {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Uint<8>,
+                alloy::sol_types::sol_data::Uint<96>,
+                alloy::sol_types::sol_data::Uint<32>,
+                alloy::sol_types::sol_data::Array<IStakeRegistryTypes::StrategyParams>,
+            );
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (
+                u8,
+                alloy::sol_types::private::primitives::aliases::U96,
+                u32,
+                alloy::sol_types::private::Vec<
+                    <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
+                >,
+            );
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<initializeSlashableStakeQuorumCall> for UnderlyingRustTuple<'_> {
+                fn from(value: initializeSlashableStakeQuorumCall) -> Self {
+                    (
+                        value.quorumNumber,
+                        value.minimumStake,
+                        value.lookAheadPeriod,
+                        value._strategyParams,
+                    )
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for initializeSlashableStakeQuorumCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {
+                        quorumNumber: tuple.0,
+                        minimumStake: tuple.1,
+                        lookAheadPeriod: tuple.2,
+                        _strategyParams: tuple.3,
+                    }
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = ();
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = ();
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<initializeSlashableStakeQuorumReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: initializeSlashableStakeQuorumReturn) -> Self {
+                    ()
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for initializeSlashableStakeQuorumReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {}
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for initializeSlashableStakeQuorumCall {
+            type Parameters<'a> = (
+                alloy::sol_types::sol_data::Uint<8>,
+                alloy::sol_types::sol_data::Uint<96>,
+                alloy::sol_types::sol_data::Uint<32>,
+                alloy::sol_types::sol_data::Array<IStakeRegistryTypes::StrategyParams>,
+            );
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = initializeSlashableStakeQuorumReturn;
+            type ReturnTuple<'a> = ();
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str =
+                "initializeSlashableStakeQuorum(uint8,uint96,uint32,(address,uint96)[])";
+            const SELECTOR: [u8; 4] = [204u8, 90u8, 124u8, 32u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Uint<
+                        8,
+                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
+                    <alloy::sol_types::sol_data::Uint<
+                        96,
+                    > as alloy_sol_types::SolType>::tokenize(&self.minimumStake),
+                    <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::SolType>::tokenize(&self.lookAheadPeriod),
+                    <alloy::sol_types::sol_data::Array<
+                        IStakeRegistryTypes::StrategyParams,
                     > as alloy_sol_types::SolType>::tokenize(&self._strategyParams),
                 )
             }
@@ -5607,14 +7290,378 @@ pub mod StakeRegistry {
             }
         }
     };
+    /**Function with signature `setSlashableStakeLookahead(uint8,uint32)` and selector `0xe086adb3`.
+    ```solidity
+    function setSlashableStakeLookahead(uint8 quorumNumber, uint32 _lookAheadBlocks) external;
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct setSlashableStakeLookaheadCall {
+        pub quorumNumber: u8,
+        pub _lookAheadBlocks: u32,
+    }
+    ///Container type for the return parameters of the [`setSlashableStakeLookahead(uint8,uint32)`](setSlashableStakeLookaheadCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct setSlashableStakeLookaheadReturn {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Uint<8>,
+                alloy::sol_types::sol_data::Uint<32>,
+            );
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (u8, u32);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<setSlashableStakeLookaheadCall> for UnderlyingRustTuple<'_> {
+                fn from(value: setSlashableStakeLookaheadCall) -> Self {
+                    (value.quorumNumber, value._lookAheadBlocks)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setSlashableStakeLookaheadCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {
+                        quorumNumber: tuple.0,
+                        _lookAheadBlocks: tuple.1,
+                    }
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = ();
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = ();
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<setSlashableStakeLookaheadReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: setSlashableStakeLookaheadReturn) -> Self {
+                    ()
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setSlashableStakeLookaheadReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {}
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for setSlashableStakeLookaheadCall {
+            type Parameters<'a> = (
+                alloy::sol_types::sol_data::Uint<8>,
+                alloy::sol_types::sol_data::Uint<32>,
+            );
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = setSlashableStakeLookaheadReturn;
+            type ReturnTuple<'a> = ();
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "setSlashableStakeLookahead(uint8,uint32)";
+            const SELECTOR: [u8; 4] = [224u8, 134u8, 173u8, 179u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self._lookAheadBlocks,
+                    ),
+                )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
+    /**Function with signature `slashableStakeLookAheadPerQuorum(uint8)` and selector `0x9ab4d6ff`.
+    ```solidity
+    function slashableStakeLookAheadPerQuorum(uint8 quorumNumber) external view returns (uint32);
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct slashableStakeLookAheadPerQuorumCall {
+        pub quorumNumber: u8,
+    }
+    ///Container type for the return parameters of the [`slashableStakeLookAheadPerQuorum(uint8)`](slashableStakeLookAheadPerQuorumCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct slashableStakeLookAheadPerQuorumReturn {
+        pub _0: u32,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<8>,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (u8,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<slashableStakeLookAheadPerQuorumCall> for UnderlyingRustTuple<'_> {
+                fn from(value: slashableStakeLookAheadPerQuorumCall) -> Self {
+                    (value.quorumNumber,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for slashableStakeLookAheadPerQuorumCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {
+                        quorumNumber: tuple.0,
+                    }
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<32>,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (u32,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<slashableStakeLookAheadPerQuorumReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: slashableStakeLookAheadPerQuorumReturn) -> Self {
+                    (value._0,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for slashableStakeLookAheadPerQuorumReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { _0: tuple.0 }
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for slashableStakeLookAheadPerQuorumCall {
+            type Parameters<'a> = (alloy::sol_types::sol_data::Uint<8>,);
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = slashableStakeLookAheadPerQuorumReturn;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<32>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "slashableStakeLookAheadPerQuorum(uint8)";
+            const SELECTOR: [u8; 4] = [154u8, 180u8, 214u8, 255u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
+                )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
+    /**Function with signature `stakeTypePerQuorum(uint8)` and selector `0x697fbd93`.
+    ```solidity
+    function stakeTypePerQuorum(uint8 quorumNumber) external view returns (IStakeRegistryTypes.StakeType);
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct stakeTypePerQuorumCall {
+        pub quorumNumber: u8,
+    }
+    ///Container type for the return parameters of the [`stakeTypePerQuorum(uint8)`](stakeTypePerQuorumCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct stakeTypePerQuorumReturn {
+        pub _0: <IStakeRegistryTypes::StakeType as alloy::sol_types::SolType>::RustType,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<8>,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (u8,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<stakeTypePerQuorumCall> for UnderlyingRustTuple<'_> {
+                fn from(value: stakeTypePerQuorumCall) -> Self {
+                    (value.quorumNumber,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakeTypePerQuorumCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {
+                        quorumNumber: tuple.0,
+                    }
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (IStakeRegistryTypes::StakeType,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> =
+                (<IStakeRegistryTypes::StakeType as alloy::sol_types::SolType>::RustType,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<stakeTypePerQuorumReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: stakeTypePerQuorumReturn) -> Self {
+                    (value._0,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakeTypePerQuorumReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { _0: tuple.0 }
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for stakeTypePerQuorumCall {
+            type Parameters<'a> = (alloy::sol_types::sol_data::Uint<8>,);
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = stakeTypePerQuorumReturn;
+            type ReturnTuple<'a> = (IStakeRegistryTypes::StakeType,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "stakeTypePerQuorum(uint8)";
+            const SELECTOR: [u8; 4] = [105u8, 127u8, 189u8, 147u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
+                )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
     /**Function with signature `strategiesPerQuorum(uint8,uint256)` and selector `0x9f3ccf65`.
     ```solidity
-    function strategiesPerQuorum(uint8, uint256) external view returns (address);
+    function strategiesPerQuorum(uint8 quorumNumber, uint256) external view returns (address);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategiesPerQuorumCall {
-        pub _0: u8,
+        pub quorumNumber: u8,
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`strategiesPerQuorum(uint8,uint256)`](strategiesPerQuorumCall) function.
@@ -5653,7 +7700,7 @@ pub mod StakeRegistry {
             #[doc(hidden)]
             impl ::core::convert::From<strategiesPerQuorumCall> for UnderlyingRustTuple<'_> {
                 fn from(value: strategiesPerQuorumCall) -> Self {
-                    (value._0, value._1)
+                    (value.quorumNumber, value._1)
                 }
             }
             #[automatically_derived]
@@ -5661,7 +7708,7 @@ pub mod StakeRegistry {
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for strategiesPerQuorumCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
-                        _0: tuple.0,
+                        quorumNumber: tuple.0,
                         _1: tuple.1,
                     }
                 }
@@ -5718,7 +7765,7 @@ pub mod StakeRegistry {
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
-                        &self._0,
+                        &self.quorumNumber,
                     ),
                     <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
                         &self._1,
@@ -5739,12 +7786,12 @@ pub mod StakeRegistry {
     };
     /**Function with signature `strategyParams(uint8,uint256)` and selector `0x08732461`.
     ```solidity
-    function strategyParams(uint8, uint256) external view returns (address strategy, uint96 multiplier);
+    function strategyParams(uint8 quorumNumber, uint256) external view returns (address strategy, uint96 multiplier);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyParamsCall {
-        pub _0: u8,
+        pub quorumNumber: u8,
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`strategyParams(uint8,uint256)`](strategyParamsCall) function.
@@ -5784,7 +7831,7 @@ pub mod StakeRegistry {
             #[doc(hidden)]
             impl ::core::convert::From<strategyParamsCall> for UnderlyingRustTuple<'_> {
                 fn from(value: strategyParamsCall) -> Self {
-                    (value._0, value._1)
+                    (value.quorumNumber, value._1)
                 }
             }
             #[automatically_derived]
@@ -5792,7 +7839,7 @@ pub mod StakeRegistry {
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for strategyParamsCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
-                        _0: tuple.0,
+                        quorumNumber: tuple.0,
                         _1: tuple.1,
                     }
                 }
@@ -5861,7 +7908,7 @@ pub mod StakeRegistry {
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
-                        &self._0,
+                        &self.quorumNumber,
                     ),
                     <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
                         &self._1,
@@ -5882,7 +7929,7 @@ pub mod StakeRegistry {
     };
     /**Function with signature `strategyParamsByIndex(uint8,uint256)` and selector `0xadc804da`.
     ```solidity
-    function strategyParamsByIndex(uint8 quorumNumber, uint256 index) external view returns (IStakeRegistry.StrategyParams memory);
+    function strategyParamsByIndex(uint8 quorumNumber, uint256 index) external view returns (IStakeRegistryTypes.StrategyParams memory);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5894,7 +7941,7 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyParamsByIndexReturn {
-        pub _0: <IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,
+        pub _0: <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
         non_camel_case_types,
@@ -5942,10 +7989,10 @@ pub mod StakeRegistry {
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (IStakeRegistry::StrategyParams,);
+            type UnderlyingSolTuple<'a> = (IStakeRegistryTypes::StrategyParams,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> =
-                (<IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,);
+                (<IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -5978,7 +8025,7 @@ pub mod StakeRegistry {
             );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = strategyParamsByIndexReturn;
-            type ReturnTuple<'a> = (IStakeRegistry::StrategyParams,);
+            type ReturnTuple<'a> = (IStakeRegistryTypes::StrategyParams,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "strategyParamsByIndex(uint8,uint256)";
             const SELECTOR: [u8; 4] = [173u8, 200u8, 4u8, 218u8];
@@ -6129,22 +8176,22 @@ pub mod StakeRegistry {
             }
         }
     };
-    /**Function with signature `updateOperatorStake(address,bytes32,bytes)` and selector `0x66acfefe`.
+    /**Function with signature `updateOperatorsStake(address[],bytes32[],uint8)` and selector `0x6c3fb4bf`.
     ```solidity
-    function updateOperatorStake(address operator, bytes32 operatorId, bytes memory quorumNumbers) external returns (uint192);
+    function updateOperatorsStake(address[] memory operators, bytes32[] memory operatorIds, uint8 quorumNumber) external returns (bool[] memory);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
-    pub struct updateOperatorStakeCall {
-        pub operator: alloy::sol_types::private::Address,
-        pub operatorId: alloy::sol_types::private::FixedBytes<32>,
-        pub quorumNumbers: alloy::sol_types::private::Bytes,
+    pub struct updateOperatorsStakeCall {
+        pub operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        pub operatorIds: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
+        pub quorumNumber: u8,
     }
-    ///Container type for the return parameters of the [`updateOperatorStake(address,bytes32,bytes)`](updateOperatorStakeCall) function.
+    ///Container type for the return parameters of the [`updateOperatorsStake(address[],bytes32[],uint8)`](updateOperatorsStakeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
-    pub struct updateOperatorStakeReturn {
-        pub _0: alloy::sol_types::private::primitives::aliases::U192,
+    pub struct updateOperatorsStakeReturn {
+        pub _0: alloy::sol_types::private::Vec<bool>,
     }
     #[allow(
         non_camel_case_types,
@@ -6157,15 +8204,15 @@ pub mod StakeRegistry {
         {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Address,
-                alloy::sol_types::sol_data::FixedBytes<32>,
-                alloy::sol_types::sol_data::Bytes,
+                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
+                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::FixedBytes<32>>,
+                alloy::sol_types::sol_data::Uint<8>,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Address,
-                alloy::sol_types::private::FixedBytes<32>,
-                alloy::sol_types::private::Bytes,
+                alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+                alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
+                u8,
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
@@ -6178,28 +8225,29 @@ pub mod StakeRegistry {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<updateOperatorStakeCall> for UnderlyingRustTuple<'_> {
-                fn from(value: updateOperatorStakeCall) -> Self {
-                    (value.operator, value.operatorId, value.quorumNumbers)
+            impl ::core::convert::From<updateOperatorsStakeCall> for UnderlyingRustTuple<'_> {
+                fn from(value: updateOperatorsStakeCall) -> Self {
+                    (value.operators, value.operatorIds, value.quorumNumber)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for updateOperatorStakeCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for updateOperatorsStakeCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
-                        operator: tuple.0,
-                        operatorId: tuple.1,
-                        quorumNumbers: tuple.2,
+                        operators: tuple.0,
+                        operatorIds: tuple.1,
+                        quorumNumber: tuple.2,
                     }
                 }
             }
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<192>,);
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Bool>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U192,);
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Vec<bool>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -6211,32 +8259,33 @@ pub mod StakeRegistry {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<updateOperatorStakeReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: updateOperatorStakeReturn) -> Self {
+            impl ::core::convert::From<updateOperatorsStakeReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: updateOperatorsStakeReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for updateOperatorStakeReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for updateOperatorsStakeReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::SolCall for updateOperatorStakeCall {
+        impl alloy_sol_types::SolCall for updateOperatorsStakeCall {
             type Parameters<'a> = (
-                alloy::sol_types::sol_data::Address,
-                alloy::sol_types::sol_data::FixedBytes<32>,
-                alloy::sol_types::sol_data::Bytes,
+                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
+                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::FixedBytes<32>>,
+                alloy::sol_types::sol_data::Uint<8>,
             );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = updateOperatorStakeReturn;
-            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<192>,);
+            type Return = updateOperatorsStakeReturn;
+            type ReturnTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Bool>,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "updateOperatorStake(address,bytes32,bytes)";
-            const SELECTOR: [u8; 4] = [102u8, 172u8, 254u8, 254u8];
+            const SIGNATURE: &'static str = "updateOperatorsStake(address[],bytes32[],uint8)";
+            const SELECTOR: [u8; 4] = [108u8, 63u8, 180u8, 191u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -6246,15 +8295,15 @@ pub mod StakeRegistry {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.operator,
-                    ),
-                    <alloy::sol_types::sol_data::FixedBytes<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.operatorId),
-                    <alloy::sol_types::sol_data::Bytes as alloy_sol_types::SolType>::tokenize(
-                        &self.quorumNumbers,
-                    ),
+                    <alloy::sol_types::sol_data::Array<
+                        alloy::sol_types::sol_data::Address,
+                    > as alloy_sol_types::SolType>::tokenize(&self.operators),
+                    <alloy::sol_types::sol_data::Array<
+                        alloy::sol_types::sol_data::FixedBytes<32>,
+                    > as alloy_sol_types::SolType>::tokenize(&self.operatorIds),
+                    <alloy::sol_types::sol_data::Uint<
+                        8,
+                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
                 )
             }
             #[inline]
@@ -6403,6 +8452,8 @@ pub mod StakeRegistry {
         MAX_WEIGHING_FUNCTION_LENGTH(MAX_WEIGHING_FUNCTION_LENGTHCall),
         WEIGHTING_DIVISOR(WEIGHTING_DIVISORCall),
         addStrategies(addStrategiesCall),
+        allocationManager(allocationManagerCall),
+        avsDirectory(avsDirectoryCall),
         delegation(delegationCall),
         deregisterOperator(deregisterOperatorCall),
         getCurrentStake(getCurrentStakeCall),
@@ -6418,18 +8469,22 @@ pub mod StakeRegistry {
         getTotalStakeHistoryLength(getTotalStakeHistoryLengthCall),
         getTotalStakeIndicesAtBlockNumber(getTotalStakeIndicesAtBlockNumberCall),
         getTotalStakeUpdateAtIndex(getTotalStakeUpdateAtIndexCall),
-        initializeQuorum(initializeQuorumCall),
+        initializeDelegatedStakeQuorum(initializeDelegatedStakeQuorumCall),
+        initializeSlashableStakeQuorum(initializeSlashableStakeQuorumCall),
         minimumStakeForQuorum(minimumStakeForQuorumCall),
         modifyStrategyParams(modifyStrategyParamsCall),
         registerOperator(registerOperatorCall),
         registryCoordinator(registryCoordinatorCall),
         removeStrategies(removeStrategiesCall),
         setMinimumStakeForQuorum(setMinimumStakeForQuorumCall),
+        setSlashableStakeLookahead(setSlashableStakeLookaheadCall),
+        slashableStakeLookAheadPerQuorum(slashableStakeLookAheadPerQuorumCall),
+        stakeTypePerQuorum(stakeTypePerQuorumCall),
         strategiesPerQuorum(strategiesPerQuorumCall),
         strategyParams(strategyParamsCall),
         strategyParamsByIndex(strategyParamsByIndexCall),
         strategyParamsLength(strategyParamsLengthCall),
-        updateOperatorStake(updateOperatorStakeCall),
+        updateOperatorsStake(updateOperatorsStakeCall),
         weightOfOperatorForQuorum(weightOfOperatorForQuorumCall),
     }
     #[automatically_derived]
@@ -6452,10 +8507,14 @@ pub mod StakeRegistry {
             [84u8, 1u8, 237u8, 39u8],
             [94u8, 90u8, 103u8, 117u8],
             [95u8, 31u8, 45u8, 119u8],
-            [102u8, 172u8, 254u8, 254u8],
+            [105u8, 127u8, 189u8, 147u8],
+            [107u8, 58u8, 167u8, 46u8],
+            [108u8, 63u8, 180u8, 191u8],
             [109u8, 20u8, 169u8, 135u8],
+            [117u8, 212u8, 23u8, 58u8],
             [124u8, 23u8, 35u8, 71u8],
             [129u8, 192u8, 117u8, 2u8],
+            [154u8, 180u8, 214u8, 255u8],
             [159u8, 60u8, 207u8, 101u8],
             [172u8, 107u8, 251u8, 3u8],
             [173u8, 200u8, 4u8, 218u8],
@@ -6465,20 +8524,22 @@ pub mod StakeRegistry {
             [196u8, 103u8, 120u8, 165u8],
             [198u8, 1u8, 82u8, 125u8],
             [200u8, 41u8, 76u8, 86u8],
+            [202u8, 138u8, 167u8, 199u8],
+            [204u8, 90u8, 124u8, 32u8],
             [213u8, 236u8, 204u8, 5u8],
             [221u8, 152u8, 70u8, 185u8],
             [223u8, 92u8, 247u8, 35u8],
+            [224u8, 134u8, 173u8, 179u8],
             [242u8, 190u8, 148u8, 174u8],
             [248u8, 81u8, 225u8, 152u8],
             [250u8, 40u8, 198u8, 39u8],
-            [255u8, 105u8, 74u8, 119u8],
         ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for StakeRegistryCalls {
         const NAME: &'static str = "StakeRegistryCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 31usize;
+        const COUNT: usize = 37usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -6489,6 +8550,10 @@ pub mod StakeRegistry {
                     <WEIGHTING_DIVISORCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::addStrategies(_) => <addStrategiesCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::allocationManager(_) => {
+                    <allocationManagerCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::avsDirectory(_) => <avsDirectoryCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::delegation(_) => <delegationCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::deregisterOperator(_) => {
                     <deregisterOperatorCall as alloy_sol_types::SolCall>::SELECTOR
@@ -6532,8 +8597,11 @@ pub mod StakeRegistry {
                 Self::getTotalStakeUpdateAtIndex(_) => {
                     <getTotalStakeUpdateAtIndexCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::initializeQuorum(_) => {
-                    <initializeQuorumCall as alloy_sol_types::SolCall>::SELECTOR
+                Self::initializeDelegatedStakeQuorum(_) => {
+                    <initializeDelegatedStakeQuorumCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::initializeSlashableStakeQuorum(_) => {
+                    <initializeSlashableStakeQuorumCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::minimumStakeForQuorum(_) => {
                     <minimumStakeForQuorumCall as alloy_sol_types::SolCall>::SELECTOR
@@ -6553,6 +8621,15 @@ pub mod StakeRegistry {
                 Self::setMinimumStakeForQuorum(_) => {
                     <setMinimumStakeForQuorumCall as alloy_sol_types::SolCall>::SELECTOR
                 }
+                Self::setSlashableStakeLookahead(_) => {
+                    <setSlashableStakeLookaheadCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::slashableStakeLookAheadPerQuorum(_) => {
+                    <slashableStakeLookAheadPerQuorumCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::stakeTypePerQuorum(_) => {
+                    <stakeTypePerQuorumCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::strategiesPerQuorum(_) => {
                     <strategiesPerQuorumCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -6565,8 +8642,8 @@ pub mod StakeRegistry {
                 Self::strategyParamsLength(_) => {
                     <strategyParamsLengthCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::updateOperatorStake(_) => {
-                    <updateOperatorStakeCall as alloy_sol_types::SolCall>::SELECTOR
+                Self::updateOperatorsStake(_) => {
+                    <updateOperatorsStakeCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::weightOfOperatorForQuorum(_) => {
                     <weightOfOperatorForQuorumCall as alloy_sol_types::SolCall>::SELECTOR
@@ -6727,16 +8804,40 @@ pub mod StakeRegistry {
                     removeStrategies
                 },
                 {
-                    fn updateOperatorStake(
+                    fn stakeTypePerQuorum(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<StakeRegistryCalls> {
-                        <updateOperatorStakeCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                        <stakeTypePerQuorumCall as alloy_sol_types::SolCall>::abi_decode_raw(
                             data, validate,
                         )
-                        .map(StakeRegistryCalls::updateOperatorStake)
+                        .map(StakeRegistryCalls::stakeTypePerQuorum)
                     }
-                    updateOperatorStake
+                    stakeTypePerQuorum
+                },
+                {
+                    fn avsDirectory(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryCalls> {
+                        <avsDirectoryCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryCalls::avsDirectory)
+                    }
+                    avsDirectory
+                },
+                {
+                    fn updateOperatorsStake(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryCalls> {
+                        <updateOperatorsStakeCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryCalls::updateOperatorsStake)
+                    }
+                    updateOperatorsStake
                 },
                 {
                     fn registryCoordinator(
@@ -6749,6 +8850,19 @@ pub mod StakeRegistry {
                         .map(StakeRegistryCalls::registryCoordinator)
                     }
                     registryCoordinator
+                },
+                {
+                    fn initializeDelegatedStakeQuorum(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryCalls> {
+                        <initializeDelegatedStakeQuorumCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(StakeRegistryCalls::initializeDelegatedStakeQuorum)
+                    }
+                    initializeDelegatedStakeQuorum
                 },
                 {
                     fn MAX_WEIGHING_FUNCTION_LENGTH(
@@ -6775,6 +8889,19 @@ pub mod StakeRegistry {
                             .map(StakeRegistryCalls::getTotalStakeIndicesAtBlockNumber)
                     }
                     getTotalStakeIndicesAtBlockNumber
+                },
+                {
+                    fn slashableStakeLookAheadPerQuorum(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryCalls> {
+                        <slashableStakeLookAheadPerQuorumCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(StakeRegistryCalls::slashableStakeLookAheadPerQuorum)
+                    }
+                    slashableStakeLookAheadPerQuorum
                 },
                 {
                     fn strategiesPerQuorum(
@@ -6887,6 +9014,31 @@ pub mod StakeRegistry {
                     getTotalStakeAtBlockNumberFromIndex
                 },
                 {
+                    fn allocationManager(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryCalls> {
+                        <allocationManagerCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryCalls::allocationManager)
+                    }
+                    allocationManager
+                },
+                {
+                    fn initializeSlashableStakeQuorum(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryCalls> {
+                        <initializeSlashableStakeQuorumCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(StakeRegistryCalls::initializeSlashableStakeQuorum)
+                    }
+                    initializeSlashableStakeQuorum
+                },
+                {
                     fn getCurrentTotalStake(
                         data: &[u8],
                         validate: bool,
@@ -6920,6 +9072,19 @@ pub mod StakeRegistry {
                             .map(StakeRegistryCalls::delegation)
                     }
                     delegation
+                },
+                {
+                    fn setSlashableStakeLookahead(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryCalls> {
+                        <setSlashableStakeLookaheadCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(StakeRegistryCalls::setSlashableStakeLookahead)
+                    }
+                    setSlashableStakeLookahead
                 },
                 {
                     fn getStakeAtBlockNumberAndIndex(
@@ -6958,18 +9123,6 @@ pub mod StakeRegistry {
                     }
                     getStakeAtBlockNumber
                 },
-                {
-                    fn initializeQuorum(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<StakeRegistryCalls> {
-                        <initializeQuorumCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(StakeRegistryCalls::initializeQuorum)
-                    }
-                    initializeQuorum
-                },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
                 return Err(alloy_sol_types::Error::unknown_selector(
@@ -6994,6 +9147,16 @@ pub mod StakeRegistry {
                 }
                 Self::addStrategies(inner) => {
                     <addStrategiesCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::allocationManager(inner) => {
+                    <allocationManagerCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::avsDirectory(inner) => {
+                    <avsDirectoryCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -7070,8 +9233,13 @@ pub mod StakeRegistry {
                         inner,
                     )
                 }
-                Self::initializeQuorum(inner) => {
-                    <initializeQuorumCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                Self::initializeDelegatedStakeQuorum(inner) => {
+                    <initializeDelegatedStakeQuorumCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::initializeSlashableStakeQuorum(inner) => {
+                    <initializeSlashableStakeQuorumCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -7105,6 +9273,21 @@ pub mod StakeRegistry {
                         inner,
                     )
                 }
+                Self::setSlashableStakeLookahead(inner) => {
+                    <setSlashableStakeLookaheadCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::slashableStakeLookAheadPerQuorum(inner) => {
+                    <slashableStakeLookAheadPerQuorumCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::stakeTypePerQuorum(inner) => {
+                    <stakeTypePerQuorumCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::strategiesPerQuorum(inner) => {
                     <strategiesPerQuorumCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
@@ -7125,8 +9308,8 @@ pub mod StakeRegistry {
                         inner,
                     )
                 }
-                Self::updateOperatorStake(inner) => {
-                    <updateOperatorStakeCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                Self::updateOperatorsStake(inner) => {
+                    <updateOperatorsStakeCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -7154,6 +9337,18 @@ pub mod StakeRegistry {
                 }
                 Self::addStrategies(inner) => {
                     <addStrategiesCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::allocationManager(inner) => {
+                    <allocationManagerCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::avsDirectory(inner) => {
+                    <avsDirectoryCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -7248,8 +9443,14 @@ pub mod StakeRegistry {
                         out,
                     )
                 }
-                Self::initializeQuorum(inner) => {
-                    <initializeQuorumCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                Self::initializeDelegatedStakeQuorum(inner) => {
+                    <initializeDelegatedStakeQuorumCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::initializeSlashableStakeQuorum(inner) => {
+                    <initializeSlashableStakeQuorumCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -7290,6 +9491,24 @@ pub mod StakeRegistry {
                         out,
                     )
                 }
+                Self::setSlashableStakeLookahead(inner) => {
+                    <setSlashableStakeLookaheadCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::slashableStakeLookAheadPerQuorum(inner) => {
+                    <slashableStakeLookAheadPerQuorumCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::stakeTypePerQuorum(inner) => {
+                    <stakeTypePerQuorumCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
                 Self::strategiesPerQuorum(inner) => {
                     <strategiesPerQuorumCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
@@ -7314,8 +9533,8 @@ pub mod StakeRegistry {
                         out,
                     )
                 }
-                Self::updateOperatorStake(inner) => {
-                    <updateOperatorStakeCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                Self::updateOperatorsStake(inner) => {
+                    <updateOperatorsStakeCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -7329,11 +9548,417 @@ pub mod StakeRegistry {
             }
         }
     }
+    ///Container for all the [`StakeRegistry`](self) custom errors.
+    pub enum StakeRegistryErrors {
+        BelowMinimumStakeRequirement(BelowMinimumStakeRequirement),
+        EmptyStakeHistory(EmptyStakeHistory),
+        InputArrayLengthMismatch(InputArrayLengthMismatch),
+        InputArrayLengthZero(InputArrayLengthZero),
+        InputDuplicateStrategy(InputDuplicateStrategy),
+        InputMultiplierZero(InputMultiplierZero),
+        InvalidBlockNumber(InvalidBlockNumber),
+        OnlySlashingRegistryCoordinator(OnlySlashingRegistryCoordinator),
+        OnlySlashingRegistryCoordinatorOwner(OnlySlashingRegistryCoordinatorOwner),
+        QuorumAlreadyExists(QuorumAlreadyExists),
+        QuorumDoesNotExist(QuorumDoesNotExist),
+        QuorumNotSlashable(QuorumNotSlashable),
+    }
+    #[automatically_derived]
+    impl StakeRegistryErrors {
+        /// All the selectors of this enum.
+        ///
+        /// Note that the selectors might not be in the same order as the variants.
+        /// No guarantees are made about the order of the selectors.
+        ///
+        /// Prefer using `SolInterface` methods instead.
+        pub const SELECTORS: &'static [[u8; 4usize]] = &[
+            [64u8, 254u8, 39u8, 198u8],
+            [67u8, 54u8, 148u8, 92u8],
+            [67u8, 113u8, 74u8, 253u8],
+            [78u8, 71u8, 132u8, 108u8],
+            [114u8, 87u8, 18u8, 81u8],
+            [121u8, 108u8, 197u8, 37u8],
+            [123u8, 116u8, 52u8, 11u8],
+            [163u8, 190u8, 37u8, 131u8],
+            [176u8, 6u8, 200u8, 20u8],
+            [204u8, 100u8, 101u8, 115u8],
+            [206u8, 152u8, 194u8, 75u8],
+            [230u8, 33u8, 159u8, 234u8],
+        ];
+    }
+    #[automatically_derived]
+    impl alloy_sol_types::SolInterface for StakeRegistryErrors {
+        const NAME: &'static str = "StakeRegistryErrors";
+        const MIN_DATA_LENGTH: usize = 0usize;
+        const COUNT: usize = 12usize;
+        #[inline]
+        fn selector(&self) -> [u8; 4] {
+            match self {
+                Self::BelowMinimumStakeRequirement(_) => {
+                    <BelowMinimumStakeRequirement as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::EmptyStakeHistory(_) => {
+                    <EmptyStakeHistory as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InputArrayLengthMismatch(_) => {
+                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InputArrayLengthZero(_) => {
+                    <InputArrayLengthZero as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InputDuplicateStrategy(_) => {
+                    <InputDuplicateStrategy as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InputMultiplierZero(_) => {
+                    <InputMultiplierZero as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InvalidBlockNumber(_) => {
+                    <InvalidBlockNumber as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::OnlySlashingRegistryCoordinator(_) => {
+                    <OnlySlashingRegistryCoordinator as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::OnlySlashingRegistryCoordinatorOwner(_) => {
+                    <OnlySlashingRegistryCoordinatorOwner as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::QuorumAlreadyExists(_) => {
+                    <QuorumAlreadyExists as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::QuorumDoesNotExist(_) => {
+                    <QuorumDoesNotExist as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::QuorumNotSlashable(_) => {
+                    <QuorumNotSlashable as alloy_sol_types::SolError>::SELECTOR
+                }
+            }
+        }
+        #[inline]
+        fn selector_at(i: usize) -> ::core::option::Option<[u8; 4]> {
+            Self::SELECTORS.get(i).copied()
+        }
+        #[inline]
+        fn valid_selector(selector: [u8; 4]) -> bool {
+            Self::SELECTORS.binary_search(&selector).is_ok()
+        }
+        #[inline]
+        #[allow(non_snake_case)]
+        fn abi_decode_raw(
+            selector: [u8; 4],
+            data: &[u8],
+            validate: bool,
+        ) -> alloy_sol_types::Result<Self> {
+            static DECODE_SHIMS: &[fn(
+                &[u8],
+                bool,
+            )
+                -> alloy_sol_types::Result<StakeRegistryErrors>] = &[
+                {
+                    fn BelowMinimumStakeRequirement(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <BelowMinimumStakeRequirement as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryErrors::BelowMinimumStakeRequirement)
+                    }
+                    BelowMinimumStakeRequirement
+                },
+                {
+                    fn QuorumAlreadyExists(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <QuorumAlreadyExists as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryErrors::QuorumAlreadyExists)
+                    }
+                    QuorumAlreadyExists
+                },
+                {
+                    fn InputArrayLengthMismatch(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryErrors::InputArrayLengthMismatch)
+                    }
+                    InputArrayLengthMismatch
+                },
+                {
+                    fn InvalidBlockNumber(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <InvalidBlockNumber as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryErrors::InvalidBlockNumber)
+                    }
+                    InvalidBlockNumber
+                },
+                {
+                    fn InputMultiplierZero(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <InputMultiplierZero as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryErrors::InputMultiplierZero)
+                    }
+                    InputMultiplierZero
+                },
+                {
+                    fn InputArrayLengthZero(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <InputArrayLengthZero as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryErrors::InputArrayLengthZero)
+                    }
+                    InputArrayLengthZero
+                },
+                {
+                    fn InputDuplicateStrategy(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <InputDuplicateStrategy as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryErrors::InputDuplicateStrategy)
+                    }
+                    InputDuplicateStrategy
+                },
+                {
+                    fn QuorumNotSlashable(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <QuorumNotSlashable as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryErrors::QuorumNotSlashable)
+                    }
+                    QuorumNotSlashable
+                },
+                {
+                    fn OnlySlashingRegistryCoordinator(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <OnlySlashingRegistryCoordinator as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(StakeRegistryErrors::OnlySlashingRegistryCoordinator)
+                    }
+                    OnlySlashingRegistryCoordinator
+                },
+                {
+                    fn EmptyStakeHistory(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <EmptyStakeHistory as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryErrors::EmptyStakeHistory)
+                    }
+                    EmptyStakeHistory
+                },
+                {
+                    fn OnlySlashingRegistryCoordinatorOwner(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <OnlySlashingRegistryCoordinatorOwner as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                StakeRegistryErrors::OnlySlashingRegistryCoordinatorOwner,
+                            )
+                    }
+                    OnlySlashingRegistryCoordinatorOwner
+                },
+                {
+                    fn QuorumDoesNotExist(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<StakeRegistryErrors> {
+                        <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(StakeRegistryErrors::QuorumDoesNotExist)
+                    }
+                    QuorumDoesNotExist
+                },
+            ];
+            let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
+            };
+            DECODE_SHIMS[idx](data, validate)
+        }
+        #[inline]
+        fn abi_encoded_size(&self) -> usize {
+            match self {
+                Self::BelowMinimumStakeRequirement(inner) => {
+                    <BelowMinimumStakeRequirement as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::EmptyStakeHistory(inner) => {
+                    <EmptyStakeHistory as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InputArrayLengthMismatch(inner) => {
+                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InputArrayLengthZero(inner) => {
+                    <InputArrayLengthZero as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InputDuplicateStrategy(inner) => {
+                    <InputDuplicateStrategy as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InputMultiplierZero(inner) => {
+                    <InputMultiplierZero as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InvalidBlockNumber(inner) => {
+                    <InvalidBlockNumber as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::OnlySlashingRegistryCoordinator(inner) => {
+                    <OnlySlashingRegistryCoordinator as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::OnlySlashingRegistryCoordinatorOwner(inner) => {
+                    <OnlySlashingRegistryCoordinatorOwner as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::QuorumAlreadyExists(inner) => {
+                    <QuorumAlreadyExists as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::QuorumDoesNotExist(inner) => {
+                    <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::QuorumNotSlashable(inner) => {
+                    <QuorumNotSlashable as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+            }
+        }
+        #[inline]
+        fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+            match self {
+                Self::BelowMinimumStakeRequirement(inner) => {
+                    <BelowMinimumStakeRequirement as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::EmptyStakeHistory(inner) => {
+                    <EmptyStakeHistory as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InputArrayLengthMismatch(inner) => {
+                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InputArrayLengthZero(inner) => {
+                    <InputArrayLengthZero as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InputDuplicateStrategy(inner) => {
+                    <InputDuplicateStrategy as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InputMultiplierZero(inner) => {
+                    <InputMultiplierZero as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InvalidBlockNumber(inner) => {
+                    <InvalidBlockNumber as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::OnlySlashingRegistryCoordinator(inner) => {
+                    <OnlySlashingRegistryCoordinator as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::OnlySlashingRegistryCoordinatorOwner(inner) => {
+                    <OnlySlashingRegistryCoordinatorOwner as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::QuorumAlreadyExists(inner) => {
+                    <QuorumAlreadyExists as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::QuorumDoesNotExist(inner) => {
+                    <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::QuorumNotSlashable(inner) => {
+                    <QuorumNotSlashable as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+            }
+        }
+    }
     ///Container for all the [`StakeRegistry`](self) events.
     pub enum StakeRegistryEvents {
+        LookAheadPeriodChanged(LookAheadPeriodChanged),
         MinimumStakeForQuorumUpdated(MinimumStakeForQuorumUpdated),
         OperatorStakeUpdate(OperatorStakeUpdate),
         QuorumCreated(QuorumCreated),
+        StakeTypeSet(StakeTypeSet),
         StrategyAddedToQuorum(StrategyAddedToQuorum),
         StrategyMultiplierUpdated(StrategyMultiplierUpdated),
         StrategyRemovedFromQuorum(StrategyRemovedFromQuorum),
@@ -7363,6 +9988,11 @@ pub mod StakeRegistry {
                 135u8, 167u8, 190u8, 23u8, 165u8, 150u8, 179u8, 207u8,
             ],
             [
+                40u8, 215u8, 53u8, 139u8, 121u8, 240u8, 45u8, 33u8, 184u8, 183u8, 225u8, 122u8,
+                239u8, 196u8, 24u8, 90u8, 100u8, 48u8, 138u8, 163u8, 116u8, 6u8, 250u8, 91u8,
+                239u8, 192u8, 91u8, 145u8, 147u8, 44u8, 57u8, 199u8,
+            ],
+            [
                 47u8, 82u8, 125u8, 82u8, 126u8, 149u8, 216u8, 254u8, 64u8, 174u8, 197u8, 83u8,
                 119u8, 116u8, 59u8, 183u8, 121u8, 8u8, 125u8, 163u8, 246u8, 208u8, 208u8, 143u8,
                 18u8, 227u8, 100u8, 68u8, 218u8, 98u8, 50u8, 125u8,
@@ -7371,6 +10001,11 @@ pub mod StakeRegistry {
                 49u8, 250u8, 46u8, 44u8, 210u8, 128u8, 201u8, 55u8, 94u8, 19u8, 255u8, 207u8, 61u8,
                 129u8, 226u8, 55u8, 129u8, 0u8, 24u8, 110u8, 64u8, 88u8, 248u8, 211u8, 221u8,
                 182u8, 144u8, 184u8, 45u8, 205u8, 49u8, 247u8,
+            ],
+            [
+                124u8, 17u8, 46u8, 134u8, 60u8, 207u8, 0u8, 120u8, 98u8, 226u8, 201u8, 226u8, 88u8,
+                25u8, 201u8, 51u8, 254u8, 219u8, 201u8, 53u8, 10u8, 100u8, 67u8, 66u8, 59u8, 74u8,
+                133u8, 153u8, 194u8, 232u8, 165u8, 45u8,
             ],
             [
                 131u8, 26u8, 156u8, 134u8, 196u8, 91u8, 179u8, 3u8, 202u8, 243u8, 240u8, 100u8,
@@ -7382,13 +10017,19 @@ pub mod StakeRegistry {
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for StakeRegistryEvents {
         const NAME: &'static str = "StakeRegistryEvents";
-        const COUNT: usize = 6usize;
+        const COUNT: usize = 8usize;
         fn decode_raw_log(
             topics: &[alloy_sol_types::Word],
             data: &[u8],
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
             match topics.first().copied() {
+                Some(<LookAheadPeriodChanged as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                    <LookAheadPeriodChanged as alloy_sol_types::SolEvent>::decode_raw_log(
+                        topics, data, validate,
+                    )
+                    .map(Self::LookAheadPeriodChanged)
+                }
                 Some(
                     <MinimumStakeForQuorumUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
                 ) => <MinimumStakeForQuorumUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -7406,6 +10047,12 @@ pub mod StakeRegistry {
                         topics, data, validate,
                     )
                     .map(Self::QuorumCreated)
+                }
+                Some(<StakeTypeSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                    <StakeTypeSet as alloy_sol_types::SolEvent>::decode_raw_log(
+                        topics, data, validate,
+                    )
+                    .map(Self::StakeTypeSet)
                 }
                 Some(<StrategyAddedToQuorum as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <StrategyAddedToQuorum as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -7441,6 +10088,9 @@ pub mod StakeRegistry {
     impl alloy_sol_types::private::IntoLogData for StakeRegistryEvents {
         fn to_log_data(&self) -> alloy_sol_types::private::LogData {
             match self {
+                Self::LookAheadPeriodChanged(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
                 Self::MinimumStakeForQuorumUpdated(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
@@ -7448,6 +10098,9 @@ pub mod StakeRegistry {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::QuorumCreated(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
+                Self::StakeTypeSet(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::StrategyAddedToQuorum(inner) => {
@@ -7463,6 +10116,9 @@ pub mod StakeRegistry {
         }
         fn into_log_data(self) -> alloy_sol_types::private::LogData {
             match self {
+                Self::LookAheadPeriodChanged(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
                 Self::MinimumStakeForQuorumUpdated(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
@@ -7470,6 +10126,9 @@ pub mod StakeRegistry {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::QuorumCreated(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
+                Self::StakeTypeSet(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::StrategyAddedToQuorum(inner) => {
@@ -7511,11 +10170,19 @@ pub mod StakeRegistry {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-        _registryCoordinator: alloy::sol_types::private::Address,
+        _slashingRegistryCoordinator: alloy::sol_types::private::Address,
         _delegationManager: alloy::sol_types::private::Address,
+        _avsDirectory: alloy::sol_types::private::Address,
+        _allocationManager: alloy::sol_types::private::Address,
     ) -> impl ::core::future::Future<Output = alloy_contract::Result<StakeRegistryInstance<T, P, N>>>
     {
-        StakeRegistryInstance::<T, P, N>::deploy(provider, _registryCoordinator, _delegationManager)
+        StakeRegistryInstance::<T, P, N>::deploy(
+            provider,
+            _slashingRegistryCoordinator,
+            _delegationManager,
+            _avsDirectory,
+            _allocationManager,
+        )
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
     and constructor arguments, if any.
@@ -7529,13 +10196,17 @@ pub mod StakeRegistry {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-        _registryCoordinator: alloy::sol_types::private::Address,
+        _slashingRegistryCoordinator: alloy::sol_types::private::Address,
         _delegationManager: alloy::sol_types::private::Address,
+        _avsDirectory: alloy::sol_types::private::Address,
+        _allocationManager: alloy::sol_types::private::Address,
     ) -> alloy_contract::RawCallBuilder<T, P, N> {
         StakeRegistryInstance::<T, P, N>::deploy_builder(
             provider,
-            _registryCoordinator,
+            _slashingRegistryCoordinator,
             _delegationManager,
+            _avsDirectory,
+            _allocationManager,
         )
     }
     /**A [`StakeRegistry`](self) instance.
@@ -7591,11 +10262,18 @@ pub mod StakeRegistry {
         #[inline]
         pub async fn deploy(
             provider: P,
-            _registryCoordinator: alloy::sol_types::private::Address,
+            _slashingRegistryCoordinator: alloy::sol_types::private::Address,
             _delegationManager: alloy::sol_types::private::Address,
+            _avsDirectory: alloy::sol_types::private::Address,
+            _allocationManager: alloy::sol_types::private::Address,
         ) -> alloy_contract::Result<StakeRegistryInstance<T, P, N>> {
-            let call_builder =
-                Self::deploy_builder(provider, _registryCoordinator, _delegationManager);
+            let call_builder = Self::deploy_builder(
+                provider,
+                _slashingRegistryCoordinator,
+                _delegationManager,
+                _avsDirectory,
+                _allocationManager,
+            );
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
@@ -7607,16 +10285,20 @@ pub mod StakeRegistry {
         #[inline]
         pub fn deploy_builder(
             provider: P,
-            _registryCoordinator: alloy::sol_types::private::Address,
+            _slashingRegistryCoordinator: alloy::sol_types::private::Address,
             _delegationManager: alloy::sol_types::private::Address,
+            _avsDirectory: alloy::sol_types::private::Address,
+            _allocationManager: alloy::sol_types::private::Address,
         ) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
                 provider,
                 [
                     &BYTECODE[..],
                     &alloy_sol_types::SolConstructor::abi_encode(&constructorCall {
-                        _registryCoordinator,
+                        _slashingRegistryCoordinator,
                         _delegationManager,
+                        _avsDirectory,
+                        _allocationManager,
                     })[..],
                 ]
                 .concat()
@@ -7690,13 +10372,23 @@ pub mod StakeRegistry {
             &self,
             quorumNumber: u8,
             _strategyParams: alloy::sol_types::private::Vec<
-                <IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,
+                <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
             >,
         ) -> alloy_contract::SolCallBuilder<T, &P, addStrategiesCall, N> {
             self.call_builder(&addStrategiesCall {
                 quorumNumber,
                 _strategyParams,
             })
+        }
+        ///Creates a new call builder for the [`allocationManager`] function.
+        pub fn allocationManager(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, allocationManagerCall, N> {
+            self.call_builder(&allocationManagerCall {})
+        }
+        ///Creates a new call builder for the [`avsDirectory`] function.
+        pub fn avsDirectory(&self) -> alloy_contract::SolCallBuilder<T, &P, avsDirectoryCall, N> {
+            self.call_builder(&avsDirectoryCall {})
         }
         ///Creates a new call builder for the [`delegation`] function.
         pub fn delegation(&self) -> alloy_contract::SolCallBuilder<T, &P, delegationCall, N> {
@@ -7863,18 +10555,35 @@ pub mod StakeRegistry {
                 index,
             })
         }
-        ///Creates a new call builder for the [`initializeQuorum`] function.
-        pub fn initializeQuorum(
+        ///Creates a new call builder for the [`initializeDelegatedStakeQuorum`] function.
+        pub fn initializeDelegatedStakeQuorum(
             &self,
             quorumNumber: u8,
             minimumStake: alloy::sol_types::private::primitives::aliases::U96,
             _strategyParams: alloy::sol_types::private::Vec<
-                <IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,
+                <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
             >,
-        ) -> alloy_contract::SolCallBuilder<T, &P, initializeQuorumCall, N> {
-            self.call_builder(&initializeQuorumCall {
+        ) -> alloy_contract::SolCallBuilder<T, &P, initializeDelegatedStakeQuorumCall, N> {
+            self.call_builder(&initializeDelegatedStakeQuorumCall {
                 quorumNumber,
                 minimumStake,
+                _strategyParams,
+            })
+        }
+        ///Creates a new call builder for the [`initializeSlashableStakeQuorum`] function.
+        pub fn initializeSlashableStakeQuorum(
+            &self,
+            quorumNumber: u8,
+            minimumStake: alloy::sol_types::private::primitives::aliases::U96,
+            lookAheadPeriod: u32,
+            _strategyParams: alloy::sol_types::private::Vec<
+                <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
+            >,
+        ) -> alloy_contract::SolCallBuilder<T, &P, initializeSlashableStakeQuorumCall, N> {
+            self.call_builder(&initializeSlashableStakeQuorumCall {
+                quorumNumber,
+                minimumStake,
+                lookAheadPeriod,
                 _strategyParams,
             })
         }
@@ -7945,21 +10654,47 @@ pub mod StakeRegistry {
                 minimumStake,
             })
         }
+        ///Creates a new call builder for the [`setSlashableStakeLookahead`] function.
+        pub fn setSlashableStakeLookahead(
+            &self,
+            quorumNumber: u8,
+            _lookAheadBlocks: u32,
+        ) -> alloy_contract::SolCallBuilder<T, &P, setSlashableStakeLookaheadCall, N> {
+            self.call_builder(&setSlashableStakeLookaheadCall {
+                quorumNumber,
+                _lookAheadBlocks,
+            })
+        }
+        ///Creates a new call builder for the [`slashableStakeLookAheadPerQuorum`] function.
+        pub fn slashableStakeLookAheadPerQuorum(
+            &self,
+            quorumNumber: u8,
+        ) -> alloy_contract::SolCallBuilder<T, &P, slashableStakeLookAheadPerQuorumCall, N>
+        {
+            self.call_builder(&slashableStakeLookAheadPerQuorumCall { quorumNumber })
+        }
+        ///Creates a new call builder for the [`stakeTypePerQuorum`] function.
+        pub fn stakeTypePerQuorum(
+            &self,
+            quorumNumber: u8,
+        ) -> alloy_contract::SolCallBuilder<T, &P, stakeTypePerQuorumCall, N> {
+            self.call_builder(&stakeTypePerQuorumCall { quorumNumber })
+        }
         ///Creates a new call builder for the [`strategiesPerQuorum`] function.
         pub fn strategiesPerQuorum(
             &self,
-            _0: u8,
+            quorumNumber: u8,
             _1: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, strategiesPerQuorumCall, N> {
-            self.call_builder(&strategiesPerQuorumCall { _0, _1 })
+            self.call_builder(&strategiesPerQuorumCall { quorumNumber, _1 })
         }
         ///Creates a new call builder for the [`strategyParams`] function.
         pub fn strategyParams(
             &self,
-            _0: u8,
+            quorumNumber: u8,
             _1: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, strategyParamsCall, N> {
-            self.call_builder(&strategyParamsCall { _0, _1 })
+            self.call_builder(&strategyParamsCall { quorumNumber, _1 })
         }
         ///Creates a new call builder for the [`strategyParamsByIndex`] function.
         pub fn strategyParamsByIndex(
@@ -7979,17 +10714,17 @@ pub mod StakeRegistry {
         ) -> alloy_contract::SolCallBuilder<T, &P, strategyParamsLengthCall, N> {
             self.call_builder(&strategyParamsLengthCall { quorumNumber })
         }
-        ///Creates a new call builder for the [`updateOperatorStake`] function.
-        pub fn updateOperatorStake(
+        ///Creates a new call builder for the [`updateOperatorsStake`] function.
+        pub fn updateOperatorsStake(
             &self,
-            operator: alloy::sol_types::private::Address,
-            operatorId: alloy::sol_types::private::FixedBytes<32>,
-            quorumNumbers: alloy::sol_types::private::Bytes,
-        ) -> alloy_contract::SolCallBuilder<T, &P, updateOperatorStakeCall, N> {
-            self.call_builder(&updateOperatorStakeCall {
-                operator,
-                operatorId,
-                quorumNumbers,
+            operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+            operatorIds: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
+            quorumNumber: u8,
+        ) -> alloy_contract::SolCallBuilder<T, &P, updateOperatorsStakeCall, N> {
+            self.call_builder(&updateOperatorsStakeCall {
+                operators,
+                operatorIds,
+                quorumNumber,
             })
         }
         ///Creates a new call builder for the [`weightOfOperatorForQuorum`] function.
@@ -8021,6 +10756,12 @@ pub mod StakeRegistry {
         ) -> alloy_contract::Event<T, &P, E, N> {
             alloy_contract::Event::new_sol(&self.provider, &self.address)
         }
+        ///Creates a new event filter for the [`LookAheadPeriodChanged`] event.
+        pub fn LookAheadPeriodChanged_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, LookAheadPeriodChanged, N> {
+            self.event_filter::<LookAheadPeriodChanged>()
+        }
         ///Creates a new event filter for the [`MinimumStakeForQuorumUpdated`] event.
         pub fn MinimumStakeForQuorumUpdated_filter(
             &self,
@@ -8036,6 +10777,10 @@ pub mod StakeRegistry {
         ///Creates a new event filter for the [`QuorumCreated`] event.
         pub fn QuorumCreated_filter(&self) -> alloy_contract::Event<T, &P, QuorumCreated, N> {
             self.event_filter::<QuorumCreated>()
+        }
+        ///Creates a new event filter for the [`StakeTypeSet`] event.
+        pub fn StakeTypeSet_filter(&self) -> alloy_contract::Event<T, &P, StakeTypeSet, N> {
+            self.event_filter::<StakeTypeSet>()
         }
         ///Creates a new event filter for the [`StrategyAddedToQuorum`] event.
         pub fn StrategyAddedToQuorum_filter(

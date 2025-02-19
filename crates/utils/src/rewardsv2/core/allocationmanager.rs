@@ -20,7 +20,6 @@ library IAllocationManagerTypes {
 )]
 pub mod IAllocationManagerTypes {
     use super::*;
-    use crate::slashing::core::allocationmanager::AllocationManager::OperatorSet;
     use alloy::sol_types as alloy_sol_types;
     /**```solidity
     struct AllocateParams { OperatorSet operatorSet; address[] strategies; uint64[] newMagnitudes; }

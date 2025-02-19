@@ -958,6 +958,794 @@ pub mod BeaconChainProofs {
         }
     }
 }
+///Module containing a contract's types and functions.
+/**
+
+```solidity
+library IEigenPodTypes {
+    type VALIDATOR_STATUS is uint8;
+    struct Checkpoint { bytes32 beaconBlockRoot; uint24 proofsRemaining; uint64 podBalanceGwei; int64 balanceDeltasGwei; uint64 prevBeaconBalanceGwei; }
+    struct ValidatorInfo { uint64 validatorIndex; uint64 restakedBalanceGwei; uint64 lastCheckpointedAt; VALIDATOR_STATUS status; }
+}
+```*/
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
+pub mod IEigenPodTypes {
+    use super::*;
+    use alloy::sol_types as alloy_sol_types;
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct VALIDATOR_STATUS(u8);
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::private::SolTypeValue<VALIDATOR_STATUS> for u8 {
+            #[inline]
+            fn stv_to_tokens(
+                &self,
+            ) -> <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::Token<'_>
+            {
+                alloy_sol_types::private::SolTypeValue::<
+                    alloy::sol_types::sol_data::Uint<8>,
+                >::stv_to_tokens(self)
+            }
+            #[inline]
+            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(self).0
+            }
+            #[inline]
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::SolType>::abi_encode_packed_to(self, out)
+            }
+            #[inline]
+            fn stv_abi_packed_encoded_size(&self) -> usize {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::abi_encoded_size(
+                    self,
+                )
+            }
+        }
+        #[automatically_derived]
+        impl VALIDATOR_STATUS {
+            /// The Solidity type name.
+            pub const NAME: &'static str = stringify!(@ name);
+            /// Convert from the underlying value type.
+            #[inline]
+            pub const fn from(value: u8) -> Self {
+                Self(value)
+            }
+            /// Return the underlying value.
+            #[inline]
+            pub const fn into(self) -> u8 {
+                self.0
+            }
+            /// Return the single encoding of this value, delegating to the
+            /// underlying type.
+            #[inline]
+            pub fn abi_encode(&self) -> alloy_sol_types::private::Vec<u8> {
+                <Self as alloy_sol_types::SolType>::abi_encode(&self.0)
+            }
+            /// Return the packed encoding of this value, delegating to the
+            /// underlying type.
+            #[inline]
+            pub fn abi_encode_packed(&self) -> alloy_sol_types::private::Vec<u8> {
+                <Self as alloy_sol_types::SolType>::abi_encode_packed(&self.0)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolType for VALIDATOR_STATUS {
+            type RustType = u8;
+            type Token<'a> =
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::Token<'a>;
+            const SOL_NAME: &'static str = Self::NAME;
+            const ENCODED_SIZE: Option<usize> =
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> = <alloy::sol_types::sol_data::Uint<
+                8,
+            > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            #[inline]
+            fn valid_token(token: &Self::Token<'_>) -> bool {
+                Self::type_check(token).is_ok()
+            }
+            #[inline]
+            fn type_check(token: &Self::Token<'_>) -> alloy_sol_types::Result<()> {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::type_check(token)
+            }
+            #[inline]
+            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::detokenize(token)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::EventTopic for VALIDATOR_STATUS {
+            #[inline]
+            fn topic_preimage_length(rust: &Self::RustType) -> usize {
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::EventTopic>::topic_preimage_length(rust)
+            }
+            #[inline]
+            fn encode_topic_preimage(
+                rust: &Self::RustType,
+                out: &mut alloy_sol_types::private::Vec<u8>,
+            ) {
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, out)
+            }
+            #[inline]
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::EventTopic>::encode_topic(
+                    rust,
+                )
+            }
+        }
+    };
+    /**```solidity
+    struct Checkpoint { bytes32 beaconBlockRoot; uint24 proofsRemaining; uint64 podBalanceGwei; int64 balanceDeltasGwei; uint64 prevBeaconBalanceGwei; }
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct Checkpoint {
+        pub beaconBlockRoot: alloy::sol_types::private::FixedBytes<32>,
+        pub proofsRemaining: alloy::sol_types::private::primitives::aliases::U24,
+        pub podBalanceGwei: u64,
+        pub balanceDeltasGwei: i64,
+        pub prevBeaconBalanceGwei: u64,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = (
+            alloy::sol_types::sol_data::FixedBytes<32>,
+            alloy::sol_types::sol_data::Uint<24>,
+            alloy::sol_types::sol_data::Uint<64>,
+            alloy::sol_types::sol_data::Int<64>,
+            alloy::sol_types::sol_data::Uint<64>,
+        );
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = (
+            alloy::sol_types::private::FixedBytes<32>,
+            alloy::sol_types::private::primitives::aliases::U24,
+            u64,
+            i64,
+            u64,
+        );
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<Checkpoint> for UnderlyingRustTuple<'_> {
+            fn from(value: Checkpoint) -> Self {
+                (
+                    value.beaconBlockRoot,
+                    value.proofsRemaining,
+                    value.podBalanceGwei,
+                    value.balanceDeltasGwei,
+                    value.prevBeaconBalanceGwei,
+                )
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for Checkpoint {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {
+                    beaconBlockRoot: tuple.0,
+                    proofsRemaining: tuple.1,
+                    podBalanceGwei: tuple.2,
+                    balanceDeltasGwei: tuple.3,
+                    prevBeaconBalanceGwei: tuple.4,
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolValue for Checkpoint {
+            type SolType = Self;
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::SolTypeValue<Self> for Checkpoint {
+            #[inline]
+            fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::FixedBytes<
+                        32,
+                    > as alloy_sol_types::SolType>::tokenize(&self.beaconBlockRoot),
+                    <alloy::sol_types::sol_data::Uint<
+                        24,
+                    > as alloy_sol_types::SolType>::tokenize(&self.proofsRemaining),
+                    <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::SolType>::tokenize(&self.podBalanceGwei),
+                    <alloy::sol_types::sol_data::Int<
+                        64,
+                    > as alloy_sol_types::SolType>::tokenize(&self.balanceDeltasGwei),
+                    <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::SolType>::tokenize(&self.prevBeaconBalanceGwei),
+                )
+            }
+            #[inline]
+            fn stv_abi_encoded_size(&self) -> usize {
+                if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
+                    return size;
+                }
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+            }
+            #[inline]
+            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
+                <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
+            }
+            #[inline]
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
+            }
+            #[inline]
+            fn stv_abi_packed_encoded_size(&self) -> usize {
+                if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
+                    return size;
+                }
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolType for Checkpoint {
+            type RustType = Self;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            #[inline]
+            fn valid_token(token: &Self::Token<'_>) -> bool {
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
+            }
+            #[inline]
+            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
+                <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolStruct for Checkpoint {
+            const NAME: &'static str = "Checkpoint";
+            #[inline]
+            fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
+                alloy_sol_types::private::Cow::Borrowed(
+                    "Checkpoint(bytes32 beaconBlockRoot,uint24 proofsRemaining,uint64 podBalanceGwei,int64 balanceDeltasGwei,uint64 prevBeaconBalanceGwei)",
+                )
+            }
+            #[inline]
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
+                alloy_sol_types::private::Vec::new()
+            }
+            #[inline]
+            fn eip712_encode_type() -> alloy_sol_types::private::Cow<'static, str> {
+                <Self as alloy_sol_types::SolStruct>::eip712_root_type()
+            }
+            #[inline]
+            fn eip712_encode_data(&self) -> alloy_sol_types::private::Vec<u8> {
+                [
+                    <alloy::sol_types::sol_data::FixedBytes<
+                        32,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.beaconBlockRoot,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Uint<
+                        24,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.proofsRemaining,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.podBalanceGwei,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Int<
+                        64,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.balanceDeltasGwei,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.prevBeaconBalanceGwei,
+                        )
+                        .0,
+                ]
+                    .concat()
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::EventTopic for Checkpoint {
+            #[inline]
+            fn topic_preimage_length(rust: &Self::RustType) -> usize {
+                0usize
+                    + <alloy::sol_types::sol_data::FixedBytes<
+                        32,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.beaconBlockRoot,
+                    )
+                    + <alloy::sol_types::sol_data::Uint<
+                        24,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.proofsRemaining,
+                    )
+                    + <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.podBalanceGwei,
+                    )
+                    + <alloy::sol_types::sol_data::Int<
+                        64,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.balanceDeltasGwei,
+                    )
+                    + <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.prevBeaconBalanceGwei,
+                    )
+            }
+            #[inline]
+            fn encode_topic_preimage(
+                rust: &Self::RustType,
+                out: &mut alloy_sol_types::private::Vec<u8>,
+            ) {
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
+                <alloy::sol_types::sol_data::FixedBytes<
+                    32,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.beaconBlockRoot,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Uint<
+                    24,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.proofsRemaining,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Uint<
+                    64,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.podBalanceGwei,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Int<
+                    64,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.balanceDeltasGwei,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Uint<
+                    64,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.prevBeaconBalanceGwei,
+                    out,
+                );
+            }
+            #[inline]
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
+                let mut out = alloy_sol_types::private::Vec::new();
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
+            }
+        }
+    };
+    /**```solidity
+    struct ValidatorInfo { uint64 validatorIndex; uint64 restakedBalanceGwei; uint64 lastCheckpointedAt; VALIDATOR_STATUS status; }
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct ValidatorInfo {
+        pub validatorIndex: u64,
+        pub restakedBalanceGwei: u64,
+        pub lastCheckpointedAt: u64,
+        pub status: <VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = (
+            alloy::sol_types::sol_data::Uint<64>,
+            alloy::sol_types::sol_data::Uint<64>,
+            alloy::sol_types::sol_data::Uint<64>,
+            VALIDATOR_STATUS,
+        );
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = (
+            u64,
+            u64,
+            u64,
+            <VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
+        );
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<ValidatorInfo> for UnderlyingRustTuple<'_> {
+            fn from(value: ValidatorInfo) -> Self {
+                (
+                    value.validatorIndex,
+                    value.restakedBalanceGwei,
+                    value.lastCheckpointedAt,
+                    value.status,
+                )
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ValidatorInfo {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {
+                    validatorIndex: tuple.0,
+                    restakedBalanceGwei: tuple.1,
+                    lastCheckpointedAt: tuple.2,
+                    status: tuple.3,
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolValue for ValidatorInfo {
+            type SolType = Self;
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::SolTypeValue<Self> for ValidatorInfo {
+            #[inline]
+            fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
+                        &self.validatorIndex,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
+                        &self.restakedBalanceGwei,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
+                        &self.lastCheckpointedAt,
+                    ),
+                    <VALIDATOR_STATUS as alloy_sol_types::SolType>::tokenize(&self.status),
+                )
+            }
+            #[inline]
+            fn stv_abi_encoded_size(&self) -> usize {
+                if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
+                    return size;
+                }
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+            }
+            #[inline]
+            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
+                <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
+            }
+            #[inline]
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
+            }
+            #[inline]
+            fn stv_abi_packed_encoded_size(&self) -> usize {
+                if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
+                    return size;
+                }
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolType for ValidatorInfo {
+            type RustType = Self;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            #[inline]
+            fn valid_token(token: &Self::Token<'_>) -> bool {
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
+            }
+            #[inline]
+            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
+                <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolStruct for ValidatorInfo {
+            const NAME: &'static str = "ValidatorInfo";
+            #[inline]
+            fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
+                alloy_sol_types::private::Cow::Borrowed(
+                    "ValidatorInfo(uint64 validatorIndex,uint64 restakedBalanceGwei,uint64 lastCheckpointedAt,uint8 status)",
+                )
+            }
+            #[inline]
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
+                alloy_sol_types::private::Vec::new()
+            }
+            #[inline]
+            fn eip712_encode_type() -> alloy_sol_types::private::Cow<'static, str> {
+                <Self as alloy_sol_types::SolStruct>::eip712_root_type()
+            }
+            #[inline]
+            fn eip712_encode_data(&self) -> alloy_sol_types::private::Vec<u8> {
+                [
+                    <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.validatorIndex,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.restakedBalanceGwei,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.lastCheckpointedAt,
+                        )
+                        .0,
+                    <VALIDATOR_STATUS as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.status,
+                        )
+                        .0,
+                ]
+                    .concat()
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::EventTopic for ValidatorInfo {
+            #[inline]
+            fn topic_preimage_length(rust: &Self::RustType) -> usize {
+                0usize
+                    + <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.validatorIndex,
+                    )
+                    + <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.restakedBalanceGwei,
+                    )
+                    + <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.lastCheckpointedAt,
+                    )
+                    + <VALIDATOR_STATUS as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.status,
+                    )
+            }
+            #[inline]
+            fn encode_topic_preimage(
+                rust: &Self::RustType,
+                out: &mut alloy_sol_types::private::Vec<u8>,
+            ) {
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
+                <alloy::sol_types::sol_data::Uint<
+                    64,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.validatorIndex,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Uint<
+                    64,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.restakedBalanceGwei,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Uint<
+                    64,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.lastCheckpointedAt,
+                    out,
+                );
+                <VALIDATOR_STATUS as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.status,
+                    out,
+                );
+            }
+            #[inline]
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
+                let mut out = alloy_sol_types::private::Vec::new();
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
+            }
+        }
+    };
+    use alloy::contract as alloy_contract;
+    /**Creates a new wrapper around an on-chain [`IEigenPodTypes`](self) contract instance.
+
+    See the [wrapper's documentation](`IEigenPodTypesInstance`) for more details.*/
+    #[inline]
+    pub const fn new<
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    >(
+        address: alloy_sol_types::private::Address,
+        provider: P,
+    ) -> IEigenPodTypesInstance<T, P, N> {
+        IEigenPodTypesInstance::<T, P, N>::new(address, provider)
+    }
+    /**A [`IEigenPodTypes`](self) instance.
+
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IEigenPodTypes`](self) contract located at a given `address`, using a given
+    provider `P`.
+
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
+
+    See the [module-level documentation](self) for all the available methods.*/
+    #[derive(Clone)]
+    pub struct IEigenPodTypesInstance<T, P, N = alloy_contract::private::Ethereum> {
+        address: alloy_sol_types::private::Address,
+        provider: P,
+        _network_transport: ::core::marker::PhantomData<(N, T)>,
+    }
+    #[automatically_derived]
+    impl<T, P, N> ::core::fmt::Debug for IEigenPodTypesInstance<T, P, N> {
+        #[inline]
+        fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+            f.debug_tuple("IEigenPodTypesInstance")
+                .field(&self.address)
+                .finish()
+        }
+    }
+    /// Instantiation and getters/setters.
+    #[automatically_derived]
+    impl<
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodTypesInstance<T, P, N>
+    {
+        /**Creates a new wrapper around an on-chain [`IEigenPodTypes`](self) contract instance.
+
+        See the [wrapper's documentation](`IEigenPodTypesInstance`) for more details.*/
+        #[inline]
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+            Self {
+                address,
+                provider,
+                _network_transport: ::core::marker::PhantomData,
+            }
+        }
+        /// Returns a reference to the address.
+        #[inline]
+        pub const fn address(&self) -> &alloy_sol_types::private::Address {
+            &self.address
+        }
+        /// Sets the address.
+        #[inline]
+        pub fn set_address(&mut self, address: alloy_sol_types::private::Address) {
+            self.address = address;
+        }
+        /// Sets the address and returns `self`.
+        pub fn at(mut self, address: alloy_sol_types::private::Address) -> Self {
+            self.set_address(address);
+            self
+        }
+        /// Returns a reference to the provider.
+        #[inline]
+        pub const fn provider(&self) -> &P {
+            &self.provider
+        }
+    }
+    impl<T, P: ::core::clone::Clone, N> IEigenPodTypesInstance<T, &P, N> {
+        /// Clones the provider and returns a new instance with the cloned provider.
+        #[inline]
+        pub fn with_cloned_provider(self) -> IEigenPodTypesInstance<T, P, N> {
+            IEigenPodTypesInstance {
+                address: self.address,
+                provider: ::core::clone::Clone::clone(&self.provider),
+                _network_transport: ::core::marker::PhantomData,
+            }
+        }
+    }
+    /// Function calls.
+    #[automatically_derived]
+    impl<
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodTypesInstance<T, P, N>
+    {
+        /// Creates a new call builder using this contract instance's provider and address.
+        ///
+        /// Note that the call can be any function call, not just those defined in this
+        /// contract. Prefer using the other methods for building type-safe contract calls.
+        pub fn call_builder<C: alloy_sol_types::SolCall>(
+            &self,
+            call: &C,
+        ) -> alloy_contract::SolCallBuilder<T, &P, C, N> {
+            alloy_contract::SolCallBuilder::new_sol(&self.provider, &self.address, call)
+        }
+    }
+    /// Event filters.
+    #[automatically_derived]
+    impl<
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodTypesInstance<T, P, N>
+    {
+        /// Creates a new event filter using this contract instance's provider and address.
+        ///
+        /// Note that the type can be any event, not just those defined in this contract.
+        /// Prefer using the other methods for building type-safe event filters.
+        pub fn event_filter<E: alloy_sol_types::SolEvent>(
+            &self,
+        ) -> alloy_contract::Event<T, &P, E, N> {
+            alloy_contract::Event::new_sol(&self.provider, &self.address)
+        }
+    }
+}
 /**
 
 Generated by the following Solidity interface...
@@ -982,13 +1770,14 @@ library BeaconChainProofs {
     }
 }
 
-interface IEigenPod {
+library IEigenPodTypes {
     type VALIDATOR_STATUS is uint8;
     struct Checkpoint {
         bytes32 beaconBlockRoot;
         uint24 proofsRemaining;
         uint64 podBalanceGwei;
-        int128 balanceDeltasGwei;
+        int64 balanceDeltasGwei;
+        uint64 prevBeaconBalanceGwei;
     }
     struct ValidatorInfo {
         uint64 validatorIndex;
@@ -996,6 +1785,31 @@ interface IEigenPod {
         uint64 lastCheckpointedAt;
         VALIDATOR_STATUS status;
     }
+}
+
+interface IEigenPod {
+    error BeaconTimestampTooFarInPast();
+    error CannotCheckpointTwiceInSingleBlock();
+    error CheckpointAlreadyActive();
+    error CredentialsAlreadyVerified();
+    error CurrentlyPaused();
+    error InputAddressZero();
+    error InputArrayLengthMismatch();
+    error InsufficientWithdrawableBalance();
+    error InvalidEIP4788Response();
+    error InvalidPubKeyLength();
+    error MsgValueNot32ETH();
+    error NoActiveCheckpoint();
+    error NoBalanceToCheckpoint();
+    error OnlyEigenPodManager();
+    error OnlyEigenPodOwner();
+    error OnlyEigenPodOwnerOrProofSubmitter();
+    error TimestampOutOfRange();
+    error ValidatorInactiveOnBeaconChain();
+    error ValidatorIsExitingBeaconChain();
+    error ValidatorNotActiveInPod();
+    error ValidatorNotSlashedOnBeaconChain();
+    error WithdrawalCredentialsNotForEigenPod();
 
     event CheckpointCreated(uint64 indexed checkpointTimestamp, bytes32 indexed beaconBlockRoot, uint256 validatorCount);
     event CheckpointFinalized(uint64 indexed checkpointTimestamp, int256 totalShareDeltaWei);
@@ -1010,7 +1824,7 @@ interface IEigenPod {
 
     function activeValidatorCount() external view returns (uint256);
     function checkpointBalanceExitedGwei(uint64) external view returns (uint64);
-    function currentCheckpoint() external view returns (Checkpoint memory);
+    function currentCheckpoint() external view returns (IEigenPodTypes.Checkpoint memory);
     function currentCheckpointTimestamp() external view returns (uint64);
     function eigenPodManager() external view returns (address);
     function getParentBlockRoot(uint64 timestamp) external view returns (bytes32);
@@ -1022,10 +1836,10 @@ interface IEigenPod {
     function setProofSubmitter(address newProofSubmitter) external;
     function stake(bytes memory pubkey, bytes memory signature, bytes32 depositDataRoot) external payable;
     function startCheckpoint(bool revertIfNoBalance) external;
-    function validatorPubkeyHashToInfo(bytes32 validatorPubkeyHash) external view returns (ValidatorInfo memory);
-    function validatorPubkeyToInfo(bytes memory validatorPubkey) external view returns (ValidatorInfo memory);
-    function validatorStatus(bytes memory validatorPubkey) external view returns (VALIDATOR_STATUS);
-    function validatorStatus(bytes32 pubkeyHash) external view returns (VALIDATOR_STATUS);
+    function validatorPubkeyHashToInfo(bytes32 validatorPubkeyHash) external view returns (IEigenPodTypes.ValidatorInfo memory);
+    function validatorPubkeyToInfo(bytes memory validatorPubkey) external view returns (IEigenPodTypes.ValidatorInfo memory);
+    function validatorStatus(bytes memory validatorPubkey) external view returns (IEigenPodTypes.VALIDATOR_STATUS);
+    function validatorStatus(bytes32 pubkeyHash) external view returns (IEigenPodTypes.VALIDATOR_STATUS);
     function verifyCheckpointProofs(BeaconChainProofs.BalanceContainerProof memory balanceContainerProof, BeaconChainProofs.BalanceProof[] memory proofs) external;
     function verifyStaleBalance(uint64 beaconTimestamp, BeaconChainProofs.StateRootProof memory stateRootProof, BeaconChainProofs.ValidatorProof memory proof) external;
     function verifyWithdrawalCredentials(uint64 beaconTimestamp, BeaconChainProofs.StateRootProof memory stateRootProof, uint40[] memory validatorIndices, bytes[] memory validatorFieldsProofs, bytes32[][] memory validatorFields) external;
@@ -1077,7 +1891,7 @@ interface IEigenPod {
       {
         "name": "",
         "type": "tuple",
-        "internalType": "struct IEigenPod.Checkpoint",
+        "internalType": "struct IEigenPodTypes.Checkpoint",
         "components": [
           {
             "name": "beaconBlockRoot",
@@ -1096,8 +1910,13 @@ interface IEigenPod {
           },
           {
             "name": "balanceDeltasGwei",
-            "type": "int128",
-            "internalType": "int128"
+            "type": "int64",
+            "internalType": "int64"
+          },
+          {
+            "name": "prevBeaconBalanceGwei",
+            "type": "uint64",
+            "internalType": "uint64"
           }
         ]
       }
@@ -1287,7 +2106,7 @@ interface IEigenPod {
       {
         "name": "",
         "type": "tuple",
-        "internalType": "struct IEigenPod.ValidatorInfo",
+        "internalType": "struct IEigenPodTypes.ValidatorInfo",
         "components": [
           {
             "name": "validatorIndex",
@@ -1307,7 +2126,7 @@ interface IEigenPod {
           {
             "name": "status",
             "type": "uint8",
-            "internalType": "enum IEigenPod.VALIDATOR_STATUS"
+            "internalType": "enum IEigenPodTypes.VALIDATOR_STATUS"
           }
         ]
       }
@@ -1328,7 +2147,7 @@ interface IEigenPod {
       {
         "name": "",
         "type": "tuple",
-        "internalType": "struct IEigenPod.ValidatorInfo",
+        "internalType": "struct IEigenPodTypes.ValidatorInfo",
         "components": [
           {
             "name": "validatorIndex",
@@ -1348,7 +2167,7 @@ interface IEigenPod {
           {
             "name": "status",
             "type": "uint8",
-            "internalType": "enum IEigenPod.VALIDATOR_STATUS"
+            "internalType": "enum IEigenPodTypes.VALIDATOR_STATUS"
           }
         ]
       }
@@ -1369,7 +2188,7 @@ interface IEigenPod {
       {
         "name": "",
         "type": "uint8",
-        "internalType": "enum IEigenPod.VALIDATOR_STATUS"
+        "internalType": "enum IEigenPodTypes.VALIDATOR_STATUS"
       }
     ],
     "stateMutability": "view"
@@ -1388,7 +2207,7 @@ interface IEigenPod {
       {
         "name": "",
         "type": "uint8",
-        "internalType": "enum IEigenPod.VALIDATOR_STATUS"
+        "internalType": "enum IEigenPodTypes.VALIDATOR_STATUS"
       }
     ],
     "stateMutability": "view"
@@ -1746,6 +2565,116 @@ interface IEigenPod {
       }
     ],
     "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "BeaconTimestampTooFarInPast",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CannotCheckpointTwiceInSingleBlock",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CheckpointAlreadyActive",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CredentialsAlreadyVerified",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CurrentlyPaused",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InputAddressZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InputArrayLengthMismatch",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InsufficientWithdrawableBalance",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidEIP4788Response",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidPubKeyLength",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MsgValueNot32ETH",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NoActiveCheckpoint",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NoBalanceToCheckpoint",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlyEigenPodManager",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlyEigenPodOwner",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlyEigenPodOwnerOrProofSubmitter",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "TimestampOutOfRange",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ValidatorInactiveOnBeaconChain",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ValidatorIsExitingBeaconChain",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ValidatorNotActiveInPod",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ValidatorNotSlashedOnBeaconChain",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "WithdrawalCredentialsNotForEigenPod",
+    "inputs": []
   }
 ]
 ```*/
@@ -1779,126 +2708,13 @@ pub mod IEigenPod {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct VALIDATOR_STATUS(u8);
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[automatically_derived]
-        impl alloy_sol_types::private::SolTypeValue<VALIDATOR_STATUS> for u8 {
-            #[inline]
-            fn stv_to_tokens(
-                &self,
-            ) -> <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::Token<'_>
-            {
-                alloy_sol_types::private::SolTypeValue::<
-                    alloy::sol_types::sol_data::Uint<8>,
-                >::stv_to_tokens(self)
-            }
-            #[inline]
-            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(self).0
-            }
-            #[inline]
-            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
-                <alloy::sol_types::sol_data::Uint<
-                    8,
-                > as alloy_sol_types::SolType>::abi_encode_packed_to(self, out)
-            }
-            #[inline]
-            fn stv_abi_packed_encoded_size(&self) -> usize {
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::abi_encoded_size(
-                    self,
-                )
-            }
-        }
-        #[automatically_derived]
-        impl VALIDATOR_STATUS {
-            /// The Solidity type name.
-            pub const NAME: &'static str = stringify!(@ name);
-            /// Convert from the underlying value type.
-            #[inline]
-            pub const fn from(value: u8) -> Self {
-                Self(value)
-            }
-            /// Return the underlying value.
-            #[inline]
-            pub const fn into(self) -> u8 {
-                self.0
-            }
-            /// Return the single encoding of this value, delegating to the
-            /// underlying type.
-            #[inline]
-            pub fn abi_encode(&self) -> alloy_sol_types::private::Vec<u8> {
-                <Self as alloy_sol_types::SolType>::abi_encode(&self.0)
-            }
-            /// Return the packed encoding of this value, delegating to the
-            /// underlying type.
-            #[inline]
-            pub fn abi_encode_packed(&self) -> alloy_sol_types::private::Vec<u8> {
-                <Self as alloy_sol_types::SolType>::abi_encode_packed(&self.0)
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolType for VALIDATOR_STATUS {
-            type RustType = u8;
-            type Token<'a> =
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::Token<'a>;
-            const SOL_NAME: &'static str = Self::NAME;
-            const ENCODED_SIZE: Option<usize> =
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::ENCODED_SIZE;
-            const PACKED_ENCODED_SIZE: Option<usize> = <alloy::sol_types::sol_data::Uint<
-                8,
-            > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
-            #[inline]
-            fn valid_token(token: &Self::Token<'_>) -> bool {
-                Self::type_check(token).is_ok()
-            }
-            #[inline]
-            fn type_check(token: &Self::Token<'_>) -> alloy_sol_types::Result<()> {
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::type_check(token)
-            }
-            #[inline]
-            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::detokenize(token)
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::EventTopic for VALIDATOR_STATUS {
-            #[inline]
-            fn topic_preimage_length(rust: &Self::RustType) -> usize {
-                <alloy::sol_types::sol_data::Uint<
-                    8,
-                > as alloy_sol_types::EventTopic>::topic_preimage_length(rust)
-            }
-            #[inline]
-            fn encode_topic_preimage(
-                rust: &Self::RustType,
-                out: &mut alloy_sol_types::private::Vec<u8>,
-            ) {
-                <alloy::sol_types::sol_data::Uint<
-                    8,
-                > as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, out)
-            }
-            #[inline]
-            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::EventTopic>::encode_topic(
-                    rust,
-                )
-            }
-        }
-    };
-    /**```solidity
-    struct Checkpoint { bytes32 beaconBlockRoot; uint24 proofsRemaining; uint64 podBalanceGwei; int128 balanceDeltasGwei; }
+    /**Custom error with signature `BeaconTimestampTooFarInPast()` and selector `0x37e07ffd`.
+    ```solidity
+    error BeaconTimestampTooFarInPast();
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
-    pub struct Checkpoint {
-        pub beaconBlockRoot: alloy::sol_types::private::FixedBytes<32>,
-        pub proofsRemaining: alloy::sol_types::private::primitives::aliases::U24,
-        pub podBalanceGwei: u64,
-        pub balanceDeltasGwei: i128,
-    }
+    pub struct BeaconTimestampTooFarInPast {}
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1908,19 +2724,9 @@ pub mod IEigenPod {
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = (
-            alloy::sol_types::sol_data::FixedBytes<32>,
-            alloy::sol_types::sol_data::Uint<24>,
-            alloy::sol_types::sol_data::Uint<64>,
-            alloy::sol_types::sol_data::Int<128>,
-        );
+        type UnderlyingSolTuple<'a> = ();
         #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = (
-            alloy::sol_types::private::FixedBytes<32>,
-            alloy::sol_types::private::primitives::aliases::U24,
-            u64,
-            i128,
-        );
+        type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
         fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -1932,229 +2738,43 @@ pub mod IEigenPod {
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<Checkpoint> for UnderlyingRustTuple<'_> {
-            fn from(value: Checkpoint) -> Self {
-                (
-                    value.beaconBlockRoot,
-                    value.proofsRemaining,
-                    value.podBalanceGwei,
-                    value.balanceDeltasGwei,
-                )
+        impl ::core::convert::From<BeaconTimestampTooFarInPast> for UnderlyingRustTuple<'_> {
+            fn from(value: BeaconTimestampTooFarInPast) -> Self {
+                ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for Checkpoint {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for BeaconTimestampTooFarInPast {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {
-                    beaconBlockRoot: tuple.0,
-                    proofsRemaining: tuple.1,
-                    podBalanceGwei: tuple.2,
-                    balanceDeltasGwei: tuple.3,
-                }
+                Self {}
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::SolValue for Checkpoint {
-            type SolType = Self;
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::private::SolTypeValue<Self> for Checkpoint {
+        impl alloy_sol_types::SolError for BeaconTimestampTooFarInPast {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "BeaconTimestampTooFarInPast()";
+            const SELECTOR: [u8; 4] = [55u8, 224u8, 127u8, 253u8];
             #[inline]
-            fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::FixedBytes<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.beaconBlockRoot),
-                    <alloy::sol_types::sol_data::Uint<
-                        24,
-                    > as alloy_sol_types::SolType>::tokenize(&self.proofsRemaining),
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::tokenize(&self.podBalanceGwei),
-                    <alloy::sol_types::sol_data::Int<
-                        128,
-                    > as alloy_sol_types::SolType>::tokenize(&self.balanceDeltasGwei),
-                )
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
             }
             #[inline]
-            fn stv_abi_encoded_size(&self) -> usize {
-                if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
-                    return size;
-                }
-                let tuple =
-                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
-            }
-            #[inline]
-            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
-                <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
-            }
-            #[inline]
-            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
-                let tuple =
-                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
-                    &tuple, out,
-                )
-            }
-            #[inline]
-            fn stv_abi_packed_encoded_size(&self) -> usize {
-                if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
-                    return size;
-                }
-                let tuple =
-                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
-                    &tuple,
-                )
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolType for Checkpoint {
-            type RustType = Self;
-            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
-            const ENCODED_SIZE: Option<usize> =
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
-            const PACKED_ENCODED_SIZE: Option<usize> =
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
-            #[inline]
-            fn valid_token(token: &Self::Token<'_>) -> bool {
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
-            }
-            #[inline]
-            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
-                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
-                <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolStruct for Checkpoint {
-            const NAME: &'static str = "Checkpoint";
-            #[inline]
-            fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
-                alloy_sol_types::private::Cow::Borrowed(
-                    "Checkpoint(bytes32 beaconBlockRoot,uint24 proofsRemaining,uint64 podBalanceGwei,int128 balanceDeltasGwei)",
-                )
-            }
-            #[inline]
-            fn eip712_components(
-            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
-            {
-                alloy_sol_types::private::Vec::new()
-            }
-            #[inline]
-            fn eip712_encode_type() -> alloy_sol_types::private::Cow<'static, str> {
-                <Self as alloy_sol_types::SolStruct>::eip712_root_type()
-            }
-            #[inline]
-            fn eip712_encode_data(&self) -> alloy_sol_types::private::Vec<u8> {
-                [
-                    <alloy::sol_types::sol_data::FixedBytes<
-                        32,
-                    > as alloy_sol_types::SolType>::eip712_data_word(
-                            &self.beaconBlockRoot,
-                        )
-                        .0,
-                    <alloy::sol_types::sol_data::Uint<
-                        24,
-                    > as alloy_sol_types::SolType>::eip712_data_word(
-                            &self.proofsRemaining,
-                        )
-                        .0,
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::eip712_data_word(
-                            &self.podBalanceGwei,
-                        )
-                        .0,
-                    <alloy::sol_types::sol_data::Int<
-                        128,
-                    > as alloy_sol_types::SolType>::eip712_data_word(
-                            &self.balanceDeltasGwei,
-                        )
-                        .0,
-                ]
-                    .concat()
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::EventTopic for Checkpoint {
-            #[inline]
-            fn topic_preimage_length(rust: &Self::RustType) -> usize {
-                0usize
-                    + <alloy::sol_types::sol_data::FixedBytes<
-                        32,
-                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.beaconBlockRoot,
-                    )
-                    + <alloy::sol_types::sol_data::Uint<
-                        24,
-                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.proofsRemaining,
-                    )
-                    + <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.podBalanceGwei,
-                    )
-                    + <alloy::sol_types::sol_data::Int<
-                        128,
-                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.balanceDeltasGwei,
-                    )
-            }
-            #[inline]
-            fn encode_topic_preimage(
-                rust: &Self::RustType,
-                out: &mut alloy_sol_types::private::Vec<u8>,
-            ) {
-                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
-                <alloy::sol_types::sol_data::FixedBytes<
-                    32,
-                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.beaconBlockRoot,
-                    out,
-                );
-                <alloy::sol_types::sol_data::Uint<
-                    24,
-                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.proofsRemaining,
-                    out,
-                );
-                <alloy::sol_types::sol_data::Uint<
-                    64,
-                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.podBalanceGwei,
-                    out,
-                );
-                <alloy::sol_types::sol_data::Int<
-                    128,
-                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.balanceDeltasGwei,
-                    out,
-                );
-            }
-            #[inline]
-            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
-                let mut out = alloy_sol_types::private::Vec::new();
-                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
-                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
             }
         }
     };
-    /**```solidity
-    struct ValidatorInfo { uint64 validatorIndex; uint64 restakedBalanceGwei; uint64 lastCheckpointedAt; VALIDATOR_STATUS status; }
+    /**Custom error with signature `CannotCheckpointTwiceInSingleBlock()` and selector `0x67db5b8b`.
+    ```solidity
+    error CannotCheckpointTwiceInSingleBlock();
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
-    pub struct ValidatorInfo {
-        pub validatorIndex: u64,
-        pub restakedBalanceGwei: u64,
-        pub lastCheckpointedAt: u64,
-        pub status: <VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
-    }
+    pub struct CannotCheckpointTwiceInSingleBlock {}
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -2164,19 +2784,9 @@ pub mod IEigenPod {
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = (
-            alloy::sol_types::sol_data::Uint<64>,
-            alloy::sol_types::sol_data::Uint<64>,
-            alloy::sol_types::sol_data::Uint<64>,
-            VALIDATOR_STATUS,
-        );
+        type UnderlyingSolTuple<'a> = ();
         #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = (
-            u64,
-            u64,
-            u64,
-            <VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
-        );
+        type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
         fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -2188,207 +2798,1233 @@ pub mod IEigenPod {
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<ValidatorInfo> for UnderlyingRustTuple<'_> {
-            fn from(value: ValidatorInfo) -> Self {
-                (
-                    value.validatorIndex,
-                    value.restakedBalanceGwei,
-                    value.lastCheckpointedAt,
-                    value.status,
-                )
+        impl ::core::convert::From<CannotCheckpointTwiceInSingleBlock> for UnderlyingRustTuple<'_> {
+            fn from(value: CannotCheckpointTwiceInSingleBlock) -> Self {
+                ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ValidatorInfo {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for CannotCheckpointTwiceInSingleBlock {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {
-                    validatorIndex: tuple.0,
-                    restakedBalanceGwei: tuple.1,
-                    lastCheckpointedAt: tuple.2,
-                    status: tuple.3,
-                }
+                Self {}
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::SolValue for ValidatorInfo {
-            type SolType = Self;
+        impl alloy_sol_types::SolError for CannotCheckpointTwiceInSingleBlock {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "CannotCheckpointTwiceInSingleBlock()";
+            const SELECTOR: [u8; 4] = [103u8, 219u8, 91u8, 139u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
         }
-        #[automatically_derived]
-        impl alloy_sol_types::private::SolTypeValue<Self> for ValidatorInfo {
-            #[inline]
-            fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
-                        &self.validatorIndex,
-                    ),
-                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
-                        &self.restakedBalanceGwei,
-                    ),
-                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
-                        &self.lastCheckpointedAt,
-                    ),
-                    <VALIDATOR_STATUS as alloy_sol_types::SolType>::tokenize(&self.status),
-                )
-            }
-            #[inline]
-            fn stv_abi_encoded_size(&self) -> usize {
-                if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
-                    return size;
-                }
-                let tuple =
-                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
-            }
-            #[inline]
-            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
-                <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
-            }
-            #[inline]
-            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
-                let tuple =
-                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
-                    &tuple, out,
-                )
-            }
-            #[inline]
-            fn stv_abi_packed_encoded_size(&self) -> usize {
-                if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
-                    return size;
-                }
-                let tuple =
-                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
-                    &tuple,
-                )
+    };
+    /**Custom error with signature `CheckpointAlreadyActive()` and selector `0xbe9bc300`.
+    ```solidity
+    error CheckpointAlreadyActive();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct CheckpointAlreadyActive {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::SolType for ValidatorInfo {
-            type RustType = Self;
-            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
-            const ENCODED_SIZE: Option<usize> =
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
-            const PACKED_ENCODED_SIZE: Option<usize> =
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
-            #[inline]
-            fn valid_token(token: &Self::Token<'_>) -> bool {
-                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
-            }
-            #[inline]
-            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
-                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
-                <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
+        #[doc(hidden)]
+        impl ::core::convert::From<CheckpointAlreadyActive> for UnderlyingRustTuple<'_> {
+            fn from(value: CheckpointAlreadyActive) -> Self {
+                ()
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::SolStruct for ValidatorInfo {
-            const NAME: &'static str = "ValidatorInfo";
-            #[inline]
-            fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
-                alloy_sol_types::private::Cow::Borrowed(
-                    "ValidatorInfo(uint64 validatorIndex,uint64 restakedBalanceGwei,uint64 lastCheckpointedAt,uint8 status)",
-                )
-            }
-            #[inline]
-            fn eip712_components(
-            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
-            {
-                alloy_sol_types::private::Vec::new()
-            }
-            #[inline]
-            fn eip712_encode_type() -> alloy_sol_types::private::Cow<'static, str> {
-                <Self as alloy_sol_types::SolStruct>::eip712_root_type()
-            }
-            #[inline]
-            fn eip712_encode_data(&self) -> alloy_sol_types::private::Vec<u8> {
-                [
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::eip712_data_word(
-                            &self.validatorIndex,
-                        )
-                        .0,
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::eip712_data_word(
-                            &self.restakedBalanceGwei,
-                        )
-                        .0,
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::eip712_data_word(
-                            &self.lastCheckpointedAt,
-                        )
-                        .0,
-                    <VALIDATOR_STATUS as alloy_sol_types::SolType>::eip712_data_word(
-                            &self.status,
-                        )
-                        .0,
-                ]
-                    .concat()
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for CheckpointAlreadyActive {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::EventTopic for ValidatorInfo {
+        impl alloy_sol_types::SolError for CheckpointAlreadyActive {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "CheckpointAlreadyActive()";
+            const SELECTOR: [u8; 4] = [190u8, 155u8, 195u8, 0u8];
             #[inline]
-            fn topic_preimage_length(rust: &Self::RustType) -> usize {
-                0usize
-                    + <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.validatorIndex,
-                    )
-                    + <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.restakedBalanceGwei,
-                    )
-                    + <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.lastCheckpointedAt,
-                    )
-                    + <VALIDATOR_STATUS as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.status,
-                    )
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
             }
             #[inline]
-            fn encode_topic_preimage(
-                rust: &Self::RustType,
-                out: &mut alloy_sol_types::private::Vec<u8>,
-            ) {
-                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
-                <alloy::sol_types::sol_data::Uint<
-                    64,
-                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.validatorIndex,
-                    out,
-                );
-                <alloy::sol_types::sol_data::Uint<
-                    64,
-                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.restakedBalanceGwei,
-                    out,
-                );
-                <alloy::sol_types::sol_data::Uint<
-                    64,
-                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.lastCheckpointedAt,
-                    out,
-                );
-                <VALIDATOR_STATUS as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.status,
-                    out,
-                );
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `CredentialsAlreadyVerified()` and selector `0x35e09e9d`.
+    ```solidity
+    error CredentialsAlreadyVerified();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct CredentialsAlreadyVerified {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<CredentialsAlreadyVerified> for UnderlyingRustTuple<'_> {
+            fn from(value: CredentialsAlreadyVerified) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for CredentialsAlreadyVerified {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for CredentialsAlreadyVerified {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "CredentialsAlreadyVerified()";
+            const SELECTOR: [u8; 4] = [53u8, 224u8, 158u8, 157u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
             }
             #[inline]
-            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
-                let mut out = alloy_sol_types::private::Vec::new();
-                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
-                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `CurrentlyPaused()` and selector `0x840a48d5`.
+    ```solidity
+    error CurrentlyPaused();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct CurrentlyPaused {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<CurrentlyPaused> for UnderlyingRustTuple<'_> {
+            fn from(value: CurrentlyPaused) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for CurrentlyPaused {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for CurrentlyPaused {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "CurrentlyPaused()";
+            const SELECTOR: [u8; 4] = [132u8, 10u8, 72u8, 213u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InputAddressZero()` and selector `0x73632176`.
+    ```solidity
+    error InputAddressZero();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InputAddressZero {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InputAddressZero> for UnderlyingRustTuple<'_> {
+            fn from(value: InputAddressZero) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputAddressZero {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InputAddressZero {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InputAddressZero()";
+            const SELECTOR: [u8; 4] = [115u8, 99u8, 33u8, 118u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InputArrayLengthMismatch()` and selector `0x43714afd`.
+    ```solidity
+    error InputArrayLengthMismatch();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InputArrayLengthMismatch {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InputArrayLengthMismatch> for UnderlyingRustTuple<'_> {
+            fn from(value: InputArrayLengthMismatch) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputArrayLengthMismatch {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InputArrayLengthMismatch {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InputArrayLengthMismatch()";
+            const SELECTOR: [u8; 4] = [67u8, 113u8, 74u8, 253u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InsufficientWithdrawableBalance()` and selector `0x0b1bd51c`.
+    ```solidity
+    error InsufficientWithdrawableBalance();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InsufficientWithdrawableBalance {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InsufficientWithdrawableBalance> for UnderlyingRustTuple<'_> {
+            fn from(value: InsufficientWithdrawableBalance) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InsufficientWithdrawableBalance {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InsufficientWithdrawableBalance {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InsufficientWithdrawableBalance()";
+            const SELECTOR: [u8; 4] = [11u8, 27u8, 213u8, 28u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InvalidEIP4788Response()` and selector `0x558ad0a3`.
+    ```solidity
+    error InvalidEIP4788Response();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InvalidEIP4788Response {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InvalidEIP4788Response> for UnderlyingRustTuple<'_> {
+            fn from(value: InvalidEIP4788Response) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidEIP4788Response {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InvalidEIP4788Response {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InvalidEIP4788Response()";
+            const SELECTOR: [u8; 4] = [85u8, 138u8, 208u8, 163u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InvalidPubKeyLength()` and selector `0x9f106472`.
+    ```solidity
+    error InvalidPubKeyLength();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InvalidPubKeyLength {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InvalidPubKeyLength> for UnderlyingRustTuple<'_> {
+            fn from(value: InvalidPubKeyLength) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidPubKeyLength {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InvalidPubKeyLength {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InvalidPubKeyLength()";
+            const SELECTOR: [u8; 4] = [159u8, 16u8, 100u8, 114u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `MsgValueNot32ETH()` and selector `0x24b4b598`.
+    ```solidity
+    error MsgValueNot32ETH();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct MsgValueNot32ETH {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<MsgValueNot32ETH> for UnderlyingRustTuple<'_> {
+            fn from(value: MsgValueNot32ETH) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for MsgValueNot32ETH {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for MsgValueNot32ETH {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "MsgValueNot32ETH()";
+            const SELECTOR: [u8; 4] = [36u8, 180u8, 181u8, 152u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `NoActiveCheckpoint()` and selector `0x1a544f49`.
+    ```solidity
+    error NoActiveCheckpoint();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct NoActiveCheckpoint {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<NoActiveCheckpoint> for UnderlyingRustTuple<'_> {
+            fn from(value: NoActiveCheckpoint) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for NoActiveCheckpoint {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for NoActiveCheckpoint {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "NoActiveCheckpoint()";
+            const SELECTOR: [u8; 4] = [26u8, 84u8, 79u8, 73u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `NoBalanceToCheckpoint()` and selector `0xcb7aa564`.
+    ```solidity
+    error NoBalanceToCheckpoint();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct NoBalanceToCheckpoint {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<NoBalanceToCheckpoint> for UnderlyingRustTuple<'_> {
+            fn from(value: NoBalanceToCheckpoint) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for NoBalanceToCheckpoint {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for NoBalanceToCheckpoint {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "NoBalanceToCheckpoint()";
+            const SELECTOR: [u8; 4] = [203u8, 122u8, 165u8, 100u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OnlyEigenPodManager()` and selector `0xc84e9984`.
+    ```solidity
+    error OnlyEigenPodManager();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OnlyEigenPodManager {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OnlyEigenPodManager> for UnderlyingRustTuple<'_> {
+            fn from(value: OnlyEigenPodManager) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlyEigenPodManager {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OnlyEigenPodManager {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OnlyEigenPodManager()";
+            const SELECTOR: [u8; 4] = [200u8, 78u8, 153u8, 132u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OnlyEigenPodOwner()` and selector `0xe33e6e06`.
+    ```solidity
+    error OnlyEigenPodOwner();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OnlyEigenPodOwner {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OnlyEigenPodOwner> for UnderlyingRustTuple<'_> {
+            fn from(value: OnlyEigenPodOwner) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlyEigenPodOwner {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OnlyEigenPodOwner {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OnlyEigenPodOwner()";
+            const SELECTOR: [u8; 4] = [227u8, 62u8, 110u8, 6u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OnlyEigenPodOwnerOrProofSubmitter()` and selector `0x427a7779`.
+    ```solidity
+    error OnlyEigenPodOwnerOrProofSubmitter();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OnlyEigenPodOwnerOrProofSubmitter {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OnlyEigenPodOwnerOrProofSubmitter> for UnderlyingRustTuple<'_> {
+            fn from(value: OnlyEigenPodOwnerOrProofSubmitter) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlyEigenPodOwnerOrProofSubmitter {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OnlyEigenPodOwnerOrProofSubmitter {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OnlyEigenPodOwnerOrProofSubmitter()";
+            const SELECTOR: [u8; 4] = [66u8, 122u8, 119u8, 121u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `TimestampOutOfRange()` and selector `0xf289ccda`.
+    ```solidity
+    error TimestampOutOfRange();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct TimestampOutOfRange {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<TimestampOutOfRange> for UnderlyingRustTuple<'_> {
+            fn from(value: TimestampOutOfRange) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for TimestampOutOfRange {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for TimestampOutOfRange {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "TimestampOutOfRange()";
+            const SELECTOR: [u8; 4] = [242u8, 137u8, 204u8, 218u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `ValidatorInactiveOnBeaconChain()` and selector `0x65608db4`.
+    ```solidity
+    error ValidatorInactiveOnBeaconChain();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct ValidatorInactiveOnBeaconChain {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<ValidatorInactiveOnBeaconChain> for UnderlyingRustTuple<'_> {
+            fn from(value: ValidatorInactiveOnBeaconChain) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ValidatorInactiveOnBeaconChain {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for ValidatorInactiveOnBeaconChain {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "ValidatorInactiveOnBeaconChain()";
+            const SELECTOR: [u8; 4] = [101u8, 96u8, 141u8, 180u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `ValidatorIsExitingBeaconChain()` and selector `0x2eade637`.
+    ```solidity
+    error ValidatorIsExitingBeaconChain();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct ValidatorIsExitingBeaconChain {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<ValidatorIsExitingBeaconChain> for UnderlyingRustTuple<'_> {
+            fn from(value: ValidatorIsExitingBeaconChain) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ValidatorIsExitingBeaconChain {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for ValidatorIsExitingBeaconChain {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "ValidatorIsExitingBeaconChain()";
+            const SELECTOR: [u8; 4] = [46u8, 173u8, 230u8, 55u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `ValidatorNotActiveInPod()` and selector `0xd49e19a7`.
+    ```solidity
+    error ValidatorNotActiveInPod();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct ValidatorNotActiveInPod {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<ValidatorNotActiveInPod> for UnderlyingRustTuple<'_> {
+            fn from(value: ValidatorNotActiveInPod) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ValidatorNotActiveInPod {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for ValidatorNotActiveInPod {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "ValidatorNotActiveInPod()";
+            const SELECTOR: [u8; 4] = [212u8, 158u8, 25u8, 167u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `ValidatorNotSlashedOnBeaconChain()` and selector `0xb0e72f68`.
+    ```solidity
+    error ValidatorNotSlashedOnBeaconChain();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct ValidatorNotSlashedOnBeaconChain {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<ValidatorNotSlashedOnBeaconChain> for UnderlyingRustTuple<'_> {
+            fn from(value: ValidatorNotSlashedOnBeaconChain) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ValidatorNotSlashedOnBeaconChain {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for ValidatorNotSlashedOnBeaconChain {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "ValidatorNotSlashedOnBeaconChain()";
+            const SELECTOR: [u8; 4] = [176u8, 231u8, 47u8, 104u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `WithdrawalCredentialsNotForEigenPod()` and selector `0x6ee5baa6`.
+    ```solidity
+    error WithdrawalCredentialsNotForEigenPod();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct WithdrawalCredentialsNotForEigenPod {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<WithdrawalCredentialsNotForEigenPod> for UnderlyingRustTuple<'_> {
+            fn from(value: WithdrawalCredentialsNotForEigenPod) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for WithdrawalCredentialsNotForEigenPod {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for WithdrawalCredentialsNotForEigenPod {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "WithdrawalCredentialsNotForEigenPod()";
+            const SELECTOR: [u8; 4] = [110u8, 229u8, 186u8, 166u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
             }
         }
     };
@@ -3718,7 +5354,7 @@ pub mod IEigenPod {
     };
     /**Function with signature `currentCheckpoint()` and selector `0x47d28372`.
     ```solidity
-    function currentCheckpoint() external view returns (Checkpoint memory);
+    function currentCheckpoint() external view returns (IEigenPodTypes.Checkpoint memory);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3727,7 +5363,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currentCheckpointReturn {
-        pub _0: <Checkpoint as alloy::sol_types::SolType>::RustType,
+        pub _0: <IEigenPodTypes::Checkpoint as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
         non_camel_case_types,
@@ -3768,9 +5404,10 @@ pub mod IEigenPod {
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (Checkpoint,);
+            type UnderlyingSolTuple<'a> = (IEigenPodTypes::Checkpoint,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (<Checkpoint as alloy::sol_types::SolType>::RustType,);
+            type UnderlyingRustTuple<'a> =
+                (<IEigenPodTypes::Checkpoint as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -3800,7 +5437,7 @@ pub mod IEigenPod {
             type Parameters<'a> = ();
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = currentCheckpointReturn;
-            type ReturnTuple<'a> = (Checkpoint,);
+            type ReturnTuple<'a> = (IEigenPodTypes::Checkpoint,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "currentCheckpoint()";
             const SELECTOR: [u8; 4] = [71u8, 210u8, 131u8, 114u8];
@@ -5119,7 +6756,7 @@ pub mod IEigenPod {
     };
     /**Function with signature `validatorPubkeyHashToInfo(bytes32)` and selector `0x6fcd0e53`.
     ```solidity
-    function validatorPubkeyHashToInfo(bytes32 validatorPubkeyHash) external view returns (ValidatorInfo memory);
+    function validatorPubkeyHashToInfo(bytes32 validatorPubkeyHash) external view returns (IEigenPodTypes.ValidatorInfo memory);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5130,7 +6767,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorPubkeyHashToInfoReturn {
-        pub _0: <ValidatorInfo as alloy::sol_types::SolType>::RustType,
+        pub _0: <IEigenPodTypes::ValidatorInfo as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
         non_camel_case_types,
@@ -5173,10 +6810,10 @@ pub mod IEigenPod {
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (ValidatorInfo,);
+            type UnderlyingSolTuple<'a> = (IEigenPodTypes::ValidatorInfo,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> =
-                (<ValidatorInfo as alloy::sol_types::SolType>::RustType,);
+                (<IEigenPodTypes::ValidatorInfo as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -5206,7 +6843,7 @@ pub mod IEigenPod {
             type Parameters<'a> = (alloy::sol_types::sol_data::FixedBytes<32>,);
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = validatorPubkeyHashToInfoReturn;
-            type ReturnTuple<'a> = (ValidatorInfo,);
+            type ReturnTuple<'a> = (IEigenPodTypes::ValidatorInfo,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "validatorPubkeyHashToInfo(bytes32)";
             const SELECTOR: [u8; 4] = [111u8, 205u8, 14u8, 83u8];
@@ -5238,7 +6875,7 @@ pub mod IEigenPod {
     };
     /**Function with signature `validatorPubkeyToInfo(bytes)` and selector `0xb522538a`.
     ```solidity
-    function validatorPubkeyToInfo(bytes memory validatorPubkey) external view returns (ValidatorInfo memory);
+    function validatorPubkeyToInfo(bytes memory validatorPubkey) external view returns (IEigenPodTypes.ValidatorInfo memory);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5249,7 +6886,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorPubkeyToInfoReturn {
-        pub _0: <ValidatorInfo as alloy::sol_types::SolType>::RustType,
+        pub _0: <IEigenPodTypes::ValidatorInfo as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
         non_camel_case_types,
@@ -5292,10 +6929,10 @@ pub mod IEigenPod {
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (ValidatorInfo,);
+            type UnderlyingSolTuple<'a> = (IEigenPodTypes::ValidatorInfo,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> =
-                (<ValidatorInfo as alloy::sol_types::SolType>::RustType,);
+                (<IEigenPodTypes::ValidatorInfo as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -5325,7 +6962,7 @@ pub mod IEigenPod {
             type Parameters<'a> = (alloy::sol_types::sol_data::Bytes,);
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = validatorPubkeyToInfoReturn;
-            type ReturnTuple<'a> = (ValidatorInfo,);
+            type ReturnTuple<'a> = (IEigenPodTypes::ValidatorInfo,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "validatorPubkeyToInfo(bytes)";
             const SELECTOR: [u8; 4] = [181u8, 34u8, 83u8, 138u8];
@@ -5357,7 +6994,7 @@ pub mod IEigenPod {
     };
     /**Function with signature `validatorStatus(bytes)` and selector `0x58eaee79`.
     ```solidity
-    function validatorStatus(bytes memory validatorPubkey) external view returns (VALIDATOR_STATUS);
+    function validatorStatus(bytes memory validatorPubkey) external view returns (IEigenPodTypes.VALIDATOR_STATUS);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5368,7 +7005,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorStatus_0Return {
-        pub _0: <VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
+        pub _0: <IEigenPodTypes::VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
         non_camel_case_types,
@@ -5411,10 +7048,10 @@ pub mod IEigenPod {
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (VALIDATOR_STATUS,);
+            type UnderlyingSolTuple<'a> = (IEigenPodTypes::VALIDATOR_STATUS,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> =
-                (<VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,);
+                (<IEigenPodTypes::VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -5444,7 +7081,7 @@ pub mod IEigenPod {
             type Parameters<'a> = (alloy::sol_types::sol_data::Bytes,);
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = validatorStatus_0Return;
-            type ReturnTuple<'a> = (VALIDATOR_STATUS,);
+            type ReturnTuple<'a> = (IEigenPodTypes::VALIDATOR_STATUS,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "validatorStatus(bytes)";
             const SELECTOR: [u8; 4] = [88u8, 234u8, 238u8, 121u8];
@@ -5476,7 +7113,7 @@ pub mod IEigenPod {
     };
     /**Function with signature `validatorStatus(bytes32)` and selector `0x7439841f`.
     ```solidity
-    function validatorStatus(bytes32 pubkeyHash) external view returns (VALIDATOR_STATUS);
+    function validatorStatus(bytes32 pubkeyHash) external view returns (IEigenPodTypes.VALIDATOR_STATUS);
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5487,7 +7124,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorStatus_1Return {
-        pub _0: <VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
+        pub _0: <IEigenPodTypes::VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
         non_camel_case_types,
@@ -5530,10 +7167,10 @@ pub mod IEigenPod {
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (VALIDATOR_STATUS,);
+            type UnderlyingSolTuple<'a> = (IEigenPodTypes::VALIDATOR_STATUS,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> =
-                (<VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,);
+                (<IEigenPodTypes::VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -5563,7 +7200,7 @@ pub mod IEigenPod {
             type Parameters<'a> = (alloy::sol_types::sol_data::FixedBytes<32>,);
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = validatorStatus_1Return;
-            type ReturnTuple<'a> = (VALIDATOR_STATUS,);
+            type ReturnTuple<'a> = (IEigenPodTypes::VALIDATOR_STATUS,);
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "validatorStatus(bytes32)";
             const SELECTOR: [u8; 4] = [116u8, 57u8, 132u8, 31u8];
@@ -6971,6 +8608,689 @@ pub mod IEigenPod {
                 }
                 Self::withdrawableRestakedExecutionLayerGwei(inner) => {
                     <withdrawableRestakedExecutionLayerGweiCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+            }
+        }
+    }
+    ///Container for all the [`IEigenPod`](self) custom errors.
+    pub enum IEigenPodErrors {
+        BeaconTimestampTooFarInPast(BeaconTimestampTooFarInPast),
+        CannotCheckpointTwiceInSingleBlock(CannotCheckpointTwiceInSingleBlock),
+        CheckpointAlreadyActive(CheckpointAlreadyActive),
+        CredentialsAlreadyVerified(CredentialsAlreadyVerified),
+        CurrentlyPaused(CurrentlyPaused),
+        InputAddressZero(InputAddressZero),
+        InputArrayLengthMismatch(InputArrayLengthMismatch),
+        InsufficientWithdrawableBalance(InsufficientWithdrawableBalance),
+        InvalidEIP4788Response(InvalidEIP4788Response),
+        InvalidPubKeyLength(InvalidPubKeyLength),
+        MsgValueNot32ETH(MsgValueNot32ETH),
+        NoActiveCheckpoint(NoActiveCheckpoint),
+        NoBalanceToCheckpoint(NoBalanceToCheckpoint),
+        OnlyEigenPodManager(OnlyEigenPodManager),
+        OnlyEigenPodOwner(OnlyEigenPodOwner),
+        OnlyEigenPodOwnerOrProofSubmitter(OnlyEigenPodOwnerOrProofSubmitter),
+        TimestampOutOfRange(TimestampOutOfRange),
+        ValidatorInactiveOnBeaconChain(ValidatorInactiveOnBeaconChain),
+        ValidatorIsExitingBeaconChain(ValidatorIsExitingBeaconChain),
+        ValidatorNotActiveInPod(ValidatorNotActiveInPod),
+        ValidatorNotSlashedOnBeaconChain(ValidatorNotSlashedOnBeaconChain),
+        WithdrawalCredentialsNotForEigenPod(WithdrawalCredentialsNotForEigenPod),
+    }
+    #[automatically_derived]
+    impl IEigenPodErrors {
+        /// All the selectors of this enum.
+        ///
+        /// Note that the selectors might not be in the same order as the variants.
+        /// No guarantees are made about the order of the selectors.
+        ///
+        /// Prefer using `SolInterface` methods instead.
+        pub const SELECTORS: &'static [[u8; 4usize]] = &[
+            [11u8, 27u8, 213u8, 28u8],
+            [26u8, 84u8, 79u8, 73u8],
+            [36u8, 180u8, 181u8, 152u8],
+            [46u8, 173u8, 230u8, 55u8],
+            [53u8, 224u8, 158u8, 157u8],
+            [55u8, 224u8, 127u8, 253u8],
+            [66u8, 122u8, 119u8, 121u8],
+            [67u8, 113u8, 74u8, 253u8],
+            [85u8, 138u8, 208u8, 163u8],
+            [101u8, 96u8, 141u8, 180u8],
+            [103u8, 219u8, 91u8, 139u8],
+            [110u8, 229u8, 186u8, 166u8],
+            [115u8, 99u8, 33u8, 118u8],
+            [132u8, 10u8, 72u8, 213u8],
+            [159u8, 16u8, 100u8, 114u8],
+            [176u8, 231u8, 47u8, 104u8],
+            [190u8, 155u8, 195u8, 0u8],
+            [200u8, 78u8, 153u8, 132u8],
+            [203u8, 122u8, 165u8, 100u8],
+            [212u8, 158u8, 25u8, 167u8],
+            [227u8, 62u8, 110u8, 6u8],
+            [242u8, 137u8, 204u8, 218u8],
+        ];
+    }
+    #[automatically_derived]
+    impl alloy_sol_types::SolInterface for IEigenPodErrors {
+        const NAME: &'static str = "IEigenPodErrors";
+        const MIN_DATA_LENGTH: usize = 0usize;
+        const COUNT: usize = 22usize;
+        #[inline]
+        fn selector(&self) -> [u8; 4] {
+            match self {
+                Self::BeaconTimestampTooFarInPast(_) => {
+                    <BeaconTimestampTooFarInPast as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::CannotCheckpointTwiceInSingleBlock(_) => {
+                    <CannotCheckpointTwiceInSingleBlock as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::CheckpointAlreadyActive(_) => {
+                    <CheckpointAlreadyActive as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::CredentialsAlreadyVerified(_) => {
+                    <CredentialsAlreadyVerified as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::CurrentlyPaused(_) => {
+                    <CurrentlyPaused as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InputAddressZero(_) => {
+                    <InputAddressZero as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InputArrayLengthMismatch(_) => {
+                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InsufficientWithdrawableBalance(_) => {
+                    <InsufficientWithdrawableBalance as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InvalidEIP4788Response(_) => {
+                    <InvalidEIP4788Response as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InvalidPubKeyLength(_) => {
+                    <InvalidPubKeyLength as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::MsgValueNot32ETH(_) => {
+                    <MsgValueNot32ETH as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::NoActiveCheckpoint(_) => {
+                    <NoActiveCheckpoint as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::NoBalanceToCheckpoint(_) => {
+                    <NoBalanceToCheckpoint as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::OnlyEigenPodManager(_) => {
+                    <OnlyEigenPodManager as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::OnlyEigenPodOwner(_) => {
+                    <OnlyEigenPodOwner as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::OnlyEigenPodOwnerOrProofSubmitter(_) => {
+                    <OnlyEigenPodOwnerOrProofSubmitter as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::TimestampOutOfRange(_) => {
+                    <TimestampOutOfRange as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::ValidatorInactiveOnBeaconChain(_) => {
+                    <ValidatorInactiveOnBeaconChain as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::ValidatorIsExitingBeaconChain(_) => {
+                    <ValidatorIsExitingBeaconChain as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::ValidatorNotActiveInPod(_) => {
+                    <ValidatorNotActiveInPod as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::ValidatorNotSlashedOnBeaconChain(_) => {
+                    <ValidatorNotSlashedOnBeaconChain as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::WithdrawalCredentialsNotForEigenPod(_) => {
+                    <WithdrawalCredentialsNotForEigenPod as alloy_sol_types::SolError>::SELECTOR
+                }
+            }
+        }
+        #[inline]
+        fn selector_at(i: usize) -> ::core::option::Option<[u8; 4]> {
+            Self::SELECTORS.get(i).copied()
+        }
+        #[inline]
+        fn valid_selector(selector: [u8; 4]) -> bool {
+            Self::SELECTORS.binary_search(&selector).is_ok()
+        }
+        #[inline]
+        #[allow(non_snake_case)]
+        fn abi_decode_raw(
+            selector: [u8; 4],
+            data: &[u8],
+            validate: bool,
+        ) -> alloy_sol_types::Result<Self> {
+            static DECODE_SHIMS: &[fn(&[u8], bool) -> alloy_sol_types::Result<IEigenPodErrors>] = &[
+                {
+                    fn InsufficientWithdrawableBalance(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <InsufficientWithdrawableBalance as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodErrors::InsufficientWithdrawableBalance)
+                    }
+                    InsufficientWithdrawableBalance
+                },
+                {
+                    fn NoActiveCheckpoint(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <NoActiveCheckpoint as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::NoActiveCheckpoint)
+                    }
+                    NoActiveCheckpoint
+                },
+                {
+                    fn MsgValueNot32ETH(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <MsgValueNot32ETH as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::MsgValueNot32ETH)
+                    }
+                    MsgValueNot32ETH
+                },
+                {
+                    fn ValidatorIsExitingBeaconChain(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <ValidatorIsExitingBeaconChain as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodErrors::ValidatorIsExitingBeaconChain)
+                    }
+                    ValidatorIsExitingBeaconChain
+                },
+                {
+                    fn CredentialsAlreadyVerified(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <CredentialsAlreadyVerified as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::CredentialsAlreadyVerified)
+                    }
+                    CredentialsAlreadyVerified
+                },
+                {
+                    fn BeaconTimestampTooFarInPast(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <BeaconTimestampTooFarInPast as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::BeaconTimestampTooFarInPast)
+                    }
+                    BeaconTimestampTooFarInPast
+                },
+                {
+                    fn OnlyEigenPodOwnerOrProofSubmitter(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <OnlyEigenPodOwnerOrProofSubmitter as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodErrors::OnlyEigenPodOwnerOrProofSubmitter)
+                    }
+                    OnlyEigenPodOwnerOrProofSubmitter
+                },
+                {
+                    fn InputArrayLengthMismatch(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::InputArrayLengthMismatch)
+                    }
+                    InputArrayLengthMismatch
+                },
+                {
+                    fn InvalidEIP4788Response(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <InvalidEIP4788Response as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::InvalidEIP4788Response)
+                    }
+                    InvalidEIP4788Response
+                },
+                {
+                    fn ValidatorInactiveOnBeaconChain(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <ValidatorInactiveOnBeaconChain as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodErrors::ValidatorInactiveOnBeaconChain)
+                    }
+                    ValidatorInactiveOnBeaconChain
+                },
+                {
+                    fn CannotCheckpointTwiceInSingleBlock(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <CannotCheckpointTwiceInSingleBlock as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodErrors::CannotCheckpointTwiceInSingleBlock)
+                    }
+                    CannotCheckpointTwiceInSingleBlock
+                },
+                {
+                    fn WithdrawalCredentialsNotForEigenPod(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <WithdrawalCredentialsNotForEigenPod as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodErrors::WithdrawalCredentialsNotForEigenPod)
+                    }
+                    WithdrawalCredentialsNotForEigenPod
+                },
+                {
+                    fn InputAddressZero(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <InputAddressZero as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::InputAddressZero)
+                    }
+                    InputAddressZero
+                },
+                {
+                    fn CurrentlyPaused(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <CurrentlyPaused as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::CurrentlyPaused)
+                    }
+                    CurrentlyPaused
+                },
+                {
+                    fn InvalidPubKeyLength(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <InvalidPubKeyLength as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::InvalidPubKeyLength)
+                    }
+                    InvalidPubKeyLength
+                },
+                {
+                    fn ValidatorNotSlashedOnBeaconChain(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <ValidatorNotSlashedOnBeaconChain as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodErrors::ValidatorNotSlashedOnBeaconChain)
+                    }
+                    ValidatorNotSlashedOnBeaconChain
+                },
+                {
+                    fn CheckpointAlreadyActive(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <CheckpointAlreadyActive as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::CheckpointAlreadyActive)
+                    }
+                    CheckpointAlreadyActive
+                },
+                {
+                    fn OnlyEigenPodManager(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <OnlyEigenPodManager as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::OnlyEigenPodManager)
+                    }
+                    OnlyEigenPodManager
+                },
+                {
+                    fn NoBalanceToCheckpoint(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <NoBalanceToCheckpoint as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::NoBalanceToCheckpoint)
+                    }
+                    NoBalanceToCheckpoint
+                },
+                {
+                    fn ValidatorNotActiveInPod(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <ValidatorNotActiveInPod as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::ValidatorNotActiveInPod)
+                    }
+                    ValidatorNotActiveInPod
+                },
+                {
+                    fn OnlyEigenPodOwner(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <OnlyEigenPodOwner as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::OnlyEigenPodOwner)
+                    }
+                    OnlyEigenPodOwner
+                },
+                {
+                    fn TimestampOutOfRange(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <TimestampOutOfRange as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::TimestampOutOfRange)
+                    }
+                    TimestampOutOfRange
+                },
+            ];
+            let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
+            };
+            DECODE_SHIMS[idx](data, validate)
+        }
+        #[inline]
+        fn abi_encoded_size(&self) -> usize {
+            match self {
+                Self::BeaconTimestampTooFarInPast(inner) => {
+                    <BeaconTimestampTooFarInPast as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::CannotCheckpointTwiceInSingleBlock(inner) => {
+                    <CannotCheckpointTwiceInSingleBlock as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::CheckpointAlreadyActive(inner) => {
+                    <CheckpointAlreadyActive as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::CredentialsAlreadyVerified(inner) => {
+                    <CredentialsAlreadyVerified as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::CurrentlyPaused(inner) => {
+                    <CurrentlyPaused as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InputAddressZero(inner) => {
+                    <InputAddressZero as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InputArrayLengthMismatch(inner) => {
+                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InsufficientWithdrawableBalance(inner) => {
+                    <InsufficientWithdrawableBalance as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InvalidEIP4788Response(inner) => {
+                    <InvalidEIP4788Response as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InvalidPubKeyLength(inner) => {
+                    <InvalidPubKeyLength as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::MsgValueNot32ETH(inner) => {
+                    <MsgValueNot32ETH as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::NoActiveCheckpoint(inner) => {
+                    <NoActiveCheckpoint as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::NoBalanceToCheckpoint(inner) => {
+                    <NoBalanceToCheckpoint as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::OnlyEigenPodManager(inner) => {
+                    <OnlyEigenPodManager as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::OnlyEigenPodOwner(inner) => {
+                    <OnlyEigenPodOwner as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::OnlyEigenPodOwnerOrProofSubmitter(inner) => {
+                    <OnlyEigenPodOwnerOrProofSubmitter as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::TimestampOutOfRange(inner) => {
+                    <TimestampOutOfRange as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::ValidatorInactiveOnBeaconChain(inner) => {
+                    <ValidatorInactiveOnBeaconChain as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::ValidatorIsExitingBeaconChain(inner) => {
+                    <ValidatorIsExitingBeaconChain as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::ValidatorNotActiveInPod(inner) => {
+                    <ValidatorNotActiveInPod as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::ValidatorNotSlashedOnBeaconChain(inner) => {
+                    <ValidatorNotSlashedOnBeaconChain as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::WithdrawalCredentialsNotForEigenPod(inner) => {
+                    <WithdrawalCredentialsNotForEigenPod as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+            }
+        }
+        #[inline]
+        fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+            match self {
+                Self::BeaconTimestampTooFarInPast(inner) => {
+                    <BeaconTimestampTooFarInPast as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::CannotCheckpointTwiceInSingleBlock(inner) => {
+                    <CannotCheckpointTwiceInSingleBlock as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::CheckpointAlreadyActive(inner) => {
+                    <CheckpointAlreadyActive as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::CredentialsAlreadyVerified(inner) => {
+                    <CredentialsAlreadyVerified as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::CurrentlyPaused(inner) => {
+                    <CurrentlyPaused as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InputAddressZero(inner) => {
+                    <InputAddressZero as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InputArrayLengthMismatch(inner) => {
+                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InsufficientWithdrawableBalance(inner) => {
+                    <InsufficientWithdrawableBalance as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InvalidEIP4788Response(inner) => {
+                    <InvalidEIP4788Response as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InvalidPubKeyLength(inner) => {
+                    <InvalidPubKeyLength as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::MsgValueNot32ETH(inner) => {
+                    <MsgValueNot32ETH as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::NoActiveCheckpoint(inner) => {
+                    <NoActiveCheckpoint as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::NoBalanceToCheckpoint(inner) => {
+                    <NoBalanceToCheckpoint as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::OnlyEigenPodManager(inner) => {
+                    <OnlyEigenPodManager as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::OnlyEigenPodOwner(inner) => {
+                    <OnlyEigenPodOwner as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::OnlyEigenPodOwnerOrProofSubmitter(inner) => {
+                    <OnlyEigenPodOwnerOrProofSubmitter as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::TimestampOutOfRange(inner) => {
+                    <TimestampOutOfRange as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::ValidatorInactiveOnBeaconChain(inner) => {
+                    <ValidatorInactiveOnBeaconChain as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::ValidatorIsExitingBeaconChain(inner) => {
+                    <ValidatorIsExitingBeaconChain as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::ValidatorNotActiveInPod(inner) => {
+                    <ValidatorNotActiveInPod as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::ValidatorNotSlashedOnBeaconChain(inner) => {
+                    <ValidatorNotSlashedOnBeaconChain as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::WithdrawalCredentialsNotForEigenPod(inner) => {
+                    <WithdrawalCredentialsNotForEigenPod as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )
