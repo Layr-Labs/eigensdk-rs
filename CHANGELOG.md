@@ -84,6 +84,61 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 * `TaskMetadata.task_created_block` field changed to `u64` [#362](https://github.com/Layr-Labs/eigensdk-rs/pull/362)
 
+* Refactor `bls_aggr` module in [#363](https://github.com/Layr-Labs/eigensdk-rs/pull/363).
+  - Separated the interface and service in the `bls_aggr` module.
+    - To interact with the BLS aggregation service, use the `ServiceHandle` struct. Aggregation responses are now handled by the `AggregateReceiver` struct.
+      - To initialize both structs, use the `BLSAggregationService::start` method. It returns a tuple with the `ServiceHandle` and `AggregateReceiver` structs.
+    - Add methods `start` and `run` to `BLSAggregationService` struct.
+  - Removed `initialize_new_task` and `process_new_signature` functions since their logic is now integrated in `run()`.  
+
+  ```rust
+  // Before
+  let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+  let metadata = TaskMetadata::new(
+        task_index,
+        block_number,
+        quorum_numbers,
+        quorum_threshold_percentages,
+        time_to_expiry,
+    );
+    
+    bls_agg_service.initialize_new_task(metadata).await.unwrap();
+
+    bls_agg_service
+        .process_new_signature(TaskSignature::new(
+            task_index,
+            task_response_digest,
+            bls_signature,
+            test_operator_1.operator_id,
+        ))
+        .await
+        .unwrap();
+
+  // After
+  let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+  let (handle, mut aggregator_response) = bls_agg_service.start();
+
+  let metadata = TaskMetadata::new(
+      task_index,
+      block_number,
+      quorum_numbers,
+      quorum_threshold_percentages,
+      time_to_expiry,
+  );
+  handle.initialize_task(metadata).await.unwrap();
+
+  handle
+      .process_signature(TaskSignature::new(
+          task_index,
+          task_response_digest,
+          bls_signature,
+          test_operator_1.operator_id,
+      ))
+      .await
+      .unwrap();
+  ```
+  
+
 ### Deprecated ⚠️
 
 ### Removed 🗑

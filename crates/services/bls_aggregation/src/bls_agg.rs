@@ -11,13 +11,11 @@ use eigen_types::{
     avs::{SignatureVerificationError, SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
-use parking_lot::RwLock;
 use std::collections::HashMap;
-use std::sync::Arc;
 use tokio::{
     sync::{
         mpsc::{self, UnboundedReceiver, UnboundedSender},
-        Mutex,
+        oneshot,
     },
     time::Duration,
 };
@@ -130,6 +128,96 @@ impl TaskSignature {
     }
 }
 
+/// Valid messages to interact with the BLS Aggregator Service
+pub enum AggregationMessage {
+    InitializeTask(
+        TaskMetadata,
+        oneshot::Sender<Result<(), BlsAggregationServiceError>>,
+    ),
+    ProcessSignature(
+        TaskSignature,
+        oneshot::Sender<Result<(), BlsAggregationServiceError>>,
+    ),
+}
+
+/// Handler to interact with the BLS Aggregator Service
+#[derive(Debug, Clone)]
+pub struct ServiceHandle {
+    /// Channel to send messages to the BLS Aggregator Service
+    msg_sender: UnboundedSender<AggregationMessage>,
+}
+
+impl ServiceHandle {
+    /// Sends a message to the BLS Aggregator Service to initialize a new task.
+    ///
+    /// # Arguments
+    ///
+    /// * `metadata` - The metadata of the task to initialize
+    ///
+    /// # Returns
+    /// Returns error if the task index already exists
+    pub async fn initialize_task(
+        &self,
+        metadata: TaskMetadata,
+    ) -> Result<(), BlsAggregationServiceError> {
+        let (tx, rx) = oneshot::channel();
+        self.msg_sender
+            .send(AggregationMessage::InitializeTask(metadata, tx))
+            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+
+        rx.await
+            .map_err(|_| BlsAggregationServiceError::ChannelError)?
+    }
+
+    /// Sends a message to the BLS Aggregator Service to process a signature.
+    ///
+    /// # Arguments
+    ///
+    /// * `task_signature` - The signed task response
+    ///
+    /// # Returns error:
+    ///
+    /// * `TaskNotFound` - If the task is not found
+    /// * `ChannelError` - If there is an error while sending the task through the channel
+    /// * `SignatureVerificationError` - If the signature verification fails
+    pub async fn process_signature(
+        &self,
+        task_signature: TaskSignature,
+    ) -> Result<(), BlsAggregationServiceError> {
+        let (tx, rx) = oneshot::channel();
+        self.msg_sender
+            .send(AggregationMessage::ProcessSignature(task_signature, tx))
+            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+
+        rx.await
+            .map_err(|_| BlsAggregationServiceError::ChannelError)?
+    }
+}
+
+/// Receiver to receive the aggregated responses from the BLS Aggregator Service.
+#[derive(Debug)]
+pub struct AggregateReceiver {
+    /// Channel to receive the aggregated responses from the BLS Aggregator Service
+    aggregate_receiver:
+        UnboundedReceiver<Result<BlsAggregationServiceResponse, BlsAggregationServiceError>>,
+}
+
+impl AggregateReceiver {
+    /// Receives the aggregated response from the BLS Aggregator Service.
+    ///
+    /// # Returns
+    ///
+    /// Returns the aggregated response or an error if the channel is closed.
+    pub async fn receive_aggregated_response(
+        &mut self,
+    ) -> Result<BlsAggregationServiceResponse, BlsAggregationServiceError> {
+        self.aggregate_receiver
+            .recv()
+            .await
+            .ok_or(BlsAggregationServiceError::ChannelError)?
+    }
+}
+
 /// The BLS Aggregator Service main struct
 #[derive(Debug)]
 pub struct BlsAggregatorService<A: AvsRegistryService>
@@ -137,14 +225,6 @@ where
     A: Clone,
 {
     logger: SharedLogger,
-    aggregated_response_sender:
-        UnboundedSender<Result<BlsAggregationServiceResponse, BlsAggregationServiceError>>,
-    pub aggregated_response_receiver: Arc<
-        Mutex<UnboundedReceiver<Result<BlsAggregationServiceResponse, BlsAggregationServiceError>>>,
-    >,
-    signed_task_response:
-        Arc<RwLock<HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>>>>,
-
     avs_registry_service: A,
 }
 
@@ -158,128 +238,132 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `avs_registry_service` - The AVS registry service
     /// * `logger` - Logger to log messages
     pub fn new(avs_registry_service: A, logger: SharedLogger) -> Self {
-        let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
         Self {
             logger,
-            aggregated_response_sender: tx,
-            aggregated_response_receiver: Arc::new(Mutex::new(rx)),
-            signed_task_response: Arc::new(RwLock::new(HashMap::new())),
             avs_registry_service,
         }
     }
 
-    ///   Creates a new task meant to process new signed task responses for a task tokio channel.
+    /// Starts the BLS Aggregator Service running the main loop in background.
     ///
-    /// # Arguments
+    /// # Returns
     ///
-    /// * `metadata` - task metadata
-    ///
-    /// # Error
-    ///
-    /// Returns error if the task index already exists
-    pub async fn initialize_new_task(
-        &self,
-        metadata: TaskMetadata,
-    ) -> Result<(), BlsAggregationServiceError> {
-        let task_index = metadata.task_index;
-        let signatures_rx = {
-            let mut task_channel = self.signed_task_response.write();
+    /// Returns a tuple with the [`ServiceHandle`] and [`AggregateReceiver`] to interact with the service
+    pub fn start(self) -> (ServiceHandle, AggregateReceiver) {
+        let (msg_tx, msg_rx) = mpsc::unbounded_channel();
+        let (agg_tx, agg_rx) = mpsc::unbounded_channel();
 
-            if task_channel.contains_key(&task_index) {
-                return Err(BlsAggregationServiceError::DuplicateTaskIndex);
-            }
+        tokio::spawn(async move {
+            self.run(msg_rx, agg_tx).await;
+        });
 
-            let (signatures_tx, signatures_rx) = mpsc::unbounded_channel();
-            task_channel.insert(task_index, signatures_tx);
-            signatures_rx
+        // Create service handler and aggregate receiver to user can interact with the service
+        let service_handler = ServiceHandle { msg_sender: msg_tx };
+        let aggregate_receiver = AggregateReceiver {
+            aggregate_receiver: agg_rx,
         };
 
-        let avs_registry_service = self.avs_registry_service.clone();
-        let aggregated_response_sender = self.aggregated_response_sender.clone();
-        self.logger.debug(
-            &format!(
-                "Create task to process new signed task responses for task index: {}",
-                task_index
-            ),
-            "eigen-services-blsaggregation.bls_agg.initialize_new_task_with_window",
-        );
-        let logger = self.logger.clone();
-        tokio::spawn(async move {
-            // Process each signed response here
-            let _ = BlsAggregatorService::<A>::single_task_aggregator(
-                avs_registry_service,
-                metadata,
-                aggregated_response_sender,
-                signatures_rx,
-                logger,
-            )
-            .await
-            .inspect_err(|err| {
-                println!("Error: {:?}", err);
-            });
-        });
-        Ok(())
+        (service_handler, aggregate_receiver)
     }
 
-    /// Processes signatures received from the channel and sends
-    /// the signed task response to the task channel.
+    /// Runs the main loop of the BLS Aggregator Service.
+    ///
+    /// This function continuously processes messages from `msg_receiver` and handles:
+    /// * [`InitializeTask`]: Initializes a new aggregation task
+    /// * [`ProcessSignature`]: Forwards a signature to the appropriate task aggregator and relays the verification result.
+    ///
+    /// The final aggregated response is sent through the `aggregate_sender` channel. In addition, each
+    /// message (both [`InitializeTask`] and [`ProcessSignature`]) uses its own channel to return specific errors or results.
     ///
     /// # Arguments
     ///
-    /// * `task_signature` - The signed task response
-    ///
-    /// # Errors
-    ///
-    /// Returns error:
-    /// * `TaskNotFound` - If the task is not found.
-    /// * `ChannelError` - If there is an error while sending the task through the channel.
-    /// * `SignatureVerificationError` - If the signature verification fails.
-    pub async fn process_new_signature(
-        &self,
-        task_signature: TaskSignature,
-    ) -> Result<(), BlsAggregationServiceError> {
-        let (tx, rx) = mpsc::channel(1);
-        let task = SignedTaskResponseDigest {
-            task_response_digest: task_signature.task_response_digest,
-            bls_signature: task_signature.bls_signature,
-            operator_id: task_signature.operator_id,
-            signature_verification_channel: tx,
-        };
+    /// * `msg_receiver` - The receiver channel to receive the valid messages
+    /// * `aggregate_sender` - The sender channel to send the aggregated responses
+    async fn run(
+        self,
+        mut msg_receiver: UnboundedReceiver<AggregationMessage>,
+        aggregate_sender: UnboundedSender<
+            Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
+        >,
+    ) {
+        let mut task_channels: HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>> =
+            HashMap::new();
 
-        let mut rx = {
-            let task_channel = self.signed_task_response.read();
+        while let Some(message) = msg_receiver.recv().await {
+            match message {
+                AggregationMessage::InitializeTask(metadata, result_sender) => {
+                    let task_index = metadata.task_index;
+                    if task_channels.contains_key(&task_index) {
+                        // Task already exists - return error
+                        result_sender
+                            .send(Err(BlsAggregationServiceError::DuplicateTaskIndex))
+                            .ok();
+                        continue;
+                    }
 
-            let sender = task_channel
-                .get(&task_signature.task_index)
-                .ok_or(BlsAggregationServiceError::TaskNotFound)?;
+                    // Create a new channel to receive the signed task responses
+                    let (signature_tx, signature_rx) =
+                        mpsc::unbounded_channel::<SignedTaskResponseDigest>();
+                    task_channels.insert(task_index, signature_tx);
 
-            self.logger.debug(
-                &format!(
-                    "send the task to the aggregator thread for task index: {}",
-                    task_signature.task_index
-                ),
-                "eigen-services-blsaggregation.bls_agg.process_new_signature",
-            );
-            // send the task to the aggregator thread
-            sender
-                .send(task)
-                .map_err(|_| BlsAggregationServiceError::ChannelError)?;
-            rx
-            // release the lock
-        };
+                    let avs_registry_service = self.avs_registry_service.clone();
+                    let aggregated_response_sender = aggregate_sender.clone();
+                    let logger = self.logger.clone();
 
-        self.logger.debug(
-            &format!(
-                "receive the signature verification result for task index: {}",
-                task_signature.task_index
-            ),
-            "eigen-services-blsaggregation.bls_agg.process_new_signature",
-        );
-        // return the signature verification result
-        rx.recv()
-            .await
-            .ok_or(BlsAggregationServiceError::SignaturesChannelClosed)?
-            .map_err(BlsAggregationServiceError::SignatureVerificationError)
+                    tokio::spawn(async move {
+                        let _ = BlsAggregatorService::<A>::single_task_aggregator(
+                            avs_registry_service,
+                            metadata,
+                            aggregated_response_sender,
+                            signature_rx,
+                            logger,
+                        )
+                        .await
+                        .inspect_err(|err| {
+                            println!("Error with single_task_aggregator: {:?}", err);
+                        });
+                    });
+
+                    let _ = result_sender.send(Ok(()));
+                }
+                AggregationMessage::ProcessSignature(task_signature, result_sender) => {
+                    if let Some(sig_sender) = task_channels.get_mut(&task_signature.task_index) {
+                        // Send the signed task response to the task aggregator
+                        let (verif_tx, mut verif_rx) = tokio::sync::mpsc::channel(1);
+                        let signed_digest = SignedTaskResponseDigest {
+                            task_response_digest: task_signature.task_response_digest,
+                            bls_signature: task_signature.bls_signature,
+                            operator_id: task_signature.operator_id,
+                            signature_verification_channel: verif_tx,
+                        };
+
+                        if sig_sender.send(signed_digest).is_err() {
+                            result_sender
+                                .send(Err(BlsAggregationServiceError::ChannelError))
+                                .ok();
+                            continue;
+                        }
+
+                        if let Some(result) = verif_rx.recv().await {
+                            match result {
+                                Ok(_) => {
+                                    let _ = result_sender.send(Ok(()));
+                                }
+                                Err(e) => {
+                                    let _ = result_sender.send(Err(
+                                        BlsAggregationServiceError::SignatureVerificationError(e),
+                                    ));
+                                }
+                            }
+                        }
+                    } else {
+                        result_sender
+                            .send(Err(BlsAggregationServiceError::TaskNotFound))
+                            .ok();
+                    }
+                }
+            }
+        }
     }
 
     /// Adds a new operator to the aggregated operators by aggregating its public key, signature and stake.
@@ -822,8 +906,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 #[cfg(test)]
 mod tests {
     use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
-    use crate::bls_agg::TaskMetadata;
-    use crate::bls_agg::TaskSignature;
+    use crate::bls_agg::{TaskMetadata, TaskSignature};
     use alloy::primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_logging::get_test_logger;
@@ -907,10 +990,11 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature,
@@ -934,18 +1018,10 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -980,13 +1056,13 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
-
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
         let bls_signature_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1.clone(),
@@ -995,8 +1071,8 @@ mod tests {
             .await
             .unwrap();
 
-        let second_signature_processing_result = bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        let second_signature_processing_result = handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1.clone(),
@@ -1014,8 +1090,9 @@ mod tests {
         let bls_signature_2 = test_operator_2
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2.clone(),
@@ -1040,18 +1117,10 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1097,12 +1166,14 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
+
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
@@ -1114,8 +1185,8 @@ mod tests {
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
@@ -1127,8 +1198,8 @@ mod tests {
         let bls_sig_op_3 = test_operator_3
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_3.clone(),
@@ -1155,18 +1226,9 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
-
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        let response = aggregator_response.receive_aggregated_response().await;
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1202,12 +1264,14 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
+
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
@@ -1219,8 +1283,8 @@ mod tests {
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
@@ -1252,14 +1316,9 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(expected_agg_service_response, response.unwrap().unwrap());
+        assert_eq!(expected_agg_service_response, response.unwrap());
     }
 
     #[tokio::test]
@@ -1296,10 +1355,8 @@ mod tests {
             quorum_threshold_percentages.clone(),
             time_to_expiry,
         );
-        bls_agg_service
-            .initialize_new_task(metadata1)
-            .await
-            .unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata1).await.unwrap();
 
         let task_2_index = 2;
         let task_2_response = 234; // Initialize with appropriate data
@@ -1311,16 +1368,13 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service
-            .initialize_new_task(metadata2)
-            .await
-            .unwrap();
+        handle.initialize_task(metadata2).await.unwrap();
 
         let bls_sig_task_1_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_1_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_1_index,
                 task_1_response_digest,
                 bls_sig_task_1_op_1.clone(),
@@ -1332,8 +1386,8 @@ mod tests {
         let bls_sig_task_1_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_1_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_1_index,
                 task_1_response_digest,
                 bls_sig_task_1_op_2.clone(),
@@ -1345,8 +1399,8 @@ mod tests {
         let bls_sig_task_2_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_2_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_2_index,
                 task_2_response_digest,
                 bls_sig_task_2_op_1.clone(),
@@ -1358,8 +1412,8 @@ mod tests {
         let bls_sig_task_2_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_2_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_2_index,
                 task_2_response_digest,
                 bls_sig_task_2_op_2.clone(),
@@ -1411,20 +1465,8 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let first_response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await
-            .unwrap();
-        let second_response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await
-            .unwrap();
+        let first_response = aggregator_response.receive_aggregated_response().await;
+        let second_response = aggregator_response.receive_aggregated_response().await;
 
         let (task_1_response, task_2_response) = if first_response.clone().unwrap().task_index == 1
         {
@@ -1463,19 +1505,12 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -1514,9 +1549,11 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
+
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
@@ -1542,18 +1579,10 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1591,9 +1620,11 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
+
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1,
@@ -1602,17 +1633,9 @@ mod tests {
             .await
             .unwrap();
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -1651,13 +1674,14 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
@@ -1669,8 +1693,8 @@ mod tests {
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
@@ -1698,18 +1722,10 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1759,13 +1775,14 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
@@ -1777,8 +1794,8 @@ mod tests {
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
@@ -1807,18 +1824,10 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1868,13 +1877,14 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1,
@@ -1887,8 +1897,8 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
 
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2,
@@ -1897,17 +1907,9 @@ mod tests {
             .await
             .unwrap();
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -1939,14 +1941,15 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
 
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1,
@@ -1955,16 +1958,9 @@ mod tests {
             .await
             .unwrap();
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        let response = aggregator_response.receive_aggregated_response().await;
+
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -2003,13 +1999,14 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1,
@@ -2018,17 +2015,9 @@ mod tests {
             .await
             .unwrap();
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -2053,9 +2042,9 @@ mod tests {
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
-
-        let result = bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        let (handle, _) = bls_agg_service.start();
+        let result = handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1,
@@ -2095,15 +2084,16 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         let task_response_1 = 123; // Initialize with appropriate data
         let task_response_1_digest = hash(task_response_1);
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1,
@@ -2117,8 +2107,8 @@ mod tests {
         let bls_sig_op_2 = test_operator_1
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
                 bls_sig_op_2,
@@ -2127,17 +2117,9 @@ mod tests {
             .await
             .unwrap();
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -2170,10 +2152,11 @@ mod tests {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
-        let result = bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        let result = handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 wrong_task_response_digest,
                 bls_signature.clone(),
@@ -2189,17 +2172,9 @@ mod tests {
         );
 
         // Also test that the aggregator service is not affected by the invalid signature, so the task should expire
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -2245,14 +2220,16 @@ mod tests {
             time_to_expiry,
         )
         .with_window_duration(window_duration);
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         let task_response_1_digest = hash(task_response);
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
@@ -2265,8 +2242,8 @@ mod tests {
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
                 bls_sig_op_2.clone(),
@@ -2281,8 +2258,8 @@ mod tests {
         let bls_sig_op_3 = test_operator_3
             .bls_keypair
             .sign_message(task_response_3_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_3_digest,
                 bls_sig_op_3.clone(),
@@ -2317,19 +2294,11 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
         let elapsed = start.elapsed();
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
         assert!(elapsed < time_to_expiry);
         assert!(elapsed >= window_duration);
     }
@@ -2369,14 +2338,15 @@ mod tests {
             time_to_expiry,
         )
         .with_window_duration(window_duration);
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         let task_response_1_digest = hash(task_response);
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
@@ -2391,8 +2361,8 @@ mod tests {
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
                 bls_sig_op_2.clone(),
@@ -2422,19 +2392,11 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
         let elapsed = start.elapsed();
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
         assert!(elapsed >= time_to_expiry);
         assert!(elapsed < window_duration);
     }
@@ -2473,14 +2435,15 @@ mod tests {
             time_to_expiry,
         )
         .with_window_duration(window_duration);
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         let task_response_1_digest = hash(task_response);
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
@@ -2496,8 +2459,8 @@ mod tests {
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
-        let process_signature_result = bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        let process_signature_result = handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
                 bls_sig_op_2,
@@ -2529,19 +2492,11 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
         let elapsed = start.elapsed();
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
         assert!(elapsed < time_to_expiry);
     }
 
@@ -2579,14 +2534,15 @@ mod tests {
             time_to_expiry,
         )
         .with_window_duration(window_duration);
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut aggregator_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         let task_response_1_digest = hash(task_response);
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
@@ -2602,8 +2558,8 @@ mod tests {
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
-        let process_signature_result = bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        let process_signature_result = handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
                 bls_sig_op_2,
@@ -2635,19 +2591,11 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
-            .recv()
-            .await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
         let elapsed = start.elapsed();
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
         assert!(elapsed < time_to_expiry);
     }
 }
