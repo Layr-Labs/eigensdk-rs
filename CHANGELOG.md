@@ -34,6 +34,31 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
+* Added functions `new()` and `validate()` to `Operator` struct in [#280](https://github.com/Layr-Labs/eigensdk-rs/pull/280).
+
+```rust
+    let operator = Operator::new( 
+      "f39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "http://www.example.com/eigensdk-rs.json",
+      3
+    );
+  operator.validate();
+```
+
+* Added `OperatorMetadata` struct in [#280](https://github.com/Layr-Labs/eigensdk-rs/pull/280).
+
+```rust
+    let operator_metadata = OperatorMetadata {
+        name: "Ethereum Utopia".to_string(),
+        description: "Rust operator is good operator".to_string(),
+        logo: "https://goerli-operator-metadata.s3.amazonaws.com/eigenlayer.png".to_string(),
+        website: Some("https://test.com".to_string()),
+        twitter: Some("https://twitter.com/test".to_string()),
+    };
+    operator_metadata.validate();
+```
+
 * Added new method `update_avs_metadata_uri` in `avsregistry/writer` in [#344](https://github.com/Layr-Labs/eigensdk-rs/pull/344).
 
   ```rust

@@ -68,7 +68,7 @@ aws-config = "1.5.9"
 aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
-eigen-common = {  version = "0.3.0", path = "crates/common/" }
+eigen-common = { version = "0.3.0", path = "crates/common/" }
 eigen-client-elcontracts = { version = "0.3.0", path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { version = "0.3.0", path = "crates/chainio/clients/eth" }
 eigen-client-fireblocks = { version = "0.3.0", path = "crates/chainio/clients/fireblocks" }
@@ -125,7 +125,6 @@ uuid = { version = "1.11", features = ["v4"] }
 
 #misc
 parking_lot = "0.12"
-
 
 
 # alloy

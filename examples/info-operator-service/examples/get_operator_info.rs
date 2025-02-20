@@ -118,8 +118,7 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
     let operator_details = Operator {
         address: signer.address(),
         delegation_approver_address: signer.address(),
-        staker_opt_out_window_blocks: 3,
-        metadata_url: Some("eigensdk-rs".to_string()),
+        metadata_url: "eigensdk-rs".to_string(),
         allocation_delay: 1,
     };
 

@@ -5,5 +5,8 @@
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
 pub mod avs;
+pub mod avs_state;
 pub mod operator;
+pub mod operator_metadata;
+pub mod operator_pubkeys;
 pub mod test;

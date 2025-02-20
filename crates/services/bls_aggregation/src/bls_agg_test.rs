@@ -262,8 +262,7 @@ pub mod integration_test {
                 .to_string(),
         )
         .unwrap();
-        let operator_id =
-            FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair.public_key()).unwrap());
+        let operator_id = operator_id_from_g1_pub_key(bls_key_pair.public_key()).unwrap();
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
             None,
@@ -496,8 +495,7 @@ pub mod integration_test {
             .await
             .unwrap()
             ._0;
-        let operator_id =
-            FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair.public_key()).unwrap());
+        let operator_id = operator_id_from_g1_pub_key(bls_key_pair.public_key()).unwrap();
         assert_eq!(s, operator_id);
         handle
             .process_signature(TaskSignature::new(
@@ -652,10 +650,8 @@ pub mod integration_test {
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
         let task_response_digest = hash(task_response);
-        let operator_id_1 =
-            FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap());
-        let operator_id_2 =
-            FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap());
+        let operator_id_1 = operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap();
+        let operator_id_2 = operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap();
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
 
         handle
@@ -721,10 +717,8 @@ pub mod integration_test {
 
         let bls_key_pair_2 = BlsKeyPair::new(BLS_KEY_2.to_string()).unwrap();
 
-        let operator_id_1 =
-            FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap());
-        let operator_id_2 =
-            FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap());
+        let operator_id_1 = operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap();
+        let operator_id_2 = operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap();
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
             None,
@@ -894,10 +888,8 @@ pub mod integration_test {
         create_operator_set(http_endpoint.as_str(), avs_address).await;
         create_operator_set(http_endpoint.as_str(), avs_address).await;
 
-        let operator_id_1 =
-            FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap());
-        let operator_id_2 =
-            FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap());
+        let operator_id_1 = operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap();
+        let operator_id_2 = operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap();
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
             None,
@@ -1059,8 +1051,7 @@ pub mod integration_test {
         let provider = get_provider(http_endpoint.as_str());
 
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
-        let operator_id_1 =
-            FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap());
+        let operator_id_1 = operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap();
         // Create quorums
         let quorum_nums = Bytes::from([0u8, 1u8]);
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100, 100];

@@ -90,7 +90,7 @@ impl ELChainWriter {
     ///
     /// # Returns
     ///
-    /// * `FixedBytes<32>` - The transaction hash if successful, otherwise an error
+    /// * `TxHash` - The transaction hash if successful, otherwise an error
     ///
     /// # Errors
     ///
@@ -98,7 +98,7 @@ impl ELChainWriter {
     pub async fn register_as_operator(
         &self,
         operator: Operator,
-    ) -> Result<FixedBytes<32>, ElContractsError> {
+    ) -> Result<TxHash, ElContractsError> {
         info!("registering operator {:?} to EigenLayer", operator.address);
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
@@ -109,7 +109,7 @@ impl ELChainWriter {
             let contract_call = contract_delegation_manager.registerAsOperator(
                 operator.address,
                 operator.allocation_delay,
-                operator.metadata_url.unwrap_or_default(),
+                operator.metadata_url,
             );
             contract_call.gas(300000)
         };
@@ -172,7 +172,7 @@ impl ELChainWriter {
         info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.address, "updated operator details tx");
 
         let contract_call_update_metadata_uri = contract_delegation_manager
-            .updateOperatorMetadataURI(operator.address, operator.metadata_url.unwrap_or_default());
+            .updateOperatorMetadataURI(operator.address, operator.metadata_url);
 
         let metadata_tx = contract_call_update_metadata_uri.send().await?;
 
@@ -897,9 +897,8 @@ mod tests {
 
         let operator = Operator {
             address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
-            staker_opt_out_window_blocks: 3,
             delegation_approver_address: FIRST_ADDRESS,
-            metadata_url: Some("metadata_uri".to_string()),
+            metadata_url: "metadata_uri".to_string(),
             allocation_delay: 1,
         };
         el_chain_writer
@@ -929,9 +928,8 @@ mod tests {
 
         let operator = Operator {
             address,
-            staker_opt_out_window_blocks: 3,
             delegation_approver_address: Address::ZERO,
-            metadata_url: Some("eigensdk-rs".to_string()),
+            metadata_url: "eigensdk-rs".to_string(),
             allocation_delay: 1,
         };
 
@@ -946,9 +944,8 @@ mod tests {
 
         let operator_modified = Operator {
             address,
-            staker_opt_out_window_blocks: 3,
             delegation_approver_address: Address::ZERO,
-            metadata_url: Some("new-metadata".to_string()),
+            metadata_url: "new-metadata".to_string(),
             allocation_delay: 1,
         };
 

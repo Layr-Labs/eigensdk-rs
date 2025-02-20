@@ -182,13 +182,7 @@ impl OperatorInfoServiceInMemory {
                                             if *entry_src == StateSource::Event
                                                 && state_src == StateSource::Historic => {}
                                         _ => {
-                                            id_map.insert(
-                                                addr,
-                                                (
-                                                    state_src.clone(),
-                                                    alloy::primitives::FixedBytes(operator_id),
-                                                ),
-                                            );
+                                            id_map.insert(addr, (state_src.clone(), operator_id));
                                         }
                                     }
                                 }
@@ -490,9 +484,7 @@ async fn query_past_registered_operator_events_and_fill_db(
     }
 
     for (i, address) in operator_address.iter().enumerate() {
-        let operator_id = FixedBytes(operator_id_from_g1_pub_key(
-            operator_pub_keys[i].g1_pub_key.clone(),
-        )?);
+        let operator_id = operator_id_from_g1_pub_key(operator_pub_keys[i].g1_pub_key.clone())?;
         if let Some(socket) = socket_map.get(&operator_id) {
             let message = OperatorsInfoMessage::InsertOperatorInfo(
                 Some(*address),
@@ -772,8 +764,7 @@ mod tests {
         let operator_details = Operator {
             address: signer.address(),
             delegation_approver_address: signer.address(),
-            staker_opt_out_window_blocks: 3,
-            metadata_url: Some("eigensdk-rs".to_string()),
+            metadata_url: "eigensdk-rs".to_string(),
             allocation_delay: 0,
         };
 
