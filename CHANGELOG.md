@@ -105,6 +105,13 @@ Those changes in added, changed or breaking changes, should include usage exampl
       .unwrap();
   ```
 
+* Added new method `set_signer` in `ELChainWriter` and `AvsRegistryChainWriter` in [#364](https://github.com/Layr-Labs/eigensdk-rs/pull/364).
+
+  ```rust
+  avs_registry_chain_writer.set_signer(PRIVATE_KEY_STRING);
+  el_chain_writer.set_signer(PRIVATE_KEY_STRING);
+  ```
+
 ### Breaking Changes 🛠
 
 * `TaskMetadata.task_created_block` field changed to `u64` [#362](https://github.com/Layr-Labs/eigensdk-rs/pull/362)
