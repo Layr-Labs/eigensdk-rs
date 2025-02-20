@@ -904,8 +904,8 @@ mod test_utils {}
 #[cfg(test)]
 mod tests {
     use crate::test_utils::{
-        build_el_chain_reader, new_claim, new_test_writer, new_test_writer_m2, OPERATOR_ADDRESS,
-        OPERATOR_PRIVATE_KEY,
+        build_el_chain_reader, new_claim, new_test_writer, new_test_writer_preslashing,
+        OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
     use alloy::{
         primitives::{address, aliases::U96, Address, U256},
@@ -974,7 +974,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let el_chain_writer =
-            new_test_writer_m2(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+            new_test_writer_preslashing(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string())
+                .await;
 
         let operator = Operator {
             address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer

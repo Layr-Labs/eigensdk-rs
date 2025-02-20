@@ -87,7 +87,10 @@ pub(crate) mod test_utils {
         )
     }
 
-    pub async fn new_test_writer_m2(http_endpoint: String, private_key: String) -> ELChainWriter {
+    pub async fn new_test_writer_preslashing(
+        http_endpoint: String,
+        private_key: String,
+    ) -> ELChainWriter {
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
         let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
