@@ -10,6 +10,8 @@ use eigen_crypto_bls::{
 pub use eigen_types::operator::Operator;
 
 use eigen_utils::convert_allocation_operator_set_to_rewards_operator_set;
+use eigen_utils::rewardsv2::core::delegationmanager::DelegationManager as RewardsV2DelegationManager;
+use eigen_utils::rewardsv2::core::delegationmanager::IDelegationManager::OperatorDetails;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 use eigen_utils::{
     slashing::core::{
@@ -82,6 +84,51 @@ impl ELChainWriter {
         self.signer = signer;
     }
 
+    pub async fn register_as_operator_m2(
+        &self,
+        operator: Operator,
+    ) -> Result<TxHash, ElContractsError> {
+        info!("registering operator {:?} to EigenLayer", operator.address);
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        if let Some(staker_opt_out_blocks) = operator.staker_opt_out_window_blocks {
+            let contract_delegation_manager =
+                RewardsV2DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
+            let operator_details = OperatorDetails {
+                __deprecated_earningsReceiver: operator
+                    ._deprecated_earnings_receiver_address
+                    .unwrap_or(Address::ZERO),
+                delegationApprover: operator.delegation_approver_address,
+                stakerOptOutWindowBlocks: staker_opt_out_blocks,
+            };
+            let binding = {
+                let contract_call = contract_delegation_manager
+                    .registerAsOperator(operator_details, operator.metadata_url);
+                contract_call.gas(300000)
+            };
+            let binding_tx = binding
+                .send()
+                .await
+                .map_err(ElContractsError::AlloyContractError)?;
+
+            let receipt = binding_tx
+                .get_receipt()
+                .await
+                .map_err(ElContractsError::AlloyPendingTransactionError)?;
+
+            let tx_status = receipt.status();
+            let hash = receipt.transaction_hash;
+            if tx_status {
+                info!(tx_hash = %receipt.transaction_hash, "tx successfully included");
+            } else {
+                info!(tx_hash = %receipt.transaction_hash, "failed to register operator");
+            };
+            Ok(hash)
+        } else {
+            Err(ElContractsError::StakerOptOutWindowBlocksNotSet)
+        }
+    }
+
     /// Register an operator to EigenLayer, and wait for the transaction to be mined.
     ///
     /// # Arguments
@@ -105,33 +152,37 @@ impl ELChainWriter {
         let contract_delegation_manager =
             DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
-        let binding = {
-            let contract_call = contract_delegation_manager.registerAsOperator(
-                operator.address,
-                operator.allocation_delay,
-                operator.metadata_url,
-            );
-            contract_call.gas(300000)
-        };
+        if let Some(allocation_delay) = operator.allocation_delay {
+            let binding = {
+                let contract_call = contract_delegation_manager.registerAsOperator(
+                    operator.address,
+                    allocation_delay,
+                    operator.metadata_url,
+                );
+                contract_call.gas(300000)
+            };
 
-        let binding_tx = binding
-            .send()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
+            let binding_tx = binding
+                .send()
+                .await
+                .map_err(ElContractsError::AlloyContractError)?;
 
-        let receipt = binding_tx
-            .get_receipt()
-            .await
-            .map_err(ElContractsError::AlloyPendingTransactionError)?;
+            let receipt = binding_tx
+                .get_receipt()
+                .await
+                .map_err(ElContractsError::AlloyPendingTransactionError)?;
 
-        let tx_status = receipt.status();
-        let hash = receipt.transaction_hash;
-        if tx_status {
-            info!(tx_hash = %receipt.transaction_hash, "tx successfully included");
+            let tx_status = receipt.status();
+            let hash = receipt.transaction_hash;
+            if tx_status {
+                info!(tx_hash = %receipt.transaction_hash, "tx successfully included");
+            } else {
+                info!(tx_hash = %receipt.transaction_hash, "failed to register operator");
+            };
+            Ok(hash)
         } else {
-            info!(tx_hash = %receipt.transaction_hash, "failed to register operator");
-        };
-        Ok(hash)
+            Err(ElContractsError::AllocationDelayNotSet)
+        }
     }
 
     /// Update operator details on EigenLayer
@@ -853,7 +904,8 @@ mod test_utils {}
 #[cfg(test)]
 mod tests {
     use crate::test_utils::{
-        build_el_chain_reader, new_claim, new_test_writer, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
+        build_el_chain_reader, new_claim, new_test_writer, new_test_writer_m2, OPERATOR_ADDRESS,
+        OPERATOR_PRIVATE_KEY,
     };
     use alloy::{
         primitives::{address, aliases::U96, Address, U256},
@@ -863,7 +915,9 @@ mod tests {
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::{
-        anvil::{mine_anvil_blocks, set_account_balance, start_anvil_container},
+        anvil::{
+            mine_anvil_blocks, set_account_balance, start_anvil_container, start_m2_anvil_container,
+        },
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
             get_registry_coordinator_address, get_service_manager_address, FIRST_ADDRESS,
@@ -899,10 +953,39 @@ mod tests {
             address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
             delegation_approver_address: FIRST_ADDRESS,
             metadata_url: "metadata_uri".to_string(),
-            allocation_delay: 1,
+            allocation_delay: Some(1),
+            _deprecated_earnings_receiver_address: None,
+            staker_opt_out_window_blocks: None,
         };
         el_chain_writer
             .register_as_operator(operator)
+            .await
+            .unwrap();
+
+        let is_registered = el_chain_reader
+            .is_operator_registered(FIRST_ADDRESS)
+            .await
+            .unwrap();
+        assert!(is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_register_operator_m2() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer_m2(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+
+        let operator = Operator {
+            address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
+            delegation_approver_address: FIRST_ADDRESS,
+            metadata_url: "metadata_uri".to_string(),
+            allocation_delay: None,
+            _deprecated_earnings_receiver_address: None,
+            staker_opt_out_window_blocks: Some(0u32),
+        };
+        el_chain_writer
+            .register_as_operator_m2(operator)
             .await
             .unwrap();
 
@@ -930,7 +1013,9 @@ mod tests {
             address,
             delegation_approver_address: Address::ZERO,
             metadata_url: "eigensdk-rs".to_string(),
-            allocation_delay: 1,
+            allocation_delay: Some(1),
+            _deprecated_earnings_receiver_address: None,
+            staker_opt_out_window_blocks: None,
         };
 
         // First test: register as an operator
@@ -946,7 +1031,9 @@ mod tests {
             address,
             delegation_approver_address: Address::ZERO,
             metadata_url: "new-metadata".to_string(),
-            allocation_delay: 1,
+            allocation_delay: Some(1),
+            staker_opt_out_window_blocks: None,
+            _deprecated_earnings_receiver_address: None,
         };
 
         // Second test: update operator details

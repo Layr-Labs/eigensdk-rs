@@ -87,6 +87,24 @@ pub(crate) mod test_utils {
         )
     }
 
+    pub async fn new_test_writer_m2(http_endpoint: String, private_key: String) -> ELChainWriter {
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+        let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
+        let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
+
+        ELChainWriter::new(
+            strategy_manager,
+            rewards_coordinator,
+            None,
+            None,
+            registry_coordinator,
+            el_chain_reader,
+            http_endpoint.clone(),
+            private_key,
+        )
+    }
+
     // Using test data taken from
     // https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/src/test/test-data/rewardsCoordinator/processClaimProofs_MaxEarnerAndLeafIndices.json
     pub async fn new_test_claim(http_endpoint: &str) -> (FixedBytes<32>, RewardsMerkleClaim) {
