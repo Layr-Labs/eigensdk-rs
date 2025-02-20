@@ -84,7 +84,7 @@ impl ELChainWriter {
         self.signer = signer;
     }
 
-    pub async fn register_as_operator_m2(
+    pub async fn register_as_operator_preslashing(
         &self,
         operator: Operator,
     ) -> Result<TxHash, ElContractsError> {
@@ -970,7 +970,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_register_operator_m2() {
+    async fn test_register_operator_preslashing() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let el_chain_writer =
@@ -985,7 +985,7 @@ mod tests {
             staker_opt_out_window_blocks: Some(0u32),
         };
         el_chain_writer
-            .register_as_operator_m2(operator)
+            .register_as_operator_preslashing(operator)
             .await
             .unwrap();
 
