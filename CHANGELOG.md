@@ -17,6 +17,22 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+### Breaking Changes 🛠
+
+### Deprecated ⚠️
+
+### Removed 🗑
+
+### Documentation 📚
+
+### Other Changes
+
+## [0.4.0] - 2025-02-20
+
+### Security 🔒
+
+### Added 🎉
+
 * Implemented `create_avs_rewards_submission` [#345](https://github.com/Layr-Labs/eigensdk-rs/pull/345)
 
   ```rust
