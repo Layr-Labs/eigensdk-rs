@@ -73,7 +73,11 @@ pub struct Operator {
 
     /// `allocation_delay` is the delay in seconds where an operator is allowed to change allocation
     /// This can only be set once by the operator. Once set this can't be changed
-    pub allocation_delay: u32,
+    pub allocation_delay: Option<u32>,
+
+    pub _deprecated_earnings_receiver_address: Option<Address>,
+
+    pub staker_opt_out_window_blocks: Option<u32>,
 }
 
 impl Operator {
@@ -81,7 +85,9 @@ impl Operator {
         address: &str,
         delegation_approver_address: &str,
         metadata_url: String,
-        allocation_delay: u32,
+        allocation_delay: Option<u32>,
+        _deprecated_earnings_receiver_address: Option<Address>,
+        staker_opt_out_window_blocks: Option<u32>,
     ) -> Result<Self, OperatorTypesError> {
         let address = Address::try_from(address.as_bytes())
             .map_err(|_| OperatorTypesError::InvalidAddress)?;
@@ -93,6 +99,8 @@ impl Operator {
             delegation_approver_address,
             metadata_url,
             allocation_delay,
+            _deprecated_earnings_receiver_address,
+            staker_opt_out_window_blocks,
         })
     }
 

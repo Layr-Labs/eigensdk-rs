@@ -112,6 +112,23 @@ Those changes in added, changed or breaking changes, should include usage exampl
   el_chain_writer.set_signer(PRIVATE_KEY_STRING);
   ```
 
+* Added additional method `register_as_operator_preslashing` in `ELChainWriter` in [#366](https://github.com/Layr-Labs/eigensdk-rs/pull/366).This method is to be used for pre-slashing.
+
+  ```rust
+   let operator = Operator {
+            address: ADDRESS, 
+            delegation_approver_address: ADDRESS,
+            metadata_url: "metadata_uri".to_string(),
+            allocation_delay: None,
+            _deprecated_earnings_receiver_address: None,
+            staker_opt_out_window_blocks: Some(0u32),
+        };
+    el_chain_writer
+        .register_as_operator_preslashing(operator)
+        .await
+        .unwrap();
+  ```
+
 ### Breaking Changes 🛠
 
 * `TaskMetadata.task_created_block` field changed to `u64` [#362](https://github.com/Layr-Labs/eigensdk-rs/pull/362)

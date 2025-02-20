@@ -765,7 +765,9 @@ mod tests {
             address: signer.address(),
             delegation_approver_address: signer.address(),
             metadata_url: "eigensdk-rs".to_string(),
-            allocation_delay: 0,
+            allocation_delay: Some(0),
+            staker_opt_out_window_blocks: None,
+            _deprecated_earnings_receiver_address: None,
         };
 
         el_chain_writer
