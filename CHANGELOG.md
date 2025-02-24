@@ -23,6 +23,10 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Removed 🗑
 
+* Removed unused empty structs from the library in [#371](https://github.com/Layr-Labs/eigensdk-rs/pull/371)
+  * `eigen_client_eth::client::Client`
+  * `eigen_services_operatorsinfo::OperatorPubKeysService`
+
 ### Documentation 📚
 
 ### Other Changes
