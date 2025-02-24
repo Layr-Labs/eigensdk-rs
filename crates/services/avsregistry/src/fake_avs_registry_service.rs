@@ -6,8 +6,9 @@ use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
 use async_trait::async_trait;
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::{BlsG1Point, OperatorId, PublicKey};
+use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
 use eigen_types::{
-    operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum},
+    operator::{OperatorInfo, OperatorPubKeys, QuorumNum},
     test::TestOperator,
 };
 use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
@@ -37,7 +38,7 @@ impl FakeAvsRegistryService {
         // populate the inner hashmap
         for op in test_operators {
             let state = OperatorAvsState {
-                operator_id: op.operator_id.into(),
+                operator_id: op.operator_id,
                 operator_info: OperatorInfo {
                     pub_keys: Some(OperatorPubKeys::from(op.bls_keypair)),
                 },

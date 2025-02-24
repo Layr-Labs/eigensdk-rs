@@ -7,9 +7,10 @@ use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
 use eigen_logging::logger::SharedLogger;
 use eigen_services_avsregistry::AvsRegistryService;
+use eigen_types::avs_state::OperatorAvsState;
 use eigen_types::{
     avs::{SignatureVerificationError, SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
-    operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
+    operator::{QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
 use std::collections::HashMap;
 use tokio::{
@@ -649,7 +650,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                                 signers_apk_g2,
                                 signers_agg_sig_g1,
                                 signers_operator_ids_set: HashMap::from([(
-                                    operator_state.operator_id.into(),
+                                    operator_state.operator_id,
                                     true,
                                 )]),
                                 signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),

@@ -12,4 +12,5 @@ doctest = false
 
 [dependencies]
 alloy.workspace = true
+regex = "1"
 reqwest.workspace = true

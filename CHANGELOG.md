@@ -17,6 +17,22 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+### Breaking Changes 🛠
+
+### Deprecated ⚠️
+
+### Removed 🗑
+
+### Documentation 📚
+
+### Other Changes
+
+## [0.4.0] - 2025-02-20
+
+### Security 🔒
+
+### Added 🎉
+
 * Implemented `create_avs_rewards_submission` [#345](https://github.com/Layr-Labs/eigensdk-rs/pull/345)
 
   ```rust
@@ -33,6 +49,31 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+
+* Added functions `new()` and `validate()` to `Operator` struct in [#280](https://github.com/Layr-Labs/eigensdk-rs/pull/280).
+
+```rust
+    let operator = Operator::new( 
+      "f39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "http://www.example.com/eigensdk-rs.json",
+      3
+    );
+  operator.validate();
+```
+
+* Added `OperatorMetadata` struct in [#280](https://github.com/Layr-Labs/eigensdk-rs/pull/280).
+
+```rust
+    let operator_metadata = OperatorMetadata {
+        name: "Ethereum Utopia".to_string(),
+        description: "Rust operator is good operator".to_string(),
+        logo: "https://goerli-operator-metadata.s3.amazonaws.com/eigenlayer.png".to_string(),
+        website: Some("https://test.com".to_string()),
+        twitter: Some("https://twitter.com/test".to_string()),
+    };
+    operator_metadata.validate();
+```
 
 * Added new method `update_avs_metadata_uri` in `avsregistry/writer` in [#344](https://github.com/Layr-Labs/eigensdk-rs/pull/344).
 
@@ -78,6 +119,30 @@ Those changes in added, changed or breaking changes, should include usage exampl
       .set_churn_approver(new_churn_approver_address)
       .await
       .unwrap();
+  ```
+
+* Added new method `set_signer` in `ELChainWriter` and `AvsRegistryChainWriter` in [#364](https://github.com/Layr-Labs/eigensdk-rs/pull/364).
+
+  ```rust
+  avs_registry_chain_writer.set_signer(PRIVATE_KEY_STRING);
+  el_chain_writer.set_signer(PRIVATE_KEY_STRING);
+  ```
+
+* Added additional method `register_as_operator_preslashing` in `ELChainWriter` in [#366](https://github.com/Layr-Labs/eigensdk-rs/pull/366).This method is to be used for pre-slashing.
+
+  ```rust
+   let operator = Operator {
+            address: ADDRESS, 
+            delegation_approver_address: ADDRESS,
+            metadata_url: "metadata_uri".to_string(),
+            allocation_delay: None,
+            _deprecated_earnings_receiver_address: None,
+            staker_opt_out_window_blocks: Some(0u32),
+        };
+    el_chain_writer
+        .register_as_operator_preslashing(operator)
+        .await
+        .unwrap();
   ```
 
 ### Breaking Changes 🛠
