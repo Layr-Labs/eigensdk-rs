@@ -4,11 +4,9 @@
 [submodule "crates/m2_contracts/lib/eigenlayer-middleware"]
 	path = crates/m2_contracts/lib/eigenlayer-middleware
 	url = https://github.com/layr-labs/eigenlayer-middleware
-	branch = feat/avs-identifier-src
 [submodule "crates/operator_sets_contracts/lib/forge-std"]
 	path = crates/operator_sets_contracts/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
 [submodule "crates/operator_sets_contracts/lib/eigenlayer-middleware"]
 	path = crates/operator_sets_contracts/lib/eigenlayer-middleware
 	url = https://github.com/layr-labs/eigenlayer-middleware
-	branch = feat/avs-identifier-src
