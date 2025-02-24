@@ -51,6 +51,7 @@ full = [
     "signer",
     "testing-utils",
     "nodeapi",
+    "types"
 ]
 
 # Client-related features
