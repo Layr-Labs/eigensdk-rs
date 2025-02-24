@@ -899,9 +899,6 @@ impl ELChainWriter {
 }
 
 #[cfg(test)]
-mod test_utils {}
-
-#[cfg(test)]
 mod tests {
     use crate::test_utils::{
         build_el_chain_reader, new_claim, new_test_writer, new_test_writer_preslashing,
