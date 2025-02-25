@@ -631,7 +631,7 @@ impl AvsRegistryChainWriter {
     /// # Returns
     ///
     /// * `TxHash` - hash of the sent transaction.
-    pub async fn set_account_identifier(
+    pub async fn set_avs(
         &self,
         new_account_identifier: Address,
     ) -> Result<TxHash, AvsRegistryError> {
@@ -1400,7 +1400,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_set_account_identifier() {
+    async fn test_set_avs() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
@@ -1416,10 +1416,7 @@ mod tests {
 
         let new_account_identifier = FIRST_ADDRESS;
 
-        let tx_hash = avs_writer
-            .set_account_identifier(new_account_identifier)
-            .await
-            .unwrap();
+        let tx_hash = avs_writer.set_avs(new_account_identifier).await.unwrap();
 
         let tx_status = wait_transaction(&http_endpoint, tx_hash)
             .await
