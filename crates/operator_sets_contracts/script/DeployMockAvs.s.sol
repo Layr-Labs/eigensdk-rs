@@ -7,6 +7,7 @@ import {CoreDeploymentLib} from "./utils/CoreDeploymentLib.sol";
 import {FundOperator} from "./utils/FundOperator.sol";
 import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.sol";
 import {MockERC20} from "../src/MockERC20.sol";
+import {MockAvsServiceManager} from "../src/MockAvsServiceManager.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {UpgradeableProxyLib} from "./utils/UpgradeableProxyLib.sol";
 import {StrategyManager} from "@eigenlayer/contracts/core/StrategyManager.sol";
@@ -42,7 +43,7 @@ contract DeployMockAvs {
         MockAvsDeploymentLib.DeploymentData memory depData = MockAvsDeploymentLib.deployContracts(
             _proxyAdmin, _configData, address(_mockAvsStrategy), avsconfig, msg.sender
         );
-        IStrategy(StrategyFactory(_configData.strategyFactory).deployNewStrategy(erc20MockRewards));
+        StrategyFactory(_configData.strategyFactory).deployNewStrategy(erc20MockRewards);
 
         // Register operators with EigenLayer
         uint256 numberOfOperators = 10;
@@ -56,6 +57,8 @@ contract DeployMockAvs {
             operatorTokenAmounts[i] = 10 ether;
             FundOperator.fundOperator(address(erc20Mock), operator, 10e18);
         }
+
+        MockAvsServiceManager(depData.mockAvsServiceManager).updateAVSMetadataURI("https://coolstuff.com/avs");
 
         _VM.stopBroadcast();
 
