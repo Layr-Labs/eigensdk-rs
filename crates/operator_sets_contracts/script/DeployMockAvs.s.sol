@@ -8,6 +8,7 @@ import {FundOperator} from "./utils/FundOperator.sol";
 import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.sol";
 import {MockERC20} from "../src/MockERC20.sol";
 import {MockAvsServiceManager} from "../src/MockAvsServiceManager.sol";
+import {AllocationManager} from "@eigenlayer/contracts/core/AllocationManager.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {UpgradeableProxyLib} from "./utils/UpgradeableProxyLib.sol";
 import {StrategyManager} from "@eigenlayer/contracts/core/StrategyManager.sol";
@@ -58,7 +59,12 @@ contract DeployMockAvs {
             FundOperator.fundOperator(address(erc20Mock), operator, 10e18);
         }
 
-        MockAvsServiceManager(depData.mockAvsServiceManager).updateAVSMetadataURI("https://coolstuff.com/avs");
+        MockAvsServiceManager(depData.mockAvsServiceManager).setAppointee(
+            _deployer, _configData.allocationManager, AllocationManager.updateAVSMetadataURI.selector
+        );
+        AllocationManager(_configData.allocationManager).updateAVSMetadataURI(
+            depData.mockAvsServiceManager, "https://coolstuff.com/avs"
+        );
 
         _VM.stopBroadcast();
 
