@@ -17,7 +17,15 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Added all features of the `eigensdk` crate to its `"full"` feature [#370](https://github.com/Layr-Labs/eigensdk-rs/pull/370)
+  * This includes: `"types"`, `"utils"`, `"metrics-collectors-economic"`, and `"metrics-collectors-rpc-calls"` features.
+
 ### Breaking Changes 🛠
+
+* Updated slashing bindings to [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing) [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
+
+* Renamed `set_account_identifier` to `set_avs` [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
+  * The underlying call was renamed in [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing).
 
 ### Deprecated ⚠️
 
@@ -26,6 +34,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Removed unused empty structs from the library in [#371](https://github.com/Layr-Labs/eigensdk-rs/pull/371)
   * `eigen_client_eth::client::Client`
   * `eigen_services_operatorsinfo::OperatorPubKeysService`
+* Removed the `AvsRegistryChainReader::is_operator_set_quorum` method [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
+  * This function was removed in [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing).
 
 ### Documentation 📚
 

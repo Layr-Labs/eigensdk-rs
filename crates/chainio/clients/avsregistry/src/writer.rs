@@ -631,7 +631,7 @@ impl AvsRegistryChainWriter {
     /// # Returns
     ///
     /// * `TxHash` - hash of the sent transaction.
-    pub async fn set_account_identifier(
+    pub async fn set_avs(
         &self,
         new_account_identifier: Address,
     ) -> Result<TxHash, AvsRegistryError> {
@@ -639,7 +639,7 @@ impl AvsRegistryChainWriter {
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         RegistryCoordinator::new(self.registry_coordinator_addr, provider)
-            .setAccountIdentifier(new_account_identifier)
+            .setAVS(new_account_identifier)
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)
@@ -1400,7 +1400,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_set_account_identifier() {
+    async fn test_set_avs() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
@@ -1411,15 +1411,12 @@ mod tests {
         let provider = get_provider(&http_endpoint);
         let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
 
-        let old_account_identifier = regcoord.accountIdentifier().call().await.unwrap()._0;
+        let old_account_identifier = regcoord.avs().call().await.unwrap()._0;
         assert_eq!(old_account_identifier, service_manager_address);
 
         let new_account_identifier = FIRST_ADDRESS;
 
-        let tx_hash = avs_writer
-            .set_account_identifier(new_account_identifier)
-            .await
-            .unwrap();
+        let tx_hash = avs_writer.set_avs(new_account_identifier).await.unwrap();
 
         let tx_status = wait_transaction(&http_endpoint, tx_hash)
             .await
@@ -1428,7 +1425,7 @@ mod tests {
 
         assert!(tx_status);
 
-        let current_account_identifier = regcoord.accountIdentifier().call().await.unwrap()._0;
+        let current_account_identifier = regcoord.avs().call().await.unwrap()._0;
         assert_eq!(current_account_identifier, new_account_identifier);
     }
 
