@@ -22,9 +22,17 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Breaking Changes 🛠
 
+* Updated slashing bindings to [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing) [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
+
+* Renamed `set_account_identifier` to `set_avs` [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
+  * The underlying call was renamed in [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing).
+
 ### Deprecated ⚠️
 
 ### Removed 🗑
+
+* Removed the `AvsRegistryChainReader::is_operator_set_quorum` method [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
+  * This function was removed in [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing).
 
 ### Documentation 📚
 
