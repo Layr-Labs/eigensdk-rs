@@ -19,7 +19,6 @@ interface IEigenPodManager {
     event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
     event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares, uint96 nonce, address delegatedAddress, address withdrawer, bytes32 withdrawalRoot);
     event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainSlashingFactor, uint64 newBeaconChainSlashingFactor);
-    event BurnableETHSharesIncreased(uint256 shares);
     event NewTotalShares(address indexed podOwner, int256 newTotalShares);
     event Paused(address indexed account, uint256 newPausedStatus);
     event PodDeployed(address indexed eigenPod, address indexed podOwner);
@@ -29,13 +28,11 @@ interface IEigenPodManager {
     function addShares(address staker, address strategy, address token, uint256 shares) external returns (uint256, uint256);
     function beaconChainETHStrategy() external view returns (address);
     function beaconChainSlashingFactor(address staker) external view returns (uint64);
-    function burnableETHShares() external view returns (uint256);
     function createPod() external returns (address);
     function eigenPodBeacon() external view returns (address);
     function ethPOS() external view returns (address);
     function getPod(address podOwner) external view returns (address);
     function hasPod(address podOwner) external view returns (bool);
-    function increaseBurnableShares(address strategy, uint256 addedSharesToBurn) external;
     function numPods() external view returns (uint256);
     function ownerToPod(address podOwner) external view returns (address);
     function pause(uint256 newPausedStatus) external;
@@ -129,19 +126,6 @@ interface IEigenPodManager {
   },
   {
     "type": "function",
-    "name": "burnableETHShares",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "createPod",
     "inputs": [],
     "outputs": [
@@ -216,24 +200,6 @@ interface IEigenPodManager {
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "increaseBurnableShares",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "internalType": "contract IStrategy"
-      },
-      {
-        "name": "addedSharesToBurn",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -568,19 +534,6 @@ interface IEigenPodManager {
         "type": "uint64",
         "indexed": false,
         "internalType": "uint64"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "BurnableETHSharesIncreased",
-    "inputs": [
-      {
-        "name": "shares",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
       }
     ],
     "anonymous": false
@@ -1860,104 +1813,6 @@ pub mod IEigenPodManager {
             }
         }
     };
-    /**Event with signature `BurnableETHSharesIncreased(uint256)` and selector `0x1ed04b7fd262c0d9e50fa02957f32a81a151f03baaa367faeedc7521b001c4a4`.
-    ```solidity
-    event BurnableETHSharesIncreased(uint256 shares);
-    ```*/
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    #[derive(Clone)]
-    pub struct BurnableETHSharesIncreased {
-        #[allow(missing_docs)]
-        pub shares: alloy::sol_types::private::primitives::aliases::U256,
-    }
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[automatically_derived]
-        impl alloy_sol_types::SolEvent for BurnableETHSharesIncreased {
-            type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
-            const SIGNATURE: &'static str = "BurnableETHSharesIncreased(uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    30u8, 208u8, 75u8, 127u8, 210u8, 98u8, 192u8, 217u8, 229u8, 15u8, 160u8, 41u8,
-                    87u8, 243u8, 42u8, 129u8, 161u8, 81u8, 240u8, 59u8, 170u8, 163u8, 103u8, 250u8,
-                    238u8, 220u8, 117u8, 33u8, 176u8, 1u8, 196u8, 164u8,
-                ]);
-            const ANONYMOUS: bool = false;
-            #[allow(unused_variables)]
-            #[inline]
-            fn new(
-                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
-                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                Self { shares: data.0 }
-            }
-            #[inline]
-            fn check_signature(
-                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
-            ) -> alloy_sol_types::Result<()> {
-                if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
-                }
-                Ok(())
-            }
-            #[inline]
-            fn tokenize_body(&self) -> Self::DataToken<'_> {
-                (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.shares,
-                    ),
-                )
-            }
-            #[inline]
-            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
-                (Self::SIGNATURE_HASH.into(),)
-            }
-            #[inline]
-            fn encode_topics_raw(
-                &self,
-                out: &mut [alloy_sol_types::abi::token::WordToken],
-            ) -> alloy_sol_types::Result<()> {
-                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
-                    return Err(alloy_sol_types::Error::Overrun);
-                }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
-                Ok(())
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData for BurnableETHSharesIncreased {
-            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
-                From::from(self)
-            }
-            fn into_log_data(self) -> alloy_sol_types::private::LogData {
-                From::from(&self)
-            }
-        }
-        #[automatically_derived]
-        impl From<&BurnableETHSharesIncreased> for alloy_sol_types::private::LogData {
-            #[inline]
-            fn from(this: &BurnableETHSharesIncreased) -> alloy_sol_types::private::LogData {
-                alloy_sol_types::SolEvent::encode_log_data(this)
-            }
-        }
-    };
     /**Event with signature `NewTotalShares(address,int256)` and selector `0xd4def76d6d2bed6f14d5cd9af73cc2913d618d00edde42432e81c09bfe077098`.
     ```solidity
     event NewTotalShares(address indexed podOwner, int256 newTotalShares);
@@ -2894,116 +2749,6 @@ pub mod IEigenPodManager {
             }
         }
     };
-    /**Function with signature `burnableETHShares()` and selector `0xf5d4fed3`.
-    ```solidity
-    function burnableETHShares() external view returns (uint256);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct burnableETHSharesCall {}
-    ///Container type for the return parameters of the [`burnableETHShares()`](burnableETHSharesCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct burnableETHSharesReturn {
-        pub _0: alloy::sol_types::private::primitives::aliases::U256,
-    }
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<burnableETHSharesCall> for UnderlyingRustTuple<'_> {
-                fn from(value: burnableETHSharesCall) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for burnableETHSharesCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {}
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<burnableETHSharesReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: burnableETHSharesReturn) -> Self {
-                    (value._0,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for burnableETHSharesReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0 }
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for burnableETHSharesCall {
-            type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = burnableETHSharesReturn;
-            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "burnableETHShares()";
-            const SELECTOR: [u8; 4] = [245u8, 212u8, 254u8, 211u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-            #[inline]
-            fn abi_decode_returns(
-                data: &[u8],
-                validate: bool,
-            ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
-            }
-        }
-    };
     /**Function with signature `createPod()` and selector `0x84d81062`.
     ```solidity
     function createPod() external returns (address);
@@ -3551,136 +3296,6 @@ pub mod IEigenPodManager {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.podOwner,
-                    ),
-                )
-            }
-            #[inline]
-            fn abi_decode_returns(
-                data: &[u8],
-                validate: bool,
-            ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
-            }
-        }
-    };
-    /**Function with signature `increaseBurnableShares(address,uint256)` and selector `0xdebe1eab`.
-    ```solidity
-    function increaseBurnableShares(address strategy, uint256 addedSharesToBurn) external;
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct increaseBurnableSharesCall {
-        pub strategy: alloy::sol_types::private::Address,
-        pub addedSharesToBurn: alloy::sol_types::private::primitives::aliases::U256,
-    }
-    ///Container type for the return parameters of the [`increaseBurnableShares(address,uint256)`](increaseBurnableSharesCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct increaseBurnableSharesReturn {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Address,
-                alloy::sol_types::sol_data::Uint<256>,
-            );
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Address,
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<increaseBurnableSharesCall> for UnderlyingRustTuple<'_> {
-                fn from(value: increaseBurnableSharesCall) -> Self {
-                    (value.strategy, value.addedSharesToBurn)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for increaseBurnableSharesCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        strategy: tuple.0,
-                        addedSharesToBurn: tuple.1,
-                    }
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<increaseBurnableSharesReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: increaseBurnableSharesReturn) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for increaseBurnableSharesReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {}
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for increaseBurnableSharesCall {
-            type Parameters<'a> = (
-                alloy::sol_types::sol_data::Address,
-                alloy::sol_types::sol_data::Uint<256>,
-            );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = increaseBurnableSharesReturn;
-            type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "increaseBurnableShares(address,uint256)";
-            const SELECTOR: [u8; 4] = [222u8, 190u8, 30u8, 171u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.strategy,
-                    ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.addedSharesToBurn,
                     ),
                 )
             }
@@ -5419,13 +5034,11 @@ pub mod IEigenPodManager {
         addShares(addSharesCall),
         beaconChainETHStrategy(beaconChainETHStrategyCall),
         beaconChainSlashingFactor(beaconChainSlashingFactorCall),
-        burnableETHShares(burnableETHSharesCall),
         createPod(createPodCall),
         eigenPodBeacon(eigenPodBeaconCall),
         ethPOS(ethPOSCall),
         getPod(getPodCall),
         hasPod(hasPodCall),
-        increaseBurnableShares(increaseBurnableSharesCall),
         numPods(numPodsCall),
         ownerToPod(ownerToPodCall),
         pause(pauseCall),
@@ -5469,8 +5082,6 @@ pub mod IEigenPodManager {
             [166u8, 165u8, 9u8, 190u8],
             [196u8, 98u8, 62u8, 161u8],
             [212u8, 142u8, 136u8, 148u8],
-            [222u8, 190u8, 30u8, 171u8],
-            [245u8, 212u8, 254u8, 211u8],
             [246u8, 132u8, 141u8, 36u8],
             [250u8, 188u8, 28u8, 188u8],
             [254u8, 36u8, 58u8, 23u8],
@@ -5480,7 +5091,7 @@ pub mod IEigenPodManager {
     impl alloy_sol_types::SolInterface for IEigenPodManagerCalls {
         const NAME: &'static str = "IEigenPodManagerCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 24usize;
+        const COUNT: usize = 22usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -5491,9 +5102,6 @@ pub mod IEigenPodManager {
                 Self::beaconChainSlashingFactor(_) => {
                     <beaconChainSlashingFactorCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::burnableETHShares(_) => {
-                    <burnableETHSharesCall as alloy_sol_types::SolCall>::SELECTOR
-                }
                 Self::createPod(_) => <createPodCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::eigenPodBeacon(_) => {
                     <eigenPodBeaconCall as alloy_sol_types::SolCall>::SELECTOR
@@ -5501,9 +5109,6 @@ pub mod IEigenPodManager {
                 Self::ethPOS(_) => <ethPOSCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::getPod(_) => <getPodCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::hasPod(_) => <hasPodCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::increaseBurnableShares(_) => {
-                    <increaseBurnableSharesCall as alloy_sol_types::SolCall>::SELECTOR
-                }
                 Self::numPods(_) => <numPodsCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::ownerToPod(_) => <ownerToPodCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::pause(_) => <pauseCall as alloy_sol_types::SolCall>::SELECTOR,
@@ -5762,30 +5367,6 @@ pub mod IEigenPodManager {
                     podOwnerDepositShares
                 },
                 {
-                    fn increaseBurnableShares(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <increaseBurnableSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::increaseBurnableShares)
-                    }
-                    increaseBurnableShares
-                },
-                {
-                    fn burnableETHShares(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <burnableETHSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::burnableETHShares)
-                    }
-                    burnableETHShares
-                },
-                {
                     fn hasPod(
                         data: &[u8],
                         validate: bool,
@@ -5842,11 +5423,6 @@ pub mod IEigenPodManager {
                         inner,
                     )
                 }
-                Self::burnableETHShares(inner) => {
-                    <burnableETHSharesCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
                 Self::createPod(inner) => {
                     <createPodCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
@@ -5863,11 +5439,6 @@ pub mod IEigenPodManager {
                 }
                 Self::hasPod(inner) => {
                     <hasPodCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
-                }
-                Self::increaseBurnableShares(inner) => {
-                    <increaseBurnableSharesCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
                 }
                 Self::numPods(inner) => {
                     <numPodsCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
@@ -5946,12 +5517,6 @@ pub mod IEigenPodManager {
                         out,
                     )
                 }
-                Self::burnableETHShares(inner) => {
-                    <burnableETHSharesCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
                 Self::createPod(inner) => {
                     <createPodCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
@@ -5972,12 +5537,6 @@ pub mod IEigenPodManager {
                 }
                 Self::hasPod(inner) => {
                     <hasPodCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
-                }
-                Self::increaseBurnableShares(inner) => {
-                    <increaseBurnableSharesCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
                 }
                 Self::numPods(inner) => {
                     <numPodsCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
@@ -6394,7 +5953,6 @@ pub mod IEigenPodManager {
         BeaconChainETHDeposited(BeaconChainETHDeposited),
         BeaconChainETHWithdrawalCompleted(BeaconChainETHWithdrawalCompleted),
         BeaconChainSlashingFactorDecreased(BeaconChainSlashingFactorDecreased),
-        BurnableETHSharesIncreased(BurnableETHSharesIncreased),
         NewTotalShares(NewTotalShares),
         Paused(Paused),
         PodDeployed(PodDeployed),
@@ -6410,11 +5968,6 @@ pub mod IEigenPodManager {
         ///
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
-            [
-                30u8, 208u8, 75u8, 127u8, 210u8, 98u8, 192u8, 217u8, 229u8, 15u8, 160u8, 41u8,
-                87u8, 243u8, 42u8, 129u8, 161u8, 81u8, 240u8, 59u8, 170u8, 163u8, 103u8, 250u8,
-                238u8, 220u8, 117u8, 33u8, 176u8, 1u8, 196u8, 164u8,
-            ],
             [
                 33u8, 201u8, 157u8, 13u8, 176u8, 34u8, 19u8, 195u8, 47u8, 255u8, 91u8, 5u8, 207u8,
                 10u8, 113u8, 138u8, 181u8, 248u8, 88u8, 128u8, 43u8, 145u8, 73u8, 143u8, 128u8,
@@ -6460,7 +6013,7 @@ pub mod IEigenPodManager {
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for IEigenPodManagerEvents {
         const NAME: &'static str = "IEigenPodManagerEvents";
-        const COUNT: usize = 9usize;
+        const COUNT: usize = 8usize;
         fn decode_raw_log(
             topics: &[alloy_sol_types::Word],
             data: &[u8],
@@ -6496,16 +6049,6 @@ pub mod IEigenPodManager {
                             validate,
                         )
                         .map(Self::BeaconChainSlashingFactorDecreased)
-                }
-                Some(
-                    <BurnableETHSharesIncreased as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
-                    <BurnableETHSharesIncreased as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::BurnableETHSharesIncreased)
                 }
                 Some(<NewTotalShares as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <NewTotalShares as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -6574,9 +6117,6 @@ pub mod IEigenPodManager {
                 Self::BeaconChainSlashingFactorDecreased(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::BurnableETHSharesIncreased(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
                 Self::NewTotalShares(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
@@ -6599,9 +6139,6 @@ pub mod IEigenPodManager {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::BeaconChainSlashingFactorDecreased(inner) => {
-                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
-                }
-                Self::BurnableETHSharesIncreased(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::NewTotalShares(inner) => {
@@ -6814,12 +6351,6 @@ pub mod IEigenPodManager {
         ) -> alloy_contract::SolCallBuilder<T, &P, beaconChainSlashingFactorCall, N> {
             self.call_builder(&beaconChainSlashingFactorCall { staker })
         }
-        ///Creates a new call builder for the [`burnableETHShares`] function.
-        pub fn burnableETHShares(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, burnableETHSharesCall, N> {
-            self.call_builder(&burnableETHSharesCall {})
-        }
         ///Creates a new call builder for the [`createPod`] function.
         pub fn createPod(&self) -> alloy_contract::SolCallBuilder<T, &P, createPodCall, N> {
             self.call_builder(&createPodCall {})
@@ -6847,17 +6378,6 @@ pub mod IEigenPodManager {
             podOwner: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, hasPodCall, N> {
             self.call_builder(&hasPodCall { podOwner })
-        }
-        ///Creates a new call builder for the [`increaseBurnableShares`] function.
-        pub fn increaseBurnableShares(
-            &self,
-            strategy: alloy::sol_types::private::Address,
-            addedSharesToBurn: alloy::sol_types::private::primitives::aliases::U256,
-        ) -> alloy_contract::SolCallBuilder<T, &P, increaseBurnableSharesCall, N> {
-            self.call_builder(&increaseBurnableSharesCall {
-                strategy,
-                addedSharesToBurn,
-            })
         }
         ///Creates a new call builder for the [`numPods`] function.
         pub fn numPods(&self) -> alloy_contract::SolCallBuilder<T, &P, numPodsCall, N> {
@@ -7010,12 +6530,6 @@ pub mod IEigenPodManager {
             &self,
         ) -> alloy_contract::Event<T, &P, BeaconChainSlashingFactorDecreased, N> {
             self.event_filter::<BeaconChainSlashingFactorDecreased>()
-        }
-        ///Creates a new event filter for the [`BurnableETHSharesIncreased`] event.
-        pub fn BurnableETHSharesIncreased_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, BurnableETHSharesIncreased, N> {
-            self.event_filter::<BurnableETHSharesIncreased>()
         }
         ///Creates a new event filter for the [`NewTotalShares`] event.
         pub fn NewTotalShares_filter(&self) -> alloy_contract::Event<T, &P, NewTotalShares, N> {
