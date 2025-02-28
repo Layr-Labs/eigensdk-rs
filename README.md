@@ -61,20 +61,7 @@ make bindings
 
 This command will generate the bindings files in the folder: `crates/utils`.
 
-**Important:** this command requires Docker installed and running since it uses a container to generate the bindings. On Mac, you may get an error similar to:
-
-```text
-v0.3.0: Pulling from foundry-rs/foundry
-docker: no matching manifest for linux/arm64/v8 in the manifest list entries.
-```
-
-In that case, you'll need to pull the foundry image for the `amd64` platform with:
-
-```bash
-docker pull --platform linux/amd64/v8 ghcr.io/foundry-rs/foundry:v0.3.0
-```
-
-And then run `make bindings` again.
+**Important:** this command requires Docker installed and running since it uses a container to generate the bindings.
 
 ## Contributor Guidelines
 
@@ -94,18 +81,6 @@ You need `foundry` to successfully run it.
 
 ```bash
 cargo test --workspace
-```
-
-On Mac, you might get an error similar to:
-
-```bash
-Error starting anvil container: Client(PullImage { descriptor: "ghcr.io/foundry-rs/foundry:latest", err: DockerStreamError { error: "no matching manifest for linux/arm64/v8 in the manifest list entries" } })
-```
-
-In that case, you'll need to pull the foundry image for the `amd64` platform with:
-
-```bash
-docker pull --platform linux/amd64/v8 ghcr.io/foundry-rs/foundry:latest
 ```
 
 At least 1 `approving` review is required to merge the PR.
