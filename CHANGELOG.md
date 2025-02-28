@@ -31,6 +31,9 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Removed 🗑
 
+* Removed unused empty structs from the library in [#371](https://github.com/Layr-Labs/eigensdk-rs/pull/371)
+  * `eigen_client_eth::client::Client`
+  * `eigen_services_operatorsinfo::OperatorPubKeysService`
 * Removed the `AvsRegistryChainReader::is_operator_set_quorum` method [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
   * This function was removed in [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing).
 
