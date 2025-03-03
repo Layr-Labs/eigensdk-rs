@@ -10,16 +10,16 @@ cargo add eigensdk --features full
 
 ## Overview
 
- List of crates in the repository :-
+ List of crates in the repository :
 
 - [eigen-client-avsregistry](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
 - [eigen-client-elcontracts](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/elcontracts) - Convenience methods to call Eigenlayer contracts
-- [eigen-crypto-bls](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bls) - New bls key pair, sign message, conversion utilites between alloy and arkworks bn254.
+- [eigen-crypto-bls](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bls) - New bls key pair, sign message, conversion utillites between alloy and arkworks bn254.
 - [eigen-crypto-bn254](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bn254) - verify message on G2, map to curve.
 - [eigen-metrics](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/metrics) - performance, rpc and economic metrics
 - [eigen-services](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/services) - Spawn tokio services for operators info, bls aggregation
 - [eigen-types](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/types) - Common types
-- [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `mainnet rewards-v2 v0.5.4` compatible alloy bindings.
+- [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable mainnet rewards-v2 v0.5.4 compatible alloy bindings.
 - [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil, holesky, mainnet addresses for eigen contracts.
 - [eigen-cli](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/eigen-cli) - ECDSA, BLS keystore cli
 - [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
@@ -51,7 +51,7 @@ make dump-state
 
 ## Contract Bindings
 
-The main branch of this repo is intended to be syncronized with mainnet version of core contracts.
+The main branch of this repo is intended to be synchronized with mainnet version of core contracts.
 
 To update the bindings of this repo, run:
 
@@ -75,7 +75,7 @@ We are actively looking for contributors. Thank you for your interest. We have s
 
 ### PR
 
-To test locally :-
+To test locally :
 
 You need `foundry` to successfully run it.
 
