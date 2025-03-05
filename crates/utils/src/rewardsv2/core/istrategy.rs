@@ -521,13 +521,16 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositCall {
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`deposit(address,uint256)`](depositCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -657,6 +660,7 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct explanationReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::String,
     }
     #[allow(
@@ -763,12 +767,14 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct sharesCall {
+        #[allow(missing_docs)]
         pub user: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`shares(address)`](sharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct sharesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -879,12 +885,14 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct sharesToUnderlyingCall {
+        #[allow(missing_docs)]
         pub amountShares: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`sharesToUnderlying(uint256)`](sharesToUnderlyingCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct sharesToUnderlyingReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -997,12 +1005,14 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct sharesToUnderlyingViewCall {
+        #[allow(missing_docs)]
         pub amountShares: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`sharesToUnderlyingView(uint256)`](sharesToUnderlyingViewCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct sharesToUnderlyingViewReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -1119,6 +1129,7 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalSharesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -1225,12 +1236,14 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct underlyingToSharesCall {
+        #[allow(missing_docs)]
         pub amountUnderlying: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`underlyingToShares(uint256)`](underlyingToSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct underlyingToSharesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -1343,12 +1356,14 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct underlyingToSharesViewCall {
+        #[allow(missing_docs)]
         pub amountUnderlying: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`underlyingToSharesView(uint256)`](underlyingToSharesViewCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct underlyingToSharesViewReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -1465,6 +1480,7 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct underlyingTokenReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -1571,12 +1587,14 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct userUnderlyingCall {
+        #[allow(missing_docs)]
         pub user: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`userUnderlying(address)`](userUnderlyingCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct userUnderlyingReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -1687,12 +1705,14 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct userUnderlyingViewCall {
+        #[allow(missing_docs)]
         pub user: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`userUnderlyingView(address)`](userUnderlyingViewCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct userUnderlyingViewReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -1803,8 +1823,11 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawCall {
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amountShares: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`withdraw(address,address,uint256)`](withdrawCall) function.
@@ -1936,17 +1959,29 @@ pub mod IStrategy {
     };
     ///Container for all the [`IStrategy`](self) function calls.
     pub enum IStrategyCalls {
+        #[allow(missing_docs)]
         deposit(depositCall),
+        #[allow(missing_docs)]
         explanation(explanationCall),
+        #[allow(missing_docs)]
         shares(sharesCall),
+        #[allow(missing_docs)]
         sharesToUnderlying(sharesToUnderlyingCall),
+        #[allow(missing_docs)]
         sharesToUnderlyingView(sharesToUnderlyingViewCall),
+        #[allow(missing_docs)]
         totalShares(totalSharesCall),
+        #[allow(missing_docs)]
         underlyingToShares(underlyingToSharesCall),
+        #[allow(missing_docs)]
         underlyingToSharesView(underlyingToSharesViewCall),
+        #[allow(missing_docs)]
         underlyingToken(underlyingTokenCall),
+        #[allow(missing_docs)]
         userUnderlying(userUnderlyingCall),
+        #[allow(missing_docs)]
         userUnderlyingView(userUnderlyingViewCall),
+        #[allow(missing_docs)]
         withdraw(withdrawCall),
     }
     #[automatically_derived]
@@ -2264,7 +2299,9 @@ pub mod IStrategy {
     }
     ///Container for all the [`IStrategy`](self) events.
     pub enum IStrategyEvents {
+        #[allow(missing_docs)]
         ExchangeRateEmitted(ExchangeRateEmitted),
+        #[allow(missing_docs)]
         StrategyTokenSet(StrategyTokenSet),
     }
     #[automatically_derived]

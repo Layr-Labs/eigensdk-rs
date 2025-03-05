@@ -2,14 +2,13 @@ use crate::client::BackendClient;
 use alloy::consensus::TxEnvelope;
 use alloy::primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
 use alloy::providers::{Provider, ProviderBuilder, RootProvider};
-use alloy::pubsub::{PubSubFrontend, Subscription};
+use alloy::pubsub::Subscription;
 use alloy::rlp::Encodable;
-use alloy::rpc::json_rpc::{RpcParam, RpcReturn};
+use alloy::rpc::json_rpc::{RpcRecv, RpcSend};
 use alloy::rpc::types::eth::{
     Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
     TransactionReceipt, TransactionRequest,
 };
-use alloy::transports::http::{Client, Http};
 use alloy::transports::ws::WsConnect;
 use alloy::transports::{TransportError, TransportResult};
 use eigen_logging::get_test_logger;
@@ -24,8 +23,8 @@ const PENDING_TAG: &str = "pending";
 /// This struct represents an instrumented client that can be used to interact with an Ethereum node.
 /// It provides a set of methods to interact with the node and measures the duration of the calls.
 pub struct InstrumentedClient {
-    http_client: Option<RootProvider<Http<Client>>>,
-    ws_client: Option<RootProvider<PubSubFrontend>>,
+    http_client: Option<RootProvider>,
+    ws_client: Option<RootProvider>,
     rpc_collector: RpcCallsCollector,
     net_version: u64,
 }
@@ -110,7 +109,9 @@ impl InstrumentedClient {
     /// Returns an error if the URL is invalid or if there is an error getting the version.
     pub async fn new(url: &str) -> Result<Self, InstrumentedClientError> {
         let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
-        let http_client = ProviderBuilder::new().on_http(url);
+        let http_client = ProviderBuilder::new()
+            .disable_recommended_fillers()
+            .on_http(url);
         let net_version = http_client
             .get_net_version()
             .await
@@ -142,7 +143,11 @@ impl InstrumentedClient {
         let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
         let ws_connect = WsConnect::new(url);
 
-        let ws_client = ProviderBuilder::new().on_ws(ws_connect).await.unwrap();
+        let ws_client = ProviderBuilder::new()
+            .disable_recommended_fillers()
+            .on_ws(ws_connect)
+            .await
+            .unwrap();
         let net_version = ws_client
             .get_net_version()
             .await
@@ -170,9 +175,7 @@ impl InstrumentedClient {
     /// # Errors
     ///
     /// Returns an error if there is an error getting the version.
-    pub async fn new_from_client(
-        client: RootProvider<Http<Client>>,
-    ) -> Result<Self, InstrumentedClientError> {
+    pub async fn new_from_client(client: RootProvider) -> Result<Self, InstrumentedClientError> {
         let net_version = client
             .get_net_version()
             .await
@@ -600,7 +603,7 @@ impl InstrumentedClient {
     /// # Errors
     ///
     /// * If ws_client is `None`.
-    pub async fn subscribe_filter_logs<R: RpcReturn>(
+    pub async fn subscribe_filter_logs<R: RpcRecv>(
         &self,
         filter: Filter,
     ) -> TransportResult<Subscription<R>> {
@@ -632,7 +635,7 @@ impl InstrumentedClient {
     /// # Errors
     ///
     /// * If ws_client is `None`.
-    pub async fn subscribe_new_head<R: RpcReturn>(&self) -> TransportResult<Subscription<R>> {
+    pub async fn subscribe_new_head<R: RpcRecv>(&self) -> TransportResult<Subscription<R>> {
         let id: U256 = self
             .instrument_function("eth_subscribe", ("newHeads",))
             .await
@@ -800,8 +803,8 @@ impl InstrumentedClient {
         params: P,
     ) -> TransportResult<R>
     where
-        P: RpcParam + 'async_trait,
-        R: RpcReturn + 'async_trait,
+        P: RpcSend + 'async_trait,
+        R: RpcRecv + 'async_trait,
     {
         let start = Instant::now();
         let method_string = String::from(rpc_method_name);

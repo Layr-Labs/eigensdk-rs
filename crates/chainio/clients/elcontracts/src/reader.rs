@@ -2,7 +2,6 @@ use crate::error::ElContractsError;
 use alloy::{
     primitives::{Address, FixedBytes, U256},
     providers::Provider,
-    transports::http::{Client, Http},
 };
 use eigen_common::{get_provider, SdkProvider};
 use eigen_logging::logger::SharedLogger;
@@ -547,8 +546,8 @@ impl ELChainReader {
         strategy_addr: Address,
     ) -> Result<
         (
-            IStrategyInstance<Http<Client>, SdkProvider>,
-            IERC20Instance<Http<Client>, SdkProvider>,
+            IStrategyInstance<(), SdkProvider>,
+            IERC20Instance<(), SdkProvider>,
             Address,
         ),
         ElContractsError,
@@ -672,7 +671,7 @@ impl ELChainReader {
     pub async fn get_strategy_and_underlying_token(
         &self,
         strategy_addr: Address,
-    ) -> Result<(IStrategyInstance<Http<Client>, SdkProvider>, Address), ElContractsError> {
+    ) -> Result<(IStrategyInstance<(), SdkProvider>, Address), ElContractsError> {
         let provider = get_provider(&self.provider);
 
         let contract_strategy = IStrategy::new(strategy_addr, provider);
@@ -1446,7 +1445,6 @@ pub struct AllocationInfo {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use crate::test_utils::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS};
     use alloy::primitives::{address, keccak256, Address, FixedBytes, U256};
