@@ -1,18 +1,28 @@
+use std::str::FromStr;
+
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy::dyn_abi::DynSolValue;
-use alloy::primitives::{Address, FixedBytes, TxHash, U256};
+use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy::signers::local::PrivateKeySigner;
+use alloy::signers::Signer;
 use alloy::sol;
+use alloy::sol_types::SolValue;
 use eigen_common::get_signer;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
+use eigen_types::operator::operator_id_from_g1_pub_key;
 pub use eigen_types::operator::Operator;
 
 use eigen_utils::convert_allocation_operator_set_to_rewards_operator_set;
 use eigen_utils::rewardsv2::core::delegationmanager::DelegationManager as RewardsV2DelegationManager;
 use eigen_utils::rewardsv2::core::delegationmanager::IDelegationManager::OperatorDetails;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
+
+use eigen_utils::slashing::middleware::slashingregistrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
+use eigen_utils::slashing::middleware::servicemanagerbase::ISignatureUtils::SignatureWithSaltAndExpiry;
+use eigen_utils::slashing::middleware::slashingregistrycoordinator::SlashingRegistryCoordinator;
 use eigen_utils::{
     slashing::core::{
         allocationmanager::{AllocationManager, IAllocationManagerTypes},
@@ -750,6 +760,87 @@ impl ELChainWriter {
             .registerForOperatorSets(operator_address, params)
             .send()
             .await?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    pub async fn register_for_operator_sets_with_churn(
+        &self,
+        operator: Address,
+        bls_key_pair: BlsKeyPair,
+        avs_address: Address,
+        operator_set_ids: Vec<u32>,
+        socket: String,
+        quorum_numbers: Bytes,
+        operators_to_kick: Vec<Address>,
+        churn_signer_private_key: String,
+        churn_sig_salt: FixedBytes<32>,
+        churn_sig_expiry: U256,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        let operators_to_kick_params: Vec<OperatorKickParam> = operators_to_kick
+            .iter()
+            .zip(quorum_numbers.iter())
+            .map(|(address, quorum_number)| OperatorKickParam {
+                operator: *address,
+                quorumNumber: *quorum_number,
+            })
+            .collect();
+
+        let contract_registry_coordinator =
+            SlashingRegistryCoordinator::new(self.registry_coordinator, &provider);
+
+        let operator_id = operator_id_from_g1_pub_key(bls_key_pair.public_key())
+            .map_err(|_| ElContractsError::BLSKeyPairInvalid)?; // CHECK ERROR
+
+        let churn_wallet = PrivateKeySigner::from_str(&churn_signer_private_key)
+            .map_err(|_| ElContractsError::BLSKeyPairInvalid)?; // CHECK ERROR
+
+        let churn_digest_hash = contract_registry_coordinator
+            .calculateOperatorChurnApprovalDigestHash(
+                operator,
+                operator_id,
+                operators_to_kick_params.clone(),
+                churn_sig_salt,
+                churn_sig_expiry,
+            )
+            .call()
+            .await?
+            ._0;
+
+        let churn_signature = churn_wallet
+            .sign_hash(&churn_digest_hash)
+            .await
+            .map_err(|_| ElContractsError::BLSKeyPairInvalid)?; // CHECK ERROR
+
+        let churn_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
+            signature: churn_signature.as_bytes().into(),
+            salt: churn_sig_salt,
+            expiry: churn_sig_expiry,
+        };
+
+        // ENCODE INFO
+        // data,
+        // (
+        //     RegistrationType,
+        //     string,
+        //     IBLSApkRegistryTypes.PubkeyRegistrationParams,
+        //     OperatorKickParam[],
+        //     SignatureWithSaltAndExpiry
+        // )
+
+        let tx = allocation_manager
+            .registerForOperatorSets(operator, register_params)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
         Ok(*tx.tx_hash())
     }
