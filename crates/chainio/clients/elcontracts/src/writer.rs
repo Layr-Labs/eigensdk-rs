@@ -7,7 +7,6 @@ use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::signers::Signer;
 use alloy::sol;
-use alloy::sol_types::SolValue;
 use eigen_common::get_signer;
 use eigen_crypto_bls::{
     alloy_g1_point_slashing_to_g1_affine, alloy_g1_point_to_g1_affine, convert_to_g1_point,
@@ -21,9 +20,7 @@ use eigen_utils::rewardsv2::core::delegationmanager::DelegationManager as Reward
 use eigen_utils::rewardsv2::core::delegationmanager::IDelegationManager::OperatorDetails;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 
-use eigen_utils::slashing::middleware::registrycoordinator::IBLSApkRegistryTypes::PubkeyRegistrationParams;
 use eigen_utils::slashing::middleware::slashingregistrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
-use eigen_utils::slashing::middleware::servicemanagerbase::ISignatureUtils::SignatureWithSaltAndExpiry;
 use eigen_utils::slashing::middleware::slashingregistrycoordinator::SlashingRegistryCoordinator;
 use eigen_utils::{
     slashing::core::{
@@ -852,17 +849,14 @@ impl ELChainWriter {
 
             let pubkey_registration_params = DynSolValue::Tuple(vec![
                 DynSolValue::Tuple(vec![
-                    // PubkeyRegistrationSignature
                     DynSolValue::Uint(alloy_g1_point_signed_msg.X, 256),
                     DynSolValue::Uint(alloy_g1_point_signed_msg.Y, 256),
                 ]),
                 DynSolValue::Tuple(vec![
-                    // PubkeyG1
                     DynSolValue::Uint(g1_pub_key_bn254.X, 256),
                     DynSolValue::Uint(g1_pub_key_bn254.Y, 256),
                 ]),
                 DynSolValue::Tuple(vec![
-                    // PubkeyG2
                     DynSolValue::FixedArray(g2_point_x),
                     DynSolValue::FixedArray(g2_point_y),
                 ]),
@@ -1093,8 +1087,10 @@ mod tests {
                     ISlashingRegistryCoordinatorTypes::OperatorSetParam,
                     IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
                 },
-                slashingregistrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
-                slashingregistrycoordinator::SlashingRegistryCoordinator,
+                slashingregistrycoordinator::{
+                    ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
+                    SlashingRegistryCoordinator,
+                },
             },
             sdk::mockavsservicemanager::MockAvsServiceManager,
         },
@@ -1839,7 +1835,7 @@ mod tests {
 
         let contract = SlashingRegistryCoordinator::new(
             get_registry_coordinator_address(http_endpoint.clone()).await,
-            default_signer,
+            default_signer.clone(),
         );
 
         let tx_hash = contract
@@ -1855,7 +1851,7 @@ mod tests {
 
         let operator_set_params = OperatorSetParamSlashing {
             maxOperatorCount: 1,
-            kickBIPsOfOperatorStake: 10,
+            kickBIPsOfOperatorStake: 1000,
             kickBIPsOfTotalStake: 1000,
         };
 
@@ -1868,11 +1864,6 @@ mod tests {
             .await
             .unwrap();
         assert!(tx_hash.status());
-
-        let tx_hash = contract.getOperatorSetParams(0).call().await.unwrap();
-        dbg!(tx_hash._0.maxOperatorCount);
-        dbg!(tx_hash._0.kickBIPsOfOperatorStake);
-        dbg!(tx_hash._0.kickBIPsOfTotalStake);
 
         let el_chain_writer_2 =
             new_test_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string()).await;
