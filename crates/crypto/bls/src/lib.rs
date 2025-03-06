@@ -21,6 +21,7 @@ use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::{
     G1Point as G1PointChecker, G2Point as G2PointChecker,
 };
 use eigen_utils::slashing::middleware::registrycoordinator::BN254::{G1Point, G2Point};
+use eigen_utils::slashing::middleware::slashingregistrycoordinator::BN254::G1Point as G1PointSlashing;
 use serde::de::{self, Visitor};
 use serde::{Deserialize, Serialize};
 pub type PrivateKey = Fr;
@@ -193,6 +194,15 @@ impl BlsKeyPair {
 
 /// Convert [`G1Point`] to [`G1Affine`]
 pub fn alloy_g1_point_to_g1_affine(g1_point: G1Point) -> G1Affine {
+    let x_point = g1_point.X.into_limbs();
+    let x = Fq::new(BigInteger256::new(x_point));
+    let y_point = g1_point.Y.into_limbs();
+    let y = Fq::new(BigInteger256::new(y_point));
+    G1Affine::new(x, y)
+}
+
+/// Convert [`G1PointSlashing`] to [`G1Affine`]
+pub fn alloy_g1_point_slashing_to_g1_affine(g1_point: G1PointSlashing) -> G1Affine {
     let x_point = g1_point.X.into_limbs();
     let x = Fq::new(BigInteger256::new(x_point));
     let y_point = g1_point.Y.into_limbs();
