@@ -1493,7 +1493,11 @@ mod tests {
         };
 
         contract_registry_coordinator
-            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
+            .createTotalDelegatedStakeQuorum(
+                operator_set_params,
+                U96::from(0),
+                vec![strategy_params],
+            )
             .send()
             .await
             .unwrap()
@@ -1808,20 +1812,26 @@ mod tests {
     async fn test_register_for_operator_sets_with_churn() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let default_signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
+        let quorum_nums = Bytes::from([0]);
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         let operator_set_id = 0;
-        let quorum_nums = Bytes::from([0]);
+        let operator_set = OperatorSet {
+            avs: avs_address,
+            id: operator_set_id,
+        };
+
         create_operator_set(http_endpoint.as_str(), avs_address).await;
 
-        let operator_addr = FIRST_ADDRESS;
+        let first_operator_address = FIRST_ADDRESS;
         let operator_private_key = FIRST_PRIVATE_KEY;
         let el_chain_writer =
             new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
         let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
 
+        // Register FIRST_ADDRESS as an operator
         let tx_hash = el_chain_writer
             .register_for_operator_sets(
-                operator_addr,
+                first_operator_address,
                 avs_address,
                 vec![operator_set_id],
                 bls_key,
@@ -1829,16 +1839,27 @@ mod tests {
             )
             .await
             .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        // Check that FIRST_ADDRESS is registered to the operator set
+        let is_first_operator_registered = el_chain_writer
+            .el_chain_reader
+            .is_operator_registered_with_operator_set(first_operator_address, operator_set.clone())
+            .await
+            .unwrap();
+        assert!(is_first_operator_registered);
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
-        let contract = SlashingRegistryCoordinator::new(
+        let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
             get_registry_coordinator_address(http_endpoint.clone()).await,
             default_signer.clone(),
         );
 
-        let tx_hash = contract
+        // Set the churn approver to THIRD_ADDRESS
+        let tx_hash = slashing_registry_coordinator
             .setChurnApprover(THIRD_ADDRESS)
             .send()
             .await
@@ -1851,11 +1872,12 @@ mod tests {
 
         let operator_set_params = OperatorSetParamSlashing {
             maxOperatorCount: 1,
-            kickBIPsOfOperatorStake: 1000,
-            kickBIPsOfTotalStake: 1000,
+            kickBIPsOfOperatorStake: 10,
+            kickBIPsOfTotalStake: 10000,
         };
 
-        let tx_hash = contract
+        // Set the maxOperatorCount to 1, so that only one operator can be registered to the operator set
+        let tx_hash = slashing_registry_coordinator
             .setOperatorSetParams(0, operator_set_params)
             .send()
             .await
@@ -1874,11 +1896,7 @@ mod tests {
         let churn_sig_salt = FixedBytes::from([0x05; 32]);
         let sig_expiry = U256::MAX;
 
-        let operator_set = OperatorSet {
-            avs: avs_address,
-            id: operator_set_id,
-        };
-
+        // Register SECOND_ADDRESS as an operator. Since the maxOperatorCount is 1, this should kick out FIRST_ADDRESS
         let tx_hash = el_chain_writer_2
             .register_for_operator_sets_with_churn(
                 second_operator_addr,
@@ -1887,7 +1905,7 @@ mod tests {
                 vec![operator_set_id],
                 "socket".to_string(),
                 quorum_nums,
-                vec![FIRST_ADDRESS],
+                vec![first_operator_address],
                 churn_private_key,
                 churn_sig_salt,
                 sig_expiry,
@@ -1898,9 +1916,18 @@ mod tests {
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
+        // Check that FIRST_ADDRESS is not registered to the operator set since it was kicked out
         let is_registered = el_chain_writer
             .el_chain_reader
-            .is_operator_registered_with_operator_set(operator_addr, operator_set.clone())
+            .is_operator_registered_with_operator_set(first_operator_address, operator_set.clone())
+            .await
+            .unwrap();
+        assert!(!is_registered);
+
+        // Check that SECOND_ADDRESS is registered to the operator set
+        let is_registered = el_chain_writer_2
+            .el_chain_reader
+            .is_operator_registered_with_operator_set(second_operator_addr, operator_set.clone())
             .await
             .unwrap();
         assert!(is_registered);
