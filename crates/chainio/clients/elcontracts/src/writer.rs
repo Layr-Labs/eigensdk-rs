@@ -896,6 +896,9 @@ impl ELChainWriter {
             data: encoded_data.into(),
         };
 
+        dbg!(operator);
+        dbg!(operators_to_kick);
+
         let tx = allocation_manager
             .registerForOperatorSets(operator, register_params)
             .send()
@@ -1056,7 +1059,7 @@ mod tests {
         OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
     use alloy::{
-        primitives::{address, aliases::U96, Address, Bytes, FixedBytes, U256},
+        primitives::{address, aliases::U96, ruint::aliases::U256, Address, Bytes, FixedBytes},
         providers::{Provider, WalletProvider},
         sol_types::SolCall,
     };
@@ -1070,7 +1073,6 @@ mod tests {
             get_allocation_manager_address, get_erc20_mock_strategy,
             get_registry_coordinator_address, get_service_manager_address, FIRST_ADDRESS,
             FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY_2, SECOND_ADDRESS, SECOND_PRIVATE_KEY,
-            THIRD_ADDRESS, THIRD_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
@@ -1089,6 +1091,7 @@ mod tests {
                 },
                 slashingregistrycoordinator::{
                     ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
+                    IStakeRegistryTypes::StrategyParams as StrategyParamsSlashing,
                     SlashingRegistryCoordinator,
                 },
             },
@@ -1808,10 +1811,112 @@ mod tests {
         );
     }
 
+    async fn create_total_stake_operator_set(
+        http_endpoint: &str,
+        erc20_mock_strategy_addr: Address,
+        avs_address: Address,
+    ) {
+        let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
+
+        let allocation_manager_addr =
+            get_allocation_manager_address(http_endpoint.to_string()).await;
+        let allocation_manager =
+            AllocationManager::new(allocation_manager_addr, default_signer.clone());
+
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+        let service_manager =
+            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
+
+        service_manager
+            .setAppointee(
+                default_signer.default_signer_address(),
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.to_string()).await;
+
+        allocation_manager
+            .setAVSRegistrar(avs_address, registry_coordinator_addr)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        // service_manager
+        //     .setAppointee(
+        //         registry_coordinator_addr,
+        //         allocation_manager_addr,
+        //         alloy::primitives::FixedBytes(
+        //             AllocationManager::deregisterFromOperatorSetsCall::SELECTOR,
+        //         ),
+        //     )
+        //     .send()
+        //     .await
+        //     .unwrap()
+        //     .get_receipt()
+        //     .await
+        //     .unwrap();
+
+        let operator_set_params = OperatorSetParamSlashing {
+            maxOperatorCount: 1,
+            kickBIPsOfOperatorStake: 10,
+            kickBIPsOfTotalStake: 10000,
+        };
+
+        let minimum_stake = U96::from(1);
+
+        let strategy_params = StrategyParamsSlashing {
+            strategy: erc20_mock_strategy_addr,
+            multiplier: U96::from(1),
+        };
+
+        let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
+            get_registry_coordinator_address(http_endpoint.to_string()).await,
+            default_signer.clone(),
+        );
+
+        let tx_hash = slashing_registry_coordinator
+            .createTotalDelegatedStakeQuorum(
+                operator_set_params,
+                minimum_stake,
+                vec![strategy_params],
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        assert!(tx_hash.status());
+    }
+
     #[tokio::test]
-    async fn test_register_for_operator_sets_with_churn() {
+    async fn test_with_churn() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let default_signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
         let quorum_nums = Bytes::from([0]);
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         let operator_set_id = 0;
@@ -1820,7 +1925,12 @@ mod tests {
             id: operator_set_id,
         };
 
-        create_operator_set(http_endpoint.as_str(), avs_address).await;
+        dbg!(avs_address);
+
+        let erc20_mock_strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+
+        create_total_stake_operator_set(&http_endpoint, erc20_mock_strategy_addr, avs_address)
+            .await;
 
         let first_operator_address = FIRST_ADDRESS;
         let operator_private_key = FIRST_PRIVATE_KEY;
@@ -1848,51 +1958,43 @@ mod tests {
             .is_operator_registered_with_operator_set(first_operator_address, operator_set.clone())
             .await
             .unwrap();
+        dbg!(
+            "is_first_operator_registered: {}",
+            is_first_operator_registered
+        );
         assert!(is_first_operator_registered);
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
-        let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
-            get_registry_coordinator_address(http_endpoint.clone()).await,
-            default_signer.clone(),
-        );
+        // let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
+        //     get_registry_coordinator_address(http_endpoint.clone()).await,
+        //     default_signer.clone(),
+        // );
 
-        // Set the churn approver to THIRD_ADDRESS
-        let tx_hash = slashing_registry_coordinator
-            .setChurnApprover(THIRD_ADDRESS)
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
+        // let operator_set_params = OperatorSetParamSlashing {
+        //     maxOperatorCount: 1,
+        //     kickBIPsOfOperatorStake: 10,
+        //     kickBIPsOfTotalStake: 10000,
+        // };
 
-        assert!(tx_hash.status());
-
-        let operator_set_params = OperatorSetParamSlashing {
-            maxOperatorCount: 1,
-            kickBIPsOfOperatorStake: 10,
-            kickBIPsOfTotalStake: 10000,
-        };
-
-        // Set the maxOperatorCount to 1, so that only one operator can be registered to the operator set
-        let tx_hash = slashing_registry_coordinator
-            .setOperatorSetParams(0, operator_set_params)
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-        assert!(tx_hash.status());
+        // // Set the maxOperatorCount to 1, so that only one operator can be registered to the operator set
+        // let tx_hash = slashing_registry_coordinator
+        //     .setOperatorSetParams(0, operator_set_params)
+        //     .send()
+        //     .await
+        //     .unwrap()
+        //     .get_receipt()
+        //     .await
+        //     .unwrap();
+        // assert!(tx_hash.status());
 
         let el_chain_writer_2 =
             new_test_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string()).await;
 
         let second_operator_addr = SECOND_ADDRESS;
         let bls_key_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
-        let churn_private_key = THIRD_PRIVATE_KEY.to_string();
+        let churn_private_key = FIRST_PRIVATE_KEY.to_string();
         let churn_sig_salt = FixedBytes::from([0x05; 32]);
         let sig_expiry = U256::MAX;
 
