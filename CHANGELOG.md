@@ -20,6 +20,34 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Added all features of the `eigensdk` crate to its `"full"` feature [#370](https://github.com/Layr-Labs/eigensdk-rs/pull/370)
   * This includes: `"types"`, `"utils"`, `"metrics-collectors-economic"`, and `"metrics-collectors-rpc-calls"` features.
 
+* Added `register_for_operator_sets_with_churn` method to `elcontracts/writer` in [#382](https://github.com/Layr-Labs/eigensdk-rs/pull/382).
+  
+  ```rust
+    let el_chain_writer_2 =
+        new_test_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string()).await;
+
+    let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
+    let churn_private_key = FIRST_PRIVATE_KEY.to_string();
+    let churn_sig_salt = FixedBytes::from([0x05; 32]);
+    let churn_sig_expiry = U256::MAX;
+    
+    let tx_hash = el_chain_writer_2
+        .register_for_operator_sets_with_churn(
+            SECOND_ADDRESS,         // Operator address to register
+            bls_key_pair,           // Operator's BLS key pair
+            avs_address,            // AVS address
+            vec![operator_set_id],  // Operator set ID
+            "socket".to_string(),   // Socket address
+            Bytes::from([0]),       // Quorum numbers
+            vec![FIRST_ADDRESS],    // Operators to kick if quorum is full
+            churn_private_key,      // Churn approver's private key
+            churn_sig_salt,         // Churn signature salt
+            churn_sig_expiry,       // Churn signature expiry
+        )
+        .await
+        .unwrap();
+  ```
+
 ### Breaking Changes 🛠
 
 * Updated slashing bindings to [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing) [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
