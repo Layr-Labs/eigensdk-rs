@@ -3,11 +3,11 @@ use std::str::FromStr;
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy::dyn_abi::DynSolValue;
-use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy::primitives::{Address, Bytes, FixedBytes, PrimitiveSignature, TxHash, U256};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::signers::Signer;
 use alloy::sol;
-use eigen_common::get_signer;
+use eigen_common::{get_provider, get_signer};
 use eigen_crypto_bls::{
     alloy_g1_point_slashing_to_g1_affine, alloy_g1_point_to_g1_affine, convert_to_g1_point,
     convert_to_g2_point, BlsKeyPair,
@@ -20,6 +20,7 @@ use eigen_utils::rewardsv2::core::delegationmanager::DelegationManager as Reward
 use eigen_utils::rewardsv2::core::delegationmanager::IDelegationManager::OperatorDetails;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 
+use eigen_utils::slashing::middleware::registrycoordinator::BN254::{G1Point, G2Point};
 use eigen_utils::slashing::middleware::slashingregistrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
 use eigen_utils::slashing::middleware::slashingregistrycoordinator::SlashingRegistryCoordinator;
 use eigen_utils::{
@@ -785,119 +786,46 @@ impl ELChainWriter {
             &provider,
         );
 
-        let contract_registry_coordinator =
-            SlashingRegistryCoordinator::new(self.registry_coordinator, &provider);
-
-        let g1_hashed_msg_to_sign = contract_registry_coordinator
-            .pubkeyRegistrationMessageHash(operator)
-            .call()
-            .await?
-            ._0;
-
-        let sig = bls_key_pair
-            .sign_hashed_to_curve_message(alloy_g1_point_slashing_to_g1_affine(
-                g1_hashed_msg_to_sign,
-            ))
-            .g1_point();
-
-        let alloy_g1_point_signed_msg =
-            convert_to_g1_point(sig.g1()).map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
-        let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())
-            .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
-        let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())
-            .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
-
-        let operators_to_kick_params: Vec<OperatorKickParam> = operators_to_kick
-            .iter()
-            .zip(quorum_numbers.iter())
-            .map(|(address, &quorum_number)| OperatorKickParam {
-                operator: *address,
-                quorumNumber: quorum_number,
-            })
-            .collect();
-
-        let churn_wallet = PrivateKeySigner::from_str(&churn_signer_private_key)
-            .map_err(|_| ElContractsError::AllocationDelayNotSet)?;
-
-        let churn_digest_hash = contract_registry_coordinator
-            .calculateOperatorChurnApprovalDigestHash(
+        let (alloy_g1_point_signed_msg, g1_pub_key_bn254, g2_pub_key_bn254) =
+            prepare_bls_keys_for_registration(
+                &self.provider,
+                self.registry_coordinator,
                 operator,
-                operator_id_from_g1_pub_key(bls_key_pair.public_key())
-                    .map_err(|_| ElContractsError::BLSKeyPairInvalid)?,
-                operators_to_kick_params.clone(),
-                churn_sig_salt,
-                churn_sig_expiry,
+                &bls_key_pair,
             )
-            .call()
-            .await?
-            ._0;
+            .await?;
 
-        let churn_signature = churn_wallet
-            .sign_hash(&churn_digest_hash)
-            .await
-            .map_err(|_| ElContractsError::AllocationDelayNotSet)?;
+        let operators_to_kick_params =
+            build_operator_kick_params(&operators_to_kick, &quorum_numbers);
 
-        let encoded_data = {
-            let g2_point_x = vec![
-                DynSolValue::Uint(g2_pub_key_bn254.X[0], 256),
-                DynSolValue::Uint(g2_pub_key_bn254.X[1], 256),
-            ];
-            let g2_point_y = vec![
-                DynSolValue::Uint(g2_pub_key_bn254.Y[0], 256),
-                DynSolValue::Uint(g2_pub_key_bn254.Y[1], 256),
-            ];
+        let churn_signature = sign_churn_digest(
+            &self.provider,
+            self.registry_coordinator,
+            &bls_key_pair,
+            operator,
+            &operators_to_kick_params,
+            churn_signer_private_key,
+            churn_sig_salt,
+            churn_sig_expiry,
+        )
+        .await?;
 
-            let pubkey_registration_params = DynSolValue::Tuple(vec![
-                DynSolValue::Tuple(vec![
-                    DynSolValue::Uint(alloy_g1_point_signed_msg.X, 256),
-                    DynSolValue::Uint(alloy_g1_point_signed_msg.Y, 256),
-                ]),
-                DynSolValue::Tuple(vec![
-                    DynSolValue::Uint(g1_pub_key_bn254.X, 256),
-                    DynSolValue::Uint(g1_pub_key_bn254.Y, 256),
-                ]),
-                DynSolValue::Tuple(vec![
-                    DynSolValue::FixedArray(g2_point_x),
-                    DynSolValue::FixedArray(g2_point_y),
-                ]),
-            ]);
-
-            let operator_kick_params = DynSolValue::Array(
-                operators_to_kick_params
-                    .into_iter()
-                    .map(|param| {
-                        DynSolValue::Tuple(vec![
-                            DynSolValue::Uint(U256::from(param.quorumNumber), 8),
-                            DynSolValue::Address(param.operator),
-                        ])
-                    })
-                    .collect(),
-            );
-
-            let signature_with_salt = DynSolValue::Tuple(vec![
-                DynSolValue::Bytes(churn_signature.as_bytes().into()),
-                DynSolValue::FixedBytes(churn_sig_salt, 32),
-                DynSolValue::Uint(churn_sig_expiry, 256),
-            ]);
-
-            DynSolValue::Tuple(vec![
-                DynSolValue::Uint(U256::from(1), 8), // RegistrationType.CHURN = 1
-                DynSolValue::String(socket),
-                pubkey_registration_params,
-                operator_kick_params,
-                signature_with_salt,
-            ])
-            .abi_encode_params()
-        };
+        let encoded_data = encode_registration_data(
+            socket,
+            alloy_g1_point_signed_msg,
+            g1_pub_key_bn254,
+            g2_pub_key_bn254,
+            operators_to_kick_params,
+            churn_signature,
+            churn_sig_salt,
+            churn_sig_expiry,
+        );
 
         let register_params = IAllocationManagerTypes::RegisterParams {
             avs: avs_address,
             operatorSetIds: operator_set_ids,
             data: encoded_data.into(),
         };
-
-        dbg!(operator);
-        dbg!(operators_to_kick);
 
         let tx = allocation_manager
             .registerForOperatorSets(operator, register_params)
@@ -1050,6 +978,167 @@ impl ELChainWriter {
             .map_err(ElContractsError::AlloyContractError)
             .map(|tx| *tx.tx_hash())
     }
+}
+
+/// Generates the G1 and G2 points for the operator registration message hash
+async fn prepare_bls_keys_for_registration(
+    rpc_url: &str,
+    registry_coordinator_address: Address,
+    operator: Address,
+    bls_key_pair: &BlsKeyPair,
+) -> Result<(G1Point, G1Point, G2Point), ElContractsError> {
+    let provider = get_provider(rpc_url);
+    let contract_registry_coordinator =
+        SlashingRegistryCoordinator::new(registry_coordinator_address, &provider);
+
+    let g1_hashed_msg_to_sign = contract_registry_coordinator
+        .pubkeyRegistrationMessageHash(operator)
+        .call()
+        .await?
+        ._0;
+
+    let sig = bls_key_pair
+        .sign_hashed_to_curve_message(alloy_g1_point_slashing_to_g1_affine(g1_hashed_msg_to_sign))
+        .g1_point();
+
+    let alloy_g1_point_signed_msg =
+        convert_to_g1_point(sig.g1()).map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+    let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())
+        .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+    let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())
+        .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+
+    Ok((
+        alloy_g1_point_signed_msg,
+        g1_pub_key_bn254,
+        g2_pub_key_bn254,
+    ))
+}
+
+/// Builds the operator kick params for the operator churn
+fn build_operator_kick_params(
+    operators_to_kick: &[Address],
+    quorum_numbers: &Bytes,
+) -> Vec<OperatorKickParam> {
+    operators_to_kick
+        .iter()
+        .zip(quorum_numbers.iter())
+        .map(|(address, &quorum_number)| OperatorKickParam {
+            operator: *address,
+            quorumNumber: quorum_number,
+        })
+        .collect()
+}
+
+/// Signs the churn digest hash
+#[allow(clippy::too_many_arguments)]
+async fn sign_churn_digest(
+    rpc_url: &str,
+    registry_coordinator_address: Address,
+    bls_key_pair: &BlsKeyPair,
+    operator: Address,
+    operators_to_kick_params: &[OperatorKickParam],
+    churn_signer_private_key: String,
+    churn_sig_salt: FixedBytes<32>,
+    churn_sig_expiry: U256,
+) -> Result<PrimitiveSignature, ElContractsError> {
+    let provider = get_provider(rpc_url);
+    let contract_registry_coordinator =
+        SlashingRegistryCoordinator::new(registry_coordinator_address, &provider);
+
+    let churn_wallet = PrivateKeySigner::from_str(&churn_signer_private_key)
+        .map_err(|_| ElContractsError::AllocationDelayNotSet)?;
+
+    let operator_id = operator_id_from_g1_pub_key(bls_key_pair.public_key())
+        .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+
+    let churn_digest_hash = contract_registry_coordinator
+        .calculateOperatorChurnApprovalDigestHash(
+            operator,
+            operator_id,
+            operators_to_kick_params.to_vec(),
+            churn_sig_salt,
+            churn_sig_expiry,
+        )
+        .call()
+        .await?
+        ._0;
+
+    let signature = churn_wallet
+        .sign_hash(&churn_digest_hash)
+        .await
+        .map_err(|_| ElContractsError::AllocationDelayNotSet)?;
+
+    Ok(signature)
+}
+
+/// Encodes the registration data for the operator churn
+#[allow(clippy::too_many_arguments)]
+fn encode_registration_data(
+    socket: String,
+    alloy_g1_point_signed_msg: G1Point,
+    g1_pub_key_bn254: G1Point,
+    g2_pub_key_bn254: G2Point,
+    operators_to_kick_params: Vec<OperatorKickParam>,
+    churn_signature: PrimitiveSignature,
+    churn_sig_salt: FixedBytes<32>,
+    churn_sig_expiry: U256,
+) -> Vec<u8> {
+    // Construir arrays para los componentes X e Y del punto G2
+    let g2_point_x = vec![
+        DynSolValue::Uint(g2_pub_key_bn254.X[0], 256),
+        DynSolValue::Uint(g2_pub_key_bn254.X[1], 256),
+    ];
+    let g2_point_y = vec![
+        DynSolValue::Uint(g2_pub_key_bn254.Y[0], 256),
+        DynSolValue::Uint(g2_pub_key_bn254.Y[1], 256),
+    ];
+
+    // Armar los parámetros de registro de la pubkey en un tuple
+    let pubkey_registration_params = DynSolValue::Tuple(vec![
+        DynSolValue::Tuple(vec![
+            DynSolValue::Uint(alloy_g1_point_signed_msg.X, 256),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.Y, 256),
+        ]),
+        DynSolValue::Tuple(vec![
+            DynSolValue::Uint(g1_pub_key_bn254.X, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.Y, 256),
+        ]),
+        DynSolValue::Tuple(vec![
+            DynSolValue::FixedArray(g2_point_x),
+            DynSolValue::FixedArray(g2_point_y),
+        ]),
+    ]);
+
+    // Convertir los parámetros para los operadores a expulsar en un array
+    let operator_kick_params = DynSolValue::Array(
+        operators_to_kick_params
+            .into_iter()
+            .map(|param| {
+                DynSolValue::Tuple(vec![
+                    DynSolValue::Uint(U256::from(param.quorumNumber), 8),
+                    DynSolValue::Address(param.operator),
+                ])
+            })
+            .collect(),
+    );
+
+    // Construir el tuple para la firma de churn, salt y expiry
+    let signature_with_salt = DynSolValue::Tuple(vec![
+        DynSolValue::Bytes(churn_signature.as_bytes().into()),
+        DynSolValue::FixedBytes(churn_sig_salt, 32),
+        DynSolValue::Uint(churn_sig_expiry, 256),
+    ]);
+
+    // Construir el tuple final y codificarlo
+    DynSolValue::Tuple(vec![
+        DynSolValue::Uint(U256::from(1), 8), // RegistrationType.CHURN = 1
+        DynSolValue::String(socket),
+        pubkey_registration_params,
+        operator_kick_params,
+        signature_with_salt,
+    ])
+    .abi_encode_params()
 }
 
 #[cfg(test)]
@@ -1811,7 +1900,7 @@ mod tests {
         );
     }
 
-    async fn create_total_stake_operator_set(
+    async fn create_total_delegated_stake_operator_set(
         http_endpoint: &str,
         erc20_mock_strategy_addr: Address,
         avs_address: Address,
@@ -1865,25 +1954,25 @@ mod tests {
             .await
             .unwrap();
 
-        // service_manager
-        //     .setAppointee(
-        //         registry_coordinator_addr,
-        //         allocation_manager_addr,
-        //         alloy::primitives::FixedBytes(
-        //             AllocationManager::deregisterFromOperatorSetsCall::SELECTOR,
-        //         ),
-        //     )
-        //     .send()
-        //     .await
-        //     .unwrap()
-        //     .get_receipt()
-        //     .await
-        //     .unwrap();
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(
+                    AllocationManager::deregisterFromOperatorSetsCall::SELECTOR,
+                ),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
 
-        let operator_set_params = OperatorSetParamSlashing {
-            maxOperatorCount: 1,
-            kickBIPsOfOperatorStake: 10,
-            kickBIPsOfTotalStake: 10000,
+        let operator_set_param = OperatorSetParamSlashing {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 100,
+            kickBIPsOfTotalStake: 1000,
         };
 
         let minimum_stake = U96::from(1);
@@ -1900,7 +1989,7 @@ mod tests {
 
         let tx_hash = slashing_registry_coordinator
             .createTotalDelegatedStakeQuorum(
-                operator_set_params,
+                operator_set_param,
                 minimum_stake,
                 vec![strategy_params],
             )
@@ -1915,123 +2004,126 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_with_churn() {
+    async fn test_register_for_operator_sets_with_churn() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let quorum_nums = Bytes::from([0]);
+        let default_signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         let operator_set_id = 0;
-        let operator_set = OperatorSet {
-            avs: avs_address,
-            id: operator_set_id,
-        };
 
-        dbg!(avs_address);
+        // Create operator set
+        create_total_delegated_stake_operator_set(
+            &http_endpoint,
+            get_erc20_mock_strategy(http_endpoint.clone()).await,
+            avs_address,
+        )
+        .await;
 
-        let erc20_mock_strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
-
-        create_total_stake_operator_set(&http_endpoint, erc20_mock_strategy_addr, avs_address)
-            .await;
-
-        let first_operator_address = FIRST_ADDRESS;
-        let operator_private_key = FIRST_PRIVATE_KEY;
+        // Register FIRST_ADDRESS to operator set
         let el_chain_writer =
-            new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
+            new_test_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string()).await;
         let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
-
-        // Register FIRST_ADDRESS as an operator
         let tx_hash = el_chain_writer
-            .register_for_operator_sets(
-                first_operator_address,
-                avs_address,
-                vec![operator_set_id],
-                bls_key,
-                "socket",
-            )
-            .await
-            .unwrap();
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-
-        // Check that FIRST_ADDRESS is registered to the operator set
-        let is_first_operator_registered = el_chain_writer
-            .el_chain_reader
-            .is_operator_registered_with_operator_set(first_operator_address, operator_set.clone())
-            .await
-            .unwrap();
-        dbg!(
-            "is_first_operator_registered: {}",
-            is_first_operator_registered
-        );
-        assert!(is_first_operator_registered);
-
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-
-        // let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
-        //     get_registry_coordinator_address(http_endpoint.clone()).await,
-        //     default_signer.clone(),
-        // );
-
-        // let operator_set_params = OperatorSetParamSlashing {
-        //     maxOperatorCount: 1,
-        //     kickBIPsOfOperatorStake: 10,
-        //     kickBIPsOfTotalStake: 10000,
-        // };
-
-        // // Set the maxOperatorCount to 1, so that only one operator can be registered to the operator set
-        // let tx_hash = slashing_registry_coordinator
-        //     .setOperatorSetParams(0, operator_set_params)
-        //     .send()
-        //     .await
-        //     .unwrap()
-        //     .get_receipt()
-        //     .await
-        //     .unwrap();
-        // assert!(tx_hash.status());
-
-        let el_chain_writer_2 =
-            new_test_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string()).await;
-
-        let second_operator_addr = SECOND_ADDRESS;
-        let bls_key_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
-        let churn_private_key = FIRST_PRIVATE_KEY.to_string();
-        let churn_sig_salt = FixedBytes::from([0x05; 32]);
-        let sig_expiry = U256::MAX;
-
-        // Register SECOND_ADDRESS as an operator. Since the maxOperatorCount is 1, this should kick out FIRST_ADDRESS
-        let tx_hash = el_chain_writer_2
             .register_for_operator_sets_with_churn(
-                second_operator_addr,
-                bls_key_2,
+                FIRST_ADDRESS,
+                bls_key,
                 avs_address,
                 vec![operator_set_id],
                 "socket".to_string(),
-                quorum_nums,
-                vec![first_operator_address],
-                churn_private_key,
-                churn_sig_salt,
-                sig_expiry,
+                Bytes::from([0]),
+                vec![FIRST_ADDRESS],
+                FIRST_PRIVATE_KEY.to_string(),
+                FixedBytes::from([0x03; 32]),
+                U256::MAX,
             )
             .await
             .unwrap();
 
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
+        assert!(wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status());
 
-        // Check that FIRST_ADDRESS is not registered to the operator set since it was kicked out
-        let is_registered = el_chain_writer
+        // Verify FIRST_ADDRESS registration
+        assert!(el_chain_writer
             .el_chain_reader
-            .is_operator_registered_with_operator_set(first_operator_address, operator_set.clone())
+            .is_operator_registered_with_operator_set(
+                FIRST_ADDRESS,
+                OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id
+                }
+            )
+            .await
+            .unwrap());
+
+        // Set maxOperatorCount to 1 so only one operator can be registered to the operator set
+        let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
+            get_registry_coordinator_address(http_endpoint.clone()).await,
+            default_signer.clone(),
+        );
+        let operator_set_params = OperatorSetParamSlashing {
+            maxOperatorCount: 1,
+            kickBIPsOfOperatorStake: 10,
+            kickBIPsOfTotalStake: 10000,
+        };
+        assert!(slashing_registry_coordinator
+            .setOperatorSetParams(0, operator_set_params)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap()
+            .status());
+
+        // Register SECOND_ADDRESS to operator set with churn. FIRST_ADDRESS will be kicked
+        let el_chain_writer_2 =
+            new_test_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string()).await;
+        let tx_hash = el_chain_writer_2
+            .register_for_operator_sets_with_churn(
+                SECOND_ADDRESS,
+                BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap(),
+                avs_address,
+                vec![operator_set_id],
+                "socket".to_string(),
+                Bytes::from([0]),
+                vec![FIRST_ADDRESS],
+                FIRST_PRIVATE_KEY.to_string(),
+                FixedBytes::from([0x05; 32]),
+                U256::MAX,
+            )
             .await
             .unwrap();
-        assert!(!is_registered);
 
-        // Check that SECOND_ADDRESS is registered to the operator set
-        let is_registered = el_chain_writer_2
-            .el_chain_reader
-            .is_operator_registered_with_operator_set(second_operator_addr, operator_set.clone())
+        assert!(wait_transaction(&http_endpoint, tx_hash)
             .await
-            .unwrap();
-        assert!(is_registered);
+            .unwrap()
+            .status());
+
+        // Verify FIRST_ADDRESS is not registered
+        assert!(!el_chain_writer
+            .el_chain_reader
+            .is_operator_registered_with_operator_set(
+                FIRST_ADDRESS,
+                OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id
+                }
+            )
+            .await
+            .unwrap());
+
+        // Verify SECOND_ADDRESS is registered
+        assert!(el_chain_writer_2
+            .el_chain_reader
+            .is_operator_registered_with_operator_set(
+                SECOND_ADDRESS,
+                OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id
+                }
+            )
+            .await
+            .unwrap());
     }
 }
