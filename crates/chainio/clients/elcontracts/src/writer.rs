@@ -764,6 +764,34 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Register with churn an operator for one or more operator sets for an AVS
+    /// while replacing existing operators in full quorums. If the operator
+    /// has any stake allocated to these operator sets, it immediately becomes slashable.
+    ///
+    /// This method performs similar steps to [`register_for_operator_sets`], except that
+    /// for each quorum where the new Operator total exceeds the `maxOperatorCount`,
+    /// the `operatorKickParams` are used to deregister a current Operator to make room for the new one.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - operator address to register
+    /// * `bls_key_pair` - bls key pair of the operator
+    /// * `avs_address` - AVS address
+    /// * `operator_set_ids` - operator set ids to register on
+    /// * `socket` - socket used for calling the contract with `registerOperator` function
+    /// * `quorum_numbers` - quorum numbers to register the new operator
+    /// * `operators_to_kick` - operators to kick if quorum is full
+    /// * `churn_signer_private_key` - private key of the churn signer
+    /// * `churn_sig_salt` - churn signature salt
+    /// * `churn_sig_expiry` - churn signature expiry
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
     #[allow(clippy::too_many_arguments)]
     pub async fn register_for_operator_sets_with_churn(
         &self,
