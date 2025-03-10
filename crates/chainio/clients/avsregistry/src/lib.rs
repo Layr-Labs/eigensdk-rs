@@ -117,17 +117,16 @@ pub(crate) mod test_utils {
     pub(crate) async fn build_avs_registry_chain_writer(
         http_endpoint: String,
         private_key: String,
+        service_manager_addr: Address,
     ) -> AvsRegistryChainWriter {
         let registry_coordinator_address =
             get_registry_coordinator_address(http_endpoint.clone()).await;
-        let operator_state_retriever_address =
-            get_operator_state_retriever_address(http_endpoint.clone()).await;
         AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint,
             private_key,
             registry_coordinator_address,
-            operator_state_retriever_address,
+            service_manager_addr,
         )
         .await
         .unwrap()

@@ -95,7 +95,7 @@ impl AvsRegistryChainWriter {
         .map_err(|e| AvsRegistryError::ElContractsError(e.to_string()))?;
 
         Ok(AvsRegistryChainWriter {
-            service_manager_addr: service_manager_addr,
+            service_manager_addr,
             registry_coordinator_addr,
             stake_registry_addr: stake_registry,
             el_reader,
