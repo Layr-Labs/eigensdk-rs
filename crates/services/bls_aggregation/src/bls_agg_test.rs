@@ -409,7 +409,7 @@ pub mod integration_test {
             http_endpoint.to_string(),
             PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
-            operator_state_retriever_address,
+            service_manager_address,
         )
         .await
         .unwrap();
