@@ -1075,10 +1075,10 @@ async fn sign_churn_digest(
         SlashingRegistryCoordinator::new(registry_coordinator_address, &provider);
 
     let churn_wallet = PrivateKeySigner::from_str(&churn_signer_private_key)
-        .map_err(|_| ElContractsError::AllocationDelayNotSet)?;
+        .map_err(|_| ElContractsError::InvalidSignature)?;
 
     let operator_id = operator_id_from_g1_pub_key(bls_key_pair.public_key())
-        .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+        .map_err(|_| ElContractsError::InvalidSignature)?;
 
     let churn_digest_hash = contract_registry_coordinator
         .calculateOperatorChurnApprovalDigestHash(
@@ -1095,7 +1095,7 @@ async fn sign_churn_digest(
     let signature = churn_wallet
         .sign_hash(&churn_digest_hash)
         .await
-        .map_err(|_| ElContractsError::AllocationDelayNotSet)?;
+        .map_err(|_| ElContractsError::InvalidSignature)?;
 
     Ok(signature)
 }
@@ -1613,11 +1613,7 @@ mod tests {
         };
 
         contract_registry_coordinator
-            .createTotalDelegatedStakeQuorum(
-                operator_set_params,
-                U96::from(0),
-                vec![strategy_params],
-            )
+            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
             .send()
             .await
             .unwrap()
