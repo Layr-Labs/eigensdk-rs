@@ -1083,8 +1083,13 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let bls_key = OPERATOR_BLS_KEY.to_string();
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
         let operator_addr = FIFTH_ADDRESS;
         let quorum_nums = Bytes::from([0]);
 
@@ -1111,8 +1116,13 @@ mod tests {
     async fn test_set_slashable_stake_lookahead() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         create_operator_set(http_endpoint.as_str(), avs_address).await;
 
@@ -1146,8 +1156,13 @@ mod tests {
     async fn test_create_operator_directed_avs_rewards_submission() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         let strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
 
@@ -1239,8 +1254,13 @@ mod tests {
     async fn test_set_rewards_initiator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         // Set up event poller to listen to `RewardsInitiatorUpdated` events
         let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
@@ -1301,8 +1321,13 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let bls_key = OPERATOR_BLS_KEY.to_string();
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
         let quorum_nums = Bytes::from([0]);
 
         test_register_operator(&avs_writer, bls_key, quorum_nums, http_endpoint.clone()).await;
@@ -1341,9 +1366,13 @@ mod tests {
     #[tokio::test]
     async fn test_update_avs_metadata_uri() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
-                .await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            FIRST_PRIVATE_KEY.to_string(),
+            service_manager_adrr,
+        )
+        .await;
 
         let new_metadata = "https://avs-metadata-uri.com";
 
@@ -1364,8 +1393,13 @@ mod tests {
     async fn test_set_churn_approver() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
 
@@ -1394,9 +1428,13 @@ mod tests {
     #[tokio::test]
     async fn test_set_avs() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
-                .await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            FIRST_PRIVATE_KEY.to_string(),
+            service_manager_adrr,
+        )
+        .await;
 
         let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
 
@@ -1426,8 +1464,13 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let bls_key = OPERATOR_BLS_KEY.to_string();
         let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
         let quorum_nums = Bytes::from([0]);
 
         test_register_operator(&avs_writer, bls_key, quorum_nums, http_endpoint.clone()).await;
@@ -1481,8 +1524,13 @@ mod tests {
         let bls_key = OPERATOR_BLS_KEY.to_string();
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let quorum_nums = Bytes::from([0]);
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         test_register_operator(
@@ -1521,9 +1569,13 @@ mod tests {
             .status();
         assert!(tx_status);
 
-        let avs_writer_2 =
-            build_avs_registry_chain_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string())
-                .await;
+        let avs_writer_2 = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            SECOND_PRIVATE_KEY.to_string(),
+            service_manager_adrr,
+        )
+        .await;
+
         let bls_key_2 = OPERATOR_BLS_KEY_2.to_string();
 
         let operator_sig_salt = FixedBytes::from([0x02; 32]);
@@ -1571,7 +1623,13 @@ mod tests {
     async fn test_set_minimum_stake_for_quorum() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
         let quorum_number = 0;
         let minimum_stake = U96::from(10);
         let tx_hash = avs_writer
@@ -1601,8 +1659,13 @@ mod tests {
     async fn test_create_total_delegated_stake_quorum() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
 
@@ -1693,8 +1756,13 @@ mod tests {
     async fn test_create_slashable_stake_quorum() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
 
@@ -1754,7 +1822,13 @@ mod tests {
 
         let private_key = FIRST_PRIVATE_KEY.to_string();
 
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         let quorum_number = 0;
         let strategy_params = [StrategyParams {
@@ -1791,7 +1865,13 @@ mod tests {
 
         let private_key = FIRST_PRIVATE_KEY.to_string();
 
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         let quorum_number = 0;
         let strategy_params = [StrategyParams {
@@ -1827,8 +1907,13 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
 
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         let registry_contract = RegistryCoordinator::new(
             avs_writer.registry_coordinator_addr,
@@ -1859,8 +1944,13 @@ mod tests {
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let quorum_nums = Bytes::from([0]);
 
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         test_register_operator(
             &avs_writer,
@@ -1895,7 +1985,13 @@ mod tests {
 
         let private_key = FIRST_PRIVATE_KEY.to_string();
 
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         let quorum_number = 0;
         let strategy_params = [StrategyParams {
@@ -1944,8 +2040,13 @@ mod tests {
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let new_ejector_address = SECOND_ADDRESS;
 
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         let registry_contract = RegistryCoordinator::new(
             avs_writer.registry_coordinator_addr,
@@ -1971,8 +2072,13 @@ mod tests {
     async fn test_create_avs_rewards_submission() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let service_manager_adrr = get_service_manager_address(http_endpoint.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            private_key.clone(),
+            service_manager_adrr,
+        )
+        .await;
 
         let rewards_coordinator_address =
             get_rewards_coordinator_address(http_endpoint.clone()).await;
