@@ -27,6 +27,28 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Renamed `set_account_identifier` to `set_avs` [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
   * The underlying call was renamed in [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing).
 
+* Changed the signature of `build_avs_registry_chain_writer` to include the service manager address in [#384](https://github.com/Layr-Labs/eigensdk-rs/pull/384).
+  
+  ```rust
+  // Before
+  pub async fn build_avs_registry_chain_writer(
+      logger: SharedLogger,
+      provider: String,
+      signer: String,
+      registry_coordinator_addr: Address,
+      _operator_state_retriever_addr: Address,
+  ) -> Result<Self, AvsRegistryError> {}
+
+  // After
+  pub async fn build_avs_registry_chain_writer(
+      logger: SharedLogger,
+      provider: String,
+      signer: String,
+      registry_coordinator_addr: Address,
+      service_manager_addr: Address,
+  ) -> Result<Self, AvsRegistryError> {}
+  ```
+
 ### Deprecated ⚠️
 
 ### Removed 🗑
