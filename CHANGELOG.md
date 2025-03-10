@@ -39,6 +39,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Documentation 📚
 
+* Reflect 2 bindings(rewardsv2 and slashing) in readme in [#383](https://github.com/Layr-Labs/eigensdk-rs/pull/383).
+
 ### Other Changes
 
 ## [0.4.0] - 2025-02-20
