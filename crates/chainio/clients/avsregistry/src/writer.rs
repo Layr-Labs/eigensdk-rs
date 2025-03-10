@@ -64,6 +64,7 @@ impl AvsRegistryChainWriter {
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
+        service_manager_addr: Address,
         _operator_state_retriever_addr: Address,
     ) -> Result<Self, AvsRegistryError> {
         let fill_provider = get_provider(&provider);
