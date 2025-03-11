@@ -1141,8 +1141,7 @@ mod tests {
     use eigen_testing_utils::{
         anvil::{start_anvil_container, start_m2_anvil_container},
         anvil_constants::{
-            get_service_manager_address, FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS,
-            FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
+            FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
         },
         transaction::wait_transaction,
     };
@@ -1160,13 +1159,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
-        let avs_writer = build_avs_registry_chain_writer(
-            http_endpoint.clone(),
-            private_key.clone(),
-            service_manager_addr,
-        )
-        .await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1207,13 +1201,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
-        let avs_writer = build_avs_registry_chain_writer(
-            http_endpoint.clone(),
-            private_key.clone(),
-            service_manager_addr,
-        )
-        .await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1255,13 +1244,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
-        let avs_writer = build_avs_registry_chain_writer(
-            http_endpoint.clone(),
-            private_key.clone(),
-            service_manager_addr,
-        )
-        .await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1301,13 +1285,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
-        let avs_writer = build_avs_registry_chain_writer(
-            http_endpoint.clone(),
-            private_key.clone(),
-            service_manager_addr,
-        )
-        .await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1377,13 +1356,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
-        let avs_writer = build_avs_registry_chain_writer(
-            http_endpoint.clone(),
-            private_key.clone(),
-            service_manager_addr,
-        )
-        .await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1424,13 +1398,9 @@ mod tests {
     async fn test_get_operator_restaked_strategies() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
-        let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
-        let avs_writer = build_avs_registry_chain_writer(
-            http_endpoint.clone(),
-            FIRST_PRIVATE_KEY.to_string(),
-            service_manager_addr,
-        )
-        .await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
+                .await;
 
         let strategies = avs_reader
             .get_operator_restaked_strategies(FIRST_ADDRESS)
@@ -1574,13 +1544,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let bls_key = OPERATOR_BLS_KEY.to_string();
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
-        let avs_writer = build_avs_registry_chain_writer(
-            http_endpoint.clone(),
-            private_key.clone(),
-            service_manager_addr,
-        )
-        .await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let operator_addr = FIFTH_ADDRESS;
         let quorum_nums = Bytes::from([0]);
 
@@ -1730,13 +1695,8 @@ mod tests {
         let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
-        let avs_writer = build_avs_registry_chain_writer(
-            http_endpoint.clone(),
-            private_key.clone(),
-            service_manager_addr,
-        )
-        .await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
