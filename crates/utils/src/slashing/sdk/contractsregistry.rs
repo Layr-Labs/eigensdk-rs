@@ -125,7 +125,6 @@ pub mod ContractsRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractCountReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -232,14 +231,12 @@ pub mod ContractsRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractNamesCall {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`contractNames(uint256)`](contractNamesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractNamesReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::String,
     }
     #[allow(
@@ -350,14 +347,12 @@ pub mod ContractsRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractsCall {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`contracts(string)`](contractsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractsReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -468,9 +463,7 @@ pub mod ContractsRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerContractCall {
-        #[allow(missing_docs)]
         pub name: alloy::sol_types::private::String,
-        #[allow(missing_docs)]
         pub _contract: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`registerContract(string,address)`](registerContractCall) function.
@@ -595,13 +588,9 @@ pub mod ContractsRegistry {
     };
     ///Container for all the [`ContractsRegistry`](self) function calls.
     pub enum ContractsRegistryCalls {
-        #[allow(missing_docs)]
         contractCount(contractCountCall),
-        #[allow(missing_docs)]
         contractNames(contractNamesCall),
-        #[allow(missing_docs)]
         contracts(contractsCall),
-        #[allow(missing_docs)]
         registerContract(registerContractCall),
     }
     #[automatically_derived]

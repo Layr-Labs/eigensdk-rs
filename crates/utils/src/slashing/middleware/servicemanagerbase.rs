@@ -25,20 +25,14 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorDirectedRewardsSubmission {
-        #[allow(missing_docs)]
         pub strategiesAndMultipliers: alloy::sol_types::private::Vec<
             <StrategyAndMultiplier as alloy::sol_types::SolType>::RustType,
         >,
-        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub operatorRewards:
             alloy::sol_types::private::Vec<<OperatorReward as alloy::sol_types::SolType>::RustType>,
-        #[allow(missing_docs)]
         pub startTimestamp: u32,
-        #[allow(missing_docs)]
         pub duration: u32,
-        #[allow(missing_docs)]
         pub description: alloy::sol_types::private::String,
     }
     #[allow(
@@ -336,9 +330,7 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorReward {
-        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -533,17 +525,12 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RewardsSubmission {
-        #[allow(missing_docs)]
         pub strategiesAndMultipliers: alloy::sol_types::private::Vec<
             <StrategyAndMultiplier as alloy::sol_types::SolType>::RustType,
         >,
-        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
-        #[allow(missing_docs)]
         pub startTimestamp: u32,
-        #[allow(missing_docs)]
         pub duration: u32,
     }
     #[allow(
@@ -818,9 +805,7 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyAndMultiplier {
-        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub multiplier: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -1163,11 +1148,8 @@ pub mod ISignatureUtils {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SignatureWithSaltAndExpiry {
-        #[allow(missing_docs)]
         pub signature: alloy::sol_types::private::Bytes,
-        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
-        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -2651,7 +2633,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addPendingAdminCall {
-        #[allow(missing_docs)]
         pub admin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`addPendingAdmin(address)`](addPendingAdminCall) function.
@@ -2770,7 +2751,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct avsDirectoryReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2877,7 +2857,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createAVSRewardsSubmissionCall {
-        #[allow(missing_docs)]
         pub rewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::RewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -3003,7 +2982,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createOperatorDirectedAVSRewardsSubmissionCall {
-        #[allow(missing_docs)]
         pub operatorDirectedRewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -3142,7 +3120,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorFromAVSCall {
-        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`deregisterOperatorFromAVS(address)`](deregisterOperatorFromAVSCall) function.
@@ -3257,9 +3234,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorFromOperatorSetsCall {
-        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub operatorSetIds: alloy::sol_types::private::Vec<u32>,
     }
     ///Container type for the return parameters of the [`deregisterOperatorFromOperatorSets(address,uint32[])`](deregisterOperatorFromOperatorSetsCall) function.
@@ -3389,14 +3364,12 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorRestakedStrategiesCall {
-        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorRestakedStrategies(address)`](getOperatorRestakedStrategiesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorRestakedStrategiesReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -3514,7 +3487,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getRestakeableStrategiesReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -3628,7 +3600,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -3735,9 +3706,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorToAVSCall {
-        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub operatorSignature:
             <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
     }
@@ -3869,7 +3838,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeAdminCall {
-        #[allow(missing_docs)]
         pub admin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`removeAdmin(address)`](removeAdminCall) function.
@@ -3984,11 +3952,8 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeAppointeeCall {
-        #[allow(missing_docs)]
         pub appointee: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
     ///Container type for the return parameters of the [`removeAppointee(address,address,bytes4)`](removeAppointeeCall) function.
@@ -4125,7 +4090,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removePendingAdminCall {
-        #[allow(missing_docs)]
         pub pendingAdmin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`removePendingAdmin(address)`](removePendingAdminCall) function.
@@ -4354,7 +4318,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct rewardsInitiatorReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -4461,11 +4424,8 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAppointeeCall {
-        #[allow(missing_docs)]
         pub appointee: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
     ///Container type for the return parameters of the [`setAppointee(address,address,bytes4)`](setAppointeeCall) function.
@@ -4602,7 +4562,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setClaimerForCall {
-        #[allow(missing_docs)]
         pub claimer: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setClaimerFor(address)`](setClaimerForCall) function.
@@ -4717,7 +4676,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setRewardsInitiatorCall {
-        #[allow(missing_docs)]
         pub newRewardsInitiator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setRewardsInitiator(address)`](setRewardsInitiatorCall) function.
@@ -4834,7 +4792,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
-        #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`transferOwnership(address)`](transferOwnershipCall) function.
@@ -4949,7 +4906,6 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateAVSMetadataURICall {
-        #[allow(missing_docs)]
         pub _metadataURI: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`updateAVSMetadataURI(string)`](updateAVSMetadataURICall) function.
@@ -5061,45 +5017,25 @@ pub mod ServiceManagerBase {
     };
     ///Container for all the [`ServiceManagerBase`](self) function calls.
     pub enum ServiceManagerBaseCalls {
-        #[allow(missing_docs)]
         addPendingAdmin(addPendingAdminCall),
-        #[allow(missing_docs)]
         avsDirectory(avsDirectoryCall),
-        #[allow(missing_docs)]
         createAVSRewardsSubmission(createAVSRewardsSubmissionCall),
-        #[allow(missing_docs)]
         createOperatorDirectedAVSRewardsSubmission(createOperatorDirectedAVSRewardsSubmissionCall),
-        #[allow(missing_docs)]
         deregisterOperatorFromAVS(deregisterOperatorFromAVSCall),
-        #[allow(missing_docs)]
         deregisterOperatorFromOperatorSets(deregisterOperatorFromOperatorSetsCall),
-        #[allow(missing_docs)]
         getOperatorRestakedStrategies(getOperatorRestakedStrategiesCall),
-        #[allow(missing_docs)]
         getRestakeableStrategies(getRestakeableStrategiesCall),
-        #[allow(missing_docs)]
         owner(ownerCall),
-        #[allow(missing_docs)]
         registerOperatorToAVS(registerOperatorToAVSCall),
-        #[allow(missing_docs)]
         removeAdmin(removeAdminCall),
-        #[allow(missing_docs)]
         removeAppointee(removeAppointeeCall),
-        #[allow(missing_docs)]
         removePendingAdmin(removePendingAdminCall),
-        #[allow(missing_docs)]
         renounceOwnership(renounceOwnershipCall),
-        #[allow(missing_docs)]
         rewardsInitiator(rewardsInitiatorCall),
-        #[allow(missing_docs)]
         setAppointee(setAppointeeCall),
-        #[allow(missing_docs)]
         setClaimerFor(setClaimerForCall),
-        #[allow(missing_docs)]
         setRewardsInitiator(setRewardsInitiatorCall),
-        #[allow(missing_docs)]
         transferOwnership(transferOwnershipCall),
-        #[allow(missing_docs)]
         updateAVSMetadataURI(updateAVSMetadataURICall),
     }
     #[automatically_derived]
@@ -5704,13 +5640,9 @@ pub mod ServiceManagerBase {
     }
     ///Container for all the [`ServiceManagerBase`](self) custom errors.
     pub enum ServiceManagerBaseErrors {
-        #[allow(missing_docs)]
         DelayPeriodNotPassed(DelayPeriodNotPassed),
-        #[allow(missing_docs)]
         OnlyRegistryCoordinator(OnlyRegistryCoordinator),
-        #[allow(missing_docs)]
         OnlyRewardsInitiator(OnlyRewardsInitiator),
-        #[allow(missing_docs)]
         OnlyStakeRegistry(OnlyStakeRegistry),
     }
     #[automatically_derived]
@@ -5866,11 +5798,8 @@ pub mod ServiceManagerBase {
     }
     ///Container for all the [`ServiceManagerBase`](self) events.
     pub enum ServiceManagerBaseEvents {
-        #[allow(missing_docs)]
         Initialized(Initialized),
-        #[allow(missing_docs)]
         OwnershipTransferred(OwnershipTransferred),
-        #[allow(missing_docs)]
         RewardsInitiatorUpdated(RewardsInitiatorUpdated),
     }
     #[automatically_derived]

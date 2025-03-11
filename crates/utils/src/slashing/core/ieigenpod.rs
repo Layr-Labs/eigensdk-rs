@@ -25,9 +25,7 @@ pub mod BeaconChainProofs {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct BalanceContainerProof {
-        #[allow(missing_docs)]
         pub balanceContainerRoot: alloy::sol_types::private::FixedBytes<32>,
-        #[allow(missing_docs)]
         pub proof: alloy::sol_types::private::Bytes,
     }
     #[allow(
@@ -224,11 +222,8 @@ pub mod BeaconChainProofs {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct BalanceProof {
-        #[allow(missing_docs)]
         pub pubkeyHash: alloy::sol_types::private::FixedBytes<32>,
-        #[allow(missing_docs)]
         pub balanceRoot: alloy::sol_types::private::FixedBytes<32>,
-        #[allow(missing_docs)]
         pub proof: alloy::sol_types::private::Bytes,
     }
     #[allow(
@@ -444,9 +439,7 @@ pub mod BeaconChainProofs {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StateRootProof {
-        #[allow(missing_docs)]
         pub beaconStateRoot: alloy::sol_types::private::FixedBytes<32>,
-        #[allow(missing_docs)]
         pub proof: alloy::sol_types::private::Bytes,
     }
     #[allow(
@@ -643,10 +636,8 @@ pub mod BeaconChainProofs {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ValidatorProof {
-        #[allow(missing_docs)]
         pub validatorFields:
             alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
-        #[allow(missing_docs)]
         pub proof: alloy::sol_types::private::Bytes,
     }
     #[allow(
@@ -1102,15 +1093,10 @@ pub mod IEigenPodTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Checkpoint {
-        #[allow(missing_docs)]
         pub beaconBlockRoot: alloy::sol_types::private::FixedBytes<32>,
-        #[allow(missing_docs)]
         pub proofsRemaining: alloy::sol_types::private::primitives::aliases::U24,
-        #[allow(missing_docs)]
         pub podBalanceGwei: u64,
-        #[allow(missing_docs)]
         pub balanceDeltasGwei: i64,
-        #[allow(missing_docs)]
         pub prevBeaconBalanceGwei: u64,
     }
     #[allow(
@@ -1388,13 +1374,9 @@ pub mod IEigenPodTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ValidatorInfo {
-        #[allow(missing_docs)]
         pub validatorIndex: u64,
-        #[allow(missing_docs)]
         pub restakedBalanceGwei: u64,
-        #[allow(missing_docs)]
         pub lastCheckpointedAt: u64,
-        #[allow(missing_docs)]
         pub status: <VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -5155,7 +5137,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct activeValidatorCountReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -5262,14 +5243,12 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct checkpointBalanceExitedGweiCall {
-        #[allow(missing_docs)]
         pub _0: u64,
     }
     ///Container type for the return parameters of the [`checkpointBalanceExitedGwei(uint64)`](checkpointBalanceExitedGweiCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct checkpointBalanceExitedGweiReturn {
-        #[allow(missing_docs)]
         pub _0: u64,
     }
     #[allow(
@@ -5384,7 +5363,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currentCheckpointReturn {
-        #[allow(missing_docs)]
         pub _0: <IEigenPodTypes::Checkpoint as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -5496,7 +5474,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currentCheckpointTimestampReturn {
-        #[allow(missing_docs)]
         pub _0: u64,
     }
     #[allow(
@@ -5607,7 +5584,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodManagerReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5714,14 +5690,12 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getParentBlockRootCall {
-        #[allow(missing_docs)]
         pub timestamp: u64,
     }
     ///Container type for the return parameters of the [`getParentBlockRoot(uint64)`](getParentBlockRootCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getParentBlockRootReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5832,7 +5806,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
-        #[allow(missing_docs)]
         pub owner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`initialize(address)`](initializeCall) function.
@@ -5951,7 +5924,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct lastCheckpointTimestampReturn {
-        #[allow(missing_docs)]
         pub _0: u64,
     }
     #[allow(
@@ -6062,7 +6034,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct podOwnerReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -6173,7 +6144,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct proofSubmitterReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -6280,12 +6250,9 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recoverTokensCall {
-        #[allow(missing_docs)]
         pub tokenList: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-        #[allow(missing_docs)]
         pub amountsToWithdraw:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
-        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`recoverTokens(address[],uint256[],address)`](recoverTokensCall) function.
@@ -6424,7 +6391,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setProofSubmitterCall {
-        #[allow(missing_docs)]
         pub newProofSubmitter: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setProofSubmitter(address)`](setProofSubmitterCall) function.
@@ -6541,11 +6507,8 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeCall {
-        #[allow(missing_docs)]
         pub pubkey: alloy::sol_types::private::Bytes,
-        #[allow(missing_docs)]
         pub signature: alloy::sol_types::private::Bytes,
-        #[allow(missing_docs)]
         pub depositDataRoot: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`stake(bytes,bytes,bytes32)`](stakeCall) function.
@@ -6682,7 +6645,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct startCheckpointCall {
-        #[allow(missing_docs)]
         pub revertIfNoBalance: bool,
     }
     ///Container type for the return parameters of the [`startCheckpoint(bool)`](startCheckpointCall) function.
@@ -6799,14 +6761,12 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorPubkeyHashToInfoCall {
-        #[allow(missing_docs)]
         pub validatorPubkeyHash: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`validatorPubkeyHashToInfo(bytes32)`](validatorPubkeyHashToInfoCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorPubkeyHashToInfoReturn {
-        #[allow(missing_docs)]
         pub _0: <IEigenPodTypes::ValidatorInfo as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -6920,14 +6880,12 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorPubkeyToInfoCall {
-        #[allow(missing_docs)]
         pub validatorPubkey: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`validatorPubkeyToInfo(bytes)`](validatorPubkeyToInfoCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorPubkeyToInfoReturn {
-        #[allow(missing_docs)]
         pub _0: <IEigenPodTypes::ValidatorInfo as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -7041,14 +6999,12 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorStatus_0Call {
-        #[allow(missing_docs)]
         pub validatorPubkey: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`validatorStatus(bytes)`](validatorStatus_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorStatus_0Return {
-        #[allow(missing_docs)]
         pub _0: <IEigenPodTypes::VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -7162,14 +7118,12 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorStatus_1Call {
-        #[allow(missing_docs)]
         pub pubkeyHash: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`validatorStatus(bytes32)`](validatorStatus_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct validatorStatus_1Return {
-        #[allow(missing_docs)]
         pub _0: <IEigenPodTypes::VALIDATOR_STATUS as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -7283,10 +7237,8 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct verifyCheckpointProofsCall {
-        #[allow(missing_docs)]
         pub balanceContainerProof:
             <BeaconChainProofs::BalanceContainerProof as alloy::sol_types::SolType>::RustType,
-        #[allow(missing_docs)]
         pub proofs: alloy::sol_types::private::Vec<
             <BeaconChainProofs::BalanceProof as alloy::sol_types::SolType>::RustType,
         >,
@@ -7421,12 +7373,9 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct verifyStaleBalanceCall {
-        #[allow(missing_docs)]
         pub beaconTimestamp: u64,
-        #[allow(missing_docs)]
         pub stateRootProof:
             <BeaconChainProofs::StateRootProof as alloy::sol_types::SolType>::RustType,
-        #[allow(missing_docs)]
         pub proof: <BeaconChainProofs::ValidatorProof as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`verifyStaleBalance(uint64,(bytes32,bytes),(bytes32[],bytes))`](verifyStaleBalanceCall) function.
@@ -7564,17 +7513,12 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct verifyWithdrawalCredentialsCall {
-        #[allow(missing_docs)]
         pub beaconTimestamp: u64,
-        #[allow(missing_docs)]
         pub stateRootProof:
             <BeaconChainProofs::StateRootProof as alloy::sol_types::SolType>::RustType,
-        #[allow(missing_docs)]
         pub validatorIndices:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U40>,
-        #[allow(missing_docs)]
         pub validatorFieldsProofs: alloy::sol_types::private::Vec<alloy::sol_types::private::Bytes>,
-        #[allow(missing_docs)]
         pub validatorFields: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
         >,
@@ -7744,9 +7688,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawRestakedBeaconChainETHCall {
-        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`withdrawRestakedBeaconChainETH(address,uint256)`](withdrawRestakedBeaconChainETHCall) function.
@@ -7880,7 +7822,6 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawableRestakedExecutionLayerGweiReturn {
-        #[allow(missing_docs)]
         pub _0: u64,
     }
     #[allow(
@@ -7986,51 +7927,28 @@ pub mod IEigenPod {
     };
     ///Container for all the [`IEigenPod`](self) function calls.
     pub enum IEigenPodCalls {
-        #[allow(missing_docs)]
         activeValidatorCount(activeValidatorCountCall),
-        #[allow(missing_docs)]
         checkpointBalanceExitedGwei(checkpointBalanceExitedGweiCall),
-        #[allow(missing_docs)]
         currentCheckpoint(currentCheckpointCall),
-        #[allow(missing_docs)]
         currentCheckpointTimestamp(currentCheckpointTimestampCall),
-        #[allow(missing_docs)]
         eigenPodManager(eigenPodManagerCall),
-        #[allow(missing_docs)]
         getParentBlockRoot(getParentBlockRootCall),
-        #[allow(missing_docs)]
         initialize(initializeCall),
-        #[allow(missing_docs)]
         lastCheckpointTimestamp(lastCheckpointTimestampCall),
-        #[allow(missing_docs)]
         podOwner(podOwnerCall),
-        #[allow(missing_docs)]
         proofSubmitter(proofSubmitterCall),
-        #[allow(missing_docs)]
         recoverTokens(recoverTokensCall),
-        #[allow(missing_docs)]
         setProofSubmitter(setProofSubmitterCall),
-        #[allow(missing_docs)]
         stake(stakeCall),
-        #[allow(missing_docs)]
         startCheckpoint(startCheckpointCall),
-        #[allow(missing_docs)]
         validatorPubkeyHashToInfo(validatorPubkeyHashToInfoCall),
-        #[allow(missing_docs)]
         validatorPubkeyToInfo(validatorPubkeyToInfoCall),
-        #[allow(missing_docs)]
         validatorStatus_0(validatorStatus_0Call),
-        #[allow(missing_docs)]
         validatorStatus_1(validatorStatus_1Call),
-        #[allow(missing_docs)]
         verifyCheckpointProofs(verifyCheckpointProofsCall),
-        #[allow(missing_docs)]
         verifyStaleBalance(verifyStaleBalanceCall),
-        #[allow(missing_docs)]
         verifyWithdrawalCredentials(verifyWithdrawalCredentialsCall),
-        #[allow(missing_docs)]
         withdrawRestakedBeaconChainETH(withdrawRestakedBeaconChainETHCall),
-        #[allow(missing_docs)]
         withdrawableRestakedExecutionLayerGwei(withdrawableRestakedExecutionLayerGweiCall),
     }
     #[automatically_derived]
@@ -8699,49 +8617,27 @@ pub mod IEigenPod {
     }
     ///Container for all the [`IEigenPod`](self) custom errors.
     pub enum IEigenPodErrors {
-        #[allow(missing_docs)]
         BeaconTimestampTooFarInPast(BeaconTimestampTooFarInPast),
-        #[allow(missing_docs)]
         CannotCheckpointTwiceInSingleBlock(CannotCheckpointTwiceInSingleBlock),
-        #[allow(missing_docs)]
         CheckpointAlreadyActive(CheckpointAlreadyActive),
-        #[allow(missing_docs)]
         CredentialsAlreadyVerified(CredentialsAlreadyVerified),
-        #[allow(missing_docs)]
         CurrentlyPaused(CurrentlyPaused),
-        #[allow(missing_docs)]
         InputAddressZero(InputAddressZero),
-        #[allow(missing_docs)]
         InputArrayLengthMismatch(InputArrayLengthMismatch),
-        #[allow(missing_docs)]
         InsufficientWithdrawableBalance(InsufficientWithdrawableBalance),
-        #[allow(missing_docs)]
         InvalidEIP4788Response(InvalidEIP4788Response),
-        #[allow(missing_docs)]
         InvalidPubKeyLength(InvalidPubKeyLength),
-        #[allow(missing_docs)]
         MsgValueNot32ETH(MsgValueNot32ETH),
-        #[allow(missing_docs)]
         NoActiveCheckpoint(NoActiveCheckpoint),
-        #[allow(missing_docs)]
         NoBalanceToCheckpoint(NoBalanceToCheckpoint),
-        #[allow(missing_docs)]
         OnlyEigenPodManager(OnlyEigenPodManager),
-        #[allow(missing_docs)]
         OnlyEigenPodOwner(OnlyEigenPodOwner),
-        #[allow(missing_docs)]
         OnlyEigenPodOwnerOrProofSubmitter(OnlyEigenPodOwnerOrProofSubmitter),
-        #[allow(missing_docs)]
         TimestampOutOfRange(TimestampOutOfRange),
-        #[allow(missing_docs)]
         ValidatorInactiveOnBeaconChain(ValidatorInactiveOnBeaconChain),
-        #[allow(missing_docs)]
         ValidatorIsExitingBeaconChain(ValidatorIsExitingBeaconChain),
-        #[allow(missing_docs)]
         ValidatorNotActiveInPod(ValidatorNotActiveInPod),
-        #[allow(missing_docs)]
         ValidatorNotSlashedOnBeaconChain(ValidatorNotSlashedOnBeaconChain),
-        #[allow(missing_docs)]
         WithdrawalCredentialsNotForEigenPod(WithdrawalCredentialsNotForEigenPod),
     }
     #[automatically_derived]
@@ -9404,25 +9300,15 @@ pub mod IEigenPod {
     }
     ///Container for all the [`IEigenPod`](self) events.
     pub enum IEigenPodEvents {
-        #[allow(missing_docs)]
         CheckpointCreated(CheckpointCreated),
-        #[allow(missing_docs)]
         CheckpointFinalized(CheckpointFinalized),
-        #[allow(missing_docs)]
         EigenPodStaked(EigenPodStaked),
-        #[allow(missing_docs)]
         NonBeaconChainETHReceived(NonBeaconChainETHReceived),
-        #[allow(missing_docs)]
         ProofSubmitterUpdated(ProofSubmitterUpdated),
-        #[allow(missing_docs)]
         RestakedBeaconChainETHWithdrawn(RestakedBeaconChainETHWithdrawn),
-        #[allow(missing_docs)]
         ValidatorBalanceUpdated(ValidatorBalanceUpdated),
-        #[allow(missing_docs)]
         ValidatorCheckpointed(ValidatorCheckpointed),
-        #[allow(missing_docs)]
         ValidatorRestaked(ValidatorRestaked),
-        #[allow(missing_docs)]
         ValidatorWithdrawn(ValidatorWithdrawn),
     }
     #[automatically_derived]

@@ -2369,22 +2369,16 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addSharesCall {
-        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`addShares(address,address,address,uint256)`](addSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addSharesReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
-        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -2540,7 +2534,6 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainETHStrategyReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2647,14 +2640,12 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainSlashingFactorCall {
-        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`beaconChainSlashingFactor(address)`](beaconChainSlashingFactorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainSlashingFactorReturn {
-        #[allow(missing_docs)]
         pub _0: u64,
     }
     #[allow(
@@ -2769,7 +2760,6 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createPodReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2880,7 +2870,6 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodBeaconReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2991,7 +2980,6 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ethPOSReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -3098,14 +3086,12 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPodCall {
-        #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getPod(address)`](getPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPodReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -3216,14 +3202,12 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct hasPodCall {
-        #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`hasPod(address)`](hasPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct hasPodReturn {
-        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -3338,7 +3322,6 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct numPodsReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -3445,14 +3428,12 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerToPodCall {
-        #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`ownerToPod(address)`](ownerToPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerToPodReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -3563,7 +3544,6 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauseCall {
-        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`pause(uint256)`](pauseCall) function.
@@ -3788,14 +3768,12 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Call {
-        #[allow(missing_docs)]
         pub index: u8,
     }
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Return {
-        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -3910,7 +3888,6 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Return {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4021,7 +3998,6 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -4128,14 +4104,12 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct podOwnerDepositSharesCall {
-        #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`podOwnerDepositShares(address)`](podOwnerDepositSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct podOwnerDepositSharesReturn {
-        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::I256,
     }
     #[allow(
@@ -4246,11 +4220,8 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordBeaconChainETHBalanceUpdateCall {
-        #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub prevRestakedBalanceWei: alloy::sol_types::private::primitives::aliases::U256,
-        #[allow(missing_docs)]
         pub balanceDeltaWei: alloy::sol_types::private::primitives::aliases::I256,
     }
     ///Container type for the return parameters of the [`recordBeaconChainETHBalanceUpdate(address,uint256,int256)`](recordBeaconChainETHBalanceUpdateCall) function.
@@ -4392,11 +4363,8 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeDepositSharesCall {
-        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub depositSharesToRemove: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`removeDepositShares(address,address,uint256)`](removeDepositSharesCall) function.
@@ -4533,11 +4501,8 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeCall {
-        #[allow(missing_docs)]
         pub pubkey: alloy::sol_types::private::Bytes,
-        #[allow(missing_docs)]
         pub signature: alloy::sol_types::private::Bytes,
-        #[allow(missing_docs)]
         pub depositDataRoot: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`stake(bytes,bytes,bytes32)`](stakeCall) function.
@@ -4674,16 +4639,13 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerDepositSharesCall {
-        #[allow(missing_docs)]
         pub user: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`stakerDepositShares(address,address)`](stakerDepositSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerDepositSharesReturn {
-        #[allow(missing_docs)]
         pub depositShares: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4811,7 +4773,6 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct unpauseCall {
-        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`unpause(uint256)`](unpauseCall) function.
@@ -4928,13 +4889,9 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawSharesAsTokensCall {
-        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
-        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`withdrawSharesAsTokens(address,address,address,uint256)`](withdrawSharesAsTokensCall) function.
@@ -5074,49 +5031,27 @@ pub mod IEigenPodManager {
     };
     ///Container for all the [`IEigenPodManager`](self) function calls.
     pub enum IEigenPodManagerCalls {
-        #[allow(missing_docs)]
         addShares(addSharesCall),
-        #[allow(missing_docs)]
         beaconChainETHStrategy(beaconChainETHStrategyCall),
-        #[allow(missing_docs)]
         beaconChainSlashingFactor(beaconChainSlashingFactorCall),
-        #[allow(missing_docs)]
         createPod(createPodCall),
-        #[allow(missing_docs)]
         eigenPodBeacon(eigenPodBeaconCall),
-        #[allow(missing_docs)]
         ethPOS(ethPOSCall),
-        #[allow(missing_docs)]
         getPod(getPodCall),
-        #[allow(missing_docs)]
         hasPod(hasPodCall),
-        #[allow(missing_docs)]
         numPods(numPodsCall),
-        #[allow(missing_docs)]
         ownerToPod(ownerToPodCall),
-        #[allow(missing_docs)]
         pause(pauseCall),
-        #[allow(missing_docs)]
         pauseAll(pauseAllCall),
-        #[allow(missing_docs)]
         paused_0(paused_0Call),
-        #[allow(missing_docs)]
         paused_1(paused_1Call),
-        #[allow(missing_docs)]
         pauserRegistry(pauserRegistryCall),
-        #[allow(missing_docs)]
         podOwnerDepositShares(podOwnerDepositSharesCall),
-        #[allow(missing_docs)]
         recordBeaconChainETHBalanceUpdate(recordBeaconChainETHBalanceUpdateCall),
-        #[allow(missing_docs)]
         removeDepositShares(removeDepositSharesCall),
-        #[allow(missing_docs)]
         stake(stakeCall),
-        #[allow(missing_docs)]
         stakerDepositShares(stakerDepositSharesCall),
-        #[allow(missing_docs)]
         unpause(unpauseCall),
-        #[allow(missing_docs)]
         withdrawSharesAsTokens(withdrawSharesAsTokensCall),
     }
     #[automatically_derived]
@@ -5680,29 +5615,17 @@ pub mod IEigenPodManager {
     }
     ///Container for all the [`IEigenPodManager`](self) custom errors.
     pub enum IEigenPodManagerErrors {
-        #[allow(missing_docs)]
         CurrentlyPaused(CurrentlyPaused),
-        #[allow(missing_docs)]
         EigenPodAlreadyExists(EigenPodAlreadyExists),
-        #[allow(missing_docs)]
         InputAddressZero(InputAddressZero),
-        #[allow(missing_docs)]
         InvalidNewPausedStatus(InvalidNewPausedStatus),
-        #[allow(missing_docs)]
         InvalidStrategy(InvalidStrategy),
-        #[allow(missing_docs)]
         LegacyWithdrawalsNotCompleted(LegacyWithdrawalsNotCompleted),
-        #[allow(missing_docs)]
         OnlyDelegationManager(OnlyDelegationManager),
-        #[allow(missing_docs)]
         OnlyEigenPod(OnlyEigenPod),
-        #[allow(missing_docs)]
         OnlyPauser(OnlyPauser),
-        #[allow(missing_docs)]
         OnlyUnpauser(OnlyUnpauser),
-        #[allow(missing_docs)]
         SharesNegative(SharesNegative),
-        #[allow(missing_docs)]
         SharesNotMultipleOfGwei(SharesNotMultipleOfGwei),
     }
     #[automatically_derived]
@@ -6027,21 +5950,13 @@ pub mod IEigenPodManager {
     }
     ///Container for all the [`IEigenPodManager`](self) events.
     pub enum IEigenPodManagerEvents {
-        #[allow(missing_docs)]
         BeaconChainETHDeposited(BeaconChainETHDeposited),
-        #[allow(missing_docs)]
         BeaconChainETHWithdrawalCompleted(BeaconChainETHWithdrawalCompleted),
-        #[allow(missing_docs)]
         BeaconChainSlashingFactorDecreased(BeaconChainSlashingFactorDecreased),
-        #[allow(missing_docs)]
         NewTotalShares(NewTotalShares),
-        #[allow(missing_docs)]
         Paused(Paused),
-        #[allow(missing_docs)]
         PodDeployed(PodDeployed),
-        #[allow(missing_docs)]
         PodSharesUpdated(PodSharesUpdated),
-        #[allow(missing_docs)]
         Unpaused(Unpaused),
     }
     #[automatically_derived]

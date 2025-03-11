@@ -835,9 +835,7 @@ mod tests {
     use alloy::network::TxSignerSync;
     use alloy::primitives::address;
     use alloy::primitives::{bytes, TxKind::Call, U256};
-    use alloy::rpc::types::eth::{
-        pubsub::SubscriptionResult, BlockId, BlockNumberOrTag, BlockTransactionsKind,
-    };
+    use alloy::rpc::types::eth::{pubsub::SubscriptionResult, BlockId, BlockNumberOrTag};
     use eigen_common::get_provider;
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::{set_account_balance, start_anvil_container};
@@ -943,17 +941,14 @@ mod tests {
 
         // get the hash from the last block
         let hash = provider
-            .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
+            .get_block(BlockId::latest())
             .await
             .unwrap()
             .unwrap()
             .header
             .hash;
 
-        let expected_block = provider
-            .get_block_by_hash(hash, BlockTransactionsKind::Full)
-            .await
-            .unwrap();
+        let expected_block = provider.get_block_by_hash(hash).full().await.unwrap();
         let block = instrumented_client.block_by_hash(hash).await.unwrap();
 
         assert_eq!(expected_block, block);
@@ -968,7 +963,8 @@ mod tests {
         let block_number = 1;
 
         let expected_block = provider
-            .get_block_by_number(block_number.into(), BlockTransactionsKind::Full)
+            .get_block_by_number(block_number.into())
+            .full()
             .await
             .unwrap();
         let block = instrumented_client
@@ -987,7 +983,7 @@ mod tests {
         let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
 
         let block = provider
-            .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
+            .get_block(BlockId::latest())
             .await
             .unwrap()
             .unwrap();
@@ -1085,7 +1081,11 @@ mod tests {
         let tx_request: TransactionRequest = tx.clone().into();
         let tx_request = tx_request.from(*from);
 
-        let expected_estimated_gas = provider.clone().estimate_gas(&tx_request).await.unwrap();
+        let expected_estimated_gas = provider
+            .clone()
+            .estimate_gas(tx_request.clone())
+            .await
+            .unwrap();
         let estimated_gas = instrumented_client.estimate_gas(tx_request).await.unwrap();
         assert_eq!(expected_estimated_gas, estimated_gas);
     }
@@ -1121,7 +1121,7 @@ mod tests {
         let tx_request = tx_request.from(*from);
 
         // test call_contract
-        let expected_bytes = anvil.call(&tx_request).await.unwrap();
+        let expected_bytes = anvil.call(tx_request.clone()).await.unwrap();
         let bytes = instrumented_client
             .call_contract(tx_request.clone(), BlockNumberOrTag::Latest)
             .await
@@ -1230,14 +1230,14 @@ mod tests {
 
         let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
         let hash = provider
-            .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
+            .get_block(BlockId::latest())
             .await
             .unwrap()
             .unwrap()
             .header
             .hash;
         let expected_header = provider
-            .get_block_by_hash(hash, BlockTransactionsKind::Hashes)
+            .get_block_by_hash(hash)
             .await
             .unwrap()
             .unwrap()
@@ -1261,7 +1261,7 @@ mod tests {
             .unwrap();
 
         let expected_header = provider
-            .get_block_by_number(block_number, BlockTransactionsKind::Hashes)
+            .get_block_by_number(block_number)
             .await
             .unwrap()
             .unwrap()
@@ -1363,7 +1363,7 @@ mod tests {
         let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
 
         let expected_transaction_count: u64 = provider
-            .get_block_by_number(BlockNumberOrTag::Pending, BlockTransactionsKind::Hashes)
+            .get_block_by_number(BlockNumberOrTag::Pending)
             .await
             .unwrap()
             .unwrap()

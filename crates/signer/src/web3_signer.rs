@@ -1,4 +1,4 @@
-use alloy::consensus::{transaction::RlpEcdsaTx, SignableTransaction, TxLegacy};
+use alloy::consensus::{transaction::RlpEcdsaDecodableTx, SignableTransaction, TxLegacy};
 use alloy::network::TxSigner;
 use alloy::primitives::{Address, Bytes, TxKind, U256};
 use alloy::rpc::client::{ClientBuilder, ReqwestClient, RpcCall};
