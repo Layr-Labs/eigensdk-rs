@@ -1009,6 +1009,20 @@ impl ELChainWriter {
 }
 
 /// Generates the G1 and G2 points for the operator registration message hash
+///
+/// # Arguments
+///
+/// * `rpc_url` - rpc url
+/// * `registry_coordinator_address` - registry coordinator address
+/// * `operator` - operator address
+/// * `bls_key_pair` - bls key pair of the operator
+///
+/// # Returns
+///
+/// * `(G1Point, G1Point, G2Point)` - alloy g1 point signed msg, g1 pub key bn254, g2 pub key bn254
+///
+/// # Errors
+/// * `ElContractsError` - if the call to the contract fails.
 async fn prepare_bls_keys_for_registration(
     rpc_url: &str,
     registry_coordinator_address: Address,
@@ -1043,7 +1057,16 @@ async fn prepare_bls_keys_for_registration(
     ))
 }
 
-/// Builds the operator kick params for the operator churn
+/// Builds the operator kick params for [`register_for_operator_sets_with_churn`]
+///
+/// # Arguments
+///
+/// * `operators_to_kick` - operators to kick
+/// * `quorum_numbers` - quorum numbers
+///
+/// # Returns
+///
+/// * `Vec<OperatorKickParam>` - operator kick params
 fn build_operator_kick_params(
     operators_to_kick: &[Address],
     quorum_numbers: &Bytes,
@@ -1058,7 +1081,24 @@ fn build_operator_kick_params(
         .collect()
 }
 
-/// Signs the churn digest hash
+/// Signs the churn digest hash for [`register_for_operator_sets_with_churn`]
+///
+/// # Arguments
+///
+/// * `rpc_url` - rpc url
+/// * `registry_coordinator_address` - registry coordinator address
+/// * `bls_key_pair` - bls key pair of the operator
+/// * `operator` - operator address
+/// * `operators_to_kick_params` - operators to kick params
+/// * `churn_signer_private_key` - private key of the churn signer
+/// * `churn_sig_salt` - churn signature salt
+/// * `churn_sig_expiry` - churn signature expiry
+///
+/// # Returns
+/// * `PrimitiveSignature` - signed churn digest hash
+///
+/// # Errors
+/// * `ElContractsError` - if the call to the contract fails.
 #[allow(clippy::too_many_arguments)]
 async fn sign_churn_digest(
     rpc_url: &str,
@@ -1100,7 +1140,21 @@ async fn sign_churn_digest(
     Ok(signature)
 }
 
-/// Encodes the registration data for the operator churn
+/// Encodes the registration data for [`register_for_operator_sets_with_churn`]
+///
+/// # Arguments
+/// * `socket` - socket
+/// * `alloy_g1_point_signed_msg` - alloy g1 point signed msg
+/// * `g1_pub_key_bn254` - g1 pub key bn254
+/// * `g2_pub_key_bn254` - g2 pub key bn254
+/// * `operators_to_kick_params` - operators to kick params
+/// * `churn_signature` - churn signature
+/// * `churn_sig_salt` - churn signature salt
+/// * `churn_sig_expiry` - churn signature expiry
+///
+/// # Returns
+///
+/// * `Vec<u8>` - encoded registration data
 #[allow(clippy::too_many_arguments)]
 fn encode_registration_data(
     socket: String,
@@ -1112,7 +1166,6 @@ fn encode_registration_data(
     churn_sig_salt: FixedBytes<32>,
     churn_sig_expiry: U256,
 ) -> Vec<u8> {
-    // Construir arrays para los componentes X e Y del punto G2
     let g2_point_x = vec![
         DynSolValue::Uint(g2_pub_key_bn254.X[0], 256),
         DynSolValue::Uint(g2_pub_key_bn254.X[1], 256),
@@ -1122,7 +1175,6 @@ fn encode_registration_data(
         DynSolValue::Uint(g2_pub_key_bn254.Y[1], 256),
     ];
 
-    // Armar los parámetros de registro de la pubkey en un tuple
     let pubkey_registration_params = DynSolValue::Tuple(vec![
         DynSolValue::Tuple(vec![
             DynSolValue::Uint(alloy_g1_point_signed_msg.X, 256),
@@ -1138,7 +1190,6 @@ fn encode_registration_data(
         ]),
     ]);
 
-    // Convertir los parámetros para los operadores a expulsar en un array
     let operator_kick_params = DynSolValue::Array(
         operators_to_kick_params
             .into_iter()
@@ -1151,14 +1202,12 @@ fn encode_registration_data(
             .collect(),
     );
 
-    // Construir el tuple para la firma de churn, salt y expiry
     let signature_with_salt = DynSolValue::Tuple(vec![
         DynSolValue::Bytes(churn_signature.as_bytes().into()),
         DynSolValue::FixedBytes(churn_sig_salt, 32),
         DynSolValue::Uint(churn_sig_expiry, 256),
     ]);
 
-    // Construir el tuple final y codificarlo
     DynSolValue::Tuple(vec![
         DynSolValue::Uint(U256::from(1), 8), // RegistrationType.CHURN = 1
         DynSolValue::String(socket),
