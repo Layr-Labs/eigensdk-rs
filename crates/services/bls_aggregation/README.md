@@ -1,6 +1,6 @@
 # Bls Aggregation Service
 
-The BLS Aggregation Service provides functionality to aggregate BLS signatures from multiple operators into a single aggregated signature. This service is fundamental for AVS systems in EigenLayer, as it enables efficient verification of consensus among multiple operators.
+The BLS Aggregation Service provides functionality to aggregate BLS signatures from multiple operators into a single aggregated signature.
 
 ## Key Features
 
