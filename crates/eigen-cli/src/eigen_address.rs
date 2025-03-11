@@ -6,8 +6,7 @@ use eigen_common::get_provider;
 use eigen_utils::slashing::{
     core::delegationmanager::DelegationManager,
     middleware::{
-        iblssignaturechecker::IBLSSignatureChecker,
-        registrycoordinator::RegistryCoordinator::{self, serviceManagerReturn},
+        iblssignaturechecker::IBLSSignatureChecker, registrycoordinator::RegistryCoordinator,
         stakeregistry::StakeRegistry,
     },
 };
@@ -129,8 +128,8 @@ impl ContractAddresses {
                     .serviceManager()
                     .call()
                     .await
-                    .unwrap_or(serviceManagerReturn { _0: Address::ZERO }) // Return a default address if we are using `SlashingRegistryCoordinator`
-                    ._0;
+                    .map(|r| r._0)
+                    .unwrap_or(Address::ZERO);
                 Ok((registry_coord_addr, service_manager_addr))
             }
             (_, Some(service_manager_addr)) => {
