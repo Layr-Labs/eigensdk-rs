@@ -28,8 +28,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
   * The underlying call was renamed in [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing).
 
 * Changed the signature of `build_avs_registry_chain_writer` in [#384](https://github.com/Layr-Labs/eigensdk-rs/pull/384).
-  * The `operator_state_retriever_addr` parameter was removed.
-  * The `service_manager_addr` parameter was added.
+  * The `operator_state_retriever_addr` parameter was replaced by `service_manager_addr`.
+  * This change was made because later middleware versions do not include `ServiceManager`.
   
   ```rust
   // Before
