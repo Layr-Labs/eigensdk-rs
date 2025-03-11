@@ -1,6 +1,18 @@
-# Bls Aggregation Service
+# BLS Aggregation Service
 
-The BLS Aggregation Service provides functionality to aggregate BLS signatures from multiple operators into a single aggregated signature.
+
+## Introduction
+
+The BLS Aggregation Service provides functionality to aggregate BLS signatures from multiple operators into a single aggregated signature. This is used by the Aggregator to verify the signatures of the operators and send the aggregated response once the quorum is reached or time expires. 
+
+When you initialize the BLS Aggregation Service, it returns a tuple of `ServiceHandle` and `AggregateReceiver`. The `ServiceHandle` is used to interact with the service. The available messages to send to the service are:
+
+- `initialize_task()`: Initializes a new task
+- `process_signature()`: Processes a signature for a task
+
+The `AggregateReceiver` is used to receive aggregated responses from the service.
+
+Once a task is initialized, the service will start processing the task in a loop in the background. The service will wait for the quorum to be reached. Aggregator will receive new signatures from the operators via the `process_signature()` method. Once the quorum is reached or the time expires, the service will aggregate the signatures and send the aggregated response to the `AggregateReceiver`.
 
 ## Key Features
 
