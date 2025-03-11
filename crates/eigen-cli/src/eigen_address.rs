@@ -122,6 +122,9 @@ impl ContractAddresses {
         N: alloy::contract::private::Network,
     {
         match (registry_coordinator, service_manager) {
+            (Some(registry_coord_addr), Some(service_manager_addr)) => {
+                Ok((registry_coord_addr, service_manager_addr))
+            }
             (Some(registry_coord_addr), _) => {
                 let registry_coordinator = RegistryCoordinator::new(registry_coord_addr, &client);
                 let service_manager_addr = registry_coordinator
