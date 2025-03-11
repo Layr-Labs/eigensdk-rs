@@ -1009,10 +1009,12 @@ impl ELChainWriter {
 }
 
 /// Generates the G1 and G2 points for the operator registration message hash
+/// Prepares the BLS keys for registration by signing a hashed message and converting the public keys
+/// to the required BN254 curve format.
 ///
 /// # Arguments
 ///
-/// * `rpc_url` - rpc url
+/// * `rpc_url` - rpc url used to create the provider.
 /// * `registry_coordinator_address` - registry coordinator address
 /// * `operator` - operator address
 /// * `bls_key_pair` - bls key pair of the operator
@@ -1058,6 +1060,7 @@ async fn prepare_bls_keys_for_registration(
 }
 
 /// Builds the operator kick params for [`register_for_operator_sets_with_churn`]
+/// The operator kick params are used to specify the operators to kick if the quorum is full.
 ///
 /// # Arguments
 ///
@@ -1081,11 +1084,11 @@ fn build_operator_kick_params(
         .collect()
 }
 
-/// Signs the churn digest hash for [`register_for_operator_sets_with_churn`]
+/// Signs the churn digest hash for [`register_for_operator_sets_with_churn`].
 ///
 /// # Arguments
 ///
-/// * `rpc_url` - rpc url
+/// * `rpc_url` - rpc url used to create the provider.
 /// * `registry_coordinator_address` - registry coordinator address
 /// * `bls_key_pair` - bls key pair of the operator
 /// * `operator` - operator address
