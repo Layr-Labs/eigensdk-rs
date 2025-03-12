@@ -1159,7 +1159,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1200,7 +1201,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1242,7 +1244,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1282,7 +1285,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1352,7 +1356,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1683,5 +1688,47 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(total_stake_indices_at_block_number.first(), Some(&1u32));
+    }
+
+    #[tokio::test]
+    async fn test_query_existing_registered_operator_pub_keys() {
+        let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
+
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair.clone(),
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let operators = avs_reader
+            .query_existing_registered_operator_pub_keys(0, 1000, ws_endpoint)
+            .await
+            .unwrap();
+
+        assert_eq!(*operators.0.first().unwrap(), FIFTH_ADDRESS);
+        assert_eq!(
+            operators.1.first().unwrap().g1_pub_key,
+            BlsG1Point::new(bls_key_pair.public_key().g1()),
+        );
     }
 }
