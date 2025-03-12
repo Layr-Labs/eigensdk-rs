@@ -156,6 +156,8 @@ sequenceDiagram
     note over U: The user start the service
     U->>BLS: start()
 
+    note over BLS: Main loop is running in the background
+
     note over SH: ServiceHandle is returned when the service is started
     BLS->>SH: ServiceHandle 
 
@@ -175,7 +177,6 @@ sequenceDiagram
     BLS->>BLS: verify_signature()
 
     BLS->>BLS: check_if_stake_thresholds_met()
-
     note over BLS: Threshold not reached yet
 
     U->>SH: process_signature() # REVIEW
@@ -185,7 +186,6 @@ sequenceDiagram
     BLS->>BLS: verify_signature()
 
     BLS->>BLS: check_if_stake_thresholds_met()
-
     note over BLS: Threshold reached
     
     BLS->>BLS: build_aggregated_response()
