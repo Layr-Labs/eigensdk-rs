@@ -1159,7 +1159,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1200,7 +1201,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1242,7 +1244,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1282,7 +1285,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1352,7 +1356,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1690,7 +1695,8 @@ mod tests {
         let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
