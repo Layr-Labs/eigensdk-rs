@@ -107,8 +107,7 @@ library MockAvsDeploymentLib {
             address(new BLSApkRegistry(ISlashingRegistryCoordinator(result.registryCoordinator)));
         address indexRegistryimpl = address(new IndexRegistry(ISlashingRegistryCoordinator(result.registryCoordinator)));
         address registryCoordinatorImpl = address(
-            new RegistryCoordinator(
-                IServiceManager(result.mockAvsServiceManager),
+            new SlashingRegistryCoordinator(
                 IStakeRegistry(result.stakeRegistry),
                 IBLSApkRegistry(result.blsapkRegistry),
                 IIndexRegistry(result.indexRegistry),

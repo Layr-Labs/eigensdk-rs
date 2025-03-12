@@ -64,21 +64,13 @@ impl AvsRegistryChainWriter {
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
-        _operator_state_retriever_addr: Address,
+        service_manager_addr: Address,
     ) -> Result<Self, AvsRegistryError> {
         let fill_provider = get_provider(&provider);
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, &fill_provider);
-        let service_manager_addr = contract_registry_coordinator
-            .serviceManager()
-            .call()
-            .await
-            .map_err(AvsRegistryError::AlloyContractError)?;
-        let RegistryCoordinator::serviceManagerReturn {
-            _0: service_manager,
-        } = service_manager_addr;
         let contract_service_manager_base =
-            ServiceManagerBase::new(service_manager, &fill_provider);
+            ServiceManagerBase::new(service_manager_addr, &fill_provider);
         let stake_registry_addr = contract_registry_coordinator.stakeRegistry().call().await?;
         let RegistryCoordinator::stakeRegistryReturn { _0: stake_registry } = stake_registry_addr;
         let contract_stake_registry = StakeRegistry::new(stake_registry, &fill_provider);
@@ -103,7 +95,7 @@ impl AvsRegistryChainWriter {
         .map_err(|e| AvsRegistryError::ElContractsError(e.to_string()))?;
 
         Ok(AvsRegistryChainWriter {
-            service_manager_addr: service_manager,
+            service_manager_addr,
             registry_coordinator_addr,
             stake_registry_addr: stake_registry,
             el_reader,
@@ -1532,6 +1524,7 @@ mod tests {
         let avs_writer_2 =
             build_avs_registry_chain_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string())
                 .await;
+
         let bls_key_2 = OPERATOR_BLS_KEY_2.to_string();
 
         let operator_sig_salt = FixedBytes::from([0x02; 32]);
@@ -1579,7 +1572,8 @@ mod tests {
     async fn test_set_minimum_stake_for_quorum() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let quorum_number = 0;
         let minimum_stake = U96::from(10);
         let tx_hash = avs_writer
@@ -1762,7 +1756,8 @@ mod tests {
 
         let private_key = FIRST_PRIVATE_KEY.to_string();
 
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
         let quorum_number = 0;
         let strategy_params = [StrategyParams {
@@ -1799,7 +1794,8 @@ mod tests {
 
         let private_key = FIRST_PRIVATE_KEY.to_string();
 
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
         let quorum_number = 0;
         let strategy_params = [StrategyParams {
@@ -1903,7 +1899,8 @@ mod tests {
 
         let private_key = FIRST_PRIVATE_KEY.to_string();
 
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
         let quorum_number = 0;
         let strategy_params = [StrategyParams {
