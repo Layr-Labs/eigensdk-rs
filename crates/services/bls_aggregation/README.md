@@ -8,6 +8,8 @@ The BLS Aggregation Service provides functionality to aggregate BLS signatures f
 
 The BLS Aggregation Service is primarily used by operators, who contribute signatures to task. AVS developers use it to define and manage tasks, set quorum requirements and integrate aggregated results into their smart contracts.
 
+<!-- BAD --> [Example of a aggregation service in action](https://github.com/Layr-Labs/incredible-squaring-avs-rs/blob/dev/crates/aggregator/src/fake_aggregator.rs).
+
 
 ## Key Features
 
@@ -76,7 +78,7 @@ When you initialize the BLS Aggregation Service, it returns a tuple of `ServiceH
 
 The `AggregateReceiver` is used to receive aggregated responses from the service.
 
-Once a task is initialized, the service will start processing the task in a loop in the background. The service will wait for the quorum to be reached. Aggregator will receive new signatures from the operators via the `process_signature()` method. Once the quorum is reached or the time expires, the service will aggregate the signatures and send the aggregated response to the `AggregateReceiver`.
+Once a task is initialized, the service will start processing the task in a loop in the background. The service will wait for the quorum to be reached or the time to expire. Once the quorum is reached or the time expires, the service will aggregate the signatures and send the aggregated response to the `AggregateReceiver`.
 
 ### Initialize the Service
 
@@ -124,13 +126,13 @@ match aggregate_receiver.receive_aggregated_response().await {
 
 ## Error Handling
 
-The service returns a `BlsAggregationServiceError` error if there is an error. The error can be one of the following:
+The service returns a `BlsAggregationServiceError` if there is an error. The error can be one of the following:
 
 | Error                              | Description                                                                 |
 |-----------------------------------|-----------------------------------------------------------------------------|
 | `BlsAggregationServiceError::TaskNotFound` | Task not found            |
 | `BlsAggregationServiceError::SignatureVerificationError::OperatorNotFound` | Operator not found |
-| `BlsAggregationServiceError::SignatureVerificationError::OperatorPublicKeyNotFound` | Operator public key not found |
+| `BlsAggregationServiceError::SignatureVerificationError::OperatorPublicKeyNotFound` | Operator public key not found for task index |
 | `BlsAggregationServiceError::SignatureVerificationError::IncorrectSignature` | Incorrect signature |
 | `BlsAggregationServiceError::SignaturesChannelClosed` | Signatures channel was closed, can't send signatures to aggregator |
 | `BlsAggregationServiceError::ChannelError` | Error sending to channel |
@@ -183,7 +185,7 @@ sequenceDiagram
     BLS->>BLS: verify_signature()
 
     BLS->>BLS: check_if_stake_thresholds_met()
-    
+
     note over BLS: Threshold reached
     
     BLS->>BLS: build_aggregated_response()
