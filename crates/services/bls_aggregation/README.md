@@ -144,7 +144,7 @@ The following diagram shows the sequence of events when a user creates the BLS A
 
 ```mermaid
 sequenceDiagram
-    participant U as User
+    participant U as Aggregator
     participant SH as ServiceHandle
     participant AR as AggregateReceiver
     participant BLS as BlsAggregatorService
@@ -173,13 +173,17 @@ sequenceDiagram
     BLS->>BLS: verify_signature()
 
     BLS->>BLS: check_if_stake_thresholds_met()
+
     note over BLS: Threshold not reached yet
 
     U->>SH: process_signature() # REVIEW
 
     SH->>BLS: process_signature()
 
+    BLS->>BLS: verify_signature()
+
     BLS->>BLS: check_if_stake_thresholds_met()
+    
     note over BLS: Threshold reached
     
     BLS->>BLS: build_aggregated_response()
