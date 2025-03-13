@@ -1380,6 +1380,20 @@ mod tests {
             .await
             .unwrap();
         assert!(is_registered);
+
+        let tx_hash = el_chain_writer
+            .deregister_from_operator_sets(operator_addr, avs_address, vec![operator_set_id])
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let is_registered = el_chain_writer
+            .el_chain_reader
+            .is_operator_registered_with_operator_set(operator_addr, operator_set.clone())
+            .await
+            .unwrap();
+        assert!(!is_registered);
     }
 
     #[tokio::test]
