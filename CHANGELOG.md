@@ -217,12 +217,12 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 * `TaskMetadata.task_created_block` field changed to `u64` [#362](https://github.com/Layr-Labs/eigensdk-rs/pull/362)
 
-* Refactor `bls_aggr` module in [#363](https://github.com/Layr-Labs/eigensdk-rs/pull/363).
-  - Separated the interface and service in the `bls_aggr` module.
-    - To interact with the BLS aggregation service, use the `ServiceHandle` struct. Aggregation responses are now handled by the `AggregateReceiver` struct.
-      - To initialize both structs, use the `BLSAggregationService::start` method. It returns a tuple with the `ServiceHandle` and `AggregateReceiver` structs.
-    - Add methods `start` and `run` to `BLSAggregationService` struct.
-  - Removed `initialize_new_task` and `process_new_signature` functions since their logic is now integrated in `run()`.  
+* Separated the interface and service in the `bls_agg` module in [#363](https://github.com/Layr-Labs/eigensdk-rs/pull/363).
+  * To start the BLS aggregation service, use `BlsAggregationService::start`. It returns a tuple of `ServiceHandle` and `AggregateReceiver`.
+  * To interact with the BLS aggregation service, use the returned structs.
+    * Aggregation responses are now handled by the `AggregateReceiver` struct. Use `AggregateReceiver::receive_aggregated_response` instead of reading from the `aggregated_response_receiver` field of `BlsAggregationService`.
+    * Task initialization and new signature processing are handled by `ServiceHandle`. It is cloneable, and can be sent to other threads or tasks. Use `ServiceHandle::initialize_task` instead of `BlsAggregationService::initialize_new_task`, and `ServiceHandle::process_signature` instead of `BlsAggregationService::process_new_signature`.
+  * Removed `initialize_new_task` and `process_new_signature` from `BlsAggregationService`, along with the field `aggregated_response_receiver`, since their functionality is now exposed by `ServiceHandle` and `AggregateReceiver`.
 
   ```rust
   // Before
@@ -235,17 +235,25 @@ Those changes in added, changed or breaking changes, should include usage exampl
         time_to_expiry,
     );
     
-    bls_agg_service.initialize_new_task(metadata).await.unwrap();
+  bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
-    bls_agg_service
-        .process_new_signature(TaskSignature::new(
-            task_index,
-            task_response_digest,
-            bls_signature,
-            test_operator_1.operator_id,
-        ))
-        .await
-        .unwrap();
+  bls_agg_service
+      .process_new_signature(TaskSignature::new(
+          task_index,
+          task_response_digest,
+          bls_signature,
+          test_operator_1.operator_id,
+      ))
+      .await
+      .unwrap();
+
+  let aggregated_response = bls_agg_service
+          .aggregated_response_receiver
+          .lock()
+          .await
+          .recv()
+          .await
+          .unwrap();
 
   // After
   let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
@@ -269,8 +277,12 @@ Those changes in added, changed or breaking changes, should include usage exampl
       ))
       .await
       .unwrap();
+
+  let aggregated_response = aggregator_response
+      .receive_aggregated_response()
+      .await
+      .unwrap();
   ```
-  
 
 ### Deprecated ⚠️
 
