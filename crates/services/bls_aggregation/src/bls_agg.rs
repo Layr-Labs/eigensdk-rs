@@ -9,7 +9,7 @@ use eigen_logging::logger::SharedLogger;
 use eigen_services_avsregistry::AvsRegistryService;
 use eigen_types::avs_state::OperatorAvsState;
 use eigen_types::{
-    avs::{SignatureVerificationError, SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
+    avs::{SignatureVerificationError, TaskIndex, TaskResponseDigest},
     operator::{QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
 use std::collections::HashMap;
@@ -229,6 +229,18 @@ where
     avs_registry_service: A,
 }
 
+/// Represents a signed task response digest
+#[derive(Debug)]
+struct SignedTaskResponseDigest {
+    task_response_digest: TaskResponseDigest,
+
+    bls_signature: Signature,
+
+    operator_id: FixedBytes<32>,
+
+    result_channel: oneshot::Sender<Result<(), BlsAggregationServiceError>>,
+}
+
 impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService<A> {
     /// Creates a new instance of the BlsAggregatorService with the given AVS registry service
     ///
@@ -330,32 +342,18 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 AggregationMessage::ProcessSignature(task_signature, result_sender) => {
                     if let Some(sig_sender) = task_channels.get_mut(&task_signature.task_index) {
                         // Send the signed task response to the task aggregator
-                        let (verif_tx, mut verif_rx) = tokio::sync::mpsc::channel(1);
                         let signed_digest = SignedTaskResponseDigest {
                             task_response_digest: task_signature.task_response_digest,
                             bls_signature: task_signature.bls_signature,
                             operator_id: task_signature.operator_id,
-                            signature_verification_channel: verif_tx,
+                            result_channel: result_sender,
                         };
 
-                        if sig_sender.send(signed_digest).is_err() {
-                            result_sender
-                                .send(Err(BlsAggregationServiceError::ChannelError))
-                                .ok();
-                            continue;
-                        }
-
-                        if let Some(result) = verif_rx.recv().await {
-                            match result {
-                                Ok(_) => {
-                                    let _ = result_sender.send(Ok(()));
-                                }
-                                Err(e) => {
-                                    let _ = result_sender.send(Err(
-                                        BlsAggregationServiceError::SignatureVerificationError(e),
-                                    ));
-                                }
-                            }
+                        if let Err(send_error) = sig_sender.send(signed_digest) {
+                            let _ = send_error
+                                .0
+                                .result_channel
+                                .send(Err(BlsAggregationServiceError::ChannelError));
                         }
                     } else {
                         result_sender
@@ -568,40 +566,39 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 );
 
                 // New signature, aggregate it. If threshold is met, start window
-                let Some(digest) = signed_task_digest else {
+                let Some(signed_digest) = signed_task_digest else {
                     return Err(BlsAggregationServiceError::SignaturesChannelClosed);
                 };
                 // check if the operator has already signed for this digest
                 if aggregated_operators
-                    .get(&digest.task_response_digest)
+                    .get(&signed_digest.task_response_digest)
                     .map(|operators| {
                         operators
                             .signers_operator_ids_set
-                            .contains_key(&digest.operator_id)
+                            .contains_key(&signed_digest.operator_id)
                     })
                     .unwrap_or(false)
                 {
-                    digest
-                        .signature_verification_channel
-                        .send(Err(SignatureVerificationError::DuplicateSignature))
-                        .await
+                    signed_digest
+                        .result_channel
+                        .send(Err(BlsAggregationServiceError::SignatureVerificationError(SignatureVerificationError::DuplicateSignature)))
                         .map_err(|_| BlsAggregationServiceError::ChannelError)?;
                     continue;
                 }
 
                     let verification_result = BlsAggregatorService::<A>::verify_signature(
                         task_index,
-                        &digest,
+                        &signed_digest,
                         &operator_state_avs,
                         logger.clone(),
                     )
-                    .await;
+                    .await
+                    .map_err(BlsAggregationServiceError::SignatureVerificationError);
                     let verification_failed = verification_result.is_err();
 
-                    digest
-                        .signature_verification_channel
+                    signed_digest
+                        .result_channel
                         .send(verification_result)
-                        .await
                         .map_err(|_| BlsAggregationServiceError::ChannelError)?;
 
                     if verification_failed {
@@ -609,7 +606,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     }
 
                     let operator_state = operator_state_avs
-                        .get(&digest.operator_id)
+                        .get(&signed_digest.operator_id)
                         .unwrap();
 
                     let operator_g2_pubkey = operator_state
@@ -620,13 +617,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         .g2_pub_key
                         .g2();
 
+                        let digest = signed_digest.task_response_digest.clone();
+                        let bls_signature_g1_point = signed_digest.bls_signature.g1_point().g1();
+
                     let digest_aggregated_operators = aggregated_operators
-                        .get_mut(&digest.task_response_digest)
+                        .get_mut(&digest)
                         .map(|digest_aggregated_operators| {
+                            let signed_digest_clone = signed_digest.clone();
                             BlsAggregatorService::<A>::aggregate_new_operator(
                                 digest_aggregated_operators,
                                 operator_state.clone(),
-                                digest.clone(),
+                                signed_digest_clone,
                                 logger.clone()
                             )
                             .clone()
@@ -642,7 +643,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                                     BlsG2Point::new((signers_apk_g2.g2() + operator_g2_pubkey).into());
                                 signers_agg_sig_g1 = Signature::new(
                                     (signers_agg_sig_g1.g1_point().g1()
-                                        + digest.bls_signature.g1_point().g1())
+                                        + bls_signature_g1_point)
                                     .into(),
                                 );
                             }
@@ -660,7 +661,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
 
                     aggregated_operators.insert(
-                        digest.task_response_digest,
+                        digest,
                         digest_aggregated_operators.clone(),
                     );
 
@@ -737,7 +738,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     async fn build_aggregated_response(
         task_index: TaskIndex,
         task_created_block: u64,
-        signed_task_digest: SignedTaskResponseDigest,
+        task_response_digest: FixedBytes<32>,
         operator_state_avs: &HashMap<FixedBytes<32>, OperatorAvsState>,
         digest_aggregated_operators: AggregatedOperators,
         avs_registry_service: &A,
@@ -780,7 +781,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         Ok(BlsAggregationServiceResponse {
             task_index,
-            task_response_digest: signed_task_digest.task_response_digest,
+            task_response_digest,
             non_signers_pub_keys_g1,
             quorum_apks_g1: quorum_apks_g1.into(),
             signers_apk_g2: digest_aggregated_operators.signers_apk_g2,
