@@ -83,4 +83,7 @@ pub enum ElContractsError {
 
     #[error("StakerOptOutWindowBlocks is not set")]
     StakerOptOutWindowBlocksNotSet,
+
+    #[error("Invalid signature")]
+    InvalidSignature,
 }
