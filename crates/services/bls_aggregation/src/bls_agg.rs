@@ -617,7 +617,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         .g2_pub_key
                         .g2();
 
-                    let digest = signed_digest.task_response_digest.clone();
+                    let digest = signed_digest.task_response_digest;
                     let bls_signature_g1_point = signed_digest.bls_signature.g1_point().g1();
                     let operator_id = signed_digest.operator_id;
 
