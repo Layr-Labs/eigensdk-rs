@@ -1903,6 +1903,7 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct acceptAdminCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`acceptAdmin(address)`](acceptAdminCall) function.
@@ -2017,7 +2018,9 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addPendingAdminCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub admin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`addPendingAdmin(address,address)`](addPendingAdminCall) function.
@@ -2147,15 +2150,20 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canCallCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub caller: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
     ///Container type for the return parameters of the [`canCall(address,address,address,bytes4)`](canCallCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canCallReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -2295,12 +2303,14 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAdminsCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getAdmins(address)`](getAdminsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAdminsReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -2414,14 +2424,18 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAppointeePermissionsCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub appointee: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getAppointeePermissions(address,address)`](getAppointeePermissionsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAppointeePermissionsReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<4>>,
     }
     #[allow(
@@ -2559,14 +2573,18 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAppointeesCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
     ///Container type for the return parameters of the [`getAppointees(address,address,bytes4)`](getAppointeesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAppointeesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -2702,12 +2720,14 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPendingAdminsCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getPendingAdmins(address)`](getPendingAdminsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPendingAdminsReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -2821,13 +2841,16 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isAdminCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub caller: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`isAdmin(address,address)`](isAdminCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isAdminReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -2953,13 +2976,16 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isPendingAdminCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub pendingAdmin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`isPendingAdmin(address,address)`](isPendingAdminCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isPendingAdminReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -3085,7 +3111,9 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeAdminCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub admin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`removeAdmin(address,address)`](removeAdminCall) function.
@@ -3215,9 +3243,13 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeAppointeeCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub appointee: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
     ///Container type for the return parameters of the [`removeAppointee(address,address,address,bytes4)`](removeAppointeeCall) function.
@@ -3361,7 +3393,9 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removePendingAdminCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub admin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`removePendingAdmin(address,address)`](removePendingAdminCall) function.
@@ -3491,9 +3525,13 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAppointeeCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub appointee: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
     ///Container type for the return parameters of the [`setAppointee(address,address,address,bytes4)`](setAppointeeCall) function.
@@ -3632,18 +3670,31 @@ pub mod PermissionController {
     };
     ///Container for all the [`PermissionController`](self) function calls.
     pub enum PermissionControllerCalls {
+        #[allow(missing_docs)]
         acceptAdmin(acceptAdminCall),
+        #[allow(missing_docs)]
         addPendingAdmin(addPendingAdminCall),
+        #[allow(missing_docs)]
         canCall(canCallCall),
+        #[allow(missing_docs)]
         getAdmins(getAdminsCall),
+        #[allow(missing_docs)]
         getAppointeePermissions(getAppointeePermissionsCall),
+        #[allow(missing_docs)]
         getAppointees(getAppointeesCall),
+        #[allow(missing_docs)]
         getPendingAdmins(getPendingAdminsCall),
+        #[allow(missing_docs)]
         isAdmin(isAdminCall),
+        #[allow(missing_docs)]
         isPendingAdmin(isPendingAdminCall),
+        #[allow(missing_docs)]
         removeAdmin(removeAdminCall),
+        #[allow(missing_docs)]
         removeAppointee(removeAppointeeCall),
+        #[allow(missing_docs)]
         removePendingAdmin(removePendingAdminCall),
+        #[allow(missing_docs)]
         setAppointee(setAppointeeCall),
     }
     #[automatically_derived]
@@ -3979,13 +4030,21 @@ pub mod PermissionController {
     }
     ///Container for all the [`PermissionController`](self) custom errors.
     pub enum PermissionControllerErrors {
+        #[allow(missing_docs)]
         AdminAlreadyPending(AdminAlreadyPending),
+        #[allow(missing_docs)]
         AdminAlreadySet(AdminAlreadySet),
+        #[allow(missing_docs)]
         AdminNotPending(AdminNotPending),
+        #[allow(missing_docs)]
         AdminNotSet(AdminNotSet),
+        #[allow(missing_docs)]
         AppointeeAlreadySet(AppointeeAlreadySet),
+        #[allow(missing_docs)]
         AppointeeNotSet(AppointeeNotSet),
+        #[allow(missing_docs)]
         CannotHaveZeroAdmins(CannotHaveZeroAdmins),
+        #[allow(missing_docs)]
         NotAdmin(NotAdmin),
     }
     #[automatically_derived]
@@ -4219,12 +4278,19 @@ pub mod PermissionController {
     }
     ///Container for all the [`PermissionController`](self) events.
     pub enum PermissionControllerEvents {
+        #[allow(missing_docs)]
         AdminRemoved(AdminRemoved),
+        #[allow(missing_docs)]
         AdminSet(AdminSet),
+        #[allow(missing_docs)]
         AppointeeRemoved(AppointeeRemoved),
+        #[allow(missing_docs)]
         AppointeeSet(AppointeeSet),
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         PendingAdminAdded(PendingAdminAdded),
+        #[allow(missing_docs)]
         PendingAdminRemoved(PendingAdminRemoved),
     }
     #[automatically_derived]

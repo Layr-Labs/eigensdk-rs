@@ -29,8 +29,11 @@ pub mod IAllocationManagerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AllocateParams {
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub newMagnitudes: alloy::sol_types::private::Vec<u64>,
     }
     #[allow(
@@ -245,8 +248,11 @@ pub mod IAllocationManagerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Allocation {
+        #[allow(missing_docs)]
         pub currentMagnitude: u64,
+        #[allow(missing_docs)]
         pub pendingDiff: i128,
+        #[allow(missing_docs)]
         pub effectBlock: u32,
     }
     #[allow(
@@ -464,7 +470,9 @@ pub mod IAllocationManagerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CreateSetParams {
+        #[allow(missing_docs)]
         pub operatorSetId: u32,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -663,8 +671,11 @@ pub mod IAllocationManagerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DeregisterParams {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetIds: alloy::sol_types::private::Vec<u32>,
     }
     #[allow(
@@ -878,8 +889,11 @@ pub mod IAllocationManagerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RegisterParams {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetIds: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     #[allow(
@@ -1093,11 +1107,16 @@ pub mod IAllocationManagerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SlashingParams {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetId: u32,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub wadsToSlash:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
+        #[allow(missing_docs)]
         pub description: alloy::sol_types::private::String,
     }
     #[allow(
@@ -3432,7 +3451,9 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorSet {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub id: u32,
     }
     #[allow(
@@ -6956,10 +6977,15 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
+        #[allow(missing_docs)]
         pub _delegation: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _pauserRegistry: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _permissionController: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _DEALLOCATION_DELAY: u32,
+        #[allow(missing_docs)]
         pub _ALLOCATION_CONFIGURATION_DELAY: u32,
     }
     const _: () = {
@@ -7066,6 +7092,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ALLOCATION_CONFIGURATION_DELAYReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -7176,6 +7203,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DEALLOCATION_DELAYReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -7282,8 +7310,11 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addStrategiesToOperatorSetCall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetId: u32,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`addStrategiesToOperatorSet(address,uint32,address[])`](addStrategiesToOperatorSetCall) function.
@@ -7420,8 +7451,11 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct clearDeallocationQueueCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub numToClear: alloy::sol_types::private::Vec<u16>,
     }
     ///Container type for the return parameters of the [`clearDeallocationQueue(address,address[],uint16[])`](clearDeallocationQueueCall) function.
@@ -7558,7 +7592,9 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createOperatorSetsCall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub params: alloy::sol_types::private::Vec<
             <IAllocationManagerTypes::CreateSetParams as alloy::sol_types::SolType>::RustType,
         >,
@@ -7696,6 +7732,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -7802,6 +7839,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterFromOperatorSetsCall {
+        #[allow(missing_docs)]
         pub params:
             <IAllocationManagerTypes::DeregisterParams as alloy::sol_types::SolType>::RustType,
     }
@@ -7920,13 +7958,16 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct encumberedMagnitudeCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`encumberedMagnitude(address,address)`](encumberedMagnitudeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct encumberedMagnitudeReturn {
+        #[allow(missing_docs)]
         pub _0: u64,
     }
     #[allow(
@@ -8052,12 +8093,14 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAVSRegistrarCall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getAVSRegistrar(address)`](getAVSRegistrarCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAVSRegistrarReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -8168,13 +8211,16 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocatableMagnitudeCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getAllocatableMagnitude(address,address)`](getAllocatableMagnitudeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocatableMagnitudeReturn {
+        #[allow(missing_docs)]
         pub _0: u64,
     }
     #[allow(
@@ -8300,12 +8346,14 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocatedSetsCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getAllocatedSets(address)`](getAllocatedSetsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocatedSetsReturn {
+        #[allow(missing_docs)]
         pub _0:
             alloy::sol_types::private::Vec<<OperatorSet as alloy::sol_types::SolType>::RustType>,
     }
@@ -8421,13 +8469,16 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocatedStrategiesCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`getAllocatedStrategies(address,(address,uint32))`](getAllocatedStrategiesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocatedStrategiesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -8548,14 +8599,18 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocationCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getAllocation(address,(address,uint32),address)`](getAllocationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocationReturn {
+        #[allow(missing_docs)]
         pub _0: <IAllocationManagerTypes::Allocation as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -8687,13 +8742,16 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocationDelayCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getAllocationDelay(address)`](getAllocationDelayCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocationDelayReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
+        #[allow(missing_docs)]
         pub _1: u32,
     }
     #[allow(
@@ -8813,14 +8871,18 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocationsCall {
+        #[allow(missing_docs)]
         pub operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getAllocations(address[],(address,uint32),address)`](getAllocationsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAllocationsReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<
             <IAllocationManagerTypes::Allocation as alloy::sol_types::SolType>::RustType,
         >,
@@ -8961,13 +9023,16 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMaxMagnitudeCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getMaxMagnitude(address,address)`](getMaxMagnitudeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMaxMagnitudeReturn {
+        #[allow(missing_docs)]
         pub _0: u64,
     }
     #[allow(
@@ -9093,13 +9158,16 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMaxMagnitudes_0Call {
+        #[allow(missing_docs)]
         pub operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getMaxMagnitudes(address[],address)`](getMaxMagnitudes_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMaxMagnitudes_0Return {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<u64>,
     }
     #[allow(
@@ -9227,13 +9295,16 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMaxMagnitudes_1Call {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`getMaxMagnitudes(address,address[])`](getMaxMagnitudes_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMaxMagnitudes_1Return {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<u64>,
     }
     #[allow(
@@ -9361,14 +9432,18 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMaxMagnitudesAtBlockCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
     }
     ///Container type for the return parameters of the [`getMaxMagnitudesAtBlock(address,address[],uint32)`](getMaxMagnitudesAtBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMaxMagnitudesAtBlockReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<u64>,
     }
     #[allow(
@@ -9503,12 +9578,14 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMemberCountCall {
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`getMemberCount((address,uint32))`](getMemberCountCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMemberCountReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -9619,12 +9696,14 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMembersCall {
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`getMembers((address,uint32))`](getMembersCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMembersReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -9738,15 +9817,20 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMinimumSlashableStakeCall {
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub futureBlock: u32,
     }
     ///Container type for the return parameters of the [`getMinimumSlashableStake((address,uint32),address[],address[],uint32)`](getMinimumSlashableStakeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMinimumSlashableStakeReturn {
+        #[allow(missing_docs)]
         pub slashableStake: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
         >,
@@ -9910,12 +9994,14 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSetCountCall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorSetCount(address)`](getOperatorSetCountCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSetCountReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -10026,12 +10112,14 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getRegisteredSetsCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getRegisteredSets(address)`](getRegisteredSetsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getRegisteredSetsReturn {
+        #[allow(missing_docs)]
         pub _0:
             alloy::sol_types::private::Vec<<OperatorSet as alloy::sol_types::SolType>::RustType>,
     }
@@ -10147,12 +10235,14 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStrategiesInOperatorSetCall {
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`getStrategiesInOperatorSet((address,uint32))`](getStrategiesInOperatorSetCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStrategiesInOperatorSetReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -10266,15 +10356,19 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStrategyAllocationsCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getStrategyAllocations(address,address)`](getStrategyAllocationsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStrategyAllocationsReturn {
+        #[allow(missing_docs)]
         pub _0:
             alloy::sol_types::private::Vec<<OperatorSet as alloy::sol_types::SolType>::RustType>,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Vec<
             <IAllocationManagerTypes::Allocation as alloy::sol_types::SolType>::RustType,
         >,
@@ -10418,7 +10512,9 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
+        #[allow(missing_docs)]
         pub initialOwner: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub initialPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`initialize(address,uint256)`](initializeCall) function.
@@ -10548,13 +10644,16 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isMemberOfOperatorSetCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`isMemberOfOperatorSet(address,(address,uint32))`](isMemberOfOperatorSetCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isMemberOfOperatorSetReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -10672,12 +10771,14 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isOperatorSetCall {
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`isOperatorSet((address,uint32))`](isOperatorSetCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isOperatorSetReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -10788,7 +10889,9 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct modifyAllocationsCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub params: alloy::sol_types::private::Vec<
             <IAllocationManagerTypes::AllocateParams as alloy::sol_types::SolType>::RustType,
         >,
@@ -10927,6 +11030,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -11033,6 +11137,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauseCall {
+        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`pause(uint256)`](pauseCall) function.
@@ -11257,12 +11362,14 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Call {
+        #[allow(missing_docs)]
         pub index: u8,
     }
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Return {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -11377,6 +11484,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Return {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -11487,6 +11595,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -11597,6 +11706,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct permissionControllerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -11703,7 +11813,9 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerForOperatorSetsCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub params:
             <IAllocationManagerTypes::RegisterParams as alloy::sol_types::SolType>::RustType,
     }
@@ -11835,8 +11947,11 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeStrategiesFromOperatorSetCall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetId: u32,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`removeStrategiesFromOperatorSet(address,uint32,address[])`](removeStrategiesFromOperatorSetCall) function.
@@ -12082,7 +12197,9 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAVSRegistrarCall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub registrar: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setAVSRegistrar(address,address)`](setAVSRegistrarCall) function.
@@ -12212,7 +12329,9 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAllocationDelayCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub delay: u32,
     }
     ///Container type for the return parameters of the [`setAllocationDelay(address,uint32)`](setAllocationDelayCall) function.
@@ -12339,7 +12458,9 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct slashOperatorCall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub params:
             <IAllocationManagerTypes::SlashingParams as alloy::sol_types::SolType>::RustType,
     }
@@ -12471,6 +12592,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
+        #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`transferOwnership(address)`](transferOwnershipCall) function.
@@ -12585,6 +12707,7 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct unpauseCall {
+        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`unpause(uint256)`](unpauseCall) function.
@@ -12701,7 +12824,9 @@ pub mod AllocationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateAVSMetadataURICall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub metadataURI: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`updateAVSMetadataURI(address,string)`](updateAVSMetadataURICall) function.
@@ -12826,51 +12951,97 @@ pub mod AllocationManager {
     };
     ///Container for all the [`AllocationManager`](self) function calls.
     pub enum AllocationManagerCalls {
+        #[allow(missing_docs)]
         ALLOCATION_CONFIGURATION_DELAY(ALLOCATION_CONFIGURATION_DELAYCall),
+        #[allow(missing_docs)]
         DEALLOCATION_DELAY(DEALLOCATION_DELAYCall),
+        #[allow(missing_docs)]
         addStrategiesToOperatorSet(addStrategiesToOperatorSetCall),
+        #[allow(missing_docs)]
         clearDeallocationQueue(clearDeallocationQueueCall),
+        #[allow(missing_docs)]
         createOperatorSets(createOperatorSetsCall),
+        #[allow(missing_docs)]
         delegation(delegationCall),
+        #[allow(missing_docs)]
         deregisterFromOperatorSets(deregisterFromOperatorSetsCall),
+        #[allow(missing_docs)]
         encumberedMagnitude(encumberedMagnitudeCall),
+        #[allow(missing_docs)]
         getAVSRegistrar(getAVSRegistrarCall),
+        #[allow(missing_docs)]
         getAllocatableMagnitude(getAllocatableMagnitudeCall),
+        #[allow(missing_docs)]
         getAllocatedSets(getAllocatedSetsCall),
+        #[allow(missing_docs)]
         getAllocatedStrategies(getAllocatedStrategiesCall),
+        #[allow(missing_docs)]
         getAllocation(getAllocationCall),
+        #[allow(missing_docs)]
         getAllocationDelay(getAllocationDelayCall),
+        #[allow(missing_docs)]
         getAllocations(getAllocationsCall),
+        #[allow(missing_docs)]
         getMaxMagnitude(getMaxMagnitudeCall),
+        #[allow(missing_docs)]
         getMaxMagnitudes_0(getMaxMagnitudes_0Call),
+        #[allow(missing_docs)]
         getMaxMagnitudes_1(getMaxMagnitudes_1Call),
+        #[allow(missing_docs)]
         getMaxMagnitudesAtBlock(getMaxMagnitudesAtBlockCall),
+        #[allow(missing_docs)]
         getMemberCount(getMemberCountCall),
+        #[allow(missing_docs)]
         getMembers(getMembersCall),
+        #[allow(missing_docs)]
         getMinimumSlashableStake(getMinimumSlashableStakeCall),
+        #[allow(missing_docs)]
         getOperatorSetCount(getOperatorSetCountCall),
+        #[allow(missing_docs)]
         getRegisteredSets(getRegisteredSetsCall),
+        #[allow(missing_docs)]
         getStrategiesInOperatorSet(getStrategiesInOperatorSetCall),
+        #[allow(missing_docs)]
         getStrategyAllocations(getStrategyAllocationsCall),
+        #[allow(missing_docs)]
         initialize(initializeCall),
+        #[allow(missing_docs)]
         isMemberOfOperatorSet(isMemberOfOperatorSetCall),
+        #[allow(missing_docs)]
         isOperatorSet(isOperatorSetCall),
+        #[allow(missing_docs)]
         modifyAllocations(modifyAllocationsCall),
+        #[allow(missing_docs)]
         owner(ownerCall),
+        #[allow(missing_docs)]
         pause(pauseCall),
+        #[allow(missing_docs)]
         pauseAll(pauseAllCall),
+        #[allow(missing_docs)]
         paused_0(paused_0Call),
+        #[allow(missing_docs)]
         paused_1(paused_1Call),
+        #[allow(missing_docs)]
         pauserRegistry(pauserRegistryCall),
+        #[allow(missing_docs)]
         permissionController(permissionControllerCall),
+        #[allow(missing_docs)]
         registerForOperatorSets(registerForOperatorSetsCall),
+        #[allow(missing_docs)]
         removeStrategiesFromOperatorSet(removeStrategiesFromOperatorSetCall),
+        #[allow(missing_docs)]
         renounceOwnership(renounceOwnershipCall),
+        #[allow(missing_docs)]
         setAVSRegistrar(setAVSRegistrarCall),
+        #[allow(missing_docs)]
         setAllocationDelay(setAllocationDelayCall),
+        #[allow(missing_docs)]
         slashOperator(slashOperatorCall),
+        #[allow(missing_docs)]
         transferOwnership(transferOwnershipCall),
+        #[allow(missing_docs)]
         unpause(unpauseCall),
+        #[allow(missing_docs)]
         updateAVSMetadataURI(updateAVSMetadataURICall),
     }
     #[automatically_derived]
@@ -14114,31 +14285,57 @@ pub mod AllocationManager {
     }
     ///Container for all the [`AllocationManager`](self) custom errors.
     pub enum AllocationManagerErrors {
+        #[allow(missing_docs)]
         AlreadyMemberOfSet(AlreadyMemberOfSet),
+        #[allow(missing_docs)]
         CurrentlyPaused(CurrentlyPaused),
+        #[allow(missing_docs)]
         Empty(Empty),
+        #[allow(missing_docs)]
         InputAddressZero(InputAddressZero),
+        #[allow(missing_docs)]
         InputArrayLengthMismatch(InputArrayLengthMismatch),
+        #[allow(missing_docs)]
         InsufficientMagnitude(InsufficientMagnitude),
+        #[allow(missing_docs)]
         InvalidAVSRegistrar(InvalidAVSRegistrar),
+        #[allow(missing_docs)]
         InvalidAVSWithNoMetadataRegistered(InvalidAVSWithNoMetadataRegistered),
+        #[allow(missing_docs)]
         InvalidCaller(InvalidCaller),
+        #[allow(missing_docs)]
         InvalidNewPausedStatus(InvalidNewPausedStatus),
+        #[allow(missing_docs)]
         InvalidOperator(InvalidOperator),
+        #[allow(missing_docs)]
         InvalidOperatorSet(InvalidOperatorSet),
+        #[allow(missing_docs)]
         InvalidPermissions(InvalidPermissions),
+        #[allow(missing_docs)]
         InvalidSnapshotOrdering(InvalidSnapshotOrdering),
+        #[allow(missing_docs)]
         InvalidWadToSlash(InvalidWadToSlash),
+        #[allow(missing_docs)]
         ModificationAlreadyPending(ModificationAlreadyPending),
+        #[allow(missing_docs)]
         NotMemberOfSet(NotMemberOfSet),
+        #[allow(missing_docs)]
         OnlyPauser(OnlyPauser),
+        #[allow(missing_docs)]
         OnlyUnpauser(OnlyUnpauser),
+        #[allow(missing_docs)]
         OperatorNotSlashable(OperatorNotSlashable),
+        #[allow(missing_docs)]
         OutOfBounds(OutOfBounds),
+        #[allow(missing_docs)]
         SameMagnitude(SameMagnitude),
+        #[allow(missing_docs)]
         StrategiesMustBeInAscendingOrder(StrategiesMustBeInAscendingOrder),
+        #[allow(missing_docs)]
         StrategyAlreadyInOperatorSet(StrategyAlreadyInOperatorSet),
+        #[allow(missing_docs)]
         StrategyNotInOperatorSet(StrategyNotInOperatorSet),
+        #[allow(missing_docs)]
         UninitializedAllocationDelay(UninitializedAllocationDelay),
     }
     #[automatically_derived]
@@ -14868,21 +15065,37 @@ pub mod AllocationManager {
     }
     ///Container for all the [`AllocationManager`](self) events.
     pub enum AllocationManagerEvents {
+        #[allow(missing_docs)]
         AVSMetadataURIUpdated(AVSMetadataURIUpdated),
+        #[allow(missing_docs)]
         AVSRegistrarSet(AVSRegistrarSet),
+        #[allow(missing_docs)]
         AllocationDelaySet(AllocationDelaySet),
+        #[allow(missing_docs)]
         AllocationUpdated(AllocationUpdated),
+        #[allow(missing_docs)]
         EncumberedMagnitudeUpdated(EncumberedMagnitudeUpdated),
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         MaxMagnitudeUpdated(MaxMagnitudeUpdated),
+        #[allow(missing_docs)]
         OperatorAddedToOperatorSet(OperatorAddedToOperatorSet),
+        #[allow(missing_docs)]
         OperatorRemovedFromOperatorSet(OperatorRemovedFromOperatorSet),
+        #[allow(missing_docs)]
         OperatorSetCreated(OperatorSetCreated),
+        #[allow(missing_docs)]
         OperatorSlashed(OperatorSlashed),
+        #[allow(missing_docs)]
         OwnershipTransferred(OwnershipTransferred),
+        #[allow(missing_docs)]
         Paused(Paused),
+        #[allow(missing_docs)]
         StrategyAddedToOperatorSet(StrategyAddedToOperatorSet),
+        #[allow(missing_docs)]
         StrategyRemovedFromOperatorSet(StrategyRemovedFromOperatorSet),
+        #[allow(missing_docs)]
         Unpaused(Unpaused),
     }
     #[automatically_derived]
