@@ -61,17 +61,17 @@ cd $repo_root/$REWARDS_V2_CORE_CONTRACTS_LOCATION && forge build --force --skip 
 cd $repo_root
 
 # Generate SDK bindings
-forge bind --alloy --use 0.8.27 --skip-build --bindings-path $REWARDS_V2_SDK_BINDINGS_PATH --overwrite \
+forge bind --alloy --skip-build --bindings-path $REWARDS_V2_SDK_BINDINGS_PATH --overwrite \
     --root $REWARDS_V2_SDK_CONTRACTS_LOCATION --module \
     $REWARDS_V2_SDK_CONTRACTS_ARGS
 
 # Generate middleware bindings
-forge bind --alloy --use 0.8.27 --skip-build --bindings-path $REWARDS_V2_MIDDLEWARE_BINDINGS_PATH --overwrite \
+forge bind --alloy --skip-build --bindings-path $REWARDS_V2_MIDDLEWARE_BINDINGS_PATH --overwrite \
     --root $REWARDS_V2_MIDDLEWARE_CONTRACTS_LOCATION --module \
     $REWARDS_V2_MIDDLEWARE_CONTRACTS_ARGS
 
 # Generate core bindings
-forge bind --alloy --use 0.8.27 --skip-build --bindings-path $REWARDS_V2_CORE_BINDINGS_PATH --overwrite \
+forge bind --alloy --skip-build --bindings-path $REWARDS_V2_CORE_BINDINGS_PATH --overwrite \
     --root $REWARDS_V2_CORE_CONTRACTS_LOCATION --module \
     $REWARDS_V2_CORE_CONTRACTS_ARGS
 
