@@ -41,13 +41,13 @@ jobs:
           ls -lah > file_list.log || true
 
       - name: Upload Diff Log
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: diff-log
           path: crates/utils/src/diff.log
 
       - name: Upload File List
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: file-list
           path: crates/utils/src/file_list.log
