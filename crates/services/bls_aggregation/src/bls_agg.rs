@@ -882,7 +882,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// # Returns
     ///
     /// Returns `true` if the stake thresholds are met for all the members, otherwise `false`.
-    pub fn check_if_stake_thresholds_met(
+    fn check_if_stake_thresholds_met(
         signed_stake_per_quorum: &HashMap<u8, U256>,
         total_stake_per_quorum: &HashMap<u8, U256>,
         quorum_threshold_percentages_map: &HashMap<u8, QuorumThresholdPercentage>,
