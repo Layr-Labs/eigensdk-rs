@@ -380,7 +380,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     fn aggregate_new_operator(
         aggregated_operators: &mut AggregatedOperators,
         operator_state: OperatorAvsState,
-        signed_task_digest: SignedTaskResponseDigest,
+        operator_id: FixedBytes<32>,
+        signature_g1_point: G1Affine,
         logger: SharedLogger,
     ) -> &mut AggregatedOperators {
         let operator_g2_pubkey = operator_state
@@ -392,12 +393,12 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .g2();
         aggregated_operators
             .signers_operator_ids_set
-            .insert(signed_task_digest.operator_id, true);
+            .insert(operator_id, true);
 
         logger.debug(
             &format!(
                 "operator {} inserted in signers_operator_ids_set",
-                signed_task_digest.operator_id
+                operator_id
             ),
             "eigen-services-blsaggregation.bls_agg.aggregate_new_operator",
         );
@@ -405,9 +406,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
             // For each quorum the operator has stake in, we aggregate the signature and update the stake
             aggregated_operators.signers_agg_sig_g1 = Signature::new(
-                (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
-                    + signed_task_digest.bls_signature.g1_point().g1())
-                .into(),
+                (aggregated_operators.signers_agg_sig_g1.g1_point().g1() + signature_g1_point)
+                    .into(),
             );
             aggregated_operators.signers_apk_g2 = BlsG2Point::new(
                 (aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into(),
@@ -617,17 +617,18 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         .g2_pub_key
                         .g2();
 
-                        let digest = signed_digest.task_response_digest.clone();
-                        let bls_signature_g1_point = signed_digest.bls_signature.g1_point().g1();
+                    let digest = signed_digest.task_response_digest.clone();
+                    let bls_signature_g1_point = signed_digest.bls_signature.g1_point().g1();
+                    let operator_id = signed_digest.operator_id;
 
                     let digest_aggregated_operators = aggregated_operators
                         .get_mut(&digest)
                         .map(|digest_aggregated_operators| {
-                            let signed_digest_clone = signed_digest.clone();
                             BlsAggregatorService::<A>::aggregate_new_operator(
                                 digest_aggregated_operators,
                                 operator_state.clone(),
-                                signed_digest_clone,
+                                operator_id,
+                                bls_signature_g1_point,
                                 logger.clone()
                             )
                             .clone()
@@ -810,7 +811,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// - `SignatureVerificationError::OperatorNotFound` if the operator is not found,
     /// - `SignatureVerificationError::OperatorPublicKeyNotFound` if the operator public key is not found,
     /// - `SignatureVerificationError::IncorrectSignature` if the signature is incorrect.
-    pub async fn verify_signature(
+    async fn verify_signature(
         task_index: TaskIndex,
         signed_task_response_digest: &SignedTaskResponseDigest,
         operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
