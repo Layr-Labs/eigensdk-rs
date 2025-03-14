@@ -556,6 +556,25 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
     }
 
+    /// Handles a new signature in the [`loop_task_aggregator`] function.
+    ///
+    /// # Arguments
+    ///
+    /// * `logger` - The logger to log messages.
+    /// * `avs_registry_service` - The avs registry service.
+    /// * `aggregated_operators` - The aggregated operators.
+    /// * `open_window` - Whether the window is open.
+    /// * `current_aggregated_response` - The current aggregated response.
+    /// * `window_tx` - The window tx.
+    /// * `task_index` - The task index.
+    /// * `task_created_block` - The task created block.
+    /// * `operator_state_avs` - The operator state avs.
+    /// * `total_stake_per_quorum` - The total stake per quorum.
+    /// * `quorum_threshold_percentage_map` - The quorum threshold percentage map.
+    /// * `quorum_apks_g1` - The quorum apks g1.
+    /// * `quorum_nums` - The quorum numbers.
+    /// * `window_duration` - The window duration.
+    /// * `signed_task_digest` - The signed task digest.
     #[allow(clippy::too_many_arguments)]
     async fn handle_new_signature(
         logger: &SharedLogger,
@@ -721,6 +740,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         Ok(())
     }
 
+    /// Handles when the task is expired in the [`loop_task_aggregator`] function.
+    ///
+    /// # Arguments
+    ///
+    /// * `logger` - The logger to log messages.
+    /// * `aggregated_response_sender` - The aggregated response sender.
+    /// * `task_index` - The task index.
+    /// * `open_window` - Whether the window is open.
+    /// * `current_aggregated_response` - The current aggregated response.
     fn handle_task_expired(
         logger: &SharedLogger,
         aggregated_response_sender: &UnboundedSender<
@@ -764,10 +792,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `aggregated_response_sender` - The aggregated response sender.
     /// * `task_index` - The task index.
     /// * `current_aggregated_response` - The current aggregated response.
-    ///
-    /// # Returns
-    ///
-    /// * `Result<(), BlsAggregationServiceError>` - The result of the operation
     fn handle_window_finished(
         logger: &SharedLogger,
         aggregated_response_sender: &UnboundedSender<
