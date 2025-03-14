@@ -23,7 +23,9 @@ pub mod BN254 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct G1Point {
+        #[allow(missing_docs)]
         pub X: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub Y: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -210,7 +212,9 @@ pub mod BN254 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct G2Point {
+        #[allow(missing_docs)]
         pub X: [alloy::sol_types::private::primitives::aliases::U256; 2usize],
+        #[allow(missing_docs)]
         pub Y: [alloy::sol_types::private::primitives::aliases::U256; 2usize],
     }
     #[allow(
@@ -560,8 +564,11 @@ pub mod IBLSApkRegistryTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ApkUpdate {
+        #[allow(missing_docs)]
         pub apkHash: alloy::sol_types::private::FixedBytes<24>,
+        #[allow(missing_docs)]
         pub updateBlockNumber: u32,
+        #[allow(missing_docs)]
         pub nextUpdateBlockNumber: u32,
     }
     #[allow(
@@ -785,8 +792,11 @@ pub mod IBLSApkRegistryTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct PubkeyRegistrationParams {
+        #[allow(missing_docs)]
         pub pubkeyRegistrationSignature: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub pubkeyG1: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub pubkeyG2: <BN254::G2Point as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -3199,6 +3209,7 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
+        #[allow(missing_docs)]
         pub _slashingRegistryCoordinator: alloy::sol_types::private::Address,
     }
     const _: () = {
@@ -3261,15 +3272,20 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct apkHistoryCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`apkHistory(uint8,uint256)`](apkHistoryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct apkHistoryReturn {
+        #[allow(missing_docs)]
         pub apkHash: alloy::sol_types::private::FixedBytes<24>,
+        #[allow(missing_docs)]
         pub updateBlockNumber: u32,
+        #[allow(missing_docs)]
         pub nextUpdateBlockNumber: u32,
     }
     #[allow(
@@ -3409,13 +3425,16 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currentApkCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`currentApk(uint8)`](currentApkCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currentApkReturn {
+        #[allow(missing_docs)]
         pub X: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub Y: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -3540,7 +3559,9 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`deregisterOperator(address,bytes)`](deregisterOperatorCall) function.
@@ -3670,12 +3691,14 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApkCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getApk(uint8)`](getApkCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApkReturn {
+        #[allow(missing_docs)]
         pub _0: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -3789,14 +3812,18 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApkHashAtBlockNumberAndIndexCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getApkHashAtBlockNumberAndIndex(uint8,uint32,uint256)`](getApkHashAtBlockNumberAndIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApkHashAtBlockNumberAndIndexReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<24>,
     }
     #[allow(
@@ -3929,12 +3956,14 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApkHistoryLengthCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getApkHistoryLength(uint8)`](getApkHistoryLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApkHistoryLengthReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -4047,13 +4076,16 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApkIndicesAtBlockNumberCall {
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub blockNumber: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getApkIndicesAtBlockNumber(bytes,uint256)`](getApkIndicesAtBlockNumberCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApkIndicesAtBlockNumberReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<u32>,
     }
     #[allow(
@@ -4181,13 +4213,16 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApkUpdateAtIndexCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getApkUpdateAtIndex(uint8,uint256)`](getApkUpdateAtIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApkUpdateAtIndexReturn {
+        #[allow(missing_docs)]
         pub _0: <IBLSApkRegistryTypes::ApkUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -4312,12 +4347,14 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorFromPubkeyHashCall {
+        #[allow(missing_docs)]
         pub pubkeyHash: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`getOperatorFromPubkeyHash(bytes32)`](getOperatorFromPubkeyHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorFromPubkeyHashReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -4430,12 +4467,14 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorIdCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorId(address)`](getOperatorIdCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorIdReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -4546,13 +4585,16 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getRegisteredPubkeyCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getRegisteredPubkey(address)`](getRegisteredPubkeyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getRegisteredPubkeyReturn {
+        #[allow(missing_docs)]
         pub _0: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -4670,6 +4712,7 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeQuorumCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`initializeQuorum(uint8)`](initializeQuorumCall) function.
@@ -4786,13 +4829,16 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorToPubkeyCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`operatorToPubkey(address)`](operatorToPubkeyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorToPubkeyReturn {
+        #[allow(missing_docs)]
         pub X: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub Y: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4915,12 +4961,14 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorToPubkeyHashCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`operatorToPubkeyHash(address)`](operatorToPubkeyHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorToPubkeyHashReturn {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5033,12 +5081,14 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pubkeyHashToOperatorCall {
+        #[allow(missing_docs)]
         pub pubkeyHash: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`pubkeyHashToOperator(bytes32)`](pubkeyHashToOperatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pubkeyHashToOperatorReturn {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5151,15 +5201,19 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerBLSPublicKeyCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub params:
             <IBLSApkRegistryTypes::PubkeyRegistrationParams as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub pubkeyRegistrationMessageHash: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`registerBLSPublicKey(address,((uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])),(uint256,uint256))`](registerBLSPublicKeyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerBLSPublicKeyReturn {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5298,7 +5352,9 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`registerOperator(address,bytes)`](registerOperatorCall) function.
@@ -5432,6 +5488,7 @@ pub mod BLSApkRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5533,23 +5590,41 @@ pub mod BLSApkRegistry {
     };
     ///Container for all the [`BLSApkRegistry`](self) function calls.
     pub enum BLSApkRegistryCalls {
+        #[allow(missing_docs)]
         apkHistory(apkHistoryCall),
+        #[allow(missing_docs)]
         currentApk(currentApkCall),
+        #[allow(missing_docs)]
         deregisterOperator(deregisterOperatorCall),
+        #[allow(missing_docs)]
         getApk(getApkCall),
+        #[allow(missing_docs)]
         getApkHashAtBlockNumberAndIndex(getApkHashAtBlockNumberAndIndexCall),
+        #[allow(missing_docs)]
         getApkHistoryLength(getApkHistoryLengthCall),
+        #[allow(missing_docs)]
         getApkIndicesAtBlockNumber(getApkIndicesAtBlockNumberCall),
+        #[allow(missing_docs)]
         getApkUpdateAtIndex(getApkUpdateAtIndexCall),
+        #[allow(missing_docs)]
         getOperatorFromPubkeyHash(getOperatorFromPubkeyHashCall),
+        #[allow(missing_docs)]
         getOperatorId(getOperatorIdCall),
+        #[allow(missing_docs)]
         getRegisteredPubkey(getRegisteredPubkeyCall),
+        #[allow(missing_docs)]
         initializeQuorum(initializeQuorumCall),
+        #[allow(missing_docs)]
         operatorToPubkey(operatorToPubkeyCall),
+        #[allow(missing_docs)]
         operatorToPubkeyHash(operatorToPubkeyHashCall),
+        #[allow(missing_docs)]
         pubkeyHashToOperator(pubkeyHashToOperatorCall),
+        #[allow(missing_docs)]
         registerBLSPublicKey(registerBLSPublicKeyCall),
+        #[allow(missing_docs)]
         registerOperator(registerOperatorCall),
+        #[allow(missing_docs)]
         registryCoordinator(registryCoordinatorCall),
     }
     #[automatically_derived]
@@ -6080,19 +6155,33 @@ pub mod BLSApkRegistry {
     }
     ///Container for all the [`BLSApkRegistry`](self) custom errors.
     pub enum BLSApkRegistryErrors {
+        #[allow(missing_docs)]
         BLSPubkeyAlreadyRegistered(BLSPubkeyAlreadyRegistered),
+        #[allow(missing_docs)]
         BlockNumberBeforeFirstUpdate(BlockNumberBeforeFirstUpdate),
+        #[allow(missing_docs)]
         BlockNumberNotLatest(BlockNumberNotLatest),
+        #[allow(missing_docs)]
         BlockNumberTooRecent(BlockNumberTooRecent),
+        #[allow(missing_docs)]
         ECAddFailed(ECAddFailed),
+        #[allow(missing_docs)]
         ECMulFailed(ECMulFailed),
+        #[allow(missing_docs)]
         ECPairingFailed(ECPairingFailed),
+        #[allow(missing_docs)]
         InvalidBLSSignatureOrPrivateKey(InvalidBLSSignatureOrPrivateKey),
+        #[allow(missing_docs)]
         OnlyRegistryCoordinatorOwner(OnlyRegistryCoordinatorOwner),
+        #[allow(missing_docs)]
         OperatorAlreadyRegistered(OperatorAlreadyRegistered),
+        #[allow(missing_docs)]
         OperatorNotRegistered(OperatorNotRegistered),
+        #[allow(missing_docs)]
         QuorumAlreadyExists(QuorumAlreadyExists),
+        #[allow(missing_docs)]
         QuorumDoesNotExist(QuorumDoesNotExist),
+        #[allow(missing_docs)]
         ZeroPubKey(ZeroPubKey),
     }
     #[automatically_derived]
@@ -6475,9 +6564,13 @@ pub mod BLSApkRegistry {
     }
     ///Container for all the [`BLSApkRegistry`](self) events.
     pub enum BLSApkRegistryEvents {
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         NewPubkeyRegistration(NewPubkeyRegistration),
+        #[allow(missing_docs)]
         OperatorAddedToQuorums(OperatorAddedToQuorums),
+        #[allow(missing_docs)]
         OperatorRemovedFromQuorums(OperatorRemovedFromQuorums),
     }
     #[automatically_derived]

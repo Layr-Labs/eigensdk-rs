@@ -23,7 +23,9 @@ pub mod BN254 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct G1Point {
+        #[allow(missing_docs)]
         pub X: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub Y: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -210,7 +212,9 @@ pub mod BN254 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct G2Point {
+        #[allow(missing_docs)]
         pub X: [alloy::sol_types::private::primitives::aliases::U256; 2usize],
+        #[allow(missing_docs)]
         pub Y: [alloy::sol_types::private::primitives::aliases::U256; 2usize],
     }
     #[allow(
@@ -560,15 +564,23 @@ pub mod IBLSSignatureCheckerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NonSignerStakesAndSignature {
+        #[allow(missing_docs)]
         pub nonSignerQuorumBitmapIndices: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub nonSignerPubkeys:
             alloy::sol_types::private::Vec<<BN254::G1Point as alloy::sol_types::SolType>::RustType>,
+        #[allow(missing_docs)]
         pub quorumApks:
             alloy::sol_types::private::Vec<<BN254::G1Point as alloy::sol_types::SolType>::RustType>,
+        #[allow(missing_docs)]
         pub apkG2: <BN254::G2Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub sigma: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub quorumApkIndices: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub totalStakeIndices: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub nonSignerStakeIndices:
             alloy::sol_types::private::Vec<alloy::sol_types::private::Vec<u32>>,
     }
@@ -920,8 +932,10 @@ pub mod IBLSSignatureCheckerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QuorumStakeTotals {
+        #[allow(missing_docs)]
         pub signedStakeForQuorum:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U96>,
+        #[allow(missing_docs)]
         pub totalStakeForQuorum:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U96>,
     }
@@ -1276,14 +1290,20 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorDirectedRewardsSubmission {
+        #[allow(missing_docs)]
         pub strategiesAndMultipliers: alloy::sol_types::private::Vec<
             <StrategyAndMultiplier as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorRewards:
             alloy::sol_types::private::Vec<<OperatorReward as alloy::sol_types::SolType>::RustType>,
+        #[allow(missing_docs)]
         pub startTimestamp: u32,
+        #[allow(missing_docs)]
         pub duration: u32,
+        #[allow(missing_docs)]
         pub description: alloy::sol_types::private::String,
     }
     #[allow(
@@ -1581,7 +1601,9 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorReward {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -1776,12 +1798,17 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RewardsSubmission {
+        #[allow(missing_docs)]
         pub strategiesAndMultipliers: alloy::sol_types::private::Vec<
             <StrategyAndMultiplier as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub startTimestamp: u32,
+        #[allow(missing_docs)]
         pub duration: u32,
     }
     #[allow(
@@ -2056,7 +2083,9 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyAndMultiplier {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub multiplier: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -2399,8 +2428,11 @@ pub mod ISignatureUtils {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SignatureWithSaltAndExpiry {
+        #[allow(missing_docs)]
         pub signature: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -5500,11 +5532,17 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
+        #[allow(missing_docs)]
         pub _avsDirectory: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _slashingRegCoordinator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _stakeRegistry: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub rewards_coordinator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _permissionController: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _allocationManager: alloy::sol_types::private::Address,
     }
     const _: () = {
@@ -5615,6 +5653,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addPendingAdminCall {
+        #[allow(missing_docs)]
         pub admin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`addPendingAdmin(address)`](addPendingAdminCall) function.
@@ -5733,6 +5772,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct avsDirectoryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5843,6 +5883,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct blsApkRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5949,17 +5990,23 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct checkSignaturesCall {
+        #[allow(missing_docs)]
         pub msgHash: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub referenceBlockNumber: u32,
+        #[allow(missing_docs)]
         pub params: <IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`checkSignatures(bytes32,bytes,uint32,(uint32[],(uint256,uint256)[],(uint256,uint256)[],(uint256[2],uint256[2]),(uint256,uint256),uint32[],uint32[],uint32[][]))`](checkSignaturesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct checkSignaturesReturn {
+        #[allow(missing_docs)]
         pub _0:
             <IBLSSignatureCheckerTypes::QuorumStakeTotals as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -6116,6 +6163,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createAVSRewardsSubmissionCall {
+        #[allow(missing_docs)]
         pub rewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::RewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -6241,6 +6289,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createOperatorDirectedAVSRewardsSubmissionCall {
+        #[allow(missing_docs)]
         pub operatorDirectedRewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -6383,6 +6432,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -6489,6 +6539,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorFromAVSCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`deregisterOperatorFromAVS(address)`](deregisterOperatorFromAVSCall) function.
@@ -6603,7 +6654,9 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorFromOperatorSetsCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetIds: alloy::sol_types::private::Vec<u32>,
     }
     ///Container type for the return parameters of the [`deregisterOperatorFromOperatorSets(address,uint32[])`](deregisterOperatorFromOperatorSetsCall) function.
@@ -6733,12 +6786,14 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorRestakedStrategiesCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorRestakedStrategies(address)`](getOperatorRestakedStrategiesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorRestakedStrategiesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -6856,6 +6911,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getRestakeableStrategiesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -6965,6 +7021,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
+        #[allow(missing_docs)]
         pub _initialOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`initialize(address)`](initializeCall) function.
@@ -7085,6 +7142,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -7191,7 +7249,9 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorToAVSCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSignature:
             <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
     }
@@ -7327,6 +7387,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -7433,6 +7494,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeAdminCall {
+        #[allow(missing_docs)]
         pub admin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`removeAdmin(address)`](removeAdminCall) function.
@@ -7547,8 +7609,11 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeAppointeeCall {
+        #[allow(missing_docs)]
         pub appointee: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
     ///Container type for the return parameters of the [`removeAppointee(address,address,bytes4)`](removeAppointeeCall) function.
@@ -7685,6 +7750,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removePendingAdminCall {
+        #[allow(missing_docs)]
         pub pendingAdmin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`removePendingAdmin(address)`](removePendingAdminCall) function.
@@ -7913,6 +7979,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct rewardsInitiatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -8019,8 +8086,11 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAppointeeCall {
+        #[allow(missing_docs)]
         pub appointee: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
     ///Container type for the return parameters of the [`setAppointee(address,address,bytes4)`](setAppointeeCall) function.
@@ -8157,6 +8227,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setClaimerForCall {
+        #[allow(missing_docs)]
         pub claimer: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setClaimerFor(address)`](setClaimerForCall) function.
@@ -8271,6 +8342,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setRewardsInitiatorCall {
+        #[allow(missing_docs)]
         pub newRewardsInitiator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setRewardsInitiator(address)`](setRewardsInitiatorCall) function.
@@ -8387,6 +8459,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setStaleStakesForbiddenCall {
+        #[allow(missing_docs)]
         pub value: bool,
     }
     ///Container type for the return parameters of the [`setStaleStakesForbidden(bool)`](setStaleStakesForbiddenCall) function.
@@ -8505,6 +8578,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -8615,6 +8689,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct staleStakesForbiddenReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -8721,6 +8796,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
+        #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`transferOwnership(address)`](transferOwnershipCall) function.
@@ -8835,16 +8911,22 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct trySignatureAndApkVerificationCall {
+        #[allow(missing_docs)]
         pub msgHash: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub apk: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub apkG2: <BN254::G2Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub sigma: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`trySignatureAndApkVerification(bytes32,(uint256,uint256),(uint256[2],uint256[2]),(uint256,uint256))`](trySignatureAndApkVerificationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct trySignatureAndApkVerificationReturn {
+        #[allow(missing_docs)]
         pub pairingSuccessful: bool,
+        #[allow(missing_docs)]
         pub siganatureIsValid: bool,
     }
     #[allow(
@@ -8987,6 +9069,7 @@ pub mod MockAvsServiceManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateAVSMetadataURICall {
+        #[allow(missing_docs)]
         pub _metadataURI: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`updateAVSMetadataURI(string)`](updateAVSMetadataURICall) function.
@@ -9098,34 +9181,63 @@ pub mod MockAvsServiceManager {
     };
     ///Container for all the [`MockAvsServiceManager`](self) function calls.
     pub enum MockAvsServiceManagerCalls {
+        #[allow(missing_docs)]
         addPendingAdmin(addPendingAdminCall),
+        #[allow(missing_docs)]
         avsDirectory(avsDirectoryCall),
+        #[allow(missing_docs)]
         blsApkRegistry(blsApkRegistryCall),
+        #[allow(missing_docs)]
         checkSignatures(checkSignaturesCall),
+        #[allow(missing_docs)]
         createAVSRewardsSubmission(createAVSRewardsSubmissionCall),
+        #[allow(missing_docs)]
         createOperatorDirectedAVSRewardsSubmission(createOperatorDirectedAVSRewardsSubmissionCall),
+        #[allow(missing_docs)]
         delegation(delegationCall),
+        #[allow(missing_docs)]
         deregisterOperatorFromAVS(deregisterOperatorFromAVSCall),
+        #[allow(missing_docs)]
         deregisterOperatorFromOperatorSets(deregisterOperatorFromOperatorSetsCall),
+        #[allow(missing_docs)]
         getOperatorRestakedStrategies(getOperatorRestakedStrategiesCall),
+        #[allow(missing_docs)]
         getRestakeableStrategies(getRestakeableStrategiesCall),
+        #[allow(missing_docs)]
         initialize(initializeCall),
+        #[allow(missing_docs)]
         owner(ownerCall),
+        #[allow(missing_docs)]
         registerOperatorToAVS(registerOperatorToAVSCall),
+        #[allow(missing_docs)]
         registryCoordinator(registryCoordinatorCall),
+        #[allow(missing_docs)]
         removeAdmin(removeAdminCall),
+        #[allow(missing_docs)]
         removeAppointee(removeAppointeeCall),
+        #[allow(missing_docs)]
         removePendingAdmin(removePendingAdminCall),
+        #[allow(missing_docs)]
         renounceOwnership(renounceOwnershipCall),
+        #[allow(missing_docs)]
         rewardsInitiator(rewardsInitiatorCall),
+        #[allow(missing_docs)]
         setAppointee(setAppointeeCall),
+        #[allow(missing_docs)]
         setClaimerFor(setClaimerForCall),
+        #[allow(missing_docs)]
         setRewardsInitiator(setRewardsInitiatorCall),
+        #[allow(missing_docs)]
         setStaleStakesForbidden(setStaleStakesForbiddenCall),
+        #[allow(missing_docs)]
         stakeRegistry(stakeRegistryCall),
+        #[allow(missing_docs)]
         staleStakesForbidden(staleStakesForbiddenCall),
+        #[allow(missing_docs)]
         transferOwnership(transferOwnershipCall),
+        #[allow(missing_docs)]
         trySignatureAndApkVerification(trySignatureAndApkVerificationCall),
+        #[allow(missing_docs)]
         updateAVSMetadataURI(updateAVSMetadataURICall),
     }
     #[automatically_derived]
@@ -9970,26 +10082,47 @@ pub mod MockAvsServiceManager {
     }
     ///Container for all the [`MockAvsServiceManager`](self) custom errors.
     pub enum MockAvsServiceManagerErrors {
+        #[allow(missing_docs)]
         BitmapValueTooLarge(BitmapValueTooLarge),
+        #[allow(missing_docs)]
         BytesArrayLengthTooLong(BytesArrayLengthTooLong),
+        #[allow(missing_docs)]
         BytesArrayNotOrdered(BytesArrayNotOrdered),
+        #[allow(missing_docs)]
         DelayPeriodNotPassed(DelayPeriodNotPassed),
+        #[allow(missing_docs)]
         ECAddFailed(ECAddFailed),
+        #[allow(missing_docs)]
         ECMulFailed(ECMulFailed),
+        #[allow(missing_docs)]
         ExpModFailed(ExpModFailed),
+        #[allow(missing_docs)]
         InputArrayLengthMismatch(InputArrayLengthMismatch),
+        #[allow(missing_docs)]
         InputEmptyQuorumNumbers(InputEmptyQuorumNumbers),
+        #[allow(missing_docs)]
         InputNonSignerLengthMismatch(InputNonSignerLengthMismatch),
+        #[allow(missing_docs)]
         InvalidBLSPairingKey(InvalidBLSPairingKey),
+        #[allow(missing_docs)]
         InvalidBLSSignature(InvalidBLSSignature),
+        #[allow(missing_docs)]
         InvalidQuorumApkHash(InvalidQuorumApkHash),
+        #[allow(missing_docs)]
         InvalidReferenceBlocknumber(InvalidReferenceBlocknumber),
+        #[allow(missing_docs)]
         NonSignerPubkeysNotSorted(NonSignerPubkeysNotSorted),
+        #[allow(missing_docs)]
         OnlyRegistryCoordinator(OnlyRegistryCoordinator),
+        #[allow(missing_docs)]
         OnlyRegistryCoordinatorOwner(OnlyRegistryCoordinatorOwner),
+        #[allow(missing_docs)]
         OnlyRewardsInitiator(OnlyRewardsInitiator),
+        #[allow(missing_docs)]
         OnlyStakeRegistry(OnlyStakeRegistry),
+        #[allow(missing_docs)]
         ScalarTooLarge(ScalarTooLarge),
+        #[allow(missing_docs)]
         StaleStakesForbidden(StaleStakesForbidden),
     }
     #[automatically_derived]
@@ -10527,9 +10660,13 @@ pub mod MockAvsServiceManager {
     }
     ///Container for all the [`MockAvsServiceManager`](self) events.
     pub enum MockAvsServiceManagerEvents {
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         OwnershipTransferred(OwnershipTransferred),
+        #[allow(missing_docs)]
         RewardsInitiatorUpdated(RewardsInitiatorUpdated),
+        #[allow(missing_docs)]
         StaleStakesForbiddenUpdate(StaleStakesForbiddenUpdate),
     }
     #[automatically_derived]

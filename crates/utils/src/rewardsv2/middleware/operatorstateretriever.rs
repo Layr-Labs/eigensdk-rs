@@ -295,9 +295,13 @@ pub mod OperatorStateRetriever {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CheckSignaturesIndices {
+        #[allow(missing_docs)]
         pub nonSignerQuorumBitmapIndices: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub quorumApkIndices: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub totalStakeIndices: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub nonSignerStakeIndices:
             alloy::sol_types::private::Vec<alloy::sol_types::private::Vec<u32>>,
     }
@@ -562,8 +566,11 @@ pub mod OperatorStateRetriever {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Operator {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub stake: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -778,13 +785,16 @@ pub mod OperatorStateRetriever {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getBatchOperatorFromIdCall {
+        #[allow(missing_docs)]
         pub registryCoordinator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorIds: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
     ///Container type for the return parameters of the [`getBatchOperatorFromId(address,bytes32[])`](getBatchOperatorFromIdCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getBatchOperatorFromIdReturn {
+        #[allow(missing_docs)]
         pub operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -913,13 +923,16 @@ pub mod OperatorStateRetriever {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getBatchOperatorIdCall {
+        #[allow(missing_docs)]
         pub registryCoordinator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`getBatchOperatorId(address,address[])`](getBatchOperatorIdCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getBatchOperatorIdReturn {
+        #[allow(missing_docs)]
         pub operatorIds: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
     #[allow(
@@ -1050,9 +1063,13 @@ pub mod OperatorStateRetriever {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCheckSignaturesIndicesCall {
+        #[allow(missing_docs)]
         pub registryCoordinator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub referenceBlockNumber: u32,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub nonSignerOperatorIds:
             alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
@@ -1060,6 +1077,7 @@ pub mod OperatorStateRetriever {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCheckSignaturesIndicesReturn {
+        #[allow(missing_docs)]
         pub _0: <CheckSignaturesIndices as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -1206,14 +1224,18 @@ pub mod OperatorStateRetriever {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorState_0Call {
+        #[allow(missing_docs)]
         pub registryCoordinator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
     }
     ///Container type for the return parameters of the [`getOperatorState(address,bytes,uint32)`](getOperatorState_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorState_0Return {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Vec<<Operator as alloy::sol_types::SolType>::RustType>,
         >,
@@ -1360,15 +1382,20 @@ pub mod OperatorStateRetriever {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorState_1Call {
+        #[allow(missing_docs)]
         pub registryCoordinator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
     }
     ///Container type for the return parameters of the [`getOperatorState(address,bytes32,uint32)`](getOperatorState_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorState_1Return {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Vec<<Operator as alloy::sol_types::SolType>::RustType>,
         >,
@@ -1523,14 +1550,18 @@ pub mod OperatorStateRetriever {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapsAtBlockNumberCall {
+        #[allow(missing_docs)]
         pub registryCoordinator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorIds: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
     }
     ///Container type for the return parameters of the [`getQuorumBitmapsAtBlockNumber(address,bytes32[],uint32)`](getQuorumBitmapsAtBlockNumberCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapsAtBlockNumberReturn {
+        #[allow(missing_docs)]
         pub _0:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
@@ -1670,11 +1701,17 @@ pub mod OperatorStateRetriever {
     };
     ///Container for all the [`OperatorStateRetriever`](self) function calls.
     pub enum OperatorStateRetrieverCalls {
+        #[allow(missing_docs)]
         getBatchOperatorFromId(getBatchOperatorFromIdCall),
+        #[allow(missing_docs)]
         getBatchOperatorId(getBatchOperatorIdCall),
+        #[allow(missing_docs)]
         getCheckSignaturesIndices(getCheckSignaturesIndicesCall),
+        #[allow(missing_docs)]
         getOperatorState_0(getOperatorState_0Call),
+        #[allow(missing_docs)]
         getOperatorState_1(getOperatorState_1Call),
+        #[allow(missing_docs)]
         getQuorumBitmapsAtBlockNumber(getQuorumBitmapsAtBlockNumberCall),
     }
     #[automatically_derived]

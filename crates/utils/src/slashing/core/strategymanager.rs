@@ -2714,7 +2714,9 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
+        #[allow(missing_docs)]
         pub _delegation: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _pauserRegistry: alloy::sol_types::private::Address,
     }
     const _: () = {
@@ -2794,6 +2796,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DEFAULT_BURN_ADDRESSReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2904,6 +2907,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DEPOSIT_TYPEHASHReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -3010,16 +3014,22 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addSharesCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`addShares(address,address,address,uint256)`](addSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addSharesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -3171,6 +3181,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addStrategiesToDepositWhitelistCall {
+        #[allow(missing_docs)]
         pub strategiesToWhitelist:
             alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
@@ -3291,7 +3302,9 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct burnSharesCall {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub sharesToBurn: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`burnShares(address,uint256)`](burnSharesCall) function.
@@ -3421,17 +3434,24 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateStrategyDepositDigestHashCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub nonce: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`calculateStrategyDepositDigestHash(address,address,address,uint256,uint256,uint256)`](calculateStrategyDepositDigestHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateStrategyDepositDigestHashReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -3596,6 +3616,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -3702,14 +3723,18 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositIntoStrategyCall {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`depositIntoStrategy(address,address,uint256)`](depositIntoStrategyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositIntoStrategyReturn {
+        #[allow(missing_docs)]
         pub depositedShares: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -3844,17 +3869,24 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositIntoStrategyWithSignatureCall {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub signature: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`depositIntoStrategyWithSignature(address,address,uint256,address,uint256,bytes)`](depositIntoStrategyWithSignatureCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositIntoStrategyWithSignatureReturn {
+        #[allow(missing_docs)]
         pub depositedShares: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4022,6 +4054,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct domainSeparatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -4128,13 +4161,16 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getDepositsCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getDeposits(address)`](getDepositsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getDepositsReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub _1:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
@@ -4260,12 +4296,14 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakerStrategyListCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getStakerStrategyList(address)`](getStakerStrategyListCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakerStrategyListReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -4379,8 +4417,11 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
+        #[allow(missing_docs)]
         pub initialOwner: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub initialStrategyWhitelister: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub initialPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`initialize(address,address,uint256)`](initializeCall) function.
@@ -4521,12 +4562,14 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct noncesCall {
+        #[allow(missing_docs)]
         pub signer: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`nonces(address)`](noncesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct noncesReturn {
+        #[allow(missing_docs)]
         pub nonce: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4641,6 +4684,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -4747,6 +4791,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauseCall {
+        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`pause(uint256)`](pauseCall) function.
@@ -4971,12 +5016,14 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Call {
+        #[allow(missing_docs)]
         pub index: u8,
     }
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Return {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -5091,6 +5138,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Return {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -5201,6 +5249,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5307,8 +5356,11 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeDepositSharesCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub depositSharesToRemove: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`removeDepositShares(address,address,uint256)`](removeDepositSharesCall) function.
@@ -5445,6 +5497,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeStrategiesFromDepositWhitelistCall {
+        #[allow(missing_docs)]
         pub strategiesToRemoveFromWhitelist:
             alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
@@ -5673,6 +5726,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setStrategyWhitelisterCall {
+        #[allow(missing_docs)]
         pub newStrategyWhitelister: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setStrategyWhitelister(address)`](setStrategyWhitelisterCall) function.
@@ -5789,13 +5843,16 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerDepositSharesCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`stakerDepositShares(address,address)`](stakerDepositSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerDepositSharesReturn {
+        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -5921,13 +5978,16 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerStrategyListCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`stakerStrategyList(address,uint256)`](stakerStrategyListCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerStrategyListReturn {
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -6055,12 +6115,14 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerStrategyListLengthCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`stakerStrategyListLength(address)`](stakerStrategyListLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerStrategyListLengthReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -6171,12 +6233,14 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyIsWhitelistedForDepositCall {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`strategyIsWhitelistedForDeposit(address)`](strategyIsWhitelistedForDepositCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyIsWhitelistedForDepositReturn {
+        #[allow(missing_docs)]
         pub whitelisted: bool,
     }
     #[allow(
@@ -6293,6 +6357,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyWhitelisterReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -6399,6 +6464,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
+        #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`transferOwnership(address)`](transferOwnershipCall) function.
@@ -6513,6 +6579,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct unpauseCall {
+        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`unpause(uint256)`](unpauseCall) function.
@@ -6629,9 +6696,13 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawSharesAsTokensCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`withdrawSharesAsTokens(address,address,address,uint256)`](withdrawSharesAsTokensCall) function.
@@ -6771,37 +6842,69 @@ pub mod StrategyManager {
     };
     ///Container for all the [`StrategyManager`](self) function calls.
     pub enum StrategyManagerCalls {
+        #[allow(missing_docs)]
         DEFAULT_BURN_ADDRESS(DEFAULT_BURN_ADDRESSCall),
+        #[allow(missing_docs)]
         DEPOSIT_TYPEHASH(DEPOSIT_TYPEHASHCall),
+        #[allow(missing_docs)]
         addShares(addSharesCall),
+        #[allow(missing_docs)]
         addStrategiesToDepositWhitelist(addStrategiesToDepositWhitelistCall),
+        #[allow(missing_docs)]
         burnShares(burnSharesCall),
+        #[allow(missing_docs)]
         calculateStrategyDepositDigestHash(calculateStrategyDepositDigestHashCall),
+        #[allow(missing_docs)]
         delegation(delegationCall),
+        #[allow(missing_docs)]
         depositIntoStrategy(depositIntoStrategyCall),
+        #[allow(missing_docs)]
         depositIntoStrategyWithSignature(depositIntoStrategyWithSignatureCall),
+        #[allow(missing_docs)]
         domainSeparator(domainSeparatorCall),
+        #[allow(missing_docs)]
         getDeposits(getDepositsCall),
+        #[allow(missing_docs)]
         getStakerStrategyList(getStakerStrategyListCall),
+        #[allow(missing_docs)]
         initialize(initializeCall),
+        #[allow(missing_docs)]
         nonces(noncesCall),
+        #[allow(missing_docs)]
         owner(ownerCall),
+        #[allow(missing_docs)]
         pause(pauseCall),
+        #[allow(missing_docs)]
         pauseAll(pauseAllCall),
+        #[allow(missing_docs)]
         paused_0(paused_0Call),
+        #[allow(missing_docs)]
         paused_1(paused_1Call),
+        #[allow(missing_docs)]
         pauserRegistry(pauserRegistryCall),
+        #[allow(missing_docs)]
         removeDepositShares(removeDepositSharesCall),
+        #[allow(missing_docs)]
         removeStrategiesFromDepositWhitelist(removeStrategiesFromDepositWhitelistCall),
+        #[allow(missing_docs)]
         renounceOwnership(renounceOwnershipCall),
+        #[allow(missing_docs)]
         setStrategyWhitelister(setStrategyWhitelisterCall),
+        #[allow(missing_docs)]
         stakerDepositShares(stakerDepositSharesCall),
+        #[allow(missing_docs)]
         stakerStrategyList(stakerStrategyListCall),
+        #[allow(missing_docs)]
         stakerStrategyListLength(stakerStrategyListLengthCall),
+        #[allow(missing_docs)]
         strategyIsWhitelistedForDeposit(strategyIsWhitelistedForDepositCall),
+        #[allow(missing_docs)]
         strategyWhitelister(strategyWhitelisterCall),
+        #[allow(missing_docs)]
         transferOwnership(transferOwnershipCall),
+        #[allow(missing_docs)]
         unpause(unpauseCall),
+        #[allow(missing_docs)]
         withdrawSharesAsTokens(withdrawSharesAsTokensCall),
     }
     #[automatically_derived]
@@ -7660,20 +7763,35 @@ pub mod StrategyManager {
     }
     ///Container for all the [`StrategyManager`](self) custom errors.
     pub enum StrategyManagerErrors {
+        #[allow(missing_docs)]
         CurrentlyPaused(CurrentlyPaused),
+        #[allow(missing_docs)]
         InputAddressZero(InputAddressZero),
+        #[allow(missing_docs)]
         InvalidNewPausedStatus(InvalidNewPausedStatus),
+        #[allow(missing_docs)]
         InvalidSignature(InvalidSignature),
+        #[allow(missing_docs)]
         MaxStrategiesExceeded(MaxStrategiesExceeded),
+        #[allow(missing_docs)]
         OnlyDelegationManager(OnlyDelegationManager),
+        #[allow(missing_docs)]
         OnlyPauser(OnlyPauser),
+        #[allow(missing_docs)]
         OnlyStrategyWhitelister(OnlyStrategyWhitelister),
+        #[allow(missing_docs)]
         OnlyUnpauser(OnlyUnpauser),
+        #[allow(missing_docs)]
         SharesAmountTooHigh(SharesAmountTooHigh),
+        #[allow(missing_docs)]
         SharesAmountZero(SharesAmountZero),
+        #[allow(missing_docs)]
         SignatureExpired(SignatureExpired),
+        #[allow(missing_docs)]
         StakerAddressZero(StakerAddressZero),
+        #[allow(missing_docs)]
         StrategyNotFound(StrategyNotFound),
+        #[allow(missing_docs)]
         StrategyNotWhitelisted(StrategyNotWhitelisted),
     }
     #[automatically_derived]
@@ -8067,13 +8185,21 @@ pub mod StrategyManager {
     }
     ///Container for all the [`StrategyManager`](self) events.
     pub enum StrategyManagerEvents {
+        #[allow(missing_docs)]
         Deposit(Deposit),
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         OwnershipTransferred(OwnershipTransferred),
+        #[allow(missing_docs)]
         Paused(Paused),
+        #[allow(missing_docs)]
         StrategyAddedToDepositWhitelist(StrategyAddedToDepositWhitelist),
+        #[allow(missing_docs)]
         StrategyRemovedFromDepositWhitelist(StrategyRemovedFromDepositWhitelist),
+        #[allow(missing_docs)]
         StrategyWhitelisterChanged(StrategyWhitelisterChanged),
+        #[allow(missing_docs)]
         Unpaused(Unpaused),
     }
     #[automatically_derived]

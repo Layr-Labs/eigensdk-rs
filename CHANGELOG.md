@@ -19,6 +19,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 * Added all features of the `eigensdk` crate to its `"full"` feature [#370](https://github.com/Layr-Labs/eigensdk-rs/pull/370)
   * This includes: `"types"`, `"utils"`, `"metrics-collectors-economic"`, and `"metrics-collectors-rpc-calls"` features.
+* Bump alloy to 0.12 in [#381](https://github.com/Layr-Labs/eigensdk-rs/pull/381).
 
 * Added `register_for_operator_sets_with_churn` method to `elcontracts/writer` in [#382](https://github.com/Layr-Labs/eigensdk-rs/pull/382).
   

@@ -2,7 +2,6 @@ use crate::error::ElContractsError;
 use alloy::{
     primitives::{Address, FixedBytes, U256},
     providers::Provider,
-    transports::http::{Client, Http},
 };
 use eigen_common::{get_provider, SdkProvider};
 use eigen_logging::logger::SharedLogger;
@@ -547,8 +546,8 @@ impl ELChainReader {
         strategy_addr: Address,
     ) -> Result<
         (
-            IStrategyInstance<Http<Client>, SdkProvider>,
-            IERC20Instance<Http<Client>, SdkProvider>,
+            IStrategyInstance<(), SdkProvider>,
+            IERC20Instance<(), SdkProvider>,
             Address,
         ),
         ElContractsError,
@@ -672,7 +671,7 @@ impl ELChainReader {
     pub async fn get_strategy_and_underlying_token(
         &self,
         strategy_addr: Address,
-    ) -> Result<(IStrategyInstance<Http<Client>, SdkProvider>, Address), ElContractsError> {
+    ) -> Result<(IStrategyInstance<(), SdkProvider>, Address), ElContractsError> {
         let provider = get_provider(&self.provider);
 
         let contract_strategy = IStrategy::new(strategy_addr, provider);
@@ -1446,12 +1445,11 @@ pub struct AllocationInfo {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use crate::test_utils::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS};
+    use alloy::eips::eip1898::BlockNumberOrTag::Number;
     use alloy::primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy::providers::Provider;
-    use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
@@ -1475,7 +1473,7 @@ mod tests {
         let approve_salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let current_block_number = provider.get_block_number().await.unwrap();
         let block_info = provider
-            .get_block_by_number(Number(current_block_number), BlockTransactionsKind::Hashes)
+            .get_block_by_number(Number(current_block_number))
             .await
             .unwrap();
 
@@ -1525,7 +1523,7 @@ mod tests {
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let current_block_number = provider.get_block_number().await.unwrap();
         let block_info = provider
-            .get_block_by_number(Number(current_block_number), BlockTransactionsKind::Hashes)
+            .get_block_by_number(Number(current_block_number))
             .await
             .unwrap();
         let block = block_info.unwrap();

@@ -128,7 +128,7 @@ parking_lot = "0.12"
 
 
 # alloy
-alloy = { version = "0.9", features = [
+alloy = { version = "0.12", features = [
     "sol-types",
     "contract",
     "full",

@@ -279,8 +279,11 @@ pub mod ISignatureUtils {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SignatureWithSaltAndExpiry {
+        #[allow(missing_docs)]
         pub signature: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -1982,6 +1985,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
+        #[allow(missing_docs)]
         pub _delegation: alloy::sol_types::private::Address,
     }
     const _: () = {
@@ -2048,6 +2052,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DOMAIN_TYPEHASHReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -2158,6 +2163,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OPERATOR_AVS_REGISTRATION_TYPEHASHReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -2264,13 +2270,16 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct avsOperatorStatusCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`avsOperatorStatus(address,address)`](avsOperatorStatusCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct avsOperatorStatusReturn {
+        #[allow(missing_docs)]
         pub _0:
             <IAVSDirectory::OperatorAVSRegistrationStatus as alloy::sol_types::SolType>::RustType,
     }
@@ -2399,15 +2408,20 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateOperatorAVSRegistrationDigestHashCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`calculateOperatorAVSRegistrationDigestHash(address,address,bytes32,uint256)`](calculateOperatorAVSRegistrationDigestHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateOperatorAVSRegistrationDigestHashReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -2556,6 +2570,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct cancelSaltCall {
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`cancelSalt(bytes32)`](cancelSaltCall) function.
@@ -2674,6 +2689,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2780,6 +2796,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorFromAVSCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`deregisterOperatorFromAVS(address)`](deregisterOperatorFromAVSCall) function.
@@ -2898,6 +2915,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct domainSeparatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -3004,8 +3022,11 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
+        #[allow(missing_docs)]
         pub initialOwner: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _pauserRegistry: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub initialPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`initialize(address,address,uint256)`](initializeCall) function.
@@ -3146,13 +3167,16 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorSaltIsSpentCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`operatorSaltIsSpent(address,bytes32)`](operatorSaltIsSpentCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorSaltIsSpentReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -3282,6 +3306,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -3388,6 +3413,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauseCall {
+        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`pause(uint256)`](pauseCall) function.
@@ -3612,12 +3638,14 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Call {
+        #[allow(missing_docs)]
         pub index: u8,
     }
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Return {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -3732,6 +3760,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Return {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -3842,6 +3871,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -3948,7 +3978,9 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorToAVSCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSignature:
             <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
     }
@@ -4188,6 +4220,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPauserRegistryCall {
+        #[allow(missing_docs)]
         pub newPauserRegistry: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setPauserRegistry(address)`](setPauserRegistryCall) function.
@@ -4304,6 +4337,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
+        #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`transferOwnership(address)`](transferOwnershipCall) function.
@@ -4418,6 +4452,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct unpauseCall {
+        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`unpause(uint256)`](unpauseCall) function.
@@ -4534,6 +4569,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateAVSMetadataURICall {
+        #[allow(missing_docs)]
         pub metadataURI: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`updateAVSMetadataURI(string)`](updateAVSMetadataURICall) function.
@@ -4645,27 +4681,49 @@ pub mod AVSDirectory {
     };
     ///Container for all the [`AVSDirectory`](self) function calls.
     pub enum AVSDirectoryCalls {
+        #[allow(missing_docs)]
         DOMAIN_TYPEHASH(DOMAIN_TYPEHASHCall),
+        #[allow(missing_docs)]
         OPERATOR_AVS_REGISTRATION_TYPEHASH(OPERATOR_AVS_REGISTRATION_TYPEHASHCall),
+        #[allow(missing_docs)]
         avsOperatorStatus(avsOperatorStatusCall),
+        #[allow(missing_docs)]
         calculateOperatorAVSRegistrationDigestHash(calculateOperatorAVSRegistrationDigestHashCall),
+        #[allow(missing_docs)]
         cancelSalt(cancelSaltCall),
+        #[allow(missing_docs)]
         delegation(delegationCall),
+        #[allow(missing_docs)]
         deregisterOperatorFromAVS(deregisterOperatorFromAVSCall),
+        #[allow(missing_docs)]
         domainSeparator(domainSeparatorCall),
+        #[allow(missing_docs)]
         initialize(initializeCall),
+        #[allow(missing_docs)]
         operatorSaltIsSpent(operatorSaltIsSpentCall),
+        #[allow(missing_docs)]
         owner(ownerCall),
+        #[allow(missing_docs)]
         pause(pauseCall),
+        #[allow(missing_docs)]
         pauseAll(pauseAllCall),
+        #[allow(missing_docs)]
         paused_0(paused_0Call),
+        #[allow(missing_docs)]
         paused_1(paused_1Call),
+        #[allow(missing_docs)]
         pauserRegistry(pauserRegistryCall),
+        #[allow(missing_docs)]
         registerOperatorToAVS(registerOperatorToAVSCall),
+        #[allow(missing_docs)]
         renounceOwnership(renounceOwnershipCall),
+        #[allow(missing_docs)]
         setPauserRegistry(setPauserRegistryCall),
+        #[allow(missing_docs)]
         transferOwnership(transferOwnershipCall),
+        #[allow(missing_docs)]
         unpause(unpauseCall),
+        #[allow(missing_docs)]
         updateAVSMetadataURI(updateAVSMetadataURICall),
     }
     #[automatically_derived]
@@ -5272,12 +5330,19 @@ pub mod AVSDirectory {
     }
     ///Container for all the [`AVSDirectory`](self) events.
     pub enum AVSDirectoryEvents {
+        #[allow(missing_docs)]
         AVSMetadataURIUpdated(AVSMetadataURIUpdated),
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         OperatorAVSRegistrationStatusUpdated(OperatorAVSRegistrationStatusUpdated),
+        #[allow(missing_docs)]
         OwnershipTransferred(OwnershipTransferred),
+        #[allow(missing_docs)]
         Paused(Paused),
+        #[allow(missing_docs)]
         PauserRegistrySet(PauserRegistrySet),
+        #[allow(missing_docs)]
         Unpaused(Unpaused),
     }
     #[automatically_derived]
