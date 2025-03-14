@@ -756,6 +756,18 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         Ok(())
     }
 
+    /// Handles when the window is finished in the [`loop_task_aggregator`] function.
+    ///
+    /// # Arguments
+    ///
+    /// * `logger` - The logger to log messages.
+    /// * `aggregated_response_sender` - The aggregated response sender.
+    /// * `task_index` - The task index.
+    /// * `current_aggregated_response` - The current aggregated response.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), BlsAggregationServiceError>` - The result of the operation
     fn handle_window_finished(
         logger: &SharedLogger,
         aggregated_response_sender: &UnboundedSender<
