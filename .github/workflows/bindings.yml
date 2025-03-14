@@ -29,29 +29,10 @@ jobs:
 
       - name: Show Forge version
         run: forge --version
-
+      
       - name: Generate new bindings
         run: make bindings_host
 
       - name: Compare existing and new bindings
-        working-directory: crates/utils/src/
-        run: |
-          git diff > diff.log || true
-          git status
-          ls -lah > file_list.log || true
-
-      - name: Upload Diff Log
-        uses: actions/upload-artifact@v3
-        with:
-          name: diff-log
-          path: crates/utils/src/diff.log
-
-      - name: Upload File List
-        uses: actions/upload-artifact@v3
-        with:
-          name: file-list
-          path: crates/utils/src/file_list.log
-
-      - name: Fail if diff exists
         working-directory: crates/utils/src/
         run: git diff --exit-code
