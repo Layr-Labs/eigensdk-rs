@@ -285,6 +285,10 @@ Those changes in added, changed or breaking changes, should include usage exampl
       .unwrap();
   ```
 
+* Made some internal `BlsAggregatorService` methods private in [#390](https://github.com/Layr-Labs/eigensdk-rs/pull/390).
+  * `check_if_stake_thresholds_met`
+  * `verify_signature`
+
 ### Deprecated ⚠️
 
 ### Removed 🗑
