@@ -1,18 +1,28 @@
+use std::str::FromStr;
+
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy::dyn_abi::DynSolValue;
-use alloy::primitives::{Address, FixedBytes, TxHash, U256};
+use alloy::primitives::{Address, Bytes, FixedBytes, PrimitiveSignature, TxHash, U256};
+use alloy::signers::local::PrivateKeySigner;
+use alloy::signers::Signer;
 use alloy::sol;
-use eigen_common::get_signer;
+use eigen_common::{get_provider, get_signer};
 use eigen_crypto_bls::{
-    alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
+    alloy_g1_point_slashing_to_g1_affine, alloy_g1_point_to_g1_affine, convert_to_g1_point,
+    convert_to_g2_point, BlsKeyPair,
 };
+use eigen_types::operator::operator_id_from_g1_pub_key;
 pub use eigen_types::operator::Operator;
 
 use eigen_utils::convert_allocation_operator_set_to_rewards_operator_set;
 use eigen_utils::rewardsv2::core::delegationmanager::DelegationManager as RewardsV2DelegationManager;
 use eigen_utils::rewardsv2::core::delegationmanager::IDelegationManager::OperatorDetails;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
+
+use eigen_utils::slashing::middleware::registrycoordinator::BN254::{G1Point, G2Point};
+use eigen_utils::slashing::middleware::slashingregistrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
+use eigen_utils::slashing::middleware::slashingregistrycoordinator::SlashingRegistryCoordinator;
 use eigen_utils::{
     slashing::core::{
         allocationmanager::{AllocationManager, IAllocationManagerTypes},
@@ -754,6 +764,106 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Register with churn an operator for one or more operator sets for an AVS
+    /// while replacing existing operators in full quorums. If the operator
+    /// has any stake allocated to these operator sets, it immediately becomes slashable.
+    ///
+    /// This method performs similar steps to [`register_for_operator_sets`], except that
+    /// for each quorum where the new Operator total exceeds the `maxOperatorCount`,
+    /// the `operatorKickParams` are used to deregister a current Operator to make room for the new one.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - operator address to register
+    /// * `bls_key_pair` - bls key pair of the operator
+    /// * `avs_address` - AVS address
+    /// * `operator_set_ids` - operator set ids to register on
+    /// * `socket` - socket used for calling the contract with `registerOperator` function
+    /// * `quorum_numbers` - quorum numbers to register the new operator
+    /// * `operators_to_kick` - operators to kick if quorum is full
+    /// * `churn_signer_private_key` - private key of the churn signer
+    /// * `churn_sig_salt` - churn signature salt
+    /// * `churn_sig_expiry` - churn signature expiry
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    #[allow(clippy::too_many_arguments)]
+    pub async fn register_for_operator_sets_with_churn(
+        &self,
+        operator: Address,
+        bls_key_pair: BlsKeyPair,
+        avs_address: Address,
+        operator_set_ids: Vec<u32>,
+        socket: String,
+        quorum_numbers: Bytes,
+        operators_to_kick: Vec<Address>,
+        churn_signer_private_key: String,
+        churn_sig_salt: FixedBytes<32>,
+        churn_sig_expiry: U256,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            &provider,
+        );
+
+        let (alloy_g1_point_signed_msg, g1_pub_key_bn254, g2_pub_key_bn254) =
+            prepare_bls_keys_for_registration(
+                &self.provider,
+                self.registry_coordinator,
+                operator,
+                &bls_key_pair,
+            )
+            .await?;
+
+        let operators_to_kick_params =
+            build_operator_kick_params(&operators_to_kick, &quorum_numbers);
+
+        let churn_signature = sign_churn_digest(
+            &self.provider,
+            self.registry_coordinator,
+            &bls_key_pair,
+            operator,
+            &operators_to_kick_params,
+            churn_signer_private_key,
+            churn_sig_salt,
+            churn_sig_expiry,
+        )
+        .await?;
+
+        let encoded_data = encode_registration_data(
+            socket,
+            alloy_g1_point_signed_msg,
+            g1_pub_key_bn254,
+            g2_pub_key_bn254,
+            operators_to_kick_params,
+            churn_signature,
+            churn_sig_salt,
+            churn_sig_expiry,
+        );
+
+        let register_params = IAllocationManagerTypes::RegisterParams {
+            avs: avs_address,
+            operatorSetIds: operator_set_ids,
+            data: encoded_data.into(),
+        };
+
+        let tx = allocation_manager
+            .registerForOperatorSets(operator, register_params)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
     /// Deregister an operator from one or more of the AVS's operator sets. If the operator
     /// has any slashable stake allocated to the AVS, it remains slashable until the deallocation delay has passed.
     ///
@@ -898,6 +1008,219 @@ impl ELChainWriter {
     }
 }
 
+/// Generates the G1 and G2 points for the operator registration message hash
+/// Prepares the BLS keys for registration by signing a hashed message and converting the public keys
+/// to the required BN254 curve format.
+///
+/// # Arguments
+///
+/// * `rpc_url` - rpc url used to create the provider.
+/// * `registry_coordinator_address` - registry coordinator address
+/// * `operator` - operator address
+/// * `bls_key_pair` - bls key pair of the operator
+///
+/// # Returns
+///
+/// * `(G1Point, G1Point, G2Point)` - alloy g1 point signed msg, g1 pub key bn254, g2 pub key bn254
+///
+/// # Errors
+/// * `ElContractsError` - if the call to the contract fails.
+async fn prepare_bls_keys_for_registration(
+    rpc_url: &str,
+    registry_coordinator_address: Address,
+    operator: Address,
+    bls_key_pair: &BlsKeyPair,
+) -> Result<(G1Point, G1Point, G2Point), ElContractsError> {
+    let provider = get_provider(rpc_url);
+    let contract_registry_coordinator =
+        SlashingRegistryCoordinator::new(registry_coordinator_address, &provider);
+
+    let g1_hashed_msg_to_sign = contract_registry_coordinator
+        .pubkeyRegistrationMessageHash(operator)
+        .call()
+        .await?
+        ._0;
+
+    let sig = bls_key_pair
+        .sign_hashed_to_curve_message(alloy_g1_point_slashing_to_g1_affine(g1_hashed_msg_to_sign))
+        .g1_point();
+
+    let alloy_g1_point_signed_msg =
+        convert_to_g1_point(sig.g1()).map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+    let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())
+        .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+    let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())
+        .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+
+    Ok((
+        alloy_g1_point_signed_msg,
+        g1_pub_key_bn254,
+        g2_pub_key_bn254,
+    ))
+}
+
+/// Builds the operator kick params for [`register_for_operator_sets_with_churn`]
+/// The operator kick params are used to specify the operators to kick if the quorum is full.
+///
+/// # Arguments
+///
+/// * `operators_to_kick` - operators to kick
+/// * `quorum_numbers` - quorum numbers
+///
+/// # Returns
+///
+/// * `Vec<OperatorKickParam>` - operator kick params
+fn build_operator_kick_params(
+    operators_to_kick: &[Address],
+    quorum_numbers: &Bytes,
+) -> Vec<OperatorKickParam> {
+    operators_to_kick
+        .iter()
+        .zip(quorum_numbers.iter())
+        .map(|(address, &quorum_number)| OperatorKickParam {
+            operator: *address,
+            quorumNumber: quorum_number,
+        })
+        .collect()
+}
+
+/// Signs the churn digest hash for [`register_for_operator_sets_with_churn`].
+///
+/// # Arguments
+///
+/// * `rpc_url` - rpc url used to create the provider.
+/// * `registry_coordinator_address` - registry coordinator address
+/// * `bls_key_pair` - bls key pair of the operator
+/// * `operator` - operator address
+/// * `operators_to_kick_params` - operators to kick params
+/// * `churn_signer_private_key` - private key of the churn signer
+/// * `churn_sig_salt` - churn signature salt
+/// * `churn_sig_expiry` - churn signature expiry
+///
+/// # Returns
+/// * `PrimitiveSignature` - signed churn digest hash
+///
+/// # Errors
+/// * `ElContractsError` - if the call to the contract fails.
+#[allow(clippy::too_many_arguments)]
+async fn sign_churn_digest(
+    rpc_url: &str,
+    registry_coordinator_address: Address,
+    bls_key_pair: &BlsKeyPair,
+    operator: Address,
+    operators_to_kick_params: &[OperatorKickParam],
+    churn_signer_private_key: String,
+    churn_sig_salt: FixedBytes<32>,
+    churn_sig_expiry: U256,
+) -> Result<PrimitiveSignature, ElContractsError> {
+    let provider = get_provider(rpc_url);
+    let contract_registry_coordinator =
+        SlashingRegistryCoordinator::new(registry_coordinator_address, &provider);
+
+    let churn_wallet = PrivateKeySigner::from_str(&churn_signer_private_key)
+        .map_err(|_| ElContractsError::InvalidSignature)?;
+
+    let operator_id = operator_id_from_g1_pub_key(bls_key_pair.public_key())
+        .map_err(|_| ElContractsError::InvalidSignature)?;
+
+    let churn_digest_hash = contract_registry_coordinator
+        .calculateOperatorChurnApprovalDigestHash(
+            operator,
+            operator_id,
+            operators_to_kick_params.to_vec(),
+            churn_sig_salt,
+            churn_sig_expiry,
+        )
+        .call()
+        .await?
+        ._0;
+
+    let signature = churn_wallet
+        .sign_hash(&churn_digest_hash)
+        .await
+        .map_err(|_| ElContractsError::InvalidSignature)?;
+
+    Ok(signature)
+}
+
+/// Encodes the registration data for [`register_for_operator_sets_with_churn`]
+///
+/// # Arguments
+/// * `socket` - socket
+/// * `alloy_g1_point_signed_msg` - alloy g1 point signed msg
+/// * `g1_pub_key_bn254` - g1 pub key bn254
+/// * `g2_pub_key_bn254` - g2 pub key bn254
+/// * `operators_to_kick_params` - operators to kick params
+/// * `churn_signature` - churn signature
+/// * `churn_sig_salt` - churn signature salt
+/// * `churn_sig_expiry` - churn signature expiry
+///
+/// # Returns
+///
+/// * `Vec<u8>` - encoded registration data
+#[allow(clippy::too_many_arguments)]
+fn encode_registration_data(
+    socket: String,
+    alloy_g1_point_signed_msg: G1Point,
+    g1_pub_key_bn254: G1Point,
+    g2_pub_key_bn254: G2Point,
+    operators_to_kick_params: Vec<OperatorKickParam>,
+    churn_signature: PrimitiveSignature,
+    churn_sig_salt: FixedBytes<32>,
+    churn_sig_expiry: U256,
+) -> Vec<u8> {
+    let g2_point_x = vec![
+        DynSolValue::Uint(g2_pub_key_bn254.X[0], 256),
+        DynSolValue::Uint(g2_pub_key_bn254.X[1], 256),
+    ];
+    let g2_point_y = vec![
+        DynSolValue::Uint(g2_pub_key_bn254.Y[0], 256),
+        DynSolValue::Uint(g2_pub_key_bn254.Y[1], 256),
+    ];
+
+    let pubkey_registration_params = DynSolValue::Tuple(vec![
+        DynSolValue::Tuple(vec![
+            DynSolValue::Uint(alloy_g1_point_signed_msg.X, 256),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.Y, 256),
+        ]),
+        DynSolValue::Tuple(vec![
+            DynSolValue::Uint(g1_pub_key_bn254.X, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.Y, 256),
+        ]),
+        DynSolValue::Tuple(vec![
+            DynSolValue::FixedArray(g2_point_x),
+            DynSolValue::FixedArray(g2_point_y),
+        ]),
+    ]);
+
+    let operator_kick_params = DynSolValue::Array(
+        operators_to_kick_params
+            .into_iter()
+            .map(|param| {
+                DynSolValue::Tuple(vec![
+                    DynSolValue::Uint(U256::from(param.quorumNumber), 8),
+                    DynSolValue::Address(param.operator),
+                ])
+            })
+            .collect(),
+    );
+
+    let signature_with_salt = DynSolValue::Tuple(vec![
+        DynSolValue::Bytes(churn_signature.as_bytes().into()),
+        DynSolValue::FixedBytes(churn_sig_salt, 32),
+        DynSolValue::Uint(churn_sig_expiry, 256),
+    ]);
+
+    DynSolValue::Tuple(vec![
+        DynSolValue::Uint(U256::from(1), 8), // RegistrationType.CHURN = 1
+        DynSolValue::String(socket),
+        pubkey_registration_params,
+        operator_kick_params,
+        signature_with_salt,
+    ])
+    .abi_encode_params()
+}
+
 #[cfg(test)]
 mod tests {
     use crate::test_utils::{
@@ -905,7 +1228,7 @@ mod tests {
         OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
     use alloy::{
-        primitives::{address, aliases::U96, Address, U256},
+        primitives::{address, aliases::U96, ruint::aliases::U256, Address, Bytes, FixedBytes},
         providers::{Provider, WalletProvider},
         sol_types::SolCall,
     };
@@ -918,7 +1241,7 @@ mod tests {
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
             get_registry_coordinator_address, get_service_manager_address, FIRST_ADDRESS,
-            FIRST_PRIVATE_KEY,
+            FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY_2, SECOND_ADDRESS, SECOND_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
@@ -930,13 +1253,21 @@ mod tests {
                 AllocationManager::{self, OperatorSet},
                 IAllocationManagerTypes,
             },
-            middleware::registrycoordinator::{
-                ISlashingRegistryCoordinatorTypes::OperatorSetParam,
-                IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
+            middleware::{
+                registrycoordinator::{
+                    ISlashingRegistryCoordinatorTypes::OperatorSetParam,
+                    IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
+                },
+                slashingregistrycoordinator::{
+                    ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
+                    IStakeRegistryTypes::StrategyParams as StrategyParamsSlashing,
+                    SlashingRegistryCoordinator,
+                },
             },
             sdk::mockavsservicemanager::MockAvsServiceManager,
         },
     };
+
     use std::str::FromStr;
 
     #[tokio::test]
@@ -1657,5 +1988,232 @@ mod tests {
             allocation_info_after[0].current_magnitude,
             U256::from(new_allocation)
         );
+    }
+
+    async fn create_total_delegated_stake_operator_set(
+        http_endpoint: &str,
+        erc20_mock_strategy_addr: Address,
+        avs_address: Address,
+    ) {
+        let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
+
+        let allocation_manager_addr =
+            get_allocation_manager_address(http_endpoint.to_string()).await;
+        let allocation_manager =
+            AllocationManager::new(allocation_manager_addr, default_signer.clone());
+
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+        let service_manager =
+            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
+
+        service_manager
+            .setAppointee(
+                default_signer.default_signer_address(),
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.to_string()).await;
+
+        allocation_manager
+            .setAVSRegistrar(avs_address, registry_coordinator_addr)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(
+                    AllocationManager::deregisterFromOperatorSetsCall::SELECTOR,
+                ),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        let operator_set_param = OperatorSetParamSlashing {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 100,
+            kickBIPsOfTotalStake: 1000,
+        };
+
+        let minimum_stake = U96::from(1);
+
+        let strategy_params = StrategyParamsSlashing {
+            strategy: erc20_mock_strategy_addr,
+            multiplier: U96::from(1),
+        };
+
+        let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
+            get_registry_coordinator_address(http_endpoint.to_string()).await,
+            default_signer.clone(),
+        );
+
+        let tx_hash = slashing_registry_coordinator
+            .createTotalDelegatedStakeQuorum(
+                operator_set_param,
+                minimum_stake,
+                vec![strategy_params],
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        assert!(tx_hash.status());
+    }
+
+    #[tokio::test]
+    async fn test_register_for_operator_sets_with_churn() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let default_signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+
+        // Create operator set
+        create_total_delegated_stake_operator_set(
+            &http_endpoint,
+            get_erc20_mock_strategy(http_endpoint.clone()).await,
+            avs_address,
+        )
+        .await;
+
+        // Register FIRST_ADDRESS to operator set
+        let el_chain_writer =
+            new_test_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string()).await;
+        let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
+        let tx_hash = el_chain_writer
+            .register_for_operator_sets_with_churn(
+                FIRST_ADDRESS,
+                bls_key,
+                avs_address,
+                vec![operator_set_id],
+                "socket".to_string(),
+                Bytes::from([0]),
+                vec![FIRST_ADDRESS],
+                FIRST_PRIVATE_KEY.to_string(),
+                FixedBytes::from([0x03; 32]),
+                U256::MAX,
+            )
+            .await
+            .unwrap();
+
+        assert!(wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status());
+
+        // Verify FIRST_ADDRESS registration
+        assert!(el_chain_writer
+            .el_chain_reader
+            .is_operator_registered_with_operator_set(
+                FIRST_ADDRESS,
+                OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id
+                }
+            )
+            .await
+            .unwrap());
+
+        // Set maxOperatorCount to 1 so only one operator can be registered to the operator set
+        let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
+            get_registry_coordinator_address(http_endpoint.clone()).await,
+            default_signer.clone(),
+        );
+        let operator_set_params = OperatorSetParamSlashing {
+            maxOperatorCount: 1,
+            kickBIPsOfOperatorStake: 10,
+            kickBIPsOfTotalStake: 10000,
+        };
+        assert!(slashing_registry_coordinator
+            .setOperatorSetParams(0, operator_set_params)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap()
+            .status());
+
+        // Register SECOND_ADDRESS to operator set with churn. FIRST_ADDRESS will be kicked
+        let el_chain_writer_2 =
+            new_test_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string()).await;
+        let tx_hash = el_chain_writer_2
+            .register_for_operator_sets_with_churn(
+                SECOND_ADDRESS,
+                BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap(),
+                avs_address,
+                vec![operator_set_id],
+                "socket".to_string(),
+                Bytes::from([0]),
+                vec![FIRST_ADDRESS],
+                FIRST_PRIVATE_KEY.to_string(),
+                FixedBytes::from([0x05; 32]),
+                U256::MAX,
+            )
+            .await
+            .unwrap();
+
+        assert!(wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status());
+
+        // Verify FIRST_ADDRESS is not registered
+        assert!(!el_chain_writer
+            .el_chain_reader
+            .is_operator_registered_with_operator_set(
+                FIRST_ADDRESS,
+                OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id
+                }
+            )
+            .await
+            .unwrap());
+
+        // Verify SECOND_ADDRESS is registered
+        assert!(el_chain_writer_2
+            .el_chain_reader
+            .is_operator_registered_with_operator_set(
+                SECOND_ADDRESS,
+                OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id
+                }
+            )
+            .await
+            .unwrap());
     }
 }
