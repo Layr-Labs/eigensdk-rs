@@ -129,6 +129,13 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+
+* Updated error types in `BlsAggregationServiceError` for channel failures in the BLS Aggregator Service ([#392](https://github.com/Layr-Labs/eigensdk-rs/pull/392)).
+  * Before: A generic `ChannelError` was used for both sender and receiver channel failures.
+  * After: Distinct errors are now provided:
+    - `SenderError` is returned when the sender channel fails to send a message to the service.
+    - `ReceiverError` is returned when the receiver channel fails to receive a message from the service.
+
 ### Deprecated ⚠️
 
 ### Removed 
