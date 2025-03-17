@@ -38,6 +38,7 @@ library CoreDeploymentLib {
     using stdJson for *;
     using Strings for *;
     using UpgradeableProxyLib for address;
+
     string internal constant EIGENLAYER_VERSION = "v1.3.0-rc.0";
     Vm internal constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
@@ -118,15 +119,21 @@ library CoreDeploymentLib {
 
         address permissionControllerImpl = address(new PermissionController(EIGENLAYER_VERSION));
         address avsDirectoryImpl = address(
-            new AVSDirectory(IDelegationManager(result.delegationManager), IPauserRegistry(result.pauserRegistry),EIGENLAYER_VERSION)
+            new AVSDirectory(
+                IDelegationManager(result.delegationManager), IPauserRegistry(result.pauserRegistry), EIGENLAYER_VERSION
+            )
         );
 
         address strategyManagerImpl = address(
-            new StrategyManager(IDelegationManager(result.delegationManager), IPauserRegistry(result.pauserRegistry),EIGENLAYER_VERSION)
+            new StrategyManager(
+                IDelegationManager(result.delegationManager), IPauserRegistry(result.pauserRegistry), EIGENLAYER_VERSION
+            )
         );
 
         address strategyFactoryImpl = address(
-            new StrategyFactory(IStrategyManager(result.strategyManager), IPauserRegistry(result.pauserRegistry),EIGENLAYER_VERSION)
+            new StrategyFactory(
+                IStrategyManager(result.strategyManager), IPauserRegistry(result.pauserRegistry), EIGENLAYER_VERSION
+            )
         );
 
         address allocationManagerImpl = address(
@@ -165,30 +172,38 @@ library CoreDeploymentLib {
         uint32 MAX_RETROACTIVE_LENGTH = 1;
         uint32 MAX_FUTURE_LENGTH = 1 days;
         uint32 GENESIS_REWARDS_TIMESTAMP = 10 days;
-IRewardsCoordinatorTypes.RewardsCoordinatorConstructorParams memory rewardsCoordinatorParams = IRewardsCoordinatorTypes.RewardsCoordinatorConstructorParams( IDelegationManager(result.delegationManager),
-                IStrategyManager(result.strategyManager),
-                IAllocationManager(result.allocationManager),
-                IPauserRegistry(result.pauserRegistry),
-                IPermissionController(result.permissionController),
-                CALCULATION_INTERVAL_SECONDS,
-                MAX_REWARDS_DURATION,
-                MAX_RETROACTIVE_LENGTH,
-                MAX_FUTURE_LENGTH,
-                GENESIS_REWARDS_TIMESTAMP,
-                EIGENLAYER_VERSION);
-
-        address rewardsCoordinatorImpl = address(
-            new RewardsCoordinator(
-               rewardsCoordinatorParams
-            )
+        IRewardsCoordinatorTypes.RewardsCoordinatorConstructorParams memory rewardsCoordinatorParams =
+        IRewardsCoordinatorTypes.RewardsCoordinatorConstructorParams(
+            IDelegationManager(result.delegationManager),
+            IStrategyManager(result.strategyManager),
+            IAllocationManager(result.allocationManager),
+            IPauserRegistry(result.pauserRegistry),
+            IPermissionController(result.permissionController),
+            CALCULATION_INTERVAL_SECONDS,
+            MAX_REWARDS_DURATION,
+            MAX_RETROACTIVE_LENGTH,
+            MAX_FUTURE_LENGTH,
+            GENESIS_REWARDS_TIMESTAMP,
+            EIGENLAYER_VERSION
         );
+
+        address rewardsCoordinatorImpl = address(new RewardsCoordinator(rewardsCoordinatorParams));
 
         uint64 GENESIS_TIME = 1_564_000;
 
-        address eigenPodImpl =
-            address(new EigenPod(IETHPOSDeposit(ethPOSDeposit), IEigenPodManager(result.eigenPodManager), GENESIS_TIME,EIGENLAYER_VERSION));
-        address baseStrategyImpl =
-            address(new StrategyBase(IStrategyManager(result.strategyManager), IPauserRegistry(result.pauserRegistry),EIGENLAYER_VERSION));
+        address eigenPodImpl = address(
+            new EigenPod(
+                IETHPOSDeposit(ethPOSDeposit),
+                IEigenPodManager(result.eigenPodManager),
+                GENESIS_TIME,
+                EIGENLAYER_VERSION
+            )
+        );
+        address baseStrategyImpl = address(
+            new StrategyBase(
+                IStrategyManager(result.strategyManager), IPauserRegistry(result.pauserRegistry), EIGENLAYER_VERSION
+            )
+        );
         /// TODO: PauserRegistry isn't upgradeable
         address pauserRegistryImpl = address(
             new PauserRegistry(
