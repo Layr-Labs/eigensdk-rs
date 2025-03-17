@@ -1425,9 +1425,18 @@ impl ELChainReader {
         Ok(is_admin)
     }
 
+    /// Checks if an operator is slashable by an operator set.
+    /// # Arguments
+    /// * `operator_address` - The operator to check slashability for
+    /// * `operator_set` - The operator set to check slashability for
+    /// # Returns
+    /// * [`bool`] - true if the operator is registered or their slashableUntil block has not passed.
+    /// This is because even when operators are deregistered, they still remain slashable for a period of time.
+    /// # Errors
+    /// * [`ElContractsError`] - if the call to the contract fails
     pub async fn is_operator_slashable(
         &self,
-        operator: Address,
+        operator_address: Address,
         operator_set: OperatorSet,
     ) -> Result<bool, ElContractsError> {
         let provider = get_provider(&self.provider);
@@ -1436,7 +1445,7 @@ impl ELChainReader {
             AllocationManager::new(self.allocation_manager.unwrap(), provider);
 
         let is_slashable = contract_allocation_manager
-            .isOperatorSlashable(operator, operator_set)
+            .isOperatorSlashable(operator_address, operator_set)
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)?
@@ -1445,6 +1454,15 @@ impl ELChainReader {
         Ok(is_slashable)
     }
 
+    /// Returns the current allocated stake, irrespective of the operator's slashable status for the [`OperatorSet`].
+    /// # Arguments
+    /// * `operators` - The operators to query
+    /// * `operator_set` - The operator set to query
+    /// * `strategies` - The strategies to query
+    /// # Returns
+    /// * [`Vec<Vec<U256>>`] - Current Allocated Stake
+    /// # Errors
+    /// * [`ElContractsError`] - if the call to the contract fails
     pub async fn get_allocated_stake(
         &self,
         operator_set: OperatorSet,
