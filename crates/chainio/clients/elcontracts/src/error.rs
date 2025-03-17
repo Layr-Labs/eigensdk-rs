@@ -83,4 +83,5 @@ pub enum ElContractsError {
 
     #[error("StakerOptOutWindowBlocks is not set")]
     StakerOptOutWindowBlocksNotSet,
+
 }

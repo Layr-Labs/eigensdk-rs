@@ -1424,6 +1424,17 @@ impl ELChainReader {
 
         Ok(is_admin)
     }
+
+    pub async fn is_operator_slashable(&self,operator: Address ,operator_set: OperatorSet) -> Result<bool,ElContractsError>{
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager =
+            AllocationManager::new(self.allocation_manager.unwrap(), provider);
+
+        let is_slashable = contract_allocation_manager.isOperatorSlashable(operator, operator_set).call().await.map_err(ElContractsError::AlloyContractError)?._0;
+
+        Ok(is_slashable)
+    }
 }
 
 // TODO: move to types.rs?
@@ -1913,6 +1924,20 @@ mod tests {
 
         assert_eq!(slashable_shares.len(), 1);
         assert_eq!(slashable_shares[0], U256::ZERO);
+    }
+
+    #[tokio::test]
+    async fn test_is_operator_slashable() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let is_slashable = chain_reader.is_operator_slashable(OPERATOR_ADDRESS, operator_set).await.unwrap();
+        assert_eq!(is_slashable,false);
     }
 
     #[tokio::test]
