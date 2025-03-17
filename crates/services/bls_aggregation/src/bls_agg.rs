@@ -51,6 +51,7 @@ impl TaskMetadata {
     /// Creates a new instance of [`TaskMetadata`]
     ///
     /// # Arguments
+    ///
     /// * `task_index` - index of the task
     /// * `task_created_block` - block number at which the task was created
     /// * `quorum_numbers` - quorum numbers which should respond to the task
@@ -61,6 +62,7 @@ impl TaskMetadata {
     /// If the window duration is not set, it will default to [`Duration::ZERO`].
     ///
     /// # Returns
+    ///
     /// A new instance of [`TaskMetadata`]
     pub fn new(
         task_index: TaskIndex,
@@ -85,6 +87,7 @@ impl TaskMetadata {
     /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
     ///
     /// # Returns
+    ///
     /// An instance of [`TaskMetadata`] with the window duration set
     pub fn with_window_duration(mut self, window_duration: Duration) -> Self {
         self.window_duration = window_duration;
@@ -956,6 +959,16 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         true
     }
 
+    /// Checks if the signature is a duplicate.
+    ///
+    /// # Arguments
+    ///
+    /// * `aggregated_operators` - The aggregated operators.
+    /// * `signed_digest` - The signed task response digest.
+    ///
+    /// # Returns
+    ///
+    /// Returns `true` if the signature is a duplicate, otherwise `false`.
     fn is_duplicate_signature(
         aggregated_operators: &HashMap<FixedBytes<32>, AggregatedOperators>,
         signed_digest: &SignedTaskResponseDigest,
