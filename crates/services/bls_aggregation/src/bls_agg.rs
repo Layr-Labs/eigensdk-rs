@@ -2635,7 +2635,6 @@ mod tests {
                 test_operator_2.operator_id,
             ))
             .await;
-        // This error is expected because the channel to send the signature is closed
         assert_eq!(
             Err(BlsAggregationServiceError::SenderChannelError),
             process_signature_result
@@ -2735,7 +2734,6 @@ mod tests {
                 test_operator_2.operator_id,
             ))
             .await;
-        // This error is expected because the channel to send the signature is closed
         assert_eq!(
             Err(BlsAggregationServiceError::SenderChannelError),
             process_signature_result
