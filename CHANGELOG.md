@@ -80,7 +80,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ) -> Result<Self, AvsRegistryError> {}
   ```
 
-* Bumped slashing bindings to [v1.3.0-rc.0](https://github.com/Layr-Labs/eigenlayer-contracts/releases/tag/v1.3.0).
+* Bumped slashing bindings to [v1.3.0-rc.0](https://github.com/Layr-Labs/eigenlayer-contracts/releases/tag/v1.3.0) in [#388](https://github.com/Layr-Labs/eigensdk-rs/pull/388)
+
   - Added method `is_operator_slashable`.
 
   ```rust
