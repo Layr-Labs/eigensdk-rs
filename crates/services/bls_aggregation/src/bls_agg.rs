@@ -164,10 +164,10 @@ impl ServiceHandle {
         let (tx, rx) = oneshot::channel();
         self.msg_sender
             .send(AggregationMessage::InitializeTask(metadata, tx))
-            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+            .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
 
         rx.await
-            .map_err(|_| BlsAggregationServiceError::ChannelError)?
+            .map_err(|_| BlsAggregationServiceError::ReceiverChannelError)?
     }
 
     /// Sends a message to the BLS Aggregator Service to process a signature.
@@ -188,10 +188,10 @@ impl ServiceHandle {
         let (tx, rx) = oneshot::channel();
         self.msg_sender
             .send(AggregationMessage::ProcessSignature(task_signature, tx))
-            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+            .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
 
         rx.await
-            .map_err(|_| BlsAggregationServiceError::ChannelError)?
+            .map_err(|_| BlsAggregationServiceError::ReceiverChannelError)?
     }
 }
 
@@ -215,7 +215,7 @@ impl AggregateReceiver {
         self.aggregate_receiver
             .recv()
             .await
-            .ok_or(BlsAggregationServiceError::ChannelError)?
+            .ok_or(BlsAggregationServiceError::ReceiverChannelError)?
     }
 }
 
@@ -353,7 +353,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                             let _ = send_error
                                 .0
                                 .result_channel
-                                .send(Err(BlsAggregationServiceError::ChannelError));
+                                .send(Err(BlsAggregationServiceError::SenderChannelError));
                         }
                     } else {
                         result_sender
@@ -611,7 +611,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .send(Err(BlsAggregationServiceError::SignatureVerificationError(
                     SignatureVerificationError::DuplicateSignature,
                 )))
-                .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+                .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
             return Ok(());
         }
 
@@ -629,7 +629,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         signed_digest
             .result_channel
             .send(verification_result.clone())
-            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+            .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
 
         // If the signature is incorrect, return
         if verification_result.is_err() {
@@ -719,7 +719,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             );
             aggregated_response_sender
                 .send(Ok(current_aggregated_response.clone().unwrap()))
-                .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+                .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
         } else {
             logger.debug(
                 &format!(
@@ -761,7 +761,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         aggregated_response_sender
             .send(Ok(current_aggregated_response.clone().unwrap()))
-            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+            .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
         Ok(())
     }
 
@@ -2618,8 +2618,9 @@ mod tests {
                 test_operator_2.operator_id,
             ))
             .await;
+        // This error is expected because the channel to send the signature is closed
         assert_eq!(
-            Err(BlsAggregationServiceError::ChannelError), // TODO: change this error to be more representative
+            Err(BlsAggregationServiceError::SenderChannelError),
             process_signature_result
         );
 
@@ -2717,8 +2718,9 @@ mod tests {
                 test_operator_2.operator_id,
             ))
             .await;
+        // This error is expected because the channel to send the signature is closed
         assert_eq!(
-            Err(BlsAggregationServiceError::ChannelError), // TODO: change this error to be more representative
+            Err(BlsAggregationServiceError::SenderChannelError),
             process_signature_result
         );
 
