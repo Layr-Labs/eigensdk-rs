@@ -1483,6 +1483,31 @@ impl ELChainReader {
 
         Ok(allocated_stake)
     }
+
+    /// For a strategy, get the amount of magnitude that is allocated across one or more operator sets
+    /// # Arguments
+    /// * `operator` - The operator to query
+    /// * `strategy_address` - The strategy to get allocatable magnitude for
+    /// # Returns
+    /// [`u64`] - currently allocated magnitude
+    pub async fn get_encumbered_magnitude(
+        &self,
+        operator: Address,
+        strategy_address: Address,
+    ) -> Result<u64, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager =
+            AllocationManager::new(self.allocation_manager.unwrap(), provider);
+
+        let magnitude = contract_allocation_manager
+            .getEncumberedMagnitude(operator, strategy_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+        Ok(magnitude)
+    }
 }
 
 // TODO: move to types.rs?
@@ -2162,5 +2187,20 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(slashable_stake[0][0], "0".parse().unwrap());
+    }
+
+    #[tokio::test]
+    async fn test_get_encumbered_magnitude() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let magnitude = chain_reader
+            .get_encumbered_magnitude(
+                OPERATOR_ADDRESS,
+                get_erc20_mock_strategy(http_endpoint.to_string()).await,
+            )
+            .await
+            .unwrap();
+        assert_eq!(magnitude, 0);
     }
 }
