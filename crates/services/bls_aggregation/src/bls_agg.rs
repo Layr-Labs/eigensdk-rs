@@ -171,10 +171,10 @@ impl ServiceHandle {
         let (tx, rx) = oneshot::channel();
         self.msg_sender
             .send(AggregationMessage::InitializeTask(metadata, tx))
-            .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
+            .map_err(|_| BlsAggregationServiceError::SenderError)?;
 
         rx.await
-            .map_err(|_| BlsAggregationServiceError::ReceiverChannelError)?
+            .map_err(|_| BlsAggregationServiceError::ReceiverError)?
     }
 
     /// Sends a message to the BLS Aggregator Service to process a signature.
@@ -195,10 +195,10 @@ impl ServiceHandle {
         let (tx, rx) = oneshot::channel();
         self.msg_sender
             .send(AggregationMessage::ProcessSignature(task_signature, tx))
-            .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
+            .map_err(|_| BlsAggregationServiceError::SenderError)?;
 
         rx.await
-            .map_err(|_| BlsAggregationServiceError::ReceiverChannelError)?
+            .map_err(|_| BlsAggregationServiceError::ReceiverError)?
     }
 }
 
@@ -222,7 +222,7 @@ impl AggregateReceiver {
         self.aggregate_receiver
             .recv()
             .await
-            .ok_or(BlsAggregationServiceError::ReceiverChannelError)?
+            .ok_or(BlsAggregationServiceError::ReceiverError)?
     }
 }
 
@@ -360,7 +360,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                             let _ = send_error
                                 .0
                                 .result_channel
-                                .send(Err(BlsAggregationServiceError::SenderChannelError));
+                                .send(Err(BlsAggregationServiceError::SenderError));
                         }
                     } else {
                         result_sender
@@ -618,7 +618,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .send(Err(BlsAggregationServiceError::SignatureVerificationError(
                     SignatureVerificationError::DuplicateSignature,
                 )))
-                .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
+                .map_err(|_| BlsAggregationServiceError::SenderError)?;
             return Ok(());
         }
 
@@ -636,7 +636,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         signed_digest
             .result_channel
             .send(verification_result.clone())
-            .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
+            .map_err(|_| BlsAggregationServiceError::SenderError)?;
 
         // If the signature is incorrect, return
         if verification_result.is_err() {
@@ -726,7 +726,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             );
             aggregated_response_sender
                 .send(Ok(current_aggregated_response.clone().unwrap()))
-                .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
+                .map_err(|_| BlsAggregationServiceError::SenderError)?;
         } else {
             logger.debug(
                 &format!(
@@ -768,7 +768,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         aggregated_response_sender
             .send(Ok(current_aggregated_response.clone().unwrap()))
-            .map_err(|_| BlsAggregationServiceError::SenderChannelError)?;
+            .map_err(|_| BlsAggregationServiceError::SenderError)?;
         Ok(())
     }
 
@@ -2641,7 +2641,7 @@ mod tests {
             ))
             .await;
         assert_eq!(
-            Err(BlsAggregationServiceError::SenderChannelError),
+            Err(BlsAggregationServiceError::SenderError),
             process_signature_result
         );
 
@@ -2740,7 +2740,7 @@ mod tests {
             ))
             .await;
         assert_eq!(
-            Err(BlsAggregationServiceError::SenderChannelError),
+            Err(BlsAggregationServiceError::SenderError),
             process_signature_result
         );
 
