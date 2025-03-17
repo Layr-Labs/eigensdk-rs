@@ -1005,7 +1005,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         logger: SharedLogger,
     ) -> AggregatedOperators {
         logger.debug(
-            &format!("Update aggregated operators for task index: {}", task_index),
+            "Update aggregated operators",
             "eigen-services-blsaggregation.bls_agg.update_aggregated_operators",
         );
 
