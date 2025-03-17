@@ -605,7 +605,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ) -> Result<(), BlsAggregationServiceError> {
         logger.debug(
             &format!("New signature received for task index: {}", task_index),
-            "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+            "eigen-services-blsaggregation.bls_agg.handle_new_signature",
         );
 
         let signed_digest =
@@ -670,7 +670,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         logger.debug(
             &format!("Signature threshold is met for task index: {}", task_index),
-            "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+            "eigen-services-blsaggregation.bls_agg.handle_new_signature",
         );
 
         // If the window is not open, open it
@@ -722,7 +722,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     "task_expired_timer while in the waiting window for task index: {}",
                     task_index
                 ),
-                "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+                "eigen-services-blsaggregation.bls_agg.handle_task_expired",
             );
             aggregated_response_sender
                 .send(Ok(current_aggregated_response.clone().unwrap()))
@@ -733,7 +733,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     "task_expired_timer NOT in the waiting window for task index: {}",
                     task_index
                 ),
-                "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+                "eigen-services-blsaggregation.bls_agg.handle_task_expired",
             );
 
             let _ = aggregated_response_sender.send(Err(BlsAggregationServiceError::TaskExpired));
@@ -763,7 +763,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 "Window finished. Send aggregated response for task index: {}",
                 task_index
             ),
-            "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+            "eigen-services-blsaggregation.bls_agg.handle_window_finished",
         );
 
         aggregated_response_sender
@@ -1004,6 +1004,11 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         operator_id: FixedBytes<32>,
         logger: SharedLogger,
     ) -> AggregatedOperators {
+        logger.debug(
+            &format!("Update aggregated operators for task index: {}", task_index),
+            "eigen-services-blsaggregation.bls_agg.update_aggregated_operators",
+        );
+
         let bls_signature_g1_point = bls_signature.g1_point().g1();
 
         if let Some(existing) = aggregated_operators.get_mut(&task_response_digest) {
@@ -1062,7 +1067,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 "Create window to wait for new signatures for task index: {}",
                 task_index
             ),
-            "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+            "eigen-services-blsaggregation.bls_agg.start_window",
         );
         tokio::spawn(async move {
             tokio::time::sleep(window_duration).await;
