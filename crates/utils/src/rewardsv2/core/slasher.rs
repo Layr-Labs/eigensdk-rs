@@ -23,8 +23,11 @@ pub mod ISlasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MiddlewareDetails {
+        #[allow(missing_docs)]
         pub registrationMayBeginAtBlock: u32,
+        #[allow(missing_docs)]
         pub contractCanSlashOperatorUntilBlock: u32,
+        #[allow(missing_docs)]
         pub latestUpdateBlock: u32,
     }
     #[allow(
@@ -250,7 +253,9 @@ pub mod ISlasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MiddlewareTimes {
+        #[allow(missing_docs)]
         pub stalestUpdateBlock: u32,
+        #[allow(missing_docs)]
         pub latestServeUntilBlock: u32,
     }
     #[allow(
@@ -2622,7 +2627,9 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
     const _: () = {
@@ -2698,13 +2705,16 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canSlashCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`canSlash(address,address)`](canSlashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canSlashReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -2830,14 +2840,18 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canWithdrawCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: u32,
+        #[allow(missing_docs)]
         pub _2: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`canWithdraw(address,uint32,uint256)`](canWithdrawCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canWithdrawReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -2970,13 +2984,16 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractCanSlashOperatorUntilBlockCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`contractCanSlashOperatorUntilBlock(address,address)`](contractCanSlashOperatorUntilBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractCanSlashOperatorUntilBlockReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -3106,6 +3123,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -3212,6 +3230,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct freezeOperatorCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`freezeOperator(address)`](freezeOperatorCall) function.
@@ -3326,13 +3345,16 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCorrectValueForInsertAfterCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: u32,
     }
     ///Container type for the return parameters of the [`getCorrectValueForInsertAfter(address,uint32)`](getCorrectValueForInsertAfterCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCorrectValueForInsertAfterReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -3455,13 +3477,16 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMiddlewareTimesIndexServeUntilBlockCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: u32,
     }
     ///Container type for the return parameters of the [`getMiddlewareTimesIndexServeUntilBlock(address,uint32)`](getMiddlewareTimesIndexServeUntilBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMiddlewareTimesIndexServeUntilBlockReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -3589,13 +3614,16 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMiddlewareTimesIndexStalestUpdateBlockCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: u32,
     }
     ///Container type for the return parameters of the [`getMiddlewareTimesIndexStalestUpdateBlock(address,uint32)`](getMiddlewareTimesIndexStalestUpdateBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMiddlewareTimesIndexStalestUpdateBlockReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -3727,8 +3755,11 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _2: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`initialize(address,address,uint256)`](initializeCall) function.
@@ -3865,12 +3896,14 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isFrozenCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`isFrozen(address)`](isFrozenCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isFrozenReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -3981,13 +4014,16 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct latestUpdateBlockCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`latestUpdateBlock(address,address)`](latestUpdateBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct latestUpdateBlockReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -4113,12 +4149,14 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct middlewareTimesLengthCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`middlewareTimesLength(address)`](middlewareTimesLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct middlewareTimesLengthReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4229,13 +4267,16 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorToMiddlewareTimesCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`operatorToMiddlewareTimes(address,uint256)`](operatorToMiddlewareTimesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorToMiddlewareTimesReturn {
+        #[allow(missing_docs)]
         pub _0: <ISlasher::MiddlewareTimes as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -4362,15 +4403,20 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorWhitelistedContractsLinkedListEntryCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`operatorWhitelistedContractsLinkedListEntry(address,address)`](operatorWhitelistedContractsLinkedListEntryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorWhitelistedContractsLinkedListEntryReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub _2: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4521,12 +4567,14 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorWhitelistedContractsLinkedListSizeCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`operatorWhitelistedContractsLinkedListSize(address)`](operatorWhitelistedContractsLinkedListSizeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorWhitelistedContractsLinkedListSizeReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4645,6 +4693,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct optIntoSlashingCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`optIntoSlashing(address)`](optIntoSlashingCall) function.
@@ -4763,6 +4812,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -4869,6 +4919,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauseCall {
+        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`pause(uint256)`](pauseCall) function.
@@ -5093,12 +5144,14 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Call {
+        #[allow(missing_docs)]
         pub index: u8,
     }
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Return {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -5213,6 +5266,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Return {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -5323,6 +5377,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5429,7 +5484,9 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordFirstStakeUpdateCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: u32,
     }
     ///Container type for the return parameters of the [`recordFirstStakeUpdate(address,uint32)`](recordFirstStakeUpdateCall) function.
@@ -5556,7 +5613,9 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordLastStakeUpdateAndRevokeSlashingAbilityCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: u32,
     }
     ///Container type for the return parameters of the [`recordLastStakeUpdateAndRevokeSlashingAbility(address,uint32)`](recordLastStakeUpdateAndRevokeSlashingAbilityCall) function.
@@ -5692,9 +5751,13 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordStakeUpdateCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: u32,
+        #[allow(missing_docs)]
         pub _2: u32,
+        #[allow(missing_docs)]
         pub _3: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`recordStakeUpdate(address,uint32,uint32,uint256)`](recordStakeUpdateCall) function.
@@ -5946,6 +6009,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct resetFrozenStatusCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`resetFrozenStatus(address[])`](resetFrozenStatusCall) function.
@@ -6063,6 +6127,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPauserRegistryCall {
+        #[allow(missing_docs)]
         pub newPauserRegistry: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setPauserRegistry(address)`](setPauserRegistryCall) function.
@@ -6183,6 +6248,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyManagerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -6289,6 +6355,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
+        #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`transferOwnership(address)`](transferOwnershipCall) function.
@@ -6403,6 +6470,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct unpauseCall {
+        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`unpause(uint256)`](unpauseCall) function.
@@ -6519,13 +6587,16 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct whitelistedContractDetailsCall {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`whitelistedContractDetails(address,address)`](whitelistedContractDetailsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct whitelistedContractDetailsReturn {
+        #[allow(missing_docs)]
         pub _0: <ISlasher::MiddlewareDetails as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -6647,41 +6718,73 @@ pub mod Slasher {
     };
     ///Container for all the [`Slasher`](self) function calls.
     pub enum SlasherCalls {
+        #[allow(missing_docs)]
         canSlash(canSlashCall),
+        #[allow(missing_docs)]
         canWithdraw(canWithdrawCall),
+        #[allow(missing_docs)]
         contractCanSlashOperatorUntilBlock(contractCanSlashOperatorUntilBlockCall),
+        #[allow(missing_docs)]
         delegation(delegationCall),
+        #[allow(missing_docs)]
         freezeOperator(freezeOperatorCall),
+        #[allow(missing_docs)]
         getCorrectValueForInsertAfter(getCorrectValueForInsertAfterCall),
+        #[allow(missing_docs)]
         getMiddlewareTimesIndexServeUntilBlock(getMiddlewareTimesIndexServeUntilBlockCall),
+        #[allow(missing_docs)]
         getMiddlewareTimesIndexStalestUpdateBlock(getMiddlewareTimesIndexStalestUpdateBlockCall),
+        #[allow(missing_docs)]
         initialize(initializeCall),
+        #[allow(missing_docs)]
         isFrozen(isFrozenCall),
+        #[allow(missing_docs)]
         latestUpdateBlock(latestUpdateBlockCall),
+        #[allow(missing_docs)]
         middlewareTimesLength(middlewareTimesLengthCall),
+        #[allow(missing_docs)]
         operatorToMiddlewareTimes(operatorToMiddlewareTimesCall),
+        #[allow(missing_docs)]
         operatorWhitelistedContractsLinkedListEntry(
             operatorWhitelistedContractsLinkedListEntryCall,
         ),
+        #[allow(missing_docs)]
         operatorWhitelistedContractsLinkedListSize(operatorWhitelistedContractsLinkedListSizeCall),
+        #[allow(missing_docs)]
         optIntoSlashing(optIntoSlashingCall),
+        #[allow(missing_docs)]
         owner(ownerCall),
+        #[allow(missing_docs)]
         pause(pauseCall),
+        #[allow(missing_docs)]
         pauseAll(pauseAllCall),
+        #[allow(missing_docs)]
         paused_0(paused_0Call),
+        #[allow(missing_docs)]
         paused_1(paused_1Call),
+        #[allow(missing_docs)]
         pauserRegistry(pauserRegistryCall),
+        #[allow(missing_docs)]
         recordFirstStakeUpdate(recordFirstStakeUpdateCall),
+        #[allow(missing_docs)]
         recordLastStakeUpdateAndRevokeSlashingAbility(
             recordLastStakeUpdateAndRevokeSlashingAbilityCall,
         ),
+        #[allow(missing_docs)]
         recordStakeUpdate(recordStakeUpdateCall),
+        #[allow(missing_docs)]
         renounceOwnership(renounceOwnershipCall),
+        #[allow(missing_docs)]
         resetFrozenStatus(resetFrozenStatusCall),
+        #[allow(missing_docs)]
         setPauserRegistry(setPauserRegistryCall),
+        #[allow(missing_docs)]
         strategyManager(strategyManagerCall),
+        #[allow(missing_docs)]
         transferOwnership(transferOwnershipCall),
+        #[allow(missing_docs)]
         unpause(unpauseCall),
+        #[allow(missing_docs)]
         whitelistedContractDetails(whitelistedContractDetailsCall),
     }
     #[automatically_derived]
@@ -7550,15 +7653,25 @@ pub mod Slasher {
     }
     ///Container for all the [`Slasher`](self) events.
     pub enum SlasherEvents {
+        #[allow(missing_docs)]
         FrozenStatusReset(FrozenStatusReset),
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         MiddlewareTimesAdded(MiddlewareTimesAdded),
+        #[allow(missing_docs)]
         OperatorFrozen(OperatorFrozen),
+        #[allow(missing_docs)]
         OptedIntoSlashing(OptedIntoSlashing),
+        #[allow(missing_docs)]
         OwnershipTransferred(OwnershipTransferred),
+        #[allow(missing_docs)]
         Paused(Paused),
+        #[allow(missing_docs)]
         PauserRegistrySet(PauserRegistrySet),
+        #[allow(missing_docs)]
         SlashingAbilityRevoked(SlashingAbilityRevoked),
+        #[allow(missing_docs)]
         Unpaused(Unpaused),
     }
     #[automatically_derived]

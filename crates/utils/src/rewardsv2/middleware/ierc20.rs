@@ -480,13 +480,16 @@ pub mod IERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct allowanceCall {
+        #[allow(missing_docs)]
         pub owner: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub spender: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`allowance(address,address)`](allowanceCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct allowanceReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -612,13 +615,16 @@ pub mod IERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct approveCall {
+        #[allow(missing_docs)]
         pub spender: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`approve(address,uint256)`](approveCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct approveReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -744,12 +750,14 @@ pub mod IERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct balanceOfCall {
+        #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`balanceOf(address)`](balanceOfCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct balanceOfReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -864,6 +872,7 @@ pub mod IERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalSupplyReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -970,13 +979,16 @@ pub mod IERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferCall {
+        #[allow(missing_docs)]
         pub to: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`transfer(address,uint256)`](transferCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -1102,14 +1114,18 @@ pub mod IERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferFromCall {
+        #[allow(missing_docs)]
         pub from: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub to: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`transferFrom(address,address,uint256)`](transferFromCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferFromReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -1237,11 +1253,17 @@ pub mod IERC20 {
     };
     ///Container for all the [`IERC20`](self) function calls.
     pub enum IERC20Calls {
+        #[allow(missing_docs)]
         allowance(allowanceCall),
+        #[allow(missing_docs)]
         approve(approveCall),
+        #[allow(missing_docs)]
         balanceOf(balanceOfCall),
+        #[allow(missing_docs)]
         totalSupply(totalSupplyCall),
+        #[allow(missing_docs)]
         transfer(transferCall),
+        #[allow(missing_docs)]
         transferFrom(transferFromCall),
     }
     #[automatically_derived]
@@ -1415,7 +1437,9 @@ pub mod IERC20 {
     }
     ///Container for all the [`IERC20`](self) events.
     pub enum IERC20Events {
+        #[allow(missing_docs)]
         Approval(Approval),
+        #[allow(missing_docs)]
         Transfer(Transfer),
     }
     #[automatically_derived]
