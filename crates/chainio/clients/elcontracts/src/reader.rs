@@ -1425,15 +1425,45 @@ impl ELChainReader {
         Ok(is_admin)
     }
 
-    pub async fn is_operator_slashable(&self,operator: Address ,operator_set: OperatorSet) -> Result<bool,ElContractsError>{
+    pub async fn is_operator_slashable(
+        &self,
+        operator: Address,
+        operator_set: OperatorSet,
+    ) -> Result<bool, ElContractsError> {
         let provider = get_provider(&self.provider);
 
         let contract_allocation_manager =
             AllocationManager::new(self.allocation_manager.unwrap(), provider);
 
-        let is_slashable = contract_allocation_manager.isOperatorSlashable(operator, operator_set).call().await.map_err(ElContractsError::AlloyContractError)?._0;
+        let is_slashable = contract_allocation_manager
+            .isOperatorSlashable(operator, operator_set)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
 
         Ok(is_slashable)
+    }
+
+    pub async fn get_allocated_stake(
+        &self,
+        operator_set: OperatorSet,
+        operators: Vec<Address>,
+        strategies: Vec<Address>,
+    ) -> Result<Vec<Vec<U256>>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager =
+            AllocationManager::new(self.allocation_manager.unwrap(), provider);
+
+        let allocated_stake = contract_allocation_manager
+            .getAllocatedStake(operator_set, operators, strategies)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(allocated_stake)
     }
 }
 
@@ -1936,8 +1966,11 @@ mod tests {
             avs: Address::ZERO,
         };
 
-        let is_slashable = chain_reader.is_operator_slashable(OPERATOR_ADDRESS, operator_set).await.unwrap();
-        assert_eq!(is_slashable,false);
+        let is_slashable = chain_reader
+            .is_operator_slashable(OPERATOR_ADDRESS, operator_set)
+            .await
+            .unwrap();
+        assert_eq!(is_slashable, false);
     }
 
     #[tokio::test]
@@ -2093,5 +2126,23 @@ mod tests {
             .unwrap();
 
         assert!(is_admin);
+    }
+
+    #[tokio::test]
+    async fn test_get_allocated_stake() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+        let operators = vec![OPERATOR_ADDRESS];
+        let strategies = vec![get_erc20_mock_strategy(http_endpoint.to_string()).await];
+        let slashable_stake = chain_reader
+            .get_allocated_stake(operator_set, operators, strategies)
+            .await
+            .unwrap();
+        assert_eq!(slashable_stake[0][0], "0".parse().unwrap());
     }
 }
