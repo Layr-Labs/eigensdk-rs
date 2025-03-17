@@ -1430,7 +1430,7 @@ impl ELChainReader {
     /// * `operator_set` - The operator set to check slashability for
     /// # Returns
     /// * [`bool`] - true if the operator is registered or their slashableUntil block has not passed.
-    /// This is because even when operators are deregistered, they still remain slashable for a period of time.
+    ///   This is because even when operators are deregistered, they still remain slashable for a period of time.
     /// # Errors
     /// * [`ElContractsError`] - if the call to the contract fails
     pub async fn is_operator_slashable(
@@ -2011,7 +2011,7 @@ mod tests {
             .is_operator_slashable(OPERATOR_ADDRESS, operator_set)
             .await
             .unwrap();
-        assert_eq!(is_slashable, false);
+        assert!(!is_slashable);
     }
 
     #[tokio::test]
