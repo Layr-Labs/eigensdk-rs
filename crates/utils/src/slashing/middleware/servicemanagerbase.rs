@@ -1143,7 +1143,7 @@ pub mod IRewardsCoordinatorTypes {
 /**
 
 ```solidity
-library ISignatureUtils {
+library ISignatureUtilsMixinTypes {
     struct SignatureWithSaltAndExpiry { bytes signature; bytes32 salt; uint256 expiry; }
 }
 ```*/
@@ -1154,7 +1154,7 @@ library ISignatureUtils {
     clippy::style,
     clippy::empty_structs_with_brackets
 )]
-pub mod ISignatureUtils {
+pub mod ISignatureUtilsMixinTypes {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /**```solidity
@@ -1376,9 +1376,9 @@ pub mod ISignatureUtils {
         }
     };
     use alloy::contract as alloy_contract;
-    /**Creates a new wrapper around an on-chain [`ISignatureUtils`](self) contract instance.
+    /**Creates a new wrapper around an on-chain [`ISignatureUtilsMixinTypes`](self) contract instance.
 
-    See the [wrapper's documentation](`ISignatureUtilsInstance`) for more details.*/
+    See the [wrapper's documentation](`ISignatureUtilsMixinTypesInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1387,13 +1387,13 @@ pub mod ISignatureUtils {
     >(
         address: alloy_sol_types::private::Address,
         provider: P,
-    ) -> ISignatureUtilsInstance<T, P, N> {
-        ISignatureUtilsInstance::<T, P, N>::new(address, provider)
+    ) -> ISignatureUtilsMixinTypesInstance<T, P, N> {
+        ISignatureUtilsMixinTypesInstance::<T, P, N>::new(address, provider)
     }
-    /**A [`ISignatureUtils`](self) instance.
+    /**A [`ISignatureUtilsMixinTypes`](self) instance.
 
     Contains type-safe methods for interacting with an on-chain instance of the
-    [`ISignatureUtils`](self) contract located at a given `address`, using a given
+    [`ISignatureUtilsMixinTypes`](self) contract located at a given `address`, using a given
     provider `P`.
 
     If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
@@ -1402,16 +1402,16 @@ pub mod ISignatureUtils {
 
     See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct ISignatureUtilsInstance<T, P, N = alloy_contract::private::Ethereum> {
+    pub struct ISignatureUtilsMixinTypesInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
     }
     #[automatically_derived]
-    impl<T, P, N> ::core::fmt::Debug for ISignatureUtilsInstance<T, P, N> {
+    impl<T, P, N> ::core::fmt::Debug for ISignatureUtilsMixinTypesInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("ISignatureUtilsInstance")
+            f.debug_tuple("ISignatureUtilsMixinTypesInstance")
                 .field(&self.address)
                 .finish()
         }
@@ -1422,11 +1422,11 @@ pub mod ISignatureUtils {
             T: alloy_contract::private::Transport + ::core::clone::Clone,
             P: alloy_contract::private::Provider<T, N>,
             N: alloy_contract::private::Network,
-        > ISignatureUtilsInstance<T, P, N>
+        > ISignatureUtilsMixinTypesInstance<T, P, N>
     {
-        /**Creates a new wrapper around an on-chain [`ISignatureUtils`](self) contract instance.
+        /**Creates a new wrapper around an on-chain [`ISignatureUtilsMixinTypes`](self) contract instance.
 
-        See the [wrapper's documentation](`ISignatureUtilsInstance`) for more details.*/
+        See the [wrapper's documentation](`ISignatureUtilsMixinTypesInstance`) for more details.*/
         #[inline]
         pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
@@ -1456,11 +1456,11 @@ pub mod ISignatureUtils {
             &self.provider
         }
     }
-    impl<T, P: ::core::clone::Clone, N> ISignatureUtilsInstance<T, &P, N> {
+    impl<T, P: ::core::clone::Clone, N> ISignatureUtilsMixinTypesInstance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
-        pub fn with_cloned_provider(self) -> ISignatureUtilsInstance<T, P, N> {
-            ISignatureUtilsInstance {
+        pub fn with_cloned_provider(self) -> ISignatureUtilsMixinTypesInstance<T, P, N> {
+            ISignatureUtilsMixinTypesInstance {
                 address: self.address,
                 provider: ::core::clone::Clone::clone(&self.provider),
                 _network_transport: ::core::marker::PhantomData,
@@ -1473,7 +1473,7 @@ pub mod ISignatureUtils {
             T: alloy_contract::private::Transport + ::core::clone::Clone,
             P: alloy_contract::private::Provider<T, N>,
             N: alloy_contract::private::Network,
-        > ISignatureUtilsInstance<T, P, N>
+        > ISignatureUtilsMixinTypesInstance<T, P, N>
     {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
@@ -1492,7 +1492,7 @@ pub mod ISignatureUtils {
             T: alloy_contract::private::Transport + ::core::clone::Clone,
             P: alloy_contract::private::Provider<T, N>,
             N: alloy_contract::private::Network,
-        > ISignatureUtilsInstance<T, P, N>
+        > ISignatureUtilsMixinTypesInstance<T, P, N>
     {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
@@ -1535,7 +1535,7 @@ library IRewardsCoordinatorTypes {
     }
 }
 
-library ISignatureUtils {
+library ISignatureUtilsMixinTypes {
     struct SignatureWithSaltAndExpiry {
         bytes signature;
         bytes32 salt;
@@ -1562,7 +1562,7 @@ interface ServiceManagerBase {
     function getOperatorRestakedStrategies(address operator) external view returns (address[] memory);
     function getRestakeableStrategies() external view returns (address[] memory);
     function owner() external view returns (address);
-    function registerOperatorToAVS(address operator, ISignatureUtils.SignatureWithSaltAndExpiry memory operatorSignature) external;
+    function registerOperatorToAVS(address operator, ISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry memory operatorSignature) external;
     function removeAdmin(address admin) external;
     function removeAppointee(address appointee, address target, bytes4 selector) external;
     function removePendingAdmin(address pendingAdmin) external;
@@ -1814,7 +1814,7 @@ interface ServiceManagerBase {
       {
         "name": "operatorSignature",
         "type": "tuple",
-        "internalType": "struct ISignatureUtils.SignatureWithSaltAndExpiry",
+        "internalType": "struct ISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry",
         "components": [
           {
             "name": "signature",
@@ -3730,7 +3730,7 @@ pub mod ServiceManagerBase {
     };
     /**Function with signature `registerOperatorToAVS(address,(bytes,bytes32,uint256))` and selector `0x9926ee7d`.
     ```solidity
-    function registerOperatorToAVS(address operator, ISignatureUtils.SignatureWithSaltAndExpiry memory operatorSignature) external;
+    function registerOperatorToAVS(address operator, ISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry memory operatorSignature) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3738,8 +3738,7 @@ pub mod ServiceManagerBase {
         #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
         #[allow(missing_docs)]
-        pub operatorSignature:
-            <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
+        pub operatorSignature: <ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`registerOperatorToAVS(address,(bytes,bytes32,uint256))`](registerOperatorToAVSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
@@ -3757,12 +3756,12 @@ pub mod ServiceManagerBase {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (
                 alloy::sol_types::sol_data::Address,
-                ISignatureUtils::SignatureWithSaltAndExpiry,
+                ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
                 alloy::sol_types::private::Address,
-                <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
+                <ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
@@ -3824,7 +3823,7 @@ pub mod ServiceManagerBase {
         impl alloy_sol_types::SolCall for registerOperatorToAVSCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Address,
-                ISignatureUtils::SignatureWithSaltAndExpiry,
+                ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry,
             );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = registerOperatorToAVSReturn;
@@ -3845,7 +3844,7 @@ pub mod ServiceManagerBase {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.operator,
                     ),
-                    <ISignatureUtils::SignatureWithSaltAndExpiry as alloy_sol_types::SolType>::tokenize(
+                    <ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry as alloy_sol_types::SolType>::tokenize(
                         &self.operatorSignature,
                     ),
                 )
@@ -6206,7 +6205,7 @@ pub mod ServiceManagerBase {
         pub fn registerOperatorToAVS(
             &self,
             operator: alloy::sol_types::private::Address,
-            operatorSignature: <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
+            operatorSignature: <ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
         ) -> alloy_contract::SolCallBuilder<T, &P, registerOperatorToAVSCall, N> {
             self.call_builder(&registerOperatorToAVSCall {
                 operator,

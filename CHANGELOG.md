@@ -80,10 +80,58 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ) -> Result<Self, AvsRegistryError> {}
   ```
 
+* Bumped slashing bindings to [v1.3.0-rc.0](https://github.com/Layr-Labs/eigenlayer-contracts/releases/tag/v1.3.0) in [#388](https://github.com/Layr-Labs/eigensdk-rs/pull/388)
+
+  - Added method `is_operator_slashable`.
+
+  ```rust
+    let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+    let operator_set = OperatorSet {
+        id: 1,
+        avs: Address::ZERO,
+    };
+
+    let is_slashable = chain_reader
+        .is_operator_slashable(OPERATOR_ADDRESS, operator_set)
+        .await
+        .unwrap();
+    assert!(!is_slashable);
+  ```
+
+  - Added method `get_allocated_stake`.
+
+  ```rust
+    let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+    let operator_set = OperatorSet {
+        id: 1,
+        avs: Address::ZERO,
+    };
+    let operators = vec![OPERATOR_ADDRESS];
+    let strategies = vec![get_erc20_mock_strategy(http_endpoint.to_string()).await];
+    let slashable_stake = chain_reader
+        .get_allocated_stake(operator_set, operators, strategies)
+        .await
+        .unwrap();
+  ```
+
+  - Added method `get_encumbered_magnitude`.
+
+  ```rust
+    let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+    let magnitude = chain_reader
+        .get_encumbered_magnitude(
+            OPERATOR_ADDRESS,
+            get_erc20_mock_strategy(http_endpoint.to_string()).await,
+        )
+        .await
+        .unwrap();
+  ```
 ### Deprecated ⚠️
 
-### Removed 🗑
-
+### Removed 
 * Removed unused empty structs from the library in [#371](https://github.com/Layr-Labs/eigensdk-rs/pull/371)
   * `eigen_client_eth::client::Client`
   * `eigen_services_operatorsinfo::OperatorPubKeysService`
