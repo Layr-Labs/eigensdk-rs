@@ -1,4 +1,4 @@
-use alloy::consensus::{transaction::RlpEcdsaTx, SignableTransaction, TxLegacy};
+use alloy::consensus::{transaction::RlpEcdsaDecodableTx, SignableTransaction, TxLegacy};
 use alloy::network::TxSigner;
 use alloy::primitives::{Address, Bytes, TxKind, U256};
 use alloy::rpc::client::{ClientBuilder, ReqwestClient, RpcCall};
@@ -62,7 +62,7 @@ impl TxSigner<Signature> for Web3Signer {
             data: Bytes::copy_from_slice(tx.input()).to_string(),
         };
 
-        let request: RpcCall<_, Vec<SignTransactionParams>, Bytes> =
+        let request: RpcCall<Vec<SignTransactionParams>, Bytes> =
             self.client.request("eth_signTransaction", vec![params]);
         let rlp_encoded_signed_tx = request.await.map_err(alloy::signers::Error::other)?;
 
