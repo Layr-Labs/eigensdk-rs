@@ -15,7 +15,8 @@ use eigen_types::operator::QuorumNum;
 use eigen_utils::convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
-    IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
+    IBLSApkRegistryTypes::PubkeyRegistrationParams,
+    ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry,
     ISlashingRegistryCoordinatorTypes::OperatorSetParam, RegistryCoordinator,
 };
 use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
