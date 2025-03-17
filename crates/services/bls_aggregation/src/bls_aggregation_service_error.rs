@@ -16,8 +16,8 @@ pub enum BlsAggregationServiceError {
     RegistryError,
     #[error("duplicate task index error")]
     DuplicateTaskIndex,
-    #[error("error sending to channel")]
-    SenderChannelError,
-    #[error("error receiving from channel")]
-    ReceiverChannelError,
+    #[error("error sending to service")]
+    SenderError,
+    #[error("error receiving from service")]
+    ReceiverError,
 }
