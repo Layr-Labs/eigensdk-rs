@@ -60,7 +60,8 @@ impl TaskMetadata {
     /// Use [`with_window_duration`](Self::with_window_duration) to set the window duration.
     /// If the window duration is not set, it will default to [`Duration::ZERO`].
     ///
-    /// # Returns a new instance of [`TaskMetadata`]
+    /// # Returns
+    /// A new instance of [`TaskMetadata`]
     pub fn new(
         task_index: TaskIndex,
         task_created_block: u64,
@@ -83,7 +84,8 @@ impl TaskMetadata {
     /// # Arguments
     /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
     ///
-    /// # Returns the TaskMetadata with the window duration set
+    /// # Returns
+    /// An instance of [`TaskMetadata`] with the window duration set
     pub fn with_window_duration(mut self, window_duration: Duration) -> Self {
         self.window_duration = window_duration;
         self
@@ -113,6 +115,7 @@ impl TaskSignature {
     /// * `operator_id` - operator ID of the operator that signed the task response
     ///
     /// # Returns
+    ///
     /// [`TaskSignature`] instance
     pub fn new(
         task_index: TaskIndex,
@@ -156,6 +159,7 @@ impl ServiceHandle {
     /// * `metadata` - The metadata of the task to initialize
     ///
     /// # Returns
+    ///
     /// Returns error if the task index already exists
     pub async fn initialize_task(
         &self,
