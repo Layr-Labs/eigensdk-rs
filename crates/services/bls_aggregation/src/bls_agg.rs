@@ -965,6 +965,20 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .unwrap_or(false)
     }
 
+    /// Updates the aggregated operators with the new operator info.
+    ///
+    /// # Arguments
+    ///
+    /// * `aggregated_operators` - The aggregated operators.
+    /// * `operator_state` - The operator state.
+    /// * `task_response_digest` - The task response digest.
+    /// * `bls_signature` - The BLS signature.
+    /// * `operator_id` - The operator id.
+    /// * `logger` - The logger to log messages.
+    ///
+    /// # Returns
+    ///
+    /// The updated aggregated operators.
     fn update_aggregated_operators(
         aggregated_operators: &mut HashMap<FixedBytes<32>, AggregatedOperators>,
         operator_state: &OperatorAvsState,
@@ -1011,6 +1025,14 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
     }
 
+    /// Starts the window to wait for new signatures.
+    ///
+    /// # Arguments
+    ///
+    /// * `window_tx` - The unbounded sender to send the window signal.
+    /// * `window_duration` - The duration of the window.
+    /// * `task_index` - The task index.
+    /// * `logger` - The logger to log messages.
     fn start_window(
         window_tx: &UnboundedSender<bool>,
         window_duration: Duration,
