@@ -12,10 +12,12 @@ pub enum BlsAggregationServiceError {
     SignatureVerificationError(SignatureVerificationError),
     #[error("signatures channel was closed, can't send signatures to aggregator")]
     SignaturesChannelClosed,
-    #[error("error sending to channel")]
-    ChannelError,
     #[error("Avs Registry Error")]
     RegistryError,
     #[error("duplicate task index error")]
     DuplicateTaskIndex,
+    #[error("error sending to channel")]
+    SenderChannelError,
+    #[error("error receiving from channel")]
+    ReceiverChannelError,
 }
