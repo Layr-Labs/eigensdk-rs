@@ -632,14 +632,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         .await
         .map_err(BlsAggregationServiceError::SignatureVerificationError);
 
+        let verification_has_error = verification_result.is_err();
+
         // Send the verification result to the result channel
         signed_digest
             .result_channel
-            .send(verification_result.clone())
+            .send(verification_result)
             .map_err(|_| BlsAggregationServiceError::SenderError)?;
 
         // If the signature is incorrect, return
-        let verification_has_error = verification_result.is_err();
         if verification_has_error {
             return Ok(());
         }
