@@ -1811,6 +1811,7 @@ interface IEigenPod {
     error CheckpointAlreadyActive();
     error CredentialsAlreadyVerified();
     error CurrentlyPaused();
+    error ForkTimestampZero();
     error InputAddressZero();
     error InputArrayLengthMismatch();
     error InsufficientWithdrawableBalance();
@@ -2625,6 +2626,11 @@ interface IEigenPod {
   },
   {
     "type": "error",
+    "name": "ForkTimestampZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "InputAddressZero",
     "inputs": []
   },
@@ -3028,6 +3034,66 @@ pub mod IEigenPod {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CurrentlyPaused()";
             const SELECTOR: [u8; 4] = [132u8, 10u8, 72u8, 213u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `ForkTimestampZero()` and selector `0x41a02cc9`.
+    ```solidity
+    error ForkTimestampZero();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct ForkTimestampZero {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<ForkTimestampZero> for UnderlyingRustTuple<'_> {
+            fn from(value: ForkTimestampZero) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ForkTimestampZero {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for ForkTimestampZero {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "ForkTimestampZero()";
+            const SELECTOR: [u8; 4] = [65u8, 160u8, 44u8, 201u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -8855,6 +8921,8 @@ pub mod IEigenPod {
         #[allow(missing_docs)]
         CurrentlyPaused(CurrentlyPaused),
         #[allow(missing_docs)]
+        ForkTimestampZero(ForkTimestampZero),
+        #[allow(missing_docs)]
         InputAddressZero(InputAddressZero),
         #[allow(missing_docs)]
         InputArrayLengthMismatch(InputArrayLengthMismatch),
@@ -8904,6 +8972,7 @@ pub mod IEigenPod {
             [46u8, 173u8, 230u8, 55u8],
             [53u8, 224u8, 158u8, 157u8],
             [55u8, 224u8, 127u8, 253u8],
+            [65u8, 160u8, 44u8, 201u8],
             [66u8, 122u8, 119u8, 121u8],
             [67u8, 113u8, 74u8, 253u8],
             [85u8, 138u8, 208u8, 163u8],
@@ -8926,7 +8995,7 @@ pub mod IEigenPod {
     impl alloy_sol_types::SolInterface for IEigenPodErrors {
         const NAME: &'static str = "IEigenPodErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 22usize;
+        const COUNT: usize = 23usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -8944,6 +9013,9 @@ pub mod IEigenPod {
                 }
                 Self::CurrentlyPaused(_) => {
                     <CurrentlyPaused as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::ForkTimestampZero(_) => {
+                    <ForkTimestampZero as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::InputAddressZero(_) => {
                     <InputAddressZero as alloy_sol_types::SolError>::SELECTOR
@@ -9087,6 +9159,18 @@ pub mod IEigenPod {
                         .map(IEigenPodErrors::BeaconTimestampTooFarInPast)
                     }
                     BeaconTimestampTooFarInPast
+                },
+                {
+                    fn ForkTimestampZero(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
+                        <ForkTimestampZero as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IEigenPodErrors::ForkTimestampZero)
+                    }
+                    ForkTimestampZero
                 },
                 {
                     fn OnlyEigenPodOwnerOrProofSubmitter(
@@ -9322,6 +9406,11 @@ pub mod IEigenPod {
                         inner,
                     )
                 }
+                Self::ForkTimestampZero(inner) => {
+                    <ForkTimestampZero as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::InputAddressZero(inner) => {
                     <InputAddressZero as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
@@ -9438,6 +9527,12 @@ pub mod IEigenPod {
                 }
                 Self::CurrentlyPaused(inner) => {
                     <CurrentlyPaused as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::ForkTimestampZero(inner) => {
+                    <ForkTimestampZero as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )
