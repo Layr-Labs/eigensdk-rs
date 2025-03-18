@@ -45,6 +45,7 @@ library MockAvsDeploymentLib {
     using stdJson for *;
     using Strings for *;
     using UpgradeableProxyLib for address;
+
     string internal constant MIDDLEWARE_VERSION = "v1.3.0-rc.0";
     Vm internal constant VM = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
