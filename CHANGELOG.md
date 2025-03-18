@@ -49,7 +49,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
-  * Bump middleware to [v1.3.0-rc.0](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.0-rc.0).
+  * Bump middleware to [v1.3.0-rc.0](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.0-rc.0) [#395](https://github.com/Layr-Labs/eigensdk-rs/pull/395).
 
 ### Breaking Changes 🛠
 
