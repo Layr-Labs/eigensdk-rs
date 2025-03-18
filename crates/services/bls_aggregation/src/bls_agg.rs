@@ -372,62 +372,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
     }
 
-    /// Adds a new operator to the aggregated operators by aggregating its public key, signature and stake.
-    ///
-    /// # Arguments
-    ///
-    /// - `aggregated_operators` - Contains the information of all the aggregated operators.
-    /// - `operator_state` - The state of the operator, contains information about its stake.
-    /// - `signed_task_digest` - Contains the id and signature of the new operator.
-    /// - `logger` - The logger to log messages.
-    ///
-    /// # Returns
-    ///
-    /// The given aggregated operators, aggregated with the new operator info.
-    fn aggregate_new_operator(
-        aggregated_operators: &mut AggregatedOperators,
-        operator_state: OperatorAvsState,
-        operator_id: FixedBytes<32>,
-        signature_g1_point: G1Affine,
-        logger: SharedLogger,
-    ) -> &mut AggregatedOperators {
-        let operator_g2_pubkey = operator_state
-            .operator_info
-            .pub_keys
-            .clone()
-            .unwrap()
-            .g2_pub_key
-            .g2();
-        aggregated_operators
-            .signers_operator_ids_set
-            .insert(operator_id, true);
-
-        logger.debug(
-            &format!(
-                "operator {} inserted in signers_operator_ids_set",
-                operator_id
-            ),
-            "eigen-services-blsaggregation.bls_agg.aggregate_new_operator",
-        );
-
-        for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
-            // For each quorum the operator has stake in, we aggregate the signature and update the stake
-            aggregated_operators.signers_agg_sig_g1 = Signature::new(
-                (aggregated_operators.signers_agg_sig_g1.g1_point().g1() + signature_g1_point)
-                    .into(),
-            );
-            aggregated_operators.signers_apk_g2 = BlsG2Point::new(
-                (aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into(),
-            );
-            aggregated_operators
-                .signers_total_stake_per_quorum
-                .entry(*quorum_num)
-                .and_modify(|v| *v += stake)
-                .or_insert(*stake);
-        }
-        aggregated_operators
-    }
-
     /// Processes each signed task responses given a task_index for a single task.
     ///
     /// It reads the signed task responses from the receiver channel and aggregates them.
@@ -648,7 +592,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         let operator_state = operator_state_avs.get(&signed_digest.operator_id).unwrap();
 
         // Update the aggregated operators with the new operator info
-        let updated_aggregated = Self::update_aggregated_operators(
+        let updated_aggregated = update_aggregated_operators(
             aggregated_operators,
             operator_state,
             signed_digest.task_response_digest,
@@ -908,71 +852,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .unwrap_or(false)
     }
 
-    /// Updates the aggregated operators with the new operator info.
-    ///
-    /// # Arguments
-    ///
-    /// * `aggregated_operators` - The aggregated operators.
-    /// * `operator_state` - The operator state.
-    /// * `task_response_digest` - The task response digest.
-    /// * `bls_signature` - The BLS signature.
-    /// * `operator_id` - The operator id.
-    /// * `logger` - The logger to log messages.
-    ///
-    /// # Returns
-    ///
-    /// The updated aggregated operators.
-    fn update_aggregated_operators(
-        aggregated_operators: &mut HashMap<FixedBytes<32>, AggregatedOperators>,
-        operator_state: &OperatorAvsState,
-        task_response_digest: FixedBytes<32>,
-        bls_signature: Signature,
-        operator_id: FixedBytes<32>,
-        logger: SharedLogger,
-    ) -> AggregatedOperators {
-        logger.debug(
-            "Update aggregated operators",
-            "eigen-services-blsaggregation.bls_agg.update_aggregated_operators",
-        );
-
-        let bls_signature_g1_point = bls_signature.g1_point().g1();
-
-        if let Some(existing) = aggregated_operators.get_mut(&task_response_digest) {
-            // If the operator is already in the aggregated operators, aggregate the new operator
-            let updated = Self::aggregate_new_operator(
-                existing,
-                operator_state.clone(),
-                operator_id,
-                bls_signature_g1_point,
-                logger,
-            );
-            updated.clone()
-        } else {
-            // If the operator is not in the aggregated operators, create a new aggregated operator
-            let operator_g2_pubkey = operator_state
-                .operator_info
-                .pub_keys
-                .clone()
-                .unwrap()
-                .g2_pub_key
-                .g2();
-            let mut signers_apk_g2 = BlsG2Point::new(G2Affine::zero());
-            let mut signers_agg_sig_g1 = Signature::new(G1Affine::zero());
-            for _ in 0..operator_state.stake_per_quorum.len() {
-                signers_apk_g2 = BlsG2Point::new((signers_apk_g2.g2() + operator_g2_pubkey).into());
-                signers_agg_sig_g1 = Signature::new(
-                    (signers_agg_sig_g1.g1_point().g1() + bls_signature_g1_point).into(),
-                );
-            }
-            AggregatedOperators {
-                signers_apk_g2,
-                signers_agg_sig_g1,
-                signers_operator_ids_set: HashMap::from([(operator_state.operator_id, true)]),
-                signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
-            }
-        }
-    }
-
     /// Starts the window to wait for new signatures.
     ///
     /// # Arguments
@@ -1076,6 +955,125 @@ async fn verify_signature(
             "eigen-services-blsaggregation.bls_agg.verify_signature",
         );
     })
+}
+
+/// Updates the aggregated operators with the new operator info.
+///
+/// # Arguments
+///
+/// * `aggregated_operators` - The aggregated operators.
+/// * `operator_state` - The operator state.
+/// * `task_response_digest` - The task response digest.
+/// * `bls_signature` - The BLS signature.
+/// * `operator_id` - The operator id.
+/// * `logger` - The logger to log messages.
+///
+/// # Returns
+///
+/// The updated aggregated operators.
+fn update_aggregated_operators(
+    aggregated_operators: &mut HashMap<FixedBytes<32>, AggregatedOperators>,
+    operator_state: &OperatorAvsState,
+    task_response_digest: FixedBytes<32>,
+    bls_signature: Signature,
+    operator_id: FixedBytes<32>,
+    logger: SharedLogger,
+) -> AggregatedOperators {
+    logger.debug(
+        "Update aggregated operators",
+        "eigen-services-blsaggregation.bls_agg.update_aggregated_operators",
+    );
+
+    let bls_signature_g1_point = bls_signature.g1_point().g1();
+
+    if let Some(existing) = aggregated_operators.get_mut(&task_response_digest) {
+        // If the operator is already in the aggregated operators, aggregate the new operator
+        let updated = aggregate_new_operator(
+            existing,
+            operator_state.clone(),
+            operator_id,
+            bls_signature_g1_point,
+            logger,
+        );
+        updated.clone()
+    } else {
+        // If the operator is not in the aggregated operators, create a new aggregated operator
+        let operator_g2_pubkey = operator_state
+            .operator_info
+            .pub_keys
+            .clone()
+            .unwrap()
+            .g2_pub_key
+            .g2();
+        let mut signers_apk_g2 = BlsG2Point::new(G2Affine::zero());
+        let mut signers_agg_sig_g1 = Signature::new(G1Affine::zero());
+        for _ in 0..operator_state.stake_per_quorum.len() {
+            signers_apk_g2 = BlsG2Point::new((signers_apk_g2.g2() + operator_g2_pubkey).into());
+            signers_agg_sig_g1 = Signature::new(
+                (signers_agg_sig_g1.g1_point().g1() + bls_signature_g1_point).into(),
+            );
+        }
+        AggregatedOperators {
+            signers_apk_g2,
+            signers_agg_sig_g1,
+            signers_operator_ids_set: HashMap::from([(operator_state.operator_id, true)]),
+            signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
+        }
+    }
+}
+
+/// Adds a new operator to the aggregated operators by aggregating its public key, signature and stake.
+///
+/// # Arguments
+///
+/// - `aggregated_operators` - Contains the information of all the aggregated operators.
+/// - `operator_state` - The state of the operator, contains information about its stake.
+/// - `signed_task_digest` - Contains the id and signature of the new operator.
+/// - `logger` - The logger to log messages.
+///
+/// # Returns
+///
+/// The given aggregated operators, aggregated with the new operator info.
+fn aggregate_new_operator(
+    aggregated_operators: &mut AggregatedOperators,
+    operator_state: OperatorAvsState,
+    operator_id: FixedBytes<32>,
+    signature_g1_point: G1Affine,
+    logger: SharedLogger,
+) -> &mut AggregatedOperators {
+    let operator_g2_pubkey = operator_state
+        .operator_info
+        .pub_keys
+        .clone()
+        .unwrap()
+        .g2_pub_key
+        .g2();
+    aggregated_operators
+        .signers_operator_ids_set
+        .insert(operator_id, true);
+
+    logger.debug(
+        &format!(
+            "operator {} inserted in signers_operator_ids_set",
+            operator_id
+        ),
+        "eigen-services-blsaggregation.bls_agg.aggregate_new_operator",
+    );
+
+    for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
+        // For each quorum the operator has stake in, we aggregate the signature and update the stake
+        aggregated_operators.signers_agg_sig_g1 = Signature::new(
+            (aggregated_operators.signers_agg_sig_g1.g1_point().g1() + signature_g1_point).into(),
+        );
+        aggregated_operators.signers_apk_g2 =
+            BlsG2Point::new((aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into());
+        aggregated_operators
+            .signers_total_stake_per_quorum
+            .entry(*quorum_num)
+            .and_modify(|v| *v += stake)
+            .or_insert(*stake);
+    }
+    aggregated_operators
 }
 
 #[cfg(test)]
