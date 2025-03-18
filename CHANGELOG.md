@@ -49,6 +49,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
+  * Bump middleware to [v1.3.0-rc.0](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.0-rc.0).
+
 ### Breaking Changes 🛠
 
 * Updated slashing bindings to [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing) [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
