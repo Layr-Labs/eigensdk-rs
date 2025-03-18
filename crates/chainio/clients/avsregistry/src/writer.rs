@@ -1731,7 +1731,7 @@ mod tests {
             strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
             multiplier: U96::from(1),
         };
-        let look_ahead_period = 10;
+        let look_ahead_period = 0;
 
         let tx_hash = avs_writer
             .create_slashable_stake_quorum(
