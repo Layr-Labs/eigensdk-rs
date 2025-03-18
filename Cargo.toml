@@ -29,7 +29,7 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 authors = ["Eigen Layer contributors"]
 rust-version = "1.79"
@@ -58,7 +58,7 @@ clippy.question_mark = "warn"
 clippy.implicit_return = "allow"
 
 [workspace.dependencies]
-eigen-client-avsregistry = { version = "0.4.0", path = "crates/chainio/clients/avsregistry" }
+eigen-client-avsregistry = { version = "0.5.0", path = "crates/chainio/clients/avsregistry" }
 ark-bn254 = "0.5.0"
 ark-ec = "0.5.0"
 ark-ff = "0.5.0"
@@ -68,24 +68,24 @@ aws-config = "1.5.9"
 aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
-eigen-common = { version = "0.4.0", path = "crates/common/" }
-eigen-client-elcontracts = { version = "0.4.0", path = "crates/chainio/clients/elcontracts" }
-eigen-client-eth = { version = "0.4.0", path = "crates/chainio/clients/eth" }
-eigen-client-fireblocks = { version = "0.4.0", path = "crates/chainio/clients/fireblocks" }
-eigen-crypto-bls = { version = "0.4.0", path = "crates/crypto/bls/" }
-eigen-crypto-bn254 = { version = "0.4.0", path = "crates/crypto/bn254/" }
-eigen-logging = { version = "0.4.0", path = "crates/logging/" }
-eigen-metrics = { version = "0.4.0", path = "crates/metrics/" }
-eigen-metrics-collectors-economic = { version = "0.4.0", path = "crates/metrics/collectors/economic" }
-eigen-metrics-collectors-rpc-calls = { version = "0.4.0", path = "crates/metrics/collectors/rpc_calls" }
-eigen-services-avsregistry = { version = "0.4.0", path = "crates/services/avsregistry" }
-eigen-services-blsaggregation = { version = "0.4.0", path = "crates/services/bls_aggregation" }
-eigen-services-operatorsinfo = { version = "0.4.0", path = "crates/services/operatorsinfo" }
-eigen-signer = { version = "0.4.0", path = "crates/signer/" }
-eigen-testing-utils = { version = "0.4.0", path = "testing/testing-utils" }
-eigen-types = { version = "0.4.0", path = "crates/types/" }
-eigen-utils = { version = "0.4.0", path = "crates/utils/" }
-eigen-nodeapi = { version = "0.4.0", path = "crates/nodeapi/" }
+eigen-common = { version = "0.5.0", path = "crates/common/" }
+eigen-client-elcontracts = { version = "0.5.0", path = "crates/chainio/clients/elcontracts" }
+eigen-client-eth = { version = "0.5.0", path = "crates/chainio/clients/eth" }
+eigen-client-fireblocks = { version = "0.5.0", path = "crates/chainio/clients/fireblocks" }
+eigen-crypto-bls = { version = "0.5.0", path = "crates/crypto/bls/" }
+eigen-crypto-bn254 = { version = "0.5.0", path = "crates/crypto/bn254/" }
+eigen-logging = { version = "0.5.0", path = "crates/logging/" }
+eigen-metrics = { version = "0.5.0", path = "crates/metrics/" }
+eigen-metrics-collectors-economic = { version = "0.5.0", path = "crates/metrics/collectors/economic" }
+eigen-metrics-collectors-rpc-calls = { version = "0.5.0", path = "crates/metrics/collectors/rpc_calls" }
+eigen-services-avsregistry = { version = "0.5.0", path = "crates/services/avsregistry" }
+eigen-services-blsaggregation = { version = "0.5.0", path = "crates/services/bls_aggregation" }
+eigen-services-operatorsinfo = { version = "0.5.0", path = "crates/services/operatorsinfo" }
+eigen-signer = { version = "0.5.0", path = "crates/signer/" }
+eigen-testing-utils = { version = "0.5.0", path = "testing/testing-utils" }
+eigen-types = { version = "0.5.0", path = "crates/types/" }
+eigen-utils = { version = "0.5.0", path = "crates/utils/" }
+eigen-nodeapi = { version = "0.5.0", path = "crates/nodeapi/" }
 eth-keystore = "0.5"
 ethers = "2.0"
 ethers-signers = "2.0"

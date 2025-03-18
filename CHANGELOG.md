@@ -17,6 +17,22 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+### Breaking Changes 🛠
+
+### Deprecated ⚠️
+
+### Removed 
+
+### Documentation 📚
+
+### Other Changes
+
+## [0.5.0] - 2025-03-18
+
+### Security 🔒
+
+### Added 🎉
+
 * Added all features of the `eigensdk` crate to its `"full"` feature [#370](https://github.com/Layr-Labs/eigensdk-rs/pull/370)
   * This includes: `"types"`, `"utils"`, `"metrics-collectors-economic"`, and `"metrics-collectors-rpc-calls"` features.
 * Bump alloy to 0.12 in [#381](https://github.com/Layr-Labs/eigensdk-rs/pull/381).
