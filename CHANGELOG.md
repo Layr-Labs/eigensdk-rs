@@ -51,6 +51,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
   * Bump middleware to [v1.3.0-rc.0](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.0-rc.0) [#395](https://github.com/Layr-Labs/eigensdk-rs/pull/395).
 
+  * Bump middleware to [v1.4.0-testnet-holesky](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.4.0-testnet-holesky) [#396](https://github.com/Layr-Labs/eigensdk-rs/pull/396).
+
 ### Breaking Changes 🛠
 
 * Updated slashing bindings to [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing) [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
