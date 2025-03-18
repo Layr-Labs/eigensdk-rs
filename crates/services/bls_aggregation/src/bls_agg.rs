@@ -623,7 +623,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
 
         // Verify the signature
-        let verification_result = Self::verify_signature(
+        let verification_result = verify_signature(
             task_index,
             &signed_digest,
             operator_state_avs,
@@ -848,82 +848,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         })
     }
 
-    /// Verifies the signature of the task response given a `operator_avs_state`.
-    /// If the signature is correct, it returns `Ok(())`, otherwise it returns an error.
-    ///
-    /// # Arguments
-    ///
-    /// * `task_index` - The index of the task
-    /// * `signed_task_response_digest` - The signed task response digest
-    /// * `operator_avs_state` - A hashmap containing the staked of all the operator indexed by operator_id.
-    ///   This is used to get the `operator_state` to obtain the operator public key.
-    /// * `logger` - The logger to log messages.
-    ///
-    /// # Error
-    ///
-    /// Returns error:
-    /// - `SignatureVerificationError::OperatorNotFound` if the operator is not found,
-    /// - `SignatureVerificationError::OperatorPublicKeyNotFound` if the operator public key is not found,
-    /// - `SignatureVerificationError::IncorrectSignature` if the signature is incorrect.
-    async fn verify_signature(
-        task_index: TaskIndex,
-        signed_task_response_digest: &SignedTaskResponseDigest,
-        operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
-        logger: SharedLogger,
-    ) -> Result<(), SignatureVerificationError> {
-        let Some(operator_state) = operator_avs_state.get(&signed_task_response_digest.operator_id)
-        else {
-            logger.error(
-                &format!("Operator Not Found for task index: {}", task_index),
-                "eigen-services-blsaggregation.bls_agg.verify_signature",
-            );
-            return Err(SignatureVerificationError::OperatorNotFound);
-        };
-
-        let Some(pub_keys) = &operator_state.operator_info.pub_keys else {
-            logger.error(
-                &format!(
-                    "Operator Public Key Not Found for task index: {}",
-                    task_index
-                ),
-                "eigen-services-blsaggregation.bls_agg.verify_signature",
-            );
-            return Err(SignatureVerificationError::OperatorPublicKeyNotFound);
-        };
-
-        let message = signed_task_response_digest
-            .task_response_digest
-            .as_slice()
-            .try_into()
-            .map_err(|_| SignatureVerificationError::IncorrectSignature)?;
-
-        verify_message(
-            pub_keys.g2_pub_key.g2(),
-            message,
-            signed_task_response_digest.bls_signature.g1_point().g1(),
-        )
-        .then_some(())
-        .ok_or(SignatureVerificationError::IncorrectSignature)
-        .inspect(|_| {
-            logger.debug(
-                &format!(
-                    "Signature verification successful for task index: {}",
-                    task_index
-                ),
-                "eigen-services-blsaggregation.bls_agg.verify_signature",
-            );
-        })
-        .inspect_err(|_| {
-            logger.error(
-                &format!(
-                    "Signature verification failed for task index: {}",
-                    task_index
-                ),
-                "eigen-services-blsaggregation.bls_agg.verify_signature",
-            );
-        })
-    }
-
     /// Checks if the stake thresholds are met for the given set of quorum members.
     ///
     /// # Arguments
@@ -1074,6 +998,82 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             let _ = sender.send(true);
         });
     }
+}
+
+/// Verifies the signature of the task response given a `operator_avs_state`.
+/// If the signature is correct, it returns `Ok(())`, otherwise it returns an error.
+///
+/// # Arguments
+///
+/// * `task_index` - The index of the task
+/// * `signed_task_response_digest` - The signed task response digest
+/// * `operator_avs_state` - A hashmap containing the staked of all the operator indexed by operator_id.
+///   This is used to get the `operator_state` to obtain the operator public key.
+/// * `logger` - The logger to log messages.
+///
+/// # Error
+///
+/// Returns error:
+/// - `SignatureVerificationError::OperatorNotFound` if the operator is not found,
+/// - `SignatureVerificationError::OperatorPublicKeyNotFound` if the operator public key is not found,
+/// - `SignatureVerificationError::IncorrectSignature` if the signature is incorrect.
+async fn verify_signature(
+    task_index: TaskIndex,
+    signed_task_response_digest: &SignedTaskResponseDigest,
+    operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
+    logger: SharedLogger,
+) -> Result<(), SignatureVerificationError> {
+    let Some(operator_state) = operator_avs_state.get(&signed_task_response_digest.operator_id)
+    else {
+        logger.error(
+            &format!("Operator Not Found for task index: {}", task_index),
+            "eigen-services-blsaggregation.bls_agg.verify_signature",
+        );
+        return Err(SignatureVerificationError::OperatorNotFound);
+    };
+
+    let Some(pub_keys) = &operator_state.operator_info.pub_keys else {
+        logger.error(
+            &format!(
+                "Operator Public Key Not Found for task index: {}",
+                task_index
+            ),
+            "eigen-services-blsaggregation.bls_agg.verify_signature",
+        );
+        return Err(SignatureVerificationError::OperatorPublicKeyNotFound);
+    };
+
+    let message = signed_task_response_digest
+        .task_response_digest
+        .as_slice()
+        .try_into()
+        .map_err(|_| SignatureVerificationError::IncorrectSignature)?;
+
+    verify_message(
+        pub_keys.g2_pub_key.g2(),
+        message,
+        signed_task_response_digest.bls_signature.g1_point().g1(),
+    )
+    .then_some(())
+    .ok_or(SignatureVerificationError::IncorrectSignature)
+    .inspect(|_| {
+        logger.debug(
+            &format!(
+                "Signature verification successful for task index: {}",
+                task_index
+            ),
+            "eigen-services-blsaggregation.bls_agg.verify_signature",
+        );
+    })
+    .inspect_err(|_| {
+        logger.error(
+            &format!(
+                "Signature verification failed for task index: {}",
+                task_index
+            ),
+            "eigen-services-blsaggregation.bls_agg.verify_signature",
+        );
+    })
 }
 
 #[cfg(test)]
