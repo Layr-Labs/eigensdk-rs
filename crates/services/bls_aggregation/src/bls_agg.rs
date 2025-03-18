@@ -639,7 +639,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .map_err(|_| BlsAggregationServiceError::SenderError)?;
 
         // If the signature is incorrect, return
-        if verification_result.is_err() {
+        let verification_has_error = verification_result.is_err();
+        if verification_has_error {
             return Ok(());
         }
 
