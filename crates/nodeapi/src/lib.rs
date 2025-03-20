@@ -9,7 +9,7 @@ pub mod error;
 use error::NodeApiError;
 use ntex::web::{self, App, HttpResponse, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use tracing::info;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -146,18 +146,20 @@ impl NodeApi {
 }
 
 #[allow(unused)]
-pub async fn node_info(api: web::types::State<NodeApi>) -> impl Responder {
+pub async fn node_info(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
+    let mut data = api.lock().unwrap(); // TODO! Handle the error
     let response = serde_json::json!({
-        "node_name": api.node_name,
-        "node_version": api.node_version,
+        "node_name": data.node_name,
+        "node_version": data.node_version,
         "spec_version": "v0.0.1",
     });
     HttpResponse::Ok().json(&response)
 }
 
 #[allow(unused)]
-pub async fn health_check(api: web::types::State<NodeApi>) -> impl Responder {
-    let health = &api.health;
+pub async fn health_check(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
+    let mut data = api.lock().unwrap(); // TODO! Handle the error
+    let health = &data.health;
 
     match health {
         NodeHealth::Healthy => HttpResponse::Ok().finish(),
@@ -167,18 +169,20 @@ pub async fn health_check(api: web::types::State<NodeApi>) -> impl Responder {
 }
 
 #[allow(unused)]
-pub async fn list_services(api: web::types::State<NodeApi>) -> impl Responder {
-    let services = &api.services;
+pub async fn list_services(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
+    let mut data = api.lock().unwrap(); // TODO! Handle the error
+    let services = &data.services;
     HttpResponse::Ok().json(&serde_json::json!({ "services": *services }))
 }
 
 #[allow(unused)]
 pub async fn service_health(
-    api: web::types::State<NodeApi>,
+    api: web::types::State<Arc<Mutex<NodeApi>>>,
     path: web::types::Path<String>,
 ) -> impl Responder {
     let service_id = path.into_inner();
-    let services = &api.services;
+    let mut data = api.lock().unwrap(); // TODO! Handle the error
+    let services = &data.services;
 
     if let Some(service) = services.iter().find(|s| s.id == service_id) {
         match service.status {
@@ -195,7 +199,7 @@ pub async fn service_health(
 /// This function sets up the server and routes.
 /// External users can call this function to create and run the server.
 pub fn create_server(
-    api: Arc<NodeApi>,
+    api: Arc<Mutex<NodeApi>>,
     ip_port_addr: String,
 ) -> std::io::Result<ntex::server::Server> {
     let server = HttpServer::new(move || {
@@ -369,9 +373,11 @@ mod tests {
             ServiceStatus::Up,
         );
 
+        let st = Arc::new(Mutex::new(node_api));
+
         // Set up a server running on a test address (e.g., 127.0.0.1:8081)
         let ip_port_addr = "127.0.0.1:8081".to_string();
-        let server = create_server(Arc::new(node_api), ip_port_addr.clone()).unwrap();
+        let server = create_server(st, ip_port_addr.clone()).unwrap();
 
         // Start the server in a background task
         ntex::rt::spawn(server);
@@ -389,6 +395,8 @@ mod tests {
             .send()
             .await
             .unwrap();
+
+        println!("{:?}", resp);
         assert_eq!(resp.status(), reqwest::StatusCode::OK);
 
         // Test the /eigen/node/health route
