@@ -6,10 +6,10 @@
 
 pub mod error;
 
-use ntex::web::{self, App, HttpResponse, HttpServer, Responder};
-
 use error::NodeApiError;
+use ntex::web::{self, App, HttpResponse, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 use tracing::info;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -191,10 +191,13 @@ pub async fn service_health(
     }
 }
 
-/// Function to create the Actix HTTP server
+/// Function to create the Ntex HTTP server
 /// This function sets up the server and routes.
 /// External users can call this function to create and run the server.
-pub fn create_server(api: NodeApi, ip_port_addr: String) -> std::io::Result<ntex::server::Server> {
+pub fn create_server(
+    api: Arc<NodeApi>,
+    ip_port_addr: String,
+) -> std::io::Result<ntex::server::Server> {
     let server = HttpServer::new(move || {
         App::new()
             .state(api.clone()) // Use the provided NodeApi instance
@@ -214,10 +217,11 @@ pub fn create_server(api: NodeApi, ip_port_addr: String) -> std::io::Result<ntex
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use ntex::{http, web::test};
     use reqwest::Client;
+    use std::sync::Arc;
+
     #[tokio::test]
     async fn test_node_handler() {
         let mut node_api = NodeApi::new("test_avs", "v0.0.1");
@@ -367,7 +371,7 @@ mod tests {
 
         // Set up a server running on a test address (e.g., 127.0.0.1:8081)
         let ip_port_addr = "127.0.0.1:8081".to_string();
-        let server = create_server(node_api.clone(), ip_port_addr.clone())?;
+        let server = create_server(Arc::new(node_api), ip_port_addr.clone()).unwrap();
 
         // Start the server in a background task
         ntex::rt::spawn(server);
