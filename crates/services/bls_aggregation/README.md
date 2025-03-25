@@ -8,7 +8,7 @@ The BLS Aggregation Service provides functionality to aggregate BLS signatures f
 
 The BLS Aggregation Service is primarily used by operators, who contribute signatures to task. AVS developers use it to define and manage tasks, set quorum requirements and integrate aggregated results into their smart contracts.
 
-<!-- BAD --> [Example of a aggregation service in action](https://github.com/Layr-Labs/incredible-squaring-avs-rs/blob/dev/crates/aggregator/src/fake_aggregator.rs).
+[Example of a aggregation service in action](https://github.com/Layr-Labs/incredible-squaring-avs-rs/blob/dev/crates/aggregator/src/lib.rs).
 
 
 ## Key Features
@@ -46,20 +46,11 @@ Represents a handle to interact with the BLS Aggregation Service.
 
 - `msg_sender`: UnboundedSender to send messages to the BLS Aggregation Service
 
-Provides methods to interact with the service:
-
-- `initialize_task()`: Initializes a new task
-- `process_signature()`: Processes a signature for a task
-
 ### AggregateReceiver
 
 Represents a receiver to receive aggregated responses from the BLS Aggregation Service.
 
 - `aggregate_receiver`: UnboundedReceiver to receive aggregated responses from the service
-
-Allows receiving aggregated responses from the service:
-
-- `receive_aggregated_response()`: Receives an aggregated response
 
 ### BlsAggregatorService
 
@@ -67,16 +58,15 @@ The main service that coordinates signature aggregation:
 
 - `new()`: Creates a new instance of the service
 - `start()`: Starts the BLS Aggregator Service running the main loop in background
-- `run()`: Runs the main loop of the service
 
 ## Usage
 
 When you initialize the BLS Aggregation Service, it returns a tuple of `ServiceHandle` and `AggregateReceiver`. The `ServiceHandle` is used to interact with the service. The available messages to send to the service are:
 
-- `initialize_task()`: Initializes a new task. If you want to set a time to expiry for the task, you can use the `with_time_to_expiry()` method in a builder pattern.
-- `process_signature()`: Processes a signature for a task
+- `initialize_task(metadata: TaskMetadata)`: Initializes a new task. If you want to set a time to expiry for the task, you can use the `with_time_to_expiry()` method in a builder pattern.
+- `process_signature(task_signature: TaskSignature)`: Processes a signature for a task
 
-The `AggregateReceiver` is used to receive aggregated responses from the service.
+The `AggregateReceiver` is used to receive aggregated responses from the service. To get the aggregated response, you can use the `receive_aggregated_response()` method.
 
 Once a task is initialized, the service will start processing the task in a loop in the background. The service will wait for the quorum to be reached or the time to expire. Once the quorum is reached or the time expires, the service will aggregate the signatures and send the aggregated response to the `AggregateReceiver`.
 
@@ -123,21 +113,6 @@ match aggregate_receiver.receive_aggregated_response().await {
     }
 }
 ```
-
-## Error Handling
-
-The service returns a `BlsAggregationServiceError` if there is an error. The error can be one of the following:
-
-| Error                              | Description                                                                 |
-|-----------------------------------|-----------------------------------------------------------------------------|
-| `BlsAggregationServiceError::TaskNotFound` | Task not found            |
-| `BlsAggregationServiceError::SignatureVerificationError::OperatorNotFound` | Operator not found |
-| `BlsAggregationServiceError::SignatureVerificationError::OperatorPublicKeyNotFound` | Operator public key not found for task index |
-| `BlsAggregationServiceError::SignatureVerificationError::IncorrectSignature` | Incorrect signature |
-| `BlsAggregationServiceError::SignaturesChannelClosed` | Signatures channel was closed, can't send signatures to aggregator |
-| `BlsAggregationServiceError::ChannelError` | Error sending to channel |
-| `BlsAggregationServiceError::RegistryError` | Registry Error |
-| `BlsAggregationServiceError::DuplicateTaskIndex` | Duplicate task index error |
 
 
 ## Example Diagram
