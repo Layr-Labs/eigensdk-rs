@@ -262,3 +262,60 @@ pub(crate) mod test_utils {
         (root, claim)
     }
 }
+
+// TODO: Move this tests package to somewhere else
+#[cfg(test)]
+mod tests {
+
+    use crate::test_utils::{build_el_chain_reader, new_claim, new_test_writer};
+    use alloy::primitives::U256;
+    use eigen_common::get_signer;
+    use eigen_testing_utils::{
+        anvil::start_anvil_container,
+        anvil_constants::{get_erc20_mock_strategy, FIRST_ADDRESS, FIRST_PRIVATE_KEY},
+        transaction::wait_transaction,
+    };
+    use eigen_utils::slashing::sdk::mockerc20::MockERC20;
+
+    #[tokio::test]
+    async fn test_process_claim() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
+        
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        // Check claimer balance at strategy before claim
+        let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+        
+        let (_, token_address) = el_chain_reader
+            .get_strategy_and_underlying_token(mock_strategy)
+            .await
+            .unwrap();
+
+        let token = MockERC20::new(token_address, &signer);
+        let initial_balance = token.balanceOf(FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert!(initial_balance._0 == U256::ZERO);
+
+        let (_root, claim) = new_claim(&http_endpoint, U256::from(42)).await;
+
+        let tx_hash = el_chain_writer
+            .process_claim(claim, FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        // Check balance at strategy after claim
+        let balance_after_claim = token.balanceOf(FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert!(balance_after_claim._0 == U256::ZERO);
+    }
+}
