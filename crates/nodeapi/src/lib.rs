@@ -147,7 +147,13 @@ impl NodeApi {
 
 #[allow(unused)]
 pub async fn node_info(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
-    let mut data = api.lock().unwrap(); // TODO! Handle the error
+    let data = match api.lock() {
+        Ok(guard) => guard,
+        Err(err) => {
+            return HttpResponse::InternalServerError()
+                .body(format!("Internal Server Error: {}", err));
+        }
+    };
     let response = serde_json::json!({
         "node_name": data.node_name,
         "node_version": data.node_version,
@@ -158,7 +164,13 @@ pub async fn node_info(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Resp
 
 #[allow(unused)]
 pub async fn health_check(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
-    let mut data = api.lock().unwrap(); // TODO! Handle the error
+    let data = match api.lock() {
+        Ok(guard) => guard,
+        Err(err) => {
+            return HttpResponse::InternalServerError()
+                .body(format!("Internal Server Error: {}", err));
+        }
+    };
     let health = &data.health;
 
     match health {
@@ -170,7 +182,13 @@ pub async fn health_check(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl R
 
 #[allow(unused)]
 pub async fn list_services(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
-    let mut data = api.lock().unwrap(); // TODO! Handle the error
+    let data = match api.lock() {
+        Ok(guard) => guard,
+        Err(err) => {
+            return HttpResponse::InternalServerError()
+                .body(format!("Internal Server Error: {}", err));
+        }
+    };
     let services = &data.services;
     HttpResponse::Ok().json(&serde_json::json!({ "services": *services }))
 }
@@ -181,7 +199,13 @@ pub async fn service_health(
     path: web::types::Path<String>,
 ) -> impl Responder {
     let service_id = path.into_inner();
-    let mut data = api.lock().unwrap(); // TODO! Handle the error
+    let data = match api.lock() {
+        Ok(guard) => guard,
+        Err(err) => {
+            return HttpResponse::InternalServerError()
+                .body(format!("Internal Server Error: {}", err));
+        }
+    };
     let services = &data.services;
 
     if let Some(service) = services.iter().find(|s| s.id == service_id) {
