@@ -161,8 +161,7 @@ async fn node_info(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responde
     HttpResponse::Ok().json(&response)
 }
 
-#[allow(unused)]
-pub async fn health_check(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
+async fn health_check(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
     let data = match api.lock() {
         Ok(guard) => guard,
         Err(err) => {
