@@ -64,6 +64,30 @@ impl NodeApi {
         }
     }
 
+    /// Function to create the Ntex HTTP server
+    /// This function sets up the server and routes.
+    /// External users can call this function to create and run the server.
+    pub fn create_server(
+        api: Arc<Mutex<NodeApi>>,
+        ip_port_addr: String,
+    ) -> std::io::Result<ntex::server::Server> {
+        let server = HttpServer::new(move || {
+            App::new()
+                .state(api.clone()) // Use the provided NodeApi instance
+                .route("/eigen/node", web::get().to(node_info))
+                .route("/eigen/node/health", web::get().to(health_check))
+                .route("/eigen/node/services", web::get().to(list_services))
+                .route(
+                    "/eigen/node/services/{id}/health",
+                    web::get().to(service_health),
+                )
+        })
+        .bind(ip_port_addr.clone())?
+        .run();
+        info!("node api server running at port :{}", ip_port_addr);
+        Ok(server)
+    }
+
     ///
     /// Updates the health status of the node.
     ///
@@ -213,30 +237,6 @@ async fn service_health(
     } else {
         HttpResponse::NotFound().finish()
     }
-}
-
-/// Function to create the Ntex HTTP server
-/// This function sets up the server and routes.
-/// External users can call this function to create and run the server.
-pub fn create_server(
-    api: Arc<Mutex<NodeApi>>,
-    ip_port_addr: String,
-) -> std::io::Result<ntex::server::Server> {
-    let server = HttpServer::new(move || {
-        App::new()
-            .state(api.clone()) // Use the provided NodeApi instance
-            .route("/eigen/node", web::get().to(node_info))
-            .route("/eigen/node/health", web::get().to(health_check))
-            .route("/eigen/node/services", web::get().to(list_services))
-            .route(
-                "/eigen/node/services/{id}/health",
-                web::get().to(service_health),
-            )
-    })
-    .bind(ip_port_addr.clone())?
-    .run();
-    info!("node api server running at port :{}", ip_port_addr);
-    Ok(server)
 }
 
 #[cfg(test)]
@@ -401,7 +401,7 @@ mod tests {
 
         // Set up a server running on a test address (e.g., 127.0.0.1:8081)
         let ip_port_addr = "127.0.0.1:8081".to_string();
-        let server = create_server(st, ip_port_addr.clone()).unwrap();
+        let server = NodeApi::create_server(st, ip_port_addr.clone()).unwrap();
 
         // Start the server in a background task
         ntex::rt::spawn(server);
