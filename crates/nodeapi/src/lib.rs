@@ -190,8 +190,7 @@ async fn list_services(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Resp
     HttpResponse::Ok().json(&serde_json::json!({ "services": *services }))
 }
 
-#[allow(unused)]
-pub async fn service_health(
+async fn service_health(
     api: web::types::State<Arc<Mutex<NodeApi>>>,
     path: web::types::Path<String>,
 ) -> impl Responder {
