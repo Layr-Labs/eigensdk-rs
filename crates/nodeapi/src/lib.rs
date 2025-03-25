@@ -68,7 +68,7 @@ impl NodeApi {
     /// This function sets up the server and routes.
     /// External users can call this function to create and run the server.
     pub fn create_server(
-        api: Arc<Mutex<NodeApi>>,
+        api: Arc<Mutex<Self>>,
         ip_port_addr: String,
     ) -> std::io::Result<ntex::server::Server> {
         let server = HttpServer::new(move || {
