@@ -85,8 +85,8 @@ let metadata = TaskMetadata::new(
     quorum_numbers,
     quorum_threshold_percentages,
     time_to_expiry,
-));
-service_handle.initialize_task().await?;
+);
+service_handle.initialize_task(metadata).await?;
 ```
 
 ### Process a Signature
@@ -113,7 +113,6 @@ match aggregate_receiver.receive_aggregated_response().await {
     }
 }
 ```
-
 
 ## Example Diagram
 
@@ -174,6 +173,6 @@ sequenceDiagram
 
 To run the integration tests, you can use the following command:
 
-```bash
+```sh
 cargo test --package eigen-services-blsaggregation --lib -- bls_agg_test::integration_test --show-output 
 ```
