@@ -22,7 +22,9 @@ pub mod BN254 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct G1Point {
+        #[allow(missing_docs)]
         pub X: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub Y: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -468,7 +470,9 @@ pub mod ISlashingRegistryCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorInfo {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub status: <OperatorStatus as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -658,7 +662,9 @@ pub mod ISlashingRegistryCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorKickParam {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -850,8 +856,11 @@ pub mod ISlashingRegistryCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorSetParam {
+        #[allow(missing_docs)]
         pub maxOperatorCount: u32,
+        #[allow(missing_docs)]
         pub kickBIPsOfOperatorStake: u16,
+        #[allow(missing_docs)]
         pub kickBIPsOfTotalStake: u16,
     }
     #[allow(
@@ -1077,8 +1086,11 @@ pub mod ISlashingRegistryCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QuorumBitmapUpdate {
+        #[allow(missing_docs)]
         pub updateBlockNumber: u32,
+        #[allow(missing_docs)]
         pub nextUpdateBlockNumber: u32,
+        #[allow(missing_docs)]
         pub quorumBitmap: alloy::sol_types::private::primitives::aliases::U192,
     }
     #[allow(
@@ -1458,7 +1470,9 @@ pub mod IStakeRegistryTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyParams {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub multiplier: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -5026,6 +5040,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OPERATOR_CHURN_APPROVAL_TYPEHASHReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5136,6 +5151,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct PUBKEY_REGISTRATION_TYPEHASHReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5246,6 +5262,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct allocationManagerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5356,6 +5373,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct avsReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5466,6 +5484,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct blsApkRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5572,18 +5591,24 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateOperatorChurnApprovalDigestHashCall {
+        #[allow(missing_docs)]
         pub registeringOperator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub registeringOperatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub operatorKickParams: alloy::sol_types::private::Vec<
             <ISlashingRegistryCoordinatorTypes::OperatorKickParam as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`calculateOperatorChurnApprovalDigestHash(address,bytes32,(uint8,address)[],bytes32,uint256)`](calculateOperatorChurnApprovalDigestHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateOperatorChurnApprovalDigestHashReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5752,12 +5777,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculatePubkeyRegistrationMessageHashCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`calculatePubkeyRegistrationMessageHash(address)`](calculatePubkeyRegistrationMessageHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculatePubkeyRegistrationMessageHashReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5876,6 +5903,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct churnApproverReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5982,11 +6010,15 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createSlashableStakeQuorumCall {
+        #[allow(missing_docs)]
         pub operatorSetParams: <ISlashingRegistryCoordinatorTypes::OperatorSetParam as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub minimumStake: alloy::sol_types::private::primitives::aliases::U96,
+        #[allow(missing_docs)]
         pub strategyParams: alloy::sol_types::private::Vec<
             <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub lookAheadPeriod: u32,
     }
     ///Container type for the return parameters of the [`createSlashableStakeQuorum((uint32,uint16,uint16),uint96,(address,uint96)[],uint32)`](createSlashableStakeQuorumCall) function.
@@ -6137,8 +6169,11 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createTotalDelegatedStakeQuorumCall {
+        #[allow(missing_docs)]
         pub operatorSetParams: <ISlashingRegistryCoordinatorTypes::OperatorSetParam as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub minimumStake: alloy::sol_types::private::primitives::aliases::U96,
+        #[allow(missing_docs)]
         pub strategyParams: alloy::sol_types::private::Vec<
             <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
         >,
@@ -6284,8 +6319,11 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetIds: alloy::sol_types::private::Vec<u32>,
     }
     ///Container type for the return parameters of the [`deregisterOperator(address,address,uint32[])`](deregisterOperatorCall) function.
@@ -6422,7 +6460,9 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ejectOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`ejectOperator(address,bytes)`](ejectOperatorCall) function.
@@ -6556,6 +6596,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ejectionCooldownReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -6666,6 +6707,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ejectorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -6772,12 +6814,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentQuorumBitmapCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`getCurrentQuorumBitmap(bytes32)`](getCurrentQuorumBitmapCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentQuorumBitmapReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U192,
     }
     #[allow(
@@ -6890,12 +6934,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperator(address)`](getOperatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorReturn {
+        #[allow(missing_docs)]
         pub _0: <ISlashingRegistryCoordinatorTypes::OperatorInfo as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -7008,12 +7054,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorFromIdCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`getOperatorFromId(bytes32)`](getOperatorFromIdCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorFromIdReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -7126,12 +7174,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorIdCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorId(address)`](getOperatorIdCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorIdReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -7242,12 +7292,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSetParamsCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getOperatorSetParams(uint8)`](getOperatorSetParamsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSetParamsReturn {
+        #[allow(missing_docs)]
         pub _0: <ISlashingRegistryCoordinatorTypes::OperatorSetParam as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -7362,12 +7414,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorStatusCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorStatus(address)`](getOperatorStatusCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorStatusReturn {
+        #[allow(missing_docs)]
         pub _0: <ISlashingRegistryCoordinatorTypes::OperatorStatus as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -7480,14 +7534,18 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapAtBlockNumberByIndexCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getQuorumBitmapAtBlockNumberByIndex(bytes32,uint32,uint256)`](getQuorumBitmapAtBlockNumberByIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapAtBlockNumberByIndexReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U192,
     }
     #[allow(
@@ -7621,12 +7679,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapHistoryLengthCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`getQuorumBitmapHistoryLength(bytes32)`](getQuorumBitmapHistoryLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapHistoryLengthReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -7739,13 +7799,16 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapIndicesAtBlockNumberCall {
+        #[allow(missing_docs)]
         pub blockNumber: u32,
+        #[allow(missing_docs)]
         pub operatorIds: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
     ///Container type for the return parameters of the [`getQuorumBitmapIndicesAtBlockNumber(uint32,bytes32[])`](getQuorumBitmapIndicesAtBlockNumberCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapIndicesAtBlockNumberReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<u32>,
     }
     #[allow(
@@ -7873,13 +7936,16 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapUpdateByIndexCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getQuorumBitmapUpdateByIndex(bytes32,uint256)`](getQuorumBitmapUpdateByIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapUpdateByIndexReturn {
+        #[allow(missing_docs)]
         pub _0: <ISlashingRegistryCoordinatorTypes::QuorumBitmapUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -8011,6 +8077,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct indexRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -8117,12 +8184,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isChurnApproverSaltUsedCall {
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`isChurnApproverSaltUsed(bytes32)`](isChurnApproverSaltUsedCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isChurnApproverSaltUsedReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -8233,12 +8302,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct lastEjectionTimestampCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`lastEjectionTimestamp(address)`](lastEjectionTimestampCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct lastEjectionTimestampReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -8353,6 +8424,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct numRegistriesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -8459,12 +8531,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pubkeyRegistrationMessageHashCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`pubkeyRegistrationMessageHash(address)`](pubkeyRegistrationMessageHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pubkeyRegistrationMessageHashReturn {
+        #[allow(missing_docs)]
         pub _0: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -8580,6 +8654,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quorumCountReturn {
+        #[allow(missing_docs)]
         pub _0: u8,
     }
     #[allow(
@@ -8686,12 +8761,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quorumUpdateBlockNumberCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`quorumUpdateBlockNumber(uint8)`](quorumUpdateBlockNumberCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quorumUpdateBlockNumberReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -8804,9 +8881,13 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetIds: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`registerOperator(address,address,uint32[],bytes)`](registerOperatorCall) function.
@@ -8950,12 +9031,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registriesCall {
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`registries(uint256)`](registriesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registriesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -9066,6 +9149,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAVSCall {
+        #[allow(missing_docs)]
         pub _avs: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setAVS(address)`](setAVSCall) function.
@@ -9180,6 +9264,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setChurnApproverCall {
+        #[allow(missing_docs)]
         pub _churnApprover: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setChurnApprover(address)`](setChurnApproverCall) function.
@@ -9296,6 +9381,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setEjectionCooldownCall {
+        #[allow(missing_docs)]
         pub _ejectionCooldown: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`setEjectionCooldown(uint256)`](setEjectionCooldownCall) function.
@@ -9412,6 +9498,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setEjectorCall {
+        #[allow(missing_docs)]
         pub _ejector: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setEjector(address)`](setEjectorCall) function.
@@ -9526,7 +9613,9 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setOperatorSetParamsCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub operatorSetParams: <ISlashingRegistryCoordinatorTypes::OperatorSetParam as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`setOperatorSetParams(uint8,(uint32,uint16,uint16))`](setOperatorSetParamsCall) function.
@@ -9660,6 +9749,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct socketRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -9770,6 +9860,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -9876,12 +9967,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct supportsAVSCall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`supportsAVS(address)`](supportsAVSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct supportsAVSReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -9992,6 +10085,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateOperatorsCall {
+        #[allow(missing_docs)]
         pub operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`updateOperators(address[])`](updateOperatorsCall) function.
@@ -10109,9 +10203,11 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateOperatorsForQuorumCall {
+        #[allow(missing_docs)]
         pub operatorsPerQuorum: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         >,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`updateOperatorsForQuorum(address[][],bytes)`](updateOperatorsForQuorumCall) function.
@@ -10249,6 +10345,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateSocketCall {
+        #[allow(missing_docs)]
         pub socket: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`updateSocket(string)`](updateSocketCall) function.
@@ -10358,49 +10455,93 @@ pub mod ISlashingRegistryCoordinator {
     };
     ///Container for all the [`ISlashingRegistryCoordinator`](self) function calls.
     pub enum ISlashingRegistryCoordinatorCalls {
+        #[allow(missing_docs)]
         OPERATOR_CHURN_APPROVAL_TYPEHASH(OPERATOR_CHURN_APPROVAL_TYPEHASHCall),
+        #[allow(missing_docs)]
         PUBKEY_REGISTRATION_TYPEHASH(PUBKEY_REGISTRATION_TYPEHASHCall),
+        #[allow(missing_docs)]
         allocationManager(allocationManagerCall),
+        #[allow(missing_docs)]
         avs(avsCall),
+        #[allow(missing_docs)]
         blsApkRegistry(blsApkRegistryCall),
+        #[allow(missing_docs)]
         calculateOperatorChurnApprovalDigestHash(calculateOperatorChurnApprovalDigestHashCall),
+        #[allow(missing_docs)]
         calculatePubkeyRegistrationMessageHash(calculatePubkeyRegistrationMessageHashCall),
+        #[allow(missing_docs)]
         churnApprover(churnApproverCall),
+        #[allow(missing_docs)]
         createSlashableStakeQuorum(createSlashableStakeQuorumCall),
+        #[allow(missing_docs)]
         createTotalDelegatedStakeQuorum(createTotalDelegatedStakeQuorumCall),
+        #[allow(missing_docs)]
         deregisterOperator(deregisterOperatorCall),
+        #[allow(missing_docs)]
         ejectOperator(ejectOperatorCall),
+        #[allow(missing_docs)]
         ejectionCooldown(ejectionCooldownCall),
+        #[allow(missing_docs)]
         ejector(ejectorCall),
+        #[allow(missing_docs)]
         getCurrentQuorumBitmap(getCurrentQuorumBitmapCall),
+        #[allow(missing_docs)]
         getOperator(getOperatorCall),
+        #[allow(missing_docs)]
         getOperatorFromId(getOperatorFromIdCall),
+        #[allow(missing_docs)]
         getOperatorId(getOperatorIdCall),
+        #[allow(missing_docs)]
         getOperatorSetParams(getOperatorSetParamsCall),
+        #[allow(missing_docs)]
         getOperatorStatus(getOperatorStatusCall),
+        #[allow(missing_docs)]
         getQuorumBitmapAtBlockNumberByIndex(getQuorumBitmapAtBlockNumberByIndexCall),
+        #[allow(missing_docs)]
         getQuorumBitmapHistoryLength(getQuorumBitmapHistoryLengthCall),
+        #[allow(missing_docs)]
         getQuorumBitmapIndicesAtBlockNumber(getQuorumBitmapIndicesAtBlockNumberCall),
+        #[allow(missing_docs)]
         getQuorumBitmapUpdateByIndex(getQuorumBitmapUpdateByIndexCall),
+        #[allow(missing_docs)]
         indexRegistry(indexRegistryCall),
+        #[allow(missing_docs)]
         isChurnApproverSaltUsed(isChurnApproverSaltUsedCall),
+        #[allow(missing_docs)]
         lastEjectionTimestamp(lastEjectionTimestampCall),
+        #[allow(missing_docs)]
         numRegistries(numRegistriesCall),
+        #[allow(missing_docs)]
         pubkeyRegistrationMessageHash(pubkeyRegistrationMessageHashCall),
+        #[allow(missing_docs)]
         quorumCount(quorumCountCall),
+        #[allow(missing_docs)]
         quorumUpdateBlockNumber(quorumUpdateBlockNumberCall),
+        #[allow(missing_docs)]
         registerOperator(registerOperatorCall),
+        #[allow(missing_docs)]
         registries(registriesCall),
+        #[allow(missing_docs)]
         setAVS(setAVSCall),
+        #[allow(missing_docs)]
         setChurnApprover(setChurnApproverCall),
+        #[allow(missing_docs)]
         setEjectionCooldown(setEjectionCooldownCall),
+        #[allow(missing_docs)]
         setEjector(setEjectorCall),
+        #[allow(missing_docs)]
         setOperatorSetParams(setOperatorSetParamsCall),
+        #[allow(missing_docs)]
         socketRegistry(socketRegistryCall),
+        #[allow(missing_docs)]
         stakeRegistry(stakeRegistryCall),
+        #[allow(missing_docs)]
         supportsAVS(supportsAVSCall),
+        #[allow(missing_docs)]
         updateOperators(updateOperatorsCall),
+        #[allow(missing_docs)]
         updateOperatorsForQuorum(updateOperatorsForQuorumCall),
+        #[allow(missing_docs)]
         updateSocket(updateSocketCall),
     }
     #[automatically_derived]
@@ -11697,24 +11838,43 @@ pub mod ISlashingRegistryCoordinator {
     }
     ///Container for all the [`ISlashingRegistryCoordinator`](self) custom errors.
     pub enum ISlashingRegistryCoordinatorErrors {
+        #[allow(missing_docs)]
         AlreadyRegisteredForQuorums(AlreadyRegisteredForQuorums),
+        #[allow(missing_docs)]
         BitmapCannotBeZero(BitmapCannotBeZero),
+        #[allow(missing_docs)]
         BitmapEmpty(BitmapEmpty),
+        #[allow(missing_docs)]
         CannotChurnSelf(CannotChurnSelf),
+        #[allow(missing_docs)]
         CannotKickOperatorAboveThreshold(CannotKickOperatorAboveThreshold),
+        #[allow(missing_docs)]
         CannotReregisterYet(CannotReregisterYet),
+        #[allow(missing_docs)]
         ChurnApproverSaltUsed(ChurnApproverSaltUsed),
+        #[allow(missing_docs)]
         InputLengthMismatch(InputLengthMismatch),
+        #[allow(missing_docs)]
         InsufficientStakeForChurn(InsufficientStakeForChurn),
+        #[allow(missing_docs)]
         InvalidAVS(InvalidAVS),
+        #[allow(missing_docs)]
         InvalidRegistrationType(InvalidRegistrationType),
+        #[allow(missing_docs)]
         MaxQuorumsReached(MaxQuorumsReached),
+        #[allow(missing_docs)]
         NotRegistered(NotRegistered),
+        #[allow(missing_docs)]
         NotRegisteredForQuorum(NotRegisteredForQuorum),
+        #[allow(missing_docs)]
         NotSorted(NotSorted),
+        #[allow(missing_docs)]
         OnlyAllocationManager(OnlyAllocationManager),
+        #[allow(missing_docs)]
         OnlyEjector(OnlyEjector),
+        #[allow(missing_docs)]
         QuorumDoesNotExist(QuorumDoesNotExist),
+        #[allow(missing_docs)]
         QuorumOperatorCountMismatch(QuorumOperatorCountMismatch),
     }
     #[automatically_derived]
@@ -12241,12 +12401,19 @@ pub mod ISlashingRegistryCoordinator {
     }
     ///Container for all the [`ISlashingRegistryCoordinator`](self) events.
     pub enum ISlashingRegistryCoordinatorEvents {
+        #[allow(missing_docs)]
         ChurnApproverUpdated(ChurnApproverUpdated),
+        #[allow(missing_docs)]
         EjectorUpdated(EjectorUpdated),
+        #[allow(missing_docs)]
         OperatorDeregistered(OperatorDeregistered),
+        #[allow(missing_docs)]
         OperatorRegistered(OperatorRegistered),
+        #[allow(missing_docs)]
         OperatorSetParamsUpdated(OperatorSetParamsUpdated),
+        #[allow(missing_docs)]
         OperatorSocketUpdate(OperatorSocketUpdate),
+        #[allow(missing_docs)]
         QuorumBlockNumberUpdated(QuorumBlockNumberUpdated),
     }
     #[automatically_derived]

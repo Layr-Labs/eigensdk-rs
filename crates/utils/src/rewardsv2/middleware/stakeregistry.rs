@@ -23,8 +23,11 @@ pub mod IStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StakeUpdate {
+        #[allow(missing_docs)]
         pub updateBlockNumber: u32,
+        #[allow(missing_docs)]
         pub nextUpdateBlockNumber: u32,
+        #[allow(missing_docs)]
         pub stake: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -250,7 +253,9 @@ pub mod IStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyParams {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub multiplier: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -2280,7 +2285,9 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
+        #[allow(missing_docs)]
         pub _registryCoordinator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _delegationManager: alloy::sol_types::private::Address,
     }
     const _: () = {
@@ -2360,6 +2367,7 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MAX_WEIGHING_FUNCTION_LENGTHReturn {
+        #[allow(missing_docs)]
         pub _0: u8,
     }
     #[allow(
@@ -2470,6 +2478,7 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WEIGHTING_DIVISORReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -2576,7 +2585,9 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addStrategiesCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub _strategyParams: alloy::sol_types::private::Vec<
             <IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,
         >,
@@ -2714,6 +2725,7 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2820,7 +2832,9 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`deregisterOperator(bytes32,bytes)`](deregisterOperatorCall) function.
@@ -2950,13 +2964,16 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentStakeCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getCurrentStake(bytes32,uint8)`](getCurrentStakeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentStakeReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -3079,12 +3096,14 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentTotalStakeCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getCurrentTotalStake(uint8)`](getCurrentTotalStakeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentTotalStakeReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -3197,13 +3216,16 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLatestStakeUpdateCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getLatestStakeUpdate(bytes32,uint8)`](getLatestStakeUpdateCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLatestStakeUpdateReturn {
+        #[allow(missing_docs)]
         pub _0: <IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -3327,14 +3349,18 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeAtBlockNumberCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
     }
     ///Container type for the return parameters of the [`getStakeAtBlockNumber(bytes32,uint8,uint32)`](getStakeAtBlockNumberCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeAtBlockNumberReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -3463,15 +3489,20 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeAtBlockNumberAndIndexCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getStakeAtBlockNumberAndIndex(uint8,uint32,bytes32,uint256)`](getStakeAtBlockNumberAndIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeAtBlockNumberAndIndexReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -3617,13 +3648,16 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeHistoryCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getStakeHistory(bytes32,uint8)`](getStakeHistoryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeHistoryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<
             <IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,
         >,
@@ -3754,13 +3788,16 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeHistoryLengthCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getStakeHistoryLength(bytes32,uint8)`](getStakeHistoryLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeHistoryLengthReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -3883,14 +3920,18 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeUpdateAtIndexCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getStakeUpdateAtIndex(uint8,bytes32,uint256)`](getStakeUpdateAtIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeUpdateAtIndexReturn {
+        #[allow(missing_docs)]
         pub _0: <IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -4024,14 +4065,18 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeUpdateIndexAtBlockNumberCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
     }
     ///Container type for the return parameters of the [`getStakeUpdateIndexAtBlockNumber(bytes32,uint8,uint32)`](getStakeUpdateIndexAtBlockNumberCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getStakeUpdateIndexAtBlockNumberReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -4161,14 +4206,18 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getTotalStakeAtBlockNumberFromIndexCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getTotalStakeAtBlockNumberFromIndex(uint8,uint32,uint256)`](getTotalStakeAtBlockNumberFromIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getTotalStakeAtBlockNumberFromIndexReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -4302,12 +4351,14 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getTotalStakeHistoryLengthCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getTotalStakeHistoryLength(uint8)`](getTotalStakeHistoryLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getTotalStakeHistoryLengthReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4420,13 +4471,16 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getTotalStakeIndicesAtBlockNumberCall {
+        #[allow(missing_docs)]
         pub blockNumber: u32,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`getTotalStakeIndicesAtBlockNumber(uint32,bytes)`](getTotalStakeIndicesAtBlockNumberCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getTotalStakeIndicesAtBlockNumberReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<u32>,
     }
     #[allow(
@@ -4551,13 +4605,16 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getTotalStakeUpdateAtIndexCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getTotalStakeUpdateAtIndex(uint8,uint256)`](getTotalStakeUpdateAtIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getTotalStakeUpdateAtIndexReturn {
+        #[allow(missing_docs)]
         pub _0: <IStakeRegistry::StakeUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -4682,8 +4739,11 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeQuorumCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub minimumStake: alloy::sol_types::private::primitives::aliases::U96,
+        #[allow(missing_docs)]
         pub _strategyParams: alloy::sol_types::private::Vec<
             <IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,
         >,
@@ -4828,12 +4888,14 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct minimumStakeForQuorumCall {
+        #[allow(missing_docs)]
         pub _0: u8,
     }
     ///Container type for the return parameters of the [`minimumStakeForQuorum(uint8)`](minimumStakeForQuorumCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct minimumStakeForQuorumReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -4944,9 +5006,12 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct modifyStrategyParamsCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub strategyIndices:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
+        #[allow(missing_docs)]
         pub newMultipliers:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U96>,
     }
@@ -5090,15 +5155,20 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`registerOperator(address,bytes32,bytes)`](registerOperatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U96>,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U96>,
     }
     #[allow(
@@ -5247,6 +5317,7 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5353,7 +5424,9 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeStrategiesCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub indicesToRemove:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
@@ -5486,7 +5559,9 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setMinimumStakeForQuorumCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub minimumStake: alloy::sol_types::private::primitives::aliases::U96,
     }
     ///Container type for the return parameters of the [`setMinimumStakeForQuorum(uint8,uint96)`](setMinimumStakeForQuorumCall) function.
@@ -5614,13 +5689,16 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategiesPerQuorumCall {
+        #[allow(missing_docs)]
         pub _0: u8,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`strategiesPerQuorum(uint8,uint256)`](strategiesPerQuorumCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategiesPerQuorumReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5744,14 +5822,18 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyParamsCall {
+        #[allow(missing_docs)]
         pub _0: u8,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`strategyParams(uint8,uint256)`](strategyParamsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyParamsReturn {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub multiplier: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -5887,13 +5969,16 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyParamsByIndexCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`strategyParamsByIndex(uint8,uint256)`](strategyParamsByIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyParamsByIndexReturn {
+        #[allow(missing_docs)]
         pub _0: <IStakeRegistry::StrategyParams as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -6018,12 +6103,14 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyParamsLengthCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`strategyParamsLength(uint8)`](strategyParamsLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyParamsLengthReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -6136,14 +6223,18 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateOperatorStakeCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`updateOperatorStake(address,bytes32,bytes)`](updateOperatorStakeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateOperatorStakeReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U192,
     }
     #[allow(
@@ -6276,13 +6367,16 @@ pub mod StakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct weightOfOperatorForQuorumCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`weightOfOperatorForQuorum(uint8,address)`](weightOfOperatorForQuorumCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct weightOfOperatorForQuorumReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -6400,36 +6494,67 @@ pub mod StakeRegistry {
     };
     ///Container for all the [`StakeRegistry`](self) function calls.
     pub enum StakeRegistryCalls {
+        #[allow(missing_docs)]
         MAX_WEIGHING_FUNCTION_LENGTH(MAX_WEIGHING_FUNCTION_LENGTHCall),
+        #[allow(missing_docs)]
         WEIGHTING_DIVISOR(WEIGHTING_DIVISORCall),
+        #[allow(missing_docs)]
         addStrategies(addStrategiesCall),
+        #[allow(missing_docs)]
         delegation(delegationCall),
+        #[allow(missing_docs)]
         deregisterOperator(deregisterOperatorCall),
+        #[allow(missing_docs)]
         getCurrentStake(getCurrentStakeCall),
+        #[allow(missing_docs)]
         getCurrentTotalStake(getCurrentTotalStakeCall),
+        #[allow(missing_docs)]
         getLatestStakeUpdate(getLatestStakeUpdateCall),
+        #[allow(missing_docs)]
         getStakeAtBlockNumber(getStakeAtBlockNumberCall),
+        #[allow(missing_docs)]
         getStakeAtBlockNumberAndIndex(getStakeAtBlockNumberAndIndexCall),
+        #[allow(missing_docs)]
         getStakeHistory(getStakeHistoryCall),
+        #[allow(missing_docs)]
         getStakeHistoryLength(getStakeHistoryLengthCall),
+        #[allow(missing_docs)]
         getStakeUpdateAtIndex(getStakeUpdateAtIndexCall),
+        #[allow(missing_docs)]
         getStakeUpdateIndexAtBlockNumber(getStakeUpdateIndexAtBlockNumberCall),
+        #[allow(missing_docs)]
         getTotalStakeAtBlockNumberFromIndex(getTotalStakeAtBlockNumberFromIndexCall),
+        #[allow(missing_docs)]
         getTotalStakeHistoryLength(getTotalStakeHistoryLengthCall),
+        #[allow(missing_docs)]
         getTotalStakeIndicesAtBlockNumber(getTotalStakeIndicesAtBlockNumberCall),
+        #[allow(missing_docs)]
         getTotalStakeUpdateAtIndex(getTotalStakeUpdateAtIndexCall),
+        #[allow(missing_docs)]
         initializeQuorum(initializeQuorumCall),
+        #[allow(missing_docs)]
         minimumStakeForQuorum(minimumStakeForQuorumCall),
+        #[allow(missing_docs)]
         modifyStrategyParams(modifyStrategyParamsCall),
+        #[allow(missing_docs)]
         registerOperator(registerOperatorCall),
+        #[allow(missing_docs)]
         registryCoordinator(registryCoordinatorCall),
+        #[allow(missing_docs)]
         removeStrategies(removeStrategiesCall),
+        #[allow(missing_docs)]
         setMinimumStakeForQuorum(setMinimumStakeForQuorumCall),
+        #[allow(missing_docs)]
         strategiesPerQuorum(strategiesPerQuorumCall),
+        #[allow(missing_docs)]
         strategyParams(strategyParamsCall),
+        #[allow(missing_docs)]
         strategyParamsByIndex(strategyParamsByIndexCall),
+        #[allow(missing_docs)]
         strategyParamsLength(strategyParamsLengthCall),
+        #[allow(missing_docs)]
         updateOperatorStake(updateOperatorStakeCall),
+        #[allow(missing_docs)]
         weightOfOperatorForQuorum(weightOfOperatorForQuorumCall),
     }
     #[automatically_derived]
@@ -7331,11 +7456,17 @@ pub mod StakeRegistry {
     }
     ///Container for all the [`StakeRegistry`](self) events.
     pub enum StakeRegistryEvents {
+        #[allow(missing_docs)]
         MinimumStakeForQuorumUpdated(MinimumStakeForQuorumUpdated),
+        #[allow(missing_docs)]
         OperatorStakeUpdate(OperatorStakeUpdate),
+        #[allow(missing_docs)]
         QuorumCreated(QuorumCreated),
+        #[allow(missing_docs)]
         StrategyAddedToQuorum(StrategyAddedToQuorum),
+        #[allow(missing_docs)]
         StrategyMultiplierUpdated(StrategyMultiplierUpdated),
+        #[allow(missing_docs)]
         StrategyRemovedFromQuorum(StrategyRemovedFromQuorum),
     }
     #[automatically_derived]

@@ -23,9 +23,12 @@ pub mod IDelegationManagerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QueuedWithdrawalParams {
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub depositShares:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
+        #[allow(missing_docs)]
         pub __deprecated_withdrawer: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -245,12 +248,19 @@ pub mod IDelegationManagerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Withdrawal {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub delegatedTo: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub withdrawer: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub nonce: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub startBlock: u32,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub scaledShares:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
@@ -697,7 +707,9 @@ pub mod ISignatureUtils {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SignatureWithExpiry {
+        #[allow(missing_docs)]
         pub signature: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -6143,11 +6155,17 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
+        #[allow(missing_docs)]
         pub _strategyManager: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _eigenPodManager: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _allocationManager: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _pauserRegistry: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _permissionController: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _MIN_WITHDRAWAL_DELAY: u32,
     }
     const _: () = {
@@ -6262,6 +6280,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DELEGATION_APPROVAL_TYPEHASHReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -6372,6 +6391,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct allocationManagerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -6482,6 +6502,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainETHStrategyReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -6588,9 +6609,13 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct burnOperatorSharesCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub prevMaxMagnitude: u64,
+        #[allow(missing_docs)]
         pub newMaxMagnitude: u64,
     }
     ///Container type for the return parameters of the [`burnOperatorShares(address,address,uint64,uint64)`](burnOperatorSharesCall) function.
@@ -6739,16 +6764,22 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateDelegationApprovalDigestHashCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub approver: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub approverSalt: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`calculateDelegationApprovalDigestHash(address,address,address,bytes32,uint256)`](calculateDelegationApprovalDigestHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateDelegationApprovalDigestHashReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -6906,6 +6937,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateWithdrawalRootCall {
+        #[allow(missing_docs)]
         pub withdrawal:
             <IDelegationManagerTypes::Withdrawal as alloy::sol_types::SolType>::RustType,
     }
@@ -6913,6 +6945,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateWithdrawalRootReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -7026,9 +7059,12 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct completeQueuedWithdrawalCall {
+        #[allow(missing_docs)]
         pub withdrawal:
             <IDelegationManagerTypes::Withdrawal as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub tokens: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub receiveAsTokens: bool,
     }
     ///Container type for the return parameters of the [`completeQueuedWithdrawal((address,address,address,uint256,uint32,address[],uint256[]),address[],bool)`](completeQueuedWithdrawalCall) function.
@@ -7165,12 +7201,15 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct completeQueuedWithdrawalsCall {
+        #[allow(missing_docs)]
         pub withdrawals: alloy::sol_types::private::Vec<
             <IDelegationManagerTypes::Withdrawal as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub tokens: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         >,
+        #[allow(missing_docs)]
         pub receiveAsTokens: alloy::sol_types::private::Vec<bool>,
     }
     ///Container type for the return parameters of the [`completeQueuedWithdrawals((address,address,address,uint256,uint32,address[],uint256[])[],address[][],bool[])`](completeQueuedWithdrawalsCall) function.
@@ -7317,8 +7356,11 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct convertToDepositSharesCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub withdrawableShares:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
@@ -7326,6 +7368,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct convertToDepositSharesReturn {
+        #[allow(missing_docs)]
         pub _0:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
@@ -7467,12 +7510,14 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct cumulativeWithdrawalsQueuedCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`cumulativeWithdrawalsQueued(address)`](cumulativeWithdrawalsQueuedCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct cumulativeWithdrawalsQueuedReturn {
+        #[allow(missing_docs)]
         pub totalQueued: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -7585,8 +7630,11 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct decreaseDelegatedSharesCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub curDepositShares: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub beaconChainSlashingFactorDecrease: u64,
     }
     ///Container type for the return parameters of the [`decreaseDelegatedShares(address,uint256,uint64)`](decreaseDelegatedSharesCall) function.
@@ -7727,9 +7775,12 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegateToCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub approverSignatureAndExpiry:
             <ISignatureUtils::SignatureWithExpiry as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub approverSalt: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`delegateTo(address,(bytes,uint256),bytes32)`](delegateToCall) function.
@@ -7870,12 +7921,14 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegatedToCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`delegatedTo(address)`](delegatedToCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegatedToReturn {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -7986,12 +8039,14 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationApproverCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`delegationApprover(address)`](delegationApproverCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationApproverReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -8102,13 +8157,16 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationApproverSaltIsSpentCall {
+        #[allow(missing_docs)]
         pub delegationApprover: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`delegationApproverSaltIsSpent(address,bytes32)`](delegationApproverSaltIsSpentCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationApproverSaltIsSpentReturn {
+        #[allow(missing_docs)]
         pub spent: bool,
     }
     #[allow(
@@ -8234,13 +8292,16 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositScalingFactorCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`depositScalingFactor(address,address)`](depositScalingFactorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositScalingFactorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -8370,6 +8431,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct domainSeparatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -8480,6 +8542,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodManagerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -8586,13 +8649,16 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getDepositedSharesCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getDepositedShares(address)`](getDepositedSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getDepositedSharesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub _1:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
@@ -8718,13 +8784,16 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSharesCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`getOperatorShares(address,address[])`](getOperatorSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSharesReturn {
+        #[allow(missing_docs)]
         pub _0:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
@@ -8857,13 +8926,16 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorsSharesCall {
+        #[allow(missing_docs)]
         pub operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`getOperatorsShares(address[],address[])`](getOperatorsSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorsSharesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
         >,
@@ -9005,12 +9077,14 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQueuedWithdrawalCall {
+        #[allow(missing_docs)]
         pub withdrawalRoot: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`getQueuedWithdrawal(bytes32)`](getQueuedWithdrawalCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQueuedWithdrawalReturn {
+        #[allow(missing_docs)]
         pub _0: <IDelegationManagerTypes::Withdrawal as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -9124,12 +9198,14 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQueuedWithdrawalRootsCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getQueuedWithdrawalRoots(address)`](getQueuedWithdrawalRootsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQueuedWithdrawalRootsReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
     #[allow(
@@ -9243,15 +9319,18 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQueuedWithdrawalsCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getQueuedWithdrawals(address)`](getQueuedWithdrawalsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQueuedWithdrawalsReturn {
+        #[allow(missing_docs)]
         pub withdrawals: alloy::sol_types::private::Vec<
             <IDelegationManagerTypes::Withdrawal as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
         >,
@@ -9386,13 +9465,16 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getSlashableSharesInQueueCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getSlashableSharesInQueue(address,address)`](getSlashableSharesInQueueCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getSlashableSharesInQueueReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -9518,15 +9600,19 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getWithdrawableSharesCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`getWithdrawableShares(address,address[])`](getWithdrawableSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getWithdrawableSharesReturn {
+        #[allow(missing_docs)]
         pub withdrawableShares:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
+        #[allow(missing_docs)]
         pub depositShares:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
@@ -9669,9 +9755,13 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct increaseDelegatedSharesCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub prevDepositShares: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub addedShares: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`increaseDelegatedShares(address,address,uint256,uint256)`](increaseDelegatedSharesCall) function.
@@ -9821,7 +9911,9 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
+        #[allow(missing_docs)]
         pub initialOwner: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub initialPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`initialize(address,uint256)`](initializeCall) function.
@@ -9951,12 +10043,14 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isDelegatedCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`isDelegated(address)`](isDelegatedCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isDelegatedReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -10067,12 +10161,14 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`isOperator(address)`](isOperatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isOperatorReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -10187,6 +10283,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct minWithdrawalDelayBlocksReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -10293,7 +10390,9 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct modifyOperatorDetailsCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub newDelegationApprover: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`modifyOperatorDetails(address,address)`](modifyOperatorDetailsCall) function.
@@ -10423,13 +10522,16 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorSharesCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`operatorShares(address,address)`](operatorSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorSharesReturn {
+        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -10559,6 +10661,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -10665,6 +10768,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauseCall {
+        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`pause(uint256)`](pauseCall) function.
@@ -10889,12 +10993,14 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Call {
+        #[allow(missing_docs)]
         pub index: u8,
     }
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Return {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -11009,6 +11115,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Return {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -11119,6 +11226,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -11225,12 +11333,14 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pendingWithdrawalsCall {
+        #[allow(missing_docs)]
         pub withdrawalRoot: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`pendingWithdrawals(bytes32)`](pendingWithdrawalsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pendingWithdrawalsReturn {
+        #[allow(missing_docs)]
         pub pending: bool,
     }
     #[allow(
@@ -11347,6 +11457,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct permissionControllerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -11453,6 +11564,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct queueWithdrawalsCall {
+        #[allow(missing_docs)]
         pub params: alloy::sol_types::private::Vec<
             <IDelegationManagerTypes::QueuedWithdrawalParams as alloy::sol_types::SolType>::RustType,
         >,
@@ -11461,6 +11573,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct queueWithdrawalsReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
     #[allow(
@@ -11582,15 +11695,19 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct redelegateCall {
+        #[allow(missing_docs)]
         pub newOperator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub newOperatorApproverSig:
             <ISignatureUtils::SignatureWithExpiry as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub approverSalt: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`redelegate(address,(bytes,uint256),bytes32)`](redelegateCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct redelegateReturn {
+        #[allow(missing_docs)]
         pub withdrawalRoots:
             alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
@@ -11733,8 +11850,11 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerAsOperatorCall {
+        #[allow(missing_docs)]
         pub initDelegationApprover: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub allocationDelay: u32,
+        #[allow(missing_docs)]
         pub metadataURI: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`registerAsOperator(address,uint32,string)`](registerAsOperatorCall) function.
@@ -11987,6 +12107,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyManagerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -12093,6 +12214,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
+        #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`transferOwnership(address)`](transferOwnershipCall) function.
@@ -12207,12 +12329,14 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct undelegateCall {
+        #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`undelegate(address)`](undelegateCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct undelegateReturn {
+        #[allow(missing_docs)]
         pub withdrawalRoots:
             alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
@@ -12329,6 +12453,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct unpauseCall {
+        #[allow(missing_docs)]
         pub newPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`unpause(uint256)`](unpauseCall) function.
@@ -12445,7 +12570,9 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateOperatorMetadataURICall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub metadataURI: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`updateOperatorMetadataURI(address,string)`](updateOperatorMetadataURICall) function.
@@ -12570,55 +12697,105 @@ pub mod DelegationManager {
     };
     ///Container for all the [`DelegationManager`](self) function calls.
     pub enum DelegationManagerCalls {
+        #[allow(missing_docs)]
         DELEGATION_APPROVAL_TYPEHASH(DELEGATION_APPROVAL_TYPEHASHCall),
+        #[allow(missing_docs)]
         allocationManager(allocationManagerCall),
+        #[allow(missing_docs)]
         beaconChainETHStrategy(beaconChainETHStrategyCall),
+        #[allow(missing_docs)]
         burnOperatorShares(burnOperatorSharesCall),
+        #[allow(missing_docs)]
         calculateDelegationApprovalDigestHash(calculateDelegationApprovalDigestHashCall),
+        #[allow(missing_docs)]
         calculateWithdrawalRoot(calculateWithdrawalRootCall),
+        #[allow(missing_docs)]
         completeQueuedWithdrawal(completeQueuedWithdrawalCall),
+        #[allow(missing_docs)]
         completeQueuedWithdrawals(completeQueuedWithdrawalsCall),
+        #[allow(missing_docs)]
         convertToDepositShares(convertToDepositSharesCall),
+        #[allow(missing_docs)]
         cumulativeWithdrawalsQueued(cumulativeWithdrawalsQueuedCall),
+        #[allow(missing_docs)]
         decreaseDelegatedShares(decreaseDelegatedSharesCall),
+        #[allow(missing_docs)]
         delegateTo(delegateToCall),
+        #[allow(missing_docs)]
         delegatedTo(delegatedToCall),
+        #[allow(missing_docs)]
         delegationApprover(delegationApproverCall),
+        #[allow(missing_docs)]
         delegationApproverSaltIsSpent(delegationApproverSaltIsSpentCall),
+        #[allow(missing_docs)]
         depositScalingFactor(depositScalingFactorCall),
+        #[allow(missing_docs)]
         domainSeparator(domainSeparatorCall),
+        #[allow(missing_docs)]
         eigenPodManager(eigenPodManagerCall),
+        #[allow(missing_docs)]
         getDepositedShares(getDepositedSharesCall),
+        #[allow(missing_docs)]
         getOperatorShares(getOperatorSharesCall),
+        #[allow(missing_docs)]
         getOperatorsShares(getOperatorsSharesCall),
+        #[allow(missing_docs)]
         getQueuedWithdrawal(getQueuedWithdrawalCall),
+        #[allow(missing_docs)]
         getQueuedWithdrawalRoots(getQueuedWithdrawalRootsCall),
+        #[allow(missing_docs)]
         getQueuedWithdrawals(getQueuedWithdrawalsCall),
+        #[allow(missing_docs)]
         getSlashableSharesInQueue(getSlashableSharesInQueueCall),
+        #[allow(missing_docs)]
         getWithdrawableShares(getWithdrawableSharesCall),
+        #[allow(missing_docs)]
         increaseDelegatedShares(increaseDelegatedSharesCall),
+        #[allow(missing_docs)]
         initialize(initializeCall),
+        #[allow(missing_docs)]
         isDelegated(isDelegatedCall),
+        #[allow(missing_docs)]
         isOperator(isOperatorCall),
+        #[allow(missing_docs)]
         minWithdrawalDelayBlocks(minWithdrawalDelayBlocksCall),
+        #[allow(missing_docs)]
         modifyOperatorDetails(modifyOperatorDetailsCall),
+        #[allow(missing_docs)]
         operatorShares(operatorSharesCall),
+        #[allow(missing_docs)]
         owner(ownerCall),
+        #[allow(missing_docs)]
         pause(pauseCall),
+        #[allow(missing_docs)]
         pauseAll(pauseAllCall),
+        #[allow(missing_docs)]
         paused_0(paused_0Call),
+        #[allow(missing_docs)]
         paused_1(paused_1Call),
+        #[allow(missing_docs)]
         pauserRegistry(pauserRegistryCall),
+        #[allow(missing_docs)]
         pendingWithdrawals(pendingWithdrawalsCall),
+        #[allow(missing_docs)]
         permissionController(permissionControllerCall),
+        #[allow(missing_docs)]
         queueWithdrawals(queueWithdrawalsCall),
+        #[allow(missing_docs)]
         redelegate(redelegateCall),
+        #[allow(missing_docs)]
         registerAsOperator(registerAsOperatorCall),
+        #[allow(missing_docs)]
         renounceOwnership(renounceOwnershipCall),
+        #[allow(missing_docs)]
         strategyManager(strategyManagerCall),
+        #[allow(missing_docs)]
         transferOwnership(transferOwnershipCall),
+        #[allow(missing_docs)]
         undelegate(undelegateCall),
+        #[allow(missing_docs)]
         unpause(unpauseCall),
+        #[allow(missing_docs)]
         updateOperatorMetadataURI(updateOperatorMetadataURICall),
     }
     #[automatically_derived]
@@ -13975,29 +14152,53 @@ pub mod DelegationManager {
     }
     ///Container for all the [`DelegationManager`](self) custom errors.
     pub enum DelegationManagerErrors {
+        #[allow(missing_docs)]
         ActivelyDelegated(ActivelyDelegated),
+        #[allow(missing_docs)]
         CallerCannotUndelegate(CallerCannotUndelegate),
+        #[allow(missing_docs)]
         CurrentlyPaused(CurrentlyPaused),
+        #[allow(missing_docs)]
         FullySlashed(FullySlashed),
+        #[allow(missing_docs)]
         InputAddressZero(InputAddressZero),
+        #[allow(missing_docs)]
         InputArrayLengthMismatch(InputArrayLengthMismatch),
+        #[allow(missing_docs)]
         InputArrayLengthZero(InputArrayLengthZero),
+        #[allow(missing_docs)]
         InvalidNewPausedStatus(InvalidNewPausedStatus),
+        #[allow(missing_docs)]
         InvalidPermissions(InvalidPermissions),
+        #[allow(missing_docs)]
         InvalidSignature(InvalidSignature),
+        #[allow(missing_docs)]
         InvalidSnapshotOrdering(InvalidSnapshotOrdering),
+        #[allow(missing_docs)]
         NotActivelyDelegated(NotActivelyDelegated),
+        #[allow(missing_docs)]
         OnlyAllocationManager(OnlyAllocationManager),
+        #[allow(missing_docs)]
         OnlyEigenPodManager(OnlyEigenPodManager),
+        #[allow(missing_docs)]
         OnlyPauser(OnlyPauser),
+        #[allow(missing_docs)]
         OnlyStrategyManagerOrEigenPodManager(OnlyStrategyManagerOrEigenPodManager),
+        #[allow(missing_docs)]
         OnlyUnpauser(OnlyUnpauser),
+        #[allow(missing_docs)]
         OperatorNotRegistered(OperatorNotRegistered),
+        #[allow(missing_docs)]
         OperatorsCannotUndelegate(OperatorsCannotUndelegate),
+        #[allow(missing_docs)]
         SaltSpent(SaltSpent),
+        #[allow(missing_docs)]
         SignatureExpired(SignatureExpired),
+        #[allow(missing_docs)]
         WithdrawalDelayNotElapsed(WithdrawalDelayNotElapsed),
+        #[allow(missing_docs)]
         WithdrawalNotQueued(WithdrawalNotQueued),
+        #[allow(missing_docs)]
         WithdrawerNotCaller(WithdrawerNotCaller),
     }
     #[automatically_derived]
@@ -14684,21 +14885,37 @@ pub mod DelegationManager {
     }
     ///Container for all the [`DelegationManager`](self) events.
     pub enum DelegationManagerEvents {
+        #[allow(missing_docs)]
         DelegationApproverUpdated(DelegationApproverUpdated),
+        #[allow(missing_docs)]
         DepositScalingFactorUpdated(DepositScalingFactorUpdated),
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         OperatorMetadataURIUpdated(OperatorMetadataURIUpdated),
+        #[allow(missing_docs)]
         OperatorRegistered(OperatorRegistered),
+        #[allow(missing_docs)]
         OperatorSharesBurned(OperatorSharesBurned),
+        #[allow(missing_docs)]
         OperatorSharesDecreased(OperatorSharesDecreased),
+        #[allow(missing_docs)]
         OperatorSharesIncreased(OperatorSharesIncreased),
+        #[allow(missing_docs)]
         OwnershipTransferred(OwnershipTransferred),
+        #[allow(missing_docs)]
         Paused(Paused),
+        #[allow(missing_docs)]
         SlashingWithdrawalCompleted(SlashingWithdrawalCompleted),
+        #[allow(missing_docs)]
         SlashingWithdrawalQueued(SlashingWithdrawalQueued),
+        #[allow(missing_docs)]
         StakerDelegated(StakerDelegated),
+        #[allow(missing_docs)]
         StakerForceUndelegated(StakerForceUndelegated),
+        #[allow(missing_docs)]
         StakerUndelegated(StakerUndelegated),
+        #[allow(missing_docs)]
         Unpaused(Unpaused),
     }
     #[automatically_derived]
