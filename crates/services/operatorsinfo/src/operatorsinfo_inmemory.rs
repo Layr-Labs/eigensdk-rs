@@ -525,7 +525,7 @@ mod tests {
     use eigen_testing_utils::anvil_constants::{
         get_avs_directory_address, get_delegation_manager_address,
         get_operator_state_retriever_address, get_registry_coordinator_address,
-        get_rewards_coordinator_address, get_strategy_manager_address,
+        get_rewards_coordinator_address, get_service_manager_address, get_strategy_manager_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_types::operator::Operator;
@@ -780,7 +780,7 @@ mod tests {
             http_endpoint.to_string(),
             pvt_key.to_string(),
             get_registry_coordinator_address(http_endpoint.clone()).await,
-            get_operator_state_retriever_address(http_endpoint.clone()).await,
+            get_service_manager_address(http_endpoint.clone()).await,
         )
         .await
         .unwrap();

@@ -22,7 +22,9 @@ pub mod BN254 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct G1Point {
+        #[allow(missing_docs)]
         pub X: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub Y: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -468,7 +470,9 @@ pub mod ISlashingRegistryCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorInfo {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub status: <OperatorStatus as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -658,7 +662,9 @@ pub mod ISlashingRegistryCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorKickParam {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -850,8 +856,11 @@ pub mod ISlashingRegistryCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorSetParam {
+        #[allow(missing_docs)]
         pub maxOperatorCount: u32,
+        #[allow(missing_docs)]
         pub kickBIPsOfOperatorStake: u16,
+        #[allow(missing_docs)]
         pub kickBIPsOfTotalStake: u16,
     }
     #[allow(
@@ -1077,8 +1086,11 @@ pub mod ISlashingRegistryCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QuorumBitmapUpdate {
+        #[allow(missing_docs)]
         pub updateBlockNumber: u32,
+        #[allow(missing_docs)]
         pub nextUpdateBlockNumber: u32,
+        #[allow(missing_docs)]
         pub quorumBitmap: alloy::sol_types::private::primitives::aliases::U192,
     }
     #[allow(
@@ -1439,6 +1451,7 @@ pub mod ISlashingRegistryCoordinatorTypes {
 
 ```solidity
 library IStakeRegistryTypes {
+    type StakeType is uint8;
     struct StrategyParams { address strategy; uint96 multiplier; }
 }
 ```*/
@@ -1452,13 +1465,124 @@ library IStakeRegistryTypes {
 pub mod IStakeRegistryTypes {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct StakeType(u8);
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::private::SolTypeValue<StakeType> for u8 {
+            #[inline]
+            fn stv_to_tokens(
+                &self,
+            ) -> <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::Token<'_>
+            {
+                alloy_sol_types::private::SolTypeValue::<
+                    alloy::sol_types::sol_data::Uint<8>,
+                >::stv_to_tokens(self)
+            }
+            #[inline]
+            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(self).0
+            }
+            #[inline]
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::SolType>::abi_encode_packed_to(self, out)
+            }
+            #[inline]
+            fn stv_abi_packed_encoded_size(&self) -> usize {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::abi_encoded_size(
+                    self,
+                )
+            }
+        }
+        #[automatically_derived]
+        impl StakeType {
+            /// The Solidity type name.
+            pub const NAME: &'static str = stringify!(@ name);
+            /// Convert from the underlying value type.
+            #[inline]
+            pub const fn from(value: u8) -> Self {
+                Self(value)
+            }
+            /// Return the underlying value.
+            #[inline]
+            pub const fn into(self) -> u8 {
+                self.0
+            }
+            /// Return the single encoding of this value, delegating to the
+            /// underlying type.
+            #[inline]
+            pub fn abi_encode(&self) -> alloy_sol_types::private::Vec<u8> {
+                <Self as alloy_sol_types::SolType>::abi_encode(&self.0)
+            }
+            /// Return the packed encoding of this value, delegating to the
+            /// underlying type.
+            #[inline]
+            pub fn abi_encode_packed(&self) -> alloy_sol_types::private::Vec<u8> {
+                <Self as alloy_sol_types::SolType>::abi_encode_packed(&self.0)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolType for StakeType {
+            type RustType = u8;
+            type Token<'a> =
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::Token<'a>;
+            const SOL_NAME: &'static str = Self::NAME;
+            const ENCODED_SIZE: Option<usize> =
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> = <alloy::sol_types::sol_data::Uint<
+                8,
+            > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            #[inline]
+            fn valid_token(token: &Self::Token<'_>) -> bool {
+                Self::type_check(token).is_ok()
+            }
+            #[inline]
+            fn type_check(token: &Self::Token<'_>) -> alloy_sol_types::Result<()> {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::type_check(token)
+            }
+            #[inline]
+            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::detokenize(token)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::EventTopic for StakeType {
+            #[inline]
+            fn topic_preimage_length(rust: &Self::RustType) -> usize {
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::EventTopic>::topic_preimage_length(rust)
+            }
+            #[inline]
+            fn encode_topic_preimage(
+                rust: &Self::RustType,
+                out: &mut alloy_sol_types::private::Vec<u8>,
+            ) {
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, out)
+            }
+            #[inline]
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
+                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::EventTopic>::encode_topic(
+                    rust,
+                )
+            }
+        }
+    };
     /**```solidity
     struct StrategyParams { address strategy; uint96 multiplier; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyParams {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub multiplier: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -1811,6 +1935,7 @@ library ISlashingRegistryCoordinatorTypes {
 }
 
 library IStakeRegistryTypes {
+    type StakeType is uint8;
     struct StrategyParams {
         address strategy;
         uint96 multiplier;
@@ -1829,22 +1954,28 @@ interface ISlashingRegistryCoordinator {
     error InsufficientStakeForChurn();
     error InvalidAVS();
     error InvalidRegistrationType();
+    error LookAheadPeriodTooLong();
+    error MaxOperatorCountReached();
     error MaxQuorumsReached();
     error NotRegistered();
     error NotRegisteredForQuorum();
     error NotSorted();
     error OnlyAllocationManager();
     error OnlyEjector();
+    error OperatorNotRegistered();
     error QuorumDoesNotExist();
     error QuorumOperatorCountMismatch();
 
+    event AVSUpdated(address prevAVS, address newAVS);
     event ChurnApproverUpdated(address prevChurnApprover, address newChurnApprover);
+    event EjectionCooldownUpdated(uint256 prevEjectionCooldown, uint256 newEjectionCooldown);
     event EjectorUpdated(address prevEjector, address newEjector);
     event OperatorDeregistered(address indexed operator, bytes32 indexed operatorId);
     event OperatorRegistered(address indexed operator, bytes32 indexed operatorId);
     event OperatorSetParamsUpdated(uint8 indexed quorumNumber, ISlashingRegistryCoordinatorTypes.OperatorSetParam operatorSetParams);
     event OperatorSocketUpdate(bytes32 indexed operatorId, string socket);
     event QuorumBlockNumberUpdated(uint8 indexed quorumNumber, uint256 blocknumber);
+    event QuorumCreated(uint8 indexed quorumNumber, ISlashingRegistryCoordinatorTypes.OperatorSetParam operatorSetParams, uint96 minimumStake, IStakeRegistryTypes.StrategyParams[] strategyParams, IStakeRegistryTypes.StakeType stakeType, uint32 lookAheadPeriod);
 
     function OPERATOR_CHURN_APPROVAL_TYPEHASH() external view returns (bytes32);
     function PUBKEY_REGISTRATION_TYPEHASH() external view returns (bytes32);
@@ -1873,12 +2004,10 @@ interface ISlashingRegistryCoordinator {
     function indexRegistry() external view returns (address);
     function isChurnApproverSaltUsed(bytes32 salt) external view returns (bool);
     function lastEjectionTimestamp(address operator) external view returns (uint256);
-    function numRegistries() external view returns (uint256);
     function pubkeyRegistrationMessageHash(address operator) external view returns (BN254.G1Point memory);
     function quorumCount() external view returns (uint8);
     function quorumUpdateBlockNumber(uint8 quorumNumber) external view returns (uint256);
     function registerOperator(address operator, address avs, uint32[] memory operatorSetIds, bytes memory data) external;
-    function registries(uint256 index) external view returns (address);
     function setAVS(address _avs) external;
     function setChurnApprover(address _churnApprover) external;
     function setEjectionCooldown(uint256 _ejectionCooldown) external;
@@ -2529,19 +2658,6 @@ interface ISlashingRegistryCoordinator {
   },
   {
     "type": "function",
-    "name": "numRegistries",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "pubkeyRegistrationMessageHash",
     "inputs": [
       {
@@ -2630,25 +2746,6 @@ interface ISlashingRegistryCoordinator {
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "registries",
-    "inputs": [
-      {
-        "name": "index",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -2828,6 +2925,25 @@ interface ISlashingRegistryCoordinator {
   },
   {
     "type": "event",
+    "name": "AVSUpdated",
+    "inputs": [
+      {
+        "name": "prevAVS",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "newAVS",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "ChurnApproverUpdated",
     "inputs": [
       {
@@ -2841,6 +2957,25 @@ interface ISlashingRegistryCoordinator {
         "type": "address",
         "indexed": false,
         "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "EjectionCooldownUpdated",
+    "inputs": [
+      {
+        "name": "prevEjectionCooldown",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "newEjectionCooldown",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
     "anonymous": false
@@ -2977,6 +3112,78 @@ interface ISlashingRegistryCoordinator {
     "anonymous": false
   },
   {
+    "type": "event",
+    "name": "QuorumCreated",
+    "inputs": [
+      {
+        "name": "quorumNumber",
+        "type": "uint8",
+        "indexed": true,
+        "internalType": "uint8"
+      },
+      {
+        "name": "operatorSetParams",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct ISlashingRegistryCoordinatorTypes.OperatorSetParam",
+        "components": [
+          {
+            "name": "maxOperatorCount",
+            "type": "uint32",
+            "internalType": "uint32"
+          },
+          {
+            "name": "kickBIPsOfOperatorStake",
+            "type": "uint16",
+            "internalType": "uint16"
+          },
+          {
+            "name": "kickBIPsOfTotalStake",
+            "type": "uint16",
+            "internalType": "uint16"
+          }
+        ]
+      },
+      {
+        "name": "minimumStake",
+        "type": "uint96",
+        "indexed": false,
+        "internalType": "uint96"
+      },
+      {
+        "name": "strategyParams",
+        "type": "tuple[]",
+        "indexed": false,
+        "internalType": "struct IStakeRegistryTypes.StrategyParams[]",
+        "components": [
+          {
+            "name": "strategy",
+            "type": "address",
+            "internalType": "contract IStrategy"
+          },
+          {
+            "name": "multiplier",
+            "type": "uint96",
+            "internalType": "uint96"
+          }
+        ]
+      },
+      {
+        "name": "stakeType",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "enum IStakeRegistryTypes.StakeType"
+      },
+      {
+        "name": "lookAheadPeriod",
+        "type": "uint32",
+        "indexed": false,
+        "internalType": "uint32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
     "type": "error",
     "name": "AlreadyRegisteredForQuorums",
     "inputs": []
@@ -3033,6 +3240,16 @@ interface ISlashingRegistryCoordinator {
   },
   {
     "type": "error",
+    "name": "LookAheadPeriodTooLong",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MaxOperatorCountReached",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "MaxQuorumsReached",
     "inputs": []
   },
@@ -3059,6 +3276,11 @@ interface ISlashingRegistryCoordinator {
   {
     "type": "error",
     "name": "OnlyEjector",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OperatorNotRegistered",
     "inputs": []
   },
   {
@@ -3763,6 +3985,126 @@ pub mod ISlashingRegistryCoordinator {
             }
         }
     };
+    /**Custom error with signature `LookAheadPeriodTooLong()` and selector `0x2f5106e4`.
+    ```solidity
+    error LookAheadPeriodTooLong();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct LookAheadPeriodTooLong {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<LookAheadPeriodTooLong> for UnderlyingRustTuple<'_> {
+            fn from(value: LookAheadPeriodTooLong) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for LookAheadPeriodTooLong {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for LookAheadPeriodTooLong {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "LookAheadPeriodTooLong()";
+            const SELECTOR: [u8; 4] = [47u8, 81u8, 6u8, 228u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `MaxOperatorCountReached()` and selector `0xc6b9e767`.
+    ```solidity
+    error MaxOperatorCountReached();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct MaxOperatorCountReached {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<MaxOperatorCountReached> for UnderlyingRustTuple<'_> {
+            fn from(value: MaxOperatorCountReached) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for MaxOperatorCountReached {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for MaxOperatorCountReached {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "MaxOperatorCountReached()";
+            const SELECTOR: [u8; 4] = [198u8, 185u8, 231u8, 103u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
     /**Custom error with signature `MaxQuorumsReached()` and selector `0x3cb89c97`.
     ```solidity
     error MaxQuorumsReached();
@@ -4123,6 +4465,66 @@ pub mod ISlashingRegistryCoordinator {
             }
         }
     };
+    /**Custom error with signature `OperatorNotRegistered()` and selector `0x25ec6c1f`.
+    ```solidity
+    error OperatorNotRegistered();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OperatorNotRegistered {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OperatorNotRegistered> for UnderlyingRustTuple<'_> {
+            fn from(value: OperatorNotRegistered) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorNotRegistered {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OperatorNotRegistered {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OperatorNotRegistered()";
+            const SELECTOR: [u8; 4] = [37u8, 236u8, 108u8, 31u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
     /**Custom error with signature `QuorumDoesNotExist()` and selector `0xe6219fea`.
     ```solidity
     error QuorumDoesNotExist();
@@ -4243,6 +4645,115 @@ pub mod ISlashingRegistryCoordinator {
             }
         }
     };
+    /**Event with signature `AVSUpdated(address,address)` and selector `0x9770f3cadfdcbb6f93af935e86047111590c3768271d237e4a2bc0b874bed693`.
+    ```solidity
+    event AVSUpdated(address prevAVS, address newAVS);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct AVSUpdated {
+        #[allow(missing_docs)]
+        pub prevAVS: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub newAVS: alloy::sol_types::private::Address,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for AVSUpdated {
+            type DataTuple<'a> = (
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
+            );
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
+            const SIGNATURE: &'static str = "AVSUpdated(address,address)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    151u8, 112u8, 243u8, 202u8, 223u8, 220u8, 187u8, 111u8, 147u8, 175u8, 147u8,
+                    94u8, 134u8, 4u8, 113u8, 17u8, 89u8, 12u8, 55u8, 104u8, 39u8, 29u8, 35u8,
+                    126u8, 74u8, 43u8, 192u8, 184u8, 116u8, 190u8, 214u8, 147u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    prevAVS: data.0,
+                    newAVS: data.1,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.prevAVS,
+                    ),
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.newAVS,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (Self::SIGNATURE_HASH.into(),)
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for AVSUpdated {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&AVSUpdated> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(this: &AVSUpdated) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
     /**Event with signature `ChurnApproverUpdated(address,address)` and selector `0x315457d8a8fe60f04af17c16e2f5a5e1db612b31648e58030360759ef8f3528c`.
     ```solidity
     event ChurnApproverUpdated(address prevChurnApprover, address newChurnApprover);
@@ -4348,6 +4859,115 @@ pub mod ISlashingRegistryCoordinator {
         impl From<&ChurnApproverUpdated> for alloy_sol_types::private::LogData {
             #[inline]
             fn from(this: &ChurnApproverUpdated) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
+    /**Event with signature `EjectionCooldownUpdated(uint256,uint256)` and selector `0xa77a91bea7b6d95a8eb5a54878a1d9e3c875e26c86a9b70e3420c5c5db193b62`.
+    ```solidity
+    event EjectionCooldownUpdated(uint256 prevEjectionCooldown, uint256 newEjectionCooldown);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct EjectionCooldownUpdated {
+        #[allow(missing_docs)]
+        pub prevEjectionCooldown: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
+        pub newEjectionCooldown: alloy::sol_types::private::primitives::aliases::U256,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for EjectionCooldownUpdated {
+            type DataTuple<'a> = (
+                alloy::sol_types::sol_data::Uint<256>,
+                alloy::sol_types::sol_data::Uint<256>,
+            );
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
+            const SIGNATURE: &'static str = "EjectionCooldownUpdated(uint256,uint256)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    167u8, 122u8, 145u8, 190u8, 167u8, 182u8, 217u8, 90u8, 142u8, 181u8, 165u8,
+                    72u8, 120u8, 161u8, 217u8, 227u8, 200u8, 117u8, 226u8, 108u8, 134u8, 169u8,
+                    183u8, 14u8, 52u8, 32u8, 197u8, 197u8, 219u8, 25u8, 59u8, 98u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    prevEjectionCooldown: data.0,
+                    newEjectionCooldown: data.1,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.prevEjectionCooldown,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.newEjectionCooldown,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (Self::SIGNATURE_HASH.into(),)
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for EjectionCooldownUpdated {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&EjectionCooldownUpdated> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(this: &EjectionCooldownUpdated) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
@@ -5015,6 +5635,147 @@ pub mod ISlashingRegistryCoordinator {
             }
         }
     };
+    /**Event with signature `QuorumCreated(uint8,(uint32,uint16,uint16),uint96,(address,uint96)[],uint8,uint32)` and selector `0xa34835bc2b673ec37fcf1591a91295b163fc2e181e4ea4e733beb27de1ceac4c`.
+    ```solidity
+    event QuorumCreated(uint8 indexed quorumNumber, ISlashingRegistryCoordinatorTypes.OperatorSetParam operatorSetParams, uint96 minimumStake, IStakeRegistryTypes.StrategyParams[] strategyParams, IStakeRegistryTypes.StakeType stakeType, uint32 lookAheadPeriod);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct QuorumCreated {
+        #[allow(missing_docs)]
+        pub quorumNumber: u8,
+        #[allow(missing_docs)]
+        pub operatorSetParams: <ISlashingRegistryCoordinatorTypes::OperatorSetParam as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
+        pub minimumStake: alloy::sol_types::private::primitives::aliases::U96,
+        #[allow(missing_docs)]
+        pub strategyParams: alloy::sol_types::private::Vec<
+            <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
+        >,
+        #[allow(missing_docs)]
+        pub stakeType: <IStakeRegistryTypes::StakeType as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
+        pub lookAheadPeriod: u32,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for QuorumCreated {
+            type DataTuple<'a> = (
+                ISlashingRegistryCoordinatorTypes::OperatorSetParam,
+                alloy::sol_types::sol_data::Uint<96>,
+                alloy::sol_types::sol_data::Array<IStakeRegistryTypes::StrategyParams>,
+                IStakeRegistryTypes::StakeType,
+                alloy::sol_types::sol_data::Uint<32>,
+            );
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (
+                alloy_sol_types::sol_data::FixedBytes<32>,
+                alloy::sol_types::sol_data::Uint<8>,
+            );
+            const SIGNATURE: &'static str = "QuorumCreated(uint8,(uint32,uint16,uint16),uint96,(address,uint96)[],uint8,uint32)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    163u8, 72u8, 53u8, 188u8, 43u8, 103u8, 62u8, 195u8, 127u8, 207u8, 21u8, 145u8,
+                    169u8, 18u8, 149u8, 177u8, 99u8, 252u8, 46u8, 24u8, 30u8, 78u8, 164u8, 231u8,
+                    51u8, 190u8, 178u8, 125u8, 225u8, 206u8, 172u8, 76u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    quorumNumber: topics.1,
+                    operatorSetParams: data.0,
+                    minimumStake: data.1,
+                    strategyParams: data.2,
+                    stakeType: data.3,
+                    lookAheadPeriod: data.4,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <ISlashingRegistryCoordinatorTypes::OperatorSetParam as alloy_sol_types::SolType>::tokenize(
+                        &self.operatorSetParams,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        96,
+                    > as alloy_sol_types::SolType>::tokenize(&self.minimumStake),
+                    <alloy::sol_types::sol_data::Array<
+                        IStakeRegistryTypes::StrategyParams,
+                    > as alloy_sol_types::SolType>::tokenize(&self.strategyParams),
+                    <IStakeRegistryTypes::StakeType as alloy_sol_types::SolType>::tokenize(
+                        &self.stakeType,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::SolType>::tokenize(&self.lookAheadPeriod),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (Self::SIGNATURE_HASH.into(), self.quorumNumber.clone())
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[1usize] = <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::EventTopic>::encode_topic(&self.quorumNumber);
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for QuorumCreated {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&QuorumCreated> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(this: &QuorumCreated) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
     /**Function with signature `OPERATOR_CHURN_APPROVAL_TYPEHASH()` and selector `0xca0de882`.
     ```solidity
     function OPERATOR_CHURN_APPROVAL_TYPEHASH() external view returns (bytes32);
@@ -5026,6 +5787,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OPERATOR_CHURN_APPROVAL_TYPEHASHReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5136,6 +5898,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct PUBKEY_REGISTRATION_TYPEHASHReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5246,6 +6009,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct allocationManagerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5356,6 +6120,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct avsReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5466,6 +6231,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct blsApkRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5572,18 +6338,24 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateOperatorChurnApprovalDigestHashCall {
+        #[allow(missing_docs)]
         pub registeringOperator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub registeringOperatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub operatorKickParams: alloy::sol_types::private::Vec<
             <ISlashingRegistryCoordinatorTypes::OperatorKickParam as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`calculateOperatorChurnApprovalDigestHash(address,bytes32,(uint8,address)[],bytes32,uint256)`](calculateOperatorChurnApprovalDigestHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateOperatorChurnApprovalDigestHashReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5752,12 +6524,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculatePubkeyRegistrationMessageHashCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`calculatePubkeyRegistrationMessageHash(address)`](calculatePubkeyRegistrationMessageHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculatePubkeyRegistrationMessageHashReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -5876,6 +6650,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct churnApproverReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5982,11 +6757,15 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createSlashableStakeQuorumCall {
+        #[allow(missing_docs)]
         pub operatorSetParams: <ISlashingRegistryCoordinatorTypes::OperatorSetParam as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub minimumStake: alloy::sol_types::private::primitives::aliases::U96,
+        #[allow(missing_docs)]
         pub strategyParams: alloy::sol_types::private::Vec<
             <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub lookAheadPeriod: u32,
     }
     ///Container type for the return parameters of the [`createSlashableStakeQuorum((uint32,uint16,uint16),uint96,(address,uint96)[],uint32)`](createSlashableStakeQuorumCall) function.
@@ -6137,8 +6916,11 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createTotalDelegatedStakeQuorumCall {
+        #[allow(missing_docs)]
         pub operatorSetParams: <ISlashingRegistryCoordinatorTypes::OperatorSetParam as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub minimumStake: alloy::sol_types::private::primitives::aliases::U96,
+        #[allow(missing_docs)]
         pub strategyParams: alloy::sol_types::private::Vec<
             <IStakeRegistryTypes::StrategyParams as alloy::sol_types::SolType>::RustType,
         >,
@@ -6284,8 +7066,11 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetIds: alloy::sol_types::private::Vec<u32>,
     }
     ///Container type for the return parameters of the [`deregisterOperator(address,address,uint32[])`](deregisterOperatorCall) function.
@@ -6422,7 +7207,9 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ejectOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`ejectOperator(address,bytes)`](ejectOperatorCall) function.
@@ -6556,6 +7343,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ejectionCooldownReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -6666,6 +7454,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ejectorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -6772,12 +7561,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentQuorumBitmapCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`getCurrentQuorumBitmap(bytes32)`](getCurrentQuorumBitmapCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentQuorumBitmapReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U192,
     }
     #[allow(
@@ -6890,12 +7681,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperator(address)`](getOperatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorReturn {
+        #[allow(missing_docs)]
         pub _0: <ISlashingRegistryCoordinatorTypes::OperatorInfo as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -7008,12 +7801,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorFromIdCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`getOperatorFromId(bytes32)`](getOperatorFromIdCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorFromIdReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -7126,12 +7921,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorIdCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorId(address)`](getOperatorIdCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorIdReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -7242,12 +8039,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSetParamsCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getOperatorSetParams(uint8)`](getOperatorSetParamsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSetParamsReturn {
+        #[allow(missing_docs)]
         pub _0: <ISlashingRegistryCoordinatorTypes::OperatorSetParam as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -7362,12 +8161,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorStatusCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorStatus(address)`](getOperatorStatusCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorStatusReturn {
+        #[allow(missing_docs)]
         pub _0: <ISlashingRegistryCoordinatorTypes::OperatorStatus as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -7480,14 +8281,18 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapAtBlockNumberByIndexCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getQuorumBitmapAtBlockNumberByIndex(bytes32,uint32,uint256)`](getQuorumBitmapAtBlockNumberByIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapAtBlockNumberByIndexReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U192,
     }
     #[allow(
@@ -7621,12 +8426,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapHistoryLengthCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`getQuorumBitmapHistoryLength(bytes32)`](getQuorumBitmapHistoryLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapHistoryLengthReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -7739,13 +8546,16 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapIndicesAtBlockNumberCall {
+        #[allow(missing_docs)]
         pub blockNumber: u32,
+        #[allow(missing_docs)]
         pub operatorIds: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
     ///Container type for the return parameters of the [`getQuorumBitmapIndicesAtBlockNumber(uint32,bytes32[])`](getQuorumBitmapIndicesAtBlockNumberCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapIndicesAtBlockNumberReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<u32>,
     }
     #[allow(
@@ -7873,13 +8683,16 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapUpdateByIndexCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getQuorumBitmapUpdateByIndex(bytes32,uint256)`](getQuorumBitmapUpdateByIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumBitmapUpdateByIndexReturn {
+        #[allow(missing_docs)]
         pub _0: <ISlashingRegistryCoordinatorTypes::QuorumBitmapUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -8011,6 +8824,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct indexRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -8117,12 +8931,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isChurnApproverSaltUsedCall {
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`isChurnApproverSaltUsed(bytes32)`](isChurnApproverSaltUsedCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isChurnApproverSaltUsedReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -8233,12 +9049,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct lastEjectionTimestampCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`lastEjectionTimestamp(address)`](lastEjectionTimestampCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct lastEjectionTimestampReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -8342,116 +9160,6 @@ pub mod ISlashingRegistryCoordinator {
             }
         }
     };
-    /**Function with signature `numRegistries()` and selector `0xd72d8dd6`.
-    ```solidity
-    function numRegistries() external view returns (uint256);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct numRegistriesCall {}
-    ///Container type for the return parameters of the [`numRegistries()`](numRegistriesCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct numRegistriesReturn {
-        pub _0: alloy::sol_types::private::primitives::aliases::U256,
-    }
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<numRegistriesCall> for UnderlyingRustTuple<'_> {
-                fn from(value: numRegistriesCall) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for numRegistriesCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {}
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<numRegistriesReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: numRegistriesReturn) -> Self {
-                    (value._0,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for numRegistriesReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0 }
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for numRegistriesCall {
-            type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = numRegistriesReturn;
-            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "numRegistries()";
-            const SELECTOR: [u8; 4] = [215u8, 45u8, 141u8, 214u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-            #[inline]
-            fn abi_decode_returns(
-                data: &[u8],
-                validate: bool,
-            ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
-            }
-        }
-    };
     /**Function with signature `pubkeyRegistrationMessageHash(address)` and selector `0x3c2a7f4c`.
     ```solidity
     function pubkeyRegistrationMessageHash(address operator) external view returns (BN254.G1Point memory);
@@ -8459,12 +9167,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pubkeyRegistrationMessageHashCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`pubkeyRegistrationMessageHash(address)`](pubkeyRegistrationMessageHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pubkeyRegistrationMessageHashReturn {
+        #[allow(missing_docs)]
         pub _0: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -8580,6 +9290,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quorumCountReturn {
+        #[allow(missing_docs)]
         pub _0: u8,
     }
     #[allow(
@@ -8686,12 +9397,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quorumUpdateBlockNumberCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`quorumUpdateBlockNumber(uint8)`](quorumUpdateBlockNumberCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quorumUpdateBlockNumberReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -8804,9 +9517,13 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetIds: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`registerOperator(address,address,uint32[],bytes)`](registerOperatorCall) function.
@@ -8943,122 +9660,6 @@ pub mod ISlashingRegistryCoordinator {
             }
         }
     };
-    /**Function with signature `registries(uint256)` and selector `0x6347c900`.
-    ```solidity
-    function registries(uint256 index) external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct registriesCall {
-        pub index: alloy::sol_types::private::primitives::aliases::U256,
-    }
-    ///Container type for the return parameters of the [`registries(uint256)`](registriesCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct registriesReturn {
-        pub _0: alloy::sol_types::private::Address,
-    }
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<registriesCall> for UnderlyingRustTuple<'_> {
-                fn from(value: registriesCall) -> Self {
-                    (value.index,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registriesCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { index: tuple.0 }
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<registriesReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: registriesReturn) -> Self {
-                    (value._0,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registriesReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0 }
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for registriesCall {
-            type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = registriesReturn;
-            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "registries(uint256)";
-            const SELECTOR: [u8; 4] = [99u8, 71u8, 201u8, 0u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.index,
-                    ),
-                )
-            }
-            #[inline]
-            fn abi_decode_returns(
-                data: &[u8],
-                validate: bool,
-            ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
-            }
-        }
-    };
     /**Function with signature `setAVS(address)` and selector `0xa65497c6`.
     ```solidity
     function setAVS(address _avs) external;
@@ -9066,6 +9667,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAVSCall {
+        #[allow(missing_docs)]
         pub _avs: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setAVS(address)`](setAVSCall) function.
@@ -9180,6 +9782,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setChurnApproverCall {
+        #[allow(missing_docs)]
         pub _churnApprover: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setChurnApprover(address)`](setChurnApproverCall) function.
@@ -9296,6 +9899,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setEjectionCooldownCall {
+        #[allow(missing_docs)]
         pub _ejectionCooldown: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`setEjectionCooldown(uint256)`](setEjectionCooldownCall) function.
@@ -9412,6 +10016,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setEjectorCall {
+        #[allow(missing_docs)]
         pub _ejector: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setEjector(address)`](setEjectorCall) function.
@@ -9526,7 +10131,9 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setOperatorSetParamsCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub operatorSetParams: <ISlashingRegistryCoordinatorTypes::OperatorSetParam as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`setOperatorSetParams(uint8,(uint32,uint16,uint16))`](setOperatorSetParamsCall) function.
@@ -9660,6 +10267,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct socketRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -9770,6 +10378,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -9876,12 +10485,14 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct supportsAVSCall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`supportsAVS(address)`](supportsAVSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct supportsAVSReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -9992,6 +10603,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateOperatorsCall {
+        #[allow(missing_docs)]
         pub operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`updateOperators(address[])`](updateOperatorsCall) function.
@@ -10109,9 +10721,11 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateOperatorsForQuorumCall {
+        #[allow(missing_docs)]
         pub operatorsPerQuorum: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         >,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`updateOperatorsForQuorum(address[][],bytes)`](updateOperatorsForQuorumCall) function.
@@ -10249,6 +10863,7 @@ pub mod ISlashingRegistryCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateSocketCall {
+        #[allow(missing_docs)]
         pub socket: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`updateSocket(string)`](updateSocketCall) function.
@@ -10358,49 +10973,89 @@ pub mod ISlashingRegistryCoordinator {
     };
     ///Container for all the [`ISlashingRegistryCoordinator`](self) function calls.
     pub enum ISlashingRegistryCoordinatorCalls {
+        #[allow(missing_docs)]
         OPERATOR_CHURN_APPROVAL_TYPEHASH(OPERATOR_CHURN_APPROVAL_TYPEHASHCall),
+        #[allow(missing_docs)]
         PUBKEY_REGISTRATION_TYPEHASH(PUBKEY_REGISTRATION_TYPEHASHCall),
+        #[allow(missing_docs)]
         allocationManager(allocationManagerCall),
+        #[allow(missing_docs)]
         avs(avsCall),
+        #[allow(missing_docs)]
         blsApkRegistry(blsApkRegistryCall),
+        #[allow(missing_docs)]
         calculateOperatorChurnApprovalDigestHash(calculateOperatorChurnApprovalDigestHashCall),
+        #[allow(missing_docs)]
         calculatePubkeyRegistrationMessageHash(calculatePubkeyRegistrationMessageHashCall),
+        #[allow(missing_docs)]
         churnApprover(churnApproverCall),
+        #[allow(missing_docs)]
         createSlashableStakeQuorum(createSlashableStakeQuorumCall),
+        #[allow(missing_docs)]
         createTotalDelegatedStakeQuorum(createTotalDelegatedStakeQuorumCall),
+        #[allow(missing_docs)]
         deregisterOperator(deregisterOperatorCall),
+        #[allow(missing_docs)]
         ejectOperator(ejectOperatorCall),
+        #[allow(missing_docs)]
         ejectionCooldown(ejectionCooldownCall),
+        #[allow(missing_docs)]
         ejector(ejectorCall),
+        #[allow(missing_docs)]
         getCurrentQuorumBitmap(getCurrentQuorumBitmapCall),
+        #[allow(missing_docs)]
         getOperator(getOperatorCall),
+        #[allow(missing_docs)]
         getOperatorFromId(getOperatorFromIdCall),
+        #[allow(missing_docs)]
         getOperatorId(getOperatorIdCall),
+        #[allow(missing_docs)]
         getOperatorSetParams(getOperatorSetParamsCall),
+        #[allow(missing_docs)]
         getOperatorStatus(getOperatorStatusCall),
+        #[allow(missing_docs)]
         getQuorumBitmapAtBlockNumberByIndex(getQuorumBitmapAtBlockNumberByIndexCall),
+        #[allow(missing_docs)]
         getQuorumBitmapHistoryLength(getQuorumBitmapHistoryLengthCall),
+        #[allow(missing_docs)]
         getQuorumBitmapIndicesAtBlockNumber(getQuorumBitmapIndicesAtBlockNumberCall),
+        #[allow(missing_docs)]
         getQuorumBitmapUpdateByIndex(getQuorumBitmapUpdateByIndexCall),
+        #[allow(missing_docs)]
         indexRegistry(indexRegistryCall),
+        #[allow(missing_docs)]
         isChurnApproverSaltUsed(isChurnApproverSaltUsedCall),
+        #[allow(missing_docs)]
         lastEjectionTimestamp(lastEjectionTimestampCall),
-        numRegistries(numRegistriesCall),
+        #[allow(missing_docs)]
         pubkeyRegistrationMessageHash(pubkeyRegistrationMessageHashCall),
+        #[allow(missing_docs)]
         quorumCount(quorumCountCall),
+        #[allow(missing_docs)]
         quorumUpdateBlockNumber(quorumUpdateBlockNumberCall),
+        #[allow(missing_docs)]
         registerOperator(registerOperatorCall),
-        registries(registriesCall),
+        #[allow(missing_docs)]
         setAVS(setAVSCall),
+        #[allow(missing_docs)]
         setChurnApprover(setChurnApproverCall),
+        #[allow(missing_docs)]
         setEjectionCooldown(setEjectionCooldownCall),
+        #[allow(missing_docs)]
         setEjector(setEjectorCall),
+        #[allow(missing_docs)]
         setOperatorSetParams(setOperatorSetParamsCall),
+        #[allow(missing_docs)]
         socketRegistry(socketRegistryCall),
+        #[allow(missing_docs)]
         stakeRegistry(stakeRegistryCall),
+        #[allow(missing_docs)]
         supportsAVS(supportsAVSCall),
+        #[allow(missing_docs)]
         updateOperators(updateOperatorsCall),
+        #[allow(missing_docs)]
         updateOperatorsForQuorum(updateOperatorsForQuorumCall),
+        #[allow(missing_docs)]
         updateSocket(updateSocketCall),
     }
     #[automatically_derived]
@@ -10434,7 +11089,6 @@ pub mod ISlashingRegistryCoordinator {
             [88u8, 101u8, 198u8, 12u8],
             [91u8, 11u8, 130u8, 159u8],
             [93u8, 244u8, 89u8, 70u8],
-            [99u8, 71u8, 201u8, 0u8],
             [104u8, 48u8, 72u8, 53u8],
             [110u8, 59u8, 23u8, 219u8],
             [115u8, 68u8, 121u8, 146u8],
@@ -10451,7 +11105,6 @@ pub mod ISlashingRegistryCoordinator {
             [198u8, 63u8, 213u8, 2u8],
             [202u8, 13u8, 232u8, 130u8],
             [202u8, 138u8, 167u8, 199u8],
-            [215u8, 45u8, 141u8, 214u8],
             [222u8, 17u8, 100u8, 187u8],
             [230u8, 87u8, 151u8, 173u8],
             [234u8, 50u8, 175u8, 174u8],
@@ -10462,7 +11115,7 @@ pub mod ISlashingRegistryCoordinator {
     impl alloy_sol_types::SolInterface for ISlashingRegistryCoordinatorCalls {
         const NAME: &'static str = "ISlashingRegistryCoordinatorCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 44usize;
+        const COUNT: usize = 42usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -10543,9 +11196,6 @@ pub mod ISlashingRegistryCoordinator {
                 Self::lastEjectionTimestamp(_) => {
                     <lastEjectionTimestampCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::numRegistries(_) => {
-                    <numRegistriesCall as alloy_sol_types::SolCall>::SELECTOR
-                }
                 Self::pubkeyRegistrationMessageHash(_) => {
                     <pubkeyRegistrationMessageHashCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -10557,9 +11207,6 @@ pub mod ISlashingRegistryCoordinator {
                 }
                 Self::registerOperator(_) => {
                     <registerOperatorCall as alloy_sol_types::SolCall>::SELECTOR
-                }
-                Self::registries(_) => {
-                    <registriesCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::setAVS(_) => <setAVSCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::setChurnApprover(_) => {
@@ -10913,17 +11560,6 @@ pub mod ISlashingRegistryCoordinator {
                     blsApkRegistry
                 },
                 {
-                    fn registries(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<ISlashingRegistryCoordinatorCalls>
-                    {
-                        <registriesCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
-                            .map(ISlashingRegistryCoordinatorCalls::registries)
-                    }
-                    registries
-                },
-                {
                     fn stakeRegistry(
                         data: &[u8],
                         validate: bool,
@@ -11148,19 +11784,6 @@ pub mod ISlashingRegistryCoordinator {
                     allocationManager
                 },
                 {
-                    fn numRegistries(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<ISlashingRegistryCoordinatorCalls>
-                    {
-                        <numRegistriesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(ISlashingRegistryCoordinatorCalls::numRegistries)
-                    }
-                    numRegistries
-                },
-                {
                     fn avs(
                         data: &[u8],
                         validate: bool,
@@ -11353,11 +11976,6 @@ pub mod ISlashingRegistryCoordinator {
                         inner,
                     )
                 }
-                Self::numRegistries(inner) => {
-                    <numRegistriesCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
                 Self::pubkeyRegistrationMessageHash(inner) => {
                     <pubkeyRegistrationMessageHashCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
@@ -11377,9 +11995,6 @@ pub mod ISlashingRegistryCoordinator {
                     <registerOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
-                }
-                Self::registries(inner) => {
-                    <registriesCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::setAVS(inner) => {
                     <setAVSCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
@@ -11593,12 +12208,6 @@ pub mod ISlashingRegistryCoordinator {
                         out,
                     )
                 }
-                Self::numRegistries(inner) => {
-                    <numRegistriesCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
                 Self::pubkeyRegistrationMessageHash(inner) => {
                     <pubkeyRegistrationMessageHashCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
@@ -11619,12 +12228,6 @@ pub mod ISlashingRegistryCoordinator {
                 }
                 Self::registerOperator(inner) => {
                     <registerOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
-                Self::registries(inner) => {
-                    <registriesCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -11697,24 +12300,49 @@ pub mod ISlashingRegistryCoordinator {
     }
     ///Container for all the [`ISlashingRegistryCoordinator`](self) custom errors.
     pub enum ISlashingRegistryCoordinatorErrors {
+        #[allow(missing_docs)]
         AlreadyRegisteredForQuorums(AlreadyRegisteredForQuorums),
+        #[allow(missing_docs)]
         BitmapCannotBeZero(BitmapCannotBeZero),
+        #[allow(missing_docs)]
         BitmapEmpty(BitmapEmpty),
+        #[allow(missing_docs)]
         CannotChurnSelf(CannotChurnSelf),
+        #[allow(missing_docs)]
         CannotKickOperatorAboveThreshold(CannotKickOperatorAboveThreshold),
+        #[allow(missing_docs)]
         CannotReregisterYet(CannotReregisterYet),
+        #[allow(missing_docs)]
         ChurnApproverSaltUsed(ChurnApproverSaltUsed),
+        #[allow(missing_docs)]
         InputLengthMismatch(InputLengthMismatch),
+        #[allow(missing_docs)]
         InsufficientStakeForChurn(InsufficientStakeForChurn),
+        #[allow(missing_docs)]
         InvalidAVS(InvalidAVS),
+        #[allow(missing_docs)]
         InvalidRegistrationType(InvalidRegistrationType),
+        #[allow(missing_docs)]
+        LookAheadPeriodTooLong(LookAheadPeriodTooLong),
+        #[allow(missing_docs)]
+        MaxOperatorCountReached(MaxOperatorCountReached),
+        #[allow(missing_docs)]
         MaxQuorumsReached(MaxQuorumsReached),
+        #[allow(missing_docs)]
         NotRegistered(NotRegistered),
+        #[allow(missing_docs)]
         NotRegisteredForQuorum(NotRegisteredForQuorum),
+        #[allow(missing_docs)]
         NotSorted(NotSorted),
+        #[allow(missing_docs)]
         OnlyAllocationManager(OnlyAllocationManager),
+        #[allow(missing_docs)]
         OnlyEjector(OnlyEjector),
+        #[allow(missing_docs)]
+        OperatorNotRegistered(OperatorNotRegistered),
+        #[allow(missing_docs)]
         QuorumDoesNotExist(QuorumDoesNotExist),
+        #[allow(missing_docs)]
         QuorumOperatorCountMismatch(QuorumOperatorCountMismatch),
     }
     #[automatically_derived]
@@ -11729,6 +12357,8 @@ pub mod ISlashingRegistryCoordinator {
             [12u8, 104u8, 22u8, 205u8],
             [19u8, 202u8, 70u8, 87u8],
             [35u8, 216u8, 113u8, 165u8],
+            [37u8, 236u8, 108u8, 31u8],
+            [47u8, 81u8, 6u8, 228u8],
             [50u8, 208u8, 206u8, 250u8],
             [53u8, 75u8, 184u8, 171u8],
             [60u8, 184u8, 156u8, 151u8],
@@ -11740,6 +12370,7 @@ pub mod ISlashingRegistryCoordinator {
             [172u8, 45u8, 22u8, 130u8],
             [177u8, 135u8, 232u8, 105u8],
             [186u8, 80u8, 249u8, 17u8],
+            [198u8, 185u8, 231u8, 103u8],
             [208u8, 83u8, 170u8, 33u8],
             [209u8, 109u8, 80u8, 234u8],
             [223u8, 125u8, 253u8, 134u8],
@@ -11751,7 +12382,7 @@ pub mod ISlashingRegistryCoordinator {
     impl alloy_sol_types::SolInterface for ISlashingRegistryCoordinatorErrors {
         const NAME: &'static str = "ISlashingRegistryCoordinatorErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 19usize;
+        const COUNT: usize = 22usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -11784,6 +12415,12 @@ pub mod ISlashingRegistryCoordinator {
                 Self::InvalidRegistrationType(_) => {
                     <InvalidRegistrationType as alloy_sol_types::SolError>::SELECTOR
                 }
+                Self::LookAheadPeriodTooLong(_) => {
+                    <LookAheadPeriodTooLong as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::MaxOperatorCountReached(_) => {
+                    <MaxOperatorCountReached as alloy_sol_types::SolError>::SELECTOR
+                }
                 Self::MaxQuorumsReached(_) => {
                     <MaxQuorumsReached as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -11796,6 +12433,9 @@ pub mod ISlashingRegistryCoordinator {
                     <OnlyAllocationManager as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::OnlyEjector(_) => <OnlyEjector as alloy_sol_types::SolError>::SELECTOR,
+                Self::OperatorNotRegistered(_) => {
+                    <OperatorNotRegistered as alloy_sol_types::SolError>::SELECTOR
+                }
                 Self::QuorumDoesNotExist(_) => {
                     <QuorumDoesNotExist as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -11861,6 +12501,32 @@ pub mod ISlashingRegistryCoordinator {
                         .map(ISlashingRegistryCoordinatorErrors::OnlyAllocationManager)
                     }
                     OnlyAllocationManager
+                },
+                {
+                    fn OperatorNotRegistered(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<ISlashingRegistryCoordinatorErrors>
+                    {
+                        <OperatorNotRegistered as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(ISlashingRegistryCoordinatorErrors::OperatorNotRegistered)
+                    }
+                    OperatorNotRegistered
+                },
+                {
+                    fn LookAheadPeriodTooLong(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<ISlashingRegistryCoordinatorErrors>
+                    {
+                        <LookAheadPeriodTooLong as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(ISlashingRegistryCoordinatorErrors::LookAheadPeriodTooLong)
+                    }
+                    LookAheadPeriodTooLong
                 },
                 {
                     fn CannotReregisterYet(
@@ -12003,6 +12669,19 @@ pub mod ISlashingRegistryCoordinator {
                     NotSorted
                 },
                 {
+                    fn MaxOperatorCountReached(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<ISlashingRegistryCoordinatorErrors>
+                    {
+                        <MaxOperatorCountReached as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(ISlashingRegistryCoordinatorErrors::MaxOperatorCountReached)
+                    }
+                    MaxOperatorCountReached
+                },
+                {
                     fn NotRegisteredForQuorum(
                         data: &[u8],
                         validate: bool,
@@ -12128,6 +12807,16 @@ pub mod ISlashingRegistryCoordinator {
                         inner,
                     )
                 }
+                Self::LookAheadPeriodTooLong(inner) => {
+                    <LookAheadPeriodTooLong as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::MaxOperatorCountReached(inner) => {
+                    <MaxOperatorCountReached as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::MaxQuorumsReached(inner) => {
                     <MaxQuorumsReached as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
@@ -12151,6 +12840,11 @@ pub mod ISlashingRegistryCoordinator {
                 }
                 Self::OnlyEjector(inner) => {
                     <OnlyEjector as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                }
+                Self::OperatorNotRegistered(inner) => {
+                    <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::QuorumDoesNotExist(inner) => {
                     <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_encoded_size(
@@ -12208,6 +12902,16 @@ pub mod ISlashingRegistryCoordinator {
                         inner, out,
                     )
                 }
+                Self::LookAheadPeriodTooLong(inner) => {
+                    <LookAheadPeriodTooLong as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner, out,
+                    )
+                }
+                Self::MaxOperatorCountReached(inner) => {
+                    <MaxOperatorCountReached as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner, out,
+                    )
+                }
                 Self::MaxQuorumsReached(inner) => {
                     <MaxQuorumsReached as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
@@ -12228,6 +12932,9 @@ pub mod ISlashingRegistryCoordinator {
                 Self::OnlyEjector(inner) => {
                     <OnlyEjector as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
+                Self::OperatorNotRegistered(inner) => {
+                    <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
+                }
                 Self::QuorumDoesNotExist(inner) => {
                     <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
@@ -12241,13 +12948,26 @@ pub mod ISlashingRegistryCoordinator {
     }
     ///Container for all the [`ISlashingRegistryCoordinator`](self) events.
     pub enum ISlashingRegistryCoordinatorEvents {
+        #[allow(missing_docs)]
+        AVSUpdated(AVSUpdated),
+        #[allow(missing_docs)]
         ChurnApproverUpdated(ChurnApproverUpdated),
+        #[allow(missing_docs)]
+        EjectionCooldownUpdated(EjectionCooldownUpdated),
+        #[allow(missing_docs)]
         EjectorUpdated(EjectorUpdated),
+        #[allow(missing_docs)]
         OperatorDeregistered(OperatorDeregistered),
+        #[allow(missing_docs)]
         OperatorRegistered(OperatorRegistered),
+        #[allow(missing_docs)]
         OperatorSetParamsUpdated(OperatorSetParamsUpdated),
+        #[allow(missing_docs)]
         OperatorSocketUpdate(OperatorSocketUpdate),
+        #[allow(missing_docs)]
         QuorumBlockNumberUpdated(QuorumBlockNumberUpdated),
+        #[allow(missing_docs)]
+        QuorumCreated(QuorumCreated),
     }
     #[automatically_derived]
     impl ISlashingRegistryCoordinatorEvents {
@@ -12284,6 +13004,21 @@ pub mod ISlashingRegistryCoordinator {
                 106u8, 33u8, 192u8, 202u8, 162u8, 77u8, 201u8,
             ],
             [
+                151u8, 112u8, 243u8, 202u8, 223u8, 220u8, 187u8, 111u8, 147u8, 175u8, 147u8, 94u8,
+                134u8, 4u8, 113u8, 17u8, 89u8, 12u8, 55u8, 104u8, 39u8, 29u8, 35u8, 126u8, 74u8,
+                43u8, 192u8, 184u8, 116u8, 190u8, 214u8, 147u8,
+            ],
+            [
+                163u8, 72u8, 53u8, 188u8, 43u8, 103u8, 62u8, 195u8, 127u8, 207u8, 21u8, 145u8,
+                169u8, 18u8, 149u8, 177u8, 99u8, 252u8, 46u8, 24u8, 30u8, 78u8, 164u8, 231u8, 51u8,
+                190u8, 178u8, 125u8, 225u8, 206u8, 172u8, 76u8,
+            ],
+            [
+                167u8, 122u8, 145u8, 190u8, 167u8, 182u8, 217u8, 90u8, 142u8, 181u8, 165u8, 72u8,
+                120u8, 161u8, 217u8, 227u8, 200u8, 117u8, 226u8, 108u8, 134u8, 169u8, 183u8, 14u8,
+                52u8, 32u8, 197u8, 197u8, 219u8, 25u8, 59u8, 98u8,
+            ],
+            [
                 232u8, 230u8, 140u8, 239u8, 28u8, 58u8, 118u8, 30u8, 215u8, 190u8, 126u8, 132u8,
                 99u8, 163u8, 117u8, 242u8, 127u8, 123u8, 195u8, 53u8, 229u8, 24u8, 36u8, 34u8,
                 60u8, 172u8, 206u8, 99u8, 110u8, 197u8, 195u8, 254u8,
@@ -12298,18 +13033,30 @@ pub mod ISlashingRegistryCoordinator {
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for ISlashingRegistryCoordinatorEvents {
         const NAME: &'static str = "ISlashingRegistryCoordinatorEvents";
-        const COUNT: usize = 7usize;
+        const COUNT: usize = 10usize;
         fn decode_raw_log(
             topics: &[alloy_sol_types::Word],
             data: &[u8],
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
             match topics.first().copied() {
+                Some(<AVSUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                    <AVSUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
+                        topics, data, validate,
+                    )
+                    .map(Self::AVSUpdated)
+                }
                 Some(<ChurnApproverUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <ChurnApproverUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
                         topics, data, validate,
                     )
                     .map(Self::ChurnApproverUpdated)
+                }
+                Some(<EjectionCooldownUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                    <EjectionCooldownUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
+                        topics, data, validate,
+                    )
+                    .map(Self::EjectionCooldownUpdated)
                 }
                 Some(<EjectorUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <EjectorUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -12347,6 +13094,12 @@ pub mod ISlashingRegistryCoordinator {
                     )
                     .map(Self::QuorumBlockNumberUpdated)
                 }
+                Some(<QuorumCreated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                    <QuorumCreated as alloy_sol_types::SolEvent>::decode_raw_log(
+                        topics, data, validate,
+                    )
+                    .map(Self::QuorumCreated)
+                }
                 _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
                     name: <Self as alloy_sol_types::SolEventInterface>::NAME,
                     log: alloy_sol_types::private::Box::new(
@@ -12363,7 +13116,13 @@ pub mod ISlashingRegistryCoordinator {
     impl alloy_sol_types::private::IntoLogData for ISlashingRegistryCoordinatorEvents {
         fn to_log_data(&self) -> alloy_sol_types::private::LogData {
             match self {
+                Self::AVSUpdated(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
                 Self::ChurnApproverUpdated(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
+                Self::EjectionCooldownUpdated(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::EjectorUpdated(inner) => {
@@ -12382,13 +13141,22 @@ pub mod ISlashingRegistryCoordinator {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::QuorumBlockNumberUpdated(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
+                Self::QuorumCreated(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
             }
         }
         fn into_log_data(self) -> alloy_sol_types::private::LogData {
             match self {
+                Self::AVSUpdated(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
                 Self::ChurnApproverUpdated(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
+                Self::EjectionCooldownUpdated(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::EjectorUpdated(inner) => {
@@ -12407,6 +13175,9 @@ pub mod ISlashingRegistryCoordinator {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::QuorumBlockNumberUpdated(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
+                Self::QuorumCreated(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
             }
@@ -12807,10 +13578,6 @@ pub mod ISlashingRegistryCoordinator {
         ) -> alloy_contract::SolCallBuilder<T, &P, lastEjectionTimestampCall, N> {
             self.call_builder(&lastEjectionTimestampCall { operator })
         }
-        ///Creates a new call builder for the [`numRegistries`] function.
-        pub fn numRegistries(&self) -> alloy_contract::SolCallBuilder<T, &P, numRegistriesCall, N> {
-            self.call_builder(&numRegistriesCall {})
-        }
         ///Creates a new call builder for the [`pubkeyRegistrationMessageHash`] function.
         pub fn pubkeyRegistrationMessageHash(
             &self,
@@ -12843,13 +13610,6 @@ pub mod ISlashingRegistryCoordinator {
                 operatorSetIds,
                 data,
             })
-        }
-        ///Creates a new call builder for the [`registries`] function.
-        pub fn registries(
-            &self,
-            index: alloy::sol_types::private::primitives::aliases::U256,
-        ) -> alloy_contract::SolCallBuilder<T, &P, registriesCall, N> {
-            self.call_builder(&registriesCall { index })
         }
         ///Creates a new call builder for the [`setAVS`] function.
         pub fn setAVS(
@@ -12952,11 +13712,21 @@ pub mod ISlashingRegistryCoordinator {
         ) -> alloy_contract::Event<T, &P, E, N> {
             alloy_contract::Event::new_sol(&self.provider, &self.address)
         }
+        ///Creates a new event filter for the [`AVSUpdated`] event.
+        pub fn AVSUpdated_filter(&self) -> alloy_contract::Event<T, &P, AVSUpdated, N> {
+            self.event_filter::<AVSUpdated>()
+        }
         ///Creates a new event filter for the [`ChurnApproverUpdated`] event.
         pub fn ChurnApproverUpdated_filter(
             &self,
         ) -> alloy_contract::Event<T, &P, ChurnApproverUpdated, N> {
             self.event_filter::<ChurnApproverUpdated>()
+        }
+        ///Creates a new event filter for the [`EjectionCooldownUpdated`] event.
+        pub fn EjectionCooldownUpdated_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, EjectionCooldownUpdated, N> {
+            self.event_filter::<EjectionCooldownUpdated>()
         }
         ///Creates a new event filter for the [`EjectorUpdated`] event.
         pub fn EjectorUpdated_filter(&self) -> alloy_contract::Event<T, &P, EjectorUpdated, N> {
@@ -12991,6 +13761,10 @@ pub mod ISlashingRegistryCoordinator {
             &self,
         ) -> alloy_contract::Event<T, &P, QuorumBlockNumberUpdated, N> {
             self.event_filter::<QuorumBlockNumberUpdated>()
+        }
+        ///Creates a new event filter for the [`QuorumCreated`] event.
+        pub fn QuorumCreated_filter(&self) -> alloy_contract::Event<T, &P, QuorumCreated, N> {
+            self.event_filter::<QuorumCreated>()
         }
     }
 }

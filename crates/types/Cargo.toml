@@ -17,7 +17,6 @@ ethers.workspace = true
 serde_json.workspace = true
 serde.workspace = true
 thiserror.workspace = true
-tokio.workspace = true
 url.workspace = true
 
 num-bigint = "0.4.4"
@@ -25,4 +24,5 @@ regex = "1"
 mime-sniffer = "0.1"
 
 [dev-dependencies]
+tokio.workspace = true
 ark-bn254.workspace = true
