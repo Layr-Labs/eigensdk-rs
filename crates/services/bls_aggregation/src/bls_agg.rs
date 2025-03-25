@@ -331,7 +331,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     let logger = self.logger.clone();
 
                     tokio::spawn(async move {
-                        let _ = BlsAggregatorService::<A>::single_task_aggregator(
+                        let _ = Self::single_task_aggregator(
                             avs_registry_service,
                             metadata,
                             aggregated_response_sender,
@@ -760,7 +760,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     .contains_key(*operator_id)
             })
             .cloned()
-            .collect::<Vec<_>>();
+            .collect();
 
         non_signers_operators_ids.sort();
 
