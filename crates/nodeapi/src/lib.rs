@@ -236,6 +236,8 @@ mod tests {
             ServiceStatus::Initializing,
         );
 
+        let node_api = Arc::new(Mutex::new(node_api));
+
         let app = App::new()
             .state(node_api.clone())
             .route("/eigen/node", web::get().to(node_info));
@@ -258,7 +260,7 @@ mod tests {
     async fn test_list_services_handler() {
         let tests = vec![
             (
-                NodeApi::new("test_avs", "v0.0.1"),
+                Arc::new(Mutex::new(NodeApi::new("test_avs", "v0.0.1"))),
                 http::StatusCode::OK,
                 "{\"services\":[]}",
             ),
@@ -271,7 +273,7 @@ mod tests {
                         "testServiceDescription",
                         ServiceStatus::Up,
                     );
-                    node_api
+                    Arc::new(Mutex::new(node_api))
                 },
                 http::StatusCode::OK,
                 "{\"services\":[{\"id\":\"testServiceId\",\"name\":\"testServiceName\",\"description\":\"testServiceDescription\",\"status\":\"Up\"}]}",
@@ -291,7 +293,7 @@ mod tests {
                         "testServiceDescription2",
                         ServiceStatus::Down,
                     );
-                    node_api
+                    Arc::new(Mutex::new(node_api))
                 },
                 http::StatusCode::OK,
                 "{\"services\":[{\"id\":\"testServiceId\",\"name\":\"testServiceName\",\"description\":\"testServiceDescription\",\"status\":\"Up\"},{\"id\":\"testServiceId2\",\"name\":\"testServiceName2\",\"description\":\"testServiceDescription2\",\"status\":\"Down\"}]}",
@@ -335,6 +337,8 @@ mod tests {
             "testServiceDescription",
             ServiceStatus::Up,
         );
+
+        let node_api = Arc::new(Mutex::new(node_api));
 
         // Initialize the app with the NodeApi
         let app = test::init_service(App::new().state(node_api.clone()).route(
