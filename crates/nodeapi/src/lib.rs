@@ -419,8 +419,6 @@ mod tests {
             .send()
             .await
             .unwrap();
-
-        println!("{:?}", resp);
         assert_eq!(resp.status(), reqwest::StatusCode::OK);
 
         // Test the /eigen/node/health route
