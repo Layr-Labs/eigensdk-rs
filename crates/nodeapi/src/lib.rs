@@ -101,16 +101,27 @@ impl NodeInfo {
 pub struct NodeApi(Arc<Mutex<NodeInfo>>);
 
 impl NodeApi {
+    /// Creates a new instance of [`NodeApi`].
+    ///
+    /// # Arguments
+    ///
+    /// * `node_info` - A [`NodeInfo`] instance that holds the node information.
+    ///
+    /// # Returns
+    ///
+    /// A new instance of [`NodeApi`] with the provided node information.
+    pub fn new(node_info: NodeInfo) -> Self {
+        Self(Arc::new(Mutex::new(node_info)))
+    }
+
     /// Function to create the Ntex HTTP server
     /// This function sets up the server and routes.
     /// External users can call this function to create and run the server.
-    pub fn create_server(
-        api: Arc<Mutex<NodeInfo>>,
-        ip_port_addr: String,
-    ) -> std::io::Result<ntex::server::Server> {
+    pub fn start_server(&self, ip_port_addr: &str) -> std::io::Result<ntex::server::Server> {
+        let state = Arc::clone(&self.0);
         let server = HttpServer::new(move || {
             App::new()
-                .state(api.clone()) // Use the provided NodeApi instance
+                .state(state.clone()) // Use the provided NodeApi instance
                 .route("/eigen/node", web::get().to(node_info))
                 .route("/eigen/node/health", web::get().to(health_check))
                 .route("/eigen/node/services", web::get().to(list_services))
@@ -119,7 +130,7 @@ impl NodeApi {
                     web::get().to(service_health),
                 )
         })
-        .bind(ip_port_addr.clone())?
+        .bind(ip_port_addr)?
         .run();
         info!("node api server running at port :{}", ip_port_addr);
         Ok(server)
@@ -438,19 +449,19 @@ mod tests {
     #[ntex::test]
     async fn test_create_server() -> std::io::Result<()> {
         // Create a NodeApi instance and register a service
-        let mut node_api = NodeInfo::new("test_node", "v1.0.0");
-        node_api.register_service(
+        let mut node_info = NodeInfo::new("test_node", "v1.0.0");
+        node_info.register_service(
             "test_service",
             "Test Service",
             "Test service description",
             ServiceStatus::Up,
         );
 
-        let st = Arc::new(Mutex::new(node_api));
-
         // Set up a server running on a test address (e.g., 127.0.0.1:8081)
-        let ip_port_addr = "127.0.0.1:8081".to_string();
-        let server = NodeApi::create_server(st, ip_port_addr.clone()).unwrap();
+        let ip_port_addr = "127.0.0.1:8081";
+
+        let node_api = NodeApi::new(node_info);
+        let server = node_api.start_server(ip_port_addr).unwrap();
 
         // Start the server in a background task
         ntex::rt::spawn(server);
