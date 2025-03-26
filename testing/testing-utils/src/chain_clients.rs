@@ -1,16 +1,20 @@
 use alloy::{
     hex::FromHex,
     primitives::{address, keccak256, Address, Bytes, FixedBytes, U256, U8},
-    sol_types::SolValue,
+    sol_types::{SolCall, SolValue},
 };
 use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
 use eigen_common::{get_provider, get_signer};
 use eigen_logging::get_test_logger;
 use std::str::FromStr;
 
+use crate::transaction::wait_transaction;
+use alloy::{primitives::aliases::U96, providers::WalletProvider};
 use eigen_client_avsregistry::{reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter};
+use eigen_crypto_bls::BlsKeyPair;
 use eigen_utils::slashing::{
     core::{
+        allocationmanager::AllocationManager,
         delegationmanager::DelegationManager,
         irewardscoordinator::{
             IRewardsCoordinator,
@@ -19,7 +23,11 @@ use eigen_utils::slashing::{
             },
         },
     },
-    sdk::mockerc20::MockERC20,
+    middleware::registrycoordinator::{
+        ISlashingRegistryCoordinatorTypes::OperatorSetParam, IStakeRegistryTypes::StrategyParams,
+        RegistryCoordinator,
+    },
+    sdk::{mockavsservicemanager::MockAvsServiceManager, mockerc20::MockERC20},
 };
 
 use crate::anvil_constants::{
@@ -294,4 +302,100 @@ pub async fn new_claim(
     assert!(submit_status);
 
     (root, claim)
+}
+
+/// Creates an operator set from an http_endpoint and an avs address
+pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
+    let allocation_manager_addr = get_allocation_manager_address(http_endpoint.to_string()).await;
+    let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
+    let allocation_manager =
+        AllocationManager::new(allocation_manager_addr, default_signer.clone());
+    let registry_coordinator_addr =
+        get_registry_coordinator_address(http_endpoint.to_string()).await;
+    let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+    let service_manager =
+        MockAvsServiceManager::new(service_manager_address, default_signer.clone());
+    service_manager
+        .setAppointee(
+            default_signer.default_signer_address(),
+            allocation_manager_addr,
+            alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+        )
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+    allocation_manager
+        .setAVSRegistrar(avs_address, registry_coordinator_addr)
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    // Create slashable quorum
+    let contract_registry_coordinator =
+        RegistryCoordinator::new(registry_coordinator_addr, default_signer.clone());
+    let operator_set_params = OperatorSetParam {
+        maxOperatorCount: 10,
+        kickBIPsOfOperatorStake: 100,
+        kickBIPsOfTotalStake: 1000,
+    };
+    let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+    service_manager
+        .setAppointee(
+            registry_coordinator_addr,
+            allocation_manager_addr,
+            alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+        )
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+    let strategy_params = StrategyParams {
+        strategy,
+        multiplier: U96::from(1),
+    };
+
+    contract_registry_coordinator
+        .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+}
+
+/// Registers an operator to the received quorum numbers, with a private key to an anvil on the
+/// http_url using the avs_writer
+pub async fn test_register_operator(
+    avs_writer: &AvsRegistryChainWriter,
+    private_key_decimal: String,
+    quorum_nums: Bytes,
+    http_url: String,
+) {
+    let bls_key_pair = BlsKeyPair::new(private_key_decimal).unwrap();
+    let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+
+    // this is set to U256::MAX so that the registry does not take the signature as expired.
+    let signature_expiry = U256::MAX;
+    let tx_hash = avs_writer
+        .register_operator_in_quorum_with_avs_registry_coordinator(
+            bls_key_pair,
+            digest_hash,
+            signature_expiry,
+            quorum_nums.clone(),
+            "".into(),
+        )
+        .await
+        .unwrap();
+
+    let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
+    assert!(tx_status);
 }
