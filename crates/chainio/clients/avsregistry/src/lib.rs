@@ -361,6 +361,73 @@ mod tests {
             new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
         let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
 
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let provider = get_provider(&http_endpoint);
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &provider);
+
+        let rewards_duration = rewards_coordinator
+            .MAX_REWARDS_DURATION()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        let calculation_interval_seconds = rewards_coordinator
+            .CALCULATION_INTERVAL_SECONDS()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L438
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L485
+        // Calculate the most recent interval start time that is less than the current timestamp
+        // This ensures the reward submission aligns with the contract's time-based requirements
+        let current_timestamp: u32 = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            .try_into()
+            .unwrap();
+        let intervals_since_genesis = current_timestamp / calculation_interval_seconds;
+        let start_timestamp = (intervals_since_genesis + 1) * calculation_interval_seconds;
+
+        let strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let (_, token) = el_chain_reader
+            .get_strategy_and_underlying_token(strategy_address)
+            .await
+            .unwrap();
+
+        let strategies_and_multipliers = vec![StrategyAndMultiplier {
+            strategy: strategy_address,
+            multiplier: U96::from(1),
+        }];
+        let rewards_submissions = vec![RewardsSubmission {
+            strategiesAndMultipliers: strategies_and_multipliers,
+            token,
+            amount: U256::from(1_000),
+            startTimestamp: start_timestamp,
+            duration: rewards_duration,
+        }];
+
+        let tx_hash = avs_writer
+            .create_avs_rewards_submission(rewards_submissions)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
         // Check claimer balance at strategy before claim
         let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
 
