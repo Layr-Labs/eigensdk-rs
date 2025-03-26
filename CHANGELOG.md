@@ -29,34 +29,34 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 * Changing NodeApi to allow concurrent modifications of the internal state of the node in PR [401](https://github.com/Layr-Labs/eigensdk-rs/pull/401).
 
-For example:
+  For example:
 
-``` rust
-let mut node_info = NodeInfo::new("test_avs", "v0.0.1");
+  ``` rust
+    let mut node_info = NodeInfo::new("test_avs", "v0.0.1");
 
-// Register a service to the NodeApi
-node_info.register_service(
-    "testServiceId",
-    "testServiceName",
-    "testServiceDescription",
-    ServiceStatus::Up,
-);
+    // Register a service to the NodeApi
+    node_info.register_service(
+        "testServiceId",
+        "testServiceName",
+        "testServiceDescription",
+        ServiceStatus::Up,
+    );
 
-let state = Arc::new(Mutex::new(node_info));
-```
+    let state = Arc::new(Mutex::new(node_info));
+  ```
 
-and then, you can modify the state (the innner scope is meant only to release the lock):
+  and then, you can modify the state (the innner scope is meant only to release the lock):
 
-``` rust
-{
-    let mut state_inner = state.lock().unwrap();
-    state_inner
-        .update_service_status("testServiceId", ServiceStatus::Down)
-        .unwrap();
+  ``` rust
+    {
+        let mut state_inner = state.lock().unwrap();
+        state_inner
+            .update_service_status("testServiceId", ServiceStatus::Down)
+            .unwrap();
 
-    // release the lock
-}
-```
+        // release the lock
+    }
+  ```
 
 ## [0.5.0] - 2025-03-18
 
