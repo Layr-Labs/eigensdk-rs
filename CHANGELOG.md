@@ -27,6 +27,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Other Changes
 
+* added rewards utilities integration test by @maximopalopoli in [#404](https://github.com/Layr-Labs/eigensdk-rs/pull/404)
+
 ## [0.5.0] - 2025-03-18
 
 ### Security 🔒
