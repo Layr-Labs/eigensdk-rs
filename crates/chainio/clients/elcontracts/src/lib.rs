@@ -315,6 +315,6 @@ mod tests {
         let balance_after_claim = token.balanceOf(FIRST_ADDRESS).call().await.unwrap()._0;
 
         println!("{}", balance_after_claim);
-        assert!(balance_after_claim == initial_balance+rewards_amount);
+        assert!(balance_after_claim == initial_balance + rewards_amount);
     }
 }
