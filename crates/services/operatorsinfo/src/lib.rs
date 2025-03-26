@@ -13,7 +13,7 @@
 //!
 //! When using the [`OperatorInfoServiceInMemory`] struct, you can initialize the service by calling the
 //! [`new`] method. This method returns a tuple of the service and a channel to receive errors from the service. Also,
-//! it create a background task to process the [`OperatorsInfoMessage`].
+//! it create a background task to process the `OperatorsInfoMessage`.
 //!
 //! ```rust
 //! let operator_info_service = OperatorInfoServiceInMemory::new(logger, avs_registry_reader, ws).await.unwrap();
@@ -37,14 +37,22 @@
 //! });
 //! ```
 //! To query past operator registration events and fill the database, you can call the [`query_past_registered_operator_events_and_fill_db`] method.
-//! This function will send a [`OperatorsInfoMessage`] to the service channel and store the data in [`OperatorState`].
+//! This function will send a `OperatorsInfoMessage` to the service channel and store the data in `OperatorState`.
 //!
 //! ```rust
 //! let _ = operators_info_service_in_memory
 //!     .query_past_registered_operator_events_and_fill_db(0, end_block)
 //!     .await;
 //! ```
+//!
+//! [`OperatorInfoServiceInMemory`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory
+//! [`new`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::new()
+//! [`start_service`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::start_service()
+//! [`query_past_registered_operator_events_and_fill_db`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::query_past_registered_operator_events_and_fill_db()
+//! [`NEW_PUBKEY_REGISTRATION_EVENT`]: eigen_common::NEW_PUBKEY_REGISTRATION_EVENT
+//! [`OPERATOR_SOCKET_UPDATE`]: eigen_common::OPERATOR_SOCKET_UPDATE
 
+// NOT WORKING:[`AvsRegistryServiceChainCaller`]: eigen_services_operatorsinfo::chaincaller::AvsRegistryServiceChainCaller
 #![doc(
     html_logo_url = "https://github.com/Layr-Labs/eigensdk-rs/assets/91280922/bd13caec-3c00-4afc-839a-b83d2890beb5",
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
