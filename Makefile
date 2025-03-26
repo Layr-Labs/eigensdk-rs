@@ -58,7 +58,7 @@ lint:
 
 .PHONY: docs
 docs:
-	cargo doc --workspace --no-deps --open
+	cargo doc --features docs --workspace --no-deps --open
 
 .PHONY: copy-env
 copy-env:

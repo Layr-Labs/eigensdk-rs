@@ -115,7 +115,7 @@
 //! The following diagram shows the sequence of events when a user creates the BLS Aggregator Service, starts the service, and then initializes a task. The service processes two signatures from the operators and then aggregates them into a single aggregated signature.
 //!
 //! <pre>
-#![doc = mermaid!("../diagram/sequence-bls.mmd")]
+#![cfg_attr(feature = "docs", doc = simple_mermaid::mermaid!("../diagram/sequence-bls.mmd"))]
 //! </pre>
 //!
 //! ## Testing
@@ -135,4 +135,3 @@ pub mod bls_agg;
 mod bls_agg_test;
 pub mod bls_aggregation_service_error;
 pub mod bls_aggregation_service_response;
-use simple_mermaid::mermaid;
