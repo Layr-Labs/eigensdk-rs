@@ -35,15 +35,14 @@ pub struct NodeService {
 }
 
 #[derive(Clone, Deserialize)]
-pub struct NodeApi {
+pub struct NodeInfo {
     node_name: String,
     node_version: String,
     health: NodeHealth,
     services: Vec<NodeService>,
 }
 
-#[allow(unused)]
-impl NodeApi {
+impl NodeInfo {
     /// Creates a new instance of [`NodeApi`].
     ///
     /// # Arguments
@@ -64,11 +63,55 @@ impl NodeApi {
         }
     }
 
+    /// Add a service to the node
+    pub fn register_service(
+        &mut self,
+        id: &str,
+        name: &str,
+        description: &str,
+        status: ServiceStatus,
+    ) {
+        self.services.push(NodeService {
+            id: id.to_string(),
+            name: name.to_string(),
+            description: description.to_string(),
+            status,
+        });
+    }
+
+    pub fn update_service_status(
+        &mut self,
+        service_id: &str,
+        status: ServiceStatus,
+    ) -> Result<(), NodeApiError> {
+        for service in self.services.iter_mut() {
+            if service.id == service_id {
+                service.status = status;
+                return Ok(());
+            }
+        }
+
+        Err(NodeApiError::ServiceIdNotFound(service_id.to_string()))
+    }
+
+    pub fn deregister_service(&mut self, service_id: &str) -> Result<(), NodeApiError> {
+        if let Some(index) = self.services.iter().position(|s| s.id == service_id) {
+            self.services.remove(index);
+            return Ok(());
+        }
+        Err(NodeApiError::ServiceIdNotFound(service_id.to_string()))
+    }
+}
+
+#[derive(Clone)]
+pub struct NodeApi(Arc<Mutex<NodeInfo>>);
+
+impl NodeApi {
     /// Function to create the Ntex HTTP server
     /// This function sets up the server and routes.
     /// External users can call this function to create and run the server.
     pub fn create_server(
-        api: Arc<Mutex<Self>>,
+        api: Arc<Mutex<NodeInfo>>,
         ip_port_addr: String,
     ) -> std::io::Result<ntex::server::Server> {
         let server = HttpServer::new(move || {
@@ -95,7 +138,8 @@ impl NodeApi {
     ///
     /// * `new_health` - The new health status to be set for the node.
     pub fn update_health(&mut self, new_health: NodeHealth) {
-        self.health = new_health;
+        let mut info = self.0.lock().unwrap();
+        info.health = new_health;
     }
 
     /// Registers a new service with the node.
@@ -112,14 +156,13 @@ impl NodeApi {
         name: &str,
         description: &str,
         status: ServiceStatus,
-    ) {
-        let mut services = &mut self.services;
-        services.push(NodeService {
-            id: id.to_string(),
-            name: name.to_string(),
-            description: description.to_string(),
-            status,
-        });
+    ) -> Result<(), NodeApiError> {
+        self.0
+            .lock()
+            .map_err(|_| NodeApiError::InternalServerError)?
+            .register_service(id, name, description, status);
+
+        Ok(())
     }
 
     /// Updates the status of a registered service.
@@ -138,15 +181,10 @@ impl NodeApi {
         service_id: &str,
         status: ServiceStatus,
     ) -> Result<(), NodeApiError> {
-        let mut services = &mut self.services;
-        for service in services.iter_mut() {
-            if service.id == service_id {
-                service.status = status;
-                return Ok(());
-            }
-        }
-
-        Err(NodeApiError::ServiceIdNotFound(service_id.to_string()))
+        self.0
+            .lock()
+            .map_err(|_| NodeApiError::InternalServerError)?
+            .update_service_status(service_id, status)
     }
 
     /// Deregisters a service from the node.
@@ -160,16 +198,14 @@ impl NodeApi {
     /// A `Result` which is `Ok(())` if the service was deregistered successfully,
     /// or an `Err` with a message if the service with the specified id was not found.
     pub fn deregister_service(&mut self, service_id: &str) -> Result<(), NodeApiError> {
-        let mut services = &mut self.services;
-        if let Some(index) = services.iter().position(|s| s.id == service_id) {
-            services.remove(index);
-            return Ok(());
-        }
-        Err(NodeApiError::ServiceIdNotFound(service_id.to_string()))
+        self.0
+            .lock()
+            .map_err(|_| NodeApiError::InternalServerError)?
+            .deregister_service(service_id)
     }
 }
 
-async fn node_info(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
+async fn node_info(api: web::types::State<Arc<Mutex<NodeInfo>>>) -> impl Responder {
     let data = match api.lock() {
         Ok(guard) => guard,
         Err(err) => {
@@ -185,7 +221,7 @@ async fn node_info(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responde
     HttpResponse::Ok().json(&response)
 }
 
-async fn health_check(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
+async fn health_check(api: web::types::State<Arc<Mutex<NodeInfo>>>) -> impl Responder {
     let data = match api.lock() {
         Ok(guard) => guard,
         Err(err) => {
@@ -202,7 +238,7 @@ async fn health_check(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Respo
     }
 }
 
-async fn list_services(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Responder {
+async fn list_services(api: web::types::State<Arc<Mutex<NodeInfo>>>) -> impl Responder {
     let data = match api.lock() {
         Ok(guard) => guard,
         Err(err) => {
@@ -215,7 +251,7 @@ async fn list_services(api: web::types::State<Arc<Mutex<NodeApi>>>) -> impl Resp
 }
 
 async fn service_health(
-    api: web::types::State<Arc<Mutex<NodeApi>>>,
+    api: web::types::State<Arc<Mutex<NodeInfo>>>,
     path: web::types::Path<String>,
 ) -> impl Responder {
     let service_id = path.into_inner();
@@ -248,19 +284,18 @@ mod tests {
 
     #[tokio::test]
     async fn test_node_handler() {
-        let mut node_api = NodeApi::new("test_avs", "v0.0.1");
-        node_api.register_service(
+        let mut node_info = NodeInfo::new("test_avs", "v0.0.1");
+        node_info.register_service(
             "test_service_id",
             "test_service_name",
             "test_service_description",
             ServiceStatus::Initializing,
         );
-
-        let node_api = Arc::new(Mutex::new(node_api));
+        let state = Arc::new(Mutex::new(node_info));
 
         let app = App::new()
-            .state(node_api.clone())
-            .route("/eigen/node", web::get().to(node_info));
+            .state(state.clone())
+            .route("/eigen/node", web::get().to(super::node_info));
         let app = test::init_service(app).await;
 
         let req = test::TestRequest::get().uri("/eigen/node").to_request();
@@ -280,13 +315,13 @@ mod tests {
     async fn test_list_services_handler() {
         let tests = vec![
             (
-                Arc::new(Mutex::new(NodeApi::new("test_avs", "v0.0.1"))),
+                Arc::new(Mutex::new(NodeInfo::new("test_avs", "v0.0.1"))),
                 http::StatusCode::OK,
                 "{\"services\":[]}",
             ),
             (
                 {
-                    let mut node_api = NodeApi::new("test_avs", "v0.0.1");
+                    let mut node_api = NodeInfo::new("test_avs", "v0.0.1");
                     node_api.register_service(
                         "testServiceId",
                         "testServiceName",
@@ -300,20 +335,20 @@ mod tests {
             ),
             (
                 {
-                    let mut node_api = NodeApi::new("test_avs", "v0.0.1");
-                    node_api.register_service(
+                    let mut node_info = NodeInfo::new("test_avs", "v0.0.1");
+                    node_info.register_service(
                         "testServiceId",
                         "testServiceName",
                         "testServiceDescription",
                         ServiceStatus::Up,
                     );
-                    node_api.register_service(
+                    node_info.register_service(
                         "testServiceId2",
                         "testServiceName2",
                         "testServiceDescription2",
                         ServiceStatus::Down,
                     );
-                    Arc::new(Mutex::new(node_api))
+                    Arc::new(Mutex::new(node_info))
                 },
                 http::StatusCode::OK,
                 "{\"services\":[{\"id\":\"testServiceId\",\"name\":\"testServiceName\",\"description\":\"testServiceDescription\",\"status\":\"Up\"},{\"id\":\"testServiceId2\",\"name\":\"testServiceName2\",\"description\":\"testServiceDescription2\",\"status\":\"Down\"}]}",
@@ -348,7 +383,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_service_health_handler() {
-        let mut node_api = NodeApi::new("test_avs", "v0.0.1");
+        let mut node_api = NodeInfo::new("test_avs", "v0.0.1");
 
         // Register a service to the NodeApi
         node_api.register_service(
@@ -389,7 +424,7 @@ mod tests {
     #[ntex::test]
     async fn test_create_server() -> std::io::Result<()> {
         // Create a NodeApi instance and register a service
-        let mut node_api = NodeApi::new("test_node", "v1.0.0");
+        let mut node_api = NodeInfo::new("test_node", "v1.0.0");
         node_api.register_service(
             "test_service",
             "Test Service",
