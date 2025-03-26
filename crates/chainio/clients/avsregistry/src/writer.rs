@@ -1042,49 +1042,103 @@ impl AvsRegistryChainWriter {
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
-    use crate::test_utils::{
-        build_avs_registry_chain_reader, build_avs_registry_chain_writer, create_operator_set,
-        test_deregister_operator, test_register_operator,
-    };
     use alloy::primitives::{address, aliases::U96, Address, Bytes, FixedBytes, U256};
     use alloy::sol_types::SolCall;
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
-    use eigen_testing_utils::anvil_constants::OPERATOR_BLS_KEY_2;
-    use eigen_testing_utils::anvil_constants::SECOND_PRIVATE_KEY;
-    use eigen_testing_utils::anvil_constants::THIRD_ADDRESS;
-    use eigen_testing_utils::anvil_constants::THIRD_PRIVATE_KEY;
     use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, get_erc20_mock_strategy, get_rewards_coordinator_address,
-        get_service_manager_address,
+        get_allocation_manager_address, get_erc20_mock_strategy, get_registry_coordinator_address,
+        get_rewards_coordinator_address, get_service_manager_address,
     };
     use eigen_testing_utils::anvil_constants::{
         FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
-        SECOND_ADDRESS,
+        OPERATOR_BLS_KEY_2, SECOND_ADDRESS, SECOND_PRIVATE_KEY, THIRD_ADDRESS, THIRD_PRIVATE_KEY,
+    };
+    use eigen_testing_utils::chain_clients::{
+        build_avs_registry_chain_reader, create_operator_set,
     };
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::slashing::core::allocationmanager::AllocationManager;
-    use eigen_utils::slashing::core::irewardscoordinator::IRewardsCoordinator;
-    use eigen_utils::slashing::middleware::registrycoordinator::{
-        ISlashingRegistryCoordinatorTypes::OperatorSetParam, RegistryCoordinator,
+    use eigen_utils::slashing::core::{
+        allocationmanager::AllocationManager, irewardscoordinator::IRewardsCoordinator,
     };
-    use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
-    use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorReward;
-    use eigen_utils::slashing::middleware::servicemanagerbase::{
-        IRewardsCoordinatorTypes::RewardsSubmission,
-        IRewardsCoordinatorTypes::StrategyAndMultiplier, ServiceManagerBase,
+    use eigen_utils::slashing::middleware::{
+        registrycoordinator::{
+            ISlashingRegistryCoordinatorTypes::OperatorSetParam, RegistryCoordinator,
+        },
+        servicemanagerbase::{
+            IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission,
+            IRewardsCoordinatorTypes::OperatorReward, IRewardsCoordinatorTypes::RewardsSubmission,
+            IRewardsCoordinatorTypes::StrategyAndMultiplier, ServiceManagerBase,
+        },
+        stakeregistry::{IStakeRegistryTypes::StrategyParams, StakeRegistry},
     };
-    use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
-    use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
+
+    async fn build_avs_registry_chain_writer(
+        http_endpoint: String,
+        private_key: String,
+    ) -> AvsRegistryChainWriter {
+        let registry_coordinator_address =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
+        AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            http_endpoint,
+            private_key,
+            registry_coordinator_address,
+            service_manager_addr,
+        )
+        .await
+        .unwrap()
+    }
+
+    /// this function is called from test_avs_writer_methods
+    async fn test_register_operator(
+        avs_writer: &AvsRegistryChainWriter,
+        private_key_decimal: String,
+        quorum_nums: Bytes,
+        http_url: String,
+    ) {
+        let bls_key_pair = BlsKeyPair::new(private_key_decimal).unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+
+        // this is set to U256::MAX so that the registry does not take the signature as expired.
+        let signature_expiry = U256::MAX;
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
+        assert!(tx_status);
+    }
+
+    /// this function is caller from test_avs_writer_methods
+    async fn test_deregister_operator(
+        avs_writer: &AvsRegistryChainWriter,
+        quorum_nums: Bytes,
+        http_url: String,
+    ) {
+        let tx_hash = avs_writer.deregister_operator(quorum_nums).await.unwrap();
+
+        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
+        assert!(tx_status);
+    }
 
     #[tokio::test]
     async fn test_avs_writer_methods() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let bls_key = OPERATOR_BLS_KEY.to_string();
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer =
+        let avs_writer: AvsRegistryChainWriter =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let operator_addr = FIFTH_ADDRESS;
         let quorum_nums = Bytes::from([0]);

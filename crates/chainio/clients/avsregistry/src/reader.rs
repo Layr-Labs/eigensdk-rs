@@ -1133,18 +1133,34 @@ impl AvsRegistryChainReader {
 mod tests {
 
     use super::*;
-    use crate::test_utils::{
-        build_avs_registry_chain_reader, build_avs_registry_chain_writer, test_register_operator,
-    };
     use alloy::primitives::address;
     use eigen_crypto_bls::BlsKeyPair;
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{start_anvil_container, start_m2_anvil_container},
         anvil_constants::{
-            FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
+            get_operator_state_retriever_address, get_registry_coordinator_address, FIFTH_ADDRESS,
+            FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
         },
+        chain_clients::{build_avs_registry_chain_writer, test_register_operator},
         transaction::wait_transaction,
     };
+
+    async fn build_avs_registry_chain_reader(http_endpoint: String) -> AvsRegistryChainReader {
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+
+        AvsRegistryChainReader::new(
+            get_test_logger(),
+            registry_coordinator_addr,
+            operator_state_retriever_address,
+            http_endpoint.to_string(),
+        )
+        .await
+        .unwrap()
+    }
 
     #[tokio::test]
     async fn test_get_quorum_count() {
@@ -1343,9 +1359,11 @@ mod tests {
     async fn test_is_operator_registered() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
 
         let is_registered = avs_reader
-            .is_operator_registered(avs_reader.registry_coordinator_addr)
+            .is_operator_registered(registry_coordinator_addr)
             .await
             .unwrap();
         assert!(!is_registered);
