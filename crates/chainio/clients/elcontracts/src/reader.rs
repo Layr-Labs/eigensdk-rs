@@ -1530,13 +1530,14 @@ pub struct AllocationInfo {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS};
     use alloy::eips::eip1898::BlockNumberOrTag::Number;
     use alloy::primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy::providers::Provider;
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::{
-        anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
+        anvil::start_anvil_container,
+        anvil_constants::{get_avs_directory_address, get_delegation_manager_address},
+        chain_clients::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS},
     };
     use eigen_utils::slashing::core::{
         avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
@@ -1620,8 +1621,8 @@ mod tests {
             .unwrap();
 
         // Using bindings directly to compare with sdk's output
-        let avs_registry_contract =
-            AVSDirectory::new(el_chain_reader.avs_directory, provider.clone());
+        let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
+        let avs_registry_contract = AVSDirectory::new(avs_directory_address, provider.clone());
         let operator_hash_from_bindings = avs_registry_contract
             .calculateOperatorAVSRegistrationDigestHash(operator, avs, salt, expiry)
             .call()
