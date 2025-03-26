@@ -1,4 +1,4 @@
-//! Documentation
+//! Integration test for rewards utilities
 #[cfg(test)]
 pub mod tests {
 

@@ -151,8 +151,12 @@ pub async fn new_claim(
     let encoded_token_leaf = [
         // uint8 internal constant TOKEN_LEAF_SALT = 1;
         U8::from(1).to_be_bytes_vec(),
-        token_leaves[0].token.abi_encode_packed(),
-        token_leaves[0].cumulativeEarnings.abi_encode_packed(),
+        token_leaves.first().unwrap().token.abi_encode_packed(),
+        token_leaves
+            .first()
+            .unwrap()
+            .cumulativeEarnings
+            .abi_encode_packed(),
     ]
     .concat();
     let earner_token_root = keccak256(encoded_token_leaf);
