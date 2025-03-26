@@ -64,13 +64,7 @@ impl NodeInfo {
     }
 
     /// Add a service to the node
-    pub fn register_service(
-        &mut self,
-        id: &str,
-        name: &str,
-        description: &str,
-        status: ServiceStatus,
-    ) {
+    fn register_service(&mut self, id: &str, name: &str, description: &str, status: ServiceStatus) {
         self.services.push(NodeService {
             id: id.to_string(),
             name: name.to_string(),
@@ -79,7 +73,7 @@ impl NodeInfo {
         });
     }
 
-    pub fn update_service_status(
+    fn update_service_status(
         &mut self,
         service_id: &str,
         status: ServiceStatus,
@@ -94,7 +88,7 @@ impl NodeInfo {
         Err(NodeApiError::ServiceIdNotFound(service_id.to_string()))
     }
 
-    pub fn deregister_service(&mut self, service_id: &str) -> Result<(), NodeApiError> {
+    fn deregister_service(&mut self, service_id: &str) -> Result<(), NodeApiError> {
         if let Some(index) = self.services.iter().position(|s| s.id == service_id) {
             self.services.remove(index);
             return Ok(());
