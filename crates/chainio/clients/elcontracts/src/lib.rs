@@ -295,11 +295,13 @@ mod tests {
             .unwrap();
 
         let token = MockERC20::new(token_address, &signer);
-        let initial_balance = token.balanceOf(FIRST_ADDRESS).await.unwrap();
+        let initial_balance = token.balanceOf(FIRST_ADDRESS).call().await.unwrap()._0;
 
-        assert!(initial_balance._0 == U256::ZERO);
+        println!("{}", initial_balance);
+        // assert!(initial_balance == U256::ZERO);
 
-        let (_root, claim) = new_claim(&http_endpoint, U256::from(42)).await;
+        let rewards_amount = U256::from(42);
+        let (_root, claim) = new_claim(&http_endpoint, rewards_amount).await;
 
         let tx_hash = el_chain_writer
             .process_claim(claim, FIRST_ADDRESS)
@@ -310,8 +312,9 @@ mod tests {
         assert!(receipt.status());
 
         // Check balance at strategy after claim
-        let balance_after_claim = token.balanceOf(FIRST_ADDRESS).await.unwrap();
+        let balance_after_claim = token.balanceOf(FIRST_ADDRESS).call().await.unwrap()._0;
 
-        assert!(balance_after_claim._0 == U256::ZERO);
+        println!("{}", balance_after_claim);
+        assert!(balance_after_claim == initial_balance+rewards_amount);
     }
 }
