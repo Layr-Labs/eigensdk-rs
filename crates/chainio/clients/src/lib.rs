@@ -1,0 +1,139 @@
+//! Documentation
+#[cfg(test)]
+pub mod tests {
+
+    use alloy::primitives::{aliases::U96, U256};
+    use eigen_common::{get_provider, get_signer};
+    use eigen_testing_utils::{
+        anvil::start_anvil_container,
+        anvil_constants::{
+            get_erc20_mock_strategy, get_rewards_coordinator_address, FIRST_ADDRESS,
+            FIRST_PRIVATE_KEY,
+        },
+        chain_clients::{
+            build_avs_registry_chain_writer, build_el_chain_reader, new_claim, new_test_writer,
+        },
+        transaction::wait_transaction,
+    };
+    use eigen_utils::slashing::{
+        core::irewardscoordinator::IRewardsCoordinator,
+        middleware::servicemanagerbase::IRewardsCoordinatorTypes::{
+            RewardsSubmission, StrategyAndMultiplier,
+        },
+        sdk::mockerc20::MockERC20,
+    };
+
+    #[tokio::test]
+    async fn test_process_claim() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
+
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let provider = get_provider(&http_endpoint);
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &provider);
+
+        let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+
+        let (_, token_address) = el_chain_reader
+            .get_strategy_and_underlying_token(mock_strategy)
+            .await
+            .unwrap();
+
+        let token = MockERC20::new(token_address, &signer);
+        let receipt = token
+            .mint(FIRST_ADDRESS, U256::from(1000))
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        assert!(receipt.status());
+
+        let rewards_duration = rewards_coordinator
+            .MAX_REWARDS_DURATION()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        let calculation_interval_seconds = rewards_coordinator
+            .CALCULATION_INTERVAL_SECONDS()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        let current_timestamp: u32 = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            .try_into()
+            .unwrap();
+        let intervals_since_genesis = current_timestamp / calculation_interval_seconds;
+        let start_timestamp = (intervals_since_genesis + 1) * calculation_interval_seconds;
+
+        let strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let (_, token) = el_chain_reader
+            .get_strategy_and_underlying_token(strategy_address)
+            .await
+            .unwrap();
+
+        let strategies_and_multipliers = vec![StrategyAndMultiplier {
+            strategy: strategy_address,
+            multiplier: U96::from(1),
+        }];
+        let rewards_submissions = vec![RewardsSubmission {
+            strategiesAndMultipliers: strategies_and_multipliers,
+            token,
+            amount: U256::from(1_000),
+            startTimestamp: start_timestamp,
+            duration: rewards_duration,
+        }];
+
+        let tx_hash = avs_writer
+            .create_avs_rewards_submission(rewards_submissions)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        // Check claimer balance at strategy before claim
+        let token = MockERC20::new(token_address, &signer);
+        let initial_balance = token.balanceOf(FIRST_ADDRESS).call().await.unwrap()._0;
+
+        let expected_initial_balance = U256::from_str_radix("10000000000000000000", 10).unwrap();
+        assert!(initial_balance == expected_initial_balance);
+
+        let rewards_amount = U256::from(42);
+        let (_root, claim) = new_claim(&http_endpoint, rewards_amount).await;
+
+        let tx_hash = el_chain_writer
+            .process_claim(claim, FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        // Check balance at strategy after claim
+        let balance_after_claim = token.balanceOf(FIRST_ADDRESS).call().await.unwrap()._0;
+
+        let expected_balance_after_claim = expected_initial_balance + rewards_amount;
+        assert!(balance_after_claim == expected_balance_after_claim);
+    }
+}
