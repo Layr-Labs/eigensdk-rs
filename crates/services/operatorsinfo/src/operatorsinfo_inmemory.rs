@@ -814,6 +814,5 @@ mod tests {
             .await
             .unwrap();
         let y = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        dbg!(y.transaction_hash);
     }
 }
