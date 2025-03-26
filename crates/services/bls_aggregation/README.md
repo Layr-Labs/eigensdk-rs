@@ -166,7 +166,7 @@ sequenceDiagram
 
 ## Testing
 
-To run the integration tests, you can use the following command:
+To run the [integration tests](https://github.com/Layr-Labs/eigensdk-rs/blob/dev/crates/services/bls_aggregation/src/bls_agg_test.rs), you can use the following command:
 
 ```sh
 cargo test --package eigen-services-blsaggregation --lib -- bls_agg_test::integration_test --show-output 
