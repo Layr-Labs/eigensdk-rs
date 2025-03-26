@@ -1,3 +1,3 @@
-# Bls Aggregation Service
+# BLS Aggregation Service
 
-## Example
+Please check [lib.rs](./src/lib.rs) for the full documentation.
