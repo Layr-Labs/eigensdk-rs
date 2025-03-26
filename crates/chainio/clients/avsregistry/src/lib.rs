@@ -370,6 +370,24 @@ mod tests {
         let provider = get_provider(&http_endpoint);
         let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &provider);
 
+        let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+
+        let (_, token_address) = el_chain_reader
+        .get_strategy_and_underlying_token(mock_strategy)
+        .await
+        .unwrap();
+
+        let token = MockERC20::new(token_address, &signer);
+        let receipt = token
+            .mint(FIRST_ADDRESS, U256::from(1000))
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        assert!(receipt.status());
+
         let rewards_duration = rewards_coordinator
             .MAX_REWARDS_DURATION()
             .call()
@@ -384,11 +402,6 @@ mod tests {
             .unwrap()
             ._0;
 
-        // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
-        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L438
-        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L485
-        // Calculate the most recent interval start time that is less than the current timestamp
-        // This ensures the reward submission aligns with the contract's time-based requirements
         let current_timestamp: u32 = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
@@ -429,18 +442,11 @@ mod tests {
         assert!(tx_status);
 
         // Check claimer balance at strategy before claim
-        let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-
-        let (_, token_address) = el_chain_reader
-            .get_strategy_and_underlying_token(mock_strategy)
-            .await
-            .unwrap();
-
         let token = MockERC20::new(token_address, &signer);
         let initial_balance = token.balanceOf(FIRST_ADDRESS).call().await.unwrap()._0;
 
-        println!("{}", initial_balance);
-        // assert!(initial_balance == U256::ZERO);
+        let expected_initial_balance = U256::from_str_radix("10000000000000000000", 10).unwrap();
+        assert!(initial_balance == expected_initial_balance);
 
         let rewards_amount = U256::from(42);
         let (_root, claim) = new_claim(&http_endpoint, rewards_amount).await;
@@ -456,7 +462,7 @@ mod tests {
         // Check balance at strategy after claim
         let balance_after_claim = token.balanceOf(FIRST_ADDRESS).call().await.unwrap()._0;
 
-        println!("{}", balance_after_claim);
-        assert!(balance_after_claim == initial_balance + rewards_amount);
+        let expected_balance_after_claim = expected_initial_balance + rewards_amount;
+        assert!(balance_after_claim == expected_balance_after_claim);
     }
 }
