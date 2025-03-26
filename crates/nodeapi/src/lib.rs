@@ -393,10 +393,10 @@ mod tests {
             ServiceStatus::Up,
         );
 
-        let node_api = Arc::new(Mutex::new(node_api));
+        let state = Arc::new(Mutex::new(node_api));
 
         // Initialize the app with the NodeApi
-        let app = test::init_service(App::new().state(node_api.clone()).route(
+        let app = test::init_service(App::new().state(state.clone()).route(
             "/eigen/node/services/{id}/health",
             web::get().to(service_health),
         ))
@@ -419,6 +419,26 @@ mod tests {
         assert_eq!(resp.status(), http::StatusCode::NOT_FOUND);
         let body = test::read_body(resp).await;
         assert_eq!(body.len(), 0);
+
+        // ------------------------------
+        // The following example shows how to modify the state of the service.
+        // Modifying the service status of a given service to ServiceStatus::Down will
+        // give a 503 Service Unavailable response.
+        {
+            let mut state_inner = state.lock().unwrap();
+            state_inner
+                .update_service_status("testServiceId", ServiceStatus::Down)
+                .unwrap();
+
+            // release the lock
+        }
+        // Test health endpoint
+        let req = test::TestRequest::get()
+            .uri("/eigen/node/services/testServiceId/health")
+            .to_request();
+        let resp = app.call(req).await.unwrap();
+        // Expect 503 SERVICE_UNAVAILABLE
+        assert_eq!(resp.status(), http::StatusCode::SERVICE_UNAVAILABLE);
     }
 
     #[ntex::test]
