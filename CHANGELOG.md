@@ -21,11 +21,42 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Deprecated ⚠️
 
-### Removed 
+### Removed
 
 ### Documentation 📚
 
 ### Other Changes
+
+* Changing NodeApi to allow concurrent modifications of the internal state of the node.
+
+For example:
+
+``` rust
+let mut node_info = NodeInfo::new("test_avs", "v0.0.1");
+
+// Register a service to the NodeApi
+node_info.register_service(
+    "testServiceId",
+    "testServiceName",
+    "testServiceDescription",
+    ServiceStatus::Up,
+);
+
+let state = Arc::new(Mutex::new(node_info));
+```
+
+and then, you can modify the state (the innner scope is meant only to release the lock):
+
+``` rust
+{
+    let mut state_inner = state.lock().unwrap();
+    state_inner
+        .update_service_status("testServiceId", ServiceStatus::Down)
+        .unwrap();
+
+    // release the lock
+}
+```
 
 ## [0.5.0] - 2025-03-18
 
@@ -102,7 +133,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 * Bumped slashing bindings to [v1.3.0-rc.0](https://github.com/Layr-Labs/eigenlayer-contracts/releases/tag/v1.3.0) in [#388](https://github.com/Layr-Labs/eigensdk-rs/pull/388)
 
-  - Added method `is_operator_slashable`.
+  * Added method `is_operator_slashable`.
 
   ```rust
     let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
@@ -119,7 +150,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
     assert!(!is_slashable);
   ```
 
-  - Added method `get_allocated_stake`.
+  * Added method `get_allocated_stake`.
 
   ```rust
     let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
@@ -136,7 +167,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
-  - Added method `get_encumbered_magnitude`.
+  * Added method `get_encumbered_magnitude`.
 
   ```rust
     let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
@@ -153,12 +184,13 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Updated error types in `BlsAggregationServiceError` for channel failures in the BLS Aggregator Service ([#392](https://github.com/Layr-Labs/eigensdk-rs/pull/392)).
   * Before: A generic `ChannelError` was used for both sender and receiver channel failures.
   * After: Distinct errors are now provided:
-    - `SenderError` is returned when the sender channel fails to send a message to the service.
-    - `ReceiverError` is returned when the receiver channel fails to receive a message from the service.
+    * `SenderError` is returned when the sender channel fails to send a message to the service.
+    * `ReceiverError` is returned when the receiver channel fails to receive a message from the service.
 
 ### Deprecated ⚠️
 
-### Removed 
+### Removed
+
 * Removed unused empty structs from the library in [#371](https://github.com/Layr-Labs/eigensdk-rs/pull/371)
   * `eigen_client_eth::client::Client`
   * `eigen_services_operatorsinfo::OperatorPubKeysService`
