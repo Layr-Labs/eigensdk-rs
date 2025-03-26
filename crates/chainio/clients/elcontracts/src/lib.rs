@@ -9,6 +9,3 @@
 pub mod error;
 pub mod reader;
 pub mod writer;
-
-#[cfg(test)]
-pub(crate) mod test_utils {}

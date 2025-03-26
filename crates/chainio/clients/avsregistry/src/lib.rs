@@ -17,6 +17,3 @@ pub mod error;
 
 /// Fake avs registry module
 pub mod fake_reader;
-
-#[cfg(test)]
-pub(crate) mod test_utils {}
