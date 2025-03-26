@@ -121,7 +121,7 @@ url = "2.5"
 #misc
 rust-bls-bn254 = { version = "0.2.1", features = ["std"] }
 uuid = { version = "1.11", features = ["v4"] }
-
+simple-mermaid = "0.2.0"
 
 #misc
 parking_lot = "0.12"
