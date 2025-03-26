@@ -194,16 +194,38 @@ pub(crate) mod test_utils {
 mod tests {
 
     use crate::test_utils::build_avs_registry_chain_writer;
-    use alloy::{primitives::{aliases::U96, keccak256, FixedBytes, U256, U8}, sol_types::SolValue};
+    use alloy::{
+        primitives::{aliases::U96, keccak256, FixedBytes, U256, U8},
+        sol_types::SolValue,
+    };
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_common::{get_provider, get_signer};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
-        anvil_constants::{get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address, get_erc20_mock_strategy, get_registry_coordinator_address, get_rewards_coordinator_address, get_strategy_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY},
+        anvil_constants::{
+            get_allocation_manager_address, get_avs_directory_address,
+            get_delegation_manager_address, get_erc20_mock_strategy,
+            get_registry_coordinator_address, get_rewards_coordinator_address,
+            get_strategy_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY,
+        },
         transaction::wait_transaction,
     };
-    use eigen_utils::slashing::{core::{delegationmanager::DelegationManager, irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::{EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf}}}, middleware::servicemanagerbase::IRewardsCoordinatorTypes::{RewardsSubmission, StrategyAndMultiplier}, sdk::mockerc20::MockERC20};
+    use eigen_utils::slashing::{
+        core::{
+            delegationmanager::DelegationManager,
+            irewardscoordinator::{
+                IRewardsCoordinator,
+                IRewardsCoordinatorTypes::{
+                    EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
+                },
+            },
+        },
+        middleware::servicemanagerbase::IRewardsCoordinatorTypes::{
+            RewardsSubmission, StrategyAndMultiplier,
+        },
+        sdk::mockerc20::MockERC20,
+    };
 
     async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
         let delegation_manager_address =
@@ -351,7 +373,7 @@ mod tests {
 
         (root, claim)
     }
-    
+
     #[tokio::test]
     async fn test_process_claim() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
@@ -373,9 +395,9 @@ mod tests {
         let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
 
         let (_, token_address) = el_chain_reader
-        .get_strategy_and_underlying_token(mock_strategy)
-        .await
-        .unwrap();
+            .get_strategy_and_underlying_token(mock_strategy)
+            .await
+            .unwrap();
 
         let token = MockERC20::new(token_address, &signer);
         let receipt = token
