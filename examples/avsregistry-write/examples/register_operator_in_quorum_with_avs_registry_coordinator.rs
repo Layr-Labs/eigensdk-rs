@@ -93,9 +93,10 @@ async fn main() -> Result<()> {
     let operator_details = Operator {
         address: wallet.address(),
         delegation_approver_address: wallet.address(),
-        staker_opt_out_window_blocks: 3,
-        metadata_url: Some("eigensdk-rs".to_string()),
-        allocation_delay: 1,
+        metadata_url: "eigensdk-rs".to_string(),
+        allocation_delay: Some(1u32),
+        _deprecated_earnings_receiver_address: None,
+        staker_opt_out_window_blocks: None,
     };
     // Register the address as operator in delegation manager
     let _s = el_writer.register_as_operator(operator_details).await;

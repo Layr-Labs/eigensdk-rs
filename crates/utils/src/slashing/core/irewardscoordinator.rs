@@ -29,9 +29,13 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DistributionRoot {
+        #[allow(missing_docs)]
         pub root: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub rewardsCalculationEndTimestamp: u32,
+        #[allow(missing_docs)]
         pub activatedAt: u32,
+        #[allow(missing_docs)]
         pub disabled: bool,
     }
     #[allow(
@@ -270,7 +274,9 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct EarnerTreeMerkleLeaf {
+        #[allow(missing_docs)]
         pub earner: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub earnerTokenRoot: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -467,14 +473,20 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorDirectedRewardsSubmission {
+        #[allow(missing_docs)]
         pub strategiesAndMultipliers: alloy::sol_types::private::Vec<
             <StrategyAndMultiplier as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorRewards:
             alloy::sol_types::private::Vec<<OperatorReward as alloy::sol_types::SolType>::RustType>,
+        #[allow(missing_docs)]
         pub startTimestamp: u32,
+        #[allow(missing_docs)]
         pub duration: u32,
+        #[allow(missing_docs)]
         pub description: alloy::sol_types::private::String,
     }
     #[allow(
@@ -772,7 +784,9 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorReward {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -967,12 +981,19 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RewardsMerkleClaim {
+        #[allow(missing_docs)]
         pub rootIndex: u32,
+        #[allow(missing_docs)]
         pub earnerIndex: u32,
+        #[allow(missing_docs)]
         pub earnerTreeProof: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub earnerLeaf: <EarnerTreeMerkleLeaf as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub tokenIndices: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub tokenTreeProofs: alloy::sol_types::private::Vec<alloy::sol_types::private::Bytes>,
+        #[allow(missing_docs)]
         pub tokenLeaves: alloy::sol_types::private::Vec<
             <TokenTreeMerkleLeaf as alloy::sol_types::SolType>::RustType,
         >,
@@ -1289,12 +1310,17 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RewardsSubmission {
+        #[allow(missing_docs)]
         pub strategiesAndMultipliers: alloy::sol_types::private::Vec<
             <StrategyAndMultiplier as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub startTimestamp: u32,
+        #[allow(missing_docs)]
         pub duration: u32,
     }
     #[allow(
@@ -1569,7 +1595,9 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyAndMultiplier {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub multiplier: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -1764,7 +1792,9 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct TokenTreeMerkleLeaf {
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub cumulativeEarnings: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -2147,6 +2177,7 @@ interface IRewardsCoordinator {
     error AmountExceedsMax();
     error AmountIsZero();
     error DurationExceedsMax();
+    error DurationIsZero();
     error EarningsNotGreaterThanClaimed();
     error InputArrayLengthMismatch();
     error InputArrayLengthZero();
@@ -2235,6 +2266,7 @@ interface IRewardsCoordinator {
     function setRewardsForAllSubmitter(address _submitter, bool _newValue) external;
     function setRewardsUpdater(address _rewardsUpdater) external;
     function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) external;
+    function version() external view returns (string memory);
 }
 ```
 
@@ -3468,6 +3500,19 @@ interface IRewardsCoordinator {
     "stateMutability": "nonpayable"
   },
   {
+    "type": "function",
+    "name": "version",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
     "type": "event",
     "name": "AVSRewardsSubmissionCreated",
     "inputs": [
@@ -4221,6 +4266,11 @@ interface IRewardsCoordinator {
   },
   {
     "type": "error",
+    "name": "DurationIsZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "EarningsNotGreaterThanClaimed",
     "inputs": []
   },
@@ -4402,7 +4452,9 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorSet {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub id: u32,
     }
     #[allow(
@@ -4749,6 +4801,66 @@ pub mod IRewardsCoordinator {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "DurationExceedsMax()";
             const SELECTOR: [u8; 4] = [55u8, 66u8, 231u8, 212u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `DurationIsZero()` and selector `0xcb3f434d`.
+    ```solidity
+    error DurationIsZero();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct DurationIsZero {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<DurationIsZero> for UnderlyingRustTuple<'_> {
+            fn from(value: DurationIsZero) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for DurationIsZero {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for DurationIsZero {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "DurationIsZero()";
+            const SELECTOR: [u8; 4] = [203u8, 63u8, 67u8, 77u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -8571,6 +8683,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CALCULATION_INTERVAL_SECONDSReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -8681,6 +8794,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct GENESIS_REWARDS_TIMESTAMPReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -8791,6 +8905,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MAX_FUTURE_LENGTHReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -8901,6 +9016,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MAX_RETROACTIVE_LENGTHReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -9011,6 +9127,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MAX_REWARDS_DURATIONReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -9121,6 +9238,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct activationDelayReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -9227,6 +9345,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateEarnerLeafHashCall {
+        #[allow(missing_docs)]
         pub leaf:
             <IRewardsCoordinatorTypes::EarnerTreeMerkleLeaf as alloy::sol_types::SolType>::RustType,
     }
@@ -9234,6 +9353,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateEarnerLeafHashReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -9346,6 +9466,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateTokenLeafHashCall {
+        #[allow(missing_docs)]
         pub leaf:
             <IRewardsCoordinatorTypes::TokenTreeMerkleLeaf as alloy::sol_types::SolType>::RustType,
     }
@@ -9353,6 +9474,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct calculateTokenLeafHashReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -9465,6 +9587,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct checkClaimCall {
+        #[allow(missing_docs)]
         pub claim:
             <IRewardsCoordinatorTypes::RewardsMerkleClaim as alloy::sol_types::SolType>::RustType,
     }
@@ -9472,6 +9595,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct checkClaimReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -9584,12 +9708,14 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct claimerForCall {
+        #[allow(missing_docs)]
         pub earner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`claimerFor(address)`](claimerForCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct claimerForReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -9700,6 +9826,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createAVSRewardsSubmissionCall {
+        #[allow(missing_docs)]
         pub rewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::RewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -9825,7 +9952,9 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createOperatorDirectedAVSRewardsSubmissionCall {
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorDirectedRewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -9973,7 +10102,9 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createOperatorDirectedOperatorSetRewardsSubmissionCall {
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub operatorDirectedRewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -10119,6 +10250,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createRewardsForAllEarnersCall {
+        #[allow(missing_docs)]
         pub rewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::RewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -10244,6 +10376,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createRewardsForAllSubmissionCall {
+        #[allow(missing_docs)]
         pub rewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::RewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -10368,13 +10501,16 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct cumulativeClaimedCall {
+        #[allow(missing_docs)]
         pub claimer: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`cumulativeClaimed(address,address)`](cumulativeClaimedCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct cumulativeClaimedReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -10504,6 +10640,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currRewardsCalculationEndTimestampReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -10614,6 +10751,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct defaultOperatorSplitBipsReturn {
+        #[allow(missing_docs)]
         pub _0: u16,
     }
     #[allow(
@@ -10720,6 +10858,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct disableRootCall {
+        #[allow(missing_docs)]
         pub rootIndex: u32,
     }
     ///Container type for the return parameters of the [`disableRoot(uint32)`](disableRootCall) function.
@@ -10838,6 +10977,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentClaimableDistributionRootReturn {
+        #[allow(missing_docs)]
         pub _0: <IRewardsCoordinatorTypes::DistributionRoot as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -10950,6 +11090,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentDistributionRootReturn {
+        #[allow(missing_docs)]
         pub _0: <IRewardsCoordinatorTypes::DistributionRoot as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -11058,12 +11199,14 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getDistributionRootAtIndexCall {
+        #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getDistributionRootAtIndex(uint256)`](getDistributionRootAtIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getDistributionRootAtIndexReturn {
+        #[allow(missing_docs)]
         pub _0: <IRewardsCoordinatorTypes::DistributionRoot as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -11180,6 +11323,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getDistributionRootsLengthReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -11286,13 +11430,16 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorAVSSplitCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorAVSSplit(address,address)`](getOperatorAVSSplitCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorAVSSplitReturn {
+        #[allow(missing_docs)]
         pub _0: u16,
     }
     #[allow(
@@ -11418,12 +11565,14 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorPISplitCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorPISplit(address)`](getOperatorPISplitCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorPISplitReturn {
+        #[allow(missing_docs)]
         pub _0: u16,
     }
     #[allow(
@@ -11534,13 +11683,16 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSetSplitCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`getOperatorSetSplit(address,(address,uint32))`](getOperatorSetSplitCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSetSplitReturn {
+        #[allow(missing_docs)]
         pub _0: u16,
     }
     #[allow(
@@ -11658,12 +11810,14 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getRootIndexFromHashCall {
+        #[allow(missing_docs)]
         pub rootHash: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`getRootIndexFromHash(bytes32)`](getRootIndexFromHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getRootIndexFromHashReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -11774,10 +11928,15 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
+        #[allow(missing_docs)]
         pub initialOwner: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub initialPausedStatus: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub _rewardsUpdater: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _activationDelay: u32,
+        #[allow(missing_docs)]
         pub _defaultSplitBips: u16,
     }
     ///Container type for the return parameters of the [`initialize(address,uint256,address,uint32,uint16)`](initializeCall) function.
@@ -11934,8 +12093,10 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct processClaimCall {
+        #[allow(missing_docs)]
         pub claim:
             <IRewardsCoordinatorTypes::RewardsMerkleClaim as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`processClaim((uint32,uint32,bytes,(address,bytes32),uint32[],bytes[],(address,uint256)[]),address)`](processClaimCall) function.
@@ -12065,9 +12226,11 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct processClaimsCall {
+        #[allow(missing_docs)]
         pub claims: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::RewardsMerkleClaim as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`processClaims((uint32,uint32,bytes,(address,bytes32),uint32[],bytes[],(address,uint256)[])[],address)`](processClaimsCall) function.
@@ -12203,6 +12366,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct rewardsUpdaterReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -12309,6 +12473,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setActivationDelayCall {
+        #[allow(missing_docs)]
         pub _activationDelay: u32,
     }
     ///Container type for the return parameters of the [`setActivationDelay(uint32)`](setActivationDelayCall) function.
@@ -12425,6 +12590,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setClaimerFor_0Call {
+        #[allow(missing_docs)]
         pub claimer: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setClaimerFor(address)`](setClaimerFor_0Call) function.
@@ -12539,7 +12705,9 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setClaimerFor_1Call {
+        #[allow(missing_docs)]
         pub earner: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub claimer: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setClaimerFor(address,address)`](setClaimerFor_1Call) function.
@@ -12669,6 +12837,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setDefaultOperatorSplitCall {
+        #[allow(missing_docs)]
         pub split: u16,
     }
     ///Container type for the return parameters of the [`setDefaultOperatorSplit(uint16)`](setDefaultOperatorSplitCall) function.
@@ -12783,8 +12952,11 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setOperatorAVSSplitCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub split: u16,
     }
     ///Container type for the return parameters of the [`setOperatorAVSSplit(address,address,uint16)`](setOperatorAVSSplitCall) function.
@@ -12921,7 +13093,9 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setOperatorPISplitCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub split: u16,
     }
     ///Container type for the return parameters of the [`setOperatorPISplit(address,uint16)`](setOperatorPISplitCall) function.
@@ -13048,8 +13222,11 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setOperatorSetSplitCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub split: u16,
     }
     ///Container type for the return parameters of the [`setOperatorSetSplit(address,(address,uint32),uint16)`](setOperatorSetSplitCall) function.
@@ -13184,7 +13361,9 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setRewardsForAllSubmitterCall {
+        #[allow(missing_docs)]
         pub _submitter: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _newValue: bool,
     }
     ///Container type for the return parameters of the [`setRewardsForAllSubmitter(address,bool)`](setRewardsForAllSubmitterCall) function.
@@ -13311,6 +13490,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setRewardsUpdaterCall {
+        #[allow(missing_docs)]
         pub _rewardsUpdater: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setRewardsUpdater(address)`](setRewardsUpdaterCall) function.
@@ -13427,7 +13607,9 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct submitRootCall {
+        #[allow(missing_docs)]
         pub root: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub rewardsCalculationEndTimestamp: u32,
     }
     ///Container type for the return parameters of the [`submitRoot(bytes32,uint32)`](submitRootCall) function.
@@ -13549,51 +13731,205 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    /**Function with signature `version()` and selector `0x54fd4d50`.
+    ```solidity
+    function version() external view returns (string memory);
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct versionCall {}
+    ///Container type for the return parameters of the [`version()`](versionCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct versionReturn {
+        #[allow(missing_docs)]
+        pub _0: alloy::sol_types::private::String,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = ();
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = ();
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<versionCall> for UnderlyingRustTuple<'_> {
+                fn from(value: versionCall) -> Self {
+                    ()
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for versionCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {}
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::String,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::String,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<versionReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: versionReturn) -> Self {
+                    (value._0,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for versionReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { _0: tuple.0 }
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for versionCall {
+            type Parameters<'a> = ();
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = versionReturn;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::String,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "version()";
+            const SELECTOR: [u8; 4] = [84u8, 253u8, 77u8, 80u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
     ///Container for all the [`IRewardsCoordinator`](self) function calls.
     pub enum IRewardsCoordinatorCalls {
+        #[allow(missing_docs)]
         CALCULATION_INTERVAL_SECONDS(CALCULATION_INTERVAL_SECONDSCall),
+        #[allow(missing_docs)]
         GENESIS_REWARDS_TIMESTAMP(GENESIS_REWARDS_TIMESTAMPCall),
+        #[allow(missing_docs)]
         MAX_FUTURE_LENGTH(MAX_FUTURE_LENGTHCall),
+        #[allow(missing_docs)]
         MAX_RETROACTIVE_LENGTH(MAX_RETROACTIVE_LENGTHCall),
+        #[allow(missing_docs)]
         MAX_REWARDS_DURATION(MAX_REWARDS_DURATIONCall),
+        #[allow(missing_docs)]
         activationDelay(activationDelayCall),
+        #[allow(missing_docs)]
         calculateEarnerLeafHash(calculateEarnerLeafHashCall),
+        #[allow(missing_docs)]
         calculateTokenLeafHash(calculateTokenLeafHashCall),
+        #[allow(missing_docs)]
         checkClaim(checkClaimCall),
+        #[allow(missing_docs)]
         claimerFor(claimerForCall),
+        #[allow(missing_docs)]
         createAVSRewardsSubmission(createAVSRewardsSubmissionCall),
+        #[allow(missing_docs)]
         createOperatorDirectedAVSRewardsSubmission(createOperatorDirectedAVSRewardsSubmissionCall),
+        #[allow(missing_docs)]
         createOperatorDirectedOperatorSetRewardsSubmission(
             createOperatorDirectedOperatorSetRewardsSubmissionCall,
         ),
+        #[allow(missing_docs)]
         createRewardsForAllEarners(createRewardsForAllEarnersCall),
+        #[allow(missing_docs)]
         createRewardsForAllSubmission(createRewardsForAllSubmissionCall),
+        #[allow(missing_docs)]
         cumulativeClaimed(cumulativeClaimedCall),
+        #[allow(missing_docs)]
         currRewardsCalculationEndTimestamp(currRewardsCalculationEndTimestampCall),
+        #[allow(missing_docs)]
         defaultOperatorSplitBips(defaultOperatorSplitBipsCall),
+        #[allow(missing_docs)]
         disableRoot(disableRootCall),
+        #[allow(missing_docs)]
         getCurrentClaimableDistributionRoot(getCurrentClaimableDistributionRootCall),
+        #[allow(missing_docs)]
         getCurrentDistributionRoot(getCurrentDistributionRootCall),
+        #[allow(missing_docs)]
         getDistributionRootAtIndex(getDistributionRootAtIndexCall),
+        #[allow(missing_docs)]
         getDistributionRootsLength(getDistributionRootsLengthCall),
+        #[allow(missing_docs)]
         getOperatorAVSSplit(getOperatorAVSSplitCall),
+        #[allow(missing_docs)]
         getOperatorPISplit(getOperatorPISplitCall),
+        #[allow(missing_docs)]
         getOperatorSetSplit(getOperatorSetSplitCall),
+        #[allow(missing_docs)]
         getRootIndexFromHash(getRootIndexFromHashCall),
+        #[allow(missing_docs)]
         initialize(initializeCall),
+        #[allow(missing_docs)]
         processClaim(processClaimCall),
+        #[allow(missing_docs)]
         processClaims(processClaimsCall),
+        #[allow(missing_docs)]
         rewardsUpdater(rewardsUpdaterCall),
+        #[allow(missing_docs)]
         setActivationDelay(setActivationDelayCall),
+        #[allow(missing_docs)]
         setClaimerFor_0(setClaimerFor_0Call),
+        #[allow(missing_docs)]
         setClaimerFor_1(setClaimerFor_1Call),
+        #[allow(missing_docs)]
         setDefaultOperatorSplit(setDefaultOperatorSplitCall),
+        #[allow(missing_docs)]
         setOperatorAVSSplit(setOperatorAVSSplitCall),
+        #[allow(missing_docs)]
         setOperatorPISplit(setOperatorPISplitCall),
+        #[allow(missing_docs)]
         setOperatorSetSplit(setOperatorSetSplitCall),
+        #[allow(missing_docs)]
         setRewardsForAllSubmitter(setRewardsForAllSubmitterCall),
+        #[allow(missing_docs)]
         setRewardsUpdater(setRewardsUpdaterCall),
+        #[allow(missing_docs)]
         submitRoot(submitRootCall),
+        #[allow(missing_docs)]
+        version(versionCall),
     }
     #[automatically_derived]
     impl IRewardsCoordinatorCalls {
@@ -13619,6 +13955,7 @@ pub mod IRewardsCoordinator {
             [69u8, 150u8, 2u8, 28u8],
             [75u8, 148u8, 57u8, 96u8],
             [77u8, 24u8, 204u8, 53u8],
+            [84u8, 253u8, 77u8, 80u8],
             [88u8, 186u8, 170u8, 62u8],
             [94u8, 157u8, 131u8, 72u8],
             [99u8, 246u8, 167u8, 152u8],
@@ -13651,7 +13988,7 @@ pub mod IRewardsCoordinator {
     impl alloy_sol_types::SolInterface for IRewardsCoordinatorCalls {
         const NAME: &'static str = "IRewardsCoordinatorCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 41usize;
+        const COUNT: usize = 42usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -13778,6 +14115,7 @@ pub mod IRewardsCoordinator {
                 Self::submitRoot(_) => {
                     <submitRootCall as alloy_sol_types::SolCall>::SELECTOR
                 }
+                Self::version(_) => <versionCall as alloy_sol_types::SolCall>::SELECTOR,
             }
         }
         #[inline]
@@ -13985,6 +14323,16 @@ pub mod IRewardsCoordinator {
                             )
                     }
                     currRewardsCalculationEndTimestamp
+                },
+                {
+                    fn version(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorCalls> {
+                        <versionCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                            .map(IRewardsCoordinatorCalls::version)
+                    }
+                    version
                 },
                 {
                     fn setActivationDelay(
@@ -14512,6 +14860,9 @@ pub mod IRewardsCoordinator {
                 Self::submitRoot(inner) => {
                     <submitRootCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
+                Self::version(inner) => {
+                    <versionCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                }
             }
         }
         #[inline]
@@ -14763,42 +15114,79 @@ pub mod IRewardsCoordinator {
                         out,
                     )
                 }
+                Self::version(inner) => {
+                    <versionCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                }
             }
         }
     }
     ///Container for all the [`IRewardsCoordinator`](self) custom errors.
     pub enum IRewardsCoordinatorErrors {
+        #[allow(missing_docs)]
         AmountExceedsMax(AmountExceedsMax),
+        #[allow(missing_docs)]
         AmountIsZero(AmountIsZero),
+        #[allow(missing_docs)]
         DurationExceedsMax(DurationExceedsMax),
+        #[allow(missing_docs)]
+        DurationIsZero(DurationIsZero),
+        #[allow(missing_docs)]
         EarningsNotGreaterThanClaimed(EarningsNotGreaterThanClaimed),
+        #[allow(missing_docs)]
         InputArrayLengthMismatch(InputArrayLengthMismatch),
+        #[allow(missing_docs)]
         InputArrayLengthZero(InputArrayLengthZero),
+        #[allow(missing_docs)]
         InvalidAddressZero(InvalidAddressZero),
+        #[allow(missing_docs)]
         InvalidCalculationIntervalSecondsRemainder(InvalidCalculationIntervalSecondsRemainder),
+        #[allow(missing_docs)]
         InvalidClaimProof(InvalidClaimProof),
+        #[allow(missing_docs)]
         InvalidDurationRemainder(InvalidDurationRemainder),
+        #[allow(missing_docs)]
         InvalidEarner(InvalidEarner),
+        #[allow(missing_docs)]
         InvalidEarnerLeafIndex(InvalidEarnerLeafIndex),
+        #[allow(missing_docs)]
         InvalidGenesisRewardsTimestampRemainder(InvalidGenesisRewardsTimestampRemainder),
+        #[allow(missing_docs)]
         InvalidOperatorSet(InvalidOperatorSet),
+        #[allow(missing_docs)]
         InvalidRoot(InvalidRoot),
+        #[allow(missing_docs)]
         InvalidRootIndex(InvalidRootIndex),
+        #[allow(missing_docs)]
         InvalidStartTimestampRemainder(InvalidStartTimestampRemainder),
+        #[allow(missing_docs)]
         InvalidTokenLeafIndex(InvalidTokenLeafIndex),
+        #[allow(missing_docs)]
         NewRootMustBeForNewCalculatedPeriod(NewRootMustBeForNewCalculatedPeriod),
+        #[allow(missing_docs)]
         OperatorsNotInAscendingOrder(OperatorsNotInAscendingOrder),
+        #[allow(missing_docs)]
         PreviousSplitPending(PreviousSplitPending),
+        #[allow(missing_docs)]
         RewardsEndTimestampNotElapsed(RewardsEndTimestampNotElapsed),
+        #[allow(missing_docs)]
         RootAlreadyActivated(RootAlreadyActivated),
+        #[allow(missing_docs)]
         RootDisabled(RootDisabled),
+        #[allow(missing_docs)]
         RootNotActivated(RootNotActivated),
+        #[allow(missing_docs)]
         SplitExceedsMax(SplitExceedsMax),
+        #[allow(missing_docs)]
         StartTimestampTooFarInFuture(StartTimestampTooFarInFuture),
+        #[allow(missing_docs)]
         StartTimestampTooFarInPast(StartTimestampTooFarInPast),
+        #[allow(missing_docs)]
         StrategiesNotInAscendingOrder(StrategiesNotInAscendingOrder),
+        #[allow(missing_docs)]
         StrategyNotWhitelisted(StrategyNotWhitelisted),
+        #[allow(missing_docs)]
         SubmissionNotRetroactive(SubmissionNotRetroactive),
+        #[allow(missing_docs)]
         UnauthorizedCaller(UnauthorizedCaller),
     }
     #[automatically_derived]
@@ -14838,6 +15226,7 @@ pub mod IRewardsCoordinator {
             [161u8, 189u8, 21u8, 216u8],
             [169u8, 254u8, 155u8, 224u8],
             [170u8, 56u8, 94u8, 129u8],
+            [203u8, 63u8, 67u8, 77u8],
             [223u8, 173u8, 156u8, 161u8],
             [238u8, 102u8, 71u8, 5u8],
             [240u8, 106u8, 83u8, 196u8],
@@ -14848,7 +15237,7 @@ pub mod IRewardsCoordinator {
     impl alloy_sol_types::SolInterface for IRewardsCoordinatorErrors {
         const NAME: &'static str = "IRewardsCoordinatorErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 32usize;
+        const COUNT: usize = 33usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -14860,6 +15249,9 @@ pub mod IRewardsCoordinator {
                 }
                 Self::DurationExceedsMax(_) => {
                     <DurationExceedsMax as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::DurationIsZero(_) => {
+                    <DurationIsZero as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::EarningsNotGreaterThanClaimed(_) => {
                     <EarningsNotGreaterThanClaimed as alloy_sol_types::SolError>::SELECTOR
@@ -15316,6 +15708,18 @@ pub mod IRewardsCoordinator {
                     EarningsNotGreaterThanClaimed
                 },
                 {
+                    fn DurationIsZero(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrors> {
+                        <DurationIsZero as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrors::DurationIsZero)
+                    }
+                    DurationIsZero
+                },
+                {
                     fn StrategiesNotInAscendingOrder(
                         data: &[u8],
                         validate: bool,
@@ -15389,6 +15793,11 @@ pub mod IRewardsCoordinator {
                 }
                 Self::DurationExceedsMax(inner) => {
                     <DurationExceedsMax as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::DurationIsZero(inner) => {
+                    <DurationIsZero as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -15550,6 +15959,12 @@ pub mod IRewardsCoordinator {
                 }
                 Self::DurationExceedsMax(inner) => {
                     <DurationExceedsMax as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::DurationIsZero(inner) => {
+                    <DurationIsZero as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -15733,23 +16148,39 @@ pub mod IRewardsCoordinator {
     }
     ///Container for all the [`IRewardsCoordinator`](self) events.
     pub enum IRewardsCoordinatorEvents {
+        #[allow(missing_docs)]
         AVSRewardsSubmissionCreated(AVSRewardsSubmissionCreated),
+        #[allow(missing_docs)]
         ActivationDelaySet(ActivationDelaySet),
+        #[allow(missing_docs)]
         ClaimerForSet(ClaimerForSet),
+        #[allow(missing_docs)]
         DefaultOperatorSplitBipsSet(DefaultOperatorSplitBipsSet),
+        #[allow(missing_docs)]
         DistributionRootDisabled(DistributionRootDisabled),
+        #[allow(missing_docs)]
         DistributionRootSubmitted(DistributionRootSubmitted),
+        #[allow(missing_docs)]
         OperatorAVSSplitBipsSet(OperatorAVSSplitBipsSet),
+        #[allow(missing_docs)]
         OperatorDirectedAVSRewardsSubmissionCreated(OperatorDirectedAVSRewardsSubmissionCreated),
+        #[allow(missing_docs)]
         OperatorDirectedOperatorSetRewardsSubmissionCreated(
             OperatorDirectedOperatorSetRewardsSubmissionCreated,
         ),
+        #[allow(missing_docs)]
         OperatorPISplitBipsSet(OperatorPISplitBipsSet),
+        #[allow(missing_docs)]
         OperatorSetSplitBipsSet(OperatorSetSplitBipsSet),
+        #[allow(missing_docs)]
         RewardsClaimed(RewardsClaimed),
+        #[allow(missing_docs)]
         RewardsForAllSubmitterSet(RewardsForAllSubmitterSet),
+        #[allow(missing_docs)]
         RewardsSubmissionForAllCreated(RewardsSubmissionForAllCreated),
+        #[allow(missing_docs)]
         RewardsSubmissionForAllEarnersCreated(RewardsSubmissionForAllEarnersCreated),
+        #[allow(missing_docs)]
         RewardsUpdaterSet(RewardsUpdaterSet),
     }
     #[automatically_derived]
@@ -16638,6 +17069,10 @@ pub mod IRewardsCoordinator {
                 root,
                 rewardsCalculationEndTimestamp,
             })
+        }
+        ///Creates a new call builder for the [`version`] function.
+        pub fn version(&self) -> alloy_contract::SolCallBuilder<T, &P, versionCall, N> {
+            self.call_builder(&versionCall {})
         }
     }
     /// Event filters.

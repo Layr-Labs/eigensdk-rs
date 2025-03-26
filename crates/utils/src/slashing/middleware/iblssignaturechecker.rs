@@ -23,7 +23,9 @@ pub mod BN254 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct G1Point {
+        #[allow(missing_docs)]
         pub X: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub Y: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -210,7 +212,9 @@ pub mod BN254 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct G2Point {
+        #[allow(missing_docs)]
         pub X: [alloy::sol_types::private::primitives::aliases::U256; 2usize],
+        #[allow(missing_docs)]
         pub Y: [alloy::sol_types::private::primitives::aliases::U256; 2usize],
     }
     #[allow(
@@ -560,15 +564,23 @@ pub mod IBLSSignatureCheckerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NonSignerStakesAndSignature {
+        #[allow(missing_docs)]
         pub nonSignerQuorumBitmapIndices: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub nonSignerPubkeys:
             alloy::sol_types::private::Vec<<BN254::G1Point as alloy::sol_types::SolType>::RustType>,
+        #[allow(missing_docs)]
         pub quorumApks:
             alloy::sol_types::private::Vec<<BN254::G1Point as alloy::sol_types::SolType>::RustType>,
+        #[allow(missing_docs)]
         pub apkG2: <BN254::G2Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub sigma: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub quorumApkIndices: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub totalStakeIndices: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub nonSignerStakeIndices:
             alloy::sol_types::private::Vec<alloy::sol_types::private::Vec<u32>>,
     }
@@ -920,8 +932,10 @@ pub mod IBLSSignatureCheckerTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QuorumStakeTotals {
+        #[allow(missing_docs)]
         pub signedStakeForQuorum:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U96>,
+        #[allow(missing_docs)]
         pub totalStakeForQuorum:
             alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U96>,
     }
@@ -2407,6 +2421,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct blsApkRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2513,17 +2528,23 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct checkSignaturesCall {
+        #[allow(missing_docs)]
         pub msgHash: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub referenceBlockNumber: u32,
+        #[allow(missing_docs)]
         pub nonSignerStakesAndSignature: <IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`checkSignatures(bytes32,bytes,uint32,(uint32[],(uint256,uint256)[],(uint256,uint256)[],(uint256[2],uint256[2]),(uint256,uint256),uint32[],uint32[],uint32[][]))`](checkSignaturesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct checkSignaturesReturn {
+        #[allow(missing_docs)]
         pub _0:
             <IBLSSignatureCheckerTypes::QuorumStakeTotals as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -2684,6 +2705,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2794,6 +2816,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2900,6 +2923,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setStaleStakesForbiddenCall {
+        #[allow(missing_docs)]
         pub value: bool,
     }
     ///Container type for the return parameters of the [`setStaleStakesForbidden(bool)`](setStaleStakesForbiddenCall) function.
@@ -3018,6 +3042,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeRegistryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -3128,6 +3153,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct staleStakesForbiddenReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -3234,16 +3260,22 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct trySignatureAndApkVerificationCall {
+        #[allow(missing_docs)]
         pub msgHash: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub apk: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub apkG2: <BN254::G2Point as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub sigma: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`trySignatureAndApkVerification(bytes32,(uint256,uint256),(uint256[2],uint256[2]),(uint256,uint256))`](trySignatureAndApkVerificationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct trySignatureAndApkVerificationReturn {
+        #[allow(missing_docs)]
         pub pairingSuccessful: bool,
+        #[allow(missing_docs)]
         pub siganatureIsValid: bool,
     }
     #[allow(
@@ -3381,13 +3413,21 @@ pub mod IBLSSignatureChecker {
     };
     ///Container for all the [`IBLSSignatureChecker`](self) function calls.
     pub enum IBLSSignatureCheckerCalls {
+        #[allow(missing_docs)]
         blsApkRegistry(blsApkRegistryCall),
+        #[allow(missing_docs)]
         checkSignatures(checkSignaturesCall),
+        #[allow(missing_docs)]
         delegation(delegationCall),
+        #[allow(missing_docs)]
         registryCoordinator(registryCoordinatorCall),
+        #[allow(missing_docs)]
         setStaleStakesForbidden(setStaleStakesForbiddenCall),
+        #[allow(missing_docs)]
         stakeRegistry(stakeRegistryCall),
+        #[allow(missing_docs)]
         staleStakesForbidden(staleStakesForbiddenCall),
+        #[allow(missing_docs)]
         trySignatureAndApkVerification(trySignatureAndApkVerificationCall),
     }
     #[automatically_derived]
@@ -3648,15 +3688,25 @@ pub mod IBLSSignatureChecker {
     }
     ///Container for all the [`IBLSSignatureChecker`](self) custom errors.
     pub enum IBLSSignatureCheckerErrors {
+        #[allow(missing_docs)]
         InputArrayLengthMismatch(InputArrayLengthMismatch),
+        #[allow(missing_docs)]
         InputEmptyQuorumNumbers(InputEmptyQuorumNumbers),
+        #[allow(missing_docs)]
         InputNonSignerLengthMismatch(InputNonSignerLengthMismatch),
+        #[allow(missing_docs)]
         InvalidBLSPairingKey(InvalidBLSPairingKey),
+        #[allow(missing_docs)]
         InvalidBLSSignature(InvalidBLSSignature),
+        #[allow(missing_docs)]
         InvalidQuorumApkHash(InvalidQuorumApkHash),
+        #[allow(missing_docs)]
         InvalidReferenceBlocknumber(InvalidReferenceBlocknumber),
+        #[allow(missing_docs)]
         NonSignerPubkeysNotSorted(NonSignerPubkeysNotSorted),
+        #[allow(missing_docs)]
         OnlyRegistryCoordinatorOwner(OnlyRegistryCoordinatorOwner),
+        #[allow(missing_docs)]
         StaleStakesForbidden(StaleStakesForbidden),
     }
     #[automatically_derived]
@@ -3962,6 +4012,7 @@ pub mod IBLSSignatureChecker {
     }
     ///Container for all the [`IBLSSignatureChecker`](self) events.
     pub enum IBLSSignatureCheckerEvents {
+        #[allow(missing_docs)]
         StaleStakesForbiddenUpdate(StaleStakesForbiddenUpdate),
     }
     #[automatically_derived]

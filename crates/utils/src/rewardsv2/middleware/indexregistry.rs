@@ -23,7 +23,9 @@ pub mod IIndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorUpdate {
+        #[allow(missing_docs)]
         pub fromBlockNumber: u32,
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -221,7 +223,9 @@ pub mod IIndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QuorumUpdate {
+        #[allow(missing_docs)]
         pub fromBlockNumber: u32,
+        #[allow(missing_docs)]
         pub numOperators: u32,
     }
     #[allow(
@@ -1178,6 +1182,7 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
+        #[allow(missing_docs)]
         pub _registryCoordinator: alloy::sol_types::private::Address,
     }
     const _: () = {
@@ -1244,6 +1249,7 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OPERATOR_DOES_NOT_EXIST_IDReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
     #[allow(
@@ -1350,13 +1356,16 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currentOperatorIndexCall {
+        #[allow(missing_docs)]
         pub _0: u8,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`currentOperatorIndex(uint8,bytes32)`](currentOperatorIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currentOperatorIndexReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -1479,7 +1488,9 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`deregisterOperator(bytes32,bytes)`](deregisterOperatorCall) function.
@@ -1609,13 +1620,16 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLatestOperatorUpdateCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub operatorIndex: u32,
     }
     ///Container type for the return parameters of the [`getLatestOperatorUpdate(uint8,uint32)`](getLatestOperatorUpdateCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLatestOperatorUpdateReturn {
+        #[allow(missing_docs)]
         pub _0: <IIndexRegistry::OperatorUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -1739,12 +1753,14 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLatestQuorumUpdateCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`getLatestQuorumUpdate(uint8)`](getLatestQuorumUpdateCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLatestQuorumUpdateReturn {
+        #[allow(missing_docs)]
         pub _0: <IIndexRegistry::QuorumUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -1858,13 +1874,16 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorListAtBlockNumberCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub blockNumber: u32,
     }
     ///Container type for the return parameters of the [`getOperatorListAtBlockNumber(uint8,uint32)`](getOperatorListAtBlockNumberCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorListAtBlockNumberReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
     #[allow(
@@ -1990,14 +2009,18 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorUpdateAtIndexCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub operatorIndex: u32,
+        #[allow(missing_docs)]
         pub arrayIndex: u32,
     }
     ///Container type for the return parameters of the [`getOperatorUpdateAtIndex(uint8,uint32,uint32)`](getOperatorUpdateAtIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorUpdateAtIndexReturn {
+        #[allow(missing_docs)]
         pub _0: <IIndexRegistry::OperatorUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -2127,13 +2150,16 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumUpdateAtIndexCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
+        #[allow(missing_docs)]
         pub quorumIndex: u32,
     }
     ///Container type for the return parameters of the [`getQuorumUpdateAtIndex(uint8,uint32)`](getQuorumUpdateAtIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumUpdateAtIndexReturn {
+        #[allow(missing_docs)]
         pub _0: <IIndexRegistry::QuorumUpdate as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -2257,6 +2283,7 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeQuorumCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`initializeQuorum(uint8)`](initializeQuorumCall) function.
@@ -2373,13 +2400,16 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorCall {
+        #[allow(missing_docs)]
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub quorumNumbers: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`registerOperator(bytes32,bytes)`](registerOperatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<u32>,
     }
     #[allow(
@@ -2511,6 +2541,7 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2617,12 +2648,14 @@ pub mod IndexRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalOperatorsForQuorumCall {
+        #[allow(missing_docs)]
         pub quorumNumber: u8,
     }
     ///Container type for the return parameters of the [`totalOperatorsForQuorum(uint8)`](totalOperatorsForQuorumCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalOperatorsForQuorumReturn {
+        #[allow(missing_docs)]
         pub _0: u32,
     }
     #[allow(
@@ -2730,17 +2763,29 @@ pub mod IndexRegistry {
     };
     ///Container for all the [`IndexRegistry`](self) function calls.
     pub enum IndexRegistryCalls {
+        #[allow(missing_docs)]
         OPERATOR_DOES_NOT_EXIST_ID(OPERATOR_DOES_NOT_EXIST_IDCall),
+        #[allow(missing_docs)]
         currentOperatorIndex(currentOperatorIndexCall),
+        #[allow(missing_docs)]
         deregisterOperator(deregisterOperatorCall),
+        #[allow(missing_docs)]
         getLatestOperatorUpdate(getLatestOperatorUpdateCall),
+        #[allow(missing_docs)]
         getLatestQuorumUpdate(getLatestQuorumUpdateCall),
+        #[allow(missing_docs)]
         getOperatorListAtBlockNumber(getOperatorListAtBlockNumberCall),
+        #[allow(missing_docs)]
         getOperatorUpdateAtIndex(getOperatorUpdateAtIndexCall),
+        #[allow(missing_docs)]
         getQuorumUpdateAtIndex(getQuorumUpdateAtIndexCall),
+        #[allow(missing_docs)]
         initializeQuorum(initializeQuorumCall),
+        #[allow(missing_docs)]
         registerOperator(registerOperatorCall),
+        #[allow(missing_docs)]
         registryCoordinator(registryCoordinatorCall),
+        #[allow(missing_docs)]
         totalOperatorsForQuorum(totalOperatorsForQuorumCall),
     }
     #[automatically_derived]
@@ -3102,7 +3147,9 @@ pub mod IndexRegistry {
     }
     ///Container for all the [`IndexRegistry`](self) events.
     pub enum IndexRegistryEvents {
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         QuorumIndexUpdate(QuorumIndexUpdate),
     }
     #[automatically_derived]

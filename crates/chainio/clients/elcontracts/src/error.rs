@@ -80,4 +80,10 @@ pub enum ElContractsError {
 
     #[error("Permission Controller is not set")]
     MissingParameter,
+
+    #[error("StakerOptOutWindowBlocks is not set")]
+    StakerOptOutWindowBlocksNotSet,
+
+    #[error("Invalid signature")]
+    InvalidSignature,
 }

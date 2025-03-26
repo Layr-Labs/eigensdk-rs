@@ -25,14 +25,20 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorDirectedRewardsSubmission {
+        #[allow(missing_docs)]
         pub strategiesAndMultipliers: alloy::sol_types::private::Vec<
             <StrategyAndMultiplier as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorRewards:
             alloy::sol_types::private::Vec<<OperatorReward as alloy::sol_types::SolType>::RustType>,
+        #[allow(missing_docs)]
         pub startTimestamp: u32,
+        #[allow(missing_docs)]
         pub duration: u32,
+        #[allow(missing_docs)]
         pub description: alloy::sol_types::private::String,
     }
     #[allow(
@@ -330,7 +336,9 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorReward {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -525,12 +533,17 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RewardsSubmission {
+        #[allow(missing_docs)]
         pub strategiesAndMultipliers: alloy::sol_types::private::Vec<
             <StrategyAndMultiplier as alloy::sol_types::SolType>::RustType,
         >,
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub startTimestamp: u32,
+        #[allow(missing_docs)]
         pub duration: u32,
     }
     #[allow(
@@ -805,7 +818,9 @@ pub mod IRewardsCoordinatorTypes {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyAndMultiplier {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub multiplier: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -1128,7 +1143,7 @@ pub mod IRewardsCoordinatorTypes {
 /**
 
 ```solidity
-library ISignatureUtils {
+library ISignatureUtilsMixinTypes {
     struct SignatureWithSaltAndExpiry { bytes signature; bytes32 salt; uint256 expiry; }
 }
 ```*/
@@ -1139,7 +1154,7 @@ library ISignatureUtils {
     clippy::style,
     clippy::empty_structs_with_brackets
 )]
-pub mod ISignatureUtils {
+pub mod ISignatureUtilsMixinTypes {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /**```solidity
@@ -1148,8 +1163,11 @@ pub mod ISignatureUtils {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SignatureWithSaltAndExpiry {
+        #[allow(missing_docs)]
         pub signature: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -1358,9 +1376,9 @@ pub mod ISignatureUtils {
         }
     };
     use alloy::contract as alloy_contract;
-    /**Creates a new wrapper around an on-chain [`ISignatureUtils`](self) contract instance.
+    /**Creates a new wrapper around an on-chain [`ISignatureUtilsMixinTypes`](self) contract instance.
 
-    See the [wrapper's documentation](`ISignatureUtilsInstance`) for more details.*/
+    See the [wrapper's documentation](`ISignatureUtilsMixinTypesInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1369,13 +1387,13 @@ pub mod ISignatureUtils {
     >(
         address: alloy_sol_types::private::Address,
         provider: P,
-    ) -> ISignatureUtilsInstance<T, P, N> {
-        ISignatureUtilsInstance::<T, P, N>::new(address, provider)
+    ) -> ISignatureUtilsMixinTypesInstance<T, P, N> {
+        ISignatureUtilsMixinTypesInstance::<T, P, N>::new(address, provider)
     }
-    /**A [`ISignatureUtils`](self) instance.
+    /**A [`ISignatureUtilsMixinTypes`](self) instance.
 
     Contains type-safe methods for interacting with an on-chain instance of the
-    [`ISignatureUtils`](self) contract located at a given `address`, using a given
+    [`ISignatureUtilsMixinTypes`](self) contract located at a given `address`, using a given
     provider `P`.
 
     If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
@@ -1384,16 +1402,16 @@ pub mod ISignatureUtils {
 
     See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct ISignatureUtilsInstance<T, P, N = alloy_contract::private::Ethereum> {
+    pub struct ISignatureUtilsMixinTypesInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
     }
     #[automatically_derived]
-    impl<T, P, N> ::core::fmt::Debug for ISignatureUtilsInstance<T, P, N> {
+    impl<T, P, N> ::core::fmt::Debug for ISignatureUtilsMixinTypesInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("ISignatureUtilsInstance")
+            f.debug_tuple("ISignatureUtilsMixinTypesInstance")
                 .field(&self.address)
                 .finish()
         }
@@ -1404,11 +1422,11 @@ pub mod ISignatureUtils {
             T: alloy_contract::private::Transport + ::core::clone::Clone,
             P: alloy_contract::private::Provider<T, N>,
             N: alloy_contract::private::Network,
-        > ISignatureUtilsInstance<T, P, N>
+        > ISignatureUtilsMixinTypesInstance<T, P, N>
     {
-        /**Creates a new wrapper around an on-chain [`ISignatureUtils`](self) contract instance.
+        /**Creates a new wrapper around an on-chain [`ISignatureUtilsMixinTypes`](self) contract instance.
 
-        See the [wrapper's documentation](`ISignatureUtilsInstance`) for more details.*/
+        See the [wrapper's documentation](`ISignatureUtilsMixinTypesInstance`) for more details.*/
         #[inline]
         pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
@@ -1438,11 +1456,11 @@ pub mod ISignatureUtils {
             &self.provider
         }
     }
-    impl<T, P: ::core::clone::Clone, N> ISignatureUtilsInstance<T, &P, N> {
+    impl<T, P: ::core::clone::Clone, N> ISignatureUtilsMixinTypesInstance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
-        pub fn with_cloned_provider(self) -> ISignatureUtilsInstance<T, P, N> {
-            ISignatureUtilsInstance {
+        pub fn with_cloned_provider(self) -> ISignatureUtilsMixinTypesInstance<T, P, N> {
+            ISignatureUtilsMixinTypesInstance {
                 address: self.address,
                 provider: ::core::clone::Clone::clone(&self.provider),
                 _network_transport: ::core::marker::PhantomData,
@@ -1455,7 +1473,7 @@ pub mod ISignatureUtils {
             T: alloy_contract::private::Transport + ::core::clone::Clone,
             P: alloy_contract::private::Provider<T, N>,
             N: alloy_contract::private::Network,
-        > ISignatureUtilsInstance<T, P, N>
+        > ISignatureUtilsMixinTypesInstance<T, P, N>
     {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
@@ -1474,7 +1492,7 @@ pub mod ISignatureUtils {
             T: alloy_contract::private::Transport + ::core::clone::Clone,
             P: alloy_contract::private::Provider<T, N>,
             N: alloy_contract::private::Network,
-        > ISignatureUtilsInstance<T, P, N>
+        > ISignatureUtilsMixinTypesInstance<T, P, N>
     {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
@@ -1517,7 +1535,7 @@ library IRewardsCoordinatorTypes {
     }
 }
 
-library ISignatureUtils {
+library ISignatureUtilsMixinTypes {
     struct SignatureWithSaltAndExpiry {
         bytes signature;
         bytes32 salt;
@@ -1529,7 +1547,6 @@ interface ServiceManagerBase {
     error DelayPeriodNotPassed();
     error OnlyRegistryCoordinator();
     error OnlyRewardsInitiator();
-    error OnlySlasher();
     error OnlyStakeRegistry();
 
     event Initialized(uint8 version);
@@ -1545,7 +1562,7 @@ interface ServiceManagerBase {
     function getOperatorRestakedStrategies(address operator) external view returns (address[] memory);
     function getRestakeableStrategies() external view returns (address[] memory);
     function owner() external view returns (address);
-    function registerOperatorToAVS(address operator, ISignatureUtils.SignatureWithSaltAndExpiry memory operatorSignature) external;
+    function registerOperatorToAVS(address operator, ISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry memory operatorSignature) external;
     function removeAdmin(address admin) external;
     function removeAppointee(address appointee, address target, bytes4 selector) external;
     function removePendingAdmin(address pendingAdmin) external;
@@ -1797,7 +1814,7 @@ interface ServiceManagerBase {
       {
         "name": "operatorSignature",
         "type": "tuple",
-        "internalType": "struct ISignatureUtils.SignatureWithSaltAndExpiry",
+        "internalType": "struct ISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry",
         "components": [
           {
             "name": "signature",
@@ -2032,11 +2049,6 @@ interface ServiceManagerBase {
   },
   {
     "type": "error",
-    "name": "OnlySlasher",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "OnlyStakeRegistry",
     "inputs": []
   }
@@ -2240,66 +2252,6 @@ pub mod ServiceManagerBase {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyRewardsInitiator()";
             const SELECTOR: [u8; 4] = [142u8, 121u8, 253u8, 181u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
-    /**Custom error with signature `OnlySlasher()` and selector `0x7e57b1e1`.
-    ```solidity
-    error OnlySlasher();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct OnlySlasher {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<OnlySlasher> for UnderlyingRustTuple<'_> {
-            fn from(value: OnlySlasher) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlySlasher {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for OnlySlasher {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "OnlySlasher()";
-            const SELECTOR: [u8; 4] = [126u8, 87u8, 177u8, 225u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -2699,6 +2651,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addPendingAdminCall {
+        #[allow(missing_docs)]
         pub admin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`addPendingAdmin(address)`](addPendingAdminCall) function.
@@ -2817,6 +2770,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct avsDirectoryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -2923,6 +2877,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createAVSRewardsSubmissionCall {
+        #[allow(missing_docs)]
         pub rewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::RewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -3048,6 +3003,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createOperatorDirectedAVSRewardsSubmissionCall {
+        #[allow(missing_docs)]
         pub operatorDirectedRewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
@@ -3186,6 +3142,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorFromAVSCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`deregisterOperatorFromAVS(address)`](deregisterOperatorFromAVSCall) function.
@@ -3300,7 +3257,9 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorFromOperatorSetsCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub operatorSetIds: alloy::sol_types::private::Vec<u32>,
     }
     ///Container type for the return parameters of the [`deregisterOperatorFromOperatorSets(address,uint32[])`](deregisterOperatorFromOperatorSetsCall) function.
@@ -3430,12 +3389,14 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorRestakedStrategiesCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorRestakedStrategies(address)`](getOperatorRestakedStrategiesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorRestakedStrategiesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -3553,6 +3514,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getRestakeableStrategiesReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     #[allow(
@@ -3666,6 +3628,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -3767,14 +3730,15 @@ pub mod ServiceManagerBase {
     };
     /**Function with signature `registerOperatorToAVS(address,(bytes,bytes32,uint256))` and selector `0x9926ee7d`.
     ```solidity
-    function registerOperatorToAVS(address operator, ISignatureUtils.SignatureWithSaltAndExpiry memory operatorSignature) external;
+    function registerOperatorToAVS(address operator, ISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry memory operatorSignature) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorToAVSCall {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
-        pub operatorSignature:
-            <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
+        pub operatorSignature: <ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`registerOperatorToAVS(address,(bytes,bytes32,uint256))`](registerOperatorToAVSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
@@ -3792,12 +3756,12 @@ pub mod ServiceManagerBase {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (
                 alloy::sol_types::sol_data::Address,
-                ISignatureUtils::SignatureWithSaltAndExpiry,
+                ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
                 alloy::sol_types::private::Address,
-                <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
+                <ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
@@ -3859,7 +3823,7 @@ pub mod ServiceManagerBase {
         impl alloy_sol_types::SolCall for registerOperatorToAVSCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Address,
-                ISignatureUtils::SignatureWithSaltAndExpiry,
+                ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry,
             );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = registerOperatorToAVSReturn;
@@ -3880,7 +3844,7 @@ pub mod ServiceManagerBase {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.operator,
                     ),
-                    <ISignatureUtils::SignatureWithSaltAndExpiry as alloy_sol_types::SolType>::tokenize(
+                    <ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry as alloy_sol_types::SolType>::tokenize(
                         &self.operatorSignature,
                     ),
                 )
@@ -3904,6 +3868,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeAdminCall {
+        #[allow(missing_docs)]
         pub admin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`removeAdmin(address)`](removeAdminCall) function.
@@ -4018,8 +3983,11 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeAppointeeCall {
+        #[allow(missing_docs)]
         pub appointee: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
     ///Container type for the return parameters of the [`removeAppointee(address,address,bytes4)`](removeAppointeeCall) function.
@@ -4156,6 +4124,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removePendingAdminCall {
+        #[allow(missing_docs)]
         pub pendingAdmin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`removePendingAdmin(address)`](removePendingAdminCall) function.
@@ -4384,6 +4353,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct rewardsInitiatorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -4490,8 +4460,11 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAppointeeCall {
+        #[allow(missing_docs)]
         pub appointee: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
     ///Container type for the return parameters of the [`setAppointee(address,address,bytes4)`](setAppointeeCall) function.
@@ -4628,6 +4601,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setClaimerForCall {
+        #[allow(missing_docs)]
         pub claimer: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setClaimerFor(address)`](setClaimerForCall) function.
@@ -4742,6 +4716,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setRewardsInitiatorCall {
+        #[allow(missing_docs)]
         pub newRewardsInitiator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setRewardsInitiator(address)`](setRewardsInitiatorCall) function.
@@ -4858,6 +4833,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
+        #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`transferOwnership(address)`](transferOwnershipCall) function.
@@ -4972,6 +4948,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateAVSMetadataURICall {
+        #[allow(missing_docs)]
         pub _metadataURI: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`updateAVSMetadataURI(string)`](updateAVSMetadataURICall) function.
@@ -5083,25 +5060,45 @@ pub mod ServiceManagerBase {
     };
     ///Container for all the [`ServiceManagerBase`](self) function calls.
     pub enum ServiceManagerBaseCalls {
+        #[allow(missing_docs)]
         addPendingAdmin(addPendingAdminCall),
+        #[allow(missing_docs)]
         avsDirectory(avsDirectoryCall),
+        #[allow(missing_docs)]
         createAVSRewardsSubmission(createAVSRewardsSubmissionCall),
+        #[allow(missing_docs)]
         createOperatorDirectedAVSRewardsSubmission(createOperatorDirectedAVSRewardsSubmissionCall),
+        #[allow(missing_docs)]
         deregisterOperatorFromAVS(deregisterOperatorFromAVSCall),
+        #[allow(missing_docs)]
         deregisterOperatorFromOperatorSets(deregisterOperatorFromOperatorSetsCall),
+        #[allow(missing_docs)]
         getOperatorRestakedStrategies(getOperatorRestakedStrategiesCall),
+        #[allow(missing_docs)]
         getRestakeableStrategies(getRestakeableStrategiesCall),
+        #[allow(missing_docs)]
         owner(ownerCall),
+        #[allow(missing_docs)]
         registerOperatorToAVS(registerOperatorToAVSCall),
+        #[allow(missing_docs)]
         removeAdmin(removeAdminCall),
+        #[allow(missing_docs)]
         removeAppointee(removeAppointeeCall),
+        #[allow(missing_docs)]
         removePendingAdmin(removePendingAdminCall),
+        #[allow(missing_docs)]
         renounceOwnership(renounceOwnershipCall),
+        #[allow(missing_docs)]
         rewardsInitiator(rewardsInitiatorCall),
+        #[allow(missing_docs)]
         setAppointee(setAppointeeCall),
+        #[allow(missing_docs)]
         setClaimerFor(setClaimerForCall),
+        #[allow(missing_docs)]
         setRewardsInitiator(setRewardsInitiatorCall),
+        #[allow(missing_docs)]
         transferOwnership(transferOwnershipCall),
+        #[allow(missing_docs)]
         updateAVSMetadataURI(updateAVSMetadataURICall),
     }
     #[automatically_derived]
@@ -5706,10 +5703,13 @@ pub mod ServiceManagerBase {
     }
     ///Container for all the [`ServiceManagerBase`](self) custom errors.
     pub enum ServiceManagerBaseErrors {
+        #[allow(missing_docs)]
         DelayPeriodNotPassed(DelayPeriodNotPassed),
+        #[allow(missing_docs)]
         OnlyRegistryCoordinator(OnlyRegistryCoordinator),
+        #[allow(missing_docs)]
         OnlyRewardsInitiator(OnlyRewardsInitiator),
-        OnlySlasher(OnlySlasher),
+        #[allow(missing_docs)]
         OnlyStakeRegistry(OnlyStakeRegistry),
     }
     #[automatically_derived]
@@ -5722,7 +5722,6 @@ pub mod ServiceManagerBase {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
             [70u8, 191u8, 34u8, 129u8],
-            [126u8, 87u8, 177u8, 225u8],
             [135u8, 41u8, 183u8, 190u8],
             [142u8, 121u8, 253u8, 181u8],
             [251u8, 98u8, 59u8, 4u8],
@@ -5732,7 +5731,7 @@ pub mod ServiceManagerBase {
     impl alloy_sol_types::SolInterface for ServiceManagerBaseErrors {
         const NAME: &'static str = "ServiceManagerBaseErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 5usize;
+        const COUNT: usize = 4usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -5745,7 +5744,6 @@ pub mod ServiceManagerBase {
                 Self::OnlyRewardsInitiator(_) => {
                     <OnlyRewardsInitiator as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::OnlySlasher(_) => <OnlySlasher as alloy_sol_types::SolError>::SELECTOR,
                 Self::OnlyStakeRegistry(_) => {
                     <OnlyStakeRegistry as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -5782,16 +5780,6 @@ pub mod ServiceManagerBase {
                         .map(ServiceManagerBaseErrors::OnlyStakeRegistry)
                     }
                     OnlyStakeRegistry
-                },
-                {
-                    fn OnlySlasher(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseErrors> {
-                        <OnlySlasher as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
-                            .map(ServiceManagerBaseErrors::OnlySlasher)
-                    }
-                    OnlySlasher
                 },
                 {
                     fn OnlyRegistryCoordinator(
@@ -5850,9 +5838,6 @@ pub mod ServiceManagerBase {
                 Self::OnlyRewardsInitiator(inner) => {
                     <OnlyRewardsInitiator as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
-                Self::OnlySlasher(inner) => {
-                    <OnlySlasher as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
                 Self::OnlyStakeRegistry(inner) => {
                     <OnlyStakeRegistry as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
@@ -5872,9 +5857,6 @@ pub mod ServiceManagerBase {
                 Self::OnlyRewardsInitiator(inner) => {
                     <OnlyRewardsInitiator as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
-                Self::OnlySlasher(inner) => {
-                    <OnlySlasher as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
-                }
                 Self::OnlyStakeRegistry(inner) => {
                     <OnlyStakeRegistry as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
@@ -5883,8 +5865,11 @@ pub mod ServiceManagerBase {
     }
     ///Container for all the [`ServiceManagerBase`](self) events.
     pub enum ServiceManagerBaseEvents {
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         OwnershipTransferred(OwnershipTransferred),
+        #[allow(missing_docs)]
         RewardsInitiatorUpdated(RewardsInitiatorUpdated),
     }
     #[automatically_derived]
@@ -6220,7 +6205,7 @@ pub mod ServiceManagerBase {
         pub fn registerOperatorToAVS(
             &self,
             operator: alloy::sol_types::private::Address,
-            operatorSignature: <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
+            operatorSignature: <ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
         ) -> alloy_contract::SolCallBuilder<T, &P, registerOperatorToAVSCall, N> {
             self.call_builder(&registerOperatorToAVSCall {
                 operator,

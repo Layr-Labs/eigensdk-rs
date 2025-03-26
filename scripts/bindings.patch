@@ -1,12 +1,13 @@
-diff --git a/crates/utils/src/slashing/core/allocationmanager.rs b/crates/utils/src/slashing/core/allocationmanager.rs
-index 3a9e39e..e167408 100644
---- a/crates/utils/src/slashing/core/allocationmanager.rs
-+++ b/crates/utils/src/slashing/core/allocationmanager.rs
-@@ -21,6 +21,7 @@ library IAllocationManagerTypes {
+diff --git i/crates/utils/src/slashing/core/allocationmanager.rs w/crates/utils/src/slashing/core/allocationmanager.rs
+index 8fae5b48..8eb9334d 100644
+--- i/crates/utils/src/slashing/core/allocationmanager.rs
++++ w/crates/utils/src/slashing/core/allocationmanager.rs
+@@ -19,6 +19,8 @@ library IAllocationManagerTypes {
+     clippy::empty_structs_with_brackets
+ )]
  pub mod IAllocationManagerTypes {
-     use super::*;
 +    use crate::slashing::core::allocationmanager::AllocationManager::OperatorSet;
++
+     use super::*;
      use alloy::sol_types as alloy_sol_types;
      /**```solidity
-     struct AllocateParams { OperatorSet operatorSet; address[] strategies; uint64[] newMagnitudes; }
-     ```*/

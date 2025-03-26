@@ -2,7 +2,6 @@ use crate::error::ElContractsError;
 use alloy::{
     primitives::{Address, FixedBytes, U256},
     providers::Provider,
-    transports::http::{Client, Http},
 };
 use eigen_common::{get_provider, SdkProvider};
 use eigen_logging::logger::SharedLogger;
@@ -547,8 +546,8 @@ impl ELChainReader {
         strategy_addr: Address,
     ) -> Result<
         (
-            IStrategyInstance<Http<Client>, SdkProvider>,
-            IERC20Instance<Http<Client>, SdkProvider>,
+            IStrategyInstance<(), SdkProvider>,
+            IERC20Instance<(), SdkProvider>,
             Address,
         ),
         ElContractsError,
@@ -672,7 +671,7 @@ impl ELChainReader {
     pub async fn get_strategy_and_underlying_token(
         &self,
         strategy_addr: Address,
-    ) -> Result<(IStrategyInstance<Http<Client>, SdkProvider>, Address), ElContractsError> {
+    ) -> Result<(IStrategyInstance<(), SdkProvider>, Address), ElContractsError> {
         let provider = get_provider(&self.provider);
 
         let contract_strategy = IStrategy::new(strategy_addr, provider);
@@ -1424,6 +1423,90 @@ impl ELChainReader {
 
         Ok(is_admin)
     }
+
+    /// Checks if an operator is slashable by an operator set.
+    /// # Arguments
+    /// * `operator_address` - The operator to check slashability for
+    /// * `operator_set` - The operator set to check slashability for
+    /// # Returns
+    /// * [`bool`] - true if the operator is registered or their slashableUntil block has not passed.
+    ///   This is because even when operators are deregistered, they still remain slashable for a period of time.
+    /// # Errors
+    /// * [`ElContractsError`] - if the call to the contract fails
+    pub async fn is_operator_slashable(
+        &self,
+        operator_address: Address,
+        operator_set: OperatorSet,
+    ) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager =
+            AllocationManager::new(self.allocation_manager.unwrap(), provider);
+
+        let is_slashable = contract_allocation_manager
+            .isOperatorSlashable(operator_address, operator_set)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(is_slashable)
+    }
+
+    /// Returns the current allocated stake, irrespective of the operator's slashable status for the [`OperatorSet`].
+    /// # Arguments
+    /// * `operators` - The operators to query
+    /// * `operator_set` - The operator set to query
+    /// * `strategies` - The strategies to query
+    /// # Returns
+    /// * [`Vec<Vec<U256>>`] - Current Allocated Stake
+    /// # Errors
+    /// * [`ElContractsError`] - if the call to the contract fails
+    pub async fn get_allocated_stake(
+        &self,
+        operator_set: OperatorSet,
+        operators: Vec<Address>,
+        strategies: Vec<Address>,
+    ) -> Result<Vec<Vec<U256>>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager =
+            AllocationManager::new(self.allocation_manager.unwrap(), provider);
+
+        let allocated_stake = contract_allocation_manager
+            .getAllocatedStake(operator_set, operators, strategies)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(allocated_stake)
+    }
+
+    /// For a strategy, get the amount of magnitude that is allocated across one or more operator sets
+    /// # Arguments
+    /// * `operator` - The operator to query
+    /// * `strategy_address` - The strategy to get allocatable magnitude for
+    /// # Returns
+    /// [`u64`] - currently allocated magnitude
+    pub async fn get_encumbered_magnitude(
+        &self,
+        operator: Address,
+        strategy_address: Address,
+    ) -> Result<u64, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager =
+            AllocationManager::new(self.allocation_manager.unwrap(), provider);
+
+        let magnitude = contract_allocation_manager
+            .getEncumberedMagnitude(operator, strategy_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+        Ok(magnitude)
+    }
 }
 
 // TODO: move to types.rs?
@@ -1446,12 +1529,11 @@ pub struct AllocationInfo {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use crate::test_utils::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS};
+    use alloy::eips::eip1898::BlockNumberOrTag::Number;
     use alloy::primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy::providers::Provider;
-    use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
@@ -1475,7 +1557,7 @@ mod tests {
         let approve_salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let current_block_number = provider.get_block_number().await.unwrap();
         let block_info = provider
-            .get_block_by_number(Number(current_block_number), BlockTransactionsKind::Hashes)
+            .get_block_by_number(Number(current_block_number))
             .await
             .unwrap();
 
@@ -1525,7 +1607,7 @@ mod tests {
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let current_block_number = provider.get_block_number().await.unwrap();
         let block_info = provider
-            .get_block_by_number(Number(current_block_number), BlockTransactionsKind::Hashes)
+            .get_block_by_number(Number(current_block_number))
             .await
             .unwrap();
         let block = block_info.unwrap();
@@ -1916,6 +1998,23 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_is_operator_slashable() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let is_slashable = chain_reader
+            .is_operator_slashable(OPERATOR_ADDRESS, operator_set)
+            .await
+            .unwrap();
+        assert!(!is_slashable);
+    }
+
+    #[tokio::test]
     async fn test_get_slashable_shares_for_operator_sets() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let chain_reader = build_el_chain_reader(http_endpoint).await;
@@ -2068,5 +2167,38 @@ mod tests {
             .unwrap();
 
         assert!(is_admin);
+    }
+
+    #[tokio::test]
+    async fn test_get_allocated_stake() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+        let operators = vec![OPERATOR_ADDRESS];
+        let strategies = vec![get_erc20_mock_strategy(http_endpoint.to_string()).await];
+        let slashable_stake = chain_reader
+            .get_allocated_stake(operator_set, operators, strategies)
+            .await
+            .unwrap();
+        assert_eq!(slashable_stake[0][0], "0".parse().unwrap());
+    }
+
+    #[tokio::test]
+    async fn test_get_encumbered_magnitude() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let magnitude = chain_reader
+            .get_encumbered_magnitude(
+                OPERATOR_ADDRESS,
+                get_erc20_mock_strategy(http_endpoint.to_string()).await,
+            )
+            .await
+            .unwrap();
+        assert_eq!(magnitude, 0);
     }
 }

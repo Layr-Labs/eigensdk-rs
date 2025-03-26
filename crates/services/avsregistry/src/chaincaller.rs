@@ -5,7 +5,8 @@ use async_trait::async_trait;
 use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryReader};
 use eigen_crypto_bls::{BlsG1Point, PublicKey};
 use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
-use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
+use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
+use eigen_types::operator::{OperatorInfo, OperatorPubKeys};
 use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 use std::collections::HashMap;
 
@@ -57,7 +58,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
                 let avs_state = operators_avs_state
                     .entry(FixedBytes(*operator.operatorId))
                     .or_insert_with(|| OperatorAvsState {
-                        operator_id: *operator.operatorId,
+                        operator_id: operator.operatorId,
                         operator_info: OperatorInfo {
                             pub_keys: Some(info),
                         },
@@ -173,9 +174,8 @@ mod tests {
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
     use eigen_testing_utils::test_data::TestData;
-    use eigen_types::operator::{
-        OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum,
-    };
+    use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
+    use eigen_types::operator::{OperatorInfo, OperatorPubKeys, QuorumNum};
     use eigen_types::test::TestOperator;
     use serde::Deserialize;
 
@@ -287,7 +287,7 @@ mod tests {
             .unwrap();
 
         let expected_operator_avs_state = OperatorAvsState {
-            operator_id: test_operator.operator_id.into(),
+            operator_id: test_operator.operator_id,
             operator_info: OperatorInfo {
                 pub_keys: Some(OperatorPubKeys::from(test_operator.bls_keypair)),
             },

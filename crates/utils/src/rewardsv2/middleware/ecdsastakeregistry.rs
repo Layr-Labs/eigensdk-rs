@@ -22,8 +22,11 @@ pub mod ISignatureUtils {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SignatureWithSaltAndExpiry {
+        #[allow(missing_docs)]
         pub signature: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub salt: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -1294,6 +1297,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Quorum {
+        #[allow(missing_docs)]
         pub strategies:
             alloy::sol_types::private::Vec<<StrategyParams as alloy::sol_types::SolType>::RustType>,
     }
@@ -1466,7 +1470,9 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyParams {
+        #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub multiplier: alloy::sol_types::private::primitives::aliases::U96,
     }
     #[allow(
@@ -3655,6 +3661,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
+        #[allow(missing_docs)]
         pub _delegationManager: alloy::sol_types::private::Address,
     }
     const _: () = {
@@ -3825,12 +3832,14 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLastCheckpointOperatorWeightCall {
+        #[allow(missing_docs)]
         pub _operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getLastCheckpointOperatorWeight(address)`](getLastCheckpointOperatorWeightCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLastCheckpointOperatorWeightReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -3945,6 +3954,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLastCheckpointThresholdWeightReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4051,12 +4061,14 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLastCheckpointThresholdWeightAtBlockCall {
+        #[allow(missing_docs)]
         pub _blockNumber: u32,
     }
     ///Container type for the return parameters of the [`getLastCheckpointThresholdWeightAtBlock(uint32)`](getLastCheckpointThresholdWeightAtBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLastCheckpointThresholdWeightAtBlockReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4181,6 +4193,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLastCheckpointTotalWeightReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4287,12 +4300,14 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLastCheckpointTotalWeightAtBlockCall {
+        #[allow(missing_docs)]
         pub _blockNumber: u32,
     }
     ///Container type for the return parameters of the [`getLastCheckpointTotalWeightAtBlock(uint32)`](getLastCheckpointTotalWeightAtBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLastCheckpointTotalWeightAtBlockReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4405,12 +4420,14 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLastestOperatorSigningKeyCall {
+        #[allow(missing_docs)]
         pub _operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getLastestOperatorSigningKey(address)`](getLastestOperatorSigningKeyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLastestOperatorSigningKeyReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -4521,13 +4538,16 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSigningKeyAtBlockCall {
+        #[allow(missing_docs)]
         pub _operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _blockNumber: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getOperatorSigningKeyAtBlock(address,uint256)`](getOperatorSigningKeyAtBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSigningKeyAtBlockReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -4653,12 +4673,14 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorWeightCall {
+        #[allow(missing_docs)]
         pub _operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getOperatorWeight(address)`](getOperatorWeightCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorWeightReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4769,13 +4791,16 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorWeightAtBlockCall {
+        #[allow(missing_docs)]
         pub _operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _blockNumber: u32,
     }
     ///Container type for the return parameters of the [`getOperatorWeightAtBlock(address,uint32)`](getOperatorWeightAtBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorWeightAtBlockReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -4898,8 +4923,11 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
+        #[allow(missing_docs)]
         pub _serviceManager: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub _thresholdWeight: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub _quorum: <Quorum as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`initialize(address,uint256,((address,uint96)[]))`](initializeCall) function.
@@ -5034,13 +5062,16 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isValidSignatureCall {
+        #[allow(missing_docs)]
         pub _dataHash: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub _signatureData: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`isValidSignature(bytes32,bytes)`](isValidSignatureCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isValidSignatureReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<4>,
     }
     #[allow(
@@ -5170,6 +5201,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct minimumWeightReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
@@ -5276,12 +5308,14 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorRegisteredCall {
+        #[allow(missing_docs)]
         pub _operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`operatorRegistered(address)`](operatorRegisteredCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorRegisteredReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
     #[allow(
@@ -5396,6 +5430,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
@@ -5506,6 +5541,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quorumReturn {
+        #[allow(missing_docs)]
         pub _0: <Quorum as alloy::sol_types::SolType>::RustType,
     }
     #[allow(
@@ -5612,8 +5648,10 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorWithSignatureCall {
+        #[allow(missing_docs)]
         pub _operatorSignature:
             <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub _signingKey: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`registerOperatorWithSignature((bytes,bytes32,uint256),address)`](registerOperatorWithSignatureCall) function.
@@ -5852,6 +5890,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
+        #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`transferOwnership(address)`](transferOwnershipCall) function.
@@ -5966,7 +6005,9 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateMinimumWeightCall {
+        #[allow(missing_docs)]
         pub _newMinimumWeight: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub _operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`updateMinimumWeight(uint256,address[])`](updateMinimumWeightCall) function.
@@ -6096,6 +6137,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateOperatorSigningKeyCall {
+        #[allow(missing_docs)]
         pub _newSigningKey: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`updateOperatorSigningKey(address)`](updateOperatorSigningKeyCall) function.
@@ -6212,6 +6254,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateOperatorsCall {
+        #[allow(missing_docs)]
         pub _operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`updateOperators(address[])`](updateOperatorsCall) function.
@@ -6331,9 +6374,11 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateOperatorsForQuorumCall {
+        #[allow(missing_docs)]
         pub operatorsPerQuorum: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         >,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`updateOperatorsForQuorum(address[][],bytes)`](updateOperatorsForQuorumCall) function.
@@ -6471,7 +6516,9 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateQuorumConfigCall {
+        #[allow(missing_docs)]
         pub _quorum: <Quorum as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub _operators: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`updateQuorumConfig(((address,uint96)[]),address[])`](updateQuorumConfigCall) function.
@@ -6599,6 +6646,7 @@ pub mod ECDSAStakeRegistry {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateStakeThresholdCall {
+        #[allow(missing_docs)]
         pub _thresholdWeight: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`updateStakeThreshold(uint256)`](updateStakeThresholdCall) function.
@@ -6710,30 +6758,55 @@ pub mod ECDSAStakeRegistry {
     };
     ///Container for all the [`ECDSAStakeRegistry`](self) function calls.
     pub enum ECDSAStakeRegistryCalls {
+        #[allow(missing_docs)]
         deregisterOperator(deregisterOperatorCall),
+        #[allow(missing_docs)]
         getLastCheckpointOperatorWeight(getLastCheckpointOperatorWeightCall),
+        #[allow(missing_docs)]
         getLastCheckpointThresholdWeight(getLastCheckpointThresholdWeightCall),
+        #[allow(missing_docs)]
         getLastCheckpointThresholdWeightAtBlock(getLastCheckpointThresholdWeightAtBlockCall),
+        #[allow(missing_docs)]
         getLastCheckpointTotalWeight(getLastCheckpointTotalWeightCall),
+        #[allow(missing_docs)]
         getLastCheckpointTotalWeightAtBlock(getLastCheckpointTotalWeightAtBlockCall),
+        #[allow(missing_docs)]
         getLastestOperatorSigningKey(getLastestOperatorSigningKeyCall),
+        #[allow(missing_docs)]
         getOperatorSigningKeyAtBlock(getOperatorSigningKeyAtBlockCall),
+        #[allow(missing_docs)]
         getOperatorWeight(getOperatorWeightCall),
+        #[allow(missing_docs)]
         getOperatorWeightAtBlock(getOperatorWeightAtBlockCall),
+        #[allow(missing_docs)]
         initialize(initializeCall),
+        #[allow(missing_docs)]
         isValidSignature(isValidSignatureCall),
+        #[allow(missing_docs)]
         minimumWeight(minimumWeightCall),
+        #[allow(missing_docs)]
         operatorRegistered(operatorRegisteredCall),
+        #[allow(missing_docs)]
         owner(ownerCall),
+        #[allow(missing_docs)]
         quorum(quorumCall),
+        #[allow(missing_docs)]
         registerOperatorWithSignature(registerOperatorWithSignatureCall),
+        #[allow(missing_docs)]
         renounceOwnership(renounceOwnershipCall),
+        #[allow(missing_docs)]
         transferOwnership(transferOwnershipCall),
+        #[allow(missing_docs)]
         updateMinimumWeight(updateMinimumWeightCall),
+        #[allow(missing_docs)]
         updateOperatorSigningKey(updateOperatorSigningKeyCall),
+        #[allow(missing_docs)]
         updateOperators(updateOperatorsCall),
+        #[allow(missing_docs)]
         updateOperatorsForQuorum(updateOperatorsForQuorumCall),
+        #[allow(missing_docs)]
         updateQuorumConfig(updateQuorumConfigCall),
+        #[allow(missing_docs)]
         updateStakeThreshold(updateStakeThresholdCall),
     }
     #[automatically_derived]
@@ -7468,18 +7541,31 @@ pub mod ECDSAStakeRegistry {
     }
     ///Container for all the [`ECDSAStakeRegistry`](self) custom errors.
     pub enum ECDSAStakeRegistryErrors {
+        #[allow(missing_docs)]
         InsufficientSignedStake(InsufficientSignedStake),
+        #[allow(missing_docs)]
         InsufficientWeight(InsufficientWeight),
+        #[allow(missing_docs)]
         InvalidLength(InvalidLength),
+        #[allow(missing_docs)]
         InvalidQuorum(InvalidQuorum),
+        #[allow(missing_docs)]
         InvalidReferenceBlock(InvalidReferenceBlock),
+        #[allow(missing_docs)]
         InvalidSignature(InvalidSignature),
+        #[allow(missing_docs)]
         InvalidSignedWeight(InvalidSignedWeight),
+        #[allow(missing_docs)]
         InvalidThreshold(InvalidThreshold),
+        #[allow(missing_docs)]
         LengthMismatch(LengthMismatch),
+        #[allow(missing_docs)]
         MustUpdateAllOperators(MustUpdateAllOperators),
+        #[allow(missing_docs)]
         NotSorted(NotSorted),
+        #[allow(missing_docs)]
         OperatorAlreadyRegistered(OperatorAlreadyRegistered),
+        #[allow(missing_docs)]
         OperatorNotRegistered(OperatorNotRegistered),
     }
     #[automatically_derived]
@@ -7825,16 +7911,27 @@ pub mod ECDSAStakeRegistry {
     }
     ///Container for all the [`ECDSAStakeRegistry`](self) events.
     pub enum ECDSAStakeRegistryEvents {
+        #[allow(missing_docs)]
         Initialized(Initialized),
+        #[allow(missing_docs)]
         MinimumWeightUpdated(MinimumWeightUpdated),
+        #[allow(missing_docs)]
         OperatorDeregistered(OperatorDeregistered),
+        #[allow(missing_docs)]
         OperatorRegistered(OperatorRegistered),
+        #[allow(missing_docs)]
         OperatorWeightUpdated(OperatorWeightUpdated),
+        #[allow(missing_docs)]
         OwnershipTransferred(OwnershipTransferred),
+        #[allow(missing_docs)]
         QuorumUpdated(QuorumUpdated),
+        #[allow(missing_docs)]
         SigningKeyUpdate(SigningKeyUpdate),
+        #[allow(missing_docs)]
         ThresholdWeightUpdated(ThresholdWeightUpdated),
+        #[allow(missing_docs)]
         TotalWeightUpdated(TotalWeightUpdated),
+        #[allow(missing_docs)]
         UpdateMinimumWeight(UpdateMinimumWeight),
     }
     #[automatically_derived]

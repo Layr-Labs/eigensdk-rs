@@ -86,7 +86,7 @@ bindings_host: bindings_rewardsv2_host bindings_slashing_host
 rewardsv2-bindings:
 	@echo "Starting Docker container..."
 	@docker run --rm -v "$(PWD):/sdk" -w "/sdk" \
-		ghcr.io/foundry-rs/foundry:v0.3.0 \
+		ghcr.io/foundry-rs/foundry:stable \
 		-c scripts/generate_rewardsv2_bindings.sh
 	cargo fmt --all
 
@@ -94,7 +94,7 @@ rewardsv2-bindings:
 slashing-bindings:
 	@echo "Starting Docker container..."
 	@docker run --rm -v "$(PWD):/sdk" -w "/sdk" \
-		ghcr.io/foundry-rs/foundry:v0.3.0 \
+		ghcr.io/foundry-rs/foundry:stable \
 		-c scripts/generate_slashing_bindings.sh
 	cargo fmt --all
 	# Apply a fix for any compile issues

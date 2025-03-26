@@ -703,31 +703,6 @@ impl AvsRegistryChainReader {
         Ok(operator_id_to_socket)
     }
 
-    /// Check if a quorum is an operator set quorum
-    ///
-    /// # Arguments
-    /// * `quorum_number` - The quorum number to query.
-    ///
-    /// # Returns
-    /// [`true`] if the quorum is an operator set quorum, [`false`] otherwise.
-    pub async fn is_operator_set_quorum(
-        &self,
-        quorum_number: QuorumNum,
-    ) -> Result<bool, AvsRegistryError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, &provider);
-
-        let quorum_status = contract_stake_registry
-            .isOperatorSetQuorum(quorum_number)
-            .call()
-            .await?;
-
-        let StakeRegistry::isOperatorSetQuorumReturn { _0: quorum_status } = quorum_status;
-
-        Ok(quorum_status)
-    }
-
     /// Computes the total weight of operator with the given quorum number.
     ///
     /// The quorum number must exist, or else the tx will fail.
@@ -1184,7 +1159,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1225,7 +1201,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1267,7 +1244,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1307,7 +1285,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1377,7 +1356,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIFTH_PRIVATE_KEY.to_string();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let bls_key_pair = BlsKeyPair::new(
@@ -1516,16 +1496,6 @@ mod tests {
             .await
             .unwrap();
         assert!(!is_registered);
-    }
-
-    #[tokio::test]
-    async fn test_is_operator_set_quorum() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
-
-        let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
-
-        assert!(operator_set_quourm);
     }
 
     #[tokio::test]
@@ -1718,5 +1688,47 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(total_stake_indices_at_block_number.first(), Some(&1u32));
+    }
+
+    #[tokio::test]
+    async fn test_query_existing_registered_operator_pub_keys() {
+        let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
+
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair.clone(),
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let operators = avs_reader
+            .query_existing_registered_operator_pub_keys(0, 1000, ws_endpoint)
+            .await
+            .unwrap();
+
+        assert_eq!(*operators.0.first().unwrap(), FIFTH_ADDRESS);
+        assert_eq!(
+            operators.1.first().unwrap().g1_pub_key,
+            BlsG1Point::new(bls_key_pair.public_key().g1()),
+        );
     }
 }
