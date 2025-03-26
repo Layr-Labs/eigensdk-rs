@@ -281,23 +281,21 @@ mod tests {
     async fn test_process_claim() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
-        
+
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
         let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
 
         // Check claimer balance at strategy before claim
         let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-        
+
         let (_, token_address) = el_chain_reader
             .get_strategy_and_underlying_token(mock_strategy)
             .await
             .unwrap();
 
         let token = MockERC20::new(token_address, &signer);
-        let initial_balance = token.balanceOf(FIRST_ADDRESS)
-            .await
-            .unwrap();
+        let initial_balance = token.balanceOf(FIRST_ADDRESS).await.unwrap();
 
         assert!(initial_balance._0 == U256::ZERO);
 
@@ -312,9 +310,7 @@ mod tests {
         assert!(receipt.status());
 
         // Check balance at strategy after claim
-        let balance_after_claim = token.balanceOf(FIRST_ADDRESS)
-            .await
-            .unwrap();
+        let balance_after_claim = token.balanceOf(FIRST_ADDRESS).await.unwrap();
 
         assert!(balance_after_claim._0 == U256::ZERO);
     }

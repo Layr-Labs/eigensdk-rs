@@ -7575,8 +7575,11 @@ pub mod EigenPodManager {
         #[allow(missing_docs)]
         burnableETHShares(burnableETHSharesCall),
         #[allow(missing_docs)]
+        createPod(createPodCall),
+        #[allow(missing_docs)]
         delegationManager(delegationManagerCall),
         #[allow(missing_docs)]
+        eigenPodBeacon(eigenPodBeaconCall),
         #[allow(missing_docs)]
         ethPOS(ethPOSCall),
         #[allow(missing_docs)]

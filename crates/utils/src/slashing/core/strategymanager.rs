@@ -7809,8 +7809,11 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         getStrategiesWithBurnableShares(getStrategiesWithBurnableSharesCall),
         #[allow(missing_docs)]
+        increaseBurnableShares(increaseBurnableSharesCall),
+        #[allow(missing_docs)]
         initialize(initializeCall),
         #[allow(missing_docs)]
+        nonces(noncesCall),
         #[allow(missing_docs)]
         owner(ownerCall),
         #[allow(missing_docs)]

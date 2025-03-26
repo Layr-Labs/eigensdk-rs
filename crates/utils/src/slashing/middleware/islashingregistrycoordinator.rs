@@ -11028,6 +11028,11 @@ pub mod ISlashingRegistryCoordinator {
         #[allow(missing_docs)]
         lastEjectionTimestamp(lastEjectionTimestampCall),
         #[allow(missing_docs)]
+        pubkeyRegistrationMessageHash(pubkeyRegistrationMessageHashCall),
+        #[allow(missing_docs)]
+        quorumCount(quorumCountCall),
+        #[allow(missing_docs)]
+        quorumUpdateBlockNumber(quorumUpdateBlockNumberCall),
         #[allow(missing_docs)]
         registerOperator(registerOperatorCall),
         #[allow(missing_docs)]
@@ -11134,6 +11139,11 @@ pub mod ISlashingRegistryCoordinator {
                     <calculatePubkeyRegistrationMessageHashCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::churnApprover(_) => {
+                    <churnApproverCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::createSlashableStakeQuorum(_) => {
+                    <createSlashableStakeQuorumCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::createTotalDelegatedStakeQuorum(_) => {
                     <createTotalDelegatedStakeQuorumCall as alloy_sol_types::SolCall>::SELECTOR
                 }

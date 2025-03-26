@@ -14497,7 +14497,6 @@ pub mod RegistryCoordinator {
             }
         }
     };
-
     /**Function with signature `operatorSetsEnabled()` and selector `0x81f936d2`.
     ```solidity
     function operatorSetsEnabled() external view returns (bool);
