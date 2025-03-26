@@ -13,6 +13,7 @@ use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
 use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 
 pub mod chaincaller;
+#[doc(hidden)]
 pub mod fake_avs_registry_service;
 
 #[async_trait]
