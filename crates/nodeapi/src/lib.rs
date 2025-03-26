@@ -424,26 +424,6 @@ mod tests {
         assert_eq!(resp.status(), http::StatusCode::NOT_FOUND);
         let body = test::read_body(resp).await;
         assert_eq!(body.len(), 0);
-
-        // ------------------------------
-        // The following example shows how to modify the state of the service.
-        // Modifying the service status of a given service to ServiceStatus::Down will
-        // give a 503 Service Unavailable response.
-        {
-            let mut state_inner = state.lock().unwrap();
-            state_inner
-                .update_service_status("testServiceId", ServiceStatus::Down)
-                .unwrap();
-
-            // release the lock
-        }
-        // Test health endpoint
-        let req = test::TestRequest::get()
-            .uri("/eigen/node/services/testServiceId/health")
-            .to_request();
-        let resp = app.call(req).await.unwrap();
-        // Expect 503 SERVICE_UNAVAILABLE
-        assert_eq!(resp.status(), http::StatusCode::SERVICE_UNAVAILABLE);
     }
 
     #[ntex::test]
@@ -460,7 +440,7 @@ mod tests {
         // Set up a server running on a test address (e.g., 127.0.0.1:8081)
         let ip_port_addr = "127.0.0.1:8081";
 
-        let node_api = NodeApi::new(node_info);
+        let mut node_api = NodeApi::new(node_info);
         let server = node_api.start_server(ip_port_addr).unwrap();
 
         // Start the server in a background task
@@ -507,6 +487,27 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(resp.status(), reqwest::StatusCode::OK);
+
+        // ------------------------------
+        // The following example shows how to modify the state of the service.
+        // Modifying the service status of a given service to ServiceStatus::Down will
+        // give a 503 Service Unavailable response.
+
+        node_api
+            .update_service_status("test_service", ServiceStatus::Down)
+            .unwrap();
+
+        // Test health endpoint
+        let resp = client
+            .get(format!(
+                "http://{}/eigen/node/services/test_service/health",
+                ip_port_addr
+            ))
+            .send()
+            .await
+            .unwrap();
+        // Expect 503 SERVICE_UNAVAILABLE
+        assert_eq!(resp.status(), reqwest::StatusCode::SERVICE_UNAVAILABLE);
 
         Ok(())
     }
