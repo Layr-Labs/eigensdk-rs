@@ -189,3 +189,60 @@ pub(crate) mod test_utils {
         assert!(tx_status);
     }
 }
+// TODO: Move this tests package to somewhere else
+#[cfg(test)]
+mod tests {
+
+    use crate::test_utils::build_avs_registry_chain_writer;
+    use alloy::{primitives::{aliases::U96, keccak256, FixedBytes, U256, U8}, sol_types::SolValue};
+    use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
+    use eigen_common::{get_provider, get_signer};
+    use eigen_logging::get_test_logger;
+    use eigen_testing_utils::{
+        anvil::start_anvil_container,
+        anvil_constants::{get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address, get_erc20_mock_strategy, get_registry_coordinator_address, get_rewards_coordinator_address, get_strategy_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY},
+        transaction::wait_transaction,
+    };
+    use eigen_utils::slashing::{core::{delegationmanager::DelegationManager, irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::{EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf}}}, middleware::servicemanagerbase::IRewardsCoordinatorTypes::{RewardsSubmission, StrategyAndMultiplier}, sdk::mockerc20::MockERC20};
+    
+    #[tokio::test]
+    async fn test_process_claim() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
+
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        // Check claimer balance at strategy before claim
+        let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+
+        let (_, token_address) = el_chain_reader
+            .get_strategy_and_underlying_token(mock_strategy)
+            .await
+            .unwrap();
+
+        let token = MockERC20::new(token_address, &signer);
+        let initial_balance = token.balanceOf(FIRST_ADDRESS).call().await.unwrap()._0;
+
+        println!("{}", initial_balance);
+        // assert!(initial_balance == U256::ZERO);
+
+        let rewards_amount = U256::from(42);
+        let (_root, claim) = new_claim(&http_endpoint, rewards_amount).await;
+
+        let tx_hash = el_chain_writer
+            .process_claim(claim, FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        // Check balance at strategy after claim
+        let balance_after_claim = token.balanceOf(FIRST_ADDRESS).call().await.unwrap()._0;
+
+        println!("{}", balance_after_claim);
+        assert!(balance_after_claim == initial_balance + rewards_amount);
+    }
+}
