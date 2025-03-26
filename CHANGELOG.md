@@ -27,7 +27,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Other Changes
 
-* Changing NodeApi to allow concurrent modifications of the internal state of the node.
+* Changing NodeApi to allow concurrent modifications of the internal state of the node in PR [401](https://github.com/Layr-Labs/eigensdk-rs/pull/401).
 
 For example:
 
