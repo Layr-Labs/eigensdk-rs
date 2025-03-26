@@ -15,7 +15,8 @@ use eigen_types::operator::QuorumNum;
 use eigen_utils::convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
-    IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
+    IBLSApkRegistryTypes::PubkeyRegistrationParams,
+    ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry,
     ISlashingRegistryCoordinatorTypes::OperatorSetParam, RegistryCoordinator,
 };
 use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
@@ -1730,7 +1731,7 @@ mod tests {
             strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
             multiplier: U96::from(1),
         };
-        let look_ahead_period = 10;
+        let look_ahead_period = 0;
 
         let tx_hash = avs_writer
             .create_slashable_stake_quorum(

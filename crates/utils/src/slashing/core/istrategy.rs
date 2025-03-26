@@ -25,6 +25,7 @@ interface IStrategy {
     function underlyingToken() external view returns (address);
     function userUnderlying(address user) external returns (uint256);
     function userUnderlyingView(address user) external view returns (uint256);
+    function version() external view returns (string memory);
     function withdraw(address recipient, address token, uint256 amountShares) external;
 }
 ```
@@ -224,6 +225,19 @@ interface IStrategy {
         "name": "",
         "type": "uint256",
         "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "version",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
       }
     ],
     "stateMutability": "view"
@@ -2279,6 +2293,117 @@ pub mod IStrategy {
             }
         }
     };
+    /**Function with signature `version()` and selector `0x54fd4d50`.
+    ```solidity
+    function version() external view returns (string memory);
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct versionCall {}
+    ///Container type for the return parameters of the [`version()`](versionCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct versionReturn {
+        #[allow(missing_docs)]
+        pub _0: alloy::sol_types::private::String,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = ();
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = ();
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<versionCall> for UnderlyingRustTuple<'_> {
+                fn from(value: versionCall) -> Self {
+                    ()
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for versionCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {}
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::String,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::String,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<versionReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: versionReturn) -> Self {
+                    (value._0,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for versionReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { _0: tuple.0 }
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for versionCall {
+            type Parameters<'a> = ();
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = versionReturn;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::String,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "version()";
+            const SELECTOR: [u8; 4] = [84u8, 253u8, 77u8, 80u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
     /**Function with signature `withdraw(address,address,uint256)` and selector `0xd9caed12`.
     ```solidity
     function withdraw(address recipient, address token, uint256 amountShares) external;
@@ -2445,6 +2570,8 @@ pub mod IStrategy {
         #[allow(missing_docs)]
         userUnderlyingView(userUnderlyingViewCall),
         #[allow(missing_docs)]
+        version(versionCall),
+        #[allow(missing_docs)]
         withdraw(withdrawCall),
     }
     #[automatically_derived]
@@ -2459,6 +2586,7 @@ pub mod IStrategy {
             [36u8, 149u8, 165u8, 153u8],
             [58u8, 152u8, 239u8, 57u8],
             [71u8, 231u8, 239u8, 36u8],
+            [84u8, 253u8, 77u8, 80u8],
             [85u8, 60u8, 165u8, 248u8],
             [122u8, 139u8, 38u8, 55u8],
             [140u8, 135u8, 16u8, 25u8],
@@ -2474,7 +2602,7 @@ pub mod IStrategy {
     impl alloy_sol_types::SolInterface for IStrategyCalls {
         const NAME: &'static str = "IStrategyCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 12usize;
+        const COUNT: usize = 13usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -2503,6 +2631,7 @@ pub mod IStrategy {
                 Self::userUnderlyingView(_) => {
                     <userUnderlyingViewCall as alloy_sol_types::SolCall>::SELECTOR
                 }
+                Self::version(_) => <versionCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::withdraw(_) => <withdrawCall as alloy_sol_types::SolCall>::SELECTOR,
             }
         }
@@ -2555,6 +2684,16 @@ pub mod IStrategy {
                             .map(IStrategyCalls::deposit)
                     }
                     deposit
+                },
+                {
+                    fn version(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IStrategyCalls> {
+                        <versionCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                            .map(IStrategyCalls::version)
+                    }
+                    version
                 },
                 {
                     fn userUnderlyingView(
@@ -2709,6 +2848,9 @@ pub mod IStrategy {
                 Self::userUnderlyingView(inner) => {
                     <userUnderlyingViewCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
+                Self::version(inner) => {
+                    <versionCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                }
                 Self::withdraw(inner) => {
                     <withdrawCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
@@ -2753,6 +2895,9 @@ pub mod IStrategy {
                 }
                 Self::userUnderlyingView(inner) => {
                     <userUnderlyingViewCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                }
+                Self::version(inner) => {
+                    <versionCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::withdraw(inner) => {
                     <withdrawCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
@@ -3338,6 +3483,10 @@ pub mod IStrategy {
             user: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, userUnderlyingViewCall, N> {
             self.call_builder(&userUnderlyingViewCall { user })
+        }
+        ///Creates a new call builder for the [`version`] function.
+        pub fn version(&self) -> alloy_contract::SolCallBuilder<T, &P, versionCall, N> {
+            self.call_builder(&versionCall {})
         }
         ///Creates a new call builder for the [`withdraw`] function.
         pub fn withdraw(

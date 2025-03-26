@@ -46,6 +46,7 @@ library MockAvsDeploymentLib {
     using Strings for *;
     using UpgradeableProxyLib for address;
 
+    string internal constant MIDDLEWARE_VERSION = "v1.3.0-rc.0";
     Vm internal constant VM = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     struct DeploymentData {
@@ -113,7 +114,8 @@ library MockAvsDeploymentLib {
                 IIndexRegistry(result.indexRegistry),
                 ISocketRegistry(result.socketRegistry),
                 IAllocationManager(core.allocationManager),
-                IPauserRegistry(core.pauserRegistry)
+                IPauserRegistry(core.pauserRegistry),
+                MIDDLEWARE_VERSION
             )
         );
 
