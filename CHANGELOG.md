@@ -19,17 +19,11 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Breaking Changes 🛠
 
-### Deprecated ⚠️
-
-### Removed
-
-### Documentation 📚
-
-### Other Changes
-
 * Changing NodeApi to allow concurrent modifications of the internal state of the node in PR [401](https://github.com/Layr-Labs/eigensdk-rs/pull/401).
 
-  For example:
+  Before: `NodeApi` had the function `create_server` to start the Node API. Now, there are two functions `NodeApi::new` and `NodeApi::start_server` to create the server and then start it.
+
+  Also, users can now call functions to modify the information served dynamically by interacting with the `NodeApi` methods. As an end-to-end example:
 
   ``` rust
     let mut node_info = NodeInfo::new("test_node", "v1.0.0");
@@ -45,15 +39,20 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
     let mut node_api = NodeApi::new(node_info);
     let server = node_api.start_server(ip_port_addr).unwrap();
-  ```
 
-  and then, you can modify the state (the innner scope is meant only to release the lock):
-
-  ``` rust
+    // and then you can dinamically modify the state of the node:
     node_api
         .update_service_status("test_service", ServiceStatus::Down)
         .unwrap();
   ```
+
+### Deprecated ⚠️
+
+### Removed
+
+### Documentation 📚
+
+### Other Changes
 
 ## [0.5.0] - 2025-03-18
 
