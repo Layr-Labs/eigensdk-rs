@@ -383,17 +383,17 @@ mod tests {
 
     #[tokio::test]
     async fn test_service_health_handler() {
-        let mut node_api = NodeInfo::new("test_avs", "v0.0.1");
+        let mut node_info = NodeInfo::new("test_avs", "v0.0.1");
 
         // Register a service to the NodeApi
-        node_api.register_service(
+        node_info.register_service(
             "testServiceId",
             "testServiceName",
             "testServiceDescription",
             ServiceStatus::Up,
         );
 
-        let state = Arc::new(Mutex::new(node_api));
+        let state = Arc::new(Mutex::new(node_info));
 
         // Initialize the app with the NodeApi
         let app = test::init_service(App::new().state(state.clone()).route(
