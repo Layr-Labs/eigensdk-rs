@@ -1,3 +1,62 @@
+//! AVS Registry Service
+//!
+//! This service is used to get the AVS state of the operators and the quorums.
+//!
+//! ## Introduction
+//!
+//! The `AvsRegistryServiceChainCaller` allows to get the AVS state of the operators and the quorums at any block.
+//!
+//! ## Usage
+//!
+//! ### Initialize the service
+//!
+//! To initialize the service, you need to provide an `AvsRegistryReader` and an `OperatorInfoService`.
+//!
+//! ```rust
+//! let avs_registry_service =
+//!     AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service);
+//! ```
+//!
+//! ### Get the AVS state of the operators and the quorums at a specific block
+//!
+//! To get the state of the operator in a specific quorum at a specific block, you can use the `get_operators_avs_state_at_block` method.
+//! The list of quorum nums and the list of operators stakes in quorums should have the same length.
+//!
+//! ```rust
+//! let operator_avs_state = avs_registry_service
+//!     .get_operators_avs_state_at_block(block_num, &quorum_nums)
+//!     .await
+//!     .unwrap();
+//! ```
+//!
+//! To get the state of the quorum at a specific block, you can use the `get_quorums_avs_state_at_block` method.
+//!
+//! ```rust
+//! let quorum_state_per_number = avs_registry_service
+//!     .get_quorums_avs_state_at_block(&quorum_nums, block_num)
+//!     .await
+//!     .unwrap();
+//! ```
+//!
+//! ### Get the signatures indices of quorum members for a specific block
+//!
+//! ```rust
+//! let check_signatures_indices = avs_registry_service
+//!     .get_check_signatures_indices(block_num, &quorum_nums, &non_signer_operator_ids)
+//!     .await
+//!     .unwrap();
+//! ```
+//!
+//! ### Get the operator info
+//!
+//! ```rust
+//! let operator_info = avs_registry_service
+//!     .get_operator_info(operator_id)
+//!     .await
+//!     .unwrap();
+//! ```
+//!
+
 #![doc(
     html_logo_url = "https://github.com/Layr-Labs/eigensdk-rs/assets/91280922/bd13caec-3c00-4afc-839a-b83d2890beb5",
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
