@@ -4,14 +4,14 @@
 //!
 //! ## Introduction
 //!
-//! The `AvsRegistryServiceChainCaller` allows to get the AVS state of the operators and the quorums at any block.
+//! The [`AvsRegistryServiceChainCaller`] allows to get the AVS state of the operators and the quorums at any block.
 //! This service is used by the `BLS Aggregator service` and use under the hood the `OperatorInfoService` to get the operator info.
 //!
 //! ## Usage
 //!
 //! ### Initialize the service
 //!
-//! To initialize the service, you need to provide an `AvsRegistryReader` and an `OperatorInfoService`.
+//! To initialize the service, you need to provide an `AvsRegistryReader` and an `OperatorInfoService` and call the [`new`] method.
 //!
 //! ```rust
 //! let avs_registry_service =
@@ -20,7 +20,7 @@
 //!
 //! ### Get the AVS state of the operators and the quorums at a specific block
 //!
-//! To get the state of the operator in a specific quorum at a specific block, you can use the `get_operators_avs_state_at_block` method.
+//! To get the state of the operator in a specific quorum at a specific block, you can use the [`get_operators_avs_state_at_block`] method.
 //! The list of quorum nums and the list of operators stakes in quorums should have the same length.
 //!
 //! ```rust
@@ -30,7 +30,7 @@
 //!     .unwrap();
 //! ```
 //!
-//! To get the state of the quorum at a specific block, you can use the `get_quorums_avs_state_at_block` method.
+//! To get the state of the quorum at a specific block, you can use the [`get_quorums_avs_state_at_block`] method.
 //!
 //! ```rust
 //! let quorum_state_per_number = avs_registry_service
@@ -41,6 +41,8 @@
 //!
 //! ### Get the signatures indices of quorum members for a specific block
 //!
+//! To get the signatures indices of quorum members for a specific block, you can use the [`get_check_signatures_indices`] method.
+//!
 //! ```rust
 //! let check_signatures_indices = avs_registry_service
 //!     .get_check_signatures_indices(block_num, &quorum_nums, &non_signer_operator_ids)
@@ -48,15 +50,11 @@
 //!     .unwrap();
 //! ```
 //!
-//! ### Get the operator info
-//!
-//! ```rust
-//! let operator_info = avs_registry_service
-//!     .get_operator_info(operator_id)
-//!     .await
-//!     .unwrap();
-//! ```
-//! [``]
+//! [`AvsRegistryServiceChainCaller`]: chaincaller::AvsRegistryServiceChainCaller
+//! [`new`]: chaincaller::AvsRegistryServiceChainCaller::new()
+//! [`get_operators_avs_state_at_block`]: chaincaller::AvsRegistryServiceChainCaller::get_operators_avs_state_at_block()
+//! [`get_quorums_avs_state_at_block`]: chaincaller::AvsRegistryServiceChainCaller::get_quorums_avs_state_at_block()
+//! [`get_check_signatures_indices`]: chaincaller::AvsRegistryServiceChainCaller::get_check_signatures_indices()
 //!
 
 #![doc(
