@@ -21,7 +21,7 @@
 //! Represents the AVS state of an operator.
 //!
 //! - `operator_id`: Operator ID
-//! - `operator_info`: Operator info
+//! - `operator_info`: Operator info public key
 //! - `stake_per_quorum`: Stake per quorum
 //! - `block_num`: Block number
 //!
