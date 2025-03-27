@@ -2,12 +2,38 @@
 //!
 //! This crate provides traits and methods to get operator information.
 //!
-//! # Introduction
+//! ## Introduction
 //!
 //! The Operators Info Service provides functionality to get operators Public Keys and Sockets.
 //!
 //! The service is designed to be used in conjunction with the `AvsRegistryServiceChainCaller`
 //! to get the operators information from the chain.
+//!
+//! ## Main Components
+//!
+//! ### OperatorInfoServiceInMemory
+//!
+//! The main struct of the service, it implements the [`OperatorInfoService`] trait.
+//! It fetches and stores operators info (addresses and public key) in memory.
+//!
+//! - `logger`: Logger
+//! - `avs_registry_reader`: `AvsRegistryChainReader` to get the operators information from the chain
+//! - `ws`: WebSocket endpoint
+//! - `pub_keys`: UnboundedSender Channel to send `OperatorsInfoMessage` to the service
+//!
+//! ### OperatorSocket
+//!
+//! Represents an operator with the ID and the socket.
+//!
+//! - `id`: Operator ID
+//! - `socket`: Operator socket
+//!
+//! ### OperatorPubKeys
+//!
+//! Represents the operator public keys.
+//!
+//! - `g1_pub_key`: Operator G1 public key
+//! - `g2_pub_key`: Operator G2 public key
 //!
 //! ## Usage
 //!
@@ -34,7 +60,7 @@
 //! ### Start the Service
 //!
 //! Then you can start the service by calling the [`start_service`] method. It will listen to events of [`NEW_PUBKEY_REGISTRATION_EVENT`]
-//! and [`OPERATOR_SOCKET_UPDATE`] and save the data in memory.
+//! and [`OPERATOR_SOCKET_UPDATE`] and save the data in memory. To stop the service, you can use the `CancellationToken`.
 //!
 //! ```rust
 //! tokio::spawn(async move {
@@ -70,6 +96,7 @@
 //! let operator_info = operators_info_service_in_memory
 //!     .get_operator_info(operator_id)
 //!     .await
+//!     .unwrap()
 //!     .unwrap();
 //!
 //! let operator_socket = operators_info_service_in_memory
@@ -80,6 +107,8 @@
 //! ```
 //!
 //! [`OperatorInfoServiceInMemory`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory
+//! [`OperatorInfoService`]: operator_info::OperatorInfoService
+//! [`OperatorSocket`]: operator_info::OperatorSocket
 //! [`new`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::new()
 //! [`start_service`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::start_service()
 //! [`query_past_registered_operator_events_and_fill_db`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::query_past_registered_operator_events_and_fill_db()
