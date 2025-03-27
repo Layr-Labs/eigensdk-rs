@@ -17,7 +17,9 @@ use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
 use eigen_logging::get_logger;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
-use eigen_services_blsaggregation::bls_agg::{BlsAggregatorService, TaskSignature};
+use eigen_services_blsaggregation::bls_agg::{
+    AggregateReceiver, BlsAggregatorService, ServiceHandle, TaskSignature,
+};
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use futures_util::StreamExt;
 use jsonrpc_core::serde_json;
@@ -36,12 +38,10 @@ pub use signed_task_response::SignedTaskResponse;
 #[derive(Debug)]
 pub struct Aggregator<TP> {
     port_address: String,
-    bls_aggregation_service: BlsAggregatorService<
-        AvsRegistryServiceChainCaller<AvsRegistryChainReader, OperatorInfoServiceInMemory>,
-    >,
     task_quorum: HashMap<u32, u32>,
-
     tp: TP,
+    service_handle: ServiceHandle,
+    aggregated_response_receiver: AggregateReceiver,
 }
 
 impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
@@ -84,14 +84,15 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
                 .await;
         });
 
-        let bls_aggregation_service =
-            BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger());
+        let (service_handle, aggregated_response_receiver) =
+            BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
 
         Ok(Self {
             port_address: config.server_address,
             task_quorum: HashMap::new(),
-            bls_aggregation_service,
             tp,
+            service_handle,
+            aggregated_response_receiver,
         })
     }
 
@@ -210,8 +211,8 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
             aggregator
                 .lock()
                 .await
-                .bls_aggregation_service
-                .initialize_new_task(info)
+                .service_handle
+                .initialize_task(info)
                 .await?;
         }
 
@@ -243,8 +244,8 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
         let task_signature =
             TaskSignature::new(task_index, task_response_digest, signature, operator_id);
 
-        self.bls_aggregation_service
-            .process_new_signature(task_signature)
+        self.service_handle
+            .process_signature(task_signature)
             .await?;
         info!("processed signature for index {:?}", task_index);
         let quorum_reached = {
@@ -255,17 +256,14 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
 
         if quorum_reached {
             info!("quorum reached for task index: {:?}", task_index);
-            if let Some(aggregated_response) = self
-                .bls_aggregation_service
+            if let Ok(aggregated_response) = self
                 .aggregated_response_receiver
-                .lock()
-                .await
-                .recv()
+                .receive_aggregated_response()
                 .await
             {
                 info!("sending aggregated response to contract");
                 self.tp
-                    .process_aggregated_response(aggregated_response?)
+                    .process_aggregated_response(aggregated_response)
                     .await?;
             }
         } else {
