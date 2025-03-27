@@ -111,8 +111,6 @@
 //! [`new`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::new()
 //! [`start_service`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::start_service()
 //! [`query_past_registered_operator_events_and_fill_db`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::query_past_registered_operator_events_and_fill_db()
-//! [`NEW_PUBKEY_REGISTRATION_EVENT`]: eigen_common::NEW_PUBKEY_REGISTRATION_EVENT
-//! [`OPERATOR_SOCKET_UPDATE`]: eigen_common::OPERATOR_SOCKET_UPDATE
 //! [`get_operator_info`]: operator_info::OperatorInfoService::get_operator_info()
 //! [`get_operator_socket`]: operator_info::OperatorInfoService::get_operator_socket()
 
