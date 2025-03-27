@@ -41,7 +41,7 @@
 //!
 //! When using the [`OperatorInfoServiceInMemory`] struct, you can initialize the service by calling the
 //! [`new`] method. This method returns a tuple of the service and a channel to receive errors from the service. Also,
-//! it create a background task to process the `OperatorsInfoMessage`. The message that the service will process are:
+//! it creates a background task to process the `OperatorsInfoMessage`. The messages that the service will process are:
 //! - `InsertOperatorInfo`: Save the operator info in memory.
 //! - `Remove`: Remove the operator info from state.
 //! - `GetPubKeys`: Get the operator public keys from memory.
