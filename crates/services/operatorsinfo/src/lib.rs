@@ -108,7 +108,6 @@
 //!
 //! [`OperatorInfoServiceInMemory`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory
 //! [`OperatorInfoService`]: operator_info::OperatorInfoService
-//! [`OperatorSocket`]: operator_info::OperatorSocket
 //! [`new`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::new()
 //! [`start_service`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::start_service()
 //! [`query_past_registered_operator_events_and_fill_db`]: operatorsinfo_inmemory::OperatorInfoServiceInMemory::query_past_registered_operator_events_and_fill_db()
