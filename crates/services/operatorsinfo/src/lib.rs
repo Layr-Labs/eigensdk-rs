@@ -15,7 +15,11 @@
 //!
 //! When using the [`OperatorInfoServiceInMemory`] struct, you can initialize the service by calling the
 //! [`new`] method. This method returns a tuple of the service and a channel to receive errors from the service. Also,
-//! it create a background task to process the `OperatorsInfoMessage`.
+//! it create a background task to process the `OperatorsInfoMessage`. The message that the service will process are:
+//! - `InsertOperatorInfo`: Save the operator info in memory.
+//! - `Remove`: Remove the operator info from state.
+//! - `GetPubKeys`: Get the operator public keys from memory.
+//! - `GetSockets`: Get the operator socket from memory.
 //!
 //! ```rust
 //! let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
@@ -50,7 +54,7 @@
 //! ### Query Past Operator Registration Events and Fill the Database
 //!
 //! To query past operator registration events and fill the database, you can call the [`query_past_registered_operator_events_and_fill_db`] method.
-//! This function will send a `OperatorsInfoMessage` to the service channel and store the data in `OperatorState`.
+//! This function will send a `OperatorsInfoMessage` with the `InsertOperatorInfo` action to the service channel and store the data in `OperatorState`.
 //!
 //! ```rust
 //! operators_info_service_in_memory
