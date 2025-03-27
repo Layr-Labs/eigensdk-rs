@@ -5,6 +5,7 @@
 //! ## Introduction
 //!
 //! The `AvsRegistryServiceChainCaller` allows to get the AVS state of the operators and the quorums at any block.
+//! This service is used by the `BLS Aggregator service` and use under the hood the `OperatorInfoService` to get the operator info.
 //!
 //! ## Usage
 //!
@@ -55,6 +56,7 @@
 //!     .await
 //!     .unwrap();
 //! ```
+//! [``]
 //!
 
 #![doc(
