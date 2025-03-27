@@ -7,6 +7,33 @@
 //! The [`AvsRegistryServiceChainCaller`] allows to get the AVS state of the operators and the quorums at any block.
 //! This service is used by the `BLS Aggregator service` and use under the hood the `OperatorInfoService` to get the operator info.
 //!
+//! ## Main Components
+//!
+//! ### AvsRegistryServiceChainCaller
+//!
+//! The main struct of the service, it implements the [`AvsRegistryService`] trait.
+//!
+//! - `avs_registry`: `AvsRegistryReader` to get the information from the chain
+//! - `operators_info_service`: `OperatorInfoService` to get the operator info
+//!
+//! ### OperatorAvsState
+//!
+//! Represents the AVS state of an operator.
+//!
+//! - `operator_id`: Operator ID
+//! - `operator_info`: Operator info
+//! - `stake_per_quorum`: Stake per quorum
+//! - `block_num`: Block number
+//!
+//! ### QuorumAvsState
+//!
+//! Represents the AVS state of a quorum.
+//!
+//! - `quorum_num`: Quorum number
+//! - `total_stake`: Total stake
+//! - `agg_pub_key_g1`: Aggregated G1 public key
+//! - `block_num`: Block number
+//!
 //! ## Usage
 //!
 //! ### Initialize the service
@@ -22,6 +49,7 @@
 //!
 //! To get the state of the operator in a specific quorum at a specific block, you can use the [`get_operators_avs_state_at_block`] method.
 //! The list of quorum nums and the list of operators stakes in quorums should have the same length.
+//! The method returns a hashmap with the operator ID as the key and the `OperatorAvsState` as the value.
 //!
 //! ```rust
 //! let operator_avs_state = avs_registry_service
@@ -31,6 +59,7 @@
 //! ```
 //!
 //! To get the state of the quorum at a specific block, you can use the [`get_quorums_avs_state_at_block`] method.
+//! The method returns a hashmap with the quorum number as the key and the `QuorumAvsState` as the value.
 //!
 //! ```rust
 //! let quorum_state_per_number = avs_registry_service
