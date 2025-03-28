@@ -89,10 +89,9 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         let (service_handle, aggregated_response_receiver) =
             BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
 
-        let task_processor = Arc::new(Mutex::new(task_processor));
         Ok(Self {
             port_address: config.server_address,
-            task_processor,
+            task_processor: Arc::new(Mutex::new(task_processor)),
             service_handle,
             aggregated_response_receiver,
         })
