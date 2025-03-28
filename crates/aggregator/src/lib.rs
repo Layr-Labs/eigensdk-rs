@@ -238,8 +238,9 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
             .and_then(|log| log.log_decode().ok())
             .map(|v| v.inner.data)
         {
-            let inner_task_processor = task_processor.lock().await;
-            let metadata = inner_task_processor
+            let metadata = task_processor
+                .lock()
+                .await
                 .process_new_task(event)
                 .await
                 .map_err(|e| AggregatorError::TaskProcessorError(e))?;
