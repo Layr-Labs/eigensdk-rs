@@ -25,7 +25,7 @@ use futures_util::StreamExt;
 use jsonrpc_core::serde_json;
 use jsonrpc_core::{Error, IoHandler, Params, Value};
 use jsonrpc_http_server::{AccessControlAllowOrigin, DomainsValidation, ServerBuilder};
-use std::{collections::HashMap, net::SocketAddr, sync::Arc};
+use std::{net::SocketAddr, sync::Arc};
 use tokio::sync::Mutex;
 use tracing::info;
 use traits::{task_processor::TaskProcessor, task_response::TaskResponse};
@@ -38,7 +38,6 @@ pub use signed_task_response::SignedTaskResponse;
 #[derive(Debug)]
 pub struct Aggregator<TP> {
     port_address: String,
-    task_quorum: HashMap<u32, u32>,
     tp: TP,
     service_handle: ServiceHandle,
     aggregated_response_receiver: AggregateReceiver,
@@ -89,7 +88,6 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
 
         Ok(Self {
             port_address: config.server_address,
-            task_quorum: HashMap::new(),
             tp,
             service_handle,
             aggregated_response_receiver,
@@ -248,43 +246,27 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
             .process_signature(task_signature)
             .await?;
         info!("processed signature for index {:?}", task_index);
-        let quorum_reached = {
-            let entry = self.task_quorum.entry(task_index).or_insert(0);
-            *entry += 1;
-            *entry >= 2
-        };
 
-        if quorum_reached {
-            info!("quorum reached for task index: {:?}", task_index);
-            if let Ok(aggregated_response) = self
-                .aggregated_response_receiver
-                .receive_aggregated_response()
-                .await
-            {
-                info!("sending aggregated response to contract");
-                self.tp
-                    .process_aggregated_response(aggregated_response)
-                    .await?;
-            }
-        } else {
-            info!(
-                "quorum not reached yet for index:{:?}. waiting to receive more signatures ",
-                task_index
-            );
-        }
         Ok(())
     }
 
     async fn process_aggregated_signatures(
-        _aggregator: Arc<Mutex<Self>>,
+        aggregator: Arc<Mutex<Self>>,
     ) -> Result<(), AggregatorError> {
-        // aggregator
-        //     .lock()
-        //     .await
-        //     .bls_aggregation_service
-        //     .aggregated_response_receiver
-        //     .lock()
-        //     .await;
-        Ok(())
+        loop {
+            let service_response = aggregator
+                .lock()
+                .await
+                .aggregated_response_receiver
+                .receive_aggregated_response()
+                .await?;
+
+            aggregator
+                .lock()
+                .await
+                .tp
+                .process_aggregated_response(service_response)
+                .await?;
+        }
     }
 }
