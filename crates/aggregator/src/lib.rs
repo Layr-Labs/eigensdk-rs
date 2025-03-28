@@ -115,16 +115,13 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         ));
 
         // Wait for both tasks to complete and handle potential errors
-        match tokio::try_join!(server_handle, process_handle, aggregate_handle) {
-            Ok((server_result, process_result, aggregate_result)) => {
-                server_result?;
-                process_result?;
-                aggregate_result?;
-            }
-            Err(_e) => {
-                return Err(AggregatorError::JoinError);
-            }
-        }
+        let (server_result, process_result, aggregate_result) =
+            tokio::try_join!(server_handle, process_handle, aggregate_handle)
+                .map_err(|_e| AggregatorError::JoinError)?;
+
+        server_result?;
+        process_result?;
+        aggregate_result?;
 
         Ok(())
     }
@@ -160,14 +157,10 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
                     serde_json::from_value(params.clone())
                         .map_err(|err| Error::invalid_params(err.to_string()))?;
 
-                let result =
-                    Self::process_signed_task_response(&tp, &service_handle, signed_task_response)
-                        .await;
-
-                match result {
-                    Ok(_) => Ok(Value::Bool(true)),
-                    Err(_) => Err(Error::invalid_params("Invalid task response")),
-                }
+                Self::process_signed_task_response(&tp, &service_handle, signed_task_response)
+                    .await
+                    .map_err(|_| Error::invalid_params("Failed to process signed task response"))
+                    .map(|_| Value::Bool(true))
             }
         });
 
