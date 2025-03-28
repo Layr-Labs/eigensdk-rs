@@ -26,6 +26,7 @@ use jsonrpc_core::serde_json;
 use jsonrpc_core::{Error, IoHandler, Params, Value};
 use jsonrpc_http_server::{AccessControlAllowOrigin, DomainsValidation, ServerBuilder};
 use std::{net::SocketAddr, sync::Arc};
+use tokio::sync::Mutex;
 use tracing::info;
 use traits::{task_processor::TaskProcessor, task_response::TaskResponse};
 
@@ -37,7 +38,7 @@ pub use signed_task_response::SignedTaskResponse;
 #[derive(Debug)]
 pub struct Aggregator<TP> {
     port_address: String,
-    task_processor: TP,
+    task_processor: Arc<Mutex<TP>>,
     service_handle: ServiceHandle,
     aggregated_response_receiver: AggregateReceiver,
 }
@@ -88,6 +89,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         let (service_handle, aggregated_response_receiver) =
             BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
 
+        let task_processor = Arc::new(Mutex::new(task_processor));
         Ok(Self {
             port_address: config.server_address,
             task_processor,
@@ -97,19 +99,34 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
     }
 
     /// Starts the aggregator service
+    ///
+    /// Creates the following tasks:
+    /// - start_server: Starts the server that receives signatures
+    /// - process_tasks: receives tasks from the log and processes them
+    /// - process_aggregated_signatures: processes the aggregated signatures
+    ///
+    /// # Arguments
+    ///
+    /// * `ws_rpc_url` - The websocket RPC URL
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), AggregatorError>` - The result of the operation
     pub async fn start(self, ws_rpc_url: String) -> Result<(), AggregatorError> {
         info!("Starting aggregator");
 
-        let task_processor = Arc::new(self.task_processor);
+        let task_processor = self.task_processor.clone();
         let service_handle = self.service_handle.clone();
         let port_address = self.port_address.clone();
 
         // Spawn three tasks: one for the server that receives signature, one for processing tasks, and another to process aggregated signatures
         let server_handle = tokio::spawn(Self::start_server(
             port_address,
-            task_processor.clone(),
+            task_processor,
             service_handle.clone(),
         ));
+        let task_processor = self.task_processor.clone();
+
         let process_handle = tokio::spawn(Self::process_tasks(
             ws_rpc_url,
             task_processor.clone(),
@@ -145,7 +162,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn start_server(
         port_address: String,
-        task_processor: Arc<TP>,
+        task_processor: Arc<Mutex<TP>>,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let mut io = IoHandler::new();
@@ -164,7 +181,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
                         .map_err(|err| Error::invalid_params(err.to_string()))?;
 
                 Self::process_signed_task_response(
-                    &task_processor,
+                    task_processor,
                     &service_handle,
                     signed_task_response,
                 )
@@ -205,7 +222,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_tasks(
         ws_rpc_url: String,
-        task_processor: Arc<TP>,
+        task_processor: Arc<Mutex<TP>>,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
@@ -221,9 +238,12 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         {
             let event: TP::NewTaskEvent = log.log_decode()?.inner.data;
 
-            let info = task_processor.process_new_task(event).await?;
-
-            service_handle.initialize_task(info).await?;
+            let inner_task_processor = task_processor.lock().await;
+            let metadata = inner_task_processor
+                .process_new_task(event)
+                .await
+                .map_err(|e| AggregatorError::TaskProcessorError(e))?;
+            service_handle.initialize_task(metadata).await?;
         }
 
         Ok(())
@@ -241,7 +261,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_signed_task_response(
-        task_processor: &TP,
+        task_processor: Arc<Mutex<TP>>,
         service_handle: &ServiceHandle,
         signed_task_response: SignedTaskResponse<TP::TaskResponse>,
     ) -> Result<(), AggregatorError> {
@@ -252,7 +272,12 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         } = signed_task_response;
         let task_index = task_response.task_index();
 
-        let task_response_digest = task_processor.process_task_response(task_response).await?;
+        let task_response_digest = task_processor
+            .lock()
+            .await
+            .process_task_response(task_response)
+            .await
+            .map_err(|e| AggregatorError::TaskProcessorError(e))?;
 
         let task_signature =
             TaskSignature::new(task_index, task_response_digest, signature, operator_id);
@@ -274,7 +299,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_aggregated_signatures(
-        task_processor: Arc<TP>,
+        task_processor: Arc<Mutex<TP>>,
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
@@ -283,8 +308,11 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
                 .await?;
 
             task_processor
+                .lock()
+                .await
                 .process_aggregated_response(service_response)
-                .await?;
+                .await
+                .map_err(|e| AggregatorError::TaskProcessorError(e))?;
         }
     }
 }
