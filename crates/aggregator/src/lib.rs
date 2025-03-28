@@ -229,15 +229,15 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         let filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
 
-        while let Some(log) = provider
+        while let Some(event) = provider
             .subscribe_logs(&filter)
             .await?
             .into_stream()
             .next()
             .await
+            .and_then(|log| log.log_decode().ok())
+            .map(|v| v.inner.data)
         {
-            let event: TP::NewTaskEvent = log.log_decode()?.inner.data;
-
             let inner_task_processor = task_processor.lock().await;
             let metadata = inner_task_processor
                 .process_new_task(event)
