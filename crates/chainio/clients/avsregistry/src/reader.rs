@@ -301,7 +301,7 @@ impl AvsRegistryChainReader {
             .await
             .map_err(|_| AvsRegistryError::GetBlockNumber)?;
 
-        if current_block_number > u32::MAX.into() {
+        if current_block_number > u64::from(u32::MAX) {
             return Err(AvsRegistryError::BlockNumberOverflow);
         }
 
@@ -384,7 +384,7 @@ impl AvsRegistryChainReader {
             AvsRegistryError::AlloyContractError(alloy::contract::Error::TransportError(e))
         })?;
 
-        if current_block_number > u32::MAX.into() {
+        if current_block_number > u64::from(u32::MAX) {
             return Err(AvsRegistryError::BlockNumberOverflow);
         }
 

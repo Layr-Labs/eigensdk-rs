@@ -1,6 +1,6 @@
 use alloy::primitives::{Address, FixedBytes};
 use alloy::providers::Provider;
-use alloy::rpc::types::Filter;
+use alloy::rpc::types::{Filter, Log};
 use async_trait::async_trait;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::{get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT, OPERATOR_SOCKET_UPDATE};
@@ -318,12 +318,14 @@ impl OperatorInfoServiceInMemory {
             .into_stream()
             .fuse();
         let pub_keys = self.pub_keys.clone();
-        let self_clone = self.clone();
 
         loop {
             tokio::select! {
                 _ = cancellation_token.cancelled() => {
-                    self.logger.info("Cancellation signal received, stopping the stream.", "eigen-services-operatorsinfo.start_service");
+                    self.logger.info(
+                        "Cancellation signal received, stopping the stream.",
+                        "eigen-services-operatorsinfo.start_service",
+                    );
                     handle.abort();
                     break;
                 },
@@ -337,89 +339,15 @@ impl OperatorInfoServiceInMemory {
                     }
                 },
                 log = new_operator_registration_stream.next() => {
-                    match log {
-                        Some(log) => {
-
-                            let data = log
-                                .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
-                                .ok();
-
-                            if let Some(new_pub_key_event) = data {
-                                let event_data = new_pub_key_event.data();
-                                let operator_pub_key = OperatorPubKeys {
-                                    g1_pub_key: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(
-                                        G1Point {
-                                            X: event_data.pubkeyG1.X,
-                                            Y: event_data.pubkeyG1.Y,
-                                        },
-                                    )),
-                                    g2_pub_key: BlsG2Point::new(alloy_registry_g2_point_to_g2_affine(
-                                        G2Point {
-                                            X: event_data.pubkeyG2.X,
-                                            Y: event_data.pubkeyG2.Y,
-                                        },
-                                    )),
-                                };
-                                // Send message
-
-                                self_clone.logger.debug(
-                                    &format!(
-                                        "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
-                                        event_data.operator, operator_pub_key
-                                    ),
-                                    "eigen-services-operatorsinfo.start_service",
-                                );
-
-                                let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
-                                    Some(event_data.operator),
-                                    Some(Box::new(operator_pub_key)),
-                                    None,
-                                    StateSource::Event
-                                ));
-                            }
-                        },
-                        None => {
-                            break;
-                        }
+                    if !self.handle_new_operator_registration(log.clone(), pub_keys.clone()) {
+                        break;
                     }
                 },
 
                 log =operator_socket_update_stream.next() =>{
 
-                    match log {
-                        Some(log) => {
-
-                            let data = log
-                                .log_decode::<RegistryCoordinator::OperatorSocketUpdate>()
-                                .ok();
-
-                            if let Some(operator_socket_update_event) = data {
-                                let event_data = operator_socket_update_event.data();
-                                let operator_socket = OperatorSocket {
-                                    id: event_data.operatorId,
-                                    socket:event_data.socket.clone()
-                                };
-                                // Send message
-
-                                self_clone.logger.debug(
-                                    &format!(
-                                        "Received new socket registration event  operator_id : {:?} , socket : {:?}",
-                                        event_data.operatorId, event_data.socket
-                                    ),
-                                    "eigen-services-operatorsinfo.start_service",
-                                );
-
-                                let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
-                                    None,
-                                    None,
-                                    Some(OperatorSocket{socket:operator_socket.socket , id:operator_socket.id }),
-                                    StateSource::Event
-                                ));
-                            }
-                        },
-                        None => {
-                            break;
-                        }
+                    if !self.handle_new_operator_socket_update(log.clone(), pub_keys.clone()) {
+                        break;
                     }
 
                 }
@@ -427,6 +355,92 @@ impl OperatorInfoServiceInMemory {
         }
 
         Ok(())
+    }
+
+    fn handle_new_operator_registration(
+        &self,
+        log: Option<Log>,
+        pub_keys: UnboundedSender<OperatorsInfoMessage>,
+    ) -> bool {
+        if let Some(log) = log {
+            if let Some(event_data) = log
+                .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
+                .ok()
+                .map(|event| event.data().clone())
+            {
+                let operator_pub_key = OperatorPubKeys {
+                    g1_pub_key: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(G1Point {
+                        X: event_data.pubkeyG1.X,
+                        Y: event_data.pubkeyG1.Y,
+                    })),
+                    g2_pub_key: BlsG2Point::new(alloy_registry_g2_point_to_g2_affine(G2Point {
+                        X: event_data.pubkeyG2.X,
+                        Y: event_data.pubkeyG2.Y,
+                    })),
+                };
+
+                self.logger.debug(
+                    &format!(
+                        "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
+                        event_data.operator, operator_pub_key
+                    ),
+                    "eigen-services-operatorsinfo.start_service",
+                );
+
+                let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
+                    Some(event_data.operator),
+                    Some(Box::new(operator_pub_key)),
+                    None,
+                    StateSource::Event,
+                ));
+            }
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn handle_new_operator_socket_update(
+        &self,
+        log: Option<Log>,
+        pub_keys: UnboundedSender<OperatorsInfoMessage>,
+    ) -> bool {
+        match log {
+            Some(log) => {
+                let data = log
+                    .log_decode::<RegistryCoordinator::OperatorSocketUpdate>()
+                    .ok();
+
+                if let Some(operator_socket_update_event) = data {
+                    let event_data = operator_socket_update_event.data();
+                    let operator_socket = OperatorSocket {
+                        id: event_data.operatorId,
+                        socket: event_data.socket.clone(),
+                    };
+                    // Send message
+
+                    self.logger.debug(
+                                    &format!(
+                                        "Received new socket registration event  operator_id : {:?} , socket : {:?}",
+                                        event_data.operatorId, event_data.socket
+                                    ),
+                                    "eigen-services-operatorsinfo.start_service",
+                                );
+
+                    let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
+                        None,
+                        None,
+                        Some(OperatorSocket {
+                            socket: operator_socket.socket,
+                            id: operator_socket.id,
+                        }),
+                        StateSource::Event,
+                    ));
+                }
+                true
+            }
+            None => false,
+        }
     }
 
     /// Queries past operator registration events and fills the database by sending messages
