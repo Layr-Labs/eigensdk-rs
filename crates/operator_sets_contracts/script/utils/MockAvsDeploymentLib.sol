@@ -222,6 +222,7 @@ library MockAvsDeploymentLib {
         data.stakeRegistry = json.readAddress(".addresses.stakeRegistry");
         data.strategy = json.readAddress(".addresses.strategy");
         data.token = json.readAddress(".addresses.token");
+        data.blsapkRegistry = json.readAddress(".addresses.blsapkRegistry");
 
         return data;
     }

@@ -33,5 +33,6 @@ library WriteToContractsRegistryLib {
         contractsRegistry.registerContract(
             "mockAvsOperatorStateRetriever", address(deploymentdata.operatorStateRetriever)
         );
+        contractsRegistry.registerContract("blsApkRegistry",address(deploymentdata.blsapkRegistry));
     }
 }
