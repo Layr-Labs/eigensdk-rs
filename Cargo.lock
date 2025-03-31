@@ -2894,7 +2894,11 @@ name = "eigen-testing-utils"
 version = "0.5.0"
 dependencies = [
  "alloy",
+ "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
  "eigen-common",
+ "eigen-crypto-bls",
+ "eigen-logging",
  "eigen-utils",
  "serde",
  "serde_json",
