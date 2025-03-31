@@ -82,13 +82,16 @@ async fn start_anvil_with_state(
     let ws_endpoint = format!("ws://localhost:{port}");
 
     // Poll to get chain ID
-    for _ in 0..10 {
+    for i in 0..10 {
         let res = container.exec(ExecCommand::new(["cast", "chain-id"])).await;
         if let Ok(res) = &res {
             let exit_code = res.exit_code().await;
             if exit_code.ok() == Some(Some(0)) {
                 break;
             }
+        } else if i == 9 {
+            let exit_code = res.unwrap().exit_code().await.unwrap().unwrap();
+            panic!("Failed to get chain ID from anvil container. Exit code: {exit_code}");
         }
 
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
