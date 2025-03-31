@@ -23,9 +23,16 @@ use eigen_utils::slashing::{
             },
         },
     },
-    middleware::registrycoordinator::{
-        ISlashingRegistryCoordinatorTypes::OperatorSetParam, IStakeRegistryTypes::StrategyParams,
-        RegistryCoordinator,
+    middleware::{
+        registrycoordinator::{
+            ISlashingRegistryCoordinatorTypes::OperatorSetParam,
+            IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
+        },
+        slashingregistrycoordinator::{
+            ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
+            IStakeRegistryTypes::StrategyParams as StrategyParamsSlashing,
+            SlashingRegistryCoordinator,
+        },
     },
     sdk::{mockavsservicemanager::MockAvsServiceManager, mockerc20::MockERC20},
 };
@@ -398,4 +405,103 @@ pub async fn test_register_operator(
 
     let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
     assert!(tx_status);
+}
+
+/// Creates a total delegated stake operator set
+pub async fn create_total_delegated_stake_operator_set(
+    http_endpoint: &str,
+    erc20_mock_strategy_addr: Address,
+    avs_address: Address,
+) {
+    let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
+
+    let allocation_manager_addr = get_allocation_manager_address(http_endpoint.to_string()).await;
+    let allocation_manager =
+        AllocationManager::new(allocation_manager_addr, default_signer.clone());
+
+    let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+    let service_manager =
+        MockAvsServiceManager::new(service_manager_address, default_signer.clone());
+
+    service_manager
+        .setAppointee(
+            default_signer.default_signer_address(),
+            allocation_manager_addr,
+            alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+        )
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    let registry_coordinator_addr =
+        get_registry_coordinator_address(http_endpoint.to_string()).await;
+
+    allocation_manager
+        .setAVSRegistrar(avs_address, registry_coordinator_addr)
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    service_manager
+        .setAppointee(
+            registry_coordinator_addr,
+            allocation_manager_addr,
+            alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+        )
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    service_manager
+        .setAppointee(
+            registry_coordinator_addr,
+            allocation_manager_addr,
+            alloy::primitives::FixedBytes(
+                AllocationManager::deregisterFromOperatorSetsCall::SELECTOR,
+            ),
+        )
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    let operator_set_param = OperatorSetParamSlashing {
+        maxOperatorCount: 10,
+        kickBIPsOfOperatorStake: 100,
+        kickBIPsOfTotalStake: 1000,
+    };
+
+    let minimum_stake = U96::from(1);
+
+    let strategy_params = StrategyParamsSlashing {
+        strategy: erc20_mock_strategy_addr,
+        multiplier: U96::from(1),
+    };
+
+    let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
+        get_registry_coordinator_address(http_endpoint.to_string()).await,
+        default_signer.clone(),
+    );
+
+    let tx_hash = slashing_registry_coordinator
+        .createTotalDelegatedStakeQuorum(operator_set_param, minimum_stake, vec![strategy_params])
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    assert!(tx_hash.status());
 }

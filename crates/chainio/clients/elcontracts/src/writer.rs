@@ -1240,8 +1240,8 @@ mod tests {
             FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY_2, SECOND_ADDRESS, SECOND_PRIVATE_KEY,
         },
         chain_clients::{
-            build_el_chain_reader, new_claim, new_test_writer, new_test_writer_preslashing,
-            OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
+            build_el_chain_reader, create_total_delegated_stake_operator_set, new_claim,
+            new_test_writer, new_test_writer_preslashing, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
@@ -1260,7 +1260,6 @@ mod tests {
                 },
                 slashingregistrycoordinator::{
                     ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
-                    IStakeRegistryTypes::StrategyParams as StrategyParamsSlashing,
                     SlashingRegistryCoordinator,
                 },
             },
@@ -1979,109 +1978,6 @@ mod tests {
             allocation_info_after[0].current_magnitude,
             U256::from(new_allocation)
         );
-    }
-
-    async fn create_total_delegated_stake_operator_set(
-        http_endpoint: &str,
-        erc20_mock_strategy_addr: Address,
-        avs_address: Address,
-    ) {
-        let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
-
-        let allocation_manager_addr =
-            get_allocation_manager_address(http_endpoint.to_string()).await;
-        let allocation_manager =
-            AllocationManager::new(allocation_manager_addr, default_signer.clone());
-
-        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
-        let service_manager =
-            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
-
-        service_manager
-            .setAppointee(
-                default_signer.default_signer_address(),
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        let registry_coordinator_addr =
-            get_registry_coordinator_address(http_endpoint.to_string()).await;
-
-        allocation_manager
-            .setAVSRegistrar(avs_address, registry_coordinator_addr)
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        service_manager
-            .setAppointee(
-                registry_coordinator_addr,
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        service_manager
-            .setAppointee(
-                registry_coordinator_addr,
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(
-                    AllocationManager::deregisterFromOperatorSetsCall::SELECTOR,
-                ),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        let operator_set_param = OperatorSetParamSlashing {
-            maxOperatorCount: 10,
-            kickBIPsOfOperatorStake: 100,
-            kickBIPsOfTotalStake: 1000,
-        };
-
-        let minimum_stake = U96::from(1);
-
-        let strategy_params = StrategyParamsSlashing {
-            strategy: erc20_mock_strategy_addr,
-            multiplier: U96::from(1),
-        };
-
-        let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
-            get_registry_coordinator_address(http_endpoint.to_string()).await,
-            default_signer.clone(),
-        );
-
-        let tx_hash = slashing_registry_coordinator
-            .createTotalDelegatedStakeQuorum(
-                operator_set_param,
-                minimum_stake,
-                vec![strategy_params],
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        assert!(tx_hash.status());
     }
 
     #[tokio::test]
