@@ -13,7 +13,6 @@ use eigen_aggregator::{
     },
     Aggregator,
 };
-
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
@@ -24,19 +23,14 @@ use eigen_logging::{init_logger, log_level::LogLevel};
 use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
 };
+use eigen_testing_utils::anvil::start_anvil_container;
 use eigen_testing_utils::anvil_constants::{
     get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address,
-    get_erc20_mock_strategy, get_rewards_coordinator_address, get_service_manager_address,
-    get_strategy_manager_address, FIRST_ADDRESS, OPERATOR_BLS_KEY,
-};
-use eigen_testing_utils::{
-    anvil::start_anvil_container,
-    anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address, FIRST_PRIVATE_KEY,
-    },
+    get_erc20_mock_strategy, get_operator_state_retriever_address,
+    get_registry_coordinator_address, get_rewards_coordinator_address, get_service_manager_address,
+    get_strategy_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
 };
 pub use eigen_types::operator::Operator;
-
 use eigen_utils::slashing::core::allocationmanager::AllocationManager;
 use eigen_utils::slashing::core::delegationmanager::DelegationManager;
 use eigen_utils::slashing::middleware::slashingregistrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
@@ -184,7 +178,7 @@ async fn main() {
     // Wait for the aggregator to initialize
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
-    // EMIT A NEW TASK WITH EVENT
+    // Emit a new task with event
     let result = task_contract
         .createTask()
         .send()

@@ -25,6 +25,7 @@ members = [
     "examples/avsregistry-read",
     "examples/avsregistry-write",
     "examples/info-operator-service/",
+    "examples/aggregator/",
     "testing/testing-utils/",
 ]
 resolver = "2"
