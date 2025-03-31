@@ -1224,9 +1224,8 @@ fn encode_registration_data(
 #[cfg(test)]
 mod tests {
     use alloy::{
-        primitives::{address, aliases::U96, ruint::aliases::U256, Address, Bytes, FixedBytes},
-        providers::{Provider, WalletProvider},
-        sol_types::SolCall,
+        primitives::{address, ruint::aliases::U256, Address, Bytes, FixedBytes},
+        providers::Provider,
     };
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
@@ -1235,13 +1234,14 @@ mod tests {
             mine_anvil_blocks, set_account_balance, start_anvil_container, start_m2_anvil_container,
         },
         anvil_constants::{
-            get_allocation_manager_address, get_erc20_mock_strategy,
-            get_registry_coordinator_address, get_service_manager_address, FIRST_ADDRESS,
-            FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY_2, SECOND_ADDRESS, SECOND_PRIVATE_KEY,
+            get_erc20_mock_strategy, get_registry_coordinator_address, get_service_manager_address,
+            FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY_2, SECOND_ADDRESS,
+            SECOND_PRIVATE_KEY,
         },
         chain_clients::{
-            build_el_chain_reader, create_total_delegated_stake_operator_set, new_claim,
-            new_test_writer, new_test_writer_preslashing, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
+            build_el_chain_reader, create_operator_set, create_total_delegated_stake_operator_set,
+            new_claim, new_test_writer, new_test_writer_preslashing, OPERATOR_ADDRESS,
+            OPERATOR_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
@@ -1249,21 +1249,11 @@ mod tests {
     use eigen_utils::{
         convert_allocation_operator_set_to_rewards_operator_set,
         slashing::{
-            core::allocationmanager::{
-                AllocationManager::{self, OperatorSet},
-                IAllocationManagerTypes,
+            core::allocationmanager::{AllocationManager::OperatorSet, IAllocationManagerTypes},
+            middleware::slashingregistrycoordinator::{
+                ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
+                SlashingRegistryCoordinator,
             },
-            middleware::{
-                registrycoordinator::{
-                    ISlashingRegistryCoordinatorTypes::OperatorSetParam,
-                    IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
-                },
-                slashingregistrycoordinator::{
-                    ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
-                    SlashingRegistryCoordinator,
-                },
-            },
-            sdk::mockavsservicemanager::MockAvsServiceManager,
         },
     };
 
@@ -1599,74 +1589,6 @@ mod tests {
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
-    }
-
-    async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
-        let allocation_manager_addr =
-            get_allocation_manager_address(http_endpoint.to_string()).await;
-        let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
-        let allocation_manager =
-            AllocationManager::new(allocation_manager_addr, default_signer.clone());
-        let registry_coordinator_addr =
-            get_registry_coordinator_address(http_endpoint.to_string()).await;
-        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
-        let service_manager =
-            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
-        service_manager
-            .setAppointee(
-                default_signer.default_signer_address(),
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-        allocation_manager
-            .setAVSRegistrar(avs_address, registry_coordinator_addr)
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        // Create slashable quorum
-        let contract_registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, default_signer.clone());
-        let operator_set_params = OperatorSetParam {
-            maxOperatorCount: 10,
-            kickBIPsOfOperatorStake: 100,
-            kickBIPsOfTotalStake: 1000,
-        };
-        let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-        service_manager
-            .setAppointee(
-                registry_coordinator_addr,
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-        let strategy_params = StrategyParams {
-            strategy,
-            multiplier: U96::from(1),
-        };
-
-        contract_registry_coordinator
-            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
     }
 
     #[tokio::test]

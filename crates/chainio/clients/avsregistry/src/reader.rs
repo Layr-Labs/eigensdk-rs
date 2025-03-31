@@ -1146,6 +1146,7 @@ mod tests {
         transaction::wait_transaction,
     };
 
+    // Note: this util is kept here due to some methods are not accessable in AvsRegistryReader trait and are used in tests
     async fn build_avs_registry_chain_reader(http_endpoint: String) -> AvsRegistryChainReader {
         let registry_coordinator_addr =
             get_registry_coordinator_address(http_endpoint.clone()).await;
