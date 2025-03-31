@@ -11,7 +11,7 @@ use eigen_aggregator::{
         task_processor::{box_error, TaskProcessor, TaskProcessorError},
         task_response::TaskResponse,
     },
-    Aggregator, AggregatorError,
+    Aggregator,
 };
 
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
@@ -44,7 +44,7 @@ use eigen_utils::slashing::middleware::slashingregistrycoordinator::IStakeRegist
 use eigen_utils::slashing::middleware::slashingregistrycoordinator::SlashingRegistryCoordinator;
 use eigen_utils::slashing::sdk::mockavsservicemanager::MockAvsServiceManager;
 use serde::{Deserialize, Serialize};
-use tracing::{error, info};
+use tracing::info;
 
 // Fake contract to emit event
 sol! {
@@ -128,10 +128,40 @@ impl TaskProcessor for MockTaskProcessor {
 async fn main() {
     init_logger(LogLevel::Info);
     let (_container, http_rpc, ws_rpc) = start_anvil_container().await;
+
+    let el_chain_writer = new_test_writer(http_rpc.clone(), FIRST_PRIVATE_KEY.to_string()).await;
+    let avs_registry = AvsRegistryChainReader::new(
+        get_test_logger(),
+        get_registry_coordinator_address(http_rpc.clone()).await,
+        get_operator_state_retriever_address(http_rpc.clone()).await,
+        http_rpc.clone(),
+    )
+    .await
+    .unwrap();
+
     // Deploy the task contract
     let provider = get_signer(FIRST_PRIVATE_KEY, &http_rpc);
     let task_contract = TaskContract::deploy(&provider).await.unwrap();
     let avs_address = get_service_manager_address(http_rpc.clone()).await;
+
+    // Create quorums and operator sets
+    create_total_delegated_stake_operator_set(
+        &http_rpc,
+        get_erc20_mock_strategy(http_rpc.clone()).await,
+        avs_address,
+    )
+    .await;
+    info!("Operator set created");
+
+    // Register operator to operator set
+    let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
+    el_chain_writer
+        .register_for_operator_sets(FIRST_ADDRESS, avs_address, vec![0], bls_key_pair, "socket")
+        .await
+        .unwrap();
+    info!("Operator registered to operator set");
+
+    let operator_id = avs_registry.get_operator_id(FIRST_ADDRESS).await.unwrap();
 
     // Set up the aggregator config and initialize the processor
     let registry_coordinator = get_registry_coordinator_address(http_rpc.clone()).await;
@@ -187,7 +217,7 @@ async fn main() {
                     "params": {
                         "task_response": fake_response,
                         "signature": bls_signature,
-                        "operator_id": 1
+                        "operator_id": operator_id
                     }
                 },
                 "id": 1
@@ -203,4 +233,147 @@ async fn main() {
     let result = aggregator_handle.await.unwrap();
 
     info!("Aggregator finished: {:?}", result);
+}
+
+// After Maxi's PR, we can remove these aux functions
+async fn create_total_delegated_stake_operator_set(
+    http_endpoint: &str,
+    erc20_mock_strategy_addr: Address,
+    avs_address: Address,
+) {
+    let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
+
+    let allocation_manager_addr = get_allocation_manager_address(http_endpoint.to_string()).await;
+    let allocation_manager =
+        AllocationManager::new(allocation_manager_addr, default_signer.clone());
+
+    let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+    let service_manager =
+        MockAvsServiceManager::new(service_manager_address, default_signer.clone());
+
+    service_manager
+        .setAppointee(
+            default_signer.default_signer_address(),
+            allocation_manager_addr,
+            alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+        )
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    let registry_coordinator_addr =
+        get_registry_coordinator_address(http_endpoint.to_string()).await;
+
+    allocation_manager
+        .setAVSRegistrar(avs_address, registry_coordinator_addr)
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    service_manager
+        .setAppointee(
+            registry_coordinator_addr,
+            allocation_manager_addr,
+            alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+        )
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    service_manager
+        .setAppointee(
+            registry_coordinator_addr,
+            allocation_manager_addr,
+            alloy::primitives::FixedBytes(
+                AllocationManager::deregisterFromOperatorSetsCall::SELECTOR,
+            ),
+        )
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    let operator_set_param = OperatorSetParam {
+        maxOperatorCount: 10,
+        kickBIPsOfOperatorStake: 100,
+        kickBIPsOfTotalStake: 1000,
+    };
+
+    let minimum_stake = U96::from(1);
+
+    let strategy_params = StrategyParams {
+        strategy: erc20_mock_strategy_addr,
+        multiplier: U96::from(1),
+    };
+
+    let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
+        get_registry_coordinator_address(http_endpoint.to_string()).await,
+        default_signer.clone(),
+    );
+
+    let tx_hash = slashing_registry_coordinator
+        .createTotalDelegatedStakeQuorum(operator_set_param, minimum_stake, vec![strategy_params])
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+    assert!(tx_hash.status());
+}
+
+pub async fn new_test_writer(http_endpoint: String, private_key: String) -> ELChainWriter {
+    let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+    let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
+    let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
+    let delegation_manager = get_delegation_manager_address(http_endpoint.clone()).await;
+    let allocation_manager = get_allocation_manager_address(http_endpoint.clone()).await;
+    let contract_delegation_manager =
+        DelegationManager::new(delegation_manager, get_provider(&http_endpoint));
+    let permission_controller = contract_delegation_manager
+        .permissionController()
+        .call()
+        .await
+        .unwrap()
+        ._0;
+    let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
+
+    ELChainWriter::new(
+        strategy_manager,
+        rewards_coordinator,
+        Some(permission_controller),
+        Some(allocation_manager),
+        registry_coordinator,
+        el_chain_reader,
+        http_endpoint.clone(),
+        private_key,
+    )
+}
+
+pub async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
+    let delegation_manager_address = get_delegation_manager_address(http_endpoint.clone()).await;
+    let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
+    let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
+
+    ELChainReader::build(
+        get_test_logger().clone(),
+        delegation_manager_address,
+        avs_directory_address,
+        rewards_coordinator,
+        &http_endpoint,
+    )
+    .await
+    .unwrap()
 }
