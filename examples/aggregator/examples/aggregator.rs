@@ -1,4 +1,19 @@
-//! This is an example of how to use the aggregator.
+//! This is a simple example of how to use the aggregator.
+//!
+//! To use the aggregator, you should implement the [`TaskProcessor`] trait and
+//! create your own logic for processing the task. Also, you should create a contract
+//! that emits an event when a task is created.
+//!
+//! Continue with the example:
+//! - Create an operator set with a total delegated stake quorum and register an
+//!   operator to it.
+//! - Deploy a contract that emits an event when a task is created.
+//! - Start the aggregator
+//! - Emit a task with the contract
+//! - Send an RPC request to the aggregator with the task response
+//! - Since the threshold is reached, the BLS aggregation service will send the aggregated response
+//!   to the aggregator
+
 use alloy::primitives::aliases::U96;
 use alloy::primitives::{Address, B256};
 use alloy::providers::WalletProvider;
@@ -190,7 +205,7 @@ async fn main() {
     info!("Task created: {:?}", result.transaction_hash);
 
     // Send fake response from operator
-    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+    tokio::time::sleep(std::time::Duration::from_secs(10)).await;
     tokio::spawn(async move {
         info!("Simulating operator response");
 
@@ -223,10 +238,15 @@ async fn main() {
         info!("Response sent");
     });
 
-    // Keep the service running
-    let result = aggregator_handle.await.unwrap();
+    // TODO: Check how to close the aggregator and stop the services
+    info!("Sleeping for 10 seconds and then closing the aggregator");
+    tokio::time::sleep(std::time::Duration::from_secs(10)).await;
+    aggregator_handle.abort();
 
-    info!("Aggregator finished: {:?}", result);
+    // Keep the service running until the aggregator is closed
+    if let Err(e) = aggregator_handle.await {
+        info!("Aggregator finished: {:?}", e);
+    }
 }
 
 // After Maxi's PR, we can remove these aux functions
