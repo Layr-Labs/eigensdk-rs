@@ -54,6 +54,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Other Changes
 
+* Moved test utils from chainio folder to testing/testutils folder by @maximopalopoli in [#407](https://github.com/Layr-Labs/eigensdk-rs/pull/407)
+
 ## [0.5.0] - 2025-03-18
 
 ### Security 🔒
