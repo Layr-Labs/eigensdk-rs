@@ -91,7 +91,7 @@ async fn start_anvil_with_state(
             }
         } else if i == 9 {
             let exit_code = res.unwrap().exit_code().await.unwrap().unwrap();
-            panic!("Failed to get chain ID from anvil container. Exit code: {exit_code}");
+            assert_eq!(exit_code, 0, "Failed to get chain ID from anvil container.");
         }
 
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
