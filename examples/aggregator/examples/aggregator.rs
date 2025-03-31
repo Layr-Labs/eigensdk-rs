@@ -27,7 +27,7 @@ use eigen_aggregator::{
 };
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_signer;
-use eigen_crypto_bls::{BlsKeyPair, Signature};
+use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
 use eigen_logging::get_test_logger;
 use eigen_logging::{init_logger, log_level::LogLevel};
 use eigen_services_blsaggregation::{
@@ -44,6 +44,7 @@ use eigen_testing_utils::chain_clients::{
 };
 pub use eigen_types::operator::Operator;
 use serde::{Deserialize, Serialize};
+use tokio::sync::mpsc;
 use tracing::info;
 
 // 1. Fake contract to emit event
@@ -87,9 +88,18 @@ impl TaskResponse for FakeResponse {
 }
 
 // 2. Implement the `TaskProcessor` trait
-#[derive(Debug, Clone)]
-struct MockTaskProcessor;
+#[derive(Debug)]
+struct MockTaskProcessor {
+    aggregated_response: mpsc::Sender<BlsAggregationServiceResponse>,
+}
 
+impl MockTaskProcessor {
+    fn new(sender: mpsc::Sender<BlsAggregationServiceResponse>) -> Self {
+        Self {
+            aggregated_response: sender,
+        }
+    }
+}
 impl TaskProcessor for MockTaskProcessor {
     type NewTaskEvent = TaskContract::NewTask;
     type TaskResponse = FakeResponse;
@@ -129,7 +139,13 @@ impl TaskProcessor for MockTaskProcessor {
             "Aggregated response received for task {}: {:?}",
             response.task_index, response.task_response_digest
         );
-        Ok(())
+
+        self.aggregated_response.send(response).await.map_err(|e| {
+            box_error(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                format!("Failed to send response: {}", e),
+            ))
+        })
     }
 }
 
@@ -198,7 +214,9 @@ async fn main() {
         http_rpc_url: http_rpc.clone(),
         ws_rpc_url: ws_rpc.clone(),
     };
-    let processor = MockTaskProcessor;
+
+    let (sender, mut receiver) = mpsc::channel(1);
+    let processor = MockTaskProcessor::new(sender);
     let aggregator = Aggregator::new(config, processor).await.unwrap();
 
     // 6. Start the aggregator in the background
@@ -220,34 +238,41 @@ async fn main() {
 
     tokio::time::sleep(std::time::Duration::from_secs(10)).await;
     // Send fake response from operator
-    tokio::spawn(async move {
-        info!("Simulating operator response");
+    info!("Simulating operator response");
 
-        // 8. Send fake response from the first operator
-        let fake_response = FakeResponse::new("Hello world".to_string());
-        let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
-        let bls_signature = bls_key_pair.sign_message(fake_response.digest().as_ref());
-        send_signed_task_response(fake_response, bls_signature, operator_id).await;
-        info!("Response from first operator sent");
+    // 8. Send fake response from the first operator
+    let fake_response = FakeResponse::new("Hello world".to_string());
+    let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
+    let bls_signature = bls_key_pair.sign_message(fake_response.digest().as_ref());
+    send_signed_task_response(fake_response, bls_signature.clone(), operator_id).await;
+    info!("Response from first operator sent");
 
-        tokio::time::sleep(std::time::Duration::from_secs(10)).await;
+    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
-        info!("Threshold reached but there is a window to send another response");
+    info!("Threshold reached but there is a window to send another response");
 
-        // 8. Send fake response from second operator
-        let fake_response_2 = FakeResponse::new("Hello world".to_string());
-        let bls_key_pair_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
-        let bls_signature_2 = bls_key_pair_2.sign_message(fake_response_2.digest().as_ref());
-        send_signed_task_response(fake_response_2, bls_signature_2, operator_id_2).await;
-        info!("Response from second operator sent");
-    });
+    // 8. Send fake response from second operator
+    let fake_response_2 = FakeResponse::new("Hello world".to_string());
+    let bls_key_pair_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
+    let bls_signature_2 = bls_key_pair_2.sign_message(fake_response_2.digest().as_ref());
+    send_signed_task_response(fake_response_2, bls_signature_2.clone(), operator_id_2).await;
+    info!("Response from second operator sent");
 
-    // Wait for the aggregator to finish
-    info!("Sleeping for 60 seconds and then closing the aggregator");
-    tokio::time::sleep(std::time::Duration::from_secs(60)).await;
-    aggregator_handle.abort();
+    // Aggregate the bls signatures manually
+    let quorum_apks_g1 = aggregate_g1_public_keys(&[bls_key_pair.clone(), bls_key_pair_2.clone()]);
+    let signers_apk_g2 = aggregate_g2_public_keys(&[bls_key_pair.clone(), bls_key_pair_2.clone()]);
+    let signers_agg_sig_g1 =
+        aggregate_g1_signatures(&[bls_signature.clone(), bls_signature_2.clone()]);
+
+    // Wait for the aggregator to aggregate the responses and then compare the results
+    let aggregated_response = receiver.recv().await.unwrap();
+    assert_eq!(aggregated_response.quorum_apks_g1, vec![quorum_apks_g1]);
+    assert_eq!(aggregated_response.signers_apk_g2, signers_apk_g2);
+    assert_eq!(aggregated_response.signers_agg_sig_g1, signers_agg_sig_g1);
+    info!("Compared aggregated response with manual aggregation and they are equal");
 
     // Keep the service running until the aggregator is closed
+    aggregator_handle.abort();
     if aggregator_handle.await.is_err() {
         info!("Aggregator finished");
         return;
@@ -277,4 +302,33 @@ async fn send_signed_task_response(
         .send()
         .await
         .unwrap();
+}
+
+// Aggregate the g1 public keys
+fn aggregate_g1_public_keys(bls_key_pairs: &[BlsKeyPair]) -> BlsG1Point {
+    bls_key_pairs
+        .iter()
+        .map(|bls| bls.public_key().g1())
+        .reduce(|a, b| (a + b).into())
+        .map(BlsG1Point::new)
+        .unwrap()
+}
+
+// Aggregate the g2 public keys
+fn aggregate_g2_public_keys(bls_key_pairs: &[BlsKeyPair]) -> BlsG2Point {
+    bls_key_pairs
+        .iter()
+        .map(|bls| bls.public_key_g2().g2())
+        .reduce(|a, b| (a + b).into())
+        .map(BlsG2Point::new)
+        .unwrap()
+}
+
+fn aggregate_g1_signatures(signatures: &[Signature]) -> Signature {
+    let agg = signatures
+        .iter()
+        .map(|s| s.g1_point().g1())
+        .reduce(|a, b| (a + b).into())
+        .unwrap();
+    Signature::new(agg)
 }
