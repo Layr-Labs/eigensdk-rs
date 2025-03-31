@@ -5,12 +5,12 @@
 //! that emits an event when a task is created.
 //!
 //! Continue with the example:
-//! - Create an operator set with a total delegated stake quorum and register an
-//!   operator to it.
+//! - Create an operator set with a total delegated stake quorum and register two
+//!   operators to it.
 //! - Deploy a contract that emits an event when a task is created.
 //! - Start the aggregator
 //! - Emit a task with the contract
-//! - Send an RPC request to the aggregator with the task response
+//! - Send an RPC request to the aggregator with the task response and signature of both operators
 //! - Since the threshold is reached, the BLS aggregation service will send the aggregated response
 //!   to the aggregator
 
@@ -111,7 +111,6 @@ impl TaskProcessor for MockTaskProcessor {
         &self,
         response: Self::TaskResponse,
     ) -> Result<B256, TaskProcessorError> {
-        dbg!(&response);
         if response.response.is_empty() {
             return Err(box_error(std::io::Error::new(
                 std::io::ErrorKind::InvalidInput,
@@ -125,7 +124,6 @@ impl TaskProcessor for MockTaskProcessor {
         &self,
         response: BlsAggregationServiceResponse,
     ) -> Result<(), TaskProcessorError> {
-        dbg!(&response);
         info!(
             "Aggregated response received for task {}: {:?}",
             response.task_index, response.task_response_digest
@@ -170,7 +168,7 @@ async fn main() {
         .register_for_operator_sets(FIRST_ADDRESS, avs_address, vec![0], bls_key_pair, "socket")
         .await
         .unwrap();
-    info!("Operator registered to operator set");
+    info!("First operator registered to operator set");
 
     // Register second operator to operator set
     let bls_key_pair_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
@@ -210,7 +208,7 @@ async fn main() {
     // Wait for the aggregator to initialize
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
-    // Emit a new task with event
+    // Emit a new task event
     let result = task_contract
         .createTask()
         .send()
@@ -221,8 +219,8 @@ async fn main() {
         .unwrap();
     info!("Task created: {:?}", result.transaction_hash);
 
-    // Send fake response from operator
     tokio::time::sleep(std::time::Duration::from_secs(10)).await;
+    // Send fake response from operator
     tokio::spawn(async move {
         info!("Simulating operator response");
 
@@ -250,9 +248,11 @@ async fn main() {
             .await
             .unwrap();
 
-        info!("Response sent");
+        info!("Response from first operator sent");
 
         tokio::time::sleep(std::time::Duration::from_secs(10)).await;
+
+        info!("Threshold reached but there is a window to send another response");
 
         let fake_response_2 = FakeResponse::new("Hello world".to_string());
         let bls_key_pair_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
@@ -276,13 +276,8 @@ async fn main() {
             .await
             .unwrap();
 
-        info!("Second response sent");
+        info!("Response from second operator sent");
     });
-
-    // TODO: Check how to close the aggregator and stop the services
-    info!("Sleeping for 10 seconds and then closing the aggregator");
-    tokio::time::sleep(std::time::Duration::from_secs(10)).await;
-    // aggregator_handle.abort();
 
     // Keep the service running until the aggregator is closed
     if let Err(e) = aggregator_handle.await {
