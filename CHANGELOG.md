@@ -273,6 +273,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
+*  Alternate impl for OperatorsInfo for retrieving pub keys from middleware directly in [#414](https://github.com/Layr-Labs/eigensdk-rs/pull/414)
+
 ### Breaking Changes 🛠
 
 * `TaskMetadata.task_created_block` field changed to `u64` [#362](https://github.com/Layr-Labs/eigensdk-rs/pull/362)
