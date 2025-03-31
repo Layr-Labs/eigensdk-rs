@@ -55,7 +55,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ### Other Changes
 
 * Moved test utils from chainio folder to testing/testutils folder by @maximopalopoli in [#407](https://github.com/Layr-Labs/eigensdk-rs/pull/407)
-* added rewards utilities integration test by @maximopalopoli in [#404](https://github.com/Layr-Labs/eigensdk-rs/pull/404)
+* Added rewards utilities integration test by @maximopalopoli in [#404](https://github.com/Layr-Labs/eigensdk-rs/pull/404)
 
 ## [0.5.0] - 2025-03-18
 
