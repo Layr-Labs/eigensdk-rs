@@ -17,6 +17,7 @@ eigen-logging.workspace = true
 eigen-client-elcontracts.workspace = true
 eigen-common.workspace = true
 eigen-utils.workspace = true
+eigen-crypto-bls.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 testcontainers.workspace = true

@@ -2917,6 +2917,7 @@ dependencies = [
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
  "eigen-common",
+ "eigen-crypto-bls",
  "eigen-logging",
  "eigen-utils",
  "serde",
