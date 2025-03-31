@@ -1,18 +1,16 @@
 //! This is a simple example of how to use the aggregator.
 //!
-//! To use the aggregator, you should implement the [`TaskProcessor`] trait and
-//! create your own logic for processing the task. Also, you should create a contract
-//! that emits an event when a task is created.
-//!
-//! Continue with the example:
-//! - Create an operator set with a total delegated stake quorum and register two
-//!   operators to it.
-//! - Deploy a contract that emits an event when a task is created.
-//! - Start the aggregator
-//! - Emit a task with the contract
-//! - Send an RPC request to the aggregator with the task response and signature of both operators
-//! - Since the threshold is reached, the BLS aggregation service will send the aggregated response
-//!   to the aggregator
+//! 1. Create a contract that emits an event when a task is created.
+//! 2. To use the aggregator, you should implement the [`TaskProcessor`] and
+//!    [`TaskResponse`] traits and create your own logic for processing the task.
+//! 3. Deploy the task contract
+//! 4. Create an operator set with a total delegated stake quorum
+//! 5. Register operators to the operator set
+//! 6. Start the aggregator
+//! 7. Emit a task with the contract
+//! 8. Send an RPC request to the aggregator with the task response and signature of both operators
+//! 9. Since the threshold is reached, the BLS aggregation service will send the aggregated response
+//!    to the aggregator
 
 use std::time::Duration;
 
@@ -48,7 +46,7 @@ pub use eigen_types::operator::Operator;
 use serde::{Deserialize, Serialize};
 use tracing::info;
 
-// Fake contract to emit event
+// 1. Fake contract to emit event
 sol! {
     #[allow(missing_docs)]
     #[derive(Debug)]
@@ -66,6 +64,7 @@ sol! {
     }
 }
 
+// 2. Implement the `TaskResponse` trait
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct FakeResponse {
     response: String,
@@ -86,6 +85,8 @@ impl TaskResponse for FakeResponse {
         1
     }
 }
+
+// 2. Implement the `TaskProcessor` trait
 #[derive(Debug, Clone)]
 struct MockTaskProcessor;
 
@@ -148,12 +149,12 @@ async fn main() {
     .await
     .unwrap();
 
-    // Deploy the task contract
+    // 3. Deploy the task contract
     let provider = get_signer(FIRST_PRIVATE_KEY, &http_rpc);
     let task_contract = TaskContract::deploy(&provider).await.unwrap();
     let avs_address = get_service_manager_address(http_rpc.clone()).await;
 
-    // Create quorums and operator sets
+    // 4. Create quorums and operator sets
     create_total_delegated_stake_operator_set(
         &http_rpc,
         get_erc20_mock_strategy(http_rpc.clone()).await,
@@ -162,7 +163,7 @@ async fn main() {
     .await;
     info!("Operator set created");
 
-    // Register operator to operator set
+    // 5. Register operator to operator set
     let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
     el_chain_writer
         .register_for_operator_sets(FIRST_ADDRESS, avs_address, vec![0], bls_key_pair, "socket")
@@ -170,7 +171,7 @@ async fn main() {
         .unwrap();
     info!("First operator registered to operator set");
 
-    // Register second operator to operator set
+    // 5. Register second operator to operator set
     let bls_key_pair_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
     el_chain_writer_2
         .register_for_operator_sets(
@@ -187,7 +188,7 @@ async fn main() {
     let operator_id = avs_registry.get_operator_id(FIRST_ADDRESS).await.unwrap();
     let operator_id_2 = avs_registry.get_operator_id(SECOND_ADDRESS).await.unwrap();
 
-    // Set up the aggregator config and initialize the processor
+    // 6. Set up the aggregator config and initialize the processor
     let registry_coordinator = get_registry_coordinator_address(http_rpc.clone()).await;
     let operator_state_retriever = get_operator_state_retriever_address(http_rpc.clone()).await;
     let config = AggregatorConfig {
@@ -198,17 +199,15 @@ async fn main() {
         ws_rpc_url: ws_rpc.clone(),
     };
     let processor = MockTaskProcessor;
-
-    // Initialize the aggregator
     let aggregator = Aggregator::new(config, processor).await.unwrap();
 
-    // Start the aggregator in the background
+    // 6. Start the aggregator in the background
     let aggregator_handle = tokio::spawn(aggregator.start(ws_rpc.clone()));
 
     // Wait for the aggregator to initialize
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
-    // Emit a new task event
+    // 7. Emit a new task event
     let result = task_contract
         .createTask()
         .send()
@@ -224,6 +223,7 @@ async fn main() {
     tokio::spawn(async move {
         info!("Simulating operator response");
 
+        // 8. Send fake response from the first operator
         let fake_response = FakeResponse::new("Hello world".to_string());
         let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
         let bls_signature = bls_key_pair.sign_message(fake_response.digest().as_ref());
@@ -234,6 +234,7 @@ async fn main() {
 
         info!("Threshold reached but there is a window to send another response");
 
+        // 8. Send fake response from second operator
         let fake_response_2 = FakeResponse::new("Hello world".to_string());
         let bls_key_pair_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
         let bls_signature_2 = bls_key_pair_2.sign_message(fake_response_2.digest().as_ref());
