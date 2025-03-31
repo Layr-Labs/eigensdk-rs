@@ -37,5 +37,8 @@ sha2 = "0.10.8"
 testcontainers.workspace = true
 tokio-util = "0.7.11"
 
+# somehow required for doc-tests
+simple-mermaid = "0.2.0"
+
 [features]
 docs = ["simple-mermaid"]
