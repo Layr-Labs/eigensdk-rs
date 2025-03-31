@@ -242,7 +242,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
                 .await
                 .process_new_task(event)
                 .await
-                .map_err(|e| AggregatorError::TaskProcessorError(e))?;
+                .map_err(AggregatorError::TaskProcessorError)?;
             service_handle.initialize_task(metadata).await?;
         }
 
@@ -277,7 +277,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
             .await
             .process_task_response(task_response)
             .await
-            .map_err(|e| AggregatorError::TaskProcessorError(e))?;
+            .map_err(AggregatorError::TaskProcessorError)?;
 
         let task_signature =
             TaskSignature::new(task_index, task_response_digest, signature, operator_id);
@@ -312,7 +312,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
                 .await
                 .process_aggregated_response(service_response)
                 .await
-                .map_err(|e| AggregatorError::TaskProcessorError(e))?;
+                .map_err(AggregatorError::TaskProcessorError)?;
         }
     }
 }
