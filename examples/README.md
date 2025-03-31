@@ -30,7 +30,7 @@ cargo run --example get_contracts_from_registry
 
 ## Aggregator
 
-Example showing how to run an aggregator. It will start an aggregator, create a task and send fake signatures to it until the window closes. When the window closes, the aggregator will aggregate the signatures and send the response back to the operator.
+Example showing how to run an aggregator. It will start an aggregator, create a task and send fake signatures to it until the window closes. When the window closes, the aggregator will aggregate the signatures and send the response back.
 
 ```sh
 cargo run --example aggregator
