@@ -16,7 +16,7 @@
 
 use std::time::Duration;
 
-use alloy::primitives::B256;
+use alloy::primitives::{FixedBytes, B256};
 use alloy::sol;
 use alloy::transports::http::reqwest;
 use eigen_aggregator::{
@@ -29,7 +29,7 @@ use eigen_aggregator::{
 };
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_signer;
-use eigen_crypto_bls::BlsKeyPair;
+use eigen_crypto_bls::{BlsKeyPair, Signature};
 use eigen_logging::get_test_logger;
 use eigen_logging::{init_logger, log_level::LogLevel};
 use eigen_services_blsaggregation::{
@@ -225,29 +225,9 @@ async fn main() {
         info!("Simulating operator response");
 
         let fake_response = FakeResponse::new("Hello world".to_string());
-
         let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
         let bls_signature = bls_key_pair.sign_message(fake_response.digest().as_ref());
-
-        let client = reqwest::Client::new();
-        client
-            .post("http://127.0.0.1:8081")
-            .json(&serde_json::json!({
-                "jsonrpc": "2.0",
-                "method": "process_signed_task_response",
-                "params": {
-                    "params": {
-                        "task_response": fake_response,
-                        "signature": bls_signature,
-                        "operator_id": operator_id
-                    }
-                },
-                "id": 1
-            }))
-            .send()
-            .await
-            .unwrap();
-
+        send_signed_task_response(fake_response, bls_signature, operator_id).await;
         info!("Response from first operator sent");
 
         tokio::time::sleep(std::time::Duration::from_secs(10)).await;
@@ -257,25 +237,7 @@ async fn main() {
         let fake_response_2 = FakeResponse::new("Hello world".to_string());
         let bls_key_pair_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
         let bls_signature_2 = bls_key_pair_2.sign_message(fake_response_2.digest().as_ref());
-
-        client
-            .post("http://127.0.0.1:8081")
-            .json(&serde_json::json!({
-                "jsonrpc": "2.0",
-                "method": "process_signed_task_response",
-                "params": {
-                    "params": {
-                        "task_response": fake_response_2,
-                        "signature": bls_signature_2,
-                        "operator_id": operator_id_2
-                    }
-                },
-                "id": 1
-            }))
-            .send()
-            .await
-            .unwrap();
-
+        send_signed_task_response(fake_response_2, bls_signature_2, operator_id_2).await;
         info!("Response from second operator sent");
     });
 
@@ -289,4 +251,29 @@ async fn main() {
         info!("Aggregator finished");
         return;
     }
+}
+
+async fn send_signed_task_response(
+    task_response: FakeResponse,
+    signature: Signature,
+    operator_id: FixedBytes<32>,
+) {
+    let client = reqwest::Client::new();
+    client
+        .post("http://127.0.0.1:8081")
+        .json(&serde_json::json!({
+            "jsonrpc": "2.0",
+            "method": "process_signed_task_response",
+            "params": {
+                "params": {
+                    "task_response": task_response,
+                    "signature": signature,
+                    "operator_id": operator_id
+                }
+            },
+            "id": 1
+        }))
+        .send()
+        .await
+        .unwrap();
 }
