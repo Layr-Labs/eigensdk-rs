@@ -279,8 +279,14 @@ async fn main() {
         info!("Response from second operator sent");
     });
 
+    // Wait for the aggregator to finish
+    info!("Sleeping for 60 seconds and then closing the aggregator");
+    tokio::time::sleep(std::time::Duration::from_secs(60)).await;
+    aggregator_handle.abort();
+
     // Keep the service running until the aggregator is closed
-    if let Err(e) = aggregator_handle.await {
-        info!("Aggregator finished: {:?}", e);
+    if aggregator_handle.await.is_err() {
+        info!("Aggregator finished");
+        return;
     }
 }
