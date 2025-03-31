@@ -54,6 +54,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Other Changes
 
+* Added additional check after starting anvil container in `start_anvil_container` and `start_m2_anvil_container` in [#417](https://github.com/Layr-Labs/eigensdk-rs/pull/417)
 * Moved test utils from chainio folder to testing/testutils folder by @maximopalopoli in [#407](https://github.com/Layr-Labs/eigensdk-rs/pull/407)
 
 ## [0.5.0] - 2025-03-18
