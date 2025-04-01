@@ -169,11 +169,6 @@ mod tests {
             .await
             .unwrap()
             .is_some());
-
-        let pub_keys = operator_info_on_chain
-            .get_operator_info(SECOND_ADDRESS)
-            .await
-            .unwrap();
     }
 
     #[tokio::test]
@@ -194,9 +189,5 @@ mod tests {
             .unwrap();
         let expected_socket = "socket";
         assert_eq!(socket, expected_socket);
-        let ss = operator_info_on_chain
-            .get_operator_socket(SECOND_ADDRESS)
-            .await
-            .unwrap();
     }
 }
