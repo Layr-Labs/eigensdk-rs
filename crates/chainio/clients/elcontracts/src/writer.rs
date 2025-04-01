@@ -1274,10 +1274,17 @@ mod tests {
             _deprecated_earnings_receiver_address: None,
             staker_opt_out_window_blocks: None,
         };
-        el_chain_writer
+
+        let tx_hash = el_chain_writer
             .register_as_operator(operator)
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
         let is_registered = el_chain_reader
             .is_operator_registered(FIRST_ADDRESS)
@@ -1302,10 +1309,16 @@ mod tests {
             _deprecated_earnings_receiver_address: None,
             staker_opt_out_window_blocks: Some(0u32),
         };
-        el_chain_writer
+        let tx_hash = el_chain_writer
             .register_as_operator_preslashing(operator)
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
         let is_registered = el_chain_reader
             .is_operator_registered(FIRST_ADDRESS)
@@ -1745,10 +1758,17 @@ mod tests {
 
         assert_eq!(split, 1); // not initialized case
 
-        el_chain_writer
+        let tx_hash = el_chain_writer
             .set_operator_avs_split(FIRST_ADDRESS, avs_address, new_split)
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
         let split = el_chain_reader
             .get_operator_avs_split(FIRST_ADDRESS, avs_address)
             .await
