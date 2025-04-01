@@ -15,8 +15,10 @@
 use std::time::Duration;
 
 use alloy::primitives::{FixedBytes, B256};
+use alloy::rpc::client::ReqwestClient;
 use alloy::sol;
 use alloy::transports::http::reqwest;
+use eigen_aggregator::SignedTaskResponse;
 use eigen_aggregator::{
     config::AggregatorConfig,
     traits::{
@@ -44,8 +46,9 @@ use eigen_testing_utils::chain_clients::{
 };
 pub use eigen_types::operator::Operator;
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 use tokio::sync::mpsc;
-use tracing::info;
+use tracing::{error, info};
 
 // 1. Fake contract to emit event
 sol! {
@@ -284,24 +287,23 @@ async fn send_signed_task_response(
     signature: Signature,
     operator_id: FixedBytes<32>,
 ) {
-    let client = reqwest::Client::new();
-    client
-        .post("http://127.0.0.1:8081")
-        .json(&serde_json::json!({
-            "jsonrpc": "2.0",
-            "method": "process_signed_task_response",
-            "params": {
-                "params": {
-                    "task_response": task_response,
-                    "signature": signature,
-                    "operator_id": operator_id
-                }
-            },
-            "id": 1
-        }))
-        .send()
+    let url = reqwest::Url::parse("http://127.0.0.1:8081").unwrap();
+    let client = ReqwestClient::new_http(url);
+    let signed_task_response = SignedTaskResponse::new(task_response, signature, operator_id);
+    let params = json!({
+        "params": signed_task_response,
+        "id": 1,
+        "jsonrpc": "2.0"
+    });
+
+    let response: bool = client
+        .request("process_signed_task_response", params)
         .await
         .unwrap();
+
+    if !response {
+        error!("Failed to send signed task response for task");
+    }
 }
 
 // Aggregate the g1 public keys
