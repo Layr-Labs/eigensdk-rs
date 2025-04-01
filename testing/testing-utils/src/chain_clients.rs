@@ -22,6 +22,7 @@ use eigen_utils::slashing::{
                 EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
             },
         },
+        permissioncontroller::PermissionController,
     },
     middleware::{
         registrycoordinator::{
@@ -40,8 +41,9 @@ use eigen_utils::slashing::{
 use crate::anvil_constants::{
     get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address,
     get_erc20_mock_strategy, get_operator_state_retriever_address,
-    get_registry_coordinator_address, get_rewards_coordinator_address, get_service_manager_address,
-    get_strategy_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY,
+    get_permission_controller_address, get_registry_coordinator_address,
+    get_rewards_coordinator_address, get_service_manager_address, get_strategy_manager_address,
+    FIRST_ADDRESS, FIRST_PRIVATE_KEY,
 };
 
 use eigen_utils::rewardsv2::middleware::registrycoordinator::{
@@ -325,28 +327,56 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
     let registry_coordinator_addr =
         get_registry_coordinator_address(http_endpoint.to_string()).await;
     let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+    let permission_controller_address =
+        get_permission_controller_address(http_endpoint.to_string()).await;
     let service_manager =
         MockAvsServiceManager::new(service_manager_address, default_signer.clone());
-    service_manager
-        .setAppointee(
+    let contract_permission_controller =
+        PermissionController::new(permission_controller_address, get_provider(http_endpoint));
+
+    if !contract_permission_controller
+        .canCall(
+            service_manager_address,
             default_signer.default_signer_address(),
             allocation_manager_addr,
             alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
         )
-        .send()
+        .call()
         .await
         .unwrap()
-        .get_receipt()
-        .await
-        .unwrap();
-    allocation_manager
-        .setAVSRegistrar(avs_address, registry_coordinator_addr)
-        .send()
+        ._0
+    {
+        service_manager
+            .setAppointee(
+                default_signer.default_signer_address(),
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+    };
+
+    if allocation_manager
+        .getAVSRegistrar(avs_address)
+        .call()
         .await
         .unwrap()
-        .get_receipt()
-        .await
-        .unwrap();
+        ._0
+        .eq(&avs_address)
+    {
+        allocation_manager
+            .setAVSRegistrar(avs_address, registry_coordinator_addr)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+    }
 
     // Create slashable quorum
     let contract_registry_coordinator =
@@ -357,18 +387,31 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         kickBIPsOfTotalStake: 1000,
     };
     let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-    service_manager
-        .setAppointee(
+    if !contract_permission_controller
+        .canCall(
+            service_manager_address,
             registry_coordinator_addr,
             allocation_manager_addr,
             alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
         )
-        .send()
+        .call()
         .await
         .unwrap()
-        .get_receipt()
-        .await
-        .unwrap();
+        ._0
+    {
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+    }
     let strategy_params = StrategyParams {
         strategy,
         multiplier: U96::from(1),
