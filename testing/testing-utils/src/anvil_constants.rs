@@ -211,3 +211,33 @@ pub async fn get_permission_controller_address(rpc_url: String) -> Address {
 
     address
 }
+
+/// Bls Apk Registry contract address
+pub async fn get_bls_apk_registry_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("blsApkRegistry".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
+
+/// Socket registry contract address
+pub async fn get_socket_registry_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("socketRegistry".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
