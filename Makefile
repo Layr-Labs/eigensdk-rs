@@ -56,6 +56,10 @@ lint:
 	cargo fmt --all -- --check \
 		&& cargo clippy --workspace --all-features --benches --examples --tests -- -D warnings
 
+.PHONY: docs
+docs:
+	cargo doc --features docs --workspace --no-deps --open
+
 .PHONY: copy-env
 copy-env:
 	@echo "Copying .env.example to .env..."
