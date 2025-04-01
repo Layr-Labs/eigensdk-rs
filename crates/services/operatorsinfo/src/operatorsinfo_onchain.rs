@@ -68,7 +68,7 @@ impl OperatorInfoService for OperatorInfoOnChain {
             .call()
             .await?
             ._0;
-        if socket == "" {
+        if socket.is_empty() {
             Ok(None)
         } else {
             Ok(Some(socket))
