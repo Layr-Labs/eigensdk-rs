@@ -222,6 +222,8 @@ library MockAvsDeploymentLib {
         data.stakeRegistry = json.readAddress(".addresses.stakeRegistry");
         data.strategy = json.readAddress(".addresses.strategy");
         data.token = json.readAddress(".addresses.token");
+        data.blsapkRegistry = json.readAddress(".addresses.blsapkRegistry");
+        data.socketRegistry = json.readAddress(".addresses.socketRegistry");
 
         return data;
     }
@@ -286,6 +288,8 @@ library MockAvsDeploymentLib {
             data.strategy.toHexString(),
             '","token":"',
             data.token.toHexString(),
+            '","socketRegistry":"',
+            data.socketRegistry.toHexString(),
             '","tokenRewards":"',
             data.tokenRewards.toHexString(),
             '"}'
