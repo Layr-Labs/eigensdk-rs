@@ -5,8 +5,6 @@
 //!
 //! The BLS Aggregation Service provides functionality to aggregate BLS signatures from multiple operators into a single aggregated signature. This is used by the Aggregator to verify the signatures of the operators and send the aggregated response once the quorum is reached or time expires. AVS developers can use it to define and manage tasks, set quorum requirements and integrate aggregated results into their smart contracts.
 //!
-//! [Example of a aggregation service in action](https://github.com/Layr-Labs/incredible-squaring-avs-rs/blob/dev/crates/aggregator/src/lib.rs).
-//!
 //! ## Key Features
 //!
 //! - **BLS Signature Aggregation**: Combines multiple individual signatures into a single verifiable aggregated signature.
