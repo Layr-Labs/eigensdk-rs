@@ -9,13 +9,6 @@
 //!
 //! ## Main Components
 //!
-//! ### AvsRegistryServiceChainCaller
-//!
-//! The main struct of the service, it implements the [`AvsRegistryService`] trait.
-//!
-//! - `avs_registry`: `AvsRegistryReader` to get the information from the chain
-//! - `operators_info_service`: `OperatorInfoService` to get the operator info
-//!
 //! ### OperatorAvsState
 //!
 //! Represents the AVS state of an operator.
