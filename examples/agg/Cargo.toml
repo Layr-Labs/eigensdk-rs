@@ -1,0 +1,22 @@
+[package]
+name = "agg"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+license-file.workspace = true
+
+[dependencies]
+hex = "0.4"
+tokio.workspace = true
+eigen-aggregator.workspace = true
+serde.workspace = true
+alloy.workspace = true
+tracing.workspace = true
+# TODO: shouldn't be needed
+eigen-services-blsaggregation.workspace = true
+
+[lints]
+workspace = true

@@ -1,0 +1,32 @@
+{
+    "strategyManager": {
+      "init_paused_status": 0,
+      "init_withdrawal_delay_blocks": 50400
+    },
+    "delegationManager": {
+      "init_paused_status": 0,
+      "init_withdrawal_delay_blocks": 50400
+    },
+    "allocationManager": {
+      "init_paused_status": 0,
+      "initial_owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "deallocation_delay": 0,
+      "allocation_configuration_delay": 0
+    },
+    "eigenPodManager": {
+      "init_paused_status": 0
+    },
+    "rewardsCoordinator": {
+      "init_paused_status": 0,
+      "initial_owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "rewards_updater": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
+      "activation_delay": 0,
+      "default_split_bips": 1000,
+      "calculation_interval_seconds": 86400,
+      "MAX_REWARDS_DURATION": 864000,
+      "MAX_RETROACTIVE_LENGTH": 432000,
+      "MAX_FUTURE_LENGTH": 86400,
+      "GENESIS_REWARDS_TIMESTAMP": 1672531200,
+      "global_operator_commission_bips": 1000
+    }
+  }
