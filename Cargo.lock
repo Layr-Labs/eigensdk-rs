@@ -2064,6 +2064,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
+name = "chainio-integration-test"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "ark-ff 0.5.0",
+ "async-trait",
+ "eigen-common",
+ "eigen-logging",
+ "eigen-testing-utils",
+ "eigen-utils",
+ "futures-util",
+ "num-bigint 0.4.6",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "chrono"
 version = "0.4.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"
