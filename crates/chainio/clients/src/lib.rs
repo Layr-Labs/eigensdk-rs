@@ -7,8 +7,8 @@ pub mod tests {
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
-            get_erc20_mock_strategy, get_rewards_coordinator_address, FIRST_ADDRESS,
-            FIRST_PRIVATE_KEY,
+            get_erc20_mock_strategy, get_rewards_coordinator_address, FIRST_PRIVATE_KEY,
+            SECOND_ADDRESS,
         },
         chain_clients::{
             build_avs_registry_chain_writer, build_el_chain_reader, new_claim, new_test_writer,
@@ -45,23 +45,12 @@ pub mod tests {
         let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &provider);
 
         let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-        let claimer_address = FIRST_ADDRESS;
+        let claimer_address = SECOND_ADDRESS;
 
         let (_, token_address) = el_chain_reader
             .get_strategy_and_underlying_token(mock_strategy)
             .await
             .unwrap();
-
-        let token = MockERC20::new(token_address, &signer);
-        let receipt = token
-            .mint(claimer_address, U256::from(1000))
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-        assert!(receipt.status());
 
         let rewards_duration = rewards_coordinator
             .MAX_REWARDS_DURATION()
@@ -120,8 +109,7 @@ pub mod tests {
         let token = MockERC20::new(token_address, &signer);
         let initial_balance = token.balanceOf(claimer_address).call().await.unwrap()._0;
 
-        let expected_initial_balance = U256::from_str_radix("10000000000000000000", 10).unwrap();
-        assert!(initial_balance == expected_initial_balance);
+        assert!(initial_balance == U256::ZERO);
 
         let rewards_amount = U256::from(42);
         let (_root, claim) = new_claim(&http_endpoint, rewards_amount).await;
@@ -137,7 +125,6 @@ pub mod tests {
         // Check balance at strategy after claim
         let balance_after_claim = token.balanceOf(claimer_address).call().await.unwrap()._0;
 
-        let expected_balance_after_claim = expected_initial_balance + rewards_amount;
-        assert!(balance_after_claim == expected_balance_after_claim);
+        assert!(balance_after_claim == rewards_amount);
     }
 }
