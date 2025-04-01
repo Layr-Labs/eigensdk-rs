@@ -1,7 +1,9 @@
 #![allow(missing_docs)]
-use std::time::Duration;
-
-use alloy::{primitives::B256, sol};
+use alloy::{
+    primitives::{keccak256, B256, U256},
+    sol_types::SolValue,
+};
+use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager;
 use eigen_aggregator::{
     traits::{
         task_processor::{TaskProcessor, TaskProcessorError},
@@ -13,31 +15,26 @@ use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
 };
 use serde::{Deserialize, Serialize};
+use std::time::Duration;
 use tracing::info;
 
-sol! {
-    event NewTask(uint256 indexed taskIndex);
-}
+#[allow(warnings)]
+mod bindings;
 
 // 1. Implement the `TaskResponse` trait
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct FakeResponse {
     task_index: u32,
-    response_digest: B256,
-}
-
-impl FakeResponse {
-    fn new(task_index: u32, response_digest: [u8; 32]) -> Self {
-        Self {
-            task_index,
-            response_digest: response_digest.into(),
-        }
-    }
+    number_squared: U256,
 }
 
 impl TaskResponse for FakeResponse {
     fn digest(&self) -> B256 {
-        self.response_digest
+        let response = IIncredibleSquaringTaskManager::TaskResponse {
+            referenceTaskIndex: self.task_index,
+            numberSquared: self.number_squared,
+        };
+        keccak256(response.abi_encode())
     }
 
     fn task_index(&self) -> u32 {
@@ -55,18 +52,24 @@ impl TaskProcessorImpl {
     }
 }
 impl TaskProcessor for TaskProcessorImpl {
-    type NewTaskEvent = NewTask;
+    type NewTaskEvent = IIncredibleSquaringTaskManager::NewTaskCreated;
     type TaskResponse = FakeResponse;
 
     async fn process_new_task(
         &self,
         event: Self::NewTaskEvent,
     ) -> Result<TaskMetadata, TaskProcessorError> {
+        let quorum_numbers: Vec<u8> = event.task.quorumNumbers.into();
+        let quorum_threshold_percentages =
+            std::iter::repeat_n(event.task.quorumThresholdPercentage, quorum_numbers.len())
+                .into_iter()
+                .map(|x| x.try_into().unwrap())
+                .collect();
         Ok(TaskMetadata::new(
-            event.taskIndex.to::<u32>(),
-            12345,
-            vec![0],
-            vec![50],
+            event.taskIndex,
+            event.task.taskCreatedBlock.into(),
+            quorum_numbers,
+            quorum_threshold_percentages,
             std::time::Duration::from_secs(60),
         )
         .with_window_duration(Duration::from_secs(15)))
@@ -111,4 +114,9 @@ async fn main() {
 
     let tp = TaskProcessorImpl::new();
     let aggregator = Aggregator::new(config, tp).await.unwrap();
+
+    aggregator
+        .start("ws://localhost:8545".to_string())
+        .await
+        .unwrap();
 }
