@@ -1,6 +1,5 @@
 //! Integration test for rewards utilities
 
-#[allow(missing_docs)]
 #[cfg(test)]
 pub mod tests {
 
