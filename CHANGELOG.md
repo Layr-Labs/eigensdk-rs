@@ -70,9 +70,6 @@ Old Implementation which uses indexing :
 
     let avs_registry_service =
         AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
-
-    // Send the shutdown signal to the OperatorInfoServiceInMemory
-    cancellation_token.cancel();
   ```
 
 Alternate implementation which directly queries from middleware using view call :
