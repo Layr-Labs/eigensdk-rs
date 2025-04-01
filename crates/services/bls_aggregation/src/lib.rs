@@ -52,17 +52,17 @@
 //!
 //! The main service that coordinates signature aggregation:
 //!
-//! - `new()`: Creates a new instance of the service
-//! - `start()`: Starts the BLS Aggregator Service running the main loop in background
+//! - [`new()`]: Creates a new instance of the service
+//! - [`start()`]: Starts the BLS Aggregator Service running the main loop in background
 //!
 //! ## Usage
 //!
-//! When you initialize the BLS Aggregation Service, it returns a tuple of `ServiceHandle` and `AggregateReceiver`. The `ServiceHandle` is used to interact with the service. The available messages to send to the service are:
+//! When you initialize the BLS Aggregation Service, it returns a tuple of [`ServiceHandle`] and [`AggregateReceiver`]. The `ServiceHandle` is used to interact with the service. The available messages to send to the service are:
 //!
-//! - `initialize_task(metadata: TaskMetadata)`: Initializes a new task. If you want to set a time to expiry for the task, you can use the `with_time_to_expiry()` method in a builder pattern.
-//! - `process_signature(task_signature: TaskSignature)`: Processes a signature for a task
+//! - [`initialize_task(metadata: TaskMetadata)`]: Initializes a new task. If you want to set a time to expiry for the task, you can use the [`with_window_duration()`] method in a builder pattern.
+//! - [`process_signature(task_signature: TaskSignature)`]: Processes a signature for a task
 //!
-//! The `AggregateReceiver` is used to receive aggregated responses from the service. To get the aggregated response, you can use the `receive_aggregated_response()` method.
+//! The `AggregateReceiver` is used to receive aggregated responses from the service. To get the aggregated response, you can use the [`receive_aggregated_response()`] method.
 //!
 //! Once a task is initialized, the service will start processing the task in a loop in the background. The service will wait for the quorum to be reached or the time to expire. Once the quorum is reached or the time expires, the service will aggregate the signatures and send the aggregated response to the `AggregateReceiver`.
 //!
@@ -352,7 +352,17 @@
 //! ```sh
 //! cargo test --package eigen-services-blsaggregation --lib -- bls_agg_test::integration_test --show-output
 //! ```
-//!
+//! [`new()`]: bls_agg::BlsAggregatorService::new()
+//! [`start()`]: bls_agg::BlsAggregatorService::start()
+//! [`initialize_task(metadata: TaskMetadata)`]: bls_agg::ServiceHandle::initialize_task()
+//! [`process_signature(task_signature: TaskSignature)`]: bls_agg::ServiceHandle::process_signature()
+//! [`receive_aggregated_response()`]: bls_agg::AggregateReceiver::receive_aggregated_response()
+//! [`with_window_duration()`]: bls_agg::TaskMetadata::with_window_duration()
+//! [`ServiceHandle`]: bls_agg::ServiceHandle
+//! [`AggregateReceiver`]: bls_agg::AggregateReceiver
+//! [`TaskMetadata`]: bls_agg::TaskMetadata
+//! [`TaskSignature`]: bls_agg::TaskSignature
+//! [`BlsAggregatorService`]: bls_agg::BlsAggregatorService
 #![doc(
     html_logo_url = "https://github.com/Layr-Labs/eigensdk-rs/assets/91280922/bd13caec-3c00-4afc-839a-b83d2890beb5",
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
