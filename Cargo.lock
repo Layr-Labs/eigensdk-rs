@@ -2594,7 +2594,6 @@ dependencies = [
  "eigen-common",
  "eigen-crypto-bls",
  "eigen-testing-utils",
- "eigen-types",
  "eigen-utils",
  "eth-keystore",
  "hex",
