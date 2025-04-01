@@ -25,7 +25,6 @@ pub mod integration_test {
         anvil::{mine_anvil_blocks, start_anvil_container, start_m2_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_operator_state_retriever_address,
-
             get_registry_coordinator_address, get_service_manager_address,
             get_socket_registry_address,
         },
