@@ -1858,10 +1858,16 @@ mod tests {
             multiplier: U96::from(1),
         }];
 
-        avs_writer
+        let tx_hash = avs_writer
             .add_strategies(quorum_number, strategy_params.to_vec())
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
         let tx_hash = avs_writer
             .remove_strategies(quorum_number, [U256::from(1)].to_vec())
@@ -1871,8 +1877,8 @@ mod tests {
             .await
             .unwrap()
             .status();
-
         assert!(tx_status);
+
         let contract_stake_registry =
             StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
         assert!(contract_stake_registry
@@ -1963,10 +1969,15 @@ mod tests {
             multiplier: U96::from(1),
         }];
 
-        avs_writer
+        let tx_hash = avs_writer
             .add_strategies(quorum_number, strategy_params.to_vec())
             .await
             .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
         let strategy_indices = [U256::from(1)];
         let new_multipliers = [U96::from(2)];
