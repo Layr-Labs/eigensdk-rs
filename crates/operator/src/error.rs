@@ -1,5 +1,5 @@
-use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
+use eigen_logging::error::ConfigError;
 use rust_bls_bn254::errors::KeystoreError;
 use thiserror::Error;
 
