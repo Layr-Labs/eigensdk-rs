@@ -12,4 +12,5 @@ pub mod r#operatorstateretriever;
 pub mod r#registrycoordinator;
 pub mod r#servicemanagerbase;
 pub mod r#slashingregistrycoordinator;
+pub mod r#socketregistry;
 pub mod r#stakeregistry;
