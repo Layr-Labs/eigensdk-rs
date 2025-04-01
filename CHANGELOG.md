@@ -17,8 +17,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
-* chore: use common testing utils in bls_agg_test in PR [420](https://github.com/Layr-Labs/eigensdk-rs/pull/420).
-
 ### Breaking Changes 🛠
 
 * Changing NodeApi to allow concurrent modifications of the internal state of the node in PR [401](https://github.com/Layr-Labs/eigensdk-rs/pull/401).
@@ -57,6 +55,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ### Other Changes
 
 * Moved test utils from chainio folder to testing/testutils folder by @maximopalopoli in [#407](https://github.com/Layr-Labs/eigensdk-rs/pull/407)
+
+* chore: use common testing utils in bls_agg_test in PR [420](https://github.com/Layr-Labs/eigensdk-rs/pull/420).
 
 ## [0.5.0] - 2025-03-18
 
