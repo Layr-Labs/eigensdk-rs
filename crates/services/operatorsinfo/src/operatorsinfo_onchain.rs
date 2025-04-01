@@ -7,7 +7,7 @@ use eigen_crypto_bls::{
     BlsG2Point,
 };
 use eigen_types::operator::OperatorPubKeys;
-use eigen_utils::slashing::middleware::blsapkregistry;
+use eigen_utils::slashing::middleware::{blsapkregistry, socketregistry};
 
 /// Retrieves operator's [`OperatorPubKeys`] directly from middleware.
 #[allow(dead_code)]
@@ -15,6 +15,7 @@ use eigen_utils::slashing::middleware::blsapkregistry;
 pub struct OperatorInfoOnChain {
     http_url: String,
     bls_apk_registry: Address,
+    socket_registry: Address,
 }
 
 #[async_trait]
@@ -47,19 +48,40 @@ impl OperatorInfoService for OperatorInfoOnChain {
 
     async fn get_operator_socket(
         &self,
-        _address: Address,
+        address: Address,
     ) -> Result<Option<String>, OperatorInfoServiceError> {
-        Err(OperatorInfoServiceError::NotSupported(
-            "get_operator_socket is not supported for OperatorInfoOnChain".to_string(),
-        ))
+        // todo!()
+        let contract_socket_registry =
+            socketregistry::SocketRegistry::new(self.socket_registry, get_provider(&self.http_url));
+        let contract_bls_apk_registry = blsapkregistry::BLSApkRegistry::new(
+            self.bls_apk_registry,
+            get_provider(&self.http_url),
+        );
+
+        let operator_id = contract_bls_apk_registry
+            .getOperatorId(address)
+            .call()
+            .await?
+            ._0;
+        let socket = contract_socket_registry
+            .getOperatorSocket(operator_id)
+            .call()
+            .await?
+            ._0;
+        if socket == "" {
+            Ok(None)
+        } else {
+            Ok(Some(socket))
+        }
     }
 }
 
 impl OperatorInfoOnChain {
-    pub fn new(http_url: &str, bls_apk_registry: Address) -> Self {
+    pub fn new(http_url: &str, bls_apk_registry: Address, socket_registry: Address) -> Self {
         Self {
             http_url: http_url.to_string(),
             bls_apk_registry,
+            socket_registry,
         }
     }
 }
@@ -81,8 +103,8 @@ mod tests {
             get_allocation_manager_address, get_avs_directory_address,
             get_bls_apk_registry_address, get_delegation_manager_address, get_erc20_mock_strategy,
             get_registry_coordinator_address, get_rewards_coordinator_address,
-            get_service_manager_address, get_strategy_manager_address, FIRST_PRIVATE_KEY,
-            SECOND_ADDRESS, SECOND_PRIVATE_KEY,
+            get_service_manager_address, get_socket_registry_address, get_strategy_manager_address,
+            FIRST_PRIVATE_KEY, SECOND_ADDRESS, SECOND_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
@@ -268,13 +290,37 @@ mod tests {
     async fn test_get_operator_info() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let bls_apk_registry_address = get_bls_apk_registry_address(http_endpoint.clone()).await;
+        let socket_registry_address = get_socket_registry_address(http_endpoint.clone()).await;
         register_operator(http_endpoint.clone()).await;
-        let operator_info_on_chain =
-            OperatorInfoOnChain::new(&http_endpoint, bls_apk_registry_address);
+        let operator_info_on_chain = OperatorInfoOnChain::new(
+            &http_endpoint,
+            bls_apk_registry_address,
+            socket_registry_address,
+        );
         assert!(operator_info_on_chain
             .get_operator_info(SECOND_ADDRESS)
             .await
             .unwrap()
             .is_some());
+    }
+
+    #[tokio::test]
+    async fn test_get_operator_socket() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let bls_apk_registry_address = get_bls_apk_registry_address(http_endpoint.clone()).await;
+        let socket_registry_address = get_socket_registry_address(http_endpoint.clone()).await;
+        register_operator(http_endpoint.clone()).await;
+        let operator_info_on_chain = OperatorInfoOnChain::new(
+            &http_endpoint,
+            bls_apk_registry_address,
+            socket_registry_address,
+        );
+        let socket = operator_info_on_chain
+            .get_operator_socket(SECOND_ADDRESS)
+            .await
+            .unwrap()
+            .unwrap();
+        let expected_socket = "socket";
+        assert_eq!(socket, expected_socket);
     }
 }
