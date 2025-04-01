@@ -18,6 +18,7 @@ use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use tracing::info;
 
+// Allow warnings in auto-generated code
 #[allow(warnings)]
 mod bindings;
 
