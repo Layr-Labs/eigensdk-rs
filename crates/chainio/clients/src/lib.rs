@@ -26,15 +26,18 @@ pub mod tests {
     #[tokio::test]
     async fn test_process_claim() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
+        let rewards_initiator_pk = FIRST_PRIVATE_KEY;
+        let signer = get_signer(rewards_initiator_pk, &http_endpoint);
 
         let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+            new_test_writer(http_endpoint.to_string(), rewards_initiator_pk.to_string()).await;
         let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
 
-        let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let avs_writer = build_avs_registry_chain_writer(
+            http_endpoint.clone(),
+            rewards_initiator_pk.to_string(),
+        )
+        .await;
 
         let rewards_coordinator_address =
             get_rewards_coordinator_address(http_endpoint.clone()).await;
