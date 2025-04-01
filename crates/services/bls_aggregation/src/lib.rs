@@ -14,44 +14,11 @@
 //!
 //! ## Main Components
 //!
-//! ### TaskMetadata
-//!
-//! Defines the metadata for a task.
-//!
-//! - `task_index`: Unique identifier for the task
-//! - `task_created_block`: Block in which the task was created
-//! - `quorum_numbers`: Quorum numbers that should respond to the task
-//! - `quorum_threshold_percentages`: Threshold percentages for each quorum
-//! - `time_to_expiry`: Time before the task response aggregation expires
-//! - `window_duration`: Duration of the window to wait for signatures after quorum is reached
-//!
-//! ### TaskSignature
-//!
-//! Represents an individual signature for a task.
-//!
-//! - `task_index`: Index of the task
-//! - `task_response_digest`: Digest of the task response
-//! - `bls_signature`: BLS signature of the task response
-//! - `operator_id`: ID of the operator that signed the response
-//!
-//! ### ServiceHandle
-//!
-//! Represents a handle to interact with the BLS Aggregation Service.
-//!
-//! - `msg_sender`: UnboundedSender to send messages to the BLS Aggregation Service
-//!
-//! ### AggregateReceiver
-//!
-//! Represents a receiver to receive aggregated responses from the BLS Aggregation Service.
-//!
-//! - `aggregate_receiver`: UnboundedReceiver to receive aggregated responses from the service
-//!
-//! ### BlsAggregatorService
-//!
-//! The main service that coordinates signature aggregation:
-//!
-//! - [`new()`]: Creates a new instance of the service
-//! - [`start()`]: Starts the BLS Aggregator Service running the main loop in background
+//! - [`TaskMetadata`]: Defines task parameters, including quorums and thresholds.
+//! - [`TaskSignature`]: Contains an individual BLS signature for a specific task.
+//! - [`ServiceHandle`]: Interface for sending tasks and signatures to the service.
+//! - [`AggregateReceiver`]: Channel for receiving aggregated responses.
+//! - [`BlsAggregatorService`]: The main service that manages tasks and aggregates signatures.
 //!
 //! ## Usage
 //!
