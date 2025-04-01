@@ -141,10 +141,11 @@
 //! # };
 //! # use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 //! # use std::time::Duration;
+//! # use eigen_testing_utils::anvil_constants::{ANVIL_HTTP_URL, ANVIL_WS_URL};
 //! # #[tokio::main]
 //! # async fn main() {
-//! #     let http_endpoint = "http://localhost:8545";
-//! #     let ws_endpoint = "ws://localhost:8546";
+//! #     let http_endpoint = ANVIL_HTTP_URL;
+//! #     let ws_endpoint = ANVIL_WS_URL;
 //! #     let logger = get_test_logger();
 //! #     let registry_coordinator_address =
 //! #         get_registry_coordinator_address(http_endpoint.to_string()).await;
@@ -215,10 +216,11 @@
 //! # use sha2::{Digest, Sha256};
 //! # use alloy::primitives::{B256, FixedBytes};
 //! # use eigen_crypto_bls::BlsKeyPair;
+//! # use eigen_testing_utils::anvil_constants::{ANVIL_HTTP_URL, ANVIL_WS_URL, OPERATOR_BLS_KEY};
 //! # #[tokio::main]
 //! # async fn main() {
-//! #     let http_endpoint = "http://localhost:8545";
-//! #     let ws_endpoint = "ws://localhost:8546";
+//! #     let http_endpoint = ANVIL_HTTP_URL;
+//! #     let ws_endpoint = ANVIL_WS_URL;
 //! #     let logger = get_test_logger();
 //! #     let registry_coordinator_address =
 //! #         get_registry_coordinator_address(http_endpoint.to_string()).await;
@@ -256,11 +258,7 @@
 //! #    let mut hasher = Sha256::new();
 //! #    hasher.update(task_response.to_be_bytes());
 //! #    let task_response_digest = B256::from_slice(hasher.finalize().as_ref());
-//! #    let bls_key_pair = BlsKeyPair::new(
-//! #        "12248929636257230549931416853095037629726205319386239410403476017439825112537"
-//! #            .to_string(),
-//! #    )
-//! #    .unwrap();
+//! #    let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
 //! #    let bls_signature = bls_key_pair.sign_message(task_response_digest.as_ref());
 //! #    let operator_id = FixedBytes::from_slice(&[1]);
 //! #
@@ -290,10 +288,11 @@
 //! #     },
 //! # };
 //! # use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+//! # use eigen_testing_utils::anvil_constants::{ANVIL_HTTP_URL, ANVIL_WS_URL};
 //! # #[tokio::main]
 //! # async fn main() {
-//! #     let http_endpoint = "http://localhost:8545";
-//! #     let ws_endpoint = "ws://localhost:8546";
+//! #     let http_endpoint = ANVIL_HTTP_URL;
+//! #     let ws_endpoint = ANVIL_WS_URL;
 //! #     let logger = get_test_logger();
 //! #     let registry_coordinator_address =
 //! #         get_registry_coordinator_address(http_endpoint.to_string()).await;
