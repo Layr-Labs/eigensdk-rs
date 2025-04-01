@@ -384,6 +384,7 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         .unwrap();
 }
 
+/// Creates m2 quorum using a private key and an http endpoint
 pub async fn create_quorum(private_key: &str, http_endpoint: &str) {
     let registry_coordinator_addr =
         get_registry_coordinator_address(http_endpoint.to_string()).await;
