@@ -24,7 +24,8 @@ members = [
     "examples/avsregistry-read",
     "examples/avsregistry-write",
     "examples/info-operator-service/",
-    "testing/testing-utils/",
+    "tests/testing-utils/",
+    "tests/integration/",
 ]
 resolver = "2"
 
@@ -82,7 +83,7 @@ eigen-services-avsregistry = { version = "0.5.0", path = "crates/services/avsreg
 eigen-services-blsaggregation = { version = "0.5.0", path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { version = "0.5.0", path = "crates/services/operatorsinfo" }
 eigen-signer = { version = "0.5.0", path = "crates/signer/" }
-eigen-testing-utils = { version = "0.5.0", path = "testing/testing-utils" }
+eigen-testing-utils = { version = "0.5.0", path = "tests/testing-utils" }
 eigen-types = { version = "0.5.0", path = "crates/types/" }
 eigen-utils = { version = "0.5.0", path = "crates/utils/" }
 eigen-nodeapi = { version = "0.5.0", path = "crates/nodeapi/" }
@@ -121,7 +122,6 @@ url = "2.5"
 #misc
 rust-bls-bn254 = { version = "0.2.1", features = ["std"] }
 uuid = { version = "1.11", features = ["v4"] }
-
 
 #misc
 parking_lot = "0.12"

@@ -2064,6 +2064,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
+name = "chainio-integration-test"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "ark-ff 0.5.0",
+ "async-trait",
+ "eigen-common",
+ "eigen-logging",
+ "eigen-testing-utils",
+ "eigen-utils",
+ "futures-util",
+ "num-bigint 0.4.6",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "chrono"
 version = "0.4.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2942,6 +2960,7 @@ dependencies = [
  "serde_json",
  "serial_test",
  "sha2",
+ "simple-mermaid",
  "testcontainers",
  "thiserror 1.0.69",
  "tokio",
@@ -6982,6 +7001,12 @@ dependencies = [
  "digest 0.10.7",
  "rand_core 0.6.4",
 ]
+
+[[package]]
+name = "simple-mermaid"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "589144a964b4b30fe3a83b4bb1a09e2475aac194ec832a046a23e75bddf9eb29"
 
 [[package]]
 name = "simple_asn1"
