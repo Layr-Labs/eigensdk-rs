@@ -373,7 +373,6 @@ Alternate implementation which directly queries from middleware using view call 
         .unwrap();
   ```
 
-
 ### Breaking Changes 🛠
 
 * `TaskMetadata.task_created_block` field changed to `u64` [#362](https://github.com/Layr-Labs/eigensdk-rs/pull/362)

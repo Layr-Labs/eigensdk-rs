@@ -70,9 +70,7 @@ pub enum OperatorInfoServiceError {
     #[error("Tokio Responder error")]
     ResponderError(#[from] tokio::sync::oneshot::error::RecvError),
     #[error("Alloy Contract Error")]
-    AlloyContractError(#[from] alloy::contract::Error),
-    #[error("Method not supported")]
-    NotSupported(String),
+    AlloyContractError(#[from] alloy::contract::Error)
 }
 
 #[derive(Debug)]
