@@ -10,7 +10,6 @@ use eigen_types::operator::OperatorPubKeys;
 use eigen_utils::slashing::middleware::{blsapkregistry, socketregistry};
 
 /// Retrieves operator's [`OperatorPubKeys`] directly from middleware.
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct OperatorInfoOnChain {
     http_url: String,
