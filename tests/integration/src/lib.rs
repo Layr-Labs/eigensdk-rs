@@ -1,7 +1,7 @@
 //! Integration test for rewards utilities
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
 
     use alloy::primitives::{aliases::U96, U256};
     use eigen_common::{get_provider, get_signer};
