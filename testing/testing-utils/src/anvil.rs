@@ -1,9 +1,12 @@
+use alloy::providers::Provider;
+use eigen_common::get_provider;
 use std::path::{Path, PathBuf};
 use testcontainers::{
     core::{ExecCommand, IntoContainerPort, WaitFor},
     runners::AsyncRunner,
     ContainerAsync, GenericImage, ImageExt,
 };
+use tokio::io::AsyncBufReadExt;
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
 const ANVIL_TAG: &str = "latest";
 const M2_ANVIL_STATE_PATH: &str =
@@ -81,19 +84,37 @@ async fn start_anvil_with_state(
     let http_endpoint = format!("http://localhost:{port}");
     let ws_endpoint = format!("ws://localhost:{port}");
 
+    // TODO: delete/rewrite this
+    let reader = container.stdout(true);
+    tokio::task::spawn(async move {
+        let mut reader = reader;
+        let mut buffer = String::new();
+        while reader.read_line(&mut buffer).await.unwrap() > 0 {
+            println!("{:?}", buffer);
+            buffer.clear();
+        }
+    });
+    let reader = container.stderr(true);
+    tokio::task::spawn(async move {
+        let mut reader = reader;
+        let mut buffer = String::new();
+        while reader.read_line(&mut buffer).await.unwrap() > 0 {
+            eprintln!("{:?}", buffer);
+            buffer.clear();
+        }
+    });
+
     // Poll to get chain ID
     for i in 0..10 {
-        let res = container.exec(ExecCommand::new(["cast", "chain-id"])).await;
-        if let Ok(res) = &res {
-            let exit_code = res.exit_code().await;
-            if exit_code.ok() == Some(Some(0)) {
-                break;
-            }
-        } else if i == 9 {
-            let exit_code = res.unwrap().exit_code().await.unwrap().unwrap();
-            assert_eq!(exit_code, 0, "Failed to get chain ID from anvil container.");
+        let provider = get_provider(&http_endpoint);
+        let chain_id_res = provider.get_chain_id().await;
+        if let Ok(_) = chain_id_res {
+            break;
         }
-
+        if i == 9 {
+            // unwrap to get full error
+            chain_id_res.unwrap();
+        }
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
 
