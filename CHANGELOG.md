@@ -17,6 +17,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
+
 ### Breaking Changes 🛠
 
 * Changing NodeApi to allow concurrent modifications of the internal state of the node in PR [401](https://github.com/Layr-Labs/eigensdk-rs/pull/401).
