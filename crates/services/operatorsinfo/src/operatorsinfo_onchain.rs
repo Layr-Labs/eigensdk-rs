@@ -49,7 +49,6 @@ impl OperatorInfoService for OperatorInfoOnChain {
         &self,
         address: Address,
     ) -> Result<Option<String>, OperatorInfoServiceError> {
-        // todo!()
         let contract_socket_registry =
             socketregistry::SocketRegistry::new(self.socket_registry, get_provider(&self.http_url));
         let contract_bls_apk_registry = blsapkregistry::BLSApkRegistry::new(
