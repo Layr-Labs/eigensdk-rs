@@ -44,6 +44,11 @@ use crate::anvil_constants::{
     get_strategy_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY,
 };
 
+use eigen_utils::rewardsv2::middleware::registrycoordinator::{
+    IRegistryCoordinator::OperatorSetParam as RewardsV2OperatorSetParam,
+    IStakeRegistry::StrategyParams as RewardsV2StrategyParams,
+    RegistryCoordinator as RewardsV2RegistryCoordinator,
+};
 /// address for operator used in tests (anvil second address)
 pub const OPERATOR_ADDRESS: Address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
 /// private key for operator used in tests (anvil second private key)
@@ -375,6 +380,29 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         .await
         .unwrap()
         .get_receipt()
+        .await
+        .unwrap();
+}
+
+pub async fn create_quorum(private_key: &str, http_endpoint: &str) {
+    let registry_coordinator_addr =
+        get_registry_coordinator_address(http_endpoint.to_string()).await;
+    let contract_registry_coordinator = RewardsV2RegistryCoordinator::new(
+        registry_coordinator_addr,
+        get_signer(private_key, http_endpoint),
+    );
+    let operator_set_params = RewardsV2OperatorSetParam {
+        maxOperatorCount: 10,
+        kickBIPsOfOperatorStake: 100,
+        kickBIPsOfTotalStake: 1000,
+    };
+    let strategy_params = RewardsV2StrategyParams {
+        strategy: get_erc20_mock_strategy(http_endpoint.to_string()).await,
+        multiplier: U96::from(1),
+    };
+    let _ = contract_registry_coordinator
+        .createQuorum(operator_set_params, U96::from(0), vec![strategy_params])
+        .send()
         .await
         .unwrap();
 }
