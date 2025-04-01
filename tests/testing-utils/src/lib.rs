@@ -26,3 +26,7 @@ pub mod transaction;
 #[allow(clippy::unwrap_used)]
 #[allow(clippy::expect_used)]
 pub mod anvil;
+
+/// Utilities for building elcontracts and avs registries
+#[allow(clippy::unwrap_used)]
+pub mod chain_clients;

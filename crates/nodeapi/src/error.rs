@@ -5,4 +5,8 @@ pub enum NodeApiError {
     /// Service id not found
     #[error("Service with id {0} not found")]
     ServiceIdNotFound(String),
+
+    /// Internal server error
+    #[error("Internal server error")]
+    InternalServerError,
 }
