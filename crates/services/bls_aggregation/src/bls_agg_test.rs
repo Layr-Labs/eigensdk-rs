@@ -46,7 +46,6 @@ pub mod integration_test {
                 IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
                 BN254::G1Point,
             },
-            slashingregistrycoordinator::SlashingRegistryCoordinator,
         },
     };
     use serde::Deserialize;
