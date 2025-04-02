@@ -264,7 +264,6 @@ impl ELChainWriter {
             .el_chain_reader
             .get_strategy_and_underlying_token(strategy_addr)
             .await?;
-        dbg!(token_address);
         let provider = get_signer(&self.signer.clone(), &self.provider);
         let token_contract = IERC20::new(token_address, &provider);
 

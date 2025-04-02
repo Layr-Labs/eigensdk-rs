@@ -233,7 +233,6 @@ pub fn convert_to_g1_point(g1: G1Affine) -> Result<G1Point, BlsError> {
 
 /// Convert [`G1Affine`] to  Alloy [`G1PointChecker`]
 pub fn convert_to_bls_checker_g1_point(g1: G1Affine) -> Result<G1PointChecker, BlsError> {
-    dbg!(g1);
     let x_point_result = g1.x();
     let y_point_result = g1.y();
 
