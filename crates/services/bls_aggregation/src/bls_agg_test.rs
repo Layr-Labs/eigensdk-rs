@@ -4,12 +4,9 @@ pub mod integration_test {
         bls_agg::{BlsAggregatorService, TaskMetadata, TaskSignature},
         bls_aggregation_service_response::BlsAggregationServiceResponse,
     };
+    use alloy::primitives::{Address, Bytes, FixedBytes, B256, U256};
     use alloy::providers::Provider;
     use alloy::providers::WalletProvider;
-    use alloy::{
-        primitives::{Address, Bytes, FixedBytes, B256, U256},
-        transports::http,
-    };
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };
@@ -31,9 +28,7 @@ pub mod integration_test {
             get_operator_state_retriever_address, get_registry_coordinator_address,
             get_service_manager_address, get_socket_registry_address, get_strategy_manager_address,
         },
-        chain_clients::{
-            create_operator_set, create_quorum, create_total_delegated_stake_operator_set,
-        },
+        chain_clients::{create_quorum, create_total_delegated_stake_operator_set},
         test_data::TestData,
         transaction::wait_transaction,
     };
