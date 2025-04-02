@@ -110,8 +110,6 @@ mod tests {
         let token = MockERC20::new(token_address, &signer);
         let initial_balance = token.balanceOf(claimer_address).call().await.unwrap()._0;
 
-        assert!(initial_balance == U256::ZERO);
-
         let rewards_amount = U256::from(42);
         let (_root, claim) = new_claim(&http_endpoint, rewards_amount).await;
 
@@ -126,6 +124,6 @@ mod tests {
         // Check balance at strategy after claim
         let balance_after_claim = token.balanceOf(claimer_address).call().await.unwrap()._0;
 
-        assert!(balance_after_claim == rewards_amount);
+        assert!(balance_after_claim == initial_balance + rewards_amount);
     }
 }
