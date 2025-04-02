@@ -4,9 +4,12 @@ pub mod integration_test {
         bls_agg::{BlsAggregatorService, TaskMetadata, TaskSignature},
         bls_aggregation_service_response::BlsAggregationServiceResponse,
     };
-    use alloy::primitives::{Address, Bytes, FixedBytes, B256, U256};
     use alloy::providers::Provider;
     use alloy::providers::WalletProvider;
+    use alloy::{
+        primitives::{Address, Bytes, FixedBytes, B256, U256},
+        transports::http,
+    };
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };
@@ -1279,6 +1282,7 @@ pub mod integration_test {
             get_registry_coordinator_address(http_endpoint.clone()).await;
         let operator_state_retriever_address =
             get_operator_state_retriever_address(http_endpoint.clone()).await;
+        let erc20_strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         let provider = get_provider(http_endpoint.as_str());
 
@@ -1350,7 +1354,12 @@ pub mod integration_test {
         let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
 
         // Create the operator set and register the operators
-        create_operator_set(&http_endpoint, avs_address).await;
+        create_total_delegated_stake_operator_set(
+            &http_endpoint,
+            erc20_strategy_address,
+            avs_address,
+        )
+        .await;
 
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
         el_chain_writer_key_1
