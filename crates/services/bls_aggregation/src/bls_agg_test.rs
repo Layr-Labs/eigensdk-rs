@@ -28,7 +28,9 @@ pub mod integration_test {
             get_operator_state_retriever_address, get_registry_coordinator_address,
             get_service_manager_address, get_socket_registry_address, get_strategy_manager_address,
         },
-        chain_clients::{create_operator_set, create_quorum},
+        chain_clients::{
+            create_operator_set, create_quorum, create_total_delegated_stake_operator_set,
+        },
         test_data::TestData,
         transaction::wait_transaction,
     };
@@ -122,7 +124,12 @@ pub mod integration_test {
         let erc20_strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let strategy_manager_address = get_strategy_manager_address(http_endpoint.clone()).await;
         let provider = get_provider(&http_endpoint);
-        create_operator_set(&http_endpoint, avs_address).await;
+        create_total_delegated_stake_operator_set(
+            &http_endpoint,
+            erc20_strategy_address,
+            avs_address,
+        )
+        .await;
 
         // Register operator
         let bls_key_pair = BlsKeyPair::new(
@@ -298,10 +305,16 @@ pub mod integration_test {
             get_operator_state_retriever_address(http_endpoint.clone()).await;
         let allocation_manager_address =
             get_allocation_manager_address(http_endpoint.clone()).await;
+        let erc20_strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let provider = get_provider(&http_endpoint.clone());
         let bls_apk_registry_address = get_bls_apk_registry_address(http_endpoint.clone()).await;
         let socket_registry_address = get_socket_registry_address(http_endpoint.clone()).await;
-        create_operator_set(&http_endpoint, avs_address).await;
+        create_total_delegated_stake_operator_set(
+            &http_endpoint,
+            erc20_strategy_address,
+            avs_address,
+        )
+        .await;
 
         // Register operator
         let bls_key_pair = BlsKeyPair::new(
@@ -572,11 +585,17 @@ pub mod integration_test {
         let operator_state_retriever_address =
             get_operator_state_retriever_address(http_endpoint.clone()).await;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let erc20_strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let provider = get_provider(http_endpoint.as_str());
 
         let quorum_nums = Bytes::from([0u8]);
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100];
-        create_operator_set(&http_endpoint, avs_address).await;
+        create_total_delegated_stake_operator_set(
+            &http_endpoint,
+            erc20_strategy_address,
+            avs_address,
+        )
+        .await;
 
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
@@ -739,13 +758,24 @@ pub mod integration_test {
             get_registry_coordinator_address(http_endpoint.clone()).await;
         let operator_state_retriever_address =
             get_operator_state_retriever_address(http_endpoint.clone()).await;
+        let erc20_strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         let provider = get_provider(http_endpoint.as_str());
 
         let quorum_nums = Bytes::from([0u8, 1u8]);
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100, 100];
-        create_operator_set(http_endpoint.as_str(), avs_address).await;
-        create_operator_set(http_endpoint.as_str(), avs_address).await;
+        create_total_delegated_stake_operator_set(
+            http_endpoint.as_str(),
+            erc20_strategy_address,
+            avs_address,
+        )
+        .await;
+        create_total_delegated_stake_operator_set(
+            http_endpoint.as_str(),
+            erc20_strategy_address,
+            avs_address,
+        )
+        .await;
 
         // Register operators
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
@@ -912,6 +942,7 @@ pub mod integration_test {
         let operator_state_retriever_address =
             get_operator_state_retriever_address(http_endpoint.clone()).await;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let erc20_strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let provider = get_provider(http_endpoint.as_str());
 
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
@@ -920,8 +951,18 @@ pub mod integration_test {
         // Create quorums
         let quorum_nums = Bytes::from([0u8, 1u8]);
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100, 100];
-        create_operator_set(http_endpoint.as_str(), avs_address).await;
-        create_operator_set(http_endpoint.as_str(), avs_address).await;
+        create_total_delegated_stake_operator_set(
+            http_endpoint.as_str(),
+            erc20_strategy_address,
+            avs_address,
+        )
+        .await;
+        create_total_delegated_stake_operator_set(
+            http_endpoint.as_str(),
+            erc20_strategy_address,
+            avs_address,
+        )
+        .await;
 
         let operator_id_1 = operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap();
         let operator_id_2 = operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap();
@@ -1082,6 +1123,7 @@ pub mod integration_test {
             get_operator_state_retriever_address(http_endpoint.clone()).await;
         let allocation_manager_address =
             get_allocation_manager_address(http_endpoint.clone()).await;
+        let erc20_strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         let provider = get_provider(http_endpoint.as_str());
 
@@ -1090,8 +1132,18 @@ pub mod integration_test {
         // Create quorums
         let quorum_nums = Bytes::from([0u8, 1u8]);
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100, 100];
-        create_operator_set(http_endpoint.as_str(), avs_address).await;
-        create_operator_set(http_endpoint.as_str(), avs_address).await;
+        create_total_delegated_stake_operator_set(
+            http_endpoint.as_str(),
+            erc20_strategy_address,
+            avs_address,
+        )
+        .await;
+        create_total_delegated_stake_operator_set(
+            http_endpoint.as_str(),
+            erc20_strategy_address,
+            avs_address,
+        )
+        .await;
 
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(

@@ -417,7 +417,7 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
     };
 
     contract_registry_coordinator
-        .createTotalDelegatedStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params])
+        .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
         .send()
         .await
         .unwrap()
@@ -493,59 +493,112 @@ pub async fn create_total_delegated_stake_operator_set(
     let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
     let service_manager =
         MockAvsServiceManager::new(service_manager_address, default_signer.clone());
-
-    service_manager
-        .setAppointee(
+    let permission_controller_address =
+        get_permission_controller_address(http_endpoint.to_string()).await;
+    let contract_permission_controller =
+        PermissionController::new(permission_controller_address, get_provider(http_endpoint));
+    if !contract_permission_controller
+        .canCall(
+            service_manager_address,
             default_signer.default_signer_address(),
             allocation_manager_addr,
             alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
         )
-        .send()
+        .call()
         .await
         .unwrap()
-        .get_receipt()
-        .await
-        .unwrap();
+        ._0
+    {
+        service_manager
+            .setAppointee(
+                default_signer.default_signer_address(),
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+    }
 
     let registry_coordinator_addr =
         get_registry_coordinator_address(http_endpoint.to_string()).await;
 
-    allocation_manager
-        .setAVSRegistrar(avs_address, registry_coordinator_addr)
-        .send()
+    if allocation_manager
+        .getAVSRegistrar(avs_address)
+        .call()
         .await
         .unwrap()
-        .get_receipt()
-        .await
-        .unwrap();
+        ._0
+        .eq(&avs_address)
+    {
+        allocation_manager
+            .setAVSRegistrar(avs_address, registry_coordinator_addr)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+    }
 
-    service_manager
-        .setAppointee(
+    if !contract_permission_controller
+        .canCall(
+            service_manager_address,
             registry_coordinator_addr,
             allocation_manager_addr,
             alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
         )
-        .send()
+        .call()
         .await
         .unwrap()
-        .get_receipt()
-        .await
-        .unwrap();
+        ._0
+    {
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+    }
 
-    service_manager
-        .setAppointee(
+    if !contract_permission_controller
+        .canCall(
+            service_manager_address,
             registry_coordinator_addr,
             allocation_manager_addr,
             alloy::primitives::FixedBytes(
                 AllocationManager::deregisterFromOperatorSetsCall::SELECTOR,
             ),
         )
-        .send()
+        .call()
         .await
         .unwrap()
-        .get_receipt()
-        .await
-        .unwrap();
+        ._0
+    {
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(
+                    AllocationManager::deregisterFromOperatorSetsCall::SELECTOR,
+                ),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+    }
 
     let operator_set_param = OperatorSetParamSlashing {
         maxOperatorCount: 10,
