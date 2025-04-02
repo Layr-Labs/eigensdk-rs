@@ -318,115 +318,7 @@ pub async fn new_claim(
     (root, claim)
 }
 
-/// Creates an operator set from an http_endpoint and an avs address
-// pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
-//     let allocation_manager_addr = get_allocation_manager_address(http_endpoint.to_string()).await;
-//     let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
-//     let allocation_manager =
-//         AllocationManager::new(allocation_manager_addr, default_signer.clone());
-//     let registry_coordinator_addr =
-//         get_registry_coordinator_address(http_endpoint.to_string()).await;
-//     let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
-//     let permission_controller_address =
-//         get_permission_controller_address(http_endpoint.to_string()).await;
-//     let service_manager =
-//         MockAvsServiceManager::new(service_manager_address, default_signer.clone());
-//     let contract_permission_controller =
-//         PermissionController::new(permission_controller_address, get_provider(http_endpoint));
-
-//     if !contract_permission_controller
-//         .canCall(
-//             service_manager_address,
-//             default_signer.default_signer_address(),
-//             allocation_manager_addr,
-//             alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
-//         )
-//         .call()
-//         .await
-//         .unwrap()
-//         ._0
-//     {
-//         service_manager
-//             .setAppointee(
-//                 default_signer.default_signer_address(),
-//                 allocation_manager_addr,
-//                 alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
-//             )
-//             .send()
-//             .await
-//             .unwrap()
-//             .get_receipt()
-//             .await
-//             .unwrap();
-//     };
-
-//     if allocation_manager
-//         .getAVSRegistrar(avs_address)
-//         .call()
-//         .await
-//         .unwrap()
-//         ._0
-//         .eq(&avs_address)
-//     {
-//         allocation_manager
-//             .setAVSRegistrar(avs_address, registry_coordinator_addr)
-//             .send()
-//             .await
-//             .unwrap()
-//             .get_receipt()
-//             .await
-//             .unwrap();
-//     }
-
-//     // Create slashable quorum
-//     let contract_registry_coordinator =
-//         RegistryCoordinator::new(registry_coordinator_addr, default_signer.clone());
-//     let operator_set_params = OperatorSetParam {
-//         maxOperatorCount: 10,
-//         kickBIPsOfOperatorStake: 100,
-//         kickBIPsOfTotalStake: 1000,
-//     };
-//     let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-//     if !contract_permission_controller
-//         .canCall(
-//             service_manager_address,
-//             registry_coordinator_addr,
-//             allocation_manager_addr,
-//             alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
-//         )
-//         .call()
-//         .await
-//         .unwrap()
-//         ._0
-//     {
-//         service_manager
-//             .setAppointee(
-//                 registry_coordinator_addr,
-//                 allocation_manager_addr,
-//                 alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
-//             )
-//             .send()
-//             .await
-//             .unwrap()
-//             .get_receipt()
-//             .await
-//             .unwrap();
-//     }
-//     let strategy_params = StrategyParams {
-//         strategy,
-//         multiplier: U96::from(1),
-//     };
-
-//     contract_registry_coordinator
-//         .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
-//         .send()
-//         .await
-//         .unwrap()
-//         .get_receipt()
-//         .await
-//         .unwrap();
-// }
-
+/// Creates an operator set from an http_endpint and an avs address
 pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
     let allocation_manager_addr = get_allocation_manager_address(http_endpoint.to_string()).await;
     let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
@@ -486,7 +378,6 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
             .unwrap();
     }
 
-    // Create slashable quorum
     let contract_registry_coordinator =
         RegistryCoordinator::new(registry_coordinator_addr, default_signer.clone());
     let operator_set_params = OperatorSetParam {
