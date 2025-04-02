@@ -1674,7 +1674,6 @@ mod tests {
             .get_current_total_stake(quorum_number)
             .await
             .unwrap();
-        dbg!(current_total_stake);
         assert_eq!(
             "10000000000000000000".parse::<U96>().unwrap(),
             current_total_stake

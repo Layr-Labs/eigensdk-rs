@@ -39,7 +39,8 @@ contract DeployMockAvs {
         erc20MockRewards = new MockERC20();
         MockAvsDeploymentLib.MockAvsSetupConfig memory avsconfig =
             MockAvsDeploymentLib.readMockAvsConfigJson("mock_avs_config");
-        FundOperator.fundOperator(address(erc20Mock), avsconfig.operatorAddr, 10e18);
+        FundOperator.fundOperator(address(erc20Mock),avsconfig.operatorAddr, 10e18);
+        FundOperator.fundOperator(address(erc20Mock),avsconfig.operator2Addr,10e18);
         _mockAvsStrategy = IStrategy(StrategyFactory(_configData.strategyFactory).deployNewStrategy(erc20Mock));
         MockAvsDeploymentLib.DeploymentData memory depData = MockAvsDeploymentLib.deployContracts(
             _proxyAdmin, _configData, address(_mockAvsStrategy), avsconfig, msg.sender

@@ -24,9 +24,9 @@ pub mod integration_test {
     use eigen_testing_utils::{
         anvil::{mine_anvil_blocks, start_anvil_container, start_m2_anvil_container},
         anvil_constants::{
-            get_allocation_manager_address, get_bls_apk_registry_address,
+            get_allocation_manager_address, get_bls_apk_registry_address, get_erc20_mock_strategy,
             get_operator_state_retriever_address, get_registry_coordinator_address,
-            get_service_manager_address, get_socket_registry_address,
+            get_service_manager_address, get_socket_registry_address, get_strategy_manager_address,
         },
         chain_clients::{create_operator_set, create_quorum},
         test_data::TestData,
@@ -37,12 +37,16 @@ pub mod integration_test {
         operator::{operator_id_from_g1_pub_key, QuorumNum, QuorumThresholdPercentages},
     };
 
-    use eigen_utils::slashing::middleware::{
-        blsapkregistry::BLSApkRegistry,
-        iblssignaturechecker::{
-            IBLSSignatureChecker::{self},
-            IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
-            BN254::G1Point,
+    use eigen_utils::slashing::{
+        core::allocationmanager::{AllocationManager::OperatorSet, IAllocationManagerTypes},
+        middleware::{
+            blsapkregistry::BLSApkRegistry,
+            iblssignaturechecker::{
+                IBLSSignatureChecker::{self},
+                IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
+                BN254::G1Point,
+            },
+            slashingregistrycoordinator::SlashingRegistryCoordinator,
         },
     };
     use serde::Deserialize;
@@ -116,6 +120,8 @@ pub mod integration_test {
             get_operator_state_retriever_address(http_endpoint.clone()).await;
         let allocation_manager_address =
             get_allocation_manager_address(http_endpoint.clone()).await;
+        let erc20_strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let strategy_manager_address = get_strategy_manager_address(http_endpoint.clone()).await;
         let provider = get_provider(&http_endpoint);
         create_operator_set(&http_endpoint, avs_address).await;
 
@@ -136,7 +142,7 @@ pub mod integration_test {
             http_endpoint.clone(),
         );
         let el_chain_writer = ELChainWriter::new(
-            Address::ZERO,
+            strategy_manager_address,
             Address::ZERO,
             None,
             Some(allocation_manager_address),
@@ -145,7 +151,40 @@ pub mod integration_test {
             http_endpoint.clone(),
             PRIVATE_KEY_2.to_string(),
         );
-
+        let operator_2_address = get_signer(PRIVATE_KEY_2, &http_endpoint).default_signer_address();
+        let s = el_chain_writer
+            .deposit_erc20_into_strategy(erc20_strategy_address, "10000000".parse().unwrap())
+            .await
+            .unwrap();
+        let modify = el_chain_writer
+            .modify_allocations(
+                operator_2_address,
+                [IAllocationManagerTypes::AllocateParams {
+                    operatorSet: OperatorSet {
+                        avs: get_service_manager_address(http_endpoint.clone()).await,
+                        id: 0,
+                    },
+                    strategies: [erc20_strategy_address].to_vec(),
+                    newMagnitudes: [10000000].to_vec(),
+                }]
+                .to_vec(),
+            )
+            .await
+            .unwrap();
+        let a = get_provider(&http_endpoint)
+            .get_transaction_receipt(s)
+            .await
+            .unwrap()
+            .unwrap()
+            .status();
+        assert!(a);
+        let b = get_provider(&http_endpoint)
+            .get_transaction_receipt(modify)
+            .await
+            .unwrap()
+            .unwrap()
+            .status();
+        assert!(b);
         el_chain_writer
             .register_for_operator_sets(
                 get_signer(PRIVATE_KEY_2, &http_endpoint).default_signer_address(),
