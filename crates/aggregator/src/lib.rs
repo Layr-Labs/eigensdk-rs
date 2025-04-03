@@ -31,6 +31,9 @@ use tracing::info;
 use traits::{task_processor::TaskProcessor, task_response::TaskResponse};
 
 use config::AggregatorConfig;
+pub use eigen_services_blsaggregation::{
+    bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
+};
 pub use error::AggregatorError;
 pub use signed_task_response::SignedTaskResponse;
 
