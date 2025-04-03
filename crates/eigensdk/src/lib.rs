@@ -91,3 +91,9 @@ pub use eigen_metrics_collectors_rpc_calls as metrics_collectors_rpc_calls;
 #[doc(inline)]
 #[cfg(feature = "common")]
 pub use eigen_common as common;
+
+/* ------------------------------------ Aggregator Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "aggregator")]
+pub use eigen_aggregator as aggregator;

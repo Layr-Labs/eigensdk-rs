@@ -27,6 +27,7 @@ eigen-types = { workspace = true, optional = true }
 eigen-utils = { workspace = true, optional = true }
 eigen-nodeapi = { workspace = true, optional = true }
 eigen-common = { workspace = true, optional = true }
+eigen-aggregator = { workspace = true, optional = true }
 
 
 # Feature configurations
@@ -36,6 +37,7 @@ default = []
 
 # Full features set for full usage
 full = [
+    "aggregator",
     "client-avsregistry",
     "client-elcontracts",
     "client-eth",
@@ -96,3 +98,6 @@ types = ["dep:eigen-types"]
 
 #common utilities
 common = ["dep:eigen-common"]
+
+#aggregator
+aggregator = ["dep:eigen-aggregator"]
