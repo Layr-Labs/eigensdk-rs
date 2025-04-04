@@ -6,7 +6,7 @@ use alloy::{
 use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
 use eigen_common::{get_provider, get_signer};
 use eigen_logging::get_test_logger;
-use std::{ops::Add, str::FromStr};
+use std::str::FromStr;
 
 use crate::transaction::wait_transaction;
 use alloy::{primitives::aliases::U96, providers::WalletProvider};
@@ -443,13 +443,12 @@ pub async fn can_set_appointee(
 ) -> bool {
     let contract_permission_controller =
         PermissionController::new(permission_controller_address, get_provider(http_endpoint));
-    let can_call = contract_permission_controller
+    contract_permission_controller
         .canCall(account, caller, target, selector)
         .call()
         .await
         .unwrap()
-        ._0;
-    can_call
+        ._0
 }
 /// Creates m2 quorum using a private key and an http endpoint
 pub async fn create_quorum(private_key: &str, http_endpoint: &str) {
