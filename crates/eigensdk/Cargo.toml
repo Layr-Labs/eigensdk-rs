@@ -8,6 +8,7 @@ description = "SDK for eigenlayer"
 license-file.workspace = true
 
 [dependencies]
+eigen-aggregator = { workspace = true, optional = true }
 eigen-client-avsregistry = { workspace = true, optional = true }
 eigen-client-elcontracts = { workspace = true, optional = true }
 eigen-client-eth = { workspace = true, optional = true }
@@ -27,7 +28,6 @@ eigen-types = { workspace = true, optional = true }
 eigen-utils = { workspace = true, optional = true }
 eigen-nodeapi = { workspace = true, optional = true }
 eigen-common = { workspace = true, optional = true }
-eigen-aggregator = { workspace = true, optional = true }
 
 
 # Feature configurations
