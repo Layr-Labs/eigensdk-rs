@@ -174,33 +174,28 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
     ) -> Result<JoinHandle<()>, AggregatorError> {
         // See https://github.com/paritytech/jsonrpsee/blob/42461391fee47c94d42c4a7303355525291df9f6/examples/examples/cors_server.rs
         let mut module = RpcModule::new((service_handle, task_processor));
-        module
-            .register_async_method(
-                "process_signed_task_response",
-                |params, ctx, _| async move {
-                    let (service_handle, task_processor) = ctx.as_ref();
-                    let signed_task_response = params
-                        .parse::<RpcRequest<TP::TaskResponse>>()
-                        .map_err(|err| ErrorObject::owned(0, err.to_string(), None::<()>))?
-                        .params;
+        module.register_async_method(
+            "process_signed_task_response",
+            |params, ctx, _| async move {
+                let (service_handle, task_processor) = ctx.as_ref();
+                let signed_task_response = params.parse::<RpcRequest<TP::TaskResponse>>()?.params;
 
-                    let task_processor_clone = task_processor.clone();
+                let task_processor_clone = task_processor.clone();
 
-                    let result = Self::process_signed_task_response(
-                        task_processor_clone,
-                        service_handle,
-                        signed_task_response,
-                    )
-                    .await;
+                let result = Self::process_signed_task_response(
+                    task_processor_clone,
+                    service_handle,
+                    signed_task_response,
+                )
+                .await;
 
-                    // TODO: Check if we can do map_err and map
-                    match result {
-                        Ok(()) => Ok(true),
-                        Err(err) => Err(ErrorObject::owned(0, err.to_string(), None::<()>)),
-                    }
-                },
-            )
-            .map_err(|_| AggregatorError::RpcError)?;
+                // TODO: Check if we can do map_err and map
+                match result {
+                    Ok(()) => Ok(true),
+                    Err(err) => Err(ErrorObject::owned(0, err.to_string(), None::<()>)),
+                }
+            },
+        )?;
 
         let socket: SocketAddr = port_address.parse().map_err(|e| {
             AggregatorError::IOError(std::io::Error::new(std::io::ErrorKind::InvalidInput, e))
