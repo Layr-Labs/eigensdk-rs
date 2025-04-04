@@ -27,6 +27,10 @@ pub enum AggregatorError {
     #[error("Alloy rpc error")]
     AlloyRpc(#[from] RpcError<TransportErrorKind>),
 
+    /// Rpc error
+    #[error("Rpc error")]
+    RpcError,
+
     /// IO error
     #[error("IO error")]
     IOError(#[from] std::io::Error),

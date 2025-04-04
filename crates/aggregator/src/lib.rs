@@ -22,11 +22,13 @@ use eigen_services_blsaggregation::bls_agg::{
 };
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use futures_util::StreamExt;
-use jsonrpc_core::serde_json;
-use jsonrpc_core::{Error, IoHandler, Params, Value};
-use jsonrpc_http_server::{AccessControlAllowOrigin, DomainsValidation, ServerBuilder};
+use jsonrpsee::server::Server;
+use jsonrpsee::types::ErrorObject;
+use jsonrpsee::RpcModule;
+use signed_task_response::RpcRequest;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::sync::Mutex;
+use tokio::task::JoinHandle;
 use tracing::info;
 
 pub use config::AggregatorConfig;
@@ -169,49 +171,51 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         port_address: String,
         task_processor: Arc<Mutex<TP>>,
         service_handle: ServiceHandle,
-    ) -> Result<(), AggregatorError> {
-        let mut io = IoHandler::new();
-        io.add_method("process_signed_task_response", move |params: Params| {
-            let task_processor = task_processor.clone();
-            let service_handle = service_handle.clone();
-            async move {
-                let Params::Map(map) = params else {
-                    return Err(Error::invalid_params("Expected a map"));
-                };
-                let params = map
-                    .get("params")
-                    .ok_or(Error::invalid_params("Expected params"))?;
-                let signed_task_response: SignedTaskResponse<TP::TaskResponse> =
-                    serde_json::from_value(params.clone())
-                        .map_err(|err| Error::invalid_params(err.to_string()))?;
+    ) -> Result<JoinHandle<()>, AggregatorError> {
+        // See https://github.com/paritytech/jsonrpsee/blob/42461391fee47c94d42c4a7303355525291df9f6/examples/examples/cors_server.rs
+        let mut module = RpcModule::new((service_handle, task_processor));
+        module
+            .register_async_method(
+                "process_signed_task_response",
+                |params, ctx, _| async move {
+                    let (service_handle, task_processor) = ctx.as_ref();
+                    let signed_task_response = params
+                        .parse::<RpcRequest<TP::TaskResponse>>()
+                        .map_err(|err| ErrorObject::owned(0, err.to_string(), None::<()>))?
+                        .params;
 
-                Self::process_signed_task_response(
-                    task_processor,
-                    &service_handle,
-                    signed_task_response,
-                )
-                .await
-                .map_err(|_| Error::invalid_params("Failed to process signed task response"))
-                .map(|_| Value::Bool(true))
-            }
-        });
+                    let task_processor_clone = task_processor.clone();
+
+                    let result = Self::process_signed_task_response(
+                        task_processor_clone,
+                        service_handle,
+                        signed_task_response,
+                    )
+                    .await;
+
+                    // TODO: Check if we can do map_err and map
+                    match result {
+                        Ok(()) => Ok(true),
+                        Err(err) => Err(ErrorObject::owned(0, err.to_string(), None::<()>)),
+                    }
+                },
+            )
+            .map_err(|_| AggregatorError::RpcError)?;
 
         let socket: SocketAddr = port_address.parse().map_err(|e| {
             AggregatorError::IOError(std::io::Error::new(std::io::ErrorKind::InvalidInput, e))
         })?;
+        let middleware = tower::ServiceBuilder::new();
+        let server = Server::builder()
+            .set_http_middleware(middleware)
+            .build(socket)
+            .await?;
 
-        let server = ServerBuilder::new(io)
-            .cors(DomainsValidation::AllowOnly(vec![
-                AccessControlAllowOrigin::Any,
-            ]))
-            .start_http(&socket)?;
-
-        // TODO: move to an async library
-        tokio::task::spawn_blocking(move || server.wait());
+        let handle = server.start(module);
 
         info!("Server running at {socket}");
 
-        Ok(())
+        Ok(tokio::spawn(handle.stopped()))
     }
 
     /// Processes the tasks
