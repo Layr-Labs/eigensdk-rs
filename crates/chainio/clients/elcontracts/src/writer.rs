@@ -1270,6 +1270,7 @@ mod tests {
             .next()
             .unwrap();
 
+        // TODO: fund new address
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), new_operator_sk.to_string()).await;
