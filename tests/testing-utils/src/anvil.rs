@@ -10,6 +10,7 @@ const M2_ANVIL_STATE_PATH: &str =
     "./crates/m2_contracts/anvil/m2_contracts_deployed_anvil_state/state.json"; // relative path from the project root
 const OPERATOR_SET_ANVIL_STATE_PATH: &str =
     "./crates/operator_sets_contracts/anvil/operatorset_contracts_deployed_anvil_state/state.json";
+
 fn workspace_dir() -> PathBuf {
     let output = std::process::Command::new(env!("CARGO"))
         .arg("locate-project")
