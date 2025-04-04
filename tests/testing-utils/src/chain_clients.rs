@@ -366,7 +366,7 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         .await
         .unwrap()
         ._0
-        .eq(&avs_address)
+        == avs_address
     {
         allocation_manager
             .setAVSRegistrar(avs_address, registry_coordinator_addr)
