@@ -24,13 +24,13 @@ pub trait TaskProcessor {
 
     /// Processes a task, returning metadata related to signature aggregation
     fn process_new_task(
-        &self,
+        &mut self,
         event: Self::NewTaskEvent,
     ) -> impl Future<Output = Result<TaskMetadata, TaskProcessorError>> + Send;
 
     /// Processes a task response, returning the response's digest
     fn process_task_response(
-        &self,
+        &mut self,
         event: Self::TaskResponse,
     ) -> impl Future<Output = Result<B256, TaskProcessorError>> + Send;
 
