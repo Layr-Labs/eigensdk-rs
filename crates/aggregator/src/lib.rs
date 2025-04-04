@@ -28,14 +28,17 @@ use jsonrpc_http_server::{AccessControlAllowOrigin, DomainsValidation, ServerBui
 use std::{net::SocketAddr, sync::Arc};
 use tokio::sync::Mutex;
 use tracing::info;
-use traits::{task_processor::TaskProcessor, task_response::TaskResponse};
 
-use config::AggregatorConfig;
+pub use config::AggregatorConfig;
 pub use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
 };
 pub use error::AggregatorError;
 pub use signed_task_response::SignedTaskResponse;
+pub use traits::{
+    task_processor::{TaskProcessor, TaskProcessorError},
+    task_response::TaskResponse,
+};
 
 /// Aggregator
 #[derive(Debug)]
