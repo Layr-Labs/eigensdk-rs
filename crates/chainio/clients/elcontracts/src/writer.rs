@@ -1283,7 +1283,7 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
         // Use arbitrary non-default wallet because first 100 default addresses are already registered
-        let new_operator_sk = "7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
+        let new_operator_sk = "0x7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
         let new_operator_address = get_signer(new_operator_sk, &http_endpoint)
             .signer_addresses()
             .next()
@@ -1327,7 +1327,7 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         // Use arbitrary non-default wallet because first 100 default addresses are already registered
-        let new_operator_sk = "7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
+        let new_operator_sk = "0x7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
         let new_operator_address = get_signer(new_operator_sk, &http_endpoint)
             .signer_addresses()
             .next()
@@ -1336,11 +1336,9 @@ mod tests {
         fund_operator(new_operator_address, &http_endpoint).await;
 
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
-        let el_chain_writer = new_test_writer_preslashing(
-            http_endpoint.to_string(),
-            new_operator_address.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer_preslashing(http_endpoint.to_string(), new_operator_sk.to_string())
+                .await;
 
         let operator = Operator {
             address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
