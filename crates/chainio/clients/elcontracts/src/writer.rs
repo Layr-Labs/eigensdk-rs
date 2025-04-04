@@ -1262,12 +1262,12 @@ mod tests {
     use std::str::FromStr;
 
     // Send 100 ETH to an operator
-    async fn fund_operator(operator_address: Address, http_endpoint: &str) {
+    async fn fund_operator(operator_address: Address, http_rpc_url: &str) {
         let tx = TransactionRequest::default()
             .with_to(operator_address)
             .with_value(U256::from(10e18));
 
-        let first_address_signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
+        let first_address_signer = get_signer(FIRST_PRIVATE_KEY, http_rpc_url);
         let receipt = first_address_signer
             .send_transaction(tx)
             .await
