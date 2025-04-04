@@ -1224,8 +1224,10 @@ fn encode_registration_data(
 #[cfg(test)]
 mod tests {
     use alloy::{
+        network::TransactionBuilder,
         primitives::{address, ruint::aliases::U256, Address, Bytes, FixedBytes},
         providers::{Provider, WalletProvider},
+        rpc::types::TransactionRequest,
     };
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
@@ -1259,18 +1261,36 @@ mod tests {
 
     use std::str::FromStr;
 
+    // Send 100 ETH to an operator
+    async fn fund_operator(operator_address: Address, http_endpoint: &str) {
+        let tx = TransactionRequest::default()
+            .with_to(operator_address)
+            .with_value(U256::from(10e18));
+
+        let first_address_signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
+        let receipt = first_address_signer
+            .send_transaction(tx)
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        assert!(receipt.status());
+    }
+
     #[tokio::test]
     async fn test_register_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
         // Use arbitrary non-default wallet because first 100 default addresses are already registered
-        let new_operator_sk = "0x7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
+        let new_operator_sk = "7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
         let new_operator_address = get_signer(new_operator_sk, &http_endpoint)
             .signer_addresses()
             .next()
             .unwrap();
 
-        // TODO: fund new address
+        fund_operator(new_operator_address, &http_endpoint).await;
+
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), new_operator_sk.to_string()).await;
@@ -1305,10 +1325,22 @@ mod tests {
     #[tokio::test]
     async fn test_register_operator_preslashing() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        // Use arbitrary non-default wallet because first 100 default addresses are already registered
+        let new_operator_sk = "7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
+        let new_operator_address = get_signer(new_operator_sk, &http_endpoint)
+            .signer_addresses()
+            .next()
+            .unwrap();
+
+        fund_operator(new_operator_address, &http_endpoint).await;
+
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
-        let el_chain_writer =
-            new_test_writer_preslashing(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string())
-                .await;
+        let el_chain_writer = new_test_writer_preslashing(
+            http_endpoint.to_string(),
+            new_operator_address.to_string(),
+        )
+        .await;
 
         let operator = Operator {
             address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
