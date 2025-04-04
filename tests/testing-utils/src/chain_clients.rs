@@ -6,7 +6,7 @@ use alloy::{
 use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
 use eigen_common::{get_provider, get_signer};
 use eigen_logging::get_test_logger;
-use std::str::FromStr;
+use std::{ops::Add, str::FromStr};
 
 use crate::transaction::wait_transaction;
 use alloy::{primitives::aliases::U96, providers::WalletProvider};
@@ -331,20 +331,16 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         get_permission_controller_address(http_endpoint.to_string()).await;
     let service_manager =
         MockAvsServiceManager::new(service_manager_address, default_signer.clone());
-    let contract_permission_controller =
-        PermissionController::new(permission_controller_address, get_provider(http_endpoint));
 
-    if !contract_permission_controller
-        .canCall(
-            service_manager_address,
-            default_signer.default_signer_address(),
-            allocation_manager_addr,
-            alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
-        )
-        .call()
-        .await
-        .unwrap()
-        ._0
+    if !can_set_appointee(
+        http_endpoint,
+        permission_controller_address,
+        service_manager_address,
+        default_signer.default_signer_address(),
+        allocation_manager_addr,
+        alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+    )
+    .await
     {
         service_manager
             .setAppointee(
@@ -360,14 +356,7 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
             .unwrap();
     };
 
-    if allocation_manager
-        .getAVSRegistrar(avs_address)
-        .call()
-        .await
-        .unwrap()
-        ._0
-        == avs_address
-    {
+    if ensure_can_set_avs_registrar(http_endpoint, allocation_manager_addr, avs_address).await {
         allocation_manager
             .setAVSRegistrar(avs_address, registry_coordinator_addr)
             .send()
@@ -386,17 +375,15 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         kickBIPsOfTotalStake: 1000,
     };
     let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-    if !contract_permission_controller
-        .canCall(
-            service_manager_address,
-            registry_coordinator_addr,
-            allocation_manager_addr,
-            alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
-        )
-        .call()
-        .await
-        .unwrap()
-        ._0
+    if !can_set_appointee(
+        http_endpoint,
+        permission_controller_address,
+        service_manager_address,
+        registry_coordinator_addr,
+        allocation_manager_addr,
+        alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+    )
+    .await
     {
         service_manager
             .setAppointee(
@@ -426,6 +413,44 @@ pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         .unwrap();
 }
 
+/// Checks if set AvS Registrar can be called
+pub async fn ensure_can_set_avs_registrar(
+    http_endpoint: &str,
+    allocation_manager_address: Address,
+    avs_address: Address,
+) -> bool {
+    let contract_allocation_manager =
+        AllocationManager::new(allocation_manager_address, get_provider(http_endpoint));
+
+    let registrar = contract_allocation_manager
+        .getAVSRegistrar(avs_address)
+        .call()
+        .await
+        .unwrap()
+        ._0;
+
+    registrar == avs_address
+}
+
+/// Checks if setAppointee can be called for the particular parameters
+pub async fn can_set_appointee(
+    http_endpoint: &str,
+    permission_controller_address: Address,
+    account: Address,
+    caller: Address,
+    target: Address,
+    selector: FixedBytes<4>,
+) -> bool {
+    let contract_permission_controller =
+        PermissionController::new(permission_controller_address, get_provider(http_endpoint));
+    let can_call = contract_permission_controller
+        .canCall(account, caller, target, selector)
+        .call()
+        .await
+        .unwrap()
+        ._0;
+    can_call
+}
 /// Creates m2 quorum using a private key and an http endpoint
 pub async fn create_quorum(private_key: &str, http_endpoint: &str) {
     let registry_coordinator_addr =
@@ -497,17 +522,15 @@ pub async fn create_total_delegated_stake_operator_set(
         get_permission_controller_address(http_endpoint.to_string()).await;
     let contract_permission_controller =
         PermissionController::new(permission_controller_address, get_provider(http_endpoint));
-    if !contract_permission_controller
-        .canCall(
-            service_manager_address,
-            default_signer.default_signer_address(),
-            allocation_manager_addr,
-            alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
-        )
-        .call()
-        .await
-        .unwrap()
-        ._0
+    if !can_set_appointee(
+        http_endpoint,
+        permission_controller_address,
+        service_manager_address,
+        default_signer.default_signer_address(),
+        allocation_manager_addr,
+        alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+    )
+    .await
     {
         service_manager
             .setAppointee(
@@ -526,14 +549,7 @@ pub async fn create_total_delegated_stake_operator_set(
     let registry_coordinator_addr =
         get_registry_coordinator_address(http_endpoint.to_string()).await;
 
-    if allocation_manager
-        .getAVSRegistrar(avs_address)
-        .call()
-        .await
-        .unwrap()
-        ._0
-        .eq(&avs_address)
-    {
+    if ensure_can_set_avs_registrar(http_endpoint, allocation_manager_addr, avs_address).await {
         allocation_manager
             .setAVSRegistrar(avs_address, registry_coordinator_addr)
             .send()
@@ -544,17 +560,15 @@ pub async fn create_total_delegated_stake_operator_set(
             .unwrap();
     }
 
-    if !contract_permission_controller
-        .canCall(
-            service_manager_address,
-            registry_coordinator_addr,
-            allocation_manager_addr,
-            alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
-        )
-        .call()
-        .await
-        .unwrap()
-        ._0
+    if !can_set_appointee(
+        http_endpoint,
+        permission_controller_address,
+        service_manager_address,
+        registry_coordinator_addr,
+        allocation_manager_addr,
+        alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+    )
+    .await
     {
         service_manager
             .setAppointee(
