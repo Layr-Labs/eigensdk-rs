@@ -66,6 +66,7 @@ library MockAvsDeploymentLib {
         uint256 numQuorums;
         uint256[] operatorParams;
         address operatorAddr;
+        address operator2Addr;
         address contractsRegistryAddr;
     }
 
@@ -201,6 +202,7 @@ library MockAvsDeploymentLib {
         data.operatorAddr = json.readAddress(".operator_addr");
         data.numQuorums = json.readUint(".num_quorums");
         data.operatorParams = json.readUintArray(".operator_params");
+        data.operator2Addr = json.readAddress(".operator_2_addr");
         return data;
     }
 
