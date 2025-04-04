@@ -127,11 +127,8 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         let port_address = self.port_address.clone();
 
         // Spawn three tasks: one for the server that receives signature, one for processing tasks, and another to process aggregated signatures
-        let server_handle = tokio::spawn(Self::start_server(
-            port_address,
-            task_processor,
-            service_handle.clone(),
-        ));
+        let server_handle =
+            Self::start_server(port_address, task_processor, service_handle.clone());
         let task_processor = self.task_processor.clone();
 
         let process_handle = tokio::spawn(Self::process_tasks(
@@ -144,14 +141,13 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
             self.aggregated_response_receiver,
         ));
 
-        // Wait for both tasks to complete and handle potential errors
-        let (server_result, process_result, aggregate_result) =
-            tokio::try_join!(server_handle, process_handle, aggregate_handle)
-                .map_err(|_e| AggregatorError::JoinError)?;
+        // Wait for the tasks to complete and handle potential errors
+        let (process_result, aggregate_result) = tokio::try_join!(process_handle, aggregate_handle)
+            .map_err(|_| AggregatorError::JoinError)?;
 
-        server_result?;
         process_result?;
         aggregate_result?;
+        server_handle.await?;
 
         Ok(())
     }
