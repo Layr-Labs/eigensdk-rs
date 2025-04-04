@@ -4,6 +4,8 @@
 pub mod config;
 /// Aggregator error
 pub mod error;
+/// RPC server
+pub mod rpc_server;
 /// Signed Task Response
 pub mod signed_task_response;
 /// Traits
@@ -21,12 +23,12 @@ use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle, TaskSignature,
 };
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-use futures_util::StreamExt;
-use jsonrpsee::server::Server;
-use jsonrpsee::types::ErrorObject;
-use jsonrpsee::RpcModule;
-use signed_task_response::RpcRequest;
+use futures_util::{FutureExt, StreamExt};
+use rpc_server::{ProcessTaskSignedResponse, ProcessTaskSignedResponseServer};
 use std::{net::SocketAddr, sync::Arc};
+use tarpc::server::incoming::Incoming;
+use tarpc::server::{BaseChannel, Channel};
+use tarpc::tokio_serde::formats::Json;
 use tokio::sync::Mutex;
 use tokio::task::JoinHandle;
 use tracing::info;
@@ -51,7 +53,7 @@ pub struct Aggregator<TP> {
     aggregated_response_receiver: AggregateReceiver,
 }
 
-impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
+impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     /// Creates a new aggregator
     ///
     /// # Arguments
@@ -127,8 +129,11 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         let port_address = self.port_address.clone();
 
         // Spawn three tasks: one for the server that receives signature, one for processing tasks, and another to process aggregated signatures
-        let server_handle =
-            Self::start_server(port_address, task_processor, service_handle.clone());
+        let server_handle = tokio::spawn(Self::start_server(
+            port_address,
+            task_processor.clone(),
+            service_handle.clone(),
+        ));
         let task_processor = self.task_processor.clone();
 
         let process_handle = tokio::spawn(Self::process_tasks(
@@ -142,12 +147,13 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         ));
 
         // Wait for the tasks to complete and handle potential errors
-        let (process_result, aggregate_result) = tokio::try_join!(process_handle, aggregate_handle)
-            .map_err(|_| AggregatorError::JoinError)?;
+        let (server_result, process_result, aggregate_result) =
+            tokio::try_join!(server_handle, process_handle, aggregate_handle)
+                .map_err(|_| AggregatorError::JoinError)?;
 
+        server_result?;
         process_result?;
         aggregate_result?;
-        server_handle.await?;
 
         Ok(())
     }
@@ -168,45 +174,44 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
         task_processor: Arc<Mutex<TP>>,
         service_handle: ServiceHandle,
     ) -> Result<JoinHandle<()>, AggregatorError> {
-        // See https://github.com/paritytech/jsonrpsee/blob/42461391fee47c94d42c4a7303355525291df9f6/examples/examples/cors_server.rs
-        let mut module = RpcModule::new((service_handle, task_processor));
-        module.register_async_method(
-            "process_signed_task_response",
-            |params, ctx, _| async move {
-                let (service_handle, task_processor) = ctx.as_ref();
-                let signed_task_response = params.parse::<RpcRequest<TP::TaskResponse>>()?.params;
-
-                let task_processor_clone = task_processor.clone();
-
-                let result = Self::process_signed_task_response(
-                    task_processor_clone,
-                    service_handle,
-                    signed_task_response,
-                )
-                .await;
-
-                // TODO: Check if we can do map_err and map
-                match result {
-                    Ok(()) => Ok(true),
-                    Err(err) => Err(ErrorObject::owned(0, err.to_string(), None::<()>)),
-                }
-            },
-        )?;
-
-        let socket: SocketAddr = port_address.parse().map_err(|e| {
+        dbg!("INICIALIZANDO SERVER");
+        let addr: SocketAddr = port_address.parse().map_err(|e| {
             AggregatorError::IOError(std::io::Error::new(std::io::ErrorKind::InvalidInput, e))
         })?;
-        let middleware = tower::ServiceBuilder::new();
-        let server = Server::builder()
-            .set_http_middleware(middleware)
-            .build(socket)
-            .await?;
 
-        let handle = server.start(module);
+        let task_processor_clone = task_processor.clone();
 
-        info!("Server running at {socket}");
+        let server =
+            ProcessTaskSignedResponseServer::<TP>::new(task_processor_clone, service_handle);
 
-        Ok(tokio::spawn(handle.stopped()))
+        let listener = tarpc::serde_transport::tcp::listen(&addr, Json::default)
+            .await
+            .map_err(|e| {
+                AggregatorError::IOError(std::io::Error::new(std::io::ErrorKind::Other, e))
+            })?;
+
+        info!("Server running at {addr}");
+
+        let server_handle = tokio::spawn(async move {
+            listener
+                .filter_map(|result| async move { result.ok() })
+                .map(|transport| {
+                    dbg!("TRANSPORT");
+                    let server = server.clone();
+                    async move {
+                        dbg!("CHANNEL");
+                        let channel = BaseChannel::with_defaults(transport);
+                        channel.execute(server.serve())
+                    }
+                })
+                .buffer_unordered(10)
+                .for_each(|_| async {})
+                .await;
+        });
+
+        dbg!("SERVER CORRIENDO");
+
+        Ok(server_handle)
     }
 
     /// Processes the tasks
@@ -316,4 +321,8 @@ impl<TP: TaskProcessor + Send + Sync + 'static> Aggregator<TP> {
                 .map_err(AggregatorError::TaskProcessorError)?;
         }
     }
+}
+
+async fn spawn(fut: impl FutureExt<Output = ()> + Send + 'static) {
+    tokio::spawn(fut);
 }

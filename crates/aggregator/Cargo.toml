@@ -26,6 +26,7 @@ tracing.workspace = true
 tokio.workspace = true
 thiserror.workspace = true
 futures-util.workspace = true
+serde_json.workspace = true
 
 # JSON-RPC
 jsonrpsee = { version = "0.24", features = ["server"] }
@@ -33,3 +34,6 @@ jsonrpsee = { version = "0.24", features = ["server"] }
 tower = { version = "0.4", features = ["full"] }
 
 tokio-util = "0.7.11"
+
+tarpc = { version = "0.36", features = ["full"] }
+

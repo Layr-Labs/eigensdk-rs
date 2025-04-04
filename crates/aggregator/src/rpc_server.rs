@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use eigen_services_blsaggregation::bls_agg::{ServiceHandle, TaskSignature};
-use tarpc::{client::RpcError, context::Context, ServerError};
+use tarpc::{context::Context, ServerError};
 use tokio::sync::Mutex;
 use tracing::info;
 
@@ -9,38 +9,46 @@ use crate::{AggregatorError, SignedTaskResponse, TaskProcessor, TaskResponse};
 
 #[tarpc::service]
 pub trait ProcessTaskSignedResponse {
-    async fn process_signed_task_response(signed_task_response: String) -> Result<(), ServerError>;
+    async fn process_signed_task_response(
+        signed_task_response: String,
+    ) -> Result<bool, ServerError>;
 }
 
 #[derive(Clone)]
-pub struct ProcessTaskSignedResponseServer<TP> {
+pub struct ProcessTaskSignedResponseServer<TP>
+where
+    TP: Clone,
+{
     task_processor: Arc<Mutex<TP>>,
     service_handle: ServiceHandle,
 }
 
-impl<TP: TaskProcessor> ProcessTaskSignedResponse for ProcessTaskSignedResponseServer<TP> {
+impl<TP: TaskProcessor + std::clone::Clone> ProcessTaskSignedResponse
+    for ProcessTaskSignedResponseServer<TP>
+{
     // Each defined rpc generates an async fn that serves the RPC
     async fn process_signed_task_response(
         self,
         _ctx: Context,
         signed_task_response: String,
-    ) -> Result<(), ServerError> {
-        // Acá usás los campos de la struct
+    ) -> Result<bool, ServerError> {
+        dbg!("RECIBI REQUEST");
         let task_processor_clone = self.task_processor.clone();
         let service_handle = &self.service_handle;
 
-        // Parseás el signed_task_response (si es JSON, por ejemplo)
+        dbg!("POR PARSEAR");
         let parsed: SignedTaskResponse<TP::TaskResponse> =
             serde_json::from_str(&signed_task_response).unwrap();
+        dbg!("PARSED");
 
         Self::process_signed_task_response(task_processor_clone, service_handle, parsed)
             .await
             .unwrap();
-        Ok(())
+        Ok(true)
     }
 }
 
-impl<TP: TaskProcessor> ProcessTaskSignedResponseServer<TP> {
+impl<TP: TaskProcessor + std::clone::Clone> ProcessTaskSignedResponseServer<TP> {
     pub fn new(task_processor: Arc<Mutex<TP>>, service_handle: ServiceHandle) -> Self {
         Self {
             task_processor,
