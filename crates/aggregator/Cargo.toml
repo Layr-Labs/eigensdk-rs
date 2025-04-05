@@ -29,11 +29,6 @@ futures-util.workspace = true
 serde_json.workspace = true
 
 # JSON-RPC
-jsonrpsee = { version = "0.24", features = ["server"] }
-# uses same version as jsonrpsee
-tower = { version = "0.4", features = ["full"] }
-
-tokio-util = "0.7.11"
-
 tarpc = { version = "0.36", features = ["full"] }
 
+tokio-util = "0.7.11"

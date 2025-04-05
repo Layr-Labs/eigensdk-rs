@@ -8,14 +8,14 @@ use tracing::info;
 use crate::{AggregatorError, SignedTaskResponse, TaskProcessor, TaskResponse};
 
 #[tarpc::service]
-pub trait ProcessTaskSignedResponse {
+pub trait ProcessSignedTaskResponse {
     async fn process_signed_task_response(
         signed_task_response: String,
     ) -> Result<bool, ServerError>;
 }
 
 #[derive(Clone)]
-pub struct ProcessTaskSignedResponseServer<TP>
+pub struct ProcessSignedTaskResponseServer<TP>
 where
     TP: Clone,
 {
@@ -23,8 +23,8 @@ where
     service_handle: ServiceHandle,
 }
 
-impl<TP: TaskProcessor + std::clone::Clone> ProcessTaskSignedResponse
-    for ProcessTaskSignedResponseServer<TP>
+impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponse
+    for ProcessSignedTaskResponseServer<TP>
 {
     // Each defined rpc generates an async fn that serves the RPC
     async fn process_signed_task_response(
@@ -48,7 +48,7 @@ impl<TP: TaskProcessor + std::clone::Clone> ProcessTaskSignedResponse
     }
 }
 
-impl<TP: TaskProcessor + std::clone::Clone> ProcessTaskSignedResponseServer<TP> {
+impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponseServer<TP> {
     pub fn new(task_processor: Arc<Mutex<TP>>, service_handle: ServiceHandle) -> Self {
         Self {
             task_processor,

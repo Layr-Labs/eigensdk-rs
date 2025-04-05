@@ -2,7 +2,6 @@ use alloy::transports::{RpcError, TransportErrorKind};
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_services_blsaggregation::bls_aggregation_service_error::BlsAggregationServiceError;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceError;
-use jsonrpsee::core::RegisterMethodError;
 use thiserror::Error;
 
 /// Error returned by chainio
@@ -27,10 +26,6 @@ pub enum AggregatorError {
     /// alloy rpc error
     #[error("Alloy rpc error")]
     AlloyRpc(#[from] RpcError<TransportErrorKind>),
-
-    /// Rpc error
-    #[error("Rpc error")]
-    RpcError(#[from] RegisterMethodError),
 
     /// IO error
     #[error("IO error")]

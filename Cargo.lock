@@ -413,7 +413,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "tokio-stream",
- "tower 0.5.2",
+ "tower",
  "tracing",
 ]
 
@@ -459,7 +459,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "tokio-stream",
- "tower 0.5.2",
+ "tower",
  "tracing",
  "url",
  "wasmtimer",
@@ -723,7 +723,7 @@ dependencies = [
  "serde_json",
  "thiserror 2.0.9",
  "tokio",
- "tower 0.5.2",
+ "tower",
  "tracing",
  "url",
  "wasmtimer",
@@ -739,7 +739,7 @@ dependencies = [
  "alloy-transport",
  "reqwest 0.12.12",
  "serde_json",
- "tower 0.5.2",
+ "tower",
  "tracing",
  "url",
 ]
@@ -2623,14 +2623,12 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "futures-util",
- "jsonrpsee",
  "serde",
  "serde_json",
  "tarpc",
  "thiserror 1.0.69",
  "tokio",
  "tokio-util",
- "tower 0.4.13",
  "tracing",
 ]
 
@@ -3938,16 +3936,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hdrhistogram"
-version = "7.5.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "765c9198f173dd59ce26ff9f95ef0aafd0a0fe01fb9d72841bc5066a4c06511d"
-dependencies = [
- "byteorder",
- "num-traits",
-]
-
-[[package]]
 name = "heck"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4588,80 +4576,6 @@ checksum = "6717b6b5b077764fb5966237269cb3c64edddde4b14ce42647430a78ced9e7b7"
 dependencies = [
  "once_cell",
  "wasm-bindgen",
-]
-
-[[package]]
-name = "jsonrpsee"
-version = "0.24.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37b26c20e2178756451cfeb0661fb74c47dd5988cb7e3939de7e9241fd604d42"
-dependencies = [
- "jsonrpsee-core",
- "jsonrpsee-server",
- "jsonrpsee-types",
- "tokio",
-]
-
-[[package]]
-name = "jsonrpsee-core"
-version = "0.24.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "456196007ca3a14db478346f58c7238028d55ee15c1df15115596e411ff27925"
-dependencies = [
- "async-trait",
- "bytes",
- "futures-util",
- "http 1.2.0",
- "http-body 1.0.1",
- "http-body-util",
- "jsonrpsee-types",
- "parking_lot",
- "rand 0.8.5",
- "rustc-hash 2.1.0",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "jsonrpsee-server"
-version = "0.24.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "55e363146da18e50ad2b51a0a7925fc423137a0b1371af8235b1c231a0647328"
-dependencies = [
- "futures-util",
- "http 1.2.0",
- "http-body 1.0.1",
- "http-body-util",
- "hyper 1.5.2",
- "hyper-util",
- "jsonrpsee-core",
- "jsonrpsee-types",
- "pin-project",
- "route-recognizer",
- "serde",
- "serde_json",
- "soketto",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tower 0.4.13",
- "tracing",
-]
-
-[[package]]
-name = "jsonrpsee-types"
-version = "0.24.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08a8e70baf945b6b5752fc8eb38c918a48f1234daf11355e07106d963f860089"
-dependencies = [
- "http 1.2.0",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -6231,7 +6145,7 @@ dependencies = [
  "system-configuration 0.6.1",
  "tokio",
  "tokio-native-tls",
- "tower 0.5.2",
+ "tower",
  "tower-service",
  "url",
  "wasm-bindgen",
@@ -6310,12 +6224,6 @@ dependencies = [
  "quote",
  "syn 1.0.109",
 ]
-
-[[package]]
-name = "route-recognizer"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "afab94fb28594581f62d981211a9a4d53cc8130bbcbbb89a0440d9b8e81a7746"
 
 [[package]]
 name = "rstest"
@@ -7088,22 +6996,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "soketto"
-version = "0.8.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e859df029d160cb88608f5d7df7fb4753fd20fdfb4de5644f3d8b8440841721"
-dependencies = [
- "base64 0.22.1",
- "bytes",
- "futures",
- "http 1.2.0",
- "httparse",
- "log",
- "rand 0.8.5",
- "sha1",
-]
-
-[[package]]
 name = "solang-parser"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7726,7 +7618,6 @@ checksum = "d7fcaa8d55a2bdd6b83ace262b016eca0d79ee02818c5c1bcdf0305114081078"
 dependencies = [
  "bytes",
  "futures-core",
- "futures-io",
  "futures-sink",
  "pin-project-lite",
  "slab",
@@ -7765,27 +7656,6 @@ dependencies = [
  "serde_spanned",
  "toml_datetime",
  "winnow 0.6.22",
-]
-
-[[package]]
-name = "tower"
-version = "0.4.13"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b8fa9be0de6cf49e536ce1851f987bd21a43b771b09473c3549a6c853db37c1c"
-dependencies = [
- "futures-core",
- "futures-util",
- "hdrhistogram",
- "indexmap 1.9.3",
- "pin-project",
- "pin-project-lite",
- "rand 0.8.5",
- "slab",
- "tokio",
- "tokio-util",
- "tower-layer",
- "tower-service",
- "tracing",
 ]
 
 [[package]]
