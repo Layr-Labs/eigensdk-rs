@@ -33,10 +33,3 @@ impl<T: Serialize + for<'de> Deserialize<'de>> SignedTaskResponse<T> {
         }
     }
 }
-
-/// RPC Request is used to parse the request from the RPC server
-#[derive(Debug, Serialize, Deserialize)]
-pub struct RpcRequest<T> {
-    /// Params of the request
-    pub params: SignedTaskResponse<T>,
-}
