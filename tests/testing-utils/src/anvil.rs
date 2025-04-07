@@ -113,6 +113,7 @@ async fn start_anvil_with_state(
         if chain_id_res.is_ok() {
             return (container, http_endpoint, ws_endpoint);
         } else if i == max_retries {
+            #[allow(clippy::panicking_unwrap)]
             chain_id_res.expect("failed to get chain id from container");
         }
     }
