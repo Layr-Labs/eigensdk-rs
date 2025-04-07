@@ -97,3 +97,9 @@ pub use eigen_common as common;
 #[doc(inline)]
 #[cfg(feature = "aggregator")]
 pub use eigen_aggregator as aggregator;
+
+/* ------------------------------------ Operator Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "operator")]
+pub use eigen_operator as operator;
