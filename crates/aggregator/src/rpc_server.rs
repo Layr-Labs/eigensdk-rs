@@ -8,13 +8,25 @@ use tracing::info;
 use crate::{AggregatorError, SignedTaskResponse, TaskProcessor, TaskResponse};
 
 #[tarpc::service]
+/// This is the service definition. It defines one RPC, [`process_signed_task_response`].
+/// This is the RPC that the aggregator will use to process the signed task response.
 pub trait ProcessSignedTaskResponse {
+    /// Processes the signed task response
+    ///
+    /// # Arguments
+    ///
+    /// * `signed_task_response` - The signed task response
+    ///
+    /// # Returns
+    ///
+    /// * `Result<bool, ServerError>` - The result of the operation
     async fn process_signed_task_response(
         signed_task_response: String,
     ) -> Result<bool, ServerError>;
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
+/// Server for the ProcessSignedTaskResponse RPC
 pub struct ProcessSignedTaskResponseServer<TP>
 where
     TP: Clone,
@@ -23,32 +35,49 @@ where
     service_handle: ServiceHandle,
 }
 
+/// Implementation of the ProcessSignedTaskResponse trait for the ProcessSignedTaskResponseServer
+/// The async method serves the RPC request and processes the signed task response
 impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponse
     for ProcessSignedTaskResponseServer<TP>
 {
-    // Each defined rpc generates an async fn that serves the RPC
     async fn process_signed_task_response(
         self,
         _ctx: Context,
         signed_task_response: String,
     ) -> Result<bool, ServerError> {
-        dbg!("RECIBI REQUEST");
         let task_processor_clone = self.task_processor.clone();
         let service_handle = &self.service_handle;
-
-        dbg!("POR PARSEAR");
         let parsed: SignedTaskResponse<TP::TaskResponse> =
-            serde_json::from_str(&signed_task_response).unwrap();
-        dbg!("PARSED");
+            serde_json::from_str(&signed_task_response).map_err(|_| {
+                ServerError::new(
+                    std::io::ErrorKind::InvalidInput,
+                    "Invalid signed task response".to_string(),
+                )
+            })?;
 
         Self::process_signed_task_response(task_processor_clone, service_handle, parsed)
             .await
-            .unwrap();
+            .map_err(|_| {
+                ServerError::new(
+                    std::io::ErrorKind::Other,
+                    "Error processing signed task response".to_string(),
+                )
+            })?;
         Ok(true)
     }
 }
 
 impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponseServer<TP> {
+    /// Creates a new [`ProcessSignedTaskResponseServer`]
+    ///
+    /// # Arguments
+    ///
+    /// * `task_processor` - The task processor
+    /// * `service_handle` - The service handle
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The [`ProcessSignedTaskResponseServer`]
     pub fn new(task_processor: Arc<Mutex<TP>>, service_handle: ServiceHandle) -> Self {
         Self {
             task_processor,
@@ -56,6 +85,17 @@ impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponseServer<TP> 
         }
     }
 
+    /// Processes the signed task response
+    ///
+    /// # Arguments
+    ///
+    /// * `task_processor` - The task processor
+    /// * `service_handle` - The service handle
+    /// * [`SignedTaskResponse`] - The signed task response
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_signed_task_response(
         task_processor: Arc<Mutex<TP>>,
         service_handle: &ServiceHandle,
