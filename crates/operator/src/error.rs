@@ -9,6 +9,9 @@ pub enum OperatorError {
     /// Operator Registration Error
     #[error("Failed to register operator")]
     RegistrationError,
+    /// Operator Id Error
+    #[error("Failed to get operator id")]
+    OperatorIdError,
     /// Operator Subscribe Logs Error
     #[error("Failed to subscribe logs")]
     SubscribeLogsError,

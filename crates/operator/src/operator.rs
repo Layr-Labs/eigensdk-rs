@@ -24,7 +24,6 @@ pub trait Operator {
     fn start_operator(
         avs_registry_reader: &AvsRegistryChainReader,
         key_pair: &BlsKeyPair,
-        operator_id: &OperatorId,
         operator_address: Address,
         operator_name: &str,
         client_aggregator: &ClientAggregator,
@@ -36,6 +35,12 @@ pub trait Operator {
                 .await
                 .map_err(|_| OperatorError::RegistrationError)?;
             info!("is {} registered {}", operator_name, is_registered);
+
+            let operator_id = avs_registry_reader
+                .get_operator_id(operator_address)
+                .await
+                .map_err(|_| OperatorError::OperatorIdError)?;
+
             let arc_client = Arc::new(client_aggregator);
 
             if !is_registered {
@@ -68,7 +73,7 @@ pub trait Operator {
                 info!("{} picked up a new task", operator_name);
                 let task_response = Self::process_new_task(data);
                 let signed_task_response =
-                    Self::sign_task_response(key_pair, operator_id, task_response)?;
+                    Self::sign_task_response(key_pair, &operator_id, task_response)?;
                 let _ = arc_client
                     .send_signed_task_response(signed_task_response)
                     .await;
