@@ -37,6 +37,7 @@ pub trait Operator {
                 .map_err(|_| OperatorError::RegistrationError)?;
             info!("is {} registered {}", operator_name, is_registered);
             let arc_client = Arc::new(client_aggregator);
+
             if !is_registered {
                 return Err(OperatorError::RegistrationError);
             }

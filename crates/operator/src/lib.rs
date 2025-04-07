@@ -1,6 +1,6 @@
 //! Operator common functions.
 
-/// Alloy Rpc Client
+/// Tarpc Client
 pub mod client;
 /// Error
 pub mod error;

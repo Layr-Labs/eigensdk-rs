@@ -1,10 +1,9 @@
 use eigen_aggregator::rpc_server::ProcessSignedTaskResponseClient;
-use serde::{de::Error, Serialize};
-use serde_json::json;
+use serde::Serialize;
 use tarpc::client::RpcError;
 use tarpc::tokio_serde::formats::Json;
 use tokio::time::{sleep, Duration};
-use tracing::{debug, error, info};
+use tracing::{error, info};
 
 use crate::error::OperatorError;
 
