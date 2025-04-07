@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "crates/aggregator/",
     "crates/common/",
     "crates/chainio/clients/avsregistry/",
     "crates/chainio/clients/elcontracts/",
@@ -69,6 +70,7 @@ aws-config = "1.5.9"
 aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
+eigen-aggregator = { version = "0.5.0", path = "crates/aggregator/" }
 eigen-common = { version = "0.5.0", path = "crates/common/" }
 eigen-client-elcontracts = { version = "0.5.0", path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { version = "0.5.0", path = "crates/chainio/clients/eth" }
