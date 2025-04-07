@@ -3024,7 +3024,6 @@ dependencies = [
  "serde",
  "serde_json",
  "testcontainers",
- "tokio",
  "url",
 ]
 
