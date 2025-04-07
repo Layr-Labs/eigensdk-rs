@@ -23,7 +23,7 @@ use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle,
 };
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-use futures_util::{future, FutureExt, StreamExt};
+use futures_util::{future, StreamExt};
 use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
 use std::{net::SocketAddr, sync::Arc};
 use tarpc::server::incoming::Incoming;
@@ -197,14 +197,16 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
                     task_processor_clone.clone(),
                     service_handle_clone.clone(),
                 );
-                channel.execute(server.serve()).for_each(spawn)
+                channel
+                    .execute(server.serve())
+                    .for_each(|response| async move {
+                        tokio::spawn(response);
+                    })
             })
             // Max 10 channels.
             .buffer_unordered(10)
             .for_each(|_| async {})
             .await;
-
-        dbg!("SERVER CORRIENDO");
 
         Ok(())
     }
@@ -277,8 +279,4 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
                 .map_err(AggregatorError::TaskProcessorError)?;
         }
     }
-}
-
-async fn spawn(fut: impl FutureExt<Output = ()> + Send + 'static) {
-    tokio::spawn(fut);
 }

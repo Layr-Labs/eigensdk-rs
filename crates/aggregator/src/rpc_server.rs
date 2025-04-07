@@ -1,11 +1,10 @@
 use std::sync::Arc;
 
+use crate::{AggregatorError, SignedTaskResponse, TaskProcessor, TaskResponse};
 use eigen_services_blsaggregation::bls_agg::{ServiceHandle, TaskSignature};
 use tarpc::{context::Context, ServerError};
 use tokio::sync::Mutex;
 use tracing::info;
-
-use crate::{AggregatorError, SignedTaskResponse, TaskProcessor, TaskResponse};
 
 #[tarpc::service]
 /// This is the service definition. It defines one RPC, [`process_signed_task_response`].
