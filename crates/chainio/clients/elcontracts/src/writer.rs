@@ -1223,14 +1223,9 @@ fn encode_registration_data(
 
 #[cfg(test)]
 mod tests {
-    use crate::test_utils::{
-        build_el_chain_reader, new_claim, new_test_writer, new_test_writer_preslashing,
-        OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
-    };
     use alloy::{
-        primitives::{address, aliases::U96, ruint::aliases::U256, Address, Bytes, FixedBytes},
+        primitives::{address, ruint::aliases::U256, Address, Bytes, FixedBytes},
         providers::{Provider, WalletProvider},
-        sol_types::SolCall,
     };
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
@@ -1239,9 +1234,14 @@ mod tests {
             mine_anvil_blocks, set_account_balance, start_anvil_container, start_m2_anvil_container,
         },
         anvil_constants::{
-            get_allocation_manager_address, get_erc20_mock_strategy,
-            get_registry_coordinator_address, get_service_manager_address, FIRST_ADDRESS,
-            FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY_2, SECOND_ADDRESS, SECOND_PRIVATE_KEY,
+            get_erc20_mock_strategy, get_registry_coordinator_address, get_service_manager_address,
+            FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY_2, SECOND_ADDRESS,
+            SECOND_PRIVATE_KEY,
+        },
+        chain_clients::{
+            build_el_chain_reader, create_operator_set, create_total_delegated_stake_operator_set,
+            new_claim, new_test_writer, new_test_writer_preslashing, OPERATOR_ADDRESS,
+            OPERATOR_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
@@ -1249,46 +1249,51 @@ mod tests {
     use eigen_utils::{
         convert_allocation_operator_set_to_rewards_operator_set,
         slashing::{
-            core::allocationmanager::{
-                AllocationManager::{self, OperatorSet},
-                IAllocationManagerTypes,
+            core::allocationmanager::{AllocationManager::OperatorSet, IAllocationManagerTypes},
+            middleware::slashingregistrycoordinator::{
+                ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
+                SlashingRegistryCoordinator,
             },
-            middleware::{
-                registrycoordinator::{
-                    ISlashingRegistryCoordinatorTypes::OperatorSetParam,
-                    IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
-                },
-                slashingregistrycoordinator::{
-                    ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
-                    IStakeRegistryTypes::StrategyParams as StrategyParamsSlashing,
-                    SlashingRegistryCoordinator,
-                },
-            },
-            sdk::mockavsservicemanager::MockAvsServiceManager,
         },
     };
-
     use std::str::FromStr;
 
     #[tokio::test]
     async fn test_register_operator() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        // Use arbitrary non-default wallet because first 100 default addresses are already registered
+        let new_operator_sk = "0x7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
+        let new_operator_address = get_signer(new_operator_sk, &http_endpoint)
+            .signer_addresses()
+            .next()
+            .unwrap();
+
+        set_account_balance(&container, &new_operator_address.to_string()).await;
+
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+            new_test_writer(http_endpoint.to_string(), new_operator_sk.to_string()).await;
 
         let operator = Operator {
-            address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
-            delegation_approver_address: FIRST_ADDRESS,
+            address: new_operator_address,
+            delegation_approver_address: new_operator_address,
             metadata_url: "metadata_uri".to_string(),
             allocation_delay: Some(1),
             _deprecated_earnings_receiver_address: None,
             staker_opt_out_window_blocks: None,
         };
-        el_chain_writer
+
+        let tx_hash = el_chain_writer
             .register_as_operator(operator)
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
         let is_registered = el_chain_reader
             .is_operator_registered(FIRST_ADDRESS)
@@ -1299,10 +1304,20 @@ mod tests {
 
     #[tokio::test]
     async fn test_register_operator_preslashing() {
-        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let (container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        // Use arbitrary non-default wallet because first 100 default addresses are already registered
+        let new_operator_sk = "0x7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
+        let new_operator_address = get_signer(new_operator_sk, &http_endpoint)
+            .signer_addresses()
+            .next()
+            .unwrap();
+
+        set_account_balance(&container, &new_operator_address.to_string()).await;
+
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let el_chain_writer =
-            new_test_writer_preslashing(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string())
+            new_test_writer_preslashing(http_endpoint.to_string(), new_operator_sk.to_string())
                 .await;
 
         let operator = Operator {
@@ -1313,10 +1328,16 @@ mod tests {
             _deprecated_earnings_receiver_address: None,
             staker_opt_out_window_blocks: Some(0u32),
         };
-        el_chain_writer
+        let tx_hash = el_chain_writer
             .register_as_operator_preslashing(operator)
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
         let is_registered = el_chain_reader
             .is_operator_registered(FIRST_ADDRESS)
@@ -1445,6 +1466,7 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
         let pending_admin = address!("009440d62dc85c73dbf889b7ad1f4da8b231d2ef");
         let tx_hash = el_chain_writer
@@ -1454,8 +1476,7 @@ mod tests {
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
-        let is_pending_admin = el_chain_writer
-            .el_chain_reader
+        let is_pending_admin = el_chain_reader
             .is_pending_admin(FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
@@ -1468,8 +1489,7 @@ mod tests {
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
-        let is_admin = el_chain_writer
-            .el_chain_reader
+        let is_admin = el_chain_reader
             .is_pending_admin(FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
@@ -1496,14 +1516,14 @@ mod tests {
 
         let admin_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_key.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
         let tx_hash = admin_writer.accept_admin(FIRST_ADDRESS).await.unwrap();
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
-        let is_admin = admin_writer
-            .el_chain_reader
+        let is_admin = el_chain_reader
             .is_admin(FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
@@ -1515,6 +1535,7 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
         let pending_admin_1 = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
         let pending_admin_1_key =
@@ -1554,8 +1575,7 @@ mod tests {
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
-        let is_admin = el_chain_writer
-            .el_chain_reader
+        let is_admin = el_chain_reader
             .is_admin(FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
@@ -1567,13 +1587,13 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let account_address = FIRST_ADDRESS;
         let appointee_address = address!("009440d62dc85c73dbf889b7ad1f4da8b231d2ef");
-        let appointee_key = "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf";
         let target = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
         let selector = [0, 1, 2, 3].into();
 
         // add an admin
         let account_writer =
             new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
         // set permission
         let tx_hash = account_writer
@@ -1584,10 +1604,7 @@ mod tests {
         assert!(receipt.status());
 
         // check if appointee can call the set target
-        let appointee_writer =
-            new_test_writer(http_endpoint.to_string(), appointee_key.to_string()).await;
-        let can_call = appointee_writer
-            .el_chain_reader
+        let can_call = el_chain_reader
             .can_call(account_address, appointee_address, target, selector)
             .await
             .unwrap();
@@ -1606,74 +1623,6 @@ mod tests {
         assert!(receipt.status());
     }
 
-    async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
-        let allocation_manager_addr =
-            get_allocation_manager_address(http_endpoint.to_string()).await;
-        let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
-        let allocation_manager =
-            AllocationManager::new(allocation_manager_addr, default_signer.clone());
-        let registry_coordinator_addr =
-            get_registry_coordinator_address(http_endpoint.to_string()).await;
-        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
-        let service_manager =
-            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
-        service_manager
-            .setAppointee(
-                default_signer.default_signer_address(),
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-        allocation_manager
-            .setAVSRegistrar(avs_address, registry_coordinator_addr)
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        // Create slashable quorum
-        let contract_registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, default_signer.clone());
-        let operator_set_params = OperatorSetParam {
-            maxOperatorCount: 10,
-            kickBIPsOfOperatorStake: 100,
-            kickBIPsOfTotalStake: 1000,
-        };
-        let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-        service_manager
-            .setAppointee(
-                registry_coordinator_addr,
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-        let strategy_params = StrategyParams {
-            strategy,
-            multiplier: U96::from(1),
-        };
-
-        contract_registry_coordinator
-            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-    }
-
     #[tokio::test]
     async fn test_register_for_operator_sets() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
@@ -1685,6 +1634,8 @@ mod tests {
         let operator_private_key = OPERATOR_PRIVATE_KEY;
         let el_chain_writer =
             new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
         let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
 
         let tx_hash = el_chain_writer
@@ -1705,8 +1656,7 @@ mod tests {
             avs: avs_address,
             id: operator_set_id,
         };
-        let is_registered = el_chain_writer
-            .el_chain_reader
+        let is_registered = el_chain_reader
             .is_operator_registered_with_operator_set(operator_addr, operator_set.clone())
             .await
             .unwrap();
@@ -1719,8 +1669,7 @@ mod tests {
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
-        let is_registered = el_chain_writer
-            .el_chain_reader
+        let is_registered = el_chain_reader
             .is_operator_registered_with_operator_set(operator_addr, operator_set.clone())
             .await
             .unwrap();
@@ -1732,6 +1681,7 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
         let delay = 10;
 
@@ -1746,8 +1696,7 @@ mod tests {
             .await
             .unwrap();
         mine_anvil_blocks(&_container, (current_block as u32) + 2).await;
-        let allocation_delay = el_chain_writer
-            .el_chain_reader
+        let allocation_delay = el_chain_reader
             .get_allocation_delay(FIRST_ADDRESS)
             .await
             .unwrap();
@@ -1760,6 +1709,7 @@ mod tests {
         let (container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
         let operator_address = FIRST_ADDRESS;
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
@@ -1785,8 +1735,7 @@ mod tests {
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
-        let allocation_info = el_chain_writer
-            .el_chain_reader
+        let allocation_info = el_chain_reader
             .get_allocation_info(operator_address, strategy_addr)
             .await
             .unwrap();
@@ -1794,15 +1743,13 @@ mod tests {
         // Allocation should be pending
         assert_eq!(allocation_info[0].pending_diff, U256::from(new_allocation));
 
-        let allocation_delay = el_chain_writer
-            .el_chain_reader
+        let allocation_delay = el_chain_reader
             .get_allocation_delay(FIRST_ADDRESS)
             .await
             .unwrap();
         mine_anvil_blocks(&container, allocation_delay).await;
 
-        let allocation_info = el_chain_writer
-            .el_chain_reader
+        let allocation_info = el_chain_reader
             .get_allocation_info(operator_address, strategy_addr)
             .await
             .unwrap();
@@ -1819,23 +1766,29 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let new_split = 5;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
 
-        let split = el_chain_writer
-            .el_chain_reader
+        let split = el_chain_reader
             .get_operator_avs_split(FIRST_ADDRESS, avs_address)
             .await
             .unwrap();
 
         assert_eq!(split, 1); // not initialized case
 
-        el_chain_writer
+        let tx_hash = el_chain_writer
             .set_operator_avs_split(FIRST_ADDRESS, avs_address, new_split)
             .await
             .unwrap();
-        let split = el_chain_writer
-            .el_chain_reader
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let split = el_chain_reader
             .get_operator_avs_split(FIRST_ADDRESS, avs_address)
             .await
             .unwrap();
@@ -1853,6 +1806,7 @@ mod tests {
         let operator_private_key = OPERATOR_PRIVATE_KEY;
         let el_chain_writer =
             new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
 
         let tx_hash = el_chain_writer
@@ -1882,8 +1836,7 @@ mod tests {
         assert!(receipt.status());
         let rewards_operator_set =
             convert_allocation_operator_set_to_rewards_operator_set(operator_set.clone());
-        let split = el_chain_writer
-            .el_chain_reader
+        let split = el_chain_reader
             .get_operator_set_split(OPERATOR_ADDRESS, rewards_operator_set.clone())
             .await
             .unwrap();
@@ -1896,10 +1849,10 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let new_split = 5;
 
-        let split = el_chain_writer
-            .el_chain_reader
+        let split = el_chain_reader
             .get_operator_pi_split(FIRST_ADDRESS)
             .await
             .unwrap();
@@ -1914,8 +1867,7 @@ mod tests {
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
-        let split = el_chain_writer
-            .el_chain_reader
+        let split = el_chain_reader
             .get_operator_pi_split(FIRST_ADDRESS)
             .await
             .unwrap();
@@ -1928,6 +1880,7 @@ mod tests {
         let (_contianer, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         create_operator_set(http_endpoint.as_str(), avs_address).await;
 
@@ -1953,8 +1906,7 @@ mod tests {
             .unwrap();
         assert!(receipt_alloc.status());
 
-        let allocation_info_before = el_chain_writer
-            .el_chain_reader
+        let allocation_info_before = el_chain_reader
             .get_allocation_info(operator_address, strategy_addr)
             .await
             .unwrap();
@@ -1977,8 +1929,7 @@ mod tests {
             .unwrap();
         assert!(receipt_clear.status(),);
 
-        let allocation_info_after = el_chain_writer
-            .el_chain_reader
+        let allocation_info_after = el_chain_reader
             .get_allocation_info(operator_address, strategy_addr)
             .await
             .unwrap();
@@ -1988,109 +1939,6 @@ mod tests {
             allocation_info_after[0].current_magnitude,
             U256::from(new_allocation)
         );
-    }
-
-    async fn create_total_delegated_stake_operator_set(
-        http_endpoint: &str,
-        erc20_mock_strategy_addr: Address,
-        avs_address: Address,
-    ) {
-        let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
-
-        let allocation_manager_addr =
-            get_allocation_manager_address(http_endpoint.to_string()).await;
-        let allocation_manager =
-            AllocationManager::new(allocation_manager_addr, default_signer.clone());
-
-        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
-        let service_manager =
-            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
-
-        service_manager
-            .setAppointee(
-                default_signer.default_signer_address(),
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        let registry_coordinator_addr =
-            get_registry_coordinator_address(http_endpoint.to_string()).await;
-
-        allocation_manager
-            .setAVSRegistrar(avs_address, registry_coordinator_addr)
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        service_manager
-            .setAppointee(
-                registry_coordinator_addr,
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        service_manager
-            .setAppointee(
-                registry_coordinator_addr,
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(
-                    AllocationManager::deregisterFromOperatorSetsCall::SELECTOR,
-                ),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        let operator_set_param = OperatorSetParamSlashing {
-            maxOperatorCount: 10,
-            kickBIPsOfOperatorStake: 100,
-            kickBIPsOfTotalStake: 1000,
-        };
-
-        let minimum_stake = U96::from(1);
-
-        let strategy_params = StrategyParamsSlashing {
-            strategy: erc20_mock_strategy_addr,
-            multiplier: U96::from(1),
-        };
-
-        let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
-            get_registry_coordinator_address(http_endpoint.to_string()).await,
-            default_signer.clone(),
-        );
-
-        let tx_hash = slashing_registry_coordinator
-            .createTotalDelegatedStakeQuorum(
-                operator_set_param,
-                minimum_stake,
-                vec![strategy_params],
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
-        assert!(tx_hash.status());
     }
 
     #[tokio::test]
@@ -2111,6 +1959,7 @@ mod tests {
         // Register FIRST_ADDRESS to operator set
         let el_chain_writer =
             new_test_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
         let tx_hash = el_chain_writer
             .register_for_operator_sets_with_churn(
@@ -2134,8 +1983,7 @@ mod tests {
             .status());
 
         // Verify FIRST_ADDRESS registration
-        assert!(el_chain_writer
-            .el_chain_reader
+        assert!(el_chain_reader
             .is_operator_registered_with_operator_set(
                 FIRST_ADDRESS,
                 OperatorSet {
@@ -2191,8 +2039,7 @@ mod tests {
             .status());
 
         // Verify FIRST_ADDRESS is not registered
-        assert!(!el_chain_writer
-            .el_chain_reader
+        assert!(!el_chain_reader
             .is_operator_registered_with_operator_set(
                 FIRST_ADDRESS,
                 OperatorSet {
@@ -2204,8 +2051,7 @@ mod tests {
             .unwrap());
 
         // Verify SECOND_ADDRESS is registered
-        assert!(el_chain_writer_2
-            .el_chain_reader
+        assert!(el_chain_reader
             .is_operator_registered_with_operator_set(
                 SECOND_ADDRESS,
                 OperatorSet {

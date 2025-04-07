@@ -29,7 +29,7 @@ SDK_CONTRACTS_ARGS=$(generate_flags $SDK_CONTRACTS)
 
 
 ### Middleware bindings ###
-MIDDLEWARE_CONTRACTS="IndexRegistry OperatorStateRetriever StakeRegistry BLSApkRegistry IBLSSignatureChecker ServiceManagerBase IERC20 SlashingRegistryCoordinator ISlashingRegistryCoordinator RegistryCoordinator"
+MIDDLEWARE_CONTRACTS="IndexRegistry OperatorStateRetriever StakeRegistry BLSApkRegistry IBLSSignatureChecker ServiceManagerBase IERC20 SlashingRegistryCoordinator ISlashingRegistryCoordinator RegistryCoordinator SocketRegistry"
 MIDDLEWARE_CONTRACTS_LOCATION=$SDK_CONTRACTS_LOCATION/lib/eigenlayer-middleware
 MIDDLEWARE_BINDINGS_PATH=crates/utils/src/slashing/middleware
 # The echo is to remove quotes, and the patsubst to make the regex match the full text only
