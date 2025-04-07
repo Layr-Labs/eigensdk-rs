@@ -6,6 +6,7 @@ use testcontainers::{
     runners::AsyncRunner,
     ContainerAsync, GenericImage, ImageExt,
 };
+use tokio::io::AsyncBufReadExt;
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
 const ANVIL_TAG: &str = "latest";
 const M2_ANVIL_STATE_PATH: &str =
@@ -89,7 +90,7 @@ async fn start_anvil_with_state(
 
         let provider = get_provider(&http_endpoint);
         let chain_id_res = provider.get_chain_id().await;
-        if let Ok(_) = chain_id_res {
+        if chain_id_res.is_ok() {
             return (container, http_endpoint, ws_endpoint);
         } else if i == max_retries {
             chain_id_res.expect("failed to get chain id from container");
