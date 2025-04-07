@@ -26,7 +26,8 @@ tracing.workspace = true
 tokio.workspace = true
 thiserror.workspace = true
 futures-util.workspace = true
+serde_json.workspace = true
 
-jsonrpc-core = "18.0.0"
-jsonrpc-http-server = "18.0.0"
+# RPC Server
+tarpc = { version = "0.36", features = ["full"] }
 tokio-util = "0.7.11"
