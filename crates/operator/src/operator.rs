@@ -70,7 +70,6 @@ pub trait Operator {
                     .map_err(|_| OperatorError::SubscribeLogsError)?
                     .inner
                     .data;
-
                 info!("{} picked up a new task", operator_name);
 
                 let task_response = Self::process_new_task(data);
@@ -93,6 +92,7 @@ pub trait Operator {
         let hash_msg = task_response.digest();
         let signed_msg = key_pair.sign_message(&hash_msg);
         let signed_task_response = SignedTaskResponse::new(task_response, signed_msg, *operator_id);
+        info!("Operator signed task response");
         Ok(signed_task_response)
     }
 }

@@ -44,6 +44,7 @@ impl ClientAggregator {
                 .await??;
 
             if s {
+                info!("Signed task response sent to aggregator");
                 return Ok(());
             }
 

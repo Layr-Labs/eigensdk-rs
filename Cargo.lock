@@ -3646,6 +3646,7 @@ dependencies = [
  "eigen-common",
  "eigen-crypto-bls",
  "eigen-logging",
+ "eigen-operator",
  "eigen-testing-utils",
  "eigen-types",
  "serde",
