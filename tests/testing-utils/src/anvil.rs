@@ -1,3 +1,5 @@
+use alloy::providers::Provider;
+use eigen_common::get_provider;
 use std::path::{Path, PathBuf};
 use testcontainers::{
     core::{ExecCommand, IntoContainerPort, WaitFor},
@@ -48,49 +50,62 @@ async fn start_anvil_with_state(
     let absolute_path = workspace_dir().join(relative_path);
     let absolute_path_str = absolute_path.to_str().unwrap();
 
-    let container = GenericImage::new(ANVIL_IMAGE, ANVIL_TAG)
-        .with_entrypoint("anvil")
-        .with_wait_for(WaitFor::message_on_stdout("Listening on"))
-        .with_exposed_port(8545.tcp())
-        .with_mount(testcontainers::core::Mount::bind_mount(
-            absolute_path_str,
-            "/state.json",
-        ))
-        .with_cmd([
-            "--host",
-            "0.0.0.0",
-            "--load-state",
-            "/state.json",
-            "--base-fee",
-            "0",
-            "--gas-price",
-            "0",
-            "--port",
-            "8545",
-        ])
-        .start()
-        .await
-        .unwrap();
+    let max_retries = 5;
 
-    let port = container
-        .ports()
-        .await
-        .unwrap()
-        .map_to_host_port_ipv4(8545.tcp())
-        .unwrap();
+    for i in 1..=max_retries {
+        let container = GenericImage::new(ANVIL_IMAGE, ANVIL_TAG)
+            .with_entrypoint("anvil")
+            .with_wait_for(WaitFor::message_on_stdout("Listening on"))
+            .with_exposed_port(8545.tcp())
+            .with_mount(testcontainers::core::Mount::bind_mount(
+                absolute_path_str,
+                "/state.json",
+            ))
+            .with_cmd([
+                "--host",
+                "0.0.0.0",
+                "--load-state",
+                "/state.json",
+                "--base-fee",
+                "0",
+                "--gas-price",
+                "0",
+                "--port",
+                "8545",
+            ])
+            .start()
+            .await
+            .unwrap();
 
-    let http_endpoint = format!("http://localhost:{port}");
-    let ws_endpoint = format!("ws://localhost:{port}");
+        let port = container
+            .ports()
+            .await
+            .unwrap()
+            .map_to_host_port_ipv4(8545.tcp())
+            .unwrap();
 
-    (container, http_endpoint, ws_endpoint)
+        let http_endpoint = format!("http://localhost:{port}");
+        let ws_endpoint = format!("ws://localhost:{port}");
+
+        let provider = get_provider(&http_endpoint);
+        let chain_id_res = provider.get_chain_id().await;
+        if let Ok(_) = chain_id_res {
+            return (container, http_endpoint, ws_endpoint);
+        } else if i == max_retries {
+            chain_id_res.expect("failed to get chain id from container");
+        }
+    }
+    unreachable!()
 }
 
 /// Start an anvil container for testing, using the dump state file for M2 contracts
+/// Panics in case of failure
 pub async fn start_m2_anvil_container() -> (ContainerAsync<GenericImage>, String, String) {
     start_anvil_with_state(M2_ANVIL_STATE_PATH).await
 }
 
 /// Start an anvil container for testing, using the dump state file for operator sets
+/// Panics in case of failure
 pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, String) {
     start_anvil_with_state(OPERATOR_SET_ANVIL_STATE_PATH).await
 }
