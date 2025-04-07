@@ -2970,6 +2970,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigen-operator"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "eigen-aggregator",
+ "eigen-client-avsregistry",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
+ "eigen-logging",
+ "eigen-types",
+ "eigen-utils",
+ "futures-util",
+ "hex",
+ "rand_core 0.6.4",
+ "reqwest 0.12.15",
+ "rust-bls-bn254",
+ "serde",
+ "serde_json",
+ "tarpc",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
+ "url",
+]
+
+[[package]]
 name = "eigen-services-avsregistry"
 version = "0.5.0"
 dependencies = [

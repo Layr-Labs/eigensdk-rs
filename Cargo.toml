@@ -13,6 +13,7 @@ members = [
     "crates/metrics/",
     "crates/metrics/collectors/economic/",
     "crates/metrics/collectors/rpc_calls/",
+    "crates/operator/",
     "crates/services/avsregistry/",
     "crates/services/bls_aggregation/",
     "crates/services/operatorsinfo/",
