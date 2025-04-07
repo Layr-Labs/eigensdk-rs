@@ -78,6 +78,26 @@ async fn start_anvil_with_state(
             .await
             .unwrap();
 
+        // TODO: delete/rewrite this
+        let reader = container.stdout(true);
+        tokio::task::spawn(async move {
+            let mut reader = reader;
+            let mut buffer = String::new();
+            while reader.read_line(&mut buffer).await.unwrap() > 0 {
+                println!("{:?}", buffer);
+                buffer.clear();
+            }
+        });
+        let reader = container.stderr(true);
+        tokio::task::spawn(async move {
+            let mut reader = reader;
+            let mut buffer = String::new();
+            while reader.read_line(&mut buffer).await.unwrap() > 0 {
+                eprintln!("{:?}", buffer);
+                buffer.clear();
+            }
+        });
+
         let port = container
             .ports()
             .await
