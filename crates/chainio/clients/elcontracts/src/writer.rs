@@ -1225,7 +1225,7 @@ fn encode_registration_data(
 mod tests {
     use alloy::{
         primitives::{address, ruint::aliases::U256, Address, Bytes, FixedBytes},
-        providers::Provider,
+        providers::{Provider, WalletProvider},
     };
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
@@ -1256,28 +1256,44 @@ mod tests {
             },
         },
     };
-
     use std::str::FromStr;
 
     #[tokio::test]
     async fn test_register_operator() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        // Use arbitrary non-default wallet because first 100 default addresses are already registered
+        let new_operator_sk = "0x7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
+        let new_operator_address = get_signer(new_operator_sk, &http_endpoint)
+            .signer_addresses()
+            .next()
+            .unwrap();
+
+        set_account_balance(&container, &new_operator_address.to_string()).await;
+
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+            new_test_writer(http_endpoint.to_string(), new_operator_sk.to_string()).await;
 
         let operator = Operator {
-            address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
-            delegation_approver_address: FIRST_ADDRESS,
+            address: new_operator_address,
+            delegation_approver_address: new_operator_address,
             metadata_url: "metadata_uri".to_string(),
             allocation_delay: Some(1),
             _deprecated_earnings_receiver_address: None,
             staker_opt_out_window_blocks: None,
         };
-        el_chain_writer
+
+        let tx_hash = el_chain_writer
             .register_as_operator(operator)
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
         let is_registered = el_chain_reader
             .is_operator_registered(FIRST_ADDRESS)
@@ -1288,10 +1304,20 @@ mod tests {
 
     #[tokio::test]
     async fn test_register_operator_preslashing() {
-        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let (container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        // Use arbitrary non-default wallet because first 100 default addresses are already registered
+        let new_operator_sk = "0x7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
+        let new_operator_address = get_signer(new_operator_sk, &http_endpoint)
+            .signer_addresses()
+            .next()
+            .unwrap();
+
+        set_account_balance(&container, &new_operator_address.to_string()).await;
+
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let el_chain_writer =
-            new_test_writer_preslashing(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string())
+            new_test_writer_preslashing(http_endpoint.to_string(), new_operator_sk.to_string())
                 .await;
 
         let operator = Operator {
@@ -1302,10 +1328,16 @@ mod tests {
             _deprecated_earnings_receiver_address: None,
             staker_opt_out_window_blocks: Some(0u32),
         };
-        el_chain_writer
+        let tx_hash = el_chain_writer
             .register_as_operator_preslashing(operator)
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
         let is_registered = el_chain_reader
             .is_operator_registered(FIRST_ADDRESS)
@@ -1745,10 +1777,17 @@ mod tests {
 
         assert_eq!(split, 1); // not initialized case
 
-        el_chain_writer
+        let tx_hash = el_chain_writer
             .set_operator_avs_split(FIRST_ADDRESS, avs_address, new_split)
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
         let split = el_chain_reader
             .get_operator_avs_split(FIRST_ADDRESS, avs_address)
             .await

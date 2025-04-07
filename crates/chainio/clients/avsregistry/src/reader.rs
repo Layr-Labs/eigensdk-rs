@@ -301,7 +301,7 @@ impl AvsRegistryChainReader {
             .await
             .map_err(|_| AvsRegistryError::GetBlockNumber)?;
 
-        if current_block_number > u32::MAX.into() {
+        if current_block_number > u64::from(u32::MAX) {
             return Err(AvsRegistryError::BlockNumberOverflow);
         }
 
@@ -384,7 +384,7 @@ impl AvsRegistryChainReader {
             AvsRegistryError::AlloyContractError(alloy::contract::Error::TransportError(e))
         })?;
 
-        if current_block_number > u32::MAX.into() {
+        if current_block_number > u64::from(u32::MAX) {
             return Err(AvsRegistryError::BlockNumberOverflow);
         }
 
@@ -1674,7 +1674,6 @@ mod tests {
             .get_current_total_stake(quorum_number)
             .await
             .unwrap();
-        dbg!(current_total_stake);
         assert_eq!(
             "10000000000000000000".parse::<U96>().unwrap(),
             current_total_stake

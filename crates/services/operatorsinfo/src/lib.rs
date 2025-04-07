@@ -9,3 +9,4 @@
 pub mod fake_operator_info;
 pub mod operator_info;
 pub mod operatorsinfo_inmemory;
+pub mod operatorsinfo_onchain;

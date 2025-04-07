@@ -66,6 +66,7 @@ library MockAvsDeploymentLib {
         uint256 numQuorums;
         uint256[] operatorParams;
         address operatorAddr;
+        address operator2Addr;
         address contractsRegistryAddr;
     }
 
@@ -201,6 +202,7 @@ library MockAvsDeploymentLib {
         data.operatorAddr = json.readAddress(".operator_addr");
         data.numQuorums = json.readUint(".num_quorums");
         data.operatorParams = json.readUintArray(".operator_params");
+        data.operator2Addr = json.readAddress(".operator_2_addr");
         return data;
     }
 
@@ -222,6 +224,8 @@ library MockAvsDeploymentLib {
         data.stakeRegistry = json.readAddress(".addresses.stakeRegistry");
         data.strategy = json.readAddress(".addresses.strategy");
         data.token = json.readAddress(".addresses.token");
+        data.blsapkRegistry = json.readAddress(".addresses.blsapkRegistry");
+        data.socketRegistry = json.readAddress(".addresses.socketRegistry");
 
         return data;
     }
@@ -286,6 +290,8 @@ library MockAvsDeploymentLib {
             data.strategy.toHexString(),
             '","token":"',
             data.token.toHexString(),
+            '","socketRegistry":"',
+            data.socketRegistry.toHexString(),
             '","tokenRewards":"',
             data.tokenRewards.toHexString(),
             '"}'
