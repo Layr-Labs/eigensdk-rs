@@ -4,6 +4,7 @@ use alloy::{
     primitives::Address,
     providers::{Provider, ProviderBuilder, WsConnect},
     rpc::types::Filter,
+    sol_types::SolEvent,
 };
 use client::ClientAggregator;
 use eigen_aggregator::{SignedTaskResponse, TaskResponse};
@@ -102,7 +103,9 @@ impl<TP: OperatorTaskProcessor> Operator<TP> {
             .await
             .map_err(|_| OperatorError::TransportError)?;
 
-        let filter = Filter::new().event_signature(self.task_processor.get_event_signature());
+        let filter = Filter::new().event_signature(
+            <<TP as OperatorTaskProcessor>::NewTaskEvent as SolEvent>::SIGNATURE_HASH,
+        );
         let sub = provider
             .subscribe_logs(&filter)
             .await
