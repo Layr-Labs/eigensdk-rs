@@ -65,7 +65,7 @@ pub struct Operator {
     /// Operator Address
     pub address: Address,
 
-    /// https://github.com/Layr-Labs/eigenlayer-contracts/blob/delegation-redesign/src/contracts/interfaces/IDelegationManager.sol#L18
+    /// <https://github.com/Layr-Labs/eigenlayer-contracts/blob/delegation-redesign/src/contracts/interfaces/IDelegationManager.sol#L18>
     pub delegation_approver_address: Address,
 
     /// MetadataUrl URL where operator metadata is stored
