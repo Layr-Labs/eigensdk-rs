@@ -6,12 +6,9 @@ use alloy::{
 };
 use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager;
 use eigen_aggregator::TaskResponse;
-use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
-use eigen_operator::{
-    client::ClientAggregator, operator_task_processor::OperatorTaskProcessor, Operator,
-};
+use eigen_operator::{operator_task_processor::OperatorTaskProcessor, Operator};
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
 use serde::{Deserialize, Serialize};
 
@@ -64,27 +61,22 @@ async fn main() {
     let server_address = "http://localhost:8080".to_string();
     let http_rpc_url = "http://localhost:8545".to_string();
     let ws_rpc_url = "ws://localhost:8545".to_string();
+    let logger = get_logger();
 
-    let avs_registry_reader = AvsRegistryChainReader::new(
-        get_logger(),
-        registry_coordiator_address,
-        operator_state_retriever_address,
-        http_rpc_url,
-    )
-    .await
-    .unwrap();
     let operator_task_processor = OperatorTaskProcessorImpl;
-    let client_aggregator = ClientAggregator::new(server_address).await.unwrap();
     let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
 
     // Initialize the operator
     let operator = Operator::new(
-        &avs_registry_reader,
         &bls_key_pair,
         FIRST_ADDRESS,
         "OPERATOR NAME",
-        &client_aggregator,
+        logger,
         &ws_rpc_url,
+        &http_rpc_url,
+        registry_coordiator_address,
+        operator_state_retriever_address,
+        server_address,
         operator_task_processor,
     )
     .await
