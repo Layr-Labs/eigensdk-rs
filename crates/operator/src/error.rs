@@ -1,3 +1,4 @@
+use eigen_client_avsregistry::error::AvsRegistryError;
 // use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
 use rust_bls_bn254::errors::KeystoreError;
@@ -7,6 +8,9 @@ use thiserror::Error;
 /// Error returned by AvsRegistry
 #[derive(Debug, Error)]
 pub enum OperatorError {
+    /// AvsRegistry Error
+    #[error("AvsRegistry Error")]
+    AvsRegistry(#[from] AvsRegistryError),
     /// Operator Registration Error
     #[error("Failed to register operator")]
     RegistrationError,

@@ -10,6 +10,7 @@ use client::ClientAggregator;
 use eigen_aggregator::{SignedTaskResponse, TaskResponse};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
+use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
@@ -41,26 +42,43 @@ impl<TP: OperatorTaskProcessor> Operator<TP> {
     ///
     /// # Arguments
     ///
-    /// * `avs_registry_reader` - The AVS registry reader.
     /// * `key_pair` - The key pair of the operator.
     /// * `operator_address` - The address of the operator.
     /// * `operator_name` - The name of the operator.
-    /// * `client_aggregator` - The client aggregator.
+    /// * `logger` - The logger.
     /// * `ws_rpc_url` - The URL of the WebSocket RPC.
+    /// * `http_rpc_url` - The URL of the HTTP RPC.
+    /// * `registry_coordinator_address` - The address of the registry coordinator.
+    /// * `operator_state_retriever_address` - The address of the operator state retriever.
+    /// * `aggregator_ip_port` - The IP and port of the aggregator.
     /// * `task_processor` - The Operator task processor.
     ///
     /// # Returns
     ///
     /// * `Result<Self, OperatorError>` - The operator.
+    #[allow(clippy::too_many_arguments)]
     pub async fn new(
-        avs_registry_reader: &AvsRegistryChainReader,
         key_pair: &BlsKeyPair,
         operator_address: Address,
         operator_name: &str,
-        client_aggregator: &ClientAggregator,
+        logger: SharedLogger,
         ws_rpc_url: &str,
+        http_rpc_url: &str,
+        registry_coordinator_address: Address,
+        operator_state_retriever_address: Address,
+        aggregator_ip_port: String,
         task_processor: TP,
     ) -> Result<Self, OperatorError> {
+        let avs_registry_reader = AvsRegistryChainReader::new(
+            logger,
+            registry_coordinator_address,
+            operator_state_retriever_address,
+            http_rpc_url.to_string(),
+        )
+        .await?;
+
+        let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
+
         let is_registered = avs_registry_reader
             .is_operator_registered(operator_address)
             .await
