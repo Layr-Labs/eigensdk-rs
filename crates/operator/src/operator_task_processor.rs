@@ -20,13 +20,4 @@ pub trait OperatorTaskProcessor {
     ///
     /// * `Self::TaskResponse` - The task response
     fn process_new_task(&self, new_task_created: Self::NewTaskEvent) -> Self::TaskResponse;
-
-    /// Get the event signature
-    ///
-    /// # Returns
-    ///
-    /// * `B256` - The event signature
-    fn get_event_signature(&self) -> B256 {
-        Self::NewTaskEvent::SIGNATURE_HASH
-    }
 }
