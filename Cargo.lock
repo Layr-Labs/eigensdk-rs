@@ -2763,6 +2763,7 @@ dependencies = [
  "eigen-crypto-bls",
  "eigen-logging",
  "eigen-services-avsregistry",
+ "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
  "eigen-types",
  "eigen-utils",
