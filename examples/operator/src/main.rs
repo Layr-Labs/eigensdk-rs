@@ -18,12 +18,12 @@ pub mod bindings;
 
 // 1. Implement the `TaskResponse` trait
 #[derive(Debug, Clone, Serialize, Deserialize)]
-struct FakeResponse {
+struct ExampleTaskResponse {
     task_index: u32,
     number_squared: U256,
 }
 
-impl TaskResponse for FakeResponse {
+impl TaskResponse for ExampleTaskResponse {
     fn digest(&self) -> B256 {
         let response = IIncredibleSquaringTaskManager::TaskResponse {
             referenceTaskIndex: self.task_index,
@@ -42,10 +42,10 @@ struct OperatorTaskProcessorImpl;
 
 impl OperatorTaskProcessor for OperatorTaskProcessorImpl {
     type NewTaskEvent = IIncredibleSquaringTaskManager::NewTaskCreated;
-    type TaskResponse = FakeResponse;
+    type TaskResponse = ExampleTaskResponse;
 
     fn process_new_task(&self, new_task_created: Self::NewTaskEvent) -> Self::TaskResponse {
-        FakeResponse {
+        ExampleTaskResponse {
             task_index: new_task_created.taskIndex,
             number_squared: new_task_created.task.numberToBeSquared,
         }
