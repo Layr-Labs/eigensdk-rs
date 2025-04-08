@@ -42,12 +42,15 @@ impl<TP: OperatorTaskProcessor> Operator<TP> {
     ///
     /// # Arguments
     ///
-    /// * `avs_registry_reader` - The AVS registry reader.
     /// * `key_pair` - The key pair of the operator.
     /// * `operator_address` - The address of the operator.
     /// * `operator_name` - The name of the operator.
-    /// * `client_aggregator` - The client aggregator.
+    /// * `logger` - The logger.
     /// * `ws_rpc_url` - The URL of the WebSocket RPC.
+    /// * `http_rpc_url` - The URL of the HTTP RPC.
+    /// * `registry_coordinator_address` - The address of the registry coordinator.
+    /// * `operator_state_retriever_address` - The address of the operator state retriever.
+    /// * `aggregator_ip_port` - The IP and port of the aggregator.
     /// * `task_processor` - The Operator task processor.
     ///
     /// # Returns
