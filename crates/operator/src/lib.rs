@@ -68,13 +68,13 @@ impl<TP: OperatorTaskProcessor> Operator<TP> {
     ) -> Result<Self, OperatorError> {
         let avs_registry_reader = AvsRegistryChainReader::new(
             logger,
-            registry_coordiator_address,
+            registry_coordinator_address,
             operator_state_retriever_address,
             http_rpc_url.to_string(),
         )
         .await?;
 
-        let client_aggregator = ClientAggregator::new(aggregator_ip_port_address).await?;
+        let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
 
         let is_registered = avs_registry_reader
             .is_operator_registered(operator_address)
