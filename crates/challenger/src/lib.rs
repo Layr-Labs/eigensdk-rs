@@ -19,7 +19,8 @@ pub struct Challenger<TP: ChallengerTaskProcessor> {
 impl<TP: ChallengerTaskProcessor> Challenger<TP> {
     pub async fn start_challenger(&mut self) -> Result<(), ChallengerError> {
         info!("challenger crate launched");
-        let ws_provider = get_ws_provider(&self.ws_url).await.unwrap();
+
+        let ws_provider = get_ws_provider(&self.ws_url).await?;
 
         // Subscribe to NewTaskCreated events
         let task_filter = Filter::new().event_signature(
@@ -27,8 +28,7 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
         );
         let mut task_stream = ws_provider
             .subscribe_logs(&task_filter)
-            .await
-            .unwrap()
+            .await?
             .into_stream();
 
         // Subscribe to TaskResponded events
@@ -37,8 +37,7 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
         );
         let mut respond_stream = ws_provider
             .subscribe_logs(&responded_filter)
-            .await
-            .unwrap()
+            .await?
             .into_stream();
 
         loop {

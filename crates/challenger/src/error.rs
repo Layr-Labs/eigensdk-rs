@@ -9,6 +9,14 @@ pub enum ChallengerError {
     #[error("Alloy contract error: {0}")]
     AlloyContractError(#[from] AlloyError),
 
+    /// Alloy Transport Error
+    #[error("Alloy Transport Error")]
+    AlloyError(#[from] alloy::transports::TransportError),
+
+    /// Alloy sol types error
+    #[error("Alloy sol types error :{0}")]
+    AlloySolType(#[from] AlloySolTypeError),
+
     /// Task Response is correct
     #[error("Task Response is not wrong")]
     TaskResponseIsCorrect,
@@ -20,10 +28,6 @@ pub enum ChallengerError {
     /// Task not found
     #[error("Task not found")]
     TaskNotFound,
-
-    /// Alloy sol types error
-    #[error("Alloy sol types error :{0}")]
-    AlloySolType(#[from] AlloySolTypeError),
 
     /// Transaction hash not found
     #[error("Tx hash not found")]
