@@ -1,6 +1,7 @@
 // use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
 use rust_bls_bn254::errors::KeystoreError;
+use tarpc::client::RpcError;
 use thiserror::Error;
 
 /// Error returned by AvsRegistry
@@ -27,4 +28,6 @@ pub enum OperatorError {
     /// Bls crate(SDK) error
     #[error("Bls crate(SDK) error")]
     EigenBlsError(#[from] BlsError),
+    #[error("Failed to send signed task response")]
+    SendSignedTaskResponseError(#[from] RpcError),
 }

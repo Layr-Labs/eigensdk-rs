@@ -121,11 +121,9 @@ impl<TP: OperatorTaskProcessor> Operator<TP> {
             let task_response = self.task_processor.process_new_task(data);
             let signed_task_response =
                 Self::sign_task_response(&self.key_pair, &self.operator_id, task_response)?;
-            // TODO: handle the error
-            let _ = self
-                .client_aggregator
+            self.client_aggregator
                 .send_signed_task_response(signed_task_response)
-                .await;
+                .await?;
         }
 
         Ok(())
