@@ -3637,26 +3637,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "examples-aggregator"
-version = "0.5.0"
-dependencies = [
- "alloy",
- "eigen-aggregator",
- "eigen-client-avsregistry",
- "eigen-common",
- "eigen-crypto-bls",
- "eigen-logging",
- "eigen-operator",
- "eigen-testing-utils",
- "eigen-types",
- "serde",
- "serde_json",
- "tarpc",
- "tokio",
- "tracing",
-]
-
-[[package]]
 name = "examples-anvil-utils"
 version = "0.5.0"
 dependencies = [
