@@ -1,4 +1,3 @@
-use alloy::primitives::B256;
 use alloy::sol_types::SolEvent;
 use eigen_aggregator::TaskResponse;
 
