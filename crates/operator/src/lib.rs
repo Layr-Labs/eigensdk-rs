@@ -63,7 +63,7 @@ impl<TP: OperatorTaskProcessor> Operator<TP> {
         http_rpc_url: &str,
         registry_coordiator_address: Address,
         operator_state_retriever_address: Address,
-        aggregator_ip_port_address: String,
+        aggregator_ip_port: String,
         task_processor: TP,
     ) -> Result<Self, OperatorError> {
         let avs_registry_reader = AvsRegistryChainReader::new(
