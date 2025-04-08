@@ -1,5 +1,5 @@
 [package]
-name = "agg"
+name = "aggregator-standalone"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
