@@ -31,4 +31,7 @@ pub enum OperatorError {
     /// Failed to serialize signed task response
     #[error("Failed to serialize signed task response")]
     SerializationError(#[from] serde_json::Error),
+    /// Max retry attempts exceeded
+    #[error("Max retry attempts exceeded")]
+    MaxRetryExceeded,
 }

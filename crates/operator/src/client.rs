@@ -53,7 +53,7 @@ impl ClientAggregator {
             delay *= 2; // Double the delay for the next retry
         }
         error!("Could not send signed task response to aggregator. Tried 5 times.");
-        // TODO: return error indicating that the task response could not be sent
-        Ok(())
+
+        Err(OperatorError::MaxRetryExceeded)
     }
 }
