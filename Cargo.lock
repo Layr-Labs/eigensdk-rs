@@ -3717,6 +3717,7 @@ dependencies = [
  "eigen-types",
  "serde",
  "serde_json",
+ "tokio",
  "tracing",
 ]
 
