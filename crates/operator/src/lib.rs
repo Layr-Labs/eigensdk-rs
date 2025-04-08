@@ -61,7 +61,7 @@ impl<TP: OperatorTaskProcessor> Operator<TP> {
         logger: SharedLogger,
         ws_rpc_url: &str,
         http_rpc_url: &str,
-        registry_coordiator_address: Address,
+        registry_coordinator_address: Address,
         operator_state_retriever_address: Address,
         aggregator_ip_port: String,
         task_processor: TP,
