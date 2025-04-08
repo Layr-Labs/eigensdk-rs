@@ -27,6 +27,7 @@ members = [
     "examples/avsregistry-read",
     "examples/avsregistry-write",
     "examples/info-operator-service/",
+    "examples/operator/",
     "tests/testing-utils/",
     "tests/integration/",
 ]
