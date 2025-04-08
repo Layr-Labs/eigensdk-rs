@@ -14,7 +14,15 @@ pub struct ClientAggregator {
 }
 
 impl ClientAggregator {
-    /// new
+    /// Create a new client that connects to the aggregator RPC server
+    ///
+    /// # Arguments
+    ///
+    /// * `aggregator_ip_port_address` - The IP and port address of the aggregator
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self, OperatorError>` - The client aggregator
     pub async fn new(aggregator_ip_port_address: String) -> Result<Self, OperatorError> {
         let transport =
             tarpc::serde_transport::tcp::connect(aggregator_ip_port_address, Json::default)
@@ -27,7 +35,15 @@ impl ClientAggregator {
         Ok(Self { client })
     }
 
-    /// Send signed task response
+    /// Send signed task response to the aggregator with exponential backoff
+    ///
+    /// # Arguments
+    ///
+    /// * `signed_task_response` - The signed task response to send
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), OperatorError>` - The result of the operation
     pub async fn send_signed_task_response(
         &self,
         signed_task_response: impl Serialize,
