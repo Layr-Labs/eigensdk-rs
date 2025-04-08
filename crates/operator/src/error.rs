@@ -19,15 +19,16 @@ pub enum OperatorError {
     /// Operator Transport Error
     #[error("Could not connect")]
     TransportError,
-    /// Failed to parse config
-    // #[error("Config error {0}")]
-    // ConfigParseError(#[from] ConfigError),
     /// Bls Keystore error
     #[error("Bls Keystore error ")]
     BlsKeystoreError(#[from] KeystoreError),
     /// Bls crate(SDK) error
     #[error("Bls crate(SDK) error")]
     EigenBlsError(#[from] BlsError),
+    /// Failed to send signed task response
     #[error("Failed to send signed task response")]
     SendSignedTaskResponseError(#[from] RpcError),
+    /// Failed to serialize signed task response
+    #[error("Failed to serialize signed task response")]
+    SerializationError(#[from] serde_json::Error),
 }
