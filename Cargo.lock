@@ -3102,6 +3102,7 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "futures-util",
+ "reqwest 0.12.15",
  "serde",
  "serde_json",
  "tarpc",
