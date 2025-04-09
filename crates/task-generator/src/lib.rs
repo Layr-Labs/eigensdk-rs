@@ -30,8 +30,6 @@ pub trait TaskProcess<T> {
         &self,
         task_index: u32,
         input: T,
-        quorum_threshold: QuorumThresholdPercentage, // TODO: It's ok to have this here?
-        quorum: Vec<QuorumNum>,                      // TODO: It's ok to have this here?
     ) -> Result<(), Box<dyn Error + Send + Sync>>;
 }
 
@@ -49,6 +47,8 @@ impl TaskGenerator {
         TaskGeneratorBuilder {
             iter: None,
             interval: None,
+            quorum_threshold: None,
+            quorums: None,
         }
     }
 }
@@ -57,6 +57,8 @@ impl TaskGenerator {
 pub struct TaskGeneratorBuilder {
     iter: Option<Box<dyn Iterator<Item = u32> + Send>>,
     interval: Option<Duration>,
+    quorum_threshold: Option<QuorumThresholdPercentage>,
+    quorums: Option<Vec<QuorumNum>>,
 }
 
 impl TaskGeneratorBuilder {
@@ -87,6 +89,25 @@ impl TaskGeneratorBuilder {
     /// # Returns
     pub fn with_interval(mut self, interval: Duration) -> Self {
         self.interval = Some(interval);
+        self
+    }
+
+    /// Set the quorum where the task will be created and the threshold, indicating when
+    /// a task is considered completed
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_threshold` - The quorum threshold for the task creation
+    /// * `quorums` - The quorums for the task creation
+    ///
+    /// # Returns
+    pub fn quorum(
+        mut self,
+        quorum_threshold: QuorumThresholdPercentage,
+        quorums: Vec<QuorumNum>,
+    ) -> Self {
+        self.quorum_threshold = Some(quorum_threshold);
+        self.quorums = Some(quorums);
         self
     }
 
@@ -137,8 +158,6 @@ mod tests {
                 &self,
                 task_index: u32,
                 input: u64,
-                _quorum_threshold: QuorumThresholdPercentage,
-                _quorum: Vec<QuorumNum>,
             ) -> Result<(), Box<dyn Error + Send + Sync>> {
                 println!("Task {} created. Processing input {}", task_index, input);
                 Ok(())
@@ -148,10 +167,11 @@ mod tests {
         let processor = MyTaskProcessor;
         TaskGenerator::builder()
             .with_iter(0..10)
+            .quorum(50, vec![0])
             .with_interval(Duration::from_millis(10))
             .run(|i| {
                 let processor = processor.clone();
-                async move { processor.create_new_task(i, 32, 100, vec![0]).await }
+                async move { processor.create_new_task(i, 32).await }
             })
             .await;
     }
@@ -174,16 +194,8 @@ mod tests {
                 &self,
                 task_index: u32,
                 input: Input,
-                quorum_threshold: QuorumThresholdPercentage,
-                quorum: Vec<QuorumNum>,
             ) -> Result<(), Box<dyn Error + Send + Sync>> {
-                println!(
-                    "Task {} created with input: {:?}, quorum_threshold: {}, quorum: {}",
-                    task_index,
-                    input,
-                    quorum_threshold,
-                    quorum.first().unwrap(),
-                );
+                println!("Task {} created with input: {:?}", task_index, input);
                 Ok(())
             }
         }
@@ -191,6 +203,7 @@ mod tests {
         let processor = Arc::new(TaskProcessor);
         TaskGenerator::builder()
             .with_iter(0..5)
+            .quorum(50, vec![0])
             .with_interval(Duration::from_millis(50))
             .run(|i| {
                 let processor = processor.clone();
@@ -198,7 +211,7 @@ mod tests {
                     description: format!("Description for task {}", i),
                     value: i * 10,
                 };
-                async move { processor.create_new_task(i, input, 50, vec![0]).await }
+                async move { processor.create_new_task(i, input).await }
             })
             .await;
     }
