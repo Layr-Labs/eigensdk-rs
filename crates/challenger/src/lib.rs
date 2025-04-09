@@ -22,7 +22,7 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
 
         let ws_provider = get_ws_provider(&self.ws_url).await?;
 
-        // Subscribe to NewTaskCreated events
+        // Subscribe to NewTaskEvent
         let task_filter = Filter::new().event_signature(
             <<TP as ChallengerTaskProcessor>::NewTaskEvent as SolEvent>::SIGNATURE_HASH,
         );
@@ -31,7 +31,7 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
             .await?
             .into_stream();
 
-        // Subscribe to TaskResponded events
+        // Subscribe to TaskResponseEvent
         let responded_filter = Filter::new().event_signature(
             <<TP as ChallengerTaskProcessor>::TaskResponseEvent as SolEvent>::SIGNATURE_HASH,
         );
