@@ -1,50 +1,65 @@
-pub mod task_generator;
+use async_trait::async_trait;
+use std::error::Error;
+use std::future::Future;
+use std::time::Duration;
+use tokio::time::sleep;
+use tracing::error;
 
-/// Task generator.
+#[async_trait]
+pub trait TaskProcess<T> {
+    async fn create_new_task(
+        &self,
+        task_number: u64,
+        input: T,
+        quorum_threshold: u64, // REVIEW
+        quorum: u64,           // REVIEW
+    ) -> Result<(), Box<dyn Error + Send + Sync>>;
+}
+
 pub struct TaskGenerator;
 
 impl TaskGenerator {
-    /// Returns the builder to configure the task generator.
-    /// The generic parameter `T` is the type of the elements of the iterator.
     pub fn builder() -> TaskGeneratorBuilder {
-        TaskGeneratorBuilder { iter: None }
+        TaskGeneratorBuilder {
+            iter: None,
+            interval: None,
+        }
     }
 }
 
-/// Builder to configure the task generator.
-
 pub struct TaskGeneratorBuilder {
-    iter: Option<Box<dyn Iterator<Item = u32> + Send>>,
+    iter: Option<Box<dyn Iterator<Item = u64> + Send>>,
+    interval: Option<Duration>,
 }
 
-/// Builder to configure the task generator.
 impl TaskGeneratorBuilder {
-    /// Set the iterator.
     pub fn with_iter<I>(mut self, iter: I) -> Self
     where
-        I: Iterator<Item = u32> + Send + 'static,
+        I: Iterator<Item = u64> + Send + 'static,
     {
         self.iter = Some(Box::new(iter));
         self
     }
 
-    /// Execute the task generator.
-    pub async fn run(self) {
-        let iter = self.iter.expect("Iterator not set. Usa with_iter()");
-
-        for item in iter {
-            println!("Item: {}", &item);
-        }
+    pub fn with_interval(mut self, interval: Duration) -> Self {
+        self.interval = Some(interval);
+        self
     }
-}
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+    pub async fn run<F, Fut>(self, sender: F)
+    where
+        F: Fn(u64) -> Fut + Send + Sync,
+        Fut: Future<Output = Result<(), Box<dyn Error + Send + Sync>>> + Send,
+    {
+        let iter = self.iter.expect("Iterator not set. Use with_iter()");
+        let interval = self.interval.unwrap_or(Duration::ZERO);
 
-    #[tokio::test]
-    async fn test_task_generator_builder() {
-        // Configuramos el generador
-        TaskGenerator::builder().with_iter(0..10).run().await;
+        for task_number in iter {
+            sender(task_number)
+                .await
+                .map_err(|e| error!("Error creating task {}: {:?}", task_number, e))
+                .unwrap();
+            sleep(interval).await;
+        }
     }
 }

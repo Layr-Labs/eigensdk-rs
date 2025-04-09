@@ -3091,22 +3091,7 @@ dependencies = [
 name = "eigen-task-generator"
 version = "0.5.0"
 dependencies = [
- "alloy",
- "eigen-client-avsregistry",
- "eigen-common",
- "eigen-crypto-bls",
- "eigen-logging",
- "eigen-services-avsregistry",
- "eigen-services-blsaggregation",
- "eigen-services-operatorsinfo",
- "eigen-types",
- "eigen-utils",
- "futures-util",
- "reqwest 0.12.15",
- "serde",
- "serde_json",
- "tarpc",
- "thiserror 1.0.69",
+ "async-trait",
  "tokio",
  "tokio-util",
  "tracing",
