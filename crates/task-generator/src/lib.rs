@@ -12,6 +12,7 @@ use alloy::{
 use reqwest::Url;
 use std::io::Error;
 use std::str::FromStr;
+use std::time::Duration;
 use task_generator::TaskGenerator;
 use tracing::info;
 
@@ -21,6 +22,7 @@ pub struct TaskManager<TG: TaskGenerator> {
     signer: String,
     task_generator: TG,
     task_manager_address: Address,
+    time_interval: Duration,
 }
 
 impl<TG: TaskGenerator> TaskManager<TG> {
@@ -36,7 +38,13 @@ impl<TG: TaskGenerator> TaskManager<TG> {
             signer,
             task_generator,
             task_manager_address,
+            time_interval: Duration::ZERO,
         }
+    }
+
+    /// Set the time interval for the task manager
+    pub fn set_time_interval(&mut self, time_interval: Duration) {
+        self.time_interval = time_interval;
     }
 
     /// Creates new task every 10 seconds
@@ -55,6 +63,8 @@ impl<TG: TaskGenerator> TaskManager<TG> {
             self.task_generator.generate_task(&task_manager_contract);
             task_num += U256::from(1);
             info!("New task created");
+
+            tokio::time::sleep(self.time_interval).await;
         }
     }
 }
