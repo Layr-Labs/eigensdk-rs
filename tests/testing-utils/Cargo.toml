@@ -7,6 +7,12 @@ rust-version.workspace = true
 license-file.workspace = true
 repository.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [lints]
 workspace = true
 

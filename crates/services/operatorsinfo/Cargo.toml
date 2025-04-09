@@ -8,6 +8,12 @@ rust-version.workspace = true
 repository.workspace = true
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 alloy.workspace = true
 async-trait.workspace = true
