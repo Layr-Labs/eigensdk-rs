@@ -1,70 +1,119 @@
-//! Task generator for Eigen Layer
+use futures_util::future::BoxFuture;
+use std::future::Future;
+use std::time::Duration;
+use tokio::time::sleep;
 
 pub mod task_generator;
 
-use alloy::providers::ProviderBuilder;
-use alloy::{
-    network::EthereumWallet,
-    primitives::{Address, Bytes, U256},
-    rpc::types::TransactionReceipt,
-    signers::local::PrivateKeySigner,
-};
-use reqwest::Url;
-use std::io::Error;
-use std::str::FromStr;
-use std::time::Duration;
-use task_generator::TaskGenerator;
-use tracing::info;
+/// Task generator.
+pub struct TaskGenerator;
 
-#[derive(Debug)]
-pub struct TaskManager<TG: TaskGenerator> {
-    rpc_url: String,
-    signer: String,
-    task_generator: TG,
-    task_manager_address: Address,
-    time_interval: Duration,
+impl TaskGenerator {
+    /// Returns the builder to configure the task generator.
+    /// The generic parameter `T` is the type of the elements of the iterator.
+    pub fn builder<T>() -> TaskGeneratorBuilder<T> {
+        TaskGeneratorBuilder {
+            iter: None,
+            sender: None,
+            interval: None,
+        }
+    }
 }
 
-impl<TG: TaskGenerator> TaskManager<TG> {
-    /// New [`TaskManager`] instance
-    pub fn new(
-        rpc_url: String,
-        signer: String,
-        task_generator: TG,
-        task_manager_address: Address,
-    ) -> Self {
-        Self {
-            rpc_url,
-            signer,
-            task_generator,
-            task_manager_address,
-            time_interval: Duration::ZERO,
+/// Builder to configure the task generator.
+pub struct TaskGeneratorBuilder<T> {
+    iter: Option<Box<dyn Iterator<Item = T> + Send>>,
+    sender: Option<Box<dyn Fn(T) -> BoxFuture<'static, ()> + Send>>,
+    interval: Option<Duration>,
+}
+
+/// Builder to configure the task generator.
+impl<T> TaskGeneratorBuilder<T> {
+    /// Set the iterator.
+    pub fn with_iter<I>(mut self, iter: I) -> Self
+    where
+        I: Iterator<Item = T> + Send + 'static,
+    {
+        self.iter = Some(Box::new(iter));
+        self
+    }
+
+    /// Set the sender function.
+    pub fn with_sender<F, Fut>(mut self, sender: F) -> Self
+    where
+        F: Fn(T) -> Fut + Send + 'static,
+        Fut: Future<Output = ()> + Send + 'static,
+    {
+        self.sender = Some(Box::new(move |item: T| -> BoxFuture<'static, ()> {
+            Box::pin(sender(item))
+        }));
+        self
+    }
+
+    /// Set the interval between each task execution.
+    pub fn with_interval(mut self, interval: Duration) -> Self {
+        self.interval = Some(interval);
+        self
+    }
+
+    /// Execute the task generator.
+    pub async fn run(self) {
+        let iter = self.iter.expect("Iterator not set. Usa with_iter()");
+        let sender = self.sender.expect("Sender not set. Usa with_sender()");
+        let interval = self
+            .interval
+            .expect("Interval not set. Usa with_interval()");
+
+        for item in iter {
+            sender(item).await;
+            sleep(interval).await;
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::Arc;
+    use tokio::time::Duration;
+
+    #[derive(Debug)]
+    struct TaskManager {
+        quorum: usize,
+        quorum_threshold: usize,
+    }
+
+    impl TaskManager {
+        fn new(quorum: usize, quorum_threshold: usize) -> Self {
+            Self {
+                quorum,
+                quorum_threshold,
+            }
+        }
+
+        async fn create_new_task(&self, task_id: i32) {
+            dbg!(&self, task_id);
         }
     }
 
-    /// Set the time interval for the task manager
-    pub fn set_time_interval(&mut self, time_interval: Duration) {
-        self.time_interval = time_interval;
-    }
+    #[tokio::test]
+    async fn test_task_generator_builder() {
+        // Creamos un contador atómico para verificar cuántas veces se ejecuta el sender
 
-    /// Creates new task every 10 seconds
-    pub async fn start(&self) {
-        let url = Url::parse(&self.rpc_url).unwrap();
-        let signer = PrivateKeySigner::from_str(&self.signer).unwrap();
-        let wallet = EthereumWallet::new(signer);
-        let pr = ProviderBuilder::new().wallet(wallet).on_http(url);
-        let mut task_num: U256 = U256::from(1);
+        let task_manager = Arc::new(TaskManager::new(0, 60));
+        let task_manager_clone = task_manager.clone();
 
-        let task_manager_contract = self
-            .task_generator
-            .build_task_manager(pr, self.task_manager_address);
-
-        loop {
-            self.task_generator.generate_task(&task_manager_contract);
-            task_num += U256::from(1);
-            info!("New task created");
-
-            tokio::time::sleep(self.time_interval).await;
-        }
+        // Configuramos el generador
+        TaskGenerator::builder()
+            .with_iter(0..10)
+            .with_sender(move |item| {
+                let task_manager = task_manager_clone.clone();
+                async move {
+                    task_manager.create_new_task(item).await;
+                }
+            })
+            .with_interval(Duration::from_secs(10))
+            .run()
+            .await;
     }
 }

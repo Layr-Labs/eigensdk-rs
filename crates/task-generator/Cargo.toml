@@ -8,7 +8,7 @@ license-file.workspace = true
 description = "eigen layer task generator"
 
 [lints]
-workspace = true
+# workspace = true
 
 [dependencies]
 alloy.workspace = true
