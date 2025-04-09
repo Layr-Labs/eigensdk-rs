@@ -55,10 +55,10 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
                     }
                 },
                 else => {
-                  // If both streams are exhausted, break the loop.
-                  info!("challenger:No more logs to process, exiting loop.");
-                  break;
-              }
+                    // If both streams are exhausted, break the loop.
+                    info!("challenger:No more logs to process, exiting loop.");
+                    break;
+                }
             }
         }
 
