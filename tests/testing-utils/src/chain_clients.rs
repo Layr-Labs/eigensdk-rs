@@ -161,7 +161,7 @@ pub async fn new_test_writer_preslashing(
 }
 
 /// Using test data taken from
-/// https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/src/test/test-data/rewardsCoordinator/processClaimProofs_MaxEarnerAndLeafIndices.json
+/// <https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/src/test/test-data/rewardsCoordinator/processClaimProofs_MaxEarnerAndLeafIndices.json>
 pub async fn new_test_claim(http_endpoint: &str) -> (FixedBytes<32>, RewardsMerkleClaim) {
     let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
 
