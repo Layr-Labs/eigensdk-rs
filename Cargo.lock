@@ -3091,7 +3091,9 @@ dependencies = [
 name = "eigen-task-generator"
 version = "0.5.0"
 dependencies = [
+ "alloy",
  "async-trait",
+ "eigen-types",
  "tokio",
  "tokio-util",
  "tracing",
