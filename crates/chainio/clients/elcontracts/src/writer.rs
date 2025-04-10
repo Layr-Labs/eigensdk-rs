@@ -1234,9 +1234,9 @@ mod tests {
             mine_anvil_blocks, set_account_balance, start_anvil_container, start_m2_anvil_container,
         },
         anvil_constants::{
-            get_erc20_mock_strategy, get_registry_coordinator_address,
-            get_rewards_coordinator_address, get_service_manager_address, FIRST_ADDRESS,
-            FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY_2, SECOND_ADDRESS, SECOND_PRIVATE_KEY,
+            get_erc20_mock_strategy, get_registry_coordinator_address, get_service_manager_address,
+            FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY_2, SECOND_ADDRESS,
+            SECOND_PRIVATE_KEY,
         },
         chain_clients::{
             build_el_chain_reader, create_operator_set, create_total_delegated_stake_operator_set,
@@ -1250,7 +1250,6 @@ mod tests {
         convert_allocation_operator_set_to_rewards_operator_set,
         slashing::{
             core::allocationmanager::{AllocationManager::OperatorSet, IAllocationManagerTypes},
-            core::irewardscoordinator::IRewardsCoordinator,
             middleware::slashingregistrycoordinator::{
                 ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
                 SlashingRegistryCoordinator,
