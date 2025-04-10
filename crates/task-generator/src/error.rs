@@ -1,6 +1,8 @@
 //! Task generator errors
 
+use alloy::contract::Error as AlloyError;
 use thiserror::Error;
+
 #[derive(Debug, Error)]
 /// Task Generator Errors
 pub enum TaskGeneratorError {
@@ -16,4 +18,7 @@ pub enum TaskGeneratorError {
     /// Task creation error
     #[error("Task creation error")]
     TaskCreation,
+    /// Alloy contract error
+    #[error("Alloy contract error: {0}")]
+    AlloyContractError(#[from] AlloyError),
 }
