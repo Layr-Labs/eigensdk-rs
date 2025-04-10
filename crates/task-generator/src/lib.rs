@@ -115,7 +115,6 @@ where
 
         for task_index in iter {
             task_fn(task_index, quorum_threshold, quorums.clone()).await?;
-
             sleep(self.interval).await;
         }
 
@@ -162,7 +161,7 @@ mod tests {
                 let processor = processor.clone();
                 async move {
                     processor
-                        .create_new_task(i, 32, quorum_threshold, quorums)
+                        .create_new_task(i, 10, quorum_threshold, quorums)
                         .await
                 }
             })
@@ -173,7 +172,6 @@ mod tests {
     #[tokio::test]
     async fn test_task_generator_with_struct() {
         #[derive(Clone, Debug)]
-        #[allow(dead_code)]
         struct Input {
             description: String,
             value: u32,
@@ -191,14 +189,15 @@ mod tests {
                 quorums: Vec<QuorumNum>,
             ) -> Result<(), TaskGeneratorError> {
                 println!(
-                    "Task {} created with input: {:?}. Quorum threshold: {}, Quorums: {:?}",
-                    task_index, input, quorum_threshold, quorums
+                    "Task {} created with description: {}, value: {}. Quorum threshold: {}, Quorums: {:?}",
+                    task_index, input.description, input.value, quorum_threshold, quorums
                 );
                 Ok(())
             }
         }
 
         let processor = Arc::new(TaskProcessor);
+        // Usamos un input default ya que generaremos el input dinámico dentro del closure.
         TaskGenerator::builder()
             .with_iter(0..5)
             .with_quorum(50, vec![0])
