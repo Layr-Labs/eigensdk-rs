@@ -244,4 +244,35 @@ mod tests {
             .await
             .unwrap();
     }
+
+    #[tokio::test]
+    async fn test_task_generator_without_quorum() {
+        let result = TaskGenerator::builder()
+            .with_iter(0..5)
+            .with_interval(Duration::from_millis(50))
+            .run(|_, _, _| async move { Ok(()) })
+            .await;
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_task_generator_without_iter() {
+        let result = TaskGenerator::builder()
+            .with_interval(Duration::from_millis(50))
+            .run(|_, _, _| async move { Ok(()) })
+            .await;
+
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_task_generator_without_interval() {
+        let result = TaskGenerator::builder()
+            .with_iter(0..5)
+            .with_quorum(50, vec![0])
+            .run(|_, _, _| async move { Ok(()) })
+            .await;
+
+        assert!(result.is_ok());
+    }
 }
