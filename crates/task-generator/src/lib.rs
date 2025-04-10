@@ -20,7 +20,7 @@ impl TaskGenerator {
     /// # Returns
     ///
     /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn builder<T>() -> TaskGeneratorBuilder<T> {
+    pub fn builder() -> TaskGeneratorBuilder<()> {
         TaskGeneratorBuilder {
             iter: None,
             interval: Duration::ZERO,
@@ -31,14 +31,15 @@ impl TaskGenerator {
 }
 
 /// Builder for the task generator
-pub struct TaskGeneratorBuilder<T> {
-    iter: Option<Box<dyn Iterator<Item = T> + Send>>,
+#[derive(Debug)]
+pub struct TaskGeneratorBuilder<I> {
+    iter: Option<I>,
     interval: Duration,
     quorum_threshold: Option<QuorumThresholdPercentage>,
     quorums: Option<Vec<QuorumNum>>,
 }
 
-impl<T> TaskGeneratorBuilder<T> {
+impl<I> TaskGeneratorBuilder<I> {
     /// Set the iterator for the task creation
     /// This will be used to create N tasks
     ///
@@ -49,12 +50,17 @@ impl<T> TaskGeneratorBuilder<T> {
     /// # Returns
     ///
     /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn with_iter<I>(mut self, iter: I) -> Self
+    pub fn with_iter<T>(self, iter: T) -> TaskGeneratorBuilder<T>
     where
-        I: Iterator<Item = T> + Send + 'static,
+        T: Iterator + Send + 'static,
+        T::Item: Send,
     {
-        self.iter = Some(Box::new(iter));
-        self
+        TaskGeneratorBuilder {
+            iter: Some(iter),
+            interval: self.interval,
+            quorum_threshold: self.quorum_threshold,
+            quorums: self.quorums,
+        }
     }
 
     /// Set the interval for the task creation
@@ -103,17 +109,16 @@ impl<T> TaskGeneratorBuilder<T> {
     /// * `Result<(), TaskGeneratorError>` - The result of the task
     pub async fn run<F, Fut>(self, task_fn: F) -> Result<(), TaskGeneratorError>
     where
-        F: Fn(T, QuorumThresholdPercentage, Vec<QuorumNum>) -> Fut + Send + Sync,
+        I: Iterator + Send,
+        I::Item: Send + 'static,
+        F: Fn(I::Item, QuorumThresholdPercentage, Vec<QuorumNum>) -> Fut + Send + Sync,
         Fut: Future<Output = Result<(), TaskGeneratorError>> + Send,
     {
         let iter = self.iter.ok_or(TaskGeneratorError::IteratorNotSet)?;
         let quorum_threshold = self
             .quorum_threshold
             .ok_or(TaskGeneratorError::QuorumThresholdNotSet)?;
-        let quorums = self
-            .quorums
-            .clone()
-            .ok_or(TaskGeneratorError::QuorumNotSet)?;
+        let quorums = self.quorums.ok_or(TaskGeneratorError::QuorumNotSet)?;
 
         for input in iter {
             task_fn(input, quorum_threshold, quorums.clone()).await?;
@@ -127,11 +132,10 @@ impl<T> TaskGeneratorBuilder<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::iter::Empty;
     use std::time::Duration;
 
     #[tokio::test]
-    async fn test_task_generator_with_u64() {
+    async fn test_task_generator_with_string() {
         let names = vec!["John", "Jane", "Jim", "Jill"];
 
         TaskGenerator::builder()
@@ -185,17 +189,6 @@ mod tests {
             .with_interval(Duration::from_millis(50))
             .run(|_, _, _| async move { Ok(()) })
             .await;
-        assert!(result.is_err());
-    }
-
-    #[tokio::test]
-    async fn test_task_generator_without_iter() {
-        // Need to specify the type for the iterator when not provided
-        let result = TaskGenerator::builder::<Empty<u32>>()
-            .with_interval(Duration::from_millis(50))
-            .run(|_, _, _| async move { Ok(()) })
-            .await;
-
         assert!(result.is_err());
     }
 
