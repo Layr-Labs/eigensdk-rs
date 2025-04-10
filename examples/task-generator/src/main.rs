@@ -24,35 +24,34 @@ async fn main() {
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
 
+    let contract = Arc::new(IIncredibleSquaringTaskManagerInstance::new(
+        task_manager_address,
+        provider,
+    ));
+
     TaskGenerator::builder()
         .with_iter(0..10)
         .with_quorum(50, vec![0])
         .with_interval(Duration::from_secs(10))
-        .run({
-            let contract_arc = Arc::new(IIncredibleSquaringTaskManagerInstance::new(
-                task_manager_address,
-                provider,
-            ));
-            move |i, quorum_threshold, quorums| {
-                let contract = Arc::clone(&contract_arc);
-                async move {
-                    let number_to_be_squared = U256::from(i * i);
-                    contract
-                        .createNewTask(
-                            number_to_be_squared,
-                            quorum_threshold.into(),
-                            quorums.into(),
-                        )
-                        .send()
-                        .await
-                        .unwrap()
-                        .get_receipt()
-                        .await
-                        .unwrap();
+        .run(move |i, quorum_threshold, quorums| {
+            let contract = Arc::clone(&contract);
+            async move {
+                let number_to_be_squared = U256::from(i * i);
+                contract
+                    .createNewTask(
+                        number_to_be_squared,
+                        quorum_threshold.into(),
+                        quorums.into(),
+                    )
+                    .send()
+                    .await
+                    .unwrap()
+                    .get_receipt()
+                    .await
+                    .unwrap();
 
-                    info!("Task {} created", i);
-                    Ok(())
-                }
+                info!("Task {} created", i);
+                Ok(())
             }
         })
         .await
