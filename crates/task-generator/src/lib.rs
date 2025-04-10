@@ -45,7 +45,7 @@ impl TaskGenerator {
     /// # Returns
     ///
     /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn builder() -> TaskGeneratorBuilder {
+    pub fn builder<I>() -> TaskGeneratorBuilder<I> {
         TaskGeneratorBuilder {
             iter: None,
             interval: Duration::ZERO,
@@ -56,14 +56,18 @@ impl TaskGenerator {
 }
 
 /// Builder for the task generator
-pub struct TaskGeneratorBuilder {
-    iter: Option<Box<dyn Iterator<Item = u32> + Send>>,
+#[derive(Debug)]
+pub struct TaskGeneratorBuilder<I> {
+    iter: Option<I>,
     interval: Duration,
     quorum_threshold: Option<QuorumThresholdPercentage>,
     quorums: Option<Vec<QuorumNum>>,
 }
 
-impl TaskGeneratorBuilder {
+impl<I> TaskGeneratorBuilder<I>
+where
+    I: Iterator<Item = u32> + Send,
+{
     /// Set the iterator for the task creation
     /// This will be used to create N tasks
     ///
@@ -74,11 +78,8 @@ impl TaskGeneratorBuilder {
     /// # Returns
     ///
     /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn with_iter<I>(mut self, iter: I) -> Self
-    where
-        I: Iterator<Item = u32> + Send + 'static,
-    {
-        self.iter = Some(Box::new(iter));
+    pub fn with_iter(mut self, iter: I) -> Self {
+        self.iter = Some(iter);
         self
     }
 
@@ -153,6 +154,7 @@ mod tests {
 
     use super::*;
     use async_trait::async_trait;
+    use std::iter::Empty;
     use std::sync::Arc;
     use std::time::Duration;
 
@@ -257,7 +259,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_task_generator_without_iter() {
-        let result = TaskGenerator::builder()
+        // Need to specify the type for the iterator when not provided
+        let result = TaskGenerator::builder::<Empty<u32>>()
             .with_interval(Duration::from_millis(50))
             .run(|_, _, _| async move { Ok(()) })
             .await;
