@@ -42,7 +42,7 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
         let responded_filter = Filter::new().event_signature(
             <<TP as ChallengerTaskProcessor>::TaskResponseEvent as SolEvent>::SIGNATURE_HASH,
         );
-        let mut respond_stream = ws_provider
+        let mut responded_stream = ws_provider
             .subscribe_logs(&responded_filter)
             .await?
             .into_stream();
@@ -55,7 +55,7 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
                         self.task_processor.handle_task_creation(decoded);
                     }
                 },
-                Some(log) = respond_stream.next() => {
+                Some(log) = responded_stream.next() => {
                     let decode = log.log_decode::<TP::TaskResponseEvent>().ok();
                     if let Some(decoded) = decode {
                         self.task_processor.handle_task_response(decoded);
