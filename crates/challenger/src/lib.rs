@@ -17,6 +17,13 @@ pub struct Challenger<TP: ChallengerTaskProcessor> {
 }
 
 impl<TP: ChallengerTaskProcessor> Challenger<TP> {
+    pub fn new(ws_url: String, task_processor: TP) -> Self {
+        Self {
+            ws_url,
+            task_processor,
+        }
+    }
+
     pub async fn start_challenger(&mut self) -> Result<(), ChallengerError> {
         info!("challenger crate launched");
 
