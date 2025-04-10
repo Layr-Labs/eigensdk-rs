@@ -3094,6 +3094,7 @@ dependencies = [
  "alloy",
  "async-trait",
  "eigen-types",
+ "thiserror 1.0.69",
  "tokio",
  "tokio-util",
  "tracing",

@@ -1,12 +1,12 @@
-//! Task generator for the Eigen Layer
+//! This is a simple task generator that can be used to create tasks for the operators.
+//! For testing purposes.
 
 use async_trait::async_trait;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
-use std::error::Error;
+use error::TaskGeneratorError;
 use std::future::Future;
 use std::time::Duration;
 use tokio::time::sleep;
-use tracing::error;
 
 /// Task generator errors
 pub mod error;
@@ -25,12 +25,14 @@ pub trait TaskProcess<T> {
     ///
     /// # Returns
     ///
-    /// * `Result<(), Box<dyn Error + Send + Sync>>` - The result of the task
+    /// * The result of the task
     async fn create_new_task(
         &self,
         task_index: u32,
         input: T,
-    ) -> Result<(), Box<dyn Error + Send + Sync>>;
+        quorum_threshold: QuorumThresholdPercentage,
+        quorums: Vec<QuorumNum>,
+    ) -> Result<(), TaskGeneratorError>;
 }
 
 /// Task generator struct
@@ -46,7 +48,7 @@ impl TaskGenerator {
     pub fn builder() -> TaskGeneratorBuilder {
         TaskGeneratorBuilder {
             iter: None,
-            interval: None,
+            interval: Duration::ZERO,
             quorum_threshold: None,
             quorums: None,
         }
@@ -56,7 +58,7 @@ impl TaskGenerator {
 /// Builder for the task generator
 pub struct TaskGeneratorBuilder {
     iter: Option<Box<dyn Iterator<Item = u32> + Send>>,
-    interval: Option<Duration>,
+    interval: Duration,
     quorum_threshold: Option<QuorumThresholdPercentage>,
     quorums: Option<Vec<QuorumNum>>,
 }
@@ -88,7 +90,7 @@ impl TaskGeneratorBuilder {
     ///
     /// # Returns
     pub fn with_interval(mut self, interval: Duration) -> Self {
-        self.interval = Some(interval);
+        self.interval = interval;
         self
     }
 
@@ -115,35 +117,38 @@ impl TaskGeneratorBuilder {
     ///
     /// # Arguments
     ///
-    /// * `sender` - The sender for the task creation. This is a function that takes a task number and returns a future that resolves to a result.
+    /// * `task_fn` - The function for the task creation. This is a function that takes a task number and returns a future that resolves to a result.
     ///
     /// # Returns
     ///
-    /// * `Result<(), Box<dyn Error + Send + Sync>>` - The result of the task
-    pub async fn run<F, Fut>(self, sender: F)
+    /// * `Result<(), TaskGeneratorError>` - The result of the task
+    pub async fn run<F, Fut>(self, task_fn: F) -> Result<(), TaskGeneratorError>
     where
-        F: Fn(u32) -> Fut + Send + Sync,
-        Fut: Future<Output = Result<(), Box<dyn Error + Send + Sync>>> + Send,
+        F: Fn(u32, QuorumThresholdPercentage, Vec<QuorumNum>) -> Fut + Send + Sync,
+        Fut: Future<Output = Result<(), TaskGeneratorError>> + Send,
     {
-        // TODO: Find a better way to handle the iterator unwrap
-        let iter = self.iter.unwrap_or(Box::new(0..10));
-        let interval = self.interval.unwrap_or(Duration::ZERO);
+        let iter = self.iter.ok_or(TaskGeneratorError::IteratorNotSet)?;
+        let quorum_threshold = self
+            .quorum_threshold
+            .ok_or(TaskGeneratorError::QuorumThresholdNotSet)?;
+        let quorums = self.quorums.ok_or(TaskGeneratorError::QuorumNotSet)?;
 
         for task_index in iter {
-            // TODO: Handle the error
-            let _ = sender(task_index)
-                .await
-                .map_err(|e| error!("Error creating task {}: {:?}", task_index, e));
-            sleep(interval).await;
+            task_fn(task_index, quorum_threshold, quorums.clone()).await?;
+
+            sleep(self.interval).await;
         }
+
+        Ok(())
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::error::TaskGeneratorError;
+
     use super::*;
     use async_trait::async_trait;
-    use std::error::Error;
     use std::sync::Arc;
     use std::time::Duration;
 
@@ -158,8 +163,13 @@ mod tests {
                 &self,
                 task_index: u32,
                 input: u64,
-            ) -> Result<(), Box<dyn Error + Send + Sync>> {
-                println!("Task {} created. Processing input {}", task_index, input);
+                quorum_threshold: QuorumThresholdPercentage,
+                quorums: Vec<QuorumNum>,
+            ) -> Result<(), TaskGeneratorError> {
+                println!(
+                    "Task {} created. Processing input {}, Quorum threshold: {}, Quorums: {:?}",
+                    task_index, input, quorum_threshold, quorums
+                );
                 Ok(())
             }
         }
@@ -169,11 +179,16 @@ mod tests {
             .with_iter(0..10)
             .quorum(50, vec![0])
             .with_interval(Duration::from_millis(10))
-            .run(|i| {
+            .run(|i, quorum_threshold, quorums| {
                 let processor = processor.clone();
-                async move { processor.create_new_task(i, 32).await }
+                async move {
+                    processor
+                        .create_new_task(i, 32, quorum_threshold, quorums)
+                        .await
+                }
             })
-            .await;
+            .await
+            .unwrap();
     }
 
     #[tokio::test]
@@ -194,8 +209,13 @@ mod tests {
                 &self,
                 task_index: u32,
                 input: Input,
-            ) -> Result<(), Box<dyn Error + Send + Sync>> {
-                println!("Task {} created with input: {:?}", task_index, input);
+                quorum_threshold: QuorumThresholdPercentage,
+                quorums: Vec<QuorumNum>,
+            ) -> Result<(), TaskGeneratorError> {
+                println!(
+                    "Task {} created with input: {:?}. Quorum threshold: {}, Quorums: {:?}",
+                    task_index, input, quorum_threshold, quorums
+                );
                 Ok(())
             }
         }
@@ -205,14 +225,19 @@ mod tests {
             .with_iter(0..5)
             .quorum(50, vec![0])
             .with_interval(Duration::from_millis(50))
-            .run(|i| {
+            .run(|i, quorum_threshold, quorums| {
                 let processor = processor.clone();
                 let input = Input {
                     description: format!("Description for task {}", i),
                     value: i * 10,
                 };
-                async move { processor.create_new_task(i, input).await }
+                async move {
+                    processor
+                        .create_new_task(i, input, quorum_threshold, quorums)
+                        .await
+                }
             })
-            .await;
+            .await
+            .unwrap();
     }
 }
