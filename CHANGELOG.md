@@ -17,6 +17,20 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+### Breaking Changes 🛠
+
+### Deprecated ⚠️
+
+### Removed
+
+### Documentation 📚
+
+### Other Changes
+
+## [1.0.0-rc.0] - 2025-04-11
+
+### Added 🎉
+
 * Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
 
 ### Breaking Changes 🛠
@@ -48,7 +62,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
-*  Alternate impl for OperatorsInfo for retrieving pub keys and socket for the operator from middleware directly in [#414](https://github.com/Layr-Labs/eigensdk-rs/pull/414)
+* Alternate impl for OperatorsInfo for retrieving pub keys and socket for the operator from middleware directly in [#414](https://github.com/Layr-Labs/eigensdk-rs/pull/414)
 
 Old Implementation which uses indexing :
 
