@@ -135,7 +135,7 @@ mod tests {
     use std::time::Duration;
 
     #[tokio::test]
-    async fn test_task_generator_with_u64() {
+    async fn test_task_generator_with_string() {
         let names = vec!["John", "Jane", "Jim", "Jill"];
 
         TaskGenerator::builder()
