@@ -97,3 +97,9 @@ pub use eigen_common as common;
 #[doc(inline)]
 #[cfg(feature = "aggregator")]
 pub use eigen_aggregator as aggregator;
+
+/* ------------------------------------ Challenger Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "challenger")]
+pub use eigen_challenger as challenger;
