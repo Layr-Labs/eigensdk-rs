@@ -20,7 +20,7 @@ impl TaskGenerator {
     /// # Returns
     ///
     /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn builder<I>() -> TaskGeneratorBuilder<I> {
+    pub fn builder<T>() -> TaskGeneratorBuilder<T> {
         TaskGeneratorBuilder {
             iter: None,
             interval: Duration::ZERO,
@@ -31,18 +31,14 @@ impl TaskGenerator {
 }
 
 /// Builder for the task generator
-#[derive(Debug)]
-pub struct TaskGeneratorBuilder<I> {
-    iter: Option<I>,
+pub struct TaskGeneratorBuilder<T> {
+    iter: Option<Box<dyn Iterator<Item = T> + Send>>,
     interval: Duration,
     quorum_threshold: Option<QuorumThresholdPercentage>,
     quorums: Option<Vec<QuorumNum>>,
 }
 
-impl<I> TaskGeneratorBuilder<I>
-where
-    I: Iterator<Item = u32> + Send,
-{
+impl<T> TaskGeneratorBuilder<T> {
     /// Set the iterator for the task creation
     /// This will be used to create N tasks
     ///
@@ -53,8 +49,11 @@ where
     /// # Returns
     ///
     /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn with_iter(mut self, iter: I) -> Self {
-        self.iter = Some(iter);
+    pub fn with_iter<I>(mut self, iter: I) -> Self
+    where
+        I: Iterator<Item = T> + Send + 'static,
+    {
+        self.iter = Some(Box::new(iter));
         self
     }
 
@@ -104,17 +103,20 @@ where
     /// * `Result<(), TaskGeneratorError>` - The result of the task
     pub async fn run<F, Fut>(self, task_fn: F) -> Result<(), TaskGeneratorError>
     where
-        F: Fn(u32, QuorumThresholdPercentage, Vec<QuorumNum>) -> Fut + Send + Sync,
+        F: Fn(T, QuorumThresholdPercentage, Vec<QuorumNum>) -> Fut + Send + Sync,
         Fut: Future<Output = Result<(), TaskGeneratorError>> + Send,
     {
         let iter = self.iter.ok_or(TaskGeneratorError::IteratorNotSet)?;
         let quorum_threshold = self
             .quorum_threshold
             .ok_or(TaskGeneratorError::QuorumThresholdNotSet)?;
-        let quorums = self.quorums.ok_or(TaskGeneratorError::QuorumNotSet)?;
+        let quorums = self
+            .quorums
+            .clone()
+            .ok_or(TaskGeneratorError::QuorumNotSet)?;
 
-        for task_index in iter {
-            task_fn(task_index, quorum_threshold, quorums.clone()).await?;
+        for input in iter {
+            task_fn(input, quorum_threshold, quorums.clone()).await?;
             sleep(self.interval).await;
         }
 
@@ -124,46 +126,21 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::error::TaskGeneratorError;
-
     use super::*;
     use std::iter::Empty;
-    use std::sync::Arc;
     use std::time::Duration;
 
     #[tokio::test]
     async fn test_task_generator_with_u64() {
-        #[derive(Clone)]
-        struct MyTaskProcessor;
+        let names = vec!["John", "Jane", "Jim", "Jill"];
 
-        impl MyTaskProcessor {
-            async fn create_new_task(
-                &self,
-                task_index: u32,
-                input: u64,
-                quorum_threshold: QuorumThresholdPercentage,
-                quorums: Vec<QuorumNum>,
-            ) -> Result<(), TaskGeneratorError> {
-                println!(
-                    "Task {} created. Processing input {}, Quorum threshold: {}, Quorums: {:?}",
-                    task_index, input, quorum_threshold, quorums
-                );
-                Ok(())
-            }
-        }
-
-        let processor = MyTaskProcessor;
         TaskGenerator::builder()
-            .with_iter(0..10)
+            .with_iter(names.into_iter())
             .with_quorum(50, vec![0])
             .with_interval(Duration::from_millis(10))
-            .run(|i, quorum_threshold, quorums| {
-                let processor = processor.clone();
-                async move {
-                    processor
-                        .create_new_task(i, 10, quorum_threshold, quorums)
-                        .await
-                }
+            .run(|input, _, _| async move {
+                println!("Hello, {}", input);
+                Ok(())
             })
             .await
             .unwrap();
@@ -177,42 +154,25 @@ mod tests {
             value: u32,
         }
 
-        #[derive(Clone)]
-        struct TaskProcessor;
+        let inputs = vec![
+            Input {
+                description: "Task 1".to_string(),
+                value: 10,
+            },
+            Input {
+                description: "Task 2".to_string(),
+                value: 20,
+            },
+        ];
 
-        impl TaskProcessor {
-            async fn create_new_task(
-                &self,
-                task_index: u32,
-                input: Input,
-                quorum_threshold: QuorumThresholdPercentage,
-                quorums: Vec<QuorumNum>,
-            ) -> Result<(), TaskGeneratorError> {
-                println!(
-                    "Task {} created with description: {}, value: {}. Quorum threshold: {}, Quorums: {:?}",
-                    task_index, input.description, input.value, quorum_threshold, quorums
-                );
-                Ok(())
-            }
-        }
-
-        let processor = Arc::new(TaskProcessor);
-        // Usamos un input default ya que generaremos el input dinámico dentro del closure.
         TaskGenerator::builder()
-            .with_iter(0..5)
+            .with_iter(inputs.into_iter())
             .with_quorum(50, vec![0])
             .with_interval(Duration::from_millis(50))
-            .run(|i, quorum_threshold, quorums| {
-                let processor = processor.clone();
-                let input = Input {
-                    description: format!("Description for task {}", i),
-                    value: i * 10,
-                };
-                async move {
-                    processor
-                        .create_new_task(i, input, quorum_threshold, quorums)
-                        .await
-                }
+            .run(|input, _, _| async move {
+                println!("Description: {}", input.description);
+                println!("Value: {}", input.value);
+                Ok(())
             })
             .await
             .unwrap();
