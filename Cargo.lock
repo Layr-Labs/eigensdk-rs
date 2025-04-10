@@ -3092,7 +3092,6 @@ name = "eigen-task-generator"
 version = "0.5.0"
 dependencies = [
  "alloy",
- "async-trait",
  "eigen-types",
  "thiserror 1.0.69",
  "tokio",
