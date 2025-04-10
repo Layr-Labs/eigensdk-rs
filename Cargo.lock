@@ -3094,6 +3094,7 @@ dependencies = [
  "alloy",
  "async-trait",
  "eigen-types",
+ "reqwest 0.12.15",
  "thiserror 1.0.69",
  "tokio",
  "tokio-util",
@@ -3714,6 +3715,18 @@ dependencies = [
  "eyre",
  "lazy_static",
  "tokio",
+]
+
+[[package]]
+name = "examples-task-generator"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "async-trait",
+ "eigen-task-generator",
+ "eigen-types",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]
