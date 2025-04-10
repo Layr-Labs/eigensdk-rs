@@ -89,6 +89,8 @@ impl TaskGeneratorBuilder {
     /// * `interval` - The interval for the task creation
     ///
     /// # Returns
+    ///
+    /// * `TaskGeneratorBuilder` - The builder for the task generator
     pub fn with_interval(mut self, interval: Duration) -> Self {
         self.interval = interval;
         self
@@ -103,7 +105,9 @@ impl TaskGeneratorBuilder {
     /// * `quorums` - The quorums for the task creation
     ///
     /// # Returns
-    pub fn quorum(
+    ///
+    /// * `TaskGeneratorBuilder` - The builder for the task generator
+    pub fn with_quorum(
         mut self,
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
@@ -177,7 +181,7 @@ mod tests {
         let processor = MyTaskProcessor;
         TaskGenerator::builder()
             .with_iter(0..10)
-            .quorum(50, vec![0])
+            .with_quorum(50, vec![0])
             .with_interval(Duration::from_millis(10))
             .run(|i, quorum_threshold, quorums| {
                 let processor = processor.clone();
@@ -223,7 +227,7 @@ mod tests {
         let processor = Arc::new(TaskProcessor);
         TaskGenerator::builder()
             .with_iter(0..5)
-            .quorum(50, vec![0])
+            .with_quorum(50, vec![0])
             .with_interval(Duration::from_millis(50))
             .run(|i, quorum_threshold, quorums| {
                 let processor = processor.clone();
