@@ -3092,7 +3092,6 @@ name = "eigen-task-generator"
 version = "0.5.0"
 dependencies = [
  "alloy",
- "async-trait",
  "eigen-types",
  "reqwest 0.12.15",
  "thiserror 1.0.69",

@@ -1,7 +1,6 @@
 //! This is a simple task generator that can be used to create tasks for the operators.
 //! For testing purposes.
 
-use async_trait::async_trait;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use error::TaskGeneratorError;
 use std::future::Future;
@@ -10,30 +9,6 @@ use tokio::time::sleep;
 
 /// Task generator errors
 pub mod error;
-
-#[async_trait]
-/// Trait for processing tasks
-pub trait TaskProcess<T> {
-    /// Create a new task with a generic input
-    ///
-    /// # Arguments
-    ///
-    /// * `task_number` - The number of the task
-    /// * `input` - The input for the task
-    /// * `quorum_threshold` - The quorum threshold for the task
-    /// * `quorum` - The quorum for the task
-    ///
-    /// # Returns
-    ///
-    /// * The result of the task
-    async fn create_new_task(
-        &self,
-        task_index: u32,
-        input: T,
-        quorum_threshold: QuorumThresholdPercentage,
-        quorums: Vec<QuorumNum>,
-    ) -> Result<(), TaskGeneratorError>;
-}
 
 /// Task generator struct
 #[derive(Debug)]
@@ -153,7 +128,6 @@ mod tests {
     use crate::error::TaskGeneratorError;
 
     use super::*;
-    use async_trait::async_trait;
     use std::iter::Empty;
     use std::sync::Arc;
     use std::time::Duration;
@@ -163,8 +137,7 @@ mod tests {
         #[derive(Clone)]
         struct MyTaskProcessor;
 
-        #[async_trait]
-        impl TaskProcess<u64> for MyTaskProcessor {
+        impl MyTaskProcessor {
             async fn create_new_task(
                 &self,
                 task_index: u32,
@@ -209,8 +182,7 @@ mod tests {
         #[derive(Clone)]
         struct TaskProcessor;
 
-        #[async_trait]
-        impl TaskProcess<Input> for TaskProcessor {
+        impl TaskProcessor {
             async fn create_new_task(
                 &self,
                 task_index: u32,

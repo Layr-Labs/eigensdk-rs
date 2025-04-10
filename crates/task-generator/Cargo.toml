@@ -18,6 +18,4 @@ thiserror.workspace = true
 tracing.workspace = true
 tokio.workspace = true
 
-
-async-trait = "0.1.88"
 tokio-util = "0.7.11"
