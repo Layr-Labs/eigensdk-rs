@@ -20,6 +20,7 @@ eigen-logging = { workspace = true, optional = true }
 eigen-metrics = { workspace = true, optional = true }
 eigen-metrics-collectors-economic = { workspace = true, optional = true }
 eigen-metrics-collectors-rpc-calls = { workspace = true, optional = true }
+eigen-operator = { workspace = true, optional = true }
 eigen-services-avsregistry = { workspace = true, optional = true }
 eigen-services-blsaggregation = { workspace = true, optional = true }
 eigen-services-operatorsinfo = { workspace = true, optional = true }
@@ -49,6 +50,7 @@ full = [
     "crypto-bn254",
     "logging",
     "metrics",
+    "operator",
     "services-avsregistry",
     "services-blsaggregation",
     "services-operatorsinfo",
@@ -101,8 +103,11 @@ types = ["dep:eigen-types"]
 #common utilities
 common = ["dep:eigen-common"]
 
-#aggregator
+# aggregator
 aggregator = ["dep:eigen-aggregator"]
 
 # challenger
 challenger = ["dep:eigen-challenger"]
+
+# operator
+operator = ["dep:eigen-operator"]

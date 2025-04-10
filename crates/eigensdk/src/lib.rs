@@ -103,3 +103,9 @@ pub use eigen_aggregator as aggregator;
 #[doc(inline)]
 #[cfg(feature = "challenger")]
 pub use eigen_challenger as challenger;
+
+/* ------------------------------------ Operator Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "operator")]
+pub use eigen_operator as operator;
