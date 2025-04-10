@@ -10,16 +10,9 @@ use eigen_challenger::{challenger::ChallengerTaskProcessor, Challenger};
 
 pub mod bindings;
 
-#[allow(dead_code)]
-pub struct TaskResponseData {
-    task_response: TaskResponse,
-    task_response_metadata: TaskResponseMetadata,
-    non_signing_operator_pub_keys: Vec<G1Point>,
-}
-
 struct ChallengerTaskProcessorImpl {
     tasks: HashMap<u32, Task>,
-    task_responses: HashMap<u32, TaskResponseData>,
+    task_responses: HashMap<u32, TaskResponse>,
 }
 
 /// 1. Implement ChallengerTaskProcessor trait
@@ -32,23 +25,14 @@ impl ChallengerTaskProcessor for ChallengerTaskProcessorImpl {
         let data = decoded.data();
 
         self.tasks.insert(data.taskIndex, data.task.clone());
-
-        // TODO: return task index?
-        // data.taskIndex
     }
 
     fn handle_task_response(&mut self, decoded: alloy::rpc::types::Log<Self::TaskResponseEvent>) {
         let data = decoded.data();
-
-        let task_response: TaskResponseData = TaskResponseData {
-            task_response: data.taskResponse.clone(),
-            task_response_metadata: data.taskResponseMetadata.clone(),
-            non_signing_operator_pub_keys: vec![], // Here goes the pubkeys of the non-signing operators
-        };
-
         let task_index = data.taskResponse.referenceTaskIndex;
 
-        self.task_responses.insert(task_index, task_response);
+        self.task_responses
+            .insert(task_index, data.taskResponse.clone());
 
         if self.tasks.contains_key(&task_index) && self.check_task_response(task_index) {
             self.raise_challenge(task_index);
@@ -72,6 +56,7 @@ impl ChallengerTaskProcessorImpl {
         todo!()
     }
 }
+
 #[tokio::main]
 async fn main() {
     let ws_url = "ws://localhost:8545";
