@@ -1803,7 +1803,7 @@ mod tests {
         let underlying_token_addr_str = underlying_token_addr.to_string();
         assert_eq!(
             underlying_token_addr_str,
-            "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570"
+            "0x4c5859f0F772848b2D91F1D83E2Fe57935348029"
         );
 
         let strategy_contract_addr_str = strategy_contract_addr.address().to_string();
