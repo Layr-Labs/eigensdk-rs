@@ -23,6 +23,7 @@ library IRewardsCoordinatorTypes {
 pub mod IRewardsCoordinatorTypes {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct DistributionRoot { bytes32 root; uint32 rewardsCalculationEndTimestamp; uint32 activatedAt; bool disabled; }
     ```*/
@@ -268,6 +269,7 @@ pub mod IRewardsCoordinatorTypes {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct EarnerTreeMerkleLeaf { address earner; bytes32 earnerTokenRoot; }
     ```*/
@@ -467,6 +469,7 @@ pub mod IRewardsCoordinatorTypes {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct OperatorDirectedRewardsSubmission { StrategyAndMultiplier[] strategiesAndMultipliers; address token; OperatorReward[] operatorRewards; uint32 startTimestamp; uint32 duration; string description; }
     ```*/
@@ -778,6 +781,7 @@ pub mod IRewardsCoordinatorTypes {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct OperatorReward { address operator; uint256 amount; }
     ```*/
@@ -975,6 +979,7 @@ pub mod IRewardsCoordinatorTypes {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct RewardsMerkleClaim { uint32 rootIndex; uint32 earnerIndex; bytes earnerTreeProof; EarnerTreeMerkleLeaf earnerLeaf; uint32[] tokenIndices; bytes[] tokenTreeProofs; TokenTreeMerkleLeaf[] tokenLeaves; }
     ```*/
@@ -1304,6 +1309,7 @@ pub mod IRewardsCoordinatorTypes {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct RewardsSubmission { StrategyAndMultiplier[] strategiesAndMultipliers; address token; uint256 amount; uint32 startTimestamp; uint32 duration; }
     ```*/
@@ -1589,6 +1595,7 @@ pub mod IRewardsCoordinatorTypes {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct StrategyAndMultiplier { address strategy; uint96 multiplier; }
     ```*/
@@ -1786,6 +1793,7 @@ pub mod IRewardsCoordinatorTypes {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct TokenTreeMerkleLeaf { address token; uint256 cumulativeEarnings; }
     ```*/
@@ -4446,6 +4454,7 @@ pub mod IRewardsCoordinator {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct OperatorSet { address avs; uint32 id; }
     ```*/
@@ -4633,6 +4642,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `AmountExceedsMax()` and selector `0x1c2d69bc`.
     ```solidity
     error AmountExceedsMax();
@@ -4693,6 +4703,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `AmountIsZero()` and selector `0x43ad20fc`.
     ```solidity
     error AmountIsZero();
@@ -4753,6 +4764,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `DurationExceedsMax()` and selector `0x3742e7d4`.
     ```solidity
     error DurationExceedsMax();
@@ -4813,6 +4825,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `DurationIsZero()` and selector `0xcb3f434d`.
     ```solidity
     error DurationIsZero();
@@ -4873,6 +4886,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `EarningsNotGreaterThanClaimed()` and selector `0xaa385e81`.
     ```solidity
     error EarningsNotGreaterThanClaimed();
@@ -4933,6 +4947,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InputArrayLengthMismatch()` and selector `0x43714afd`.
     ```solidity
     error InputArrayLengthMismatch();
@@ -4993,6 +5008,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InputArrayLengthZero()` and selector `0x796cc525`.
     ```solidity
     error InputArrayLengthZero();
@@ -5053,6 +5069,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidAddressZero()` and selector `0x10c748a6`.
     ```solidity
     error InvalidAddressZero();
@@ -5113,6 +5130,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidCalculationIntervalSecondsRemainder()` and selector `0x4478f672`.
     ```solidity
     error InvalidCalculationIntervalSecondsRemainder();
@@ -5173,6 +5191,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidClaimProof()` and selector `0x69ca16c9`.
     ```solidity
     error InvalidClaimProof();
@@ -5233,6 +5252,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidDurationRemainder()` and selector `0xee664705`.
     ```solidity
     error InvalidDurationRemainder();
@@ -5293,6 +5313,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidEarner()` and selector `0xfb494ea1`.
     ```solidity
     error InvalidEarner();
@@ -5353,6 +5374,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidEarnerLeafIndex()` and selector `0x6361ce80`.
     ```solidity
     error InvalidEarnerLeafIndex();
@@ -5413,6 +5435,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidGenesisRewardsTimestampRemainder()` and selector `0x0e06bd31`.
     ```solidity
     error InvalidGenesisRewardsTimestampRemainder();
@@ -5473,6 +5496,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidOperatorSet()` and selector `0x7ec5c154`.
     ```solidity
     error InvalidOperatorSet();
@@ -5533,6 +5557,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidRoot()` and selector `0x504570e3`.
     ```solidity
     error InvalidRoot();
@@ -5593,6 +5618,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidRootIndex()` and selector `0x94a8d389`.
     ```solidity
     error InvalidRootIndex();
@@ -5653,6 +5679,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidStartTimestampRemainder()` and selector `0xf06a53c4`.
     ```solidity
     error InvalidStartTimestampRemainder();
@@ -5713,6 +5740,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidTokenLeafIndex()` and selector `0xa9fe9be0`.
     ```solidity
     error InvalidTokenLeafIndex();
@@ -5773,6 +5801,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `NewRootMustBeForNewCalculatedPeriod()` and selector `0x729f942c`.
     ```solidity
     error NewRootMustBeForNewCalculatedPeriod();
@@ -5833,6 +5862,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `OperatorsNotInAscendingOrder()` and selector `0x87da3f88`.
     ```solidity
     error OperatorsNotInAscendingOrder();
@@ -5893,6 +5923,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `PreviousSplitPending()` and selector `0x7b1e25c5`.
     ```solidity
     error PreviousSplitPending();
@@ -5953,6 +5984,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `RewardsEndTimestampNotElapsed()` and selector `0x0d2af922`.
     ```solidity
     error RewardsEndTimestampNotElapsed();
@@ -6013,6 +6045,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `RootAlreadyActivated()` and selector `0x30dbd994`.
     ```solidity
     error RootAlreadyActivated();
@@ -6073,6 +6106,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `RootDisabled()` and selector `0x1b14174b`.
     ```solidity
     error RootDisabled();
@@ -6133,6 +6167,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `RootNotActivated()` and selector `0xa1bd15d8`.
     ```solidity
     error RootNotActivated();
@@ -6193,6 +6228,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `SplitExceedsMax()` and selector `0x891c63df`.
     ```solidity
     error SplitExceedsMax();
@@ -6253,6 +6289,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `StartTimestampTooFarInFuture()` and selector `0x7ee2b443`.
     ```solidity
     error StartTimestampTooFarInFuture();
@@ -6313,6 +6350,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `StartTimestampTooFarInPast()` and selector `0x08354eae`.
     ```solidity
     error StartTimestampTooFarInPast();
@@ -6373,6 +6411,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `StrategiesNotInAscendingOrder()` and selector `0xdfad9ca1`.
     ```solidity
     error StrategiesNotInAscendingOrder();
@@ -6433,6 +6472,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `StrategyNotWhitelisted()` and selector `0x5dfb2ca2`.
     ```solidity
     error StrategyNotWhitelisted();
@@ -6493,6 +6533,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `SubmissionNotRetroactive()` and selector `0x540d6284`.
     ```solidity
     error SubmissionNotRetroactive();
@@ -6553,6 +6594,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `UnauthorizedCaller()` and selector `0x5c427cd9`.
     ```solidity
     error UnauthorizedCaller();
@@ -6613,6 +6655,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Event with signature `AVSRewardsSubmissionCreated(address,uint256,bytes32,((address,uint96)[],address,uint256,uint32,uint32))` and selector `0x450a367a380c4e339e5ae7340c8464ef27af7781ad9945cfe8abd828f89e6281`.
     ```solidity
     event AVSRewardsSubmissionCreated(address indexed avs, uint256 indexed submissionNonce, bytes32 indexed rewardsSubmissionHash, IRewardsCoordinatorTypes.RewardsSubmission rewardsSubmission);
@@ -6744,6 +6787,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `ActivationDelaySet(uint32,uint32)` and selector `0xaf557c6c02c208794817a705609cfa935f827312a1adfdd26494b6b95dd2b4b3`.
     ```solidity
     event ActivationDelaySet(uint32 oldActivationDelay, uint32 newActivationDelay);
@@ -6853,6 +6897,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `ClaimerForSet(address,address,address)` and selector `0xbab947934d42e0ad206f25c9cab18b5bb6ae144acfb00f40b4e3aa59590ca312`.
     ```solidity
     event ClaimerForSet(address indexed earner, address indexed oldClaimer, address indexed claimer);
@@ -6974,6 +7019,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `DefaultOperatorSplitBipsSet(uint16,uint16)` and selector `0xe6cd4edfdcc1f6d130ab35f73d72378f3a642944fb4ee5bd84b7807a81ea1c4e`.
     ```solidity
     event DefaultOperatorSplitBipsSet(uint16 oldDefaultOperatorSplitBips, uint16 newDefaultOperatorSplitBips);
@@ -7083,6 +7129,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `DistributionRootDisabled(uint32)` and selector `0xd850e6e5dfa497b72661fa73df2923464eaed9dc2ff1d3cb82bccbfeabe5c41e`.
     ```solidity
     event DistributionRootDisabled(uint32 indexed rootIndex);
@@ -7185,6 +7232,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `DistributionRootSubmitted(uint32,bytes32,uint32,uint32)` and selector `0xecd866c3c158fa00bf34d803d5f6023000b57080bcb48af004c2b4b46b3afd08`.
     ```solidity
     event DistributionRootSubmitted(uint32 indexed rootIndex, bytes32 indexed root, uint32 indexed rewardsCalculationEndTimestamp, uint32 activatedAt);
@@ -7316,6 +7364,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorAVSSplitBipsSet(address,address,address,uint32,uint16,uint16)` and selector `0x48e198b6ae357e529204ee53a8e514c470ff77d9cc8e4f7207f8b5d490ae6934`.
     ```solidity
     event OperatorAVSSplitBipsSet(address indexed caller, address indexed operator, address indexed avs, uint32 activatedAt, uint16 oldOperatorAVSSplitBips, uint16 newOperatorAVSSplitBips);
@@ -7461,6 +7510,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Event with signature `OperatorDirectedAVSRewardsSubmissionCreated(address,address,bytes32,uint256,((address,uint96)[],address,(address,uint256)[],uint32,uint32,string))` and selector `0xfc8888bffd711da60bc5092b33f677d81896fe80ecc677b84cfab8184462b6e0`.
     ```solidity
     event OperatorDirectedAVSRewardsSubmissionCreated(address indexed caller, address indexed avs, bytes32 indexed operatorDirectedRewardsSubmissionHash, uint256 submissionNonce, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission operatorDirectedRewardsSubmission);
@@ -7604,6 +7654,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Event with signature `OperatorDirectedOperatorSetRewardsSubmissionCreated(address,bytes32,(address,uint32),uint256,((address,uint96)[],address,(address,uint256)[],uint32,uint32,string))` and selector `0xfff0759ccb371dfb5691798724e70b4fa61cb3bfe730a33ac19fb86a48efc756`.
     ```solidity
     event OperatorDirectedOperatorSetRewardsSubmissionCreated(address indexed caller, bytes32 indexed operatorDirectedRewardsSubmissionHash, OperatorSet operatorSet, uint256 submissionNonce, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission operatorDirectedRewardsSubmission);
@@ -7748,6 +7799,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorPISplitBipsSet(address,address,uint32,uint16,uint16)` and selector `0xd1e028bd664486a46ad26040e999cd2d22e1e9a094ee6afe19fcf64678f16f74`.
     ```solidity
     event OperatorPISplitBipsSet(address indexed caller, address indexed operator, uint32 activatedAt, uint16 oldOperatorPISplitBips, uint16 newOperatorPISplitBips);
@@ -7885,6 +7937,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorSetSplitBipsSet(address,address,(address,uint32),uint32,uint16,uint16)` and selector `0x14918b3834ab6752eb2e1b489b6663a67810efb5f56f3944a97ede8ecf1fd9f1`.
     ```solidity
     event OperatorSetSplitBipsSet(address indexed caller, address indexed operator, OperatorSet operatorSet, uint32 activatedAt, uint16 oldOperatorSetSplitBips, uint16 newOperatorSetSplitBips);
@@ -8027,6 +8080,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `RewardsClaimed(bytes32,address,address,address,address,uint256)` and selector `0x9543dbd55580842586a951f0386e24d68a5df99ae29e3b216588b45fd684ce31`.
     ```solidity
     event RewardsClaimed(bytes32 root, address indexed earner, address indexed claimer, address indexed recipient, address token, uint256 claimedAmount);
@@ -8172,6 +8226,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `RewardsForAllSubmitterSet(address,bool,bool)` and selector `0x4de6293e668df1398422e1def12118052c1539a03cbfedc145895d48d7685f1c`.
     ```solidity
     event RewardsForAllSubmitterSet(address indexed rewardsForAllSubmitter, bool indexed oldValue, bool indexed newValue);
@@ -8295,6 +8350,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Event with signature `RewardsSubmissionForAllCreated(address,uint256,bytes32,((address,uint96)[],address,uint256,uint32,uint32))` and selector `0x51088b8c89628df3a8174002c2a034d0152fce6af8415d651b2a4734bf270482`.
     ```solidity
     event RewardsSubmissionForAllCreated(address indexed submitter, uint256 indexed submissionNonce, bytes32 indexed rewardsSubmissionHash, IRewardsCoordinatorTypes.RewardsSubmission rewardsSubmission);
@@ -8426,6 +8482,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Event with signature `RewardsSubmissionForAllEarnersCreated(address,uint256,bytes32,((address,uint96)[],address,uint256,uint32,uint32))` and selector `0x5251b6fdefcb5d81144e735f69ea4c695fd43b0289ca53dc075033f5fc80068b`.
     ```solidity
     event RewardsSubmissionForAllEarnersCreated(address indexed tokenHopper, uint256 indexed submissionNonce, bytes32 indexed rewardsSubmissionHash, IRewardsCoordinatorTypes.RewardsSubmission rewardsSubmission);
@@ -8559,6 +8616,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `RewardsUpdaterSet(address,address)` and selector `0x237b82f438d75fc568ebab484b75b01d9287b9e98b490b7c23221623b6705dbb`.
     ```solidity
     event RewardsUpdaterSet(address indexed oldRewardsUpdater, address indexed newRewardsUpdater);
@@ -8672,6 +8730,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `CALCULATION_INTERVAL_SECONDS()` and selector `0x9d45c281`.
     ```solidity
     function CALCULATION_INTERVAL_SECONDS() external view returns (uint32);
@@ -8679,6 +8738,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CALCULATION_INTERVAL_SECONDSCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`CALCULATION_INTERVAL_SECONDS()`](CALCULATION_INTERVAL_SECONDSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -8783,6 +8843,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `GENESIS_REWARDS_TIMESTAMP()` and selector `0x131433b4`.
     ```solidity
     function GENESIS_REWARDS_TIMESTAMP() external view returns (uint32);
@@ -8790,6 +8851,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct GENESIS_REWARDS_TIMESTAMPCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`GENESIS_REWARDS_TIMESTAMP()`](GENESIS_REWARDS_TIMESTAMPCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -8894,6 +8956,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `MAX_FUTURE_LENGTH()` and selector `0x04a0c502`.
     ```solidity
     function MAX_FUTURE_LENGTH() external view returns (uint32);
@@ -8901,6 +8964,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MAX_FUTURE_LENGTHCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`MAX_FUTURE_LENGTH()`](MAX_FUTURE_LENGTHCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9005,6 +9069,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `MAX_RETROACTIVE_LENGTH()` and selector `0x37838ed0`.
     ```solidity
     function MAX_RETROACTIVE_LENGTH() external view returns (uint32);
@@ -9012,6 +9077,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MAX_RETROACTIVE_LENGTHCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`MAX_RETROACTIVE_LENGTH()`](MAX_RETROACTIVE_LENGTHCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9116,6 +9182,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `MAX_REWARDS_DURATION()` and selector `0xbf21a8aa`.
     ```solidity
     function MAX_REWARDS_DURATION() external view returns (uint32);
@@ -9123,6 +9190,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MAX_REWARDS_DURATIONCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`MAX_REWARDS_DURATION()`](MAX_REWARDS_DURATIONCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9227,6 +9295,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `activationDelay()` and selector `0x3a8c0786`.
     ```solidity
     function activationDelay() external view returns (uint32);
@@ -9234,6 +9303,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct activationDelayCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`activationDelay()`](activationDelayCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9338,6 +9408,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `calculateEarnerLeafHash((address,bytes32))` and selector `0x149bc872`.
     ```solidity
     function calculateEarnerLeafHash(IRewardsCoordinatorTypes.EarnerTreeMerkleLeaf memory leaf) external pure returns (bytes32);
@@ -9349,6 +9420,7 @@ pub mod IRewardsCoordinator {
         pub leaf:
             <IRewardsCoordinatorTypes::EarnerTreeMerkleLeaf as alloy::sol_types::SolType>::RustType,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`calculateEarnerLeafHash((address,bytes32))`](calculateEarnerLeafHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9459,6 +9531,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `calculateTokenLeafHash((address,uint256))` and selector `0xf8cd8448`.
     ```solidity
     function calculateTokenLeafHash(IRewardsCoordinatorTypes.TokenTreeMerkleLeaf memory leaf) external pure returns (bytes32);
@@ -9470,6 +9543,7 @@ pub mod IRewardsCoordinator {
         pub leaf:
             <IRewardsCoordinatorTypes::TokenTreeMerkleLeaf as alloy::sol_types::SolType>::RustType,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`calculateTokenLeafHash((address,uint256))`](calculateTokenLeafHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9580,6 +9654,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Function with signature `checkClaim((uint32,uint32,bytes,(address,bytes32),uint32[],bytes[],(address,uint256)[]))` and selector `0x5e9d8348`.
     ```solidity
     function checkClaim(IRewardsCoordinatorTypes.RewardsMerkleClaim memory claim) external view returns (bool);
@@ -9591,6 +9666,7 @@ pub mod IRewardsCoordinator {
         pub claim:
             <IRewardsCoordinatorTypes::RewardsMerkleClaim as alloy::sol_types::SolType>::RustType,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`checkClaim((uint32,uint32,bytes,(address,bytes32),uint32[],bytes[],(address,uint256)[]))`](checkClaimCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9701,6 +9777,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `claimerFor(address)` and selector `0x2b9f64a4`.
     ```solidity
     function claimerFor(address earner) external view returns (address);
@@ -9711,6 +9788,7 @@ pub mod IRewardsCoordinator {
         #[allow(missing_docs)]
         pub earner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`claimerFor(address)`](claimerForCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9819,6 +9897,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Function with signature `createAVSRewardsSubmission(((address,uint96)[],address,uint256,uint32,uint32)[])` and selector `0xfce36c7d`.
     ```solidity
     function createAVSRewardsSubmission(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
@@ -9945,6 +10024,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Function with signature `createOperatorDirectedAVSRewardsSubmission(address,((address,uint96)[],address,(address,uint256)[],uint32,uint32,string)[])` and selector `0x9cb9a5fa`.
     ```solidity
     function createOperatorDirectedAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission[] memory operatorDirectedRewardsSubmissions) external;
@@ -10095,6 +10175,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Function with signature `createOperatorDirectedOperatorSetRewardsSubmission((address,uint32),((address,uint96)[],address,(address,uint256)[],uint32,uint32,string)[])` and selector `0x0ca29899`.
     ```solidity
     function createOperatorDirectedOperatorSetRewardsSubmission(OperatorSet memory operatorSet, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission[] memory operatorDirectedRewardsSubmissions) external;
@@ -10243,6 +10324,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Function with signature `createRewardsForAllEarners(((address,uint96)[],address,uint256,uint32,uint32)[])` and selector `0xff9f6cce`.
     ```solidity
     function createRewardsForAllEarners(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
@@ -10369,6 +10451,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Function with signature `createRewardsForAllSubmission(((address,uint96)[],address,uint256,uint32,uint32)[])` and selector `0x36af41fa`.
     ```solidity
     function createRewardsForAllSubmission(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
@@ -10494,6 +10577,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `cumulativeClaimed(address,address)` and selector `0x865c6953`.
     ```solidity
     function cumulativeClaimed(address claimer, address token) external view returns (uint256);
@@ -10506,6 +10590,7 @@ pub mod IRewardsCoordinator {
         #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`cumulativeClaimed(address,address)`](cumulativeClaimedCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -10629,6 +10714,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `currRewardsCalculationEndTimestamp()` and selector `0x4d18cc35`.
     ```solidity
     function currRewardsCalculationEndTimestamp() external view returns (uint32);
@@ -10636,6 +10722,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currRewardsCalculationEndTimestampCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`currRewardsCalculationEndTimestamp()`](currRewardsCalculationEndTimestampCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -10740,6 +10827,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `defaultOperatorSplitBips()` and selector `0x63f6a798`.
     ```solidity
     function defaultOperatorSplitBips() external view returns (uint16);
@@ -10747,6 +10835,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct defaultOperatorSplitBipsCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`defaultOperatorSplitBips()`](defaultOperatorSplitBipsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -10851,6 +10940,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `disableRoot(uint32)` and selector `0xf96abf2e`.
     ```solidity
     function disableRoot(uint32 rootIndex) external;
@@ -10966,6 +11056,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getCurrentClaimableDistributionRoot()` and selector `0x0e9a53cf`.
     ```solidity
     function getCurrentClaimableDistributionRoot() external view returns (IRewardsCoordinatorTypes.DistributionRoot memory);
@@ -10973,6 +11064,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentClaimableDistributionRootCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getCurrentClaimableDistributionRoot()`](getCurrentClaimableDistributionRootCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11079,6 +11171,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getCurrentDistributionRoot()` and selector `0x9be3d4e4`.
     ```solidity
     function getCurrentDistributionRoot() external view returns (IRewardsCoordinatorTypes.DistributionRoot memory);
@@ -11086,6 +11179,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCurrentDistributionRootCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getCurrentDistributionRoot()`](getCurrentDistributionRootCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11192,6 +11286,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getDistributionRootAtIndex(uint256)` and selector `0xde02e503`.
     ```solidity
     function getDistributionRootAtIndex(uint256 index) external view returns (IRewardsCoordinatorTypes.DistributionRoot memory);
@@ -11202,6 +11297,7 @@ pub mod IRewardsCoordinator {
         #[allow(missing_docs)]
         pub index: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getDistributionRootAtIndex(uint256)`](getDistributionRootAtIndexCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11312,6 +11408,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getDistributionRootsLength()` and selector `0x7b8f8b05`.
     ```solidity
     function getDistributionRootsLength() external view returns (uint256);
@@ -11319,6 +11416,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getDistributionRootsLengthCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getDistributionRootsLength()`](getDistributionRootsLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11423,6 +11521,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getOperatorAVSSplit(address,address)` and selector `0xe063f81f`.
     ```solidity
     function getOperatorAVSSplit(address operator, address avs) external view returns (uint16);
@@ -11435,6 +11534,7 @@ pub mod IRewardsCoordinator {
         #[allow(missing_docs)]
         pub avs: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getOperatorAVSSplit(address,address)`](getOperatorAVSSplitCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11558,6 +11658,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getOperatorPISplit(address)` and selector `0x4b943960`.
     ```solidity
     function getOperatorPISplit(address operator) external view returns (uint16);
@@ -11568,6 +11669,7 @@ pub mod IRewardsCoordinator {
         #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getOperatorPISplit(address)`](getOperatorPISplitCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11676,6 +11778,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getOperatorSetSplit(address,(address,uint32))` and selector `0x9de4b35f`.
     ```solidity
     function getOperatorSetSplit(address operator, OperatorSet memory operatorSet) external view returns (uint16);
@@ -11688,6 +11791,7 @@ pub mod IRewardsCoordinator {
         #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getOperatorSetSplit(address,(address,uint32))`](getOperatorSetSplitCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11803,6 +11907,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getRootIndexFromHash(bytes32)` and selector `0xe810ce21`.
     ```solidity
     function getRootIndexFromHash(bytes32 rootHash) external view returns (uint32);
@@ -11813,6 +11918,7 @@ pub mod IRewardsCoordinator {
         #[allow(missing_docs)]
         pub rootHash: alloy::sol_types::private::FixedBytes<32>,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getRootIndexFromHash(bytes32)`](getRootIndexFromHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11921,6 +12027,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `initialize(address,uint256,address,uint32,uint16)` and selector `0xf6efbb59`.
     ```solidity
     function initialize(address initialOwner, uint256 initialPausedStatus, address _rewardsUpdater, uint32 _activationDelay, uint16 _defaultSplitBips) external;
@@ -12086,6 +12193,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Function with signature `processClaim((uint32,uint32,bytes,(address,bytes32),uint32[],bytes[],(address,uint256)[]),address)` and selector `0x3ccc861d`.
     ```solidity
     function processClaim(IRewardsCoordinatorTypes.RewardsMerkleClaim memory claim, address recipient) external;
@@ -12219,6 +12327,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive()]
     /**Function with signature `processClaims((uint32,uint32,bytes,(address,bytes32),uint32[],bytes[],(address,uint256)[])[],address)` and selector `0x4596021c`.
     ```solidity
     function processClaims(IRewardsCoordinatorTypes.RewardsMerkleClaim[] memory claims, address recipient) external;
@@ -12355,6 +12464,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `rewardsUpdater()` and selector `0xfbf1e2c1`.
     ```solidity
     function rewardsUpdater() external view returns (address);
@@ -12362,6 +12472,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct rewardsUpdaterCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`rewardsUpdater()`](rewardsUpdaterCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -12466,6 +12577,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setActivationDelay(uint32)` and selector `0x58baaa3e`.
     ```solidity
     function setActivationDelay(uint32 _activationDelay) external;
@@ -12583,6 +12695,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setClaimerFor(address)` and selector `0xa0169ddd`.
     ```solidity
     function setClaimerFor(address claimer) external;
@@ -12698,6 +12811,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setClaimerFor(address,address)` and selector `0xf22cef85`.
     ```solidity
     function setClaimerFor(address earner, address claimer) external;
@@ -12830,6 +12944,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setDefaultOperatorSplit(uint16)` and selector `0xa50a1d9c`.
     ```solidity
     function setDefaultOperatorSplit(uint16 split) external;
@@ -12945,6 +13060,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setOperatorAVSSplit(address,address,uint16)` and selector `0xdcbb03b3`.
     ```solidity
     function setOperatorAVSSplit(address operator, address avs, uint16 split) external;
@@ -13086,6 +13202,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setOperatorPISplit(address,uint16)` and selector `0xb3dbb0e0`.
     ```solidity
     function setOperatorPISplit(address operator, uint16 split) external;
@@ -13215,6 +13332,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setOperatorSetSplit(address,(address,uint32),uint16)` and selector `0xf74e8eac`.
     ```solidity
     function setOperatorSetSplit(address operator, OperatorSet memory operatorSet, uint16 split) external;
@@ -13354,6 +13472,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setRewardsForAllSubmitter(address,bool)` and selector `0x0eb38345`.
     ```solidity
     function setRewardsForAllSubmitter(address _submitter, bool _newValue) external;
@@ -13483,6 +13602,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setRewardsUpdater(address)` and selector `0x863cb9a9`.
     ```solidity
     function setRewardsUpdater(address _rewardsUpdater) external;
@@ -13600,6 +13720,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `submitRoot(bytes32,uint32)` and selector `0x3efe1db6`.
     ```solidity
     function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) external;
@@ -13731,6 +13852,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `version()` and selector `0x54fd4d50`.
     ```solidity
     function version() external view returns (string memory);
@@ -13738,6 +13860,7 @@ pub mod IRewardsCoordinator {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct versionCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`version()`](versionCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -13843,6 +13966,7 @@ pub mod IRewardsCoordinator {
         }
     };
     ///Container for all the [`IRewardsCoordinator`](self) function calls.
+    #[derive()]
     pub enum IRewardsCoordinatorCalls {
         #[allow(missing_docs)]
         CALCULATION_INTERVAL_SECONDS(CALCULATION_INTERVAL_SECONDSCall),
@@ -15121,6 +15245,7 @@ pub mod IRewardsCoordinator {
         }
     }
     ///Container for all the [`IRewardsCoordinator`](self) custom errors.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IRewardsCoordinatorErrors {
         #[allow(missing_docs)]
         AmountExceedsMax(AmountExceedsMax),
@@ -16147,6 +16272,7 @@ pub mod IRewardsCoordinator {
         }
     }
     ///Container for all the [`IRewardsCoordinator`](self) events.
+    #[derive()]
     pub enum IRewardsCoordinatorEvents {
         #[allow(missing_docs)]
         AVSRewardsSubmissionCreated(AVSRewardsSubmissionCreated),

@@ -17,6 +17,7 @@ library BN254 {
 pub mod BN254 {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct G1Point { uint256 X; uint256 Y; }
     ```*/
@@ -206,6 +207,7 @@ pub mod BN254 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct G2Point { uint256[2] X; uint256[2] Y; }
     ```*/
@@ -558,6 +560,7 @@ library IBLSSignatureCheckerTypes {
 pub mod IBLSSignatureCheckerTypes {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct NonSignerStakesAndSignature { uint32[] nonSignerQuorumBitmapIndices; BN254.G1Point[] nonSignerPubkeys; BN254.G1Point[] quorumApks; BN254.G2Point apkG2; BN254.G1Point sigma; uint32[] quorumApkIndices; uint32[] totalStakeIndices; uint32[][] nonSignerStakeIndices; }
     ```*/
@@ -926,6 +929,7 @@ pub mod IBLSSignatureCheckerTypes {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct QuorumStakeTotals { uint96[] signedStakeForQuorum; uint96[] totalStakeForQuorum; }
     ```*/
@@ -1712,6 +1716,7 @@ pub mod IBLSSignatureChecker {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InputArrayLengthMismatch()` and selector `0x43714afd`.
     ```solidity
     error InputArrayLengthMismatch();
@@ -1772,6 +1777,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InputEmptyQuorumNumbers()` and selector `0x1f0405a0`.
     ```solidity
     error InputEmptyQuorumNumbers();
@@ -1832,6 +1838,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InputNonSignerLengthMismatch()` and selector `0x5f832f41`.
     ```solidity
     error InputNonSignerLengthMismatch();
@@ -1892,6 +1899,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidBLSPairingKey()` and selector `0x67988d33`.
     ```solidity
     error InvalidBLSPairingKey();
@@ -1952,6 +1960,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidBLSSignature()` and selector `0xab1b236b`.
     ```solidity
     error InvalidBLSSignature();
@@ -2012,6 +2021,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidQuorumApkHash()` and selector `0xe1310aed`.
     ```solidity
     error InvalidQuorumApkHash();
@@ -2072,6 +2082,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidReferenceBlocknumber()` and selector `0x4b874f45`.
     ```solidity
     error InvalidReferenceBlocknumber();
@@ -2132,6 +2143,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `NonSignerPubkeysNotSorted()` and selector `0xff719414`.
     ```solidity
     error NonSignerPubkeysNotSorted();
@@ -2192,6 +2204,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `OnlyRegistryCoordinatorOwner()` and selector `0xe0e1e762`.
     ```solidity
     error OnlyRegistryCoordinatorOwner();
@@ -2252,6 +2265,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `StaleStakesForbidden()` and selector `0xaffc5edb`.
     ```solidity
     error StaleStakesForbidden();
@@ -2312,6 +2326,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `StaleStakesForbiddenUpdate(bool)` and selector `0x40e4ed880a29e0f6ddce307457fb75cddf4feef7d3ecb0301bfdf4976a0e2dfc`.
     ```solidity
     event StaleStakesForbiddenUpdate(bool value);
@@ -2410,6 +2425,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `blsApkRegistry()` and selector `0x5df45946`.
     ```solidity
     function blsApkRegistry() external view returns (address);
@@ -2417,6 +2433,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct blsApkRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`blsApkRegistry()`](blsApkRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2521,6 +2538,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `checkSignatures(bytes32,bytes,uint32,(uint32[],(uint256,uint256)[],(uint256,uint256)[],(uint256[2],uint256[2]),(uint256,uint256),uint32[],uint32[],uint32[][]))` and selector `0x6efb4636`.
     ```solidity
     function checkSignatures(bytes32 msgHash, bytes memory quorumNumbers, uint32 referenceBlockNumber, IBLSSignatureCheckerTypes.NonSignerStakesAndSignature memory nonSignerStakesAndSignature) external view returns (IBLSSignatureCheckerTypes.QuorumStakeTotals memory, bytes32);
@@ -2537,6 +2555,7 @@ pub mod IBLSSignatureChecker {
         #[allow(missing_docs)]
         pub nonSignerStakesAndSignature: <IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as alloy::sol_types::SolType>::RustType,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`checkSignatures(bytes32,bytes,uint32,(uint32[],(uint256,uint256)[],(uint256,uint256)[],(uint256[2],uint256[2]),(uint256,uint256),uint32[],uint32[],uint32[][]))`](checkSignaturesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2694,6 +2713,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegation()` and selector `0xdf5cf723`.
     ```solidity
     function delegation() external view returns (address);
@@ -2701,6 +2721,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`delegation()`](delegationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2805,6 +2826,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `registryCoordinator()` and selector `0x6d14a987`.
     ```solidity
     function registryCoordinator() external view returns (address);
@@ -2812,6 +2834,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`registryCoordinator()`](registryCoordinatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2916,6 +2939,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setStaleStakesForbidden(bool)` and selector `0x416c7e5e`.
     ```solidity
     function setStaleStakesForbidden(bool value) external;
@@ -3031,6 +3055,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stakeRegistry()` and selector `0x68304835`.
     ```solidity
     function stakeRegistry() external view returns (address);
@@ -3038,6 +3063,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`stakeRegistry()`](stakeRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3142,6 +3168,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `staleStakesForbidden()` and selector `0xb98d0908`.
     ```solidity
     function staleStakesForbidden() external view returns (bool);
@@ -3149,6 +3176,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct staleStakesForbiddenCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`staleStakesForbidden()`](staleStakesForbiddenCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3253,6 +3281,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `trySignatureAndApkVerification(bytes32,(uint256,uint256),(uint256[2],uint256[2]),(uint256,uint256))` and selector `0x171f1d5b`.
     ```solidity
     function trySignatureAndApkVerification(bytes32 msgHash, BN254.G1Point memory apk, BN254.G2Point memory apkG2, BN254.G1Point memory sigma) external view returns (bool pairingSuccessful, bool siganatureIsValid);
@@ -3269,6 +3298,7 @@ pub mod IBLSSignatureChecker {
         #[allow(missing_docs)]
         pub sigma: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`trySignatureAndApkVerification(bytes32,(uint256,uint256),(uint256[2],uint256[2]),(uint256,uint256))`](trySignatureAndApkVerificationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3412,6 +3442,7 @@ pub mod IBLSSignatureChecker {
         }
     };
     ///Container for all the [`IBLSSignatureChecker`](self) function calls.
+    #[derive()]
     pub enum IBLSSignatureCheckerCalls {
         #[allow(missing_docs)]
         blsApkRegistry(blsApkRegistryCall),
@@ -3687,6 +3718,7 @@ pub mod IBLSSignatureChecker {
         }
     }
     ///Container for all the [`IBLSSignatureChecker`](self) custom errors.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IBLSSignatureCheckerErrors {
         #[allow(missing_docs)]
         InputArrayLengthMismatch(InputArrayLengthMismatch),
@@ -4011,6 +4043,7 @@ pub mod IBLSSignatureChecker {
         }
     }
     ///Container for all the [`IBLSSignatureChecker`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IBLSSignatureCheckerEvents {
         #[allow(missing_docs)]
         StaleStakesForbiddenUpdate(StaleStakesForbiddenUpdate),
