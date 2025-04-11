@@ -116,7 +116,7 @@ slashing-bindings-custom:
 	docker run --rm -v "$(PWD):/sdk" -w "/sdk" custom-foundry sh -c "scripts/generate_slashing_bindings.sh"
 
 	cargo fmt --all
-	# git apply --allow-empty scripts/bindings.patch
+	git apply --allow-empty scripts/bindings.patch
 
 
 
