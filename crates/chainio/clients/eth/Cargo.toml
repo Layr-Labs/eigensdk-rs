@@ -24,7 +24,9 @@ url.workspace = true
 
 [dev-dependencies]
 eigen-testing-utils.workspace = true
-eigen-common.workspace = true
+# We don't use workspace due to:
+# https://github.com/rust-lang/cargo/issues/4242#issuecomment-2578428685
+eigen-common = { path = "../../../common" }
 
 once_cell.workspace = true
 serial_test.workspace = true
