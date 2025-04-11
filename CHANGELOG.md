@@ -33,6 +33,57 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 * Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
 * Bump middleware to [v1.3.0](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.0) in PR [443](https://github.com/Layr-Labs/eigensdk-rs/pull/443).
+* Added an additional implementation for `OperatorInfoService` for retrieving operator BLS pubkeys and sockets directly from middleware in [#414](https://github.com/Layr-Labs/eigensdk-rs/pull/414). The new `OperatorInfoOnChain` is more stable and efficient since it doesn't subscribe or fetch events, but it requires functionality from the recent v1.3.0 middleware release.
+
+  Old Implementation which indexes middleware events:
+
+    ```rust
+      use eigen_services_operatorsinfo::{operatorsinfo_inmemory::OperatorInfoServiceInMemory};
+      let operators_info = OperatorInfoServiceInMemory::new(
+          get_test_logger(),
+          avs_registry_reader.clone(),
+          ws_endpoint,
+      )
+      .await
+      .unwrap()
+      .0;
+
+      let cancellation_token = CancellationToken::new();
+      let operators_info_clone = operators_info.clone();
+      let token_clone = cancellation_token.clone();
+      task::spawn(async move { operators_info_clone.start_service(&token_clone, start_block, end_block).await });
+      // Sleep to wait for the operator info service to start
+      sleep(Duration::from_secs(1)).await;
+
+      let avs_registry_service =
+          AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
+    ```
+
+  New alternate implementation which directly queries from middleware using view call:
+
+    ```rust
+      use eigen_services_operatorsinfo::{operatorsinfo_inmemory::OperatorInfoOnChain};
+      let operators_info_on_chain = OperatorInfoOnChain::new(
+          &http_endpoint,
+          bls_apk_registry_address,
+          socket_registry_address,
+      );
+
+      let avs_registry_service = AvsRegistryServiceChainCaller::new(
+          avs_registry_reader.clone(),
+          operators_info_on_chain,
+      );
+
+      let pub_keys = operator_info_on_chain
+          .get_operator_info(OPERATOR_ADDRESS)
+          .await
+          .unwrap();
+      
+      let socket = operator_info_on_chain
+          .get_operator_socket(OPERATOR_ADDRESS)
+          .await
+          .unwrap();
+    ```
 
 ### Breaking Changes 🛠
 
@@ -63,70 +114,36 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
-* Alternate impl for OperatorsInfo for retrieving pub keys and socket for the operator from middleware directly in [#414](https://github.com/Layr-Labs/eigensdk-rs/pull/414)
-
-Old Implementation which uses indexing :
-
-  ```rust 
-    use eigen_services_operatorsinfo::{operatorsinfo_inmemory::OperatorInfoServiceInMemory};
-    let operators_info = OperatorInfoServiceInMemory::new(
-        get_test_logger(),
-        avs_registry_reader.clone(),
-        ws_endpoint,
-    )
-    .await
-    .unwrap()
-    .0;
-
-    let cancellation_token = CancellationToken::new();
-    let operators_info_clone = operators_info.clone();
-    let token_clone = cancellation_token.clone();
-    task::spawn(async move { operators_info_clone.start_service(&token_clone, start_block, end_block).await });
-    // Sleep to wait for the operator info service to start
-    sleep(Duration::from_secs(1)).await;
-
-    let avs_registry_service =
-        AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
-  ```
-
-Alternate implementation which directly queries from middleware using view call :
-
-  ```rust
-    use eigen_services_operatorsinfo::{operatorsinfo_inmemory::OperatorInfoOnChain};
-    let operators_info_on_chain = OperatorInfoOnChain::new(
-        &http_endpoint,
-        bls_apk_registry_address,
-        socket_registry_address,
-    );
-
-    let avs_registry_service = AvsRegistryServiceChainCaller::new(
-        avs_registry_reader.clone(),
-        operators_info_on_chain,
-    );
-
-    let pub_keys = operator_info_on_chain
-        .get_operator_info(OPERATOR_ADDRESS)
-        .await
-        .unwrap();
-    
-    let socket = operator_info_on_chain
-        .get_operator_socket(OPERATOR_ADDRESS)
-        .await
-        .unwrap();
-  ```
-
 ### Deprecated ⚠️
 
 ### Removed
 
 ### Documentation 📚
 
+* Added documentation for service crates:
+  * docs: avs registry service by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/409>
+  * docs: operator info service by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/406>
+  * docs: BLS Aggregator Service by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/387>
+
+* Improved documentation compiling on docs.rs
+  * chore: apply cargo doc metadata to crates by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/441>
+  * docs: fix doc warnings by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/438>
+  * docs: inline `eigensdk` documentation by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/439>
+
 ### Other Changes
 
 * Moved test utils from chainio folder to testing/testutils folder by @maximopalopoli in [#407](https://github.com/Layr-Labs/eigensdk-rs/pull/407)
 * Added rewards utilities integration test by @maximopalopoli in [#404](https://github.com/Layr-Labs/eigensdk-rs/pull/404)
+* test: check quorum creation after service initialization is working by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/400>
+* chore: use common testing utils in bls_agg_test in PR [#420](https://github.com/Layr-Labs/eigensdk-rs/pull/420).
+* chore: remove unused dependency in `eigen-cli` by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/421>
+* test: wait for transaction before doing call by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/422>
+* chore: merge changes from main branch by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/446>
 
-* chore: use common testing utils in bls_agg_test in PR [420](https://github.com/Layr-Labs/eigensdk-rs/pull/420).
+* Fixed release workflow. We now use release-plz for releases.
+  * ci: add workflow_dispatch for release-plz by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/448>
+  * fix: ignore integration tests crate when publishing by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/449>
+  * fix: use path-only dependency for testing utils by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/450>
 
 ## [0.5.0] - 2025-03-18
 
