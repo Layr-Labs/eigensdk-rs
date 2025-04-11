@@ -103,3 +103,9 @@ pub use eigen_aggregator as aggregator;
 #[doc(inline)]
 #[cfg(feature = "operator")]
 pub use eigen_operator as operator;
+
+/* ------------------------------------ Task Generator Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "task-generator")]
+pub use eigen_task_generator as task_generator;
