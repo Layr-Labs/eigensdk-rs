@@ -114,10 +114,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
-### Deprecated ⚠️
-
-### Removed
-
 ### Documentation 📚
 
 * Added documentation for service crates:
