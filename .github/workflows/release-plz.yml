@@ -5,13 +5,13 @@ permissions:
   contents: write
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
       - dev
 
 jobs:
-
   # Release unpublished packages.
   release-plz-release:
     name: Release-plz release
