@@ -19,6 +19,7 @@ library IAllocationManagerTypes {
     clippy::empty_structs_with_brackets
 )]
 pub mod IAllocationManagerTypes {
+    use super::AllocationManager::OperatorSet;
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     #[derive()]
