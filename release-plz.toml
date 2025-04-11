@@ -15,3 +15,8 @@ git_tag_name = "v{{ version }}"
 git_tag_enable = true
 git_release_enable = true
 git_release_draft = true
+
+# Integration test packages
+[[package]]
+name = "chainio-integration-test"
+release = false
