@@ -608,6 +608,7 @@ pub mod PermissionController {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0\xE5W_5`\xE0\x1C\x80c\x91\0gE\x11a\0\x88W\x80c\xAD\x8A\xCAw\x11a\0cW\x80c\xAD\x8A\xCAw\x14a\x01\xDFW\x80c\xDFY\\\xB8\x14a\x01\xF2W\x80c\xEBZN\x87\x14a\x02\x05W\x80c\xFD\xDB\xDE\xFD\x14a\x02\x18W__\xFD[\x80c\x91\0gE\x14a\x01\x96W\x80c\x95\r\x80n\x14a\x01\xB9W\x80c\xAD_\"\x10\x14a\x01\xCCW__\xFD[\x80cT\xFDMP\x11a\0\xC3W\x80cT\xFDMP\x14a\x01$W\x80cb\x88\x06\xEF\x14a\x01BW\x80ck\xDD\xFA\x1F\x14a\x01UW\x80c\x88*;8\x14a\x01uW__\xFD[\x80c\x06d\x12\x01\x14a\0\xE9W\x80c&\x89Y\xE5\x14a\0\xFEW\x80cO\x90l\xF9\x14a\x01\x11W[__\xFD[a\0\xFCa\0\xF76`\x04a\r\xBDV[a\x02+V[\0[a\0\xFCa\x01\x0C6`\x04a\x0E\x0EV[a\x03LV[a\0\xFCa\x01\x1F6`\x04a\x0E\x0EV[a\x04'V[a\x01,a\x04\xCAV[`@Qa\x019\x91\x90a\x0E?V[`@Q\x80\x91\x03\x90\xF3[a\0\xFCa\x01P6`\x04a\x0EtV[a\x04\xFAV[a\x01ha\x01c6`\x04a\x0EtV[a\x05\x88V[`@Qa\x019\x91\x90a\x0E\xD0V[a\x01\x88a\x01\x836`\x04a\x0E\x0EV[a\x05\xB1V[`@Qa\x019\x92\x91\x90a\x0E\xE2V[a\x01\xA9a\x01\xA46`\x04a\x0E\x0EV[a\x07\x12V[`@Q\x90\x15\x15\x81R` \x01a\x019V[a\0\xFCa\x01\xC76`\x04a\r\xBDV[a\x07\x82V[a\x01ha\x01\xDA6`\x04a\x0EtV[a\x08\x93V[a\x01\xA9a\x01\xED6`\x04a\x0E\x0EV[a\t9V[a\x01\xA9a\x02\x006`\x04a\r\xBDV[a\tZV[a\0\xFCa\x02\x136`\x04a\x0E\x0EV[a\t\xAFV[a\x01ha\x02&6`\x04a\x0FDV[a\n}V[\x83a\x026\x813a\x07\x12V[a\x02SW`@Qc{\xFAK\x9F`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\x01`\x01`\xA0\x1B\x03\x85\x16_\x90\x81R`\x01` R`@\x81 \x90a\x02u\x85\x85a\n\xBBV[`\x01`\x01`\xA0\x1B\x03\x87\x16_\x90\x81R`\x04\x84\x01` R`@\x90 \x90\x91Pa\x02\x9B\x90\x82a\n\xE8V[a\x02\xB8W`@Qc&!\x18\xCD`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\x01`\x01`\xA0\x1B\x03\x86\x16_\x90\x81R`\x04\x83\x01` R`@\x90 a\x02\xDB\x90\x82a\n\xFFV[P_\x81\x81R`\x05\x83\x01` R`@\x90 a\x02\xF5\x90\x87a\x0B\nV[P\x85`\x01`\x01`\xA0\x1B\x03\x16\x87`\x01`\x01`\xA0\x1B\x03\x16\x7F\x18$#&\xB6\xB8b\x12ipg\x97Y\x16\x9F\x01\xF6F\xBDU\xEC[\xFC\xAB\x85\xBA\x9F3zt\xE0\xC6\x87\x87`@Qa\x03;\x92\x91\x90a\x0F\x84V[`@Q\x80\x91\x03\x90\xA3PPPPPPPV[\x81a\x03W\x813a\x07\x12V[a\x03tW`@Qc{\xFAK\x9F`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\x01`\x01`\xA0\x1B\x03\x83\x16_\x90\x81R`\x01` \x81\x90R`@\x90\x91 `\x02\x01\x90a\x03\x9B\x82a\x0B\x1EV[\x11a\x03\xB9W`@Qc\x10\xCE\x89+`\xE3\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\x03\xC3\x81\x84a\x0B\nV[a\x03\xE0W`@Qc\x07\x16\xD8\x1B`\xE5\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`@Q`\x01`\x01`\xA0\x1B\x03\x84\x81\x16\x82R\x85\x16\x90\x7F\xDB\x9D]12\r\xAF[\xC7\x18\x1DV[m\xA4\xD1.0\xF0\xF4\xD5\xAA2J\x99$&\xC1J\x1D\x19\xCE\x90` \x01[`@Q\x80\x91\x03\x90\xA2PPPPV[\x81a\x042\x813a\x07\x12V[a\x04OW`@Qc{\xFAK\x9F`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\x01`\x01`\xA0\x1B\x03\x83\x16_\x90\x81R`\x01` R`@\x90 a\x04p\x81\x84a\x0B\nV[a\x04\x8DW`@Qc\xBE\xD8)_`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`@Q`\x01`\x01`\xA0\x1B\x03\x84\x81\x16\x82R\x85\x16\x90\x7F\xD7\x06\xEDz\xE0D\xD7\x95\xB4\x9ET\xC9\xF5\x19\xF6c\x059Q\x01\x19\x85\xF6c\xA8b\xCD\x9E\xE7*\x9A\xC7\x90` \x01a\x04\x19V[``a\x04\xF5\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0a\x0B'V[\x90P\x90V[`\x01`\x01`\xA0\x1B\x03\x81\x16_\x90\x81R`\x01` R`@\x90 a\x05\x1B\x813a\x0B\nV[a\x058W`@Qc\xBE\xD8)_`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\x05E`\x02\x82\x013a\x0BdV[P`@Q3\x81R`\x01`\x01`\xA0\x1B\x03\x83\x16\x90\x7F\xBF&^\x83&(Z'G\xE3>T\xD5\x94_q\x11\xF2\xB5\xED\xB8&\xEB\x8C\x08\xD4gwy\xB3\xFF\x97\x90` \x01`@Q\x80\x91\x03\x90\xA2PPV[`\x01`\x01`\xA0\x1B\x03\x81\x16_\x90\x81R`\x01` R`@\x90 ``\x90a\x05\xAB\x90a\x0BxV[\x92\x91PPV[`\x01`\x01`\xA0\x1B\x03\x80\x83\x16_\x90\x81R`\x01` \x90\x81R`@\x80\x83 \x93\x85\x16\x83R`\x04\x90\x93\x01\x90R\x90\x81 ``\x91\x82\x91\x90a\x05\xEA\x82a\x0B\x1EV[\x90P_\x81g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x06\x06Wa\x06\x06a\x0F\xA7V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x06/W\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_\x82g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x06LWa\x06La\x0F\xA7V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x06uW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[\x83\x81\x10\x15a\x07\x04Wa\x06\xA8a\x06\x8F\x86\x83a\x0B\x84V[``\x81\x90\x1C\x91`\xA0\x91\x90\x91\x1B`\x01`\x01`\xE0\x1B\x03\x19\x16\x90V[\x84\x83\x81Q\x81\x10a\x06\xBAWa\x06\xBAa\x0F\xBBV[` \x02` \x01\x01\x84\x84\x81Q\x81\x10a\x06\xD3Wa\x06\xD3a\x0F\xBBV[`\x01`\x01`\xE0\x1B\x03\x19\x90\x93\x16` \x93\x84\x02\x91\x90\x91\x01\x90\x92\x01\x91\x90\x91R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90R`\x01\x01a\x06zV[P\x90\x97\x90\x96P\x94PPPPPV[`\x01`\x01`\xA0\x1B\x03\x82\x16_\x90\x81R`\x01` R`@\x81 a\x075\x90`\x02\x01a\x0B\x1EV[_\x03a\x07WW\x81`\x01`\x01`\xA0\x1B\x03\x16\x83`\x01`\x01`\xA0\x1B\x03\x16\x14\x90Pa\x05\xABV[`\x01`\x01`\xA0\x1B\x03\x83\x16_\x90\x81R`\x01` R`@\x90 a\x07{\x90`\x02\x01\x83a\x0B\x8FV[\x93\x92PPPV[\x83a\x07\x8D\x813a\x07\x12V[a\x07\xAAW`@Qc{\xFAK\x9F`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\x01`\x01`\xA0\x1B\x03\x85\x16_\x90\x81R`\x01` R`@\x81 \x90a\x07\xCC\x85\x85a\n\xBBV[`\x01`\x01`\xA0\x1B\x03\x87\x16_\x90\x81R`\x04\x84\x01` R`@\x90 \x90\x91Pa\x07\xF2\x90\x82a\n\xE8V[\x15a\x08\x10W`@Qc\xAD\x8E\xFE\xB7`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\x01`\x01`\xA0\x1B\x03\x86\x16_\x90\x81R`\x04\x83\x01` R`@\x90 a\x083\x90\x82a\x0B\xB0V[P_\x81\x81R`\x05\x83\x01` R`@\x90 a\x08M\x90\x87a\x0BdV[P\x85`\x01`\x01`\xA0\x1B\x03\x16\x87`\x01`\x01`\xA0\x1B\x03\x16\x7F\x03\x7F\x03\xA2\xADk\x96}\xF4\xA0\x17y\xB6\xD2\xB4\xC8YP\xDF\x83\x92]\x9E16+Q\x94\"\xFC\x01i\x87\x87`@Qa\x03;\x92\x91\x90a\x0F\x84V[`\x01`\x01`\xA0\x1B\x03\x81\x16_\x90\x81R`\x01` R`@\x90 ``\x90a\x08\xB9\x90`\x02\x01a\x0B\x1EV[_\x03a\t\x11W`@\x80Q`\x01\x80\x82R\x81\x83\x01\x90\x92R_\x91` \x80\x83\x01\x90\x806\x837\x01\x90PP\x90P\x82\x81_\x81Q\x81\x10a\x08\xF3Wa\x08\xF3a\x0F\xBBV[`\x01`\x01`\xA0\x1B\x03\x90\x92\x16` \x92\x83\x02\x91\x90\x91\x01\x90\x91\x01R\x92\x91PPV[`\x01`\x01`\xA0\x1B\x03\x82\x16_\x90\x81R`\x01` R`@\x90 a\x05\xAB\x90`\x02\x01a\x0BxV[\x91\x90PV[`\x01`\x01`\xA0\x1B\x03\x82\x16_\x90\x81R`\x01` R`@\x81 a\x07{\x90\x83a\x0B\x8FV[_a\te\x85\x85a\x07\x12V[\x80a\t\xA6WPa\t\xA6a\tx\x84\x84a\n\xBBV[`\x01`\x01`\xA0\x1B\x03\x80\x88\x16_\x90\x81R`\x01` \x90\x81R`@\x80\x83 \x93\x8A\x16\x83R`\x04\x90\x93\x01\x90R \x90a\n\xE8V[\x95\x94PPPPPV[\x81a\t\xBA\x813a\x07\x12V[a\t\xD7W`@Qc{\xFAK\x9F`\xE0\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`\x01`\x01`\xA0\x1B\x03\x83\x16_\x90\x81R`\x01` R`@\x90 a\t\xFB`\x02\x82\x01\x84a\x0B\x8FV[\x15a\n\x19W`@Qc\x13\x01`\xE5`\xE3\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\n#\x81\x84a\x0BdV[a\n@W`@Qc\x19\xAB\xED\xE3`\xE1\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[`@Q`\x01`\x01`\xA0\x1B\x03\x84\x81\x16\x82R\x85\x16\x90\x7F\xB1K\x9A=D\x8C[\x04\xF0\xE5\xB0\x87\xB6\xF5\x193\x90\xDByUH*o\xFB\x84\x1E{;\xA6\x1AF\x0C\x90` \x01a\x04\x19V[``_a\n\x8A\x84\x84a\n\xBBV[`\x01`\x01`\xA0\x1B\x03\x86\x16_\x90\x81R`\x01` \x90\x81R`@\x80\x83 \x84\x84R`\x05\x01\x90\x91R\x90 \x90\x91Pa\t\xA6\x90a\x0BxV[``\x91\x90\x91\x1Bk\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x16`\xA0\x91\x90\x91\x1Ck\xFF\xFF\xFF\xFF\0\0\0\0\0\0\0\0\x16\x17\x90V[_\x81\x81R`\x01\x83\x01` R`@\x81 T\x15\x15a\x07{V[_a\x07{\x83\x83a\x0B\xBBV[_a\x07{\x83`\x01`\x01`\xA0\x1B\x03\x84\x16a\x0B\xBBV[_a\x05\xAB\x82T\x90V[``_a\x0B3\x83a\x0C\x9EV[`@\x80Q` \x80\x82R\x81\x83\x01\x90\x92R\x91\x92P_\x91\x90` \x82\x01\x81\x806\x837PPP\x91\x82RP` \x81\x01\x92\x90\x92RP\x90V[_a\x07{\x83`\x01`\x01`\xA0\x1B\x03\x84\x16a\x0C\xC5V[``_a\x07{\x83a\r\x11V[_a\x07{\x83\x83a\rjV[`\x01`\x01`\xA0\x1B\x03\x81\x16_\x90\x81R`\x01\x83\x01` R`@\x81 T\x15\x15a\x07{V[_a\x07{\x83\x83a\x0C\xC5V[_\x81\x81R`\x01\x83\x01` R`@\x81 T\x80\x15a\x0C\x95W_a\x0B\xDD`\x01\x83a\x0F\xCFV[\x85T\x90\x91P_\x90a\x0B\xF0\x90`\x01\x90a\x0F\xCFV[\x90P\x81\x81\x14a\x0COW_\x86_\x01\x82\x81T\x81\x10a\x0C\x0EWa\x0C\x0Ea\x0F\xBBV[\x90_R` _ \x01T\x90P\x80\x87_\x01\x84\x81T\x81\x10a\x0C.Wa\x0C.a\x0F\xBBV[_\x91\x82R` \x80\x83 \x90\x91\x01\x92\x90\x92U\x91\x82R`\x01\x88\x01\x90R`@\x90 \x83\x90U[\x85T\x86\x90\x80a\x0C`Wa\x0C`a\x0F\xEEV[`\x01\x90\x03\x81\x81\x90_R` _ \x01_\x90U\x90U\x85`\x01\x01_\x86\x81R` \x01\x90\x81R` \x01_ _\x90U`\x01\x93PPPPa\x05\xABV[_\x91PPa\x05\xABV[_`\xFF\x82\x16`\x1F\x81\x11\x15a\x05\xABW`@Qc,\xD4J\xC3`\xE2\x1B\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[_\x81\x81R`\x01\x83\x01` R`@\x81 Ta\r\nWP\x81T`\x01\x81\x81\x01\x84U_\x84\x81R` \x80\x82 \x90\x93\x01\x84\x90U\x84T\x84\x82R\x82\x86\x01\x90\x93R`@\x90 \x91\x90\x91Ua\x05\xABV[P_a\x05\xABV[``\x81_\x01\x80T\x80` \x02` \x01`@Q\x90\x81\x01`@R\x80\x92\x91\x90\x81\x81R` \x01\x82\x80T\x80\x15a\r^W` \x02\x82\x01\x91\x90_R` _ \x90[\x81T\x81R` \x01\x90`\x01\x01\x90\x80\x83\x11a\rJW[PPPPP\x90P\x91\x90PV[_\x82_\x01\x82\x81T\x81\x10a\r\x7FWa\r\x7Fa\x0F\xBBV[\x90_R` _ \x01T\x90P\x92\x91PPV[\x805`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\t4W__\xFD[\x805`\x01`\x01`\xE0\x1B\x03\x19\x81\x16\x81\x14a\t4W__\xFD[____`\x80\x85\x87\x03\x12\x15a\r\xD0W__\xFD[a\r\xD9\x85a\r\x90V[\x93Pa\r\xE7` \x86\x01a\r\x90V[\x92Pa\r\xF5`@\x86\x01a\r\x90V[\x91Pa\x0E\x03``\x86\x01a\r\xA6V[\x90P\x92\x95\x91\x94P\x92PV[__`@\x83\x85\x03\x12\x15a\x0E\x1FW__\xFD[a\x0E(\x83a\r\x90V[\x91Pa\x0E6` \x84\x01a\r\x90V[\x90P\x92P\x92\x90PV[` \x81R_\x82Q\x80` \x84\x01R\x80` \x85\x01`@\x85\x01^_`@\x82\x85\x01\x01R`@`\x1F\x19`\x1F\x83\x01\x16\x84\x01\x01\x91PP\x92\x91PPV[_` \x82\x84\x03\x12\x15a\x0E\x84W__\xFD[a\x07{\x82a\r\x90V[_\x81Q\x80\x84R` \x84\x01\x93P` \x83\x01_[\x82\x81\x10\x15a\x0E\xC6W\x81Q`\x01`\x01`\xA0\x1B\x03\x16\x86R` \x95\x86\x01\x95\x90\x91\x01\x90`\x01\x01a\x0E\x9FV[P\x93\x94\x93PPPPV[` \x81R_a\x07{` \x83\x01\x84a\x0E\x8DV[`@\x81R_a\x0E\xF4`@\x83\x01\x85a\x0E\x8DV[\x82\x81\x03` \x84\x01R\x80\x84Q\x80\x83R` \x83\x01\x91P` \x86\x01\x92P_[\x81\x81\x10\x15a\x0F8W\x83Q`\x01`\x01`\xE0\x1B\x03\x19\x16\x83R` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a\x0F\x10V[P\x90\x96\x95PPPPPPV[___``\x84\x86\x03\x12\x15a\x0FVW__\xFD[a\x0F_\x84a\r\x90V[\x92Pa\x0Fm` \x85\x01a\r\x90V[\x91Pa\x0F{`@\x85\x01a\r\xA6V[\x90P\x92P\x92P\x92V[`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x82R`\x01`\x01`\xE0\x1B\x03\x19\x16` \x82\x01R`@\x01\x90V[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[cNH{q`\xE0\x1B_R`2`\x04R`$_\xFD[\x81\x81\x03\x81\x81\x11\x15a\x05\xABWcNH{q`\xE0\x1B_R`\x11`\x04R`$_\xFD[cNH{q`\xE0\x1B_R`1`\x04R`$_\xFD\xFE\xA2dipfsX\"\x12 \xD2\x7F\xC5xU=\x9B\x08\x9F\xB6\xC1\xE7\xB6\xC2\xD4_\x13,\xB0\x89\xBD\t\x0F\xFC\xDF}\xAD\x08b\x8DN\x84dsolcC\0\x08\x1B\x003",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `AdminAlreadyPending()` and selector `0x3357dbc6`.
     ```solidity
     error AdminAlreadyPending();
@@ -668,6 +669,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `AdminAlreadySet()` and selector `0x980b0728`.
     ```solidity
     error AdminAlreadySet();
@@ -728,6 +730,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `AdminNotPending()` and selector `0xbed8295f`.
     ```solidity
     error AdminNotPending();
@@ -788,6 +791,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `AdminNotSet()` and selector `0xe2db0360`.
     ```solidity
     error AdminNotSet();
@@ -848,6 +852,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `AppointeeAlreadySet()` and selector `0xad8efeb7`.
     ```solidity
     error AppointeeAlreadySet();
@@ -908,6 +913,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `AppointeeNotSet()` and selector `0x262118cd`.
     ```solidity
     error AppointeeNotSet();
@@ -968,6 +974,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `CannotHaveZeroAdmins()` and selector `0x86744958`.
     ```solidity
     error CannotHaveZeroAdmins();
@@ -1028,6 +1035,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidShortString()` and selector `0xb3512b0c`.
     ```solidity
     error InvalidShortString();
@@ -1088,6 +1096,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `NotAdmin()` and selector `0x7bfa4b9f`.
     ```solidity
     error NotAdmin();
@@ -1148,6 +1157,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `StringTooLong(string)` and selector `0x305a27a9`.
     ```solidity
     error StringTooLong(string str);
@@ -1215,6 +1225,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `AdminRemoved(address,address)` and selector `0xdb9d5d31320daf5bc7181d565b6da4d12e30f0f4d5aa324a992426c14a1d19ce`.
     ```solidity
     event AdminRemoved(address indexed account, address admin);
@@ -1324,6 +1335,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `AdminSet(address,address)` and selector `0xbf265e8326285a2747e33e54d5945f7111f2b5edb826eb8c08d4677779b3ff97`.
     ```solidity
     event AdminSet(address indexed account, address admin);
@@ -1433,6 +1445,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `AppointeeRemoved(address,address,address,bytes4)` and selector `0x18242326b6b862126970679759169f01f646bd55ec5bfcab85ba9f337a74e0c6`.
     ```solidity
     event AppointeeRemoved(address indexed account, address indexed appointee, address target, bytes4 selector);
@@ -1562,6 +1575,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `AppointeeSet(address,address,address,bytes4)` and selector `0x037f03a2ad6b967df4a01779b6d2b4c85950df83925d9e31362b519422fc0169`.
     ```solidity
     event AppointeeSet(address indexed account, address indexed appointee, address target, bytes4 selector);
@@ -1691,6 +1705,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Initialized(uint8)` and selector `0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498`.
     ```solidity
     event Initialized(uint8 version);
@@ -1789,6 +1804,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PendingAdminAdded(address,address)` and selector `0xb14b9a3d448c5b04f0e5b087b6f5193390db7955482a6ffb841e7b3ba61a460c`.
     ```solidity
     event PendingAdminAdded(address indexed account, address admin);
@@ -1898,6 +1914,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PendingAdminRemoved(address,address)` and selector `0xd706ed7ae044d795b49e54c9f519f663053951011985f663a862cd9ee72a9ac7`.
     ```solidity
     event PendingAdminRemoved(address indexed account, address admin);
@@ -2068,6 +2085,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `acceptAdmin(address)` and selector `0x628806ef`.
     ```solidity
     function acceptAdmin(address account) external;
@@ -2183,6 +2201,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `addPendingAdmin(address,address)` and selector `0xeb5a4e87`.
     ```solidity
     function addPendingAdmin(address account, address admin) external;
@@ -2315,6 +2334,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `canCall(address,address,address,bytes4)` and selector `0xdf595cb8`.
     ```solidity
     function canCall(address account, address caller, address target, bytes4 selector) external view returns (bool);
@@ -2331,6 +2351,7 @@ pub mod PermissionController {
         #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`canCall(address,address,address,bytes4)`](canCallCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2468,6 +2489,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getAdmins(address)` and selector `0xad5f2210`.
     ```solidity
     function getAdmins(address account) external view returns (address[] memory);
@@ -2478,6 +2500,7 @@ pub mod PermissionController {
         #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getAdmins(address)`](getAdminsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2589,6 +2612,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getAppointeePermissions(address,address)` and selector `0x882a3b38`.
     ```solidity
     function getAppointeePermissions(address account, address appointee) external view returns (address[] memory, bytes4[] memory);
@@ -2601,6 +2625,7 @@ pub mod PermissionController {
         #[allow(missing_docs)]
         pub appointee: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getAppointeePermissions(address,address)`](getAppointeePermissionsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2738,6 +2763,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getAppointees(address,address,bytes4)` and selector `0xfddbdefd`.
     ```solidity
     function getAppointees(address account, address target, bytes4 selector) external view returns (address[] memory);
@@ -2752,6 +2778,7 @@ pub mod PermissionController {
         #[allow(missing_docs)]
         pub selector: alloy::sol_types::private::FixedBytes<4>,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getAppointees(address,address,bytes4)`](getAppointeesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2885,6 +2912,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getPendingAdmins(address)` and selector `0x6bddfa1f`.
     ```solidity
     function getPendingAdmins(address account) external view returns (address[] memory);
@@ -2895,6 +2923,7 @@ pub mod PermissionController {
         #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getPendingAdmins(address)`](getPendingAdminsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3006,6 +3035,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `isAdmin(address,address)` and selector `0x91006745`.
     ```solidity
     function isAdmin(address account, address caller) external view returns (bool);
@@ -3018,6 +3048,7 @@ pub mod PermissionController {
         #[allow(missing_docs)]
         pub caller: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`isAdmin(address,address)`](isAdminCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3141,6 +3172,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `isPendingAdmin(address,address)` and selector `0xad8aca77`.
     ```solidity
     function isPendingAdmin(address account, address pendingAdmin) external view returns (bool);
@@ -3153,6 +3185,7 @@ pub mod PermissionController {
         #[allow(missing_docs)]
         pub pendingAdmin: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`isPendingAdmin(address,address)`](isPendingAdminCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3276,6 +3309,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `removeAdmin(address,address)` and selector `0x268959e5`.
     ```solidity
     function removeAdmin(address account, address admin) external;
@@ -3408,6 +3442,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `removeAppointee(address,address,address,bytes4)` and selector `0x06641201`.
     ```solidity
     function removeAppointee(address account, address appointee, address target, bytes4 selector) external;
@@ -3558,6 +3593,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `removePendingAdmin(address,address)` and selector `0x4f906cf9`.
     ```solidity
     function removePendingAdmin(address account, address admin) external;
@@ -3690,6 +3726,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setAppointee(address,address,address,bytes4)` and selector `0x950d806e`.
     ```solidity
     function setAppointee(address account, address appointee, address target, bytes4 selector) external;
@@ -3840,6 +3877,7 @@ pub mod PermissionController {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `version()` and selector `0x54fd4d50`.
     ```solidity
     function version() external view returns (string memory);
@@ -3847,6 +3885,7 @@ pub mod PermissionController {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct versionCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`version()`](versionCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3952,6 +3991,7 @@ pub mod PermissionController {
         }
     };
     ///Container for all the [`PermissionController`](self) function calls.
+    #[derive()]
     pub enum PermissionControllerCalls {
         #[allow(missing_docs)]
         acceptAdmin(acceptAdminCall),
@@ -4332,6 +4372,7 @@ pub mod PermissionController {
         }
     }
     ///Container for all the [`PermissionController`](self) custom errors.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum PermissionControllerErrors {
         #[allow(missing_docs)]
         AdminAlreadyPending(AdminAlreadyPending),
@@ -4624,6 +4665,7 @@ pub mod PermissionController {
         }
     }
     ///Container for all the [`PermissionController`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum PermissionControllerEvents {
         #[allow(missing_docs)]
         AdminRemoved(AdminRemoved),

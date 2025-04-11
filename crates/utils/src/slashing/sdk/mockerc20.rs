@@ -344,6 +344,7 @@ pub mod MockERC20 {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"`\x80\x80`@R`\x046\x10\x15a\0\x12W_\x80\xFD[_5`\xE0\x1C\x90\x81c\x06\xFD\xDE\x03\x14a\x04\xB0WP\x80c\t^\xA7\xB3\x14a\x04\x8AW\x80c\x18\x16\r\xDD\x14a\x04mW\x80c#\xB8r\xDD\x14a\x04@W\x80c1<\xE5g\x14a\x04%W\x80c9P\x93Q\x14a\x03\xD7W\x80c@\xC1\x0F\x19\x14a\x03\x1AW\x80cp\xA0\x821\x14a\x02\xE3W\x80c\x95\xD8\x9BA\x14a\x01\xC8W\x80c\xA4W\xC2\xD7\x14a\x01%W\x80c\xA9\x05\x9C\xBB\x14a\0\xF4Wc\xDDb\xED>\x14a\0\xA0W_\x80\xFD[4a\0\xF0W`@6`\x03\x19\x01\x12a\0\xF0Wa\0\xB9a\x05\xA9V[a\0\xC1a\x05\xBFV[`\x01`\x01`\xA0\x1B\x03\x91\x82\x16_\x90\x81R`\x01` \x90\x81R`@\x80\x83 \x94\x90\x93\x16\x82R\x92\x83R\x81\x90 T\x90Q\x90\x81R\xF3[_\x80\xFD[4a\0\xF0W`@6`\x03\x19\x01\x12a\0\xF0Wa\x01\x1Aa\x01\x10a\x05\xA9V[`$5\x903a\x06\xFAV[` `@Q`\x01\x81R\xF3[4a\0\xF0W`@6`\x03\x19\x01\x12a\0\xF0Wa\x01>a\x05\xA9V[`$5\x903_R`\x01` R`@_ `\x01\x80`\xA0\x1B\x03\x82\x16_R` R`@_ T\x91\x80\x83\x10a\x01uWa\x01\x1A\x92\x03\x903a\x05\xF6V[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`%`$\x82\x01R\x7FERC20: decreased allowance below`D\x82\x01Rd zero`\xD8\x1B`d\x82\x01R`\x84\x90\xFD[4a\0\xF0W_6`\x03\x19\x01\x12a\0\xF0W`@Q_`\x04T\x80`\x01\x1C\x90`\x01\x81\x16\x80\x15a\x02\xD9W[` \x83\x10\x81\x14a\x02\xC5W\x82\x85R\x90\x81\x15a\x02\xA9WP`\x01\x14a\x02TW[P\x81\x90\x03`\x1F\x01`\x1F\x19\x16\x81\x01\x90g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x81\x83\x10\x17a\x02@Wa\x02<\x82\x91\x82`@R\x82a\x05\x7FV[\x03\x90\xF3[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[\x90P`\x04_R\x7F\x8A5\xAC\xFB\xC1_\xF8\x1A9\xAE}4O\xD7\t\xF2\x8E\x86\0\xB4\xAA\x8Ce\xC6\xB6K\xFE\x7F\xE3k\xD1\x9B_\x90[\x82\x82\x10a\x02\x93WP` \x91P\x82\x01\x01\x82a\x02\x0CV[`\x01\x81` \x92T\x83\x85\x88\x01\x01R\x01\x91\x01\x90a\x02~V[\x90P` \x92P`\xFF\x19\x16\x82\x84\x01R\x15\x15`\x05\x1B\x82\x01\x01\x82a\x02\x0CV[cNH{q`\xE0\x1B_R`\"`\x04R`$_\xFD[\x91`\x7F\x16\x91a\x01\xEFV[4a\0\xF0W` 6`\x03\x19\x01\x12a\0\xF0W`\x01`\x01`\xA0\x1B\x03a\x03\x04a\x05\xA9V[\x16_R_` R` `@_ T`@Q\x90\x81R\xF3[4a\0\xF0W`@6`\x03\x19\x01\x12a\0\xF0Wa\x033a\x05\xA9V[`\x01`\x01`\xA0\x1B\x03\x16`$5\x81\x15a\x03\x92W\x7F\xDD\xF2R\xAD\x1B\xE2\xC8\x9Bi\xC2\xB0h\xFC7\x8D\xAA\x95+\xA7\xF1c\xC4\xA1\x16(\xF5ZM\xF5#\xB3\xEF` \x82a\x03v_\x94`\x02Ta\x05\xD5V[`\x02U\x84\x84R\x83\x82R`@\x84 \x81\x81T\x01\x90U`@Q\x90\x81R\xA3\0[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1F`$\x82\x01R\x7FERC20: mint to the zero address\0`D\x82\x01R`d\x90\xFD[4a\0\xF0W`@6`\x03\x19\x01\x12a\0\xF0Wa\x01\x1Aa\x03\xF3a\x05\xA9V[3_R`\x01` R`@_ `\x01\x80`\xA0\x1B\x03\x82\x16_R` Ra\x04\x1E`@_ `$5\x90Ta\x05\xD5V[\x903a\x05\xF6V[4a\0\xF0W_6`\x03\x19\x01\x12a\0\xF0W` `@Q`\x12\x81R\xF3[4a\0\xF0W``6`\x03\x19\x01\x12a\0\xF0Wa\x01\x1Aa\x04\\a\x05\xA9V[a\x04da\x05\xBFV[`D5\x91a\x06\xFAV[4a\0\xF0W_6`\x03\x19\x01\x12a\0\xF0W` `\x02T`@Q\x90\x81R\xF3[4a\0\xF0W`@6`\x03\x19\x01\x12a\0\xF0Wa\x01\x1Aa\x04\xA6a\x05\xA9V[`$5\x903a\x05\xF6V[4a\0\xF0W_6`\x03\x19\x01\x12a\0\xF0W_`\x03T\x80`\x01\x1C\x90`\x01\x81\x16\x80\x15a\x05uW[` \x83\x10\x81\x14a\x02\xC5W\x82\x85R\x90\x81\x15a\x02\xA9WP`\x01\x14a\x05 WP\x81\x90\x03`\x1F\x01`\x1F\x19\x16\x81\x01\x90g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x81\x83\x10\x17a\x02@Wa\x02<\x82\x91\x82`@R\x82a\x05\x7FV[\x90P`\x03_R\x7F\xC2WZ\x0E\x9EY<\0\xF9Y\xF8\xC9/\x12\xDB(i\xC39Z;\x05\x02\xD0^%\x16Doq\xF8[_\x90[\x82\x82\x10a\x05_WP` \x91P\x82\x01\x01\x82a\x02\x0CV[`\x01\x81` \x92T\x83\x85\x88\x01\x01R\x01\x91\x01\x90a\x05JV[\x91`\x7F\x16\x91a\x04\xD4V[` `@\x92\x81\x83R\x80Q\x91\x82\x91\x82\x82\x86\x01R\x01\x84\x84\x01^_\x82\x82\x01\x84\x01R`\x1F\x01`\x1F\x19\x16\x01\x01\x90V[`\x045\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\0\xF0WV[`$5\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\0\xF0WV[\x91\x90\x82\x01\x80\x92\x11a\x05\xE2WV[cNH{q`\xE0\x1B_R`\x11`\x04R`$_\xFD[`\x01`\x01`\xA0\x1B\x03\x16\x90\x81\x15a\x06\xA9W`\x01`\x01`\xA0\x1B\x03\x16\x91\x82\x15a\x06YW` \x7F\x8C[\xE1\xE5\xEB\xEC}[\xD1OqB}\x1E\x84\xF3\xDD\x03\x14\xC0\xF7\xB2)\x1E[ \n\xC8\xC7\xC3\xB9%\x91\x83_R`\x01\x82R`@_ \x85_R\x82R\x80`@_ U`@Q\x90\x81R\xA3V[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\"`$\x82\x01R\x7FERC20: approve to the zero addre`D\x82\x01Rass`\xF0\x1B`d\x82\x01R`\x84\x90\xFD[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`$\x80\x82\x01R\x7FERC20: approve from the zero add`D\x82\x01Rcress`\xE0\x1B`d\x82\x01R`\x84\x90\xFD[`\x01`\x01`\xA0\x1B\x03\x16\x90\x81\x15a\x08\x1DW`\x01`\x01`\xA0\x1B\x03\x16\x91\x82\x15a\x07\xCCW\x81_R_` R`@_ T\x81\x81\x10a\x07xW\x81\x7F\xDD\xF2R\xAD\x1B\xE2\xC8\x9Bi\xC2\xB0h\xFC7\x8D\xAA\x95+\xA7\xF1c\xC4\xA1\x16(\xF5ZM\xF5#\xB3\xEF\x92` \x92\x85_R_\x84R\x03`@_ U\x84_R_\x82R`@_ \x81\x81T\x01\x90U`@Q\x90\x81R\xA3V[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FERC20: transfer amount exceeds b`D\x82\x01Realance`\xD0\x1B`d\x82\x01R`\x84\x90\xFD[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`#`$\x82\x01R\x7FERC20: transfer to the zero addr`D\x82\x01Rbess`\xE8\x1B`d\x82\x01R`\x84\x90\xFD[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`%`$\x82\x01R\x7FERC20: transfer from the zero ad`D\x82\x01Rddress`\xD8\x1B`d\x82\x01R`\x84\x90\xFD\xFE\xA2dipfsX\"\x12 \xC7\xBA\xCA\xCEj\xEAm\xBFf\x9A\x92\x07\x96\xCAH\xB6}JNz2<pTy\xC0qN]\x0B\xD3'dsolcC\0\x08\x1B\x003",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Approval(address,address,uint256)` and selector `0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925`.
     ```solidity
     event Approval(address indexed owner, address indexed spender, uint256 value);
@@ -464,6 +465,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Transfer(address,address,uint256)` and selector `0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef`.
     ```solidity
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -584,6 +586,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `allowance(address,address)` and selector `0xdd62ed3e`.
     ```solidity
     function allowance(address owner, address spender) external view returns (uint256);
@@ -596,6 +599,7 @@ pub mod MockERC20 {
         #[allow(missing_docs)]
         pub spender: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`allowance(address,address)`](allowanceCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -719,6 +723,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `approve(address,uint256)` and selector `0x095ea7b3`.
     ```solidity
     function approve(address spender, uint256 amount) external returns (bool);
@@ -731,6 +736,7 @@ pub mod MockERC20 {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`approve(address,uint256)`](approveCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -854,6 +860,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `balanceOf(address)` and selector `0x70a08231`.
     ```solidity
     function balanceOf(address account) external view returns (uint256);
@@ -864,6 +871,7 @@ pub mod MockERC20 {
         #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`balanceOf(address)`](balanceOfCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -972,6 +980,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `decimals()` and selector `0x313ce567`.
     ```solidity
     function decimals() external view returns (uint8);
@@ -979,6 +988,7 @@ pub mod MockERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct decimalsCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`decimals()`](decimalsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1083,6 +1093,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `decreaseAllowance(address,uint256)` and selector `0xa457c2d7`.
     ```solidity
     function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool);
@@ -1095,6 +1106,7 @@ pub mod MockERC20 {
         #[allow(missing_docs)]
         pub subtractedValue: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`decreaseAllowance(address,uint256)`](decreaseAllowanceCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1218,6 +1230,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `increaseAllowance(address,uint256)` and selector `0x39509351`.
     ```solidity
     function increaseAllowance(address spender, uint256 addedValue) external returns (bool);
@@ -1230,6 +1243,7 @@ pub mod MockERC20 {
         #[allow(missing_docs)]
         pub addedValue: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`increaseAllowance(address,uint256)`](increaseAllowanceCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1353,6 +1367,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `mint(address,uint256)` and selector `0x40c10f19`.
     ```solidity
     function mint(address account, uint256 amount) external;
@@ -1485,6 +1500,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `name()` and selector `0x06fdde03`.
     ```solidity
     function name() external view returns (string memory);
@@ -1492,6 +1508,7 @@ pub mod MockERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct nameCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`name()`](nameCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1596,6 +1613,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `symbol()` and selector `0x95d89b41`.
     ```solidity
     function symbol() external view returns (string memory);
@@ -1603,6 +1621,7 @@ pub mod MockERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct symbolCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`symbol()`](symbolCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1707,6 +1726,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `totalSupply()` and selector `0x18160ddd`.
     ```solidity
     function totalSupply() external view returns (uint256);
@@ -1714,6 +1734,7 @@ pub mod MockERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalSupplyCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`totalSupply()`](totalSupplyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1818,6 +1839,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transfer(address,uint256)` and selector `0xa9059cbb`.
     ```solidity
     function transfer(address to, uint256 amount) external returns (bool);
@@ -1830,6 +1852,7 @@ pub mod MockERC20 {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`transfer(address,uint256)`](transferCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1953,6 +1976,7 @@ pub mod MockERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transferFrom(address,address,uint256)` and selector `0x23b872dd`.
     ```solidity
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
@@ -1967,6 +1991,7 @@ pub mod MockERC20 {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`transferFrom(address,address,uint256)`](transferFromCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2098,6 +2123,7 @@ pub mod MockERC20 {
         }
     };
     ///Container for all the [`MockERC20`](self) function calls.
+    #[derive()]
     pub enum MockERC20Calls {
         #[allow(missing_docs)]
         allowance(allowanceCall),
@@ -2410,6 +2436,7 @@ pub mod MockERC20 {
         }
     }
     ///Container for all the [`MockERC20`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum MockERC20Events {
         #[allow(missing_docs)]
         Approval(Approval),

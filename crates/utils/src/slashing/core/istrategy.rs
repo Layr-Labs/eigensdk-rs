@@ -364,6 +364,7 @@ pub mod IStrategy {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `BalanceExceedsMaxTotalDeposits()` and selector `0xd86bae67`.
     ```solidity
     error BalanceExceedsMaxTotalDeposits();
@@ -424,6 +425,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `MaxPerDepositExceedsMax()` and selector `0x14ac1edc`.
     ```solidity
     error MaxPerDepositExceedsMax();
@@ -484,6 +486,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `NewSharesZero()` and selector `0x18725da6`.
     ```solidity
     error NewSharesZero();
@@ -544,6 +547,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `OnlyStrategyManager()` and selector `0x48da714f`.
     ```solidity
     error OnlyStrategyManager();
@@ -604,6 +608,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `OnlyUnderlyingToken()` and selector `0xc4aaf740`.
     ```solidity
     error OnlyUnderlyingToken();
@@ -664,6 +669,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `TotalSharesExceedsMax()` and selector `0x5e29d146`.
     ```solidity
     error TotalSharesExceedsMax();
@@ -724,6 +730,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `WithdrawalAmountExceedsTotalDeposits()` and selector `0xb469df30`.
     ```solidity
     error WithdrawalAmountExceedsTotalDeposits();
@@ -784,6 +791,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `ExchangeRateEmitted(uint256)` and selector `0xd2494f3479e5da49d386657c292c610b5b01df313d07c62eb0cfa49924a31be8`.
     ```solidity
     event ExchangeRateEmitted(uint256 rate);
@@ -882,6 +890,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `StrategyTokenSet(address,uint8)` and selector `0x1c540707b00eb5427b6b774fc799d756516a54aee108b64b327acc55af557507`.
     ```solidity
     event StrategyTokenSet(address token, uint8 decimals);
@@ -991,6 +1000,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `deposit(address,uint256)` and selector `0x47e7ef24`.
     ```solidity
     function deposit(address token, uint256 amount) external returns (uint256);
@@ -1003,6 +1013,7 @@ pub mod IStrategy {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`deposit(address,uint256)`](depositCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1126,6 +1137,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `explanation()` and selector `0xab5921e1`.
     ```solidity
     function explanation() external view returns (string memory);
@@ -1133,6 +1145,7 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct explanationCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`explanation()`](explanationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1237,6 +1250,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `shares(address)` and selector `0xce7c2ac2`.
     ```solidity
     function shares(address user) external view returns (uint256);
@@ -1247,6 +1261,7 @@ pub mod IStrategy {
         #[allow(missing_docs)]
         pub user: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`shares(address)`](sharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1355,6 +1370,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `sharesToUnderlying(uint256)` and selector `0xf3e73875`.
     ```solidity
     function sharesToUnderlying(uint256 amountShares) external returns (uint256);
@@ -1365,6 +1381,7 @@ pub mod IStrategy {
         #[allow(missing_docs)]
         pub amountShares: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`sharesToUnderlying(uint256)`](sharesToUnderlyingCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1475,6 +1492,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `sharesToUnderlyingView(uint256)` and selector `0x7a8b2637`.
     ```solidity
     function sharesToUnderlyingView(uint256 amountShares) external view returns (uint256);
@@ -1485,6 +1503,7 @@ pub mod IStrategy {
         #[allow(missing_docs)]
         pub amountShares: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`sharesToUnderlyingView(uint256)`](sharesToUnderlyingViewCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1595,6 +1614,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `totalShares()` and selector `0x3a98ef39`.
     ```solidity
     function totalShares() external view returns (uint256);
@@ -1602,6 +1622,7 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalSharesCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`totalShares()`](totalSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1706,6 +1727,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `underlyingToShares(uint256)` and selector `0x8c871019`.
     ```solidity
     function underlyingToShares(uint256 amountUnderlying) external returns (uint256);
@@ -1716,6 +1738,7 @@ pub mod IStrategy {
         #[allow(missing_docs)]
         pub amountUnderlying: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`underlyingToShares(uint256)`](underlyingToSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1826,6 +1849,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `underlyingToSharesView(uint256)` and selector `0xe3dae51c`.
     ```solidity
     function underlyingToSharesView(uint256 amountUnderlying) external view returns (uint256);
@@ -1836,6 +1860,7 @@ pub mod IStrategy {
         #[allow(missing_docs)]
         pub amountUnderlying: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`underlyingToSharesView(uint256)`](underlyingToSharesViewCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1946,6 +1971,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `underlyingToken()` and selector `0x2495a599`.
     ```solidity
     function underlyingToken() external view returns (address);
@@ -1953,6 +1979,7 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct underlyingTokenCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`underlyingToken()`](underlyingTokenCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2057,6 +2084,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `userUnderlying(address)` and selector `0x8f6a6240`.
     ```solidity
     function userUnderlying(address user) external returns (uint256);
@@ -2067,6 +2095,7 @@ pub mod IStrategy {
         #[allow(missing_docs)]
         pub user: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`userUnderlying(address)`](userUnderlyingCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2175,6 +2204,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `userUnderlyingView(address)` and selector `0x553ca5f8`.
     ```solidity
     function userUnderlyingView(address user) external view returns (uint256);
@@ -2185,6 +2215,7 @@ pub mod IStrategy {
         #[allow(missing_docs)]
         pub user: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`userUnderlyingView(address)`](userUnderlyingViewCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2293,6 +2324,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `version()` and selector `0x54fd4d50`.
     ```solidity
     function version() external view returns (string memory);
@@ -2300,6 +2332,7 @@ pub mod IStrategy {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct versionCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`version()`](versionCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2404,6 +2437,7 @@ pub mod IStrategy {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `withdraw(address,address,uint256)` and selector `0xd9caed12`.
     ```solidity
     function withdraw(address recipient, address token, uint256 amountShares) external;
@@ -2546,6 +2580,7 @@ pub mod IStrategy {
         }
     };
     ///Container for all the [`IStrategy`](self) function calls.
+    #[derive()]
     pub enum IStrategyCalls {
         #[allow(missing_docs)]
         deposit(depositCall),
@@ -2906,6 +2941,7 @@ pub mod IStrategy {
         }
     }
     ///Container for all the [`IStrategy`](self) custom errors.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IStrategyErrors {
         #[allow(missing_docs)]
         BalanceExceedsMaxTotalDeposits(BalanceExceedsMaxTotalDeposits),
@@ -3165,6 +3201,7 @@ pub mod IStrategy {
         }
     }
     ///Container for all the [`IStrategy`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IStrategyEvents {
         #[allow(missing_docs)]
         ExchangeRateEmitted(ExchangeRateEmitted),

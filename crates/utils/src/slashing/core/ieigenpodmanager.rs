@@ -12,7 +12,6 @@ interface IEigenPodManager {
     error OnlyDelegationManager();
     error OnlyEigenPod();
     error OnlyPauser();
-    error OnlyProofTimestampSetter();
     error OnlyUnpauser();
     error SharesNegative();
     error SharesNotMultipleOfGwei();
@@ -23,10 +22,8 @@ interface IEigenPodManager {
     event BurnableETHSharesIncreased(uint256 shares);
     event NewTotalShares(address indexed podOwner, int256 newTotalShares);
     event Paused(address indexed account, uint256 newPausedStatus);
-    event PectraForkTimestampSet(uint64 newPectraForkTimestamp);
     event PodDeployed(address indexed eigenPod, address indexed podOwner);
     event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
-    event ProofTimestampSetterSet(address newProofTimestampSetter);
     event Unpaused(address indexed account, uint256 newPausedStatus);
 
     function addShares(address staker, address strategy, uint256 shares) external returns (uint256, uint256);
@@ -46,12 +43,9 @@ interface IEigenPodManager {
     function paused(uint8 index) external view returns (bool);
     function paused() external view returns (uint256);
     function pauserRegistry() external view returns (address);
-    function pectraForkTimestamp() external view returns (uint64);
     function podOwnerDepositShares(address podOwner) external view returns (int256);
     function recordBeaconChainETHBalanceUpdate(address podOwner, uint256 prevRestakedBalanceWei, int256 balanceDeltaWei) external;
     function removeDepositShares(address staker, address strategy, uint256 depositSharesToRemove) external returns (uint256);
-    function setPectraForkTimestamp(uint64 timestamp) external;
-    function setProofTimestampSetter(address newProofTimestampSetter) external;
     function stake(bytes memory pubkey, bytes memory signature, bytes32 depositDataRoot) external payable;
     function stakerDepositShares(address user, address strategy) external view returns (uint256 depositShares);
     function unpause(uint256 newPausedStatus) external;
@@ -336,19 +330,6 @@ interface IEigenPodManager {
   },
   {
     "type": "function",
-    "name": "pectraForkTimestamp",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint64",
-        "internalType": "uint64"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "podOwnerDepositShares",
     "inputs": [
       {
@@ -416,32 +397,6 @@ interface IEigenPodManager {
         "internalType": "uint256"
       }
     ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setPectraForkTimestamp",
-    "inputs": [
-      {
-        "name": "timestamp",
-        "type": "uint64",
-        "internalType": "uint64"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setProofTimestampSetter",
-    "inputs": [
-      {
-        "name": "newProofTimestampSetter",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
@@ -685,19 +640,6 @@ interface IEigenPodManager {
   },
   {
     "type": "event",
-    "name": "PectraForkTimestampSet",
-    "inputs": [
-      {
-        "name": "newPectraForkTimestamp",
-        "type": "uint64",
-        "indexed": false,
-        "internalType": "uint64"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
     "name": "PodDeployed",
     "inputs": [
       {
@@ -730,19 +672,6 @@ interface IEigenPodManager {
         "type": "int256",
         "indexed": false,
         "internalType": "int256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "ProofTimestampSetterSet",
-    "inputs": [
-      {
-        "name": "newProofTimestampSetter",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
       }
     ],
     "anonymous": false
@@ -813,11 +742,6 @@ interface IEigenPodManager {
   },
   {
     "type": "error",
-    "name": "OnlyProofTimestampSetter",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "OnlyUnpauser",
     "inputs": []
   },
@@ -863,6 +787,7 @@ pub mod IEigenPodManager {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `CurrentlyPaused()` and selector `0x840a48d5`.
     ```solidity
     error CurrentlyPaused();
@@ -923,6 +848,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `EigenPodAlreadyExists()` and selector `0x0c6a1484`.
     ```solidity
     error EigenPodAlreadyExists();
@@ -983,6 +909,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InputAddressZero()` and selector `0x73632176`.
     ```solidity
     error InputAddressZero();
@@ -1043,6 +970,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidNewPausedStatus()` and selector `0xc61dca5d`.
     ```solidity
     error InvalidNewPausedStatus();
@@ -1103,6 +1031,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `InvalidStrategy()` and selector `0x4e236e9a`.
     ```solidity
     error InvalidStrategy();
@@ -1163,6 +1092,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `LegacyWithdrawalsNotCompleted()` and selector `0x4b692bcf`.
     ```solidity
     error LegacyWithdrawalsNotCompleted();
@@ -1223,6 +1153,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `OnlyDelegationManager()` and selector `0xf739589b`.
     ```solidity
     error OnlyDelegationManager();
@@ -1283,6 +1214,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `OnlyEigenPod()` and selector `0x25c2dae2`.
     ```solidity
     error OnlyEigenPod();
@@ -1343,6 +1275,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `OnlyPauser()` and selector `0x75df51dc`.
     ```solidity
     error OnlyPauser();
@@ -1403,66 +1336,7 @@ pub mod IEigenPodManager {
             }
         }
     };
-    /**Custom error with signature `OnlyProofTimestampSetter()` and selector `0x98611370`.
-    ```solidity
-    error OnlyProofTimestampSetter();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct OnlyProofTimestampSetter {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<OnlyProofTimestampSetter> for UnderlyingRustTuple<'_> {
-            fn from(value: OnlyProofTimestampSetter) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlyProofTimestampSetter {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for OnlyProofTimestampSetter {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "OnlyProofTimestampSetter()";
-            const SELECTOR: [u8; 4] = [152u8, 97u8, 19u8, 112u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `OnlyUnpauser()` and selector `0x794821ff`.
     ```solidity
     error OnlyUnpauser();
@@ -1523,6 +1397,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `SharesNegative()` and selector `0xef147de1`.
     ```solidity
     error SharesNegative();
@@ -1583,6 +1458,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Custom error with signature `SharesNotMultipleOfGwei()` and selector `0x8fa0e576`.
     ```solidity
     error SharesNotMultipleOfGwei();
@@ -1643,6 +1519,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `BeaconChainETHDeposited(address,uint256)` and selector `0x35a85cabc603f48abb2b71d9fbd8adea7c449d7f0be900ae7a2986ea369c3d0d`.
     ```solidity
     event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
@@ -1752,6 +1629,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `BeaconChainETHWithdrawalCompleted(address,uint256,uint96,address,address,bytes32)` and selector `0xa6bab1d55a361fcea2eee2bc9491e4f01e6cf333df03c9c4f2c144466429f7d6`.
     ```solidity
     event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares, uint96 nonce, address delegatedAddress, address withdrawer, bytes32 withdrawalRoot);
@@ -1892,6 +1770,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `BeaconChainSlashingFactorDecreased(address,uint64,uint64)` and selector `0xb160ab8589bf47dc04ea11b50d46678d21590cea2ed3e454e7bd3e41510f98cf`.
     ```solidity
     event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainSlashingFactor, uint64 newBeaconChainSlashingFactor);
@@ -2011,6 +1890,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `BurnableETHSharesIncreased(uint256)` and selector `0x1ed04b7fd262c0d9e50fa02957f32a81a151f03baaa367faeedc7521b001c4a4`.
     ```solidity
     event BurnableETHSharesIncreased(uint256 shares);
@@ -2109,6 +1989,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `NewTotalShares(address,int256)` and selector `0xd4def76d6d2bed6f14d5cd9af73cc2913d618d00edde42432e81c09bfe077098`.
     ```solidity
     event NewTotalShares(address indexed podOwner, int256 newTotalShares);
@@ -2218,6 +2099,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Paused(address,uint256)` and selector `0xab40a374bc51de372200a8bc981af8c9ecdc08dfdaef0bb6e09f88f3c616ef3d`.
     ```solidity
     event Paused(address indexed account, uint256 newPausedStatus);
@@ -2327,106 +2209,7 @@ pub mod IEigenPodManager {
             }
         }
     };
-    /**Event with signature `PectraForkTimestampSet(uint64)` and selector `0x1bc8f042a52db3a437620dea4548f2031fb2a16dd8d3b0b854295528dd2cdd33`.
-    ```solidity
-    event PectraForkTimestampSet(uint64 newPectraForkTimestamp);
-    ```*/
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    #[derive(Clone)]
-    pub struct PectraForkTimestampSet {
-        #[allow(missing_docs)]
-        pub newPectraForkTimestamp: u64,
-    }
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[automatically_derived]
-        impl alloy_sol_types::SolEvent for PectraForkTimestampSet {
-            type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<64>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
-            const SIGNATURE: &'static str = "PectraForkTimestampSet(uint64)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    27u8, 200u8, 240u8, 66u8, 165u8, 45u8, 179u8, 164u8, 55u8, 98u8, 13u8, 234u8,
-                    69u8, 72u8, 242u8, 3u8, 31u8, 178u8, 161u8, 109u8, 216u8, 211u8, 176u8, 184u8,
-                    84u8, 41u8, 85u8, 40u8, 221u8, 44u8, 221u8, 51u8,
-                ]);
-            const ANONYMOUS: bool = false;
-            #[allow(unused_variables)]
-            #[inline]
-            fn new(
-                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
-                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                Self {
-                    newPectraForkTimestamp: data.0,
-                }
-            }
-            #[inline]
-            fn check_signature(
-                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
-            ) -> alloy_sol_types::Result<()> {
-                if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
-                }
-                Ok(())
-            }
-            #[inline]
-            fn tokenize_body(&self) -> Self::DataToken<'_> {
-                (
-                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
-                        &self.newPectraForkTimestamp,
-                    ),
-                )
-            }
-            #[inline]
-            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
-                (Self::SIGNATURE_HASH.into(),)
-            }
-            #[inline]
-            fn encode_topics_raw(
-                &self,
-                out: &mut [alloy_sol_types::abi::token::WordToken],
-            ) -> alloy_sol_types::Result<()> {
-                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
-                    return Err(alloy_sol_types::Error::Overrun);
-                }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
-                Ok(())
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData for PectraForkTimestampSet {
-            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
-                From::from(self)
-            }
-            fn into_log_data(self) -> alloy_sol_types::private::LogData {
-                From::from(&self)
-            }
-        }
-        #[automatically_derived]
-        impl From<&PectraForkTimestampSet> for alloy_sol_types::private::LogData {
-            #[inline]
-            fn from(this: &PectraForkTimestampSet) -> alloy_sol_types::private::LogData {
-                alloy_sol_types::SolEvent::encode_log_data(this)
-            }
-        }
-    };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PodDeployed(address,address)` and selector `0x21c99d0db02213c32fff5b05cf0a718ab5f858802b91498f80d82270289d856a`.
     ```solidity
     event PodDeployed(address indexed eigenPod, address indexed podOwner);
@@ -2540,6 +2323,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PodSharesUpdated(address,int256)` and selector `0x4e2b791dedccd9fb30141b088cabf5c14a8912b52f59375c95c010700b8c6193`.
     ```solidity
     event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
@@ -2649,106 +2433,7 @@ pub mod IEigenPodManager {
             }
         }
     };
-    /**Event with signature `ProofTimestampSetterSet(address)` and selector `0x7025c71a9fe60d709e71b377dc5f7c72c3e1d8539f8022574254e736ceca01e5`.
-    ```solidity
-    event ProofTimestampSetterSet(address newProofTimestampSetter);
-    ```*/
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    #[derive(Clone)]
-    pub struct ProofTimestampSetterSet {
-        #[allow(missing_docs)]
-        pub newProofTimestampSetter: alloy::sol_types::private::Address,
-    }
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[automatically_derived]
-        impl alloy_sol_types::SolEvent for ProofTimestampSetterSet {
-            type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
-            const SIGNATURE: &'static str = "ProofTimestampSetterSet(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    112u8, 37u8, 199u8, 26u8, 159u8, 230u8, 13u8, 112u8, 158u8, 113u8, 179u8,
-                    119u8, 220u8, 95u8, 124u8, 114u8, 195u8, 225u8, 216u8, 83u8, 159u8, 128u8,
-                    34u8, 87u8, 66u8, 84u8, 231u8, 54u8, 206u8, 202u8, 1u8, 229u8,
-                ]);
-            const ANONYMOUS: bool = false;
-            #[allow(unused_variables)]
-            #[inline]
-            fn new(
-                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
-                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                Self {
-                    newProofTimestampSetter: data.0,
-                }
-            }
-            #[inline]
-            fn check_signature(
-                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
-            ) -> alloy_sol_types::Result<()> {
-                if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
-                }
-                Ok(())
-            }
-            #[inline]
-            fn tokenize_body(&self) -> Self::DataToken<'_> {
-                (
-                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.newProofTimestampSetter,
-                    ),
-                )
-            }
-            #[inline]
-            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
-                (Self::SIGNATURE_HASH.into(),)
-            }
-            #[inline]
-            fn encode_topics_raw(
-                &self,
-                out: &mut [alloy_sol_types::abi::token::WordToken],
-            ) -> alloy_sol_types::Result<()> {
-                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
-                    return Err(alloy_sol_types::Error::Overrun);
-                }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
-                Ok(())
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData for ProofTimestampSetterSet {
-            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
-                From::from(self)
-            }
-            fn into_log_data(self) -> alloy_sol_types::private::LogData {
-                From::from(&self)
-            }
-        }
-        #[automatically_derived]
-        impl From<&ProofTimestampSetterSet> for alloy_sol_types::private::LogData {
-            #[inline]
-            fn from(this: &ProofTimestampSetterSet) -> alloy_sol_types::private::LogData {
-                alloy_sol_types::SolEvent::encode_log_data(this)
-            }
-        }
-    };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Unpaused(address,uint256)` and selector `0x3582d1828e26bf56bd801502bc021ac0bc8afb57c826e4986b45593c8fad389c`.
     ```solidity
     event Unpaused(address indexed account, uint256 newPausedStatus);
@@ -2858,6 +2543,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `addShares(address,address,uint256)` and selector `0x50ff7225`.
     ```solidity
     function addShares(address staker, address strategy, uint256 shares) external returns (uint256, uint256);
@@ -2872,6 +2558,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`addShares(address,address,uint256)`](addSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3016,6 +2703,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `beaconChainETHStrategy()` and selector `0x9104c319`.
     ```solidity
     function beaconChainETHStrategy() external view returns (address);
@@ -3023,6 +2711,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainETHStrategyCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`beaconChainETHStrategy()`](beaconChainETHStrategyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3127,6 +2816,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `beaconChainSlashingFactor(address)` and selector `0xa3d75e09`.
     ```solidity
     function beaconChainSlashingFactor(address staker) external view returns (uint64);
@@ -3137,6 +2827,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`beaconChainSlashingFactor(address)`](beaconChainSlashingFactorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3245,6 +2936,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `burnableETHShares()` and selector `0xf5d4fed3`.
     ```solidity
     function burnableETHShares() external view returns (uint256);
@@ -3252,6 +2944,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct burnableETHSharesCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`burnableETHShares()`](burnableETHSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3356,6 +3049,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `createPod()` and selector `0x84d81062`.
     ```solidity
     function createPod() external returns (address);
@@ -3363,6 +3057,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createPodCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`createPod()`](createPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3467,6 +3162,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `eigenPodBeacon()` and selector `0x292b7b2b`.
     ```solidity
     function eigenPodBeacon() external view returns (address);
@@ -3474,6 +3170,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodBeaconCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`eigenPodBeacon()`](eigenPodBeaconCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3578,6 +3275,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `ethPOS()` and selector `0x74cdd798`.
     ```solidity
     function ethPOS() external view returns (address);
@@ -3585,6 +3283,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ethPOSCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`ethPOS()`](ethPOSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3689,6 +3388,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getPod(address)` and selector `0xa38406a3`.
     ```solidity
     function getPod(address podOwner) external view returns (address);
@@ -3699,6 +3399,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getPod(address)`](getPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3807,6 +3508,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `hasPod(address)` and selector `0xf6848d24`.
     ```solidity
     function hasPod(address podOwner) external view returns (bool);
@@ -3817,6 +3519,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`hasPod(address)`](hasPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3925,6 +3628,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `increaseBurnableShares(address,uint256)` and selector `0xdebe1eab`.
     ```solidity
     function increaseBurnableShares(address strategy, uint256 addedSharesToBurn) external;
@@ -4057,6 +3761,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `numPods()` and selector `0xa6a509be`.
     ```solidity
     function numPods() external view returns (uint256);
@@ -4064,6 +3769,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct numPodsCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`numPods()`](numPodsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4168,6 +3874,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `ownerToPod(address)` and selector `0x9ba06275`.
     ```solidity
     function ownerToPod(address podOwner) external view returns (address);
@@ -4178,6 +3885,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`ownerToPod(address)`](ownerToPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4286,6 +3994,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pause(uint256)` and selector `0x136439dd`.
     ```solidity
     function pause(uint256 newPausedStatus) external;
@@ -4403,6 +4112,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauseAll()` and selector `0x595c6a67`.
     ```solidity
     function pauseAll() external;
@@ -4511,6 +4221,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused(uint8)` and selector `0x5ac86ab7`.
     ```solidity
     function paused(uint8 index) external view returns (bool);
@@ -4521,6 +4232,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub index: u8,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4629,6 +4341,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused()` and selector `0x5c975abb`.
     ```solidity
     function paused() external view returns (uint256);
@@ -4636,6 +4349,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Call {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused()`](paused_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4740,6 +4454,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauserRegistry()` and selector `0x886f1195`.
     ```solidity
     function pauserRegistry() external view returns (address);
@@ -4747,6 +4462,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`pauserRegistry()`](pauserRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4851,117 +4567,7 @@ pub mod IEigenPodManager {
             }
         }
     };
-    /**Function with signature `pectraForkTimestamp()` and selector `0x2704351a`.
-    ```solidity
-    function pectraForkTimestamp() external view returns (uint64);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct pectraForkTimestampCall {}
-    ///Container type for the return parameters of the [`pectraForkTimestamp()`](pectraForkTimestampCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct pectraForkTimestampReturn {
-        #[allow(missing_docs)]
-        pub _0: u64,
-    }
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<pectraForkTimestampCall> for UnderlyingRustTuple<'_> {
-                fn from(value: pectraForkTimestampCall) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for pectraForkTimestampCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {}
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<64>,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (u64,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<pectraForkTimestampReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: pectraForkTimestampReturn) -> Self {
-                    (value._0,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for pectraForkTimestampReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0 }
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for pectraForkTimestampCall {
-            type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = pectraForkTimestampReturn;
-            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<64>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "pectraForkTimestamp()";
-            const SELECTOR: [u8; 4] = [39u8, 4u8, 53u8, 26u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-            #[inline]
-            fn abi_decode_returns(
-                data: &[u8],
-                validate: bool,
-            ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
-            }
-        }
-    };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `podOwnerDepositShares(address)` and selector `0xd48e8894`.
     ```solidity
     function podOwnerDepositShares(address podOwner) external view returns (int256);
@@ -4972,6 +4578,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`podOwnerDepositShares(address)`](podOwnerDepositSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5080,6 +4687,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `recordBeaconChainETHBalanceUpdate(address,uint256,int256)` and selector `0xa1ca780b`.
     ```solidity
     function recordBeaconChainETHBalanceUpdate(address podOwner, uint256 prevRestakedBalanceWei, int256 balanceDeltaWei) external;
@@ -5226,6 +4834,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `removeDepositShares(address,address,uint256)` and selector `0x724af423`.
     ```solidity
     function removeDepositShares(address staker, address strategy, uint256 depositSharesToRemove) external returns (uint256);
@@ -5240,6 +4849,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub depositSharesToRemove: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`removeDepositShares(address,address,uint256)`](removeDepositSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5370,238 +4980,7 @@ pub mod IEigenPodManager {
             }
         }
     };
-    /**Function with signature `setPectraForkTimestamp(uint64)` and selector `0x5a26fbf4`.
-    ```solidity
-    function setPectraForkTimestamp(uint64 timestamp) external;
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct setPectraForkTimestampCall {
-        #[allow(missing_docs)]
-        pub timestamp: u64,
-    }
-    ///Container type for the return parameters of the [`setPectraForkTimestamp(uint64)`](setPectraForkTimestampCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct setPectraForkTimestampReturn {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<64>,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (u64,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<setPectraForkTimestampCall> for UnderlyingRustTuple<'_> {
-                fn from(value: setPectraForkTimestampCall) -> Self {
-                    (value.timestamp,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setPectraForkTimestampCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { timestamp: tuple.0 }
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<setPectraForkTimestampReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: setPectraForkTimestampReturn) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setPectraForkTimestampReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {}
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for setPectraForkTimestampCall {
-            type Parameters<'a> = (alloy::sol_types::sol_data::Uint<64>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = setPectraForkTimestampReturn;
-            type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "setPectraForkTimestamp(uint64)";
-            const SELECTOR: [u8; 4] = [90u8, 38u8, 251u8, 244u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
-                        &self.timestamp,
-                    ),
-                )
-            }
-            #[inline]
-            fn abi_decode_returns(
-                data: &[u8],
-                validate: bool,
-            ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
-            }
-        }
-    };
-    /**Function with signature `setProofTimestampSetter(address)` and selector `0x0d1e9de1`.
-    ```solidity
-    function setProofTimestampSetter(address newProofTimestampSetter) external;
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct setProofTimestampSetterCall {
-        #[allow(missing_docs)]
-        pub newProofTimestampSetter: alloy::sol_types::private::Address,
-    }
-    ///Container type for the return parameters of the [`setProofTimestampSetter(address)`](setProofTimestampSetterCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct setProofTimestampSetterReturn {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<setProofTimestampSetterCall> for UnderlyingRustTuple<'_> {
-                fn from(value: setProofTimestampSetterCall) -> Self {
-                    (value.newProofTimestampSetter,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setProofTimestampSetterCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        newProofTimestampSetter: tuple.0,
-                    }
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<setProofTimestampSetterReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: setProofTimestampSetterReturn) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setProofTimestampSetterReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {}
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for setProofTimestampSetterCall {
-            type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = setProofTimestampSetterReturn;
-            type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "setProofTimestampSetter(address)";
-            const SELECTOR: [u8; 4] = [13u8, 30u8, 157u8, 225u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.newProofTimestampSetter,
-                    ),
-                )
-            }
-            #[inline]
-            fn abi_decode_returns(
-                data: &[u8],
-                validate: bool,
-            ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
-            }
-        }
-    };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stake(bytes,bytes,bytes32)` and selector `0x9b4e4634`.
     ```solidity
     function stake(bytes memory pubkey, bytes memory signature, bytes32 depositDataRoot) external payable;
@@ -5743,6 +5122,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stakerDepositShares(address,address)` and selector `0xfe243a17`.
     ```solidity
     function stakerDepositShares(address user, address strategy) external view returns (uint256 depositShares);
@@ -5755,6 +5135,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`stakerDepositShares(address,address)`](stakerDepositSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5880,6 +5261,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `unpause(uint256)` and selector `0xfabc1cbc`.
     ```solidity
     function unpause(uint256 newPausedStatus) external;
@@ -5997,6 +5379,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `version()` and selector `0x54fd4d50`.
     ```solidity
     function version() external view returns (string memory);
@@ -6004,6 +5387,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct versionCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`version()`](versionCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -6108,6 +5492,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `withdrawSharesAsTokens(address,address,address,uint256)` and selector `0x2eae418c`.
     ```solidity
     function withdrawSharesAsTokens(address staker, address strategy, address token, uint256 shares) external;
@@ -6260,6 +5645,7 @@ pub mod IEigenPodManager {
         }
     };
     ///Container for all the [`IEigenPodManager`](self) function calls.
+    #[derive()]
     pub enum IEigenPodManagerCalls {
         #[allow(missing_docs)]
         addShares(addSharesCall),
@@ -6296,17 +5682,11 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pauserRegistry(pauserRegistryCall),
         #[allow(missing_docs)]
-        pectraForkTimestamp(pectraForkTimestampCall),
-        #[allow(missing_docs)]
         podOwnerDepositShares(podOwnerDepositSharesCall),
         #[allow(missing_docs)]
         recordBeaconChainETHBalanceUpdate(recordBeaconChainETHBalanceUpdateCall),
         #[allow(missing_docs)]
         removeDepositShares(removeDepositSharesCall),
-        #[allow(missing_docs)]
-        setPectraForkTimestamp(setPectraForkTimestampCall),
-        #[allow(missing_docs)]
-        setProofTimestampSetter(setProofTimestampSetterCall),
         #[allow(missing_docs)]
         stake(stakeCall),
         #[allow(missing_docs)]
@@ -6327,15 +5707,12 @@ pub mod IEigenPodManager {
         ///
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
-            [13u8, 30u8, 157u8, 225u8],
             [19u8, 100u8, 57u8, 221u8],
-            [39u8, 4u8, 53u8, 26u8],
             [41u8, 43u8, 123u8, 43u8],
             [46u8, 174u8, 65u8, 140u8],
             [80u8, 255u8, 114u8, 37u8],
             [84u8, 253u8, 77u8, 80u8],
             [89u8, 92u8, 106u8, 103u8],
-            [90u8, 38u8, 251u8, 244u8],
             [90u8, 200u8, 106u8, 183u8],
             [92u8, 151u8, 90u8, 187u8],
             [114u8, 74u8, 244u8, 35u8],
@@ -6361,7 +5738,7 @@ pub mod IEigenPodManager {
     impl alloy_sol_types::SolInterface for IEigenPodManagerCalls {
         const NAME: &'static str = "IEigenPodManagerCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 28usize;
+        const COUNT: usize = 25usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -6394,9 +5771,6 @@ pub mod IEigenPodManager {
                 Self::pauserRegistry(_) => {
                     <pauserRegistryCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::pectraForkTimestamp(_) => {
-                    <pectraForkTimestampCall as alloy_sol_types::SolCall>::SELECTOR
-                }
                 Self::podOwnerDepositShares(_) => {
                     <podOwnerDepositSharesCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -6405,12 +5779,6 @@ pub mod IEigenPodManager {
                 }
                 Self::removeDepositShares(_) => {
                     <removeDepositSharesCall as alloy_sol_types::SolCall>::SELECTOR
-                }
-                Self::setPectraForkTimestamp(_) => {
-                    <setPectraForkTimestampCall as alloy_sol_types::SolCall>::SELECTOR
-                }
-                Self::setProofTimestampSetter(_) => {
-                    <setProofTimestampSetterCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::stake(_) => <stakeCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::stakerDepositShares(_) => {
@@ -6444,18 +5812,6 @@ pub mod IEigenPodManager {
             )
                 -> alloy_sol_types::Result<IEigenPodManagerCalls>] = &[
                 {
-                    fn setProofTimestampSetter(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <setProofTimestampSetterCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::setProofTimestampSetter)
-                    }
-                    setProofTimestampSetter
-                },
-                {
                     fn pause(
                         data: &[u8],
                         validate: bool,
@@ -6464,18 +5820,6 @@ pub mod IEigenPodManager {
                             .map(IEigenPodManagerCalls::pause)
                     }
                     pause
-                },
-                {
-                    fn pectraForkTimestamp(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <pectraForkTimestampCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::pectraForkTimestamp)
-                    }
-                    pectraForkTimestamp
                 },
                 {
                     fn eigenPodBeacon(
@@ -6530,18 +5874,6 @@ pub mod IEigenPodManager {
                             .map(IEigenPodManagerCalls::pauseAll)
                     }
                     pauseAll
-                },
-                {
-                    fn setPectraForkTimestamp(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <setPectraForkTimestampCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::setPectraForkTimestamp)
-                    }
-                    setPectraForkTimestamp
                 },
                 {
                     fn paused_0(
@@ -6829,11 +6161,6 @@ pub mod IEigenPodManager {
                         inner,
                     )
                 }
-                Self::pectraForkTimestamp(inner) => {
-                    <pectraForkTimestampCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
                 Self::podOwnerDepositShares(inner) => {
                     <podOwnerDepositSharesCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
@@ -6846,16 +6173,6 @@ pub mod IEigenPodManager {
                 }
                 Self::removeDepositShares(inner) => {
                     <removeDepositSharesCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::setPectraForkTimestamp(inner) => {
-                    <setPectraForkTimestampCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::setProofTimestampSetter(inner) => {
-                    <setProofTimestampSetterCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -6970,12 +6287,6 @@ pub mod IEigenPodManager {
                         out,
                     )
                 }
-                Self::pectraForkTimestamp(inner) => {
-                    <pectraForkTimestampCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
                 Self::podOwnerDepositShares(inner) => {
                     <podOwnerDepositSharesCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
@@ -6990,18 +6301,6 @@ pub mod IEigenPodManager {
                 }
                 Self::removeDepositShares(inner) => {
                     <removeDepositSharesCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
-                Self::setPectraForkTimestamp(inner) => {
-                    <setPectraForkTimestampCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
-                Self::setProofTimestampSetter(inner) => {
-                    <setProofTimestampSetterCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -7031,6 +6330,7 @@ pub mod IEigenPodManager {
         }
     }
     ///Container for all the [`IEigenPodManager`](self) custom errors.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IEigenPodManagerErrors {
         #[allow(missing_docs)]
         CurrentlyPaused(CurrentlyPaused),
@@ -7050,8 +6350,6 @@ pub mod IEigenPodManager {
         OnlyEigenPod(OnlyEigenPod),
         #[allow(missing_docs)]
         OnlyPauser(OnlyPauser),
-        #[allow(missing_docs)]
-        OnlyProofTimestampSetter(OnlyProofTimestampSetter),
         #[allow(missing_docs)]
         OnlyUnpauser(OnlyUnpauser),
         #[allow(missing_docs)]
@@ -7077,7 +6375,6 @@ pub mod IEigenPodManager {
             [121u8, 72u8, 33u8, 255u8],
             [132u8, 10u8, 72u8, 213u8],
             [143u8, 160u8, 229u8, 118u8],
-            [152u8, 97u8, 19u8, 112u8],
             [198u8, 29u8, 202u8, 93u8],
             [239u8, 20u8, 125u8, 225u8],
             [247u8, 57u8, 88u8, 155u8],
@@ -7087,7 +6384,7 @@ pub mod IEigenPodManager {
     impl alloy_sol_types::SolInterface for IEigenPodManagerErrors {
         const NAME: &'static str = "IEigenPodManagerErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 13usize;
+        const COUNT: usize = 12usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -7114,9 +6411,6 @@ pub mod IEigenPodManager {
                 }
                 Self::OnlyEigenPod(_) => <OnlyEigenPod as alloy_sol_types::SolError>::SELECTOR,
                 Self::OnlyPauser(_) => <OnlyPauser as alloy_sol_types::SolError>::SELECTOR,
-                Self::OnlyProofTimestampSetter(_) => {
-                    <OnlyProofTimestampSetter as alloy_sol_types::SolError>::SELECTOR
-                }
                 Self::OnlyUnpauser(_) => <OnlyUnpauser as alloy_sol_types::SolError>::SELECTOR,
                 Self::SharesNegative(_) => <SharesNegative as alloy_sol_types::SolError>::SELECTOR,
                 Self::SharesNotMultipleOfGwei(_) => {
@@ -7248,18 +6542,6 @@ pub mod IEigenPodManager {
                     SharesNotMultipleOfGwei
                 },
                 {
-                    fn OnlyProofTimestampSetter(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IEigenPodManagerErrors> {
-                        <OnlyProofTimestampSetter as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerErrors::OnlyProofTimestampSetter)
-                    }
-                    OnlyProofTimestampSetter
-                },
-                {
                     fn InvalidNewPausedStatus(
                         data: &[u8],
                         validate: bool,
@@ -7336,9 +6618,6 @@ pub mod IEigenPodManager {
                 Self::OnlyPauser(inner) => {
                     <OnlyPauser as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
-                Self::OnlyProofTimestampSetter(inner) => {
-                    <OnlyProofTimestampSetter as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
                 Self::OnlyUnpauser(inner) => {
                     <OnlyUnpauser as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
@@ -7384,11 +6663,6 @@ pub mod IEigenPodManager {
                 Self::OnlyPauser(inner) => {
                     <OnlyPauser as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
-                Self::OnlyProofTimestampSetter(inner) => {
-                    <OnlyProofTimestampSetter as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner, out,
-                    )
-                }
                 Self::OnlyUnpauser(inner) => {
                     <OnlyUnpauser as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
@@ -7404,6 +6678,7 @@ pub mod IEigenPodManager {
         }
     }
     ///Container for all the [`IEigenPodManager`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IEigenPodManagerEvents {
         #[allow(missing_docs)]
         BeaconChainETHDeposited(BeaconChainETHDeposited),
@@ -7418,13 +6693,9 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         Paused(Paused),
         #[allow(missing_docs)]
-        PectraForkTimestampSet(PectraForkTimestampSet),
-        #[allow(missing_docs)]
         PodDeployed(PodDeployed),
         #[allow(missing_docs)]
         PodSharesUpdated(PodSharesUpdated),
-        #[allow(missing_docs)]
-        ProofTimestampSetterSet(ProofTimestampSetterSet),
         #[allow(missing_docs)]
         Unpaused(Unpaused),
     }
@@ -7437,11 +6708,6 @@ pub mod IEigenPodManager {
         ///
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
-            [
-                27u8, 200u8, 240u8, 66u8, 165u8, 45u8, 179u8, 164u8, 55u8, 98u8, 13u8, 234u8, 69u8,
-                72u8, 242u8, 3u8, 31u8, 178u8, 161u8, 109u8, 216u8, 211u8, 176u8, 184u8, 84u8,
-                41u8, 85u8, 40u8, 221u8, 44u8, 221u8, 51u8,
-            ],
             [
                 30u8, 208u8, 75u8, 127u8, 210u8, 98u8, 192u8, 217u8, 229u8, 15u8, 160u8, 41u8,
                 87u8, 243u8, 42u8, 129u8, 161u8, 81u8, 240u8, 59u8, 170u8, 163u8, 103u8, 250u8,
@@ -7468,11 +6734,6 @@ pub mod IEigenPodManager {
                 192u8, 16u8, 112u8, 11u8, 140u8, 97u8, 147u8,
             ],
             [
-                112u8, 37u8, 199u8, 26u8, 159u8, 230u8, 13u8, 112u8, 158u8, 113u8, 179u8, 119u8,
-                220u8, 95u8, 124u8, 114u8, 195u8, 225u8, 216u8, 83u8, 159u8, 128u8, 34u8, 87u8,
-                66u8, 84u8, 231u8, 54u8, 206u8, 202u8, 1u8, 229u8,
-            ],
-            [
                 166u8, 186u8, 177u8, 213u8, 90u8, 54u8, 31u8, 206u8, 162u8, 238u8, 226u8, 188u8,
                 148u8, 145u8, 228u8, 240u8, 30u8, 108u8, 243u8, 51u8, 223u8, 3u8, 201u8, 196u8,
                 242u8, 193u8, 68u8, 70u8, 100u8, 41u8, 247u8, 214u8,
@@ -7497,7 +6758,7 @@ pub mod IEigenPodManager {
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for IEigenPodManagerEvents {
         const NAME: &'static str = "IEigenPodManagerEvents";
-        const COUNT: usize = 11usize;
+        const COUNT: usize = 9usize;
         fn decode_raw_log(
             topics: &[alloy_sol_types::Word],
             data: &[u8],
@@ -7560,16 +6821,6 @@ pub mod IEigenPodManager {
                         )
                         .map(Self::Paused)
                 }
-                Some(
-                    <PectraForkTimestampSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
-                    <PectraForkTimestampSet as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::PectraForkTimestampSet)
-                }
                 Some(<PodDeployed as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <PodDeployed as alloy_sol_types::SolEvent>::decode_raw_log(
                             topics,
@@ -7585,16 +6836,6 @@ pub mod IEigenPodManager {
                             validate,
                         )
                         .map(Self::PodSharesUpdated)
-                }
-                Some(
-                    <ProofTimestampSetterSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
-                    <ProofTimestampSetterSet as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::ProofTimestampSetterSet)
                 }
                 Some(<Unpaused as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <Unpaused as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -7638,16 +6879,10 @@ pub mod IEigenPodManager {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::Paused(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
-                Self::PectraForkTimestampSet(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
                 Self::PodDeployed(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::PodSharesUpdated(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
-                Self::ProofTimestampSetterSet(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::Unpaused(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
@@ -7671,16 +6906,10 @@ pub mod IEigenPodManager {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::Paused(inner) => alloy_sol_types::private::IntoLogData::into_log_data(inner),
-                Self::PectraForkTimestampSet(inner) => {
-                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
-                }
                 Self::PodDeployed(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::PodSharesUpdated(inner) => {
-                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
-                }
-                Self::ProofTimestampSetterSet(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::Unpaused(inner) => {
@@ -7965,12 +7194,6 @@ pub mod IEigenPodManager {
         ) -> alloy_contract::SolCallBuilder<T, &P, pauserRegistryCall, N> {
             self.call_builder(&pauserRegistryCall {})
         }
-        ///Creates a new call builder for the [`pectraForkTimestamp`] function.
-        pub fn pectraForkTimestamp(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, pectraForkTimestampCall, N> {
-            self.call_builder(&pectraForkTimestampCall {})
-        }
         ///Creates a new call builder for the [`podOwnerDepositShares`] function.
         pub fn podOwnerDepositShares(
             &self,
@@ -8003,22 +7226,6 @@ pub mod IEigenPodManager {
                 staker,
                 strategy,
                 depositSharesToRemove,
-            })
-        }
-        ///Creates a new call builder for the [`setPectraForkTimestamp`] function.
-        pub fn setPectraForkTimestamp(
-            &self,
-            timestamp: u64,
-        ) -> alloy_contract::SolCallBuilder<T, &P, setPectraForkTimestampCall, N> {
-            self.call_builder(&setPectraForkTimestampCall { timestamp })
-        }
-        ///Creates a new call builder for the [`setProofTimestampSetter`] function.
-        pub fn setProofTimestampSetter(
-            &self,
-            newProofTimestampSetter: alloy::sol_types::private::Address,
-        ) -> alloy_contract::SolCallBuilder<T, &P, setProofTimestampSetterCall, N> {
-            self.call_builder(&setProofTimestampSetterCall {
-                newProofTimestampSetter,
             })
         }
         ///Creates a new call builder for the [`stake`] function.
@@ -8118,12 +7325,6 @@ pub mod IEigenPodManager {
         pub fn Paused_filter(&self) -> alloy_contract::Event<T, &P, Paused, N> {
             self.event_filter::<Paused>()
         }
-        ///Creates a new event filter for the [`PectraForkTimestampSet`] event.
-        pub fn PectraForkTimestampSet_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, PectraForkTimestampSet, N> {
-            self.event_filter::<PectraForkTimestampSet>()
-        }
         ///Creates a new event filter for the [`PodDeployed`] event.
         pub fn PodDeployed_filter(&self) -> alloy_contract::Event<T, &P, PodDeployed, N> {
             self.event_filter::<PodDeployed>()
@@ -8131,12 +7332,6 @@ pub mod IEigenPodManager {
         ///Creates a new event filter for the [`PodSharesUpdated`] event.
         pub fn PodSharesUpdated_filter(&self) -> alloy_contract::Event<T, &P, PodSharesUpdated, N> {
             self.event_filter::<PodSharesUpdated>()
-        }
-        ///Creates a new event filter for the [`ProofTimestampSetterSet`] event.
-        pub fn ProofTimestampSetterSet_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, ProofTimestampSetterSet, N> {
-            self.event_filter::<ProofTimestampSetterSet>()
         }
         ///Creates a new event filter for the [`Unpaused`] event.
         pub fn Unpaused_filter(&self) -> alloy_contract::Event<T, &P, Unpaused, N> {

@@ -1,13 +1,21 @@
-diff --git i/crates/utils/src/slashing/core/allocationmanager.rs w/crates/utils/src/slashing/core/allocationmanager.rs
-index 8fae5b48..8eb9334d 100644
---- i/crates/utils/src/slashing/core/allocationmanager.rs
-+++ w/crates/utils/src/slashing/core/allocationmanager.rs
-@@ -19,6 +19,8 @@ library IAllocationManagerTypes {
+diff --git a/crates/utils/src/slashing/core/allocationmanager.rs b/crates/utils/src/slashing/core/allocationmanager.rs
+index a0a2d66..17a9ead 100644
+--- a/crates/utils/src/slashing/core/allocationmanager.rs
++++ b/crates/utils/src/slashing/core/allocationmanager.rs
+@@ -19,6 +19,7 @@ library IAllocationManagerTypes {
      clippy::empty_structs_with_brackets
  )]
  pub mod IAllocationManagerTypes {
-+    use crate::slashing::core::allocationmanager::AllocationManager::OperatorSet;
-+
++    use super::AllocationManager::OperatorSet;
      use super::*;
      use alloy::sol_types as alloy_sol_types;
-     /**```solidity
+     #[derive()]
+@@ -26,7 +27,7 @@ pub mod IAllocationManagerTypes {
+     struct AllocateParams { OperatorSet operatorSet; address[] strategies; uint64[] newMagnitudes; }
+     ```*/
+     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+-    #[derive(Clone)]
++    #[derive(Clone, Hash, PartialEq, Debug, Eq)]
+     pub struct AllocateParams {
+         #[allow(missing_docs)]
+         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
