@@ -18,6 +18,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ### Added 🎉
 
 * Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
+* Bump middleware to [1.3.0](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.0) in PR [443](https://github.com/Layr-Labs/eigensdk-rs/pull/443).
 
 ### Breaking Changes 🛠
 
