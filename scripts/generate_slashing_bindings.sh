@@ -69,10 +69,8 @@ forge bind --alloy --skip-build --bindings-path $SDK_BINDINGS_PATH --overwrite \
 
 # Generate middleware bindings
 forge bind --alloy --skip-build --bindings-path $MIDDLEWARE_BINDINGS_PATH --overwrite \
-    --root $MIDDLEWARE_CONTRACTS_LOCATION --module $MIDDLEWARE_CONTRACTS_ARGS \
-    --libraries $MIDDLEWARE_CONTRACTS_LOCATION/src/libraries/QuorumBitmapHistoryLib.sol:QuorumBitmapHistoryLib:0x0000000000000000000000000000000000000001 --libraries \
- $MIDDLEWARE_CONTRACTS_LOCATION/src/libraries/SignatureCheckerLib.sol:SignatureCheckerLib:0x0000000000000000000000000000000000000002
-
+    --root $MIDDLEWARE_CONTRACTS_LOCATION --module \ 
+    $MIDDLEWARE_CONTRACTS_ARGS 
 
 # Generate core bindings
 forge bind --alloy --skip-build --bindings-path $CORE_BINDINGS_PATH --overwrite \

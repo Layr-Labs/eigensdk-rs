@@ -106,6 +106,7 @@ slashing-bindings:
 
 slashing-bindings-custom:
 	@echo "Building custom Foundry Docker image from matt/unlinked-workaround branch..."
+	# TODO : Use foundry's master instead of fork when https://github.com/foundry-rs/foundry/pull/10291 gets merged.
 	@docker build \
 		--build-arg FOUNDRY_BRANCH=matt/unlinked-workaround \
 		--build-arg FOUNDRY_REPO=https://github.com/mattsse/foundry.git \
@@ -117,7 +118,6 @@ slashing-bindings-custom:
 
 	cargo fmt --all
 	git apply --allow-empty scripts/bindings.patch
-
 
 
 .PHONY: bindings
