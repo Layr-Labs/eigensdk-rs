@@ -105,6 +105,7 @@ slashing-bindings:
 	git apply --allow-empty scripts/bindings.patch
 
 slashing-bindings-custom:
+# FOUNDRY MASTER COMMIT DATE : 2025-04-11
 	@echo "Building custom Foundry Docker image from foundry-rs/foundry@bfb1cb6..."
 	@docker build \
 		--build-arg FOUNDRY_BRANCH=bfb1cb6b118b7e07a1de0fdea64a6cf44eb3a174 \
