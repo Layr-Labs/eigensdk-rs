@@ -24,5 +24,6 @@ metrics.workspace = true
 num-bigint.workspace = true
 
 [dev-dependencies]
-tokio.workspace = true
 eigen-testing-utils.workspace = true
+
+tokio.workspace = true

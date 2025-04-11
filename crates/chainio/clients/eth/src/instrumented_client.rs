@@ -836,8 +836,8 @@ mod tests {
     use alloy::primitives::address;
     use alloy::primitives::{bytes, TxKind::Call, U256};
     use alloy::rpc::types::eth::{pubsub::SubscriptionResult, BlockId, BlockNumberOrTag};
+    use alloy::signers::local::PrivateKeySigner;
     use eigen_common::get_provider;
-    use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::{set_account_balance, start_anvil_container};
     use eigen_testing_utils::transaction::wait_transaction;
     use tokio;
@@ -1026,8 +1026,7 @@ mod tests {
             chain_id: Some(31337),
         };
 
-        let config = Config::PrivateKey(private_key_hex);
-        let signer = Config::signer_from_config(config).unwrap();
+        let signer = private_key_hex.parse::<PrivateKeySigner>().unwrap();
         let signature = signer.sign_transaction_sync(&mut tx).unwrap();
         let signed_tx = tx.into_signed(signature);
         let tx: TxEnvelope = TxEnvelope::from(signed_tx);

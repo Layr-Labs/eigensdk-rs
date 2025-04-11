@@ -14,7 +14,7 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
-alloy.workspace =true 
+alloy.workspace = true
 async-trait.workspace = true
 aws-sdk-kms.workspace = true
 eth-keystore.workspace = true
@@ -23,7 +23,8 @@ thiserror.workspace = true
 url.workspace = true
 
 [dev-dependencies]
-aws-config.workspace = true
 eigen-testing-utils.workspace = true
+
+aws-config.workspace = true
 testcontainers.workspace = true
 tokio.workspace = true
