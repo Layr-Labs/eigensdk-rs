@@ -105,19 +105,16 @@ slashing-bindings:
 	git apply --allow-empty scripts/bindings.patch
 
 slashing-bindings-custom:
-	@echo "Building custom Foundry Docker image from matt/unlinked-workaround branch..."
-	# TODO : Use foundry's master instead of fork when https://github.com/foundry-rs/foundry/pull/10291 gets merged.
 	@docker build \
-		--build-arg FOUNDRY_BRANCH=matt/unlinked-workaround \
-		--build-arg FOUNDRY_REPO=https://github.com/mattsse/foundry.git \
 		-t custom-foundry \
 		-f Dockerfile.foundry .
 
 	@echo "Running binding generation script with custom Foundry..."
-	docker run --rm -v "$(PWD):/sdk" -w "/sdk" custom-foundry sh -c "scripts/generate_slashing_bindings.sh"
+	@docker run --rm -v "$(PWD):/sdk" -w "/sdk" custom-foundry ./scripts/generate_slashing_bindings.sh
 
 	cargo fmt --all
 	git apply --allow-empty scripts/bindings.patch
+
 
 
 .PHONY: bindings

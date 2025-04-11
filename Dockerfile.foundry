@@ -1,9 +1,8 @@
 # syntax=docker/dockerfile:1
 FROM rust:1.86-slim
 
-# TODO : Use foundry's master instead of fork when https://github.com/foundry-rs/foundry/pull/10291 gets merged.
-ARG FOUNDRY_BRANCH=matt/unlinked-workaround
-ARG FOUNDRY_REPO=https://github.com/mattsse/foundry.git
+ARG FOUNDRY_BRANCH=master
+ARG FOUNDRY_REPO=https://github.com/foundry-rs/foundry.git
 
 # Install dependencies
 RUN apt-get update && \
