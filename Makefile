@@ -104,23 +104,5 @@ slashing-bindings:
 	# Apply a fix for any compile issues
 	git apply --allow-empty scripts/bindings.patch
 
-slashing-bindings-custom:
-# FOUNDRY MASTER COMMIT DATE : 2025-04-11
-	@echo "Building custom Foundry Docker image from foundry-rs/foundry@bfb1cb6..."
-	@docker build \
-		--build-arg FOUNDRY_BRANCH=bfb1cb6b118b7e07a1de0fdea64a6cf44eb3a174 \
-		--build-arg FOUNDRY_REPO=https://github.com/foundry-rs/foundry.git \
-		-t custom-foundry \
-		-f Dockerfile.foundry .
-
-	@echo "Running binding generation script with custom Foundry..."
-	docker run --rm -v "$(PWD):/sdk" -w "/sdk" custom-foundry sh -c "scripts/generate_slashing_bindings.sh"
-
-	cargo fmt --all
-	git apply --allow-empty scripts/bindings.patch
-
-
-
-
 .PHONY: bindings
 bindings: rewardsv2-bindings slashing-bindings
