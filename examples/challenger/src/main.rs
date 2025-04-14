@@ -1,10 +1,7 @@
 use std::collections::HashMap;
 
-use bindings::iincrediblesquaringtaskmanager::{
-    IIncredibleSquaringTaskManager::{
-        NewTaskCreated, Task, TaskResponded, TaskResponse, TaskResponseMetadata,
-    },
-    BN254::G1Point,
+use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
+    NewTaskCreated, Task, TaskResponded, TaskResponse,
 };
 use eigen_challenger::{challenger::ChallengerTaskProcessor, Challenger};
 

@@ -14,10 +14,12 @@ members = [
     "crates/metrics/",
     "crates/metrics/collectors/economic/",
     "crates/metrics/collectors/rpc_calls/",
+    "crates/operator/",
     "crates/services/avsregistry/",
     "crates/services/bls_aggregation/",
     "crates/services/operatorsinfo/",
     "crates/signer/",
+    "crates/task-generator",
     "crates/types/",
     "crates/utils/",
     "crates/nodeapi/",
@@ -28,6 +30,8 @@ members = [
     "examples/avsregistry-write",
     "examples/challenger/",
     "examples/info-operator-service/",
+    "examples/operator/",
+    "examples/task-generator/",
     "tests/testing-utils/",
     "tests/integration/",
 ]
@@ -85,10 +89,12 @@ eigen-logging = { version = "0.5.0", path = "crates/logging/" }
 eigen-metrics = { version = "0.5.0", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { version = "0.5.0", path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { version = "0.5.0", path = "crates/metrics/collectors/rpc_calls" }
+eigen-operator = { version = "0.5.0", path = "crates/operator/" }
 eigen-services-avsregistry = { version = "0.5.0", path = "crates/services/avsregistry" }
 eigen-services-blsaggregation = { version = "0.5.0", path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { version = "0.5.0", path = "crates/services/operatorsinfo" }
 eigen-signer = { version = "0.5.0", path = "crates/signer/" }
+eigen-task-generator = { version = "0.5.0", path = "crates/task-generator/" }
 eigen-testing-utils = { version = "0.5.0", path = "tests/testing-utils" }
 eigen-types = { version = "0.5.0", path = "crates/types/" }
 eigen-utils = { version = "0.5.0", path = "crates/utils/" }

@@ -9,6 +9,7 @@ license-file.workspace = true
 
 [dependencies]
 eigen-aggregator = { workspace = true, optional = true }
+eigen-challenger = { workspace = true, optional = true }
 eigen-client-avsregistry = { workspace = true, optional = true }
 eigen-client-elcontracts = { workspace = true, optional = true }
 eigen-client-eth = { workspace = true, optional = true }
@@ -19,10 +20,12 @@ eigen-logging = { workspace = true, optional = true }
 eigen-metrics = { workspace = true, optional = true }
 eigen-metrics-collectors-economic = { workspace = true, optional = true }
 eigen-metrics-collectors-rpc-calls = { workspace = true, optional = true }
+eigen-operator = { workspace = true, optional = true }
 eigen-services-avsregistry = { workspace = true, optional = true }
 eigen-services-blsaggregation = { workspace = true, optional = true }
 eigen-services-operatorsinfo = { workspace = true, optional = true }
 eigen-signer = { workspace = true, optional = true }
+eigen-task-generator = { workspace = true, optional = true }
 eigen-testing-utils = { workspace = true, optional = true }
 eigen-types = { workspace = true, optional = true }
 eigen-utils = { workspace = true, optional = true }
@@ -38,6 +41,7 @@ default = []
 # Full features set for full usage
 full = [
     "aggregator",
+    "challenger",
     "client-avsregistry",
     "client-elcontracts",
     "client-eth",
@@ -47,10 +51,12 @@ full = [
     "crypto-bn254",
     "logging",
     "metrics",
+    "operator",
     "services-avsregistry",
     "services-blsaggregation",
     "services-operatorsinfo",
     "signer",
+    "task-generator",
     "testing-utils",
     "nodeapi",
     "metrics-collectors-economic",
@@ -99,5 +105,14 @@ types = ["dep:eigen-types"]
 #common utilities
 common = ["dep:eigen-common"]
 
-#aggregator
+# aggregator
 aggregator = ["dep:eigen-aggregator"]
+
+# challenger
+challenger = ["dep:eigen-challenger"]
+
+# operator
+operator = ["dep:eigen-operator"]
+
+# task generator
+task-generator = ["dep:eigen-task-generator"]
