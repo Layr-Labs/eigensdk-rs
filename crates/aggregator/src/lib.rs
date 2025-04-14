@@ -49,6 +49,7 @@ pub struct Aggregator<TP> {
     task_processor: Arc<Mutex<TP>>,
     service_handle: ServiceHandle,
     aggregated_response_receiver: AggregateReceiver,
+    ws_rpc_url: String,
 }
 
 impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
@@ -101,6 +102,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
             task_processor: Arc::new(Mutex::new(task_processor)),
             service_handle,
             aggregated_response_receiver,
+            ws_rpc_url: config.ws_rpc_url,
         })
     }
 
@@ -118,7 +120,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     /// # Returns
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
-    pub async fn start(self, ws_rpc_url: String) -> Result<(), AggregatorError> {
+    pub async fn start(self) -> Result<(), AggregatorError> {
         info!("Starting aggregator");
 
         let task_processor = self.task_processor.clone();
@@ -134,8 +136,8 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
         let task_processor = self.task_processor.clone();
 
         let process_handle = tokio::spawn(Self::process_tasks(
-            ws_rpc_url,
-            task_processor.clone(),
+            self.ws_rpc_url,
+            self.task_processor,
             service_handle,
         ));
         let aggregate_handle = tokio::spawn(Self::process_aggregated_signatures(
