@@ -30,6 +30,7 @@ members = [
     "examples/avsregistry-write",
     "examples/info-operator-service/",
     "examples/operator/",
+    "examples/task-generator/",
     "tests/testing-utils/",
     "tests/integration/",
 ]

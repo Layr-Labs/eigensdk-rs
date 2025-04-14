@@ -3759,6 +3759,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "examples-task-generator"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "async-trait",
+ "eigen-task-generator",
+ "eigen-types",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "eyre"
 version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
