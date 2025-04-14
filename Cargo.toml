@@ -78,11 +78,7 @@ eigen-signer = { version = "0.5.0", path = "crates/signer/" }
 eigen-types = { version = "0.5.0", path = "crates/types/" }
 eigen-utils = { version = "0.5.0", path = "crates/utils/" }
 eigen-nodeapi = { version = "0.5.0", path = "crates/nodeapi/" }
-
-# Testing
-# We don't specify version due to:
-# https://github.com/rust-lang/cargo/issues/4242#issuecomment-2578428685
-eigen-testing-utils = { path = "tests/testing-utils" }
+eigen-testing-utils = { version = "0.5.0", path = "tests/testing-utils" }
 
 ark-bn254 = "0.5.0"
 ark-ec = "0.5.0"
