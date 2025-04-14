@@ -33,6 +33,7 @@ The following checklist has all the steps needed to publish a new release in bot
 - [ ] Commit and push all changes and open a new PR.
 
 - [ ] Once it's reviewed and merged, wait for the [Release-plz workflow](./.github/workflows/release-plz.yml) to finish.
+      Look into [the "Releasing from non-default branches" section](#releasing-from-non-default-branches-ie-not-dev-nor-main) if releasing from a branch that's not `main` or `dev`.
 
 - [ ] Check on crates.io that [the new version of the `eigensdk` crate](https://crates.io/crates/eigensdk/versions) was published.
       The other crates are required by this one, so if this one was published, the rest were too.
