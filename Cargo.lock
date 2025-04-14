@@ -2754,6 +2754,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigen-challenger"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "eigen-aggregator",
+ "eigen-client-avsregistry",
+ "eigen-common",
+ "eigen-crypto-bls",
+ "eigen-logging",
+ "eigen-services-avsregistry",
+ "eigen-services-blsaggregation",
+ "eigen-services-operatorsinfo",
+ "eigen-types",
+ "eigen-utils",
+ "futures-util",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "eigen-cli"
 version = "0.5.0"
 dependencies = [
@@ -3150,6 +3173,7 @@ name = "eigensdk"
 version = "0.5.0"
 dependencies = [
  "eigen-aggregator",
+ "eigen-challenger",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
  "eigen-client-eth",
