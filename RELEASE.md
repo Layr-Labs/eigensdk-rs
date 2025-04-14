@@ -18,8 +18,8 @@ The following checklist has all the steps needed to publish a new release in bot
 
 - [ ] Bump the version in `Cargo.toml` (both `workspace` and `workspace.dependencies` fields).
       The new version number must follow [Semantic Versioning](https://semver.org/).
-      You can use `release-plz update` to automatically do this while checking for semver violations.
-      There's also `cargo-semver-checks` to validate the chosen version.
+      You can use [`release-plz update`](https://release-plz.dev/docs/usage/update) to automatically do this while checking for semver violations.
+      There's also [`cargo-semver-checks`](https://github.com/obi1kenobi/cargo-semver-checks) to validate the chosen version.
 
 - [ ] Verify the workspace compiles.
       This will also update the `Cargo.lock` with the new version
@@ -32,7 +32,7 @@ The following checklist has all the steps needed to publish a new release in bot
 
 - [ ] Commit and push all changes and open a new PR.
 
-- [ ] Once it's reviewed and merged, wait for the [Release-plz](./.github/workflows/release-plz.yml) workflow to finish.
+- [ ] Once it's reviewed and merged, wait for the [Release-plz workflow](./.github/workflows/release-plz.yml) to finish.
 
 - [ ] Check on crates.io that [the new version of the `eigensdk` crate](https://crates.io/crates/eigensdk/versions) was published.
       The other crates are required by this one, so if this one was published, the rest were too.
@@ -51,3 +51,17 @@ The following checklist has all the steps needed to publish a new release in bot
 - [ ] Sync the release draft description with the changelog and save the draft.
 
 - [ ] Once the draft is reviewed and the PR merged, publish the release.
+
+## Releasing from non-default branches (i.e. not `dev` nor `main`)
+
+> [!CAUTION]
+> Keep in mind commits will be lost once those branches are deleted, which reduces the auditability of the release.
+>
+> Because of this, we don't recommend releasing from non-default branches unless we expect them to be permanent, or the release is temporary, like for release candidates.
+
+The [Release-plz workflow](./.github/workflows/release-plz.yml) runs on each new commit on the `main` and `dev` branches.
+Pushing a commit with a new version on a branch not including those won't trigger it.
+
+For those cases, the workflow includes a `workflow_dispatch` trigger.
+This can be used to run it manually on any branch by going to the runs history for the workflow ([link](https://github.com/Layr-Labs/eigensdk-rs/actions/workflows/release-plz.yml)).
+There should be a "Run workflow" button which expands to a pop-up to specify the branch or tag to run the workflow on.
