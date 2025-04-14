@@ -221,7 +221,7 @@ async fn main() {
     let aggregator = Aggregator::new(config, processor).await.unwrap();
 
     // 6. Start the aggregator in the background
-    let aggregator_handle = tokio::spawn(aggregator.start(ws_rpc.clone()));
+    let aggregator_handle = tokio::spawn(aggregator.start());
 
     // Wait for the aggregator to initialize
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;

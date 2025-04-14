@@ -6,6 +6,7 @@ members = [
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
+    "crates/challenger/",
     "crates/crypto/bls/",
     "crates/crypto/bn254/",
     "crates/eigen-cli/",
@@ -28,6 +29,7 @@ members = [
     "examples/avsregistry-read",
     "examples/avsregistry-write",
     "examples/info-operator-service/",
+    "examples/operator/",
     "examples/task-generator/",
     "tests/testing-utils/",
     "tests/integration/",
@@ -75,6 +77,7 @@ aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
 eigen-aggregator = { version = "0.5.0", path = "crates/aggregator/" }
+eigen-challenger = { version = "0.5.0", path = "crates/challenger/" }
 eigen-common = { version = "0.5.0", path = "crates/common/" }
 eigen-client-elcontracts = { version = "0.5.0", path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { version = "0.5.0", path = "crates/chainio/clients/eth" }

@@ -9,6 +9,7 @@ license-file.workspace = true
 
 [dependencies]
 eigen-aggregator = { workspace = true, optional = true }
+eigen-challenger = { workspace = true, optional = true }
 eigen-client-avsregistry = { workspace = true, optional = true }
 eigen-client-elcontracts = { workspace = true, optional = true }
 eigen-client-eth = { workspace = true, optional = true }
@@ -40,6 +41,7 @@ default = []
 # Full features set for full usage
 full = [
     "aggregator",
+    "challenger",
     "client-avsregistry",
     "client-elcontracts",
     "client-eth",
@@ -105,6 +107,9 @@ common = ["dep:eigen-common"]
 
 # aggregator
 aggregator = ["dep:eigen-aggregator"]
+
+# challenger
+challenger = ["dep:eigen-challenger"]
 
 # operator
 operator = ["dep:eigen-operator"]

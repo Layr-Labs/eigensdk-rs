@@ -98,8 +98,20 @@ pub use eigen_common as common;
 #[cfg(feature = "aggregator")]
 pub use eigen_aggregator as aggregator;
 
+/* ------------------------------------ Challenger Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "challenger")]
+pub use eigen_challenger as challenger;
+
 /* ------------------------------------ Operator Re-exports -------------------------------- */
 
 #[doc(inline)]
 #[cfg(feature = "operator")]
 pub use eigen_operator as operator;
+
+/* ------------------------------------ Task Generator Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "task-generator")]
+pub use eigen_task_generator as task_generator;
