@@ -113,10 +113,6 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     /// - process_tasks: receives tasks from the log and processes them
     /// - process_aggregated_signatures: processes the aggregated signatures
     ///
-    /// # Arguments
-    ///
-    /// * `ws_rpc_url` - The websocket RPC URL
-    ///
     /// # Returns
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
@@ -133,11 +129,10 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
             task_processor.clone(),
             service_handle.clone(),
         ));
-        let task_processor = self.task_processor.clone();
 
         let process_handle = tokio::spawn(Self::process_tasks(
             self.ws_rpc_url,
-            self.task_processor,
+            task_processor.clone(),
             service_handle,
         ));
         let aggregate_handle = tokio::spawn(Self::process_aggregated_signatures(
