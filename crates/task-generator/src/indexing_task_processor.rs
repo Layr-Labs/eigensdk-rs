@@ -1,0 +1,21 @@
+use crate::task::Task;
+use crate::task_manager_contract::TaskManagerContract;
+use crate::task_response::TaskResponse;
+use eigen_types::avs::{TaskIndex, TaskResponseDigest};
+use std::collections::HashMap;
+use std::fmt::Debug;
+
+#[derive(Debug)]
+pub struct IndexingTaskProcessor<TM: TaskManagerContract>
+where
+    TM::Input: Debug,
+{
+    /// Hashmap to store the created tasks
+    tasks: HashMap<TaskIndex, Task<TM::Input>>,
+
+    /// Hashmap to store the task responses
+    task_responses: HashMap<TaskIndex, HashMap<TaskResponseDigest, TaskResponse<TM::Output>>>,
+
+    /// Avs writer
+    task_manager: TM,
+}

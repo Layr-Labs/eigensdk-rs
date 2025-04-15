@@ -9,6 +9,10 @@ use tokio::time::sleep;
 
 /// Task generator errors
 pub mod error;
+pub mod indexing_task_processor;
+pub mod task;
+pub mod task_manager_contract;
+pub mod task_response;
 
 /// Task generator struct
 #[derive(Debug)]
