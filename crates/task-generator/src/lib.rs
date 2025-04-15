@@ -12,26 +12,12 @@ pub mod error;
 
 /// Task generator struct
 #[derive(Debug)]
-pub struct TaskGenerator;
+pub struct TaskGenerator();
 
-impl TaskGenerator {
-    /// Builder for the task generator
-    ///
-    /// # Returns
-    ///
-    /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn builder() -> TaskGeneratorBuilder<()> {
-        TaskGeneratorBuilder {
-            iter: None,
-            interval: Duration::ZERO,
-            quorum_threshold: None,
-            quorums: None,
-        }
-    }
-}
+impl TaskGenerator {}
 
 /// Builder for the task generator
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct TaskGeneratorBuilder<I> {
     iter: Option<I>,
     interval: Duration,
@@ -39,7 +25,16 @@ pub struct TaskGeneratorBuilder<I> {
     quorums: Option<Vec<QuorumNum>>,
 }
 
-impl<I> TaskGeneratorBuilder<I> {
+impl<I: std::default::Default> TaskGeneratorBuilder<I> {
+    /// Builder for the task generator
+    ///
+    /// # Returns
+    ///
+    /// * `TaskGeneratorBuilder` - The builder for the task generator
+    pub fn builder() -> TaskGeneratorBuilder<I> {
+        TaskGeneratorBuilder::default()
+    }
+
     /// Set the iterator for the task creation
     /// This will be used to create N tasks
     ///
@@ -50,17 +45,13 @@ impl<I> TaskGeneratorBuilder<I> {
     /// # Returns
     ///
     /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn with_iter<T>(self, iter: T) -> TaskGeneratorBuilder<T>
+    pub fn with_iter(mut self, iter: I) -> TaskGeneratorBuilder<I>
     where
-        T: Iterator + Send + 'static,
-        T::Item: Send,
+        I: Iterator + Send + 'static,
+        I::Item: Send,
     {
-        TaskGeneratorBuilder {
-            iter: Some(iter),
-            interval: self.interval,
-            quorum_threshold: self.quorum_threshold,
-            quorums: self.quorums,
-        }
+        self.iter = Some(iter);
+        self
     }
 
     /// Set the interval for the task creation
@@ -138,7 +129,8 @@ mod tests {
     async fn test_task_generator_with_string() {
         let names = vec!["John", "Jane", "Jim", "Jill"];
 
-        TaskGenerator::builder()
+        let builder = TaskGeneratorBuilder::builder();
+        builder
             .with_iter(names.into_iter())
             .with_quorum(50, vec![0])
             .with_interval(Duration::from_millis(10))
@@ -169,7 +161,7 @@ mod tests {
             },
         ];
 
-        TaskGenerator::builder()
+        TaskGeneratorBuilder::builder()
             .with_iter(inputs.into_iter())
             .with_quorum(50, vec![0])
             .with_interval(Duration::from_millis(50))
@@ -184,7 +176,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_task_generator_without_quorum() {
-        let result = TaskGenerator::builder()
+        let result = TaskGeneratorBuilder::builder()
             .with_iter(0..5)
             .with_interval(Duration::from_millis(50))
             .run(|_, _, _| async move { Ok(()) })
@@ -194,7 +186,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_task_generator_without_interval() {
-        let result = TaskGenerator::builder()
+        let result = TaskGeneratorBuilder::builder()
             .with_iter(0..5)
             .with_quorum(50, vec![0])
             .run(|_, _, _| async move { Ok(()) })
