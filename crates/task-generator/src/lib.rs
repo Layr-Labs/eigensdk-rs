@@ -9,7 +9,9 @@ use tokio::time::sleep;
 
 /// Task generator errors
 pub mod error;
+pub mod event_task_created;
 pub mod indexing_task_processor;
+pub mod non_signer_stakes_and_signature;
 pub mod task;
 pub mod task_manager_contract;
 pub mod task_response;
