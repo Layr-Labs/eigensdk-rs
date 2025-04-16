@@ -11,6 +11,7 @@ use tokio::time::sleep;
 pub mod error;
 pub mod event_task_created;
 pub mod indexing_task_processor;
+pub mod new_task_event_generic;
 pub mod task;
 pub mod task_manager_contract;
 pub mod task_response;

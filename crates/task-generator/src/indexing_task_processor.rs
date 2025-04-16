@@ -1,3 +1,6 @@
+use crate::new_task_event_generic::{
+    NewTaskEventGeneric, BLOCK_TIME_SECONDS, TASK_CHALLENGE_WINDOW_BLOCK,
+};
 use crate::task::Task;
 use crate::task_manager_contract::TaskManagerContract;
 use crate::task_response::TaskResponse;
@@ -11,20 +14,6 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::time::Duration;
 use tracing::info;
-
-/// Task Challenge Window Block : 100 blocks
-const TASK_CHALLENGE_WINDOW_BLOCK: u32 = 100;
-/// Block Time Seconds : 12 seconds
-const BLOCK_TIME_SECONDS: u32 = 12;
-
-#[derive(Debug, Clone)]
-pub struct NewTaskEventGeneric<Input>
-where
-    Input: Clone,
-{
-    pub task_index: u32,
-    pub task: Task<Input>,
-}
 
 #[derive(Debug)]
 #[allow(missing_docs)]
@@ -70,13 +59,16 @@ where
         let time_to_expiry = tokio::time::Duration::from_secs(
             (TASK_CHALLENGE_WINDOW_BLOCK * BLOCK_TIME_SECONDS).into(),
         );
+        let task_created_block = event.get_task_created_block();
+        let quorum_numbers = event.get_quorum_numbers();
+        let quorum_threshold_percentages = vec![event.task.quorum_threshold_percentage];
 
         // REVIEW: window_duration?
         Ok(TaskMetadata::new(
             event.task_index,
-            u64::from(event.task.task_created_block),
-            event.task.quorum_numbers.to_vec(),
-            vec![event.task.quorum_threshold_percentage],
+            task_created_block,
+            quorum_numbers,
+            quorum_threshold_percentages,
             time_to_expiry,
         )
         .with_window_duration(Duration::from_secs(5)))
