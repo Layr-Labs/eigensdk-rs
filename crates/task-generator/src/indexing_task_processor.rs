@@ -8,14 +8,13 @@ use std::fmt::Debug;
 
 #[derive(Debug)]
 pub struct IndexingTaskProcessor<
-    TM: TaskManagerContract<INPUT, R, G1Points, G2Points>,
+    TM: TaskManagerContract<INPUT, R, N>,
     INPUT: SolType,
     R: SolType,
-    G1Points: alloy::sol_types::SolType + Clone,
-    G2Points: alloy::sol_types::SolType + Clone,
+    N: SolType,
 > where
     TM::Input: Debug,
-    <TM as TaskManagerContract<INPUT, R, G1Points, G2Points>>::Output: alloy_sol_types::SolType,
+    <TM as TaskManagerContract<INPUT, R, N>>::Output: alloy_sol_types::SolType,
 {
     /// Hashmap to store the created tasks
     tasks: HashMap<TaskIndex, Task<TM::Input>>,

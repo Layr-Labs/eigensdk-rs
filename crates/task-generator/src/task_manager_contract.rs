@@ -1,16 +1,9 @@
 use alloy_sol_types::SolType;
 
-use crate::non_signer_stakes_and_signature;
 use crate::task::Task;
 use crate::task_response::TaskResponse;
 
-pub trait TaskManagerContract<
-    T: SolType,
-    R: SolType,
-    G1Point: alloy::sol_types::SolType + Clone,
-    G2Point: alloy::sol_types::SolType + Clone,
->
-{
+pub trait TaskManagerContract<T: SolType, R: SolType, N: SolType> {
     /// Type for task indices
     //type Index;
 
@@ -26,7 +19,7 @@ pub trait TaskManagerContract<
         &self,
         task: T,
         response: R,
-        non_signer_stakes_and_signature: non_signer_stakes_and_signature::NonSignerStakesAndSignature<G1Point, G2Point>,
+        non_signer_stakes_and_signature: N,
     ) -> TaskResponse<R>;
 
     /*pub async fn send_aggregated_response(
