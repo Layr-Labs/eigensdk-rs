@@ -1,12 +1,15 @@
 #[allow(non_snake_case)]
-#[derive(Debug)]
-pub struct Task<INPUT> {
+#[derive(Debug, Clone)]
+pub struct Task<INPUT>
+where
+    INPUT: Clone,
+{
     #[allow(missing_docs)]
     pub input: INPUT,
     #[allow(missing_docs)]
-    pub taskCreatedBlock: u32,
+    pub task_created_block: u32,
     #[allow(missing_docs)]
-    pub quorumNumbers: alloy::sol_types::private::Bytes,
+    pub quorum_numbers: alloy::sol_types::private::Bytes,
     #[allow(missing_docs)]
-    pub quorumThresholdPercentage: u32,
+    pub quorum_threshold_percentage: u8,
 }

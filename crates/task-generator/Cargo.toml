@@ -16,6 +16,8 @@ eigen-types.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 tokio.workspace = true
-alloy-sol-types = "1.0"
+eigen-services-blsaggregation.workspace = true
+eigen-aggregator.workspace = true
+eigen-crypto-bls.workspace = true
 
 tokio-util = "0.7.11"
