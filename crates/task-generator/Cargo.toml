@@ -16,5 +16,6 @@ eigen-types.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 tokio.workspace = true
+alloy-sol-types = "1.0"
 
 tokio-util = "0.7.11"
