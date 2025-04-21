@@ -1,0 +1,20 @@
+[package]
+name = "eigen-task-processor"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license-file.workspace = true
+description = "eigen layer task processor"
+
+[lints]
+workspace = true
+
+[dependencies]
+alloy.workspace = true
+eigen-types.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tokio.workspace = true
+
+tokio-util = "0.7.11"
