@@ -12,6 +12,7 @@ workspace = true
 
 [dependencies]
 alloy.workspace = true
+ark-ec.workspace = true
 eigen-types.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
@@ -19,5 +20,6 @@ tokio.workspace = true
 eigen-services-blsaggregation.workspace = true
 eigen-aggregator.workspace = true
 eigen-crypto-bls.workspace = true
+eigen-utils.workspace = true
 
 tokio-util = "0.7.11"
