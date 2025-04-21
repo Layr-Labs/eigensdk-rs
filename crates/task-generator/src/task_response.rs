@@ -1,5 +1,5 @@
 #[allow(non_snake_case)]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct TaskResponse<OUTPUT> {
     #[allow(missing_docs)]
     pub referenceTaskIndex: u32,
