@@ -21,6 +21,13 @@ use std::{str::FromStr, time::Duration};
 // You need to specify the input type of the task. In this case, U256.
 // You also need to specify the call type of the task manager contract. `createNewTask` uses `createNewTaskCall`.
 // You also need to specify the provider and network types.
+//
+// NOTE: When you are implementing this, you will have an exteranl trait `TaskManagerContract` and and external struct
+// `CONTRACT_NAME_INSTANCE`, so it will throw an error. You can wrap the external struct in a newtype to avoid this.
+// Example:
+// struct TaskManagerWrapper<T, P, N>(IncredibleSquaringTaskManagerInstance<T, P, N>);
+//
+// impl<T, P, N> TaskManagerContract<U256, T, P, N> for TaskManagerWrapper<T, P, N> { ... }
 impl<T, P, N> TaskManagerContract<U256, T, P, N> for IIncredibleSquaringTaskManagerInstance<T, P, N>
 where
     T: Transport + Clone,
