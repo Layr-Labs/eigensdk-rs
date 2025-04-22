@@ -21,4 +21,7 @@ pub enum TaskGeneratorError {
     /// Alloy contract error
     #[error("Alloy contract error: {0}")]
     AlloyContractError(#[from] AlloyError),
+    /// Pending transaction error
+    #[error("Pending transaction error: {0}")]
+    PendingTransactionError(#[from] alloy::providers::PendingTransactionError),
 }
