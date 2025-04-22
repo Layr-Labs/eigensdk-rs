@@ -170,7 +170,7 @@ impl Operator {
     where
         Response: SolType + SolValue + Serialize + for<'de> Deserialize<'de>,
     {
-        let encoded = SolValue::abi_encode(&task_response);
+        let encoded = task_response.abi_encode();
         let hash_msg = keccak256(encoded);
         let signed_msg = key_pair.sign_message(&hash_msg);
         let signed_task_response = SignedTaskResponse::new(task_response, signed_msg, *operator_id);
