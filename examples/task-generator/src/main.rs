@@ -1,14 +1,50 @@
 use alloy::{
+    contract::private::{Provider, Transport},
+    network::Network,
+};
+use alloy::{
+    contract::SolCallBuilder,
     network::EthereumWallet,
     primitives::{Address, U256},
     providers::ProviderBuilder,
     signers::local::PrivateKeySigner,
     transports::http::reqwest::Url,
 };
-use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::IIncredibleSquaringTaskManagerInstance;
-use eigen_task_generator::TaskGenerator;
-use std::{str::FromStr, sync::Arc, time::Duration};
-use tracing::info;
+use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
+    createNewTaskCall, IIncredibleSquaringTaskManagerInstance,
+};
+use eigen_task_generator::{task_manager::TaskManagerContract, TaskGeneratorBuilder};
+use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
+use std::{str::FromStr, time::Duration};
+
+// 1. Implement the TaskManagerContract trait for the task manager contract.
+// You need to specify the input type of the task. In this case, U256.
+// You also need to specify the call type of the task manager contract. `createNewTask` uses `createNewTaskCall`.
+// You also need to specify the provider and network types.
+//
+// NOTE: When you are implementing this, you will have an exteranl trait `TaskManagerContract` and and external struct
+// `CONTRACT_NAME_INSTANCE`, so it will throw an error. You can wrap the external struct in a newtype to avoid this.
+// Example:
+// struct TaskManagerWrapper<T, P, N>(IncredibleSquaringTaskManagerInstance<T, P, N>);
+//
+// impl<T, P, N> TaskManagerContract<U256, T, P, N> for TaskManagerWrapper<T, P, N> { ... }
+impl<T, P, N> TaskManagerContract<U256, T, P, N> for IIncredibleSquaringTaskManagerInstance<T, P, N>
+where
+    T: Transport + Clone,
+    P: Provider<T, N>,
+    N: Network,
+{
+    type Call = createNewTaskCall;
+
+    fn create_new_task(
+        &self,
+        input: U256,
+        quorum_threshold: QuorumThresholdPercentage,
+        quorums: Vec<QuorumNum>,
+    ) -> SolCallBuilder<T, &P, Self::Call, N> {
+        self.createNewTask(input, quorum_threshold.into(), quorums.into())
+    }
+}
 
 // Allow warnings in auto-generated code
 #[allow(warnings)]
@@ -24,36 +60,15 @@ async fn main() {
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
 
-    let contract = Arc::new(IIncredibleSquaringTaskManagerInstance::new(
-        task_manager_address,
-        provider,
-    ));
+    let contract = IIncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
-    TaskGenerator::builder()
-        .with_iter(0..10)
+    TaskGeneratorBuilder::new(contract)
+        .with_iter((0..).map(U256::from))
         .with_quorum(50, vec![0])
         .with_interval(Duration::from_secs(10))
-        .run(move |i, quorum_threshold, quorums| {
-            let contract = Arc::clone(&contract);
-            async move {
-                let number_to_be_squared = U256::from(i * i);
-                contract
-                    .createNewTask(
-                        number_to_be_squared,
-                        quorum_threshold.into(),
-                        quorums.into(),
-                    )
-                    .send()
-                    .await
-                    .unwrap()
-                    .get_receipt()
-                    .await
-                    .unwrap();
-
-                info!("Task {} created", i);
-                Ok(())
-            }
-        })
+        .build()
+        .unwrap()
+        .run()
         .await
         .unwrap();
 }

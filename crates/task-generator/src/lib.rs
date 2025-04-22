@@ -1,45 +1,59 @@
 //! This is a simple task generator that can be used to create tasks for the operators.
 //! For testing purposes.
 
+use alloy::{
+    contract::private::{Provider, Transport},
+    network::Network,
+};
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use error::TaskGeneratorError;
-use std::future::Future;
 use std::time::Duration;
+use task_manager::TaskManagerContract;
 use tokio::time::sleep;
 
 /// Task generator errors
 pub mod error;
+/// Task manager contract trait
+pub mod task_manager;
 
-/// Task generator struct
+/// Task generator builder
 #[derive(Debug)]
-pub struct TaskGenerator;
-
-impl TaskGenerator {
-    /// Builder for the task generator
-    ///
-    /// # Returns
-    ///
-    /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn builder() -> TaskGeneratorBuilder<()> {
-        TaskGeneratorBuilder {
-            iter: None,
-            interval: Duration::ZERO,
-            quorum_threshold: None,
-            quorums: None,
-        }
-    }
-}
-
-/// Builder for the task generator
-#[derive(Debug)]
-pub struct TaskGeneratorBuilder<I> {
+pub struct TaskGeneratorBuilder<I, TM, T, P, N, Input> {
     iter: Option<I>,
     interval: Duration,
     quorum_threshold: Option<QuorumThresholdPercentage>,
     quorums: Option<Vec<QuorumNum>>,
+    task_manager: TM,
+    _phantom: std::marker::PhantomData<(T, P, N, Input)>,
 }
 
-impl<I> TaskGeneratorBuilder<I> {
+impl<I, TM, T, P, N, Input> TaskGeneratorBuilder<I, TM, T, P, N, Input>
+where
+    TM: TaskManagerContract<Input, T, P, N>,
+    T: Transport + Clone,
+    P: Provider<T, N>,
+    N: Network,
+{
+    /// Create a new task generator builder
+    ///
+    /// # Arguments
+    ///
+    /// * `task_manager` - Trait that wraps the task manager contract.
+    ///
+    /// # Returns
+    ///
+    /// A new task generator builder.
+    pub fn new(task_manager: TM) -> Self {
+        Self {
+            iter: None,
+            interval: Duration::ZERO,
+            quorum_threshold: None,
+            quorums: None,
+            task_manager,
+            _phantom: std::marker::PhantomData,
+        }
+    }
+
     /// Set the iterator for the task creation
     /// This will be used to create N tasks
     ///
@@ -50,16 +64,18 @@ impl<I> TaskGeneratorBuilder<I> {
     /// # Returns
     ///
     /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn with_iter<T>(self, iter: T) -> TaskGeneratorBuilder<T>
+    pub fn with_iter(self, iter: I) -> TaskGeneratorBuilder<I, TM, T, P, N, Input>
     where
-        T: Iterator + Send + 'static,
-        T::Item: Send,
+        I: Iterator + Send + 'static,
+        I::Item: Send,
     {
         TaskGeneratorBuilder {
             iter: Some(iter),
             interval: self.interval,
             quorum_threshold: self.quorum_threshold,
             quorums: self.quorums,
+            task_manager: self.task_manager,
+            _phantom: std::marker::PhantomData,
         }
     }
 
@@ -98,108 +114,70 @@ impl<I> TaskGeneratorBuilder<I> {
         self
     }
 
-    /// Run the task generator
-    ///
-    /// # Arguments
-    ///
-    /// * `task_fn` - The function for the task creation. This is a function that takes a task number and returns a future that resolves to a result.
+    /// Build the task generator
     ///
     /// # Returns
     ///
-    /// * `Result<(), TaskGeneratorError>` - The result of the task
-    pub async fn run<F, Fut>(self, task_fn: F) -> Result<(), TaskGeneratorError>
+    /// * `TaskGenerator` - The task generator to be run
+    pub fn build(self) -> Result<TaskGenerator<I, TM, T, P, N, Input>, TaskGeneratorError>
     where
-        I: Iterator + Send,
-        I::Item: Send + 'static,
-        F: Fn(I::Item, QuorumThresholdPercentage, Vec<QuorumNum>) -> Fut + Send + Sync,
-        Fut: Future<Output = Result<(), TaskGeneratorError>> + Send,
+        TM: TaskManagerContract<Input, T, P, N>,
+        T: Transport + Clone,
+        P: Provider<T, N>,
+        N: Network,
     {
-        let iter = self.iter.ok_or(TaskGeneratorError::IteratorNotSet)?;
-        let quorum_threshold = self
-            .quorum_threshold
-            .ok_or(TaskGeneratorError::QuorumThresholdNotSet)?;
-        let quorums = self.quorums.ok_or(TaskGeneratorError::QuorumNotSet)?;
-
-        for input in iter {
-            task_fn(input, quorum_threshold, quorums.clone()).await?;
-            sleep(self.interval).await;
-        }
-
-        Ok(())
+        Ok(TaskGenerator {
+            iter: self.iter.ok_or(TaskGeneratorError::IteratorNotSet)?,
+            interval: self.interval,
+            quorum_threshold: self
+                .quorum_threshold
+                .ok_or(TaskGeneratorError::QuorumThresholdNotSet)?,
+            quorums: self.quorums.ok_or(TaskGeneratorError::QuorumNotSet)?,
+            task_manager: self.task_manager,
+            _phantom: std::marker::PhantomData,
+        })
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::time::Duration;
+/// Task generator struct
+#[derive(Debug)]
+pub struct TaskGenerator<I, TM, T, P, N, Input> {
+    iter: I,
+    interval: Duration,
+    quorum_threshold: QuorumThresholdPercentage,
+    quorums: Vec<QuorumNum>,
+    task_manager: TM,
+    _phantom: std::marker::PhantomData<(T, P, N, Input)>,
+}
 
-    #[tokio::test]
-    async fn test_task_generator_with_string() {
-        let names = vec!["John", "Jane", "Jim", "Jill"];
-
-        TaskGenerator::builder()
-            .with_iter(names.into_iter())
-            .with_quorum(50, vec![0])
-            .with_interval(Duration::from_millis(10))
-            .run(|input, _, _| async move {
-                println!("Hello, {}", input);
-                Ok(())
-            })
-            .await
-            .unwrap();
-    }
-
-    #[tokio::test]
-    async fn test_task_generator_with_struct() {
-        #[derive(Clone, Debug)]
-        struct Input {
-            description: String,
-            value: u32,
+impl<I, TM, T, P, N, Input> TaskGenerator<I, TM, T, P, N, Input>
+where
+    TM: TaskManagerContract<Input, T, P, N> + Send + Sync,
+    T: Transport + Clone + Send + Sync,
+    P: Provider<T, N> + Send + Sync,
+    N: Network + Send + Sync,
+{
+    /// Run the task generator
+    /// This will create N tasks, where N is the number of items in the iterator
+    /// We use the elements of the iterator as input for the task manager contract
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), TaskGeneratorError>` - The result of the task generator
+    pub async fn run(self) -> Result<(), TaskGeneratorError>
+    where
+        I: Iterator<Item = Input> + Send,
+        I::Item: Clone + Send + 'static,
+    {
+        for input in self.iter {
+            self.task_manager
+                .create_new_task(input, self.quorum_threshold, self.quorums.clone())
+                .send()
+                .await?
+                .get_receipt()
+                .await?;
+            sleep(self.interval).await;
         }
-
-        let inputs = vec![
-            Input {
-                description: "Task 1".to_string(),
-                value: 10,
-            },
-            Input {
-                description: "Task 2".to_string(),
-                value: 20,
-            },
-        ];
-
-        TaskGenerator::builder()
-            .with_iter(inputs.into_iter())
-            .with_quorum(50, vec![0])
-            .with_interval(Duration::from_millis(50))
-            .run(|input, _, _| async move {
-                println!("Description: {}", input.description);
-                println!("Value: {}", input.value);
-                Ok(())
-            })
-            .await
-            .unwrap();
-    }
-
-    #[tokio::test]
-    async fn test_task_generator_without_quorum() {
-        let result = TaskGenerator::builder()
-            .with_iter(0..5)
-            .with_interval(Duration::from_millis(50))
-            .run(|_, _, _| async move { Ok(()) })
-            .await;
-        assert!(result.is_err());
-    }
-
-    #[tokio::test]
-    async fn test_task_generator_without_interval() {
-        let result = TaskGenerator::builder()
-            .with_iter(0..5)
-            .with_quorum(50, vec![0])
-            .run(|_, _, _| async move { Ok(()) })
-            .await;
-
-        assert!(result.is_ok());
+        Ok(())
     }
 }

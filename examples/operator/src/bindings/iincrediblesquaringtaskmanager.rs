@@ -936,7 +936,7 @@ pub mod IIncredibleSquaringTaskManager {
     struct TaskResponse { uint32 referenceTaskIndex; uint256 numberSquared; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
+    #[derive(Clone, Serialize, Deserialize)]
     pub struct TaskResponse {
         #[allow(missing_docs)]
         pub referenceTaskIndex: u32,
@@ -2709,6 +2709,8 @@ pub mod IIncredibleSquaringTaskManager {
         }
     }
     use alloy::contract as alloy_contract;
+    use serde::Deserialize;
+    use serde::Serialize;
     /**Creates a new wrapper around an on-chain [`IIncredibleSquaringTaskManager`](self) contract instance.
 
     See the [wrapper's documentation](`IIncredibleSquaringTaskManagerInstance`) for more details.*/
