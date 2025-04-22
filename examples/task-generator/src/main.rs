@@ -1,4 +1,8 @@
 use alloy::{
+    contract::private::{Provider, Transport},
+    network::Network,
+};
+use alloy::{
     contract::SolCallBuilder,
     network::EthereumWallet,
     primitives::{Address, U256},
@@ -9,16 +13,19 @@ use alloy::{
 use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
     createNewTaskCall, IIncredibleSquaringTaskManagerInstance,
 };
-
 use eigen_task_generator::{task_manager::TaskManagerContract, TaskGeneratorBuilder};
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use std::{str::FromStr, time::Duration};
 
+// 1. Implement the TaskManagerContract trait for the task manager contract.
+// You need to specify the input type of the task. In this case, U256.
+// You also need to specify the call type of the task manager contract. `createNewTask` uses `createNewTaskCall`.
+// You also need to specify the provider and network types.
 impl<T, P, N> TaskManagerContract<U256, T, P, N> for IIncredibleSquaringTaskManagerInstance<T, P, N>
 where
-    T: alloy::contract::private::Transport + ::core::clone::Clone,
-    P: alloy::contract::private::Provider<T, N>,
-    N: alloy::network::Network,
+    T: Transport + Clone,
+    P: Provider<T, N>,
+    N: Network,
 {
     type Call = createNewTaskCall;
 

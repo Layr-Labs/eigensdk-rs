@@ -1,6 +1,10 @@
 //! This is a simple task generator that can be used to create tasks for the operators.
 //! For testing purposes.
 
+use alloy::{
+    contract::private::{Provider, Transport},
+    network::Network,
+};
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use error::TaskGeneratorError;
 use std::time::Duration;
@@ -26,9 +30,9 @@ pub struct TaskGeneratorBuilder<I, TM, T, P, N, Input> {
 impl<I, TM, T, P, N, Input> TaskGeneratorBuilder<I, TM, T, P, N, Input>
 where
     TM: TaskManagerContract<Input, T, P, N>,
-    T: alloy::contract::private::Transport + ::core::clone::Clone,
-    P: alloy::contract::private::Provider<T, N>,
-    N: alloy::network::Network,
+    T: Transport + Clone,
+    P: Provider<T, N>,
+    N: Network,
 {
     /// Create a new task generator builder
     ///
@@ -118,9 +122,9 @@ where
     pub fn build(self) -> Result<TaskGenerator<I, TM, T, P, N, Input>, TaskGeneratorError>
     where
         TM: TaskManagerContract<Input, T, P, N>,
-        T: alloy::contract::private::Transport + ::core::clone::Clone,
-        P: alloy::contract::private::Provider<T, N>,
-        N: alloy::network::Network,
+        T: Transport + Clone,
+        P: Provider<T, N>,
+        N: Network,
     {
         Ok(TaskGenerator {
             iter: self.iter.ok_or(TaskGeneratorError::IteratorNotSet)?,
@@ -149,9 +153,9 @@ pub struct TaskGenerator<I, TM, T, P, N, Input> {
 impl<I, TM, T, P, N, Input> TaskGenerator<I, TM, T, P, N, Input>
 where
     TM: TaskManagerContract<Input, T, P, N> + Send + Sync,
-    T: alloy::contract::private::Transport + Clone + Send + Sync,
-    P: alloy::contract::private::Provider<T, N> + Send + Sync,
-    N: alloy::providers::Network + Send + Sync,
+    T: Transport + Clone + Send + Sync,
+    P: Provider<T, N> + Send + Sync,
+    N: Network + Send + Sync,
 {
     /// Run the task generator
     /// This will create N tasks, where N is the number of items in the iterator
