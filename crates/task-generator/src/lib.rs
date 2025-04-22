@@ -31,6 +31,14 @@ where
     N: alloy::network::Network,
 {
     /// Create a new task generator builder
+    ///
+    /// # Arguments
+    ///
+    /// * `task_manager` - Trait that wraps the task manager contract.
+    ///
+    /// # Returns
+    ///
+    /// A new task generator builder.
     pub fn new(task_manager: TM) -> Self {
         Self {
             iter: None,
@@ -42,7 +50,16 @@ where
         }
     }
 
-    /// Set the iterator
+    /// Set the iterator for the task creation
+    /// This will be used to create N tasks
+    ///
+    /// # Arguments
+    ///
+    /// * `iter` - The iterator for the task creation
+    ///
+    /// # Returns
+    ///
+    /// * `TaskGeneratorBuilder` - The builder for the task generator
     pub fn with_iter(self, iter: I) -> TaskGeneratorBuilder<I, TM, T, P, N, Input>
     where
         I: Iterator + Send + 'static,
@@ -58,13 +75,31 @@ where
         }
     }
 
-    /// Set the interval
+    /// Set the interval for the task creation
+    ///
+    /// # Arguments
+    ///
+    /// * `interval` - The interval for the task creation
+    ///
+    /// # Returns
+    ///
+    /// * `TaskGeneratorBuilder` - The builder for the task generator
     pub fn with_interval(mut self, interval: Duration) -> Self {
         self.interval = interval;
         self
     }
 
-    /// Set the quorum and threshold
+    /// Set the quorum where the task will be created and the threshold, indicating when
+    /// a task is considered completed
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_threshold` - The quorum threshold for the task creation
+    /// * `quorums` - The quorums for the task creation
+    ///
+    /// # Returns
+    ///
+    /// * `TaskGeneratorBuilder` - The builder for the task generator
     pub fn with_quorum(
         mut self,
         quorum_threshold: QuorumThresholdPercentage,
@@ -76,6 +111,10 @@ where
     }
 
     /// Build the task generator
+    ///
+    /// # Returns
+    ///
+    /// * `TaskGenerator` - The task generator to be run
     pub fn build(self) -> Result<TaskGenerator<I, TM, T, P, N, Input>, TaskGeneratorError>
     where
         TM: TaskManagerContract<Input, T, P, N>,
@@ -115,6 +154,12 @@ where
     N: alloy::providers::Network + Send + Sync,
 {
     /// Run the task generator
+    /// This will create N tasks, where N is the number of items in the iterator
+    /// We use the elements of the iterator as input for the task manager contract
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), TaskGeneratorError>` - The result of the task generator
     pub async fn run(self) -> Result<(), TaskGeneratorError>
     where
         I: Iterator<Item = Input> + Send,
