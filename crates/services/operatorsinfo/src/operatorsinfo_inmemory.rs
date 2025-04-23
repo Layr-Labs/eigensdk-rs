@@ -348,6 +348,7 @@ impl OperatorInfoServiceInMemory {
 
                             if let Some(new_pub_key_event) = data {
                                 let event_data = new_pub_key_event.data();
+
                                 let operator_pub_key = OperatorPubKeys {
                                     g1_pub_key: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(
                                         G1Point {

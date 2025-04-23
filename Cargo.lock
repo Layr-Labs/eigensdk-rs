@@ -3127,7 +3127,9 @@ name = "eigen-task-processor"
 version = "0.5.0"
 dependencies = [
  "alloy",
+ "eigen-services-blsaggregation",
  "eigen-types",
+ "serde",
  "thiserror 1.0.69",
  "tokio",
  "tokio-util",
@@ -7215,9 +7217,9 @@ dependencies = [
 
 [[package]]
 name = "signature"
-version = "2.2.0"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "77549399552de45a898a580c1b41d445bf730df867cc44e6c0233bbc4b8329de"
+checksum = "8fe458c98333f9c8152221191a77e2a44e8325d0193484af2e9421a53019e57d"
 dependencies = [
  "digest 0.10.7",
  "rand_core 0.6.4",
