@@ -3127,8 +3127,10 @@ name = "eigen-task-processor"
 version = "0.5.0"
 dependencies = [
  "alloy",
+ "eigen-crypto-bls",
  "eigen-services-blsaggregation",
  "eigen-types",
+ "eigen-utils",
  "serde",
  "thiserror 1.0.69",
  "tokio",

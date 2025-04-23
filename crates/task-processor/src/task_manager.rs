@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use crate::{task::Task, task_response::TaskResponse};
+use crate::{non_signer::NonSignerStakesAndSignature, task::Task, task_response::TaskResponse};
 use eigen_services_blsaggregation::bls_agg::TaskMetadata;
 
 pub trait TaskManagerContract {
@@ -26,7 +26,12 @@ pub trait TaskManagerContract {
 
     fn create_new_task(&self, task: Task<Self::Input>);
 
-    fn respond_to_task(&self, task_index: u32, response: TaskResponse<Self::Output>);
+    fn respond_to_task(
+        &self,
+        task: Task<Self::Input>,
+        response: TaskResponse<Self::Output>,
+        non_signer_stakes_and_signature: NonSignerStakesAndSignature,
+    );
 
     fn process_new_task(
         &self,
@@ -34,4 +39,6 @@ pub trait TaskManagerContract {
         task_timeout: Duration,
         window_duration: Duration,
     ) -> TaskMetadata;
+
+    fn task_response_to_bytes(&self, response: TaskResponse<Self::Output>) -> &[u8];
 }

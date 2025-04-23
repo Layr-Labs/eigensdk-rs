@@ -12,8 +12,10 @@ workspace = true
 
 [dependencies]
 alloy.workspace = true
+eigen-crypto-bls.workspace = true
 eigen-services-blsaggregation.workspace = true
 eigen-types.workspace = true
+eigen-utils.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 tokio.workspace = true
