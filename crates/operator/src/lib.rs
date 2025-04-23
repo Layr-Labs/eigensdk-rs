@@ -21,8 +21,6 @@ use tracing::info;
 pub mod client;
 /// Error
 pub mod error;
-/// Operator trait
-pub mod operator_task_processor;
 
 /// Operator struct to handle the operator logic of processing new tasks
 /// and sending signed task responses to the aggregator.
