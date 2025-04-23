@@ -115,3 +115,9 @@ pub use eigen_operator as operator;
 #[doc(inline)]
 #[cfg(feature = "task-generator")]
 pub use eigen_task_generator as task_generator;
+
+/* ------------------------------------ Task Processor Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "task-processor")]
+pub use eigen_task_processor as task_processor;

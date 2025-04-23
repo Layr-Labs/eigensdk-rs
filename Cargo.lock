@@ -3123,6 +3123,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigen-task-processor"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "eigen-types",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
 name = "eigen-testing-utils"
 version = "0.5.0"
 dependencies = [
@@ -3192,6 +3204,7 @@ dependencies = [
  "eigen-services-operatorsinfo",
  "eigen-signer",
  "eigen-task-generator",
+ "eigen-task-processor",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",

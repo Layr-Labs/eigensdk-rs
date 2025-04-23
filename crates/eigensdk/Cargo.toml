@@ -26,6 +26,7 @@ eigen-services-blsaggregation = { workspace = true, optional = true }
 eigen-services-operatorsinfo = { workspace = true, optional = true }
 eigen-signer = { workspace = true, optional = true }
 eigen-task-generator = { workspace = true, optional = true }
+eigen-task-processor = { workspace = true, optional = true }
 eigen-testing-utils = { workspace = true, optional = true }
 eigen-types = { workspace = true, optional = true }
 eigen-utils = { workspace = true, optional = true }
@@ -57,6 +58,7 @@ full = [
     "services-operatorsinfo",
     "signer",
     "task-generator",
+    "task-processor",
     "testing-utils",
     "nodeapi",
     "metrics-collectors-economic",
@@ -116,3 +118,6 @@ operator = ["dep:eigen-operator"]
 
 # task generator
 task-generator = ["dep:eigen-task-generator"]
+
+# task processor
+task-processor = ["dep:eigen-task-processor"]

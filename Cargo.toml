@@ -20,6 +20,7 @@ members = [
     "crates/services/operatorsinfo/",
     "crates/signer/",
     "crates/task-generator",
+    "crates/task-processor",
     "crates/types/",
     "crates/utils/",
     "crates/nodeapi/",
@@ -94,6 +95,7 @@ eigen-services-blsaggregation = { version = "0.5.0", path = "crates/services/bls
 eigen-services-operatorsinfo = { version = "0.5.0", path = "crates/services/operatorsinfo" }
 eigen-signer = { version = "0.5.0", path = "crates/signer/" }
 eigen-task-generator = { version = "0.5.0", path = "crates/task-generator/" }
+eigen-task-processor = { version = "0.5.0", path = "crates/task-processor/" }
 eigen-testing-utils = { version = "0.5.0", path = "tests/testing-utils" }
 eigen-types = { version = "0.5.0", path = "crates/types/" }
 eigen-utils = { version = "0.5.0", path = "crates/utils/" }
