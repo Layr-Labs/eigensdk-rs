@@ -59,6 +59,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
             for operator in &operators_stakes_in_quorums[quorum_id] {
                 let info = self.get_operator_info(*operator.operatorId).await?;
+                let socket = self.get_operator_socket(*operator.operatorId).await?;
                 let stake_per_quorum = HashMap::new();
                 let avs_state = operators_avs_state
                     .entry(FixedBytes(*operator.operatorId))
@@ -66,6 +67,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
                         operator_id: operator.operatorId,
                         operator_info: OperatorInfo {
                             pub_keys: Some(info),
+                            socket: Some(socket),
                         },
                         stake_per_quorum,
                         block_num: block_num.into(),
@@ -165,6 +167,15 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
             .unwrap_or(None)
             .ok_or(AvsRegistryError::GetOperatorInfo)
     }
+
+    async fn get_operator_socket(&self, operator_id: [u8; 32]) -> Result<String, AvsRegistryError> {
+        let operator_addr = self.avs_registry.get_operator_from_id(operator_id).await?;
+        self.operators_info_service
+            .get_operator_socket(operator_addr)
+            .await
+            .unwrap_or(None)
+            .ok_or(AvsRegistryError::GetOperatorInfo)
+    }
 }
 
 #[cfg(test)]
@@ -232,7 +243,10 @@ mod tests {
     ) -> AvsRegistryServiceChainCaller<FakeAvsRegistryReader, FakeOperatorInfoService> {
         let operator_address = Address::from_str(operator_address).unwrap();
         let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
-        let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
+        let operator_info_service = FakeOperatorInfoService::new(
+            test_operator.bls_keypair.clone(),
+            Some(String::from("test_socket")),
+        );
         AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service)
     }
 
@@ -295,6 +309,7 @@ mod tests {
             operator_id: test_operator.operator_id,
             operator_info: OperatorInfo {
                 pub_keys: Some(OperatorPubKeys::from(test_operator.bls_keypair)),
+                socket: Some(String::from("test_socket")),
             },
             stake_per_quorum: test_operator.stake_per_quorum,
             block_num: test_data.input.block_num.into(),
