@@ -16,6 +16,7 @@ impl FakeOperatorInfoService {
         Self {
             pubkeys: OperatorInfo {
                 pub_keys: Some(OperatorPubKeys::from(pubkeys)),
+                socket: None,
             },
             socket: String::default(),
         }

@@ -136,6 +136,7 @@ pub type QuorumNum = u8;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OperatorInfo {
     pub pub_keys: Option<OperatorPubKeys>,
+    pub socket: Option<Socket>,
 }
 
 pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<OperatorId, OperatorTypesError> {

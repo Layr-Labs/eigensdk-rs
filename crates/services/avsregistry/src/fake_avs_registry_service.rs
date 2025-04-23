@@ -41,6 +41,7 @@ impl FakeAvsRegistryService {
                 operator_id: op.operator_id,
                 operator_info: OperatorInfo {
                     pub_keys: Some(OperatorPubKeys::from(op.bls_keypair)),
+                    socket: None,
                 },
                 block_num: block_number.into(),
                 stake_per_quorum: op.stake_per_quorum,
