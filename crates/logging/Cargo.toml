@@ -7,6 +7,12 @@ repository.workspace = true
 description = "logging utilities"
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 ctor = "0.2.8"
 once_cell.workspace = true

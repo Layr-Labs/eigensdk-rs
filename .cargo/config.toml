@@ -1,6 +1,3 @@
-[alias]
-docs = "doc --workspace --all-features --no-deps"
-
 [target.x86_64-pc-windows-msvc]
 rustflags = [
     # Increases the stack size to 10MB, which is
