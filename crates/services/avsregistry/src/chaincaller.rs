@@ -243,7 +243,10 @@ mod tests {
     ) -> AvsRegistryServiceChainCaller<FakeAvsRegistryReader, FakeOperatorInfoService> {
         let operator_address = Address::from_str(operator_address).unwrap();
         let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
-        let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
+        let operator_info_service = FakeOperatorInfoService::new(
+            test_operator.bls_keypair.clone(),
+            Some(String::from("test_socket")),
+        );
         AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service)
     }
 
