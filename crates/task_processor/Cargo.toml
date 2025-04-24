@@ -16,5 +16,7 @@ eigen-types.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 tokio.workspace = true
+field_info.workspace = true
+field_info_derive.workspace = true
 
 tokio-util = "0.7.11"

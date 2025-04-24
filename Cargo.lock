@@ -3123,6 +3123,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigen-task-processor"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "eigen-types",
+ "field_info",
+ "field_info_derive",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
 name = "eigen-testing-utils"
 version = "0.5.0"
 dependencies = [
@@ -3816,6 +3830,18 @@ checksum = "c0b50bfb653653f9ca9095b427bed08ab8d75a137839d9ad64eb11810d5b6393"
 dependencies = [
  "rand_core 0.6.4",
  "subtle",
+]
+
+[[package]]
+name = "field_info"
+version = "0.1.0"
+
+[[package]]
+name = "field_info_derive"
+version = "0.1.0"
+dependencies = [
+ "quote",
+ "syn 2.0.100",
 ]
 
 [[package]]
