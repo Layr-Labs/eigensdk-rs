@@ -17,8 +17,6 @@ use task_manager::TaskManagerContract;
 use task_response::TaskResponse;
 use tracing::info;
 
-/// Task processor error
-pub mod error;
 /// New task event generic
 pub mod new_task_event_generic;
 /// Task
