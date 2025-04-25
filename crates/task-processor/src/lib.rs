@@ -1,27 +1,35 @@
 //! Task manager
-#![allow(missing_docs)]
 
-use alloy::{primitives::B256, sol_types::SolValue};
+use alloy::primitives::B256;
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
 use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
 };
 use eigen_types::avs::TaskResponseDigest;
-use eigen_utils::slashing::middleware::blsapkregistry::BN254::{G1Point, G2Point};
+use eigen_utils::slashing::middleware::{
+    iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
+    iblssignaturechecker::BN254::{G1Point, G2Point},
+};
 use new_task_event_generic::NewTaskEventGeneric;
-use non_signer::NonSignerStakesAndSignature;
 use std::{collections::HashMap, time::Duration};
 use task::Task;
 use task_manager::TaskManagerContract;
 use task_response::TaskResponse;
 use tracing::info;
 
+/// Task processor error
+pub mod error;
+/// New task event generic
 pub mod new_task_event_generic;
-pub mod non_signer;
+/// Task
 pub mod task;
+/// Task manager trait
 pub mod task_manager;
+/// Task response
 pub mod task_response;
 
+/// Indexing task processor
+#[derive(Debug)]
 pub struct IndexingTaskProcessor<TM>
 where
     TM: TaskManagerContract,
@@ -42,6 +50,17 @@ impl<TM> IndexingTaskProcessor<TM>
 where
     TM: TaskManagerContract,
 {
+    /// Create a new task processor
+    ///
+    /// # Arguments
+    ///
+    /// * `task_manager` - The task manager
+    /// * `task_timeout` - The task timeout
+    /// * `window_duration` - The window duration
+    ///
+    /// # Returns
+    ///
+    /// A new task processor
     pub fn new(task_manager: TM, task_timeout: Duration, window_duration: Duration) -> Self {
         Self {
             tasks: HashMap::default(),
@@ -52,13 +71,18 @@ where
         }
     }
 
-    // TODO: Return Result type
-    pub fn process_new_task(
-        &mut self,
-        event: NewTaskEventGeneric<TM::Input>,
-        task_timeout: Duration,    // TODO: Check if this is correct
-        window_duration: Duration, // TODO: Check if this is correct
-    ) -> TaskMetadata {
+    /// Recieves a event and creates the [`TaskMetadata`]
+    ///
+    /// # Arguments
+    ///
+    /// * `event` - The new task event
+    /// * `task_timeout` - The task timeout
+    /// * `window_duration` - The window duration
+    ///
+    /// # Returns
+    ///
+    /// The [`TaskMetadata`]
+    pub fn process_new_task(&mut self, event: NewTaskEventGeneric<TM::Input>) -> TaskMetadata {
         self.tasks.insert(event.task_index, event.task.clone());
 
         TaskMetadata::new(
@@ -66,18 +90,25 @@ where
             u64::from(event.task.task_created_block),
             event.task.quorum_numbers.to_vec(),
             vec![event.task.quorum_threshold_percentage],
-            task_timeout,
+            self.task_timeout,
         )
-        .with_window_duration(window_duration)
+        .with_window_duration(self.window_duration)
     }
 
-    // TODO: Return Result type
-    async fn process_task_response(&mut self, response: TaskResponse<TM::Output>) -> B256 {
-        let bytes = self.task_manager.task_response_to_bytes(response.clone());
-        let digest = alloy::primitives::keccak256(bytes.abi_encode());
+    /// Processes a task response
+    ///
+    /// # Arguments
+    ///
+    /// * `response` - The task response
+    ///
+    /// # Returns
+    ///
+    /// The task response digest
+    pub async fn process_task_response(&mut self, response: TaskResponse<TM::Output>) -> B256 {
+        let digest = alloy::primitives::keccak256(response.encode());
 
         self.task_responses
-            .entry(response.referenceTaskIndex)
+            .entry(response.task_index)
             .or_default()
             .entry(digest)
             .or_insert(response);
@@ -85,7 +116,16 @@ where
         digest
     }
 
-    async fn process_aggregated_response(&self, response: BlsAggregationServiceResponse) {
+    /// Processes an aggregated response and sends it to the contract
+    ///
+    /// # Arguments
+    ///
+    /// * `response` - The BLS Aggregated Response
+    ///
+    /// # Returns
+    ///
+    /// The aggregated response digest
+    pub async fn process_aggregated_response(&self, response: BlsAggregationServiceResponse) {
         info!(
             "Aggregated response received for task {}: {:?}",
             response.task_index, response.task_response_digest
@@ -125,7 +165,7 @@ where
             nonSignerStakeIndices: response.non_signer_stake_indices,
         };
 
-        let task = &self.tasks[&response.task_index];
+        let task = self.tasks.get(&response.task_index).unwrap();
 
         let task_response = self
             .task_responses

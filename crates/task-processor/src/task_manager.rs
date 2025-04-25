@@ -1,20 +1,14 @@
-use std::time::Duration;
+use crate::{task::Task, task_response::TaskResponse};
+use alloy::sol_types::SolValue;
+use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 
-use crate::{
-    new_task_event_generic::NewTaskEventGeneric, non_signer::NonSignerStakesAndSignature,
-    task::Task, task_response::TaskResponse,
-};
-use eigen_services_blsaggregation::bls_agg::TaskMetadata;
-
+/// Task manager contract trait. It wraps the contract's types and functions.
 pub trait TaskManagerContract {
-    // /// Type for task indices
-    // type Index = u32;
-
     /// Type for inputs of each task
-    type Input: Clone;
+    type Input: Clone + SolValue;
 
     /// Type for outputs of each task
-    type Output: Clone;
+    type Output: Clone + SolValue;
 
     /// New task event
     type EventSignature: AsRef<str>;
@@ -27,21 +21,17 @@ pub trait TaskManagerContract {
     // re-create the `IncredibleSquaringTaskManager::Task` using the values
     // of our Task struct. I think it feels weird.
 
-    fn create_new_task(&self, task: Task<Self::Input>);
-
+    /// Respond to a task
+    ///
+    /// # Arguments
+    ///
+    /// * `task` - The task
+    /// * `response` - The response
+    /// * `non_signer_stakes_and_signature` - The non-signer stakes and signature
     fn respond_to_task(
         &self,
         task: Task<Self::Input>,
         response: TaskResponse<Self::Output>,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
     );
-
-    fn process_new_task(
-        &self,
-        event: NewTaskEventGeneric<Self::Input>,
-        task_timeout: Duration,
-        window_duration: Duration,
-    ) -> TaskMetadata;
-
-    fn task_response_to_bytes(&self, response: TaskResponse<Self::Output>) -> &[u8];
 }

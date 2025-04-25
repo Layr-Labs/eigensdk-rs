@@ -1,10 +1,28 @@
+use alloy::sol_types::SolValue;
 use serde::{Deserialize, Serialize};
 
-#[allow(non_snake_case)]
+/// Task response struct with generic response
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct TaskResponse<Output> {
-    #[allow(missing_docs)]
-    pub referenceTaskIndex: u32,
-    #[allow(missing_docs)]
-    pub respose: Output,
+pub struct TaskResponse<Output>
+where
+    Output: Clone + SolValue,
+{
+    /// Task index
+    pub task_index: u32,
+    /// Response
+    pub response: Output,
+}
+
+impl<Output: Clone + SolValue> TaskResponse<Output> {
+    /// Abi encode the task response
+    ///
+    /// # Returns
+    ///
+    /// The abi encoded task response
+    pub fn encode(&self) -> Vec<u8> {
+        let mut bytes = vec![];
+        bytes.extend(self.task_index.abi_encode());
+        bytes.extend(self.response.abi_encode());
+        bytes
+    }
 }

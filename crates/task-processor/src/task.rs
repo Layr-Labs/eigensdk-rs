@@ -1,10 +1,10 @@
-use alloy::sol_types::private::Bytes;
+use alloy::sol_types::{private::Bytes, SolValue};
 /// Task abstraction
 #[allow(non_snake_case)]
 #[derive(Debug, Clone)]
 pub struct Task<Input>
 where
-    Input: Clone,
+    Input: Clone + SolValue,
 {
     #[allow(missing_docs)]
     pub input: Input,
