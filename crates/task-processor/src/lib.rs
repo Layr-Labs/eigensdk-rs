@@ -1,6 +1,10 @@
 //! Task manager
 
 use alloy::primitives::B256;
+use alloy::{
+    contract::private::{Provider, Transport},
+    network::Network,
+};
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
 use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
@@ -15,7 +19,6 @@ use task::Task;
 use task_manager::TaskManagerContract;
 use task_response::TaskResponse;
 use tracing::info;
-
 /// Task
 pub mod task;
 /// Task manager trait
@@ -33,9 +36,12 @@ pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskProcessorE
 
 /// Indexing task processor
 #[derive(Debug, Clone)]
-pub struct IndexingTaskProcessor<TM>
+pub struct IndexingTaskProcessor<TM, T, P, N>
 where
-    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
+    T: Transport + Clone + Send + Sync + 'static,
+    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    N: Network,
 {
     /// Hashmap to store the created tasks
     tasks: HashMap<u32, Task<TM::Input>>,
@@ -45,9 +51,12 @@ where
     task_manager: TM,
 }
 
-impl<TM> IndexingTaskProcessor<TM>
+impl<TM, T, P, N> IndexingTaskProcessor<TM, T, P, N>
 where
-    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
+    T: Transport + Clone + Send + Sync + 'static,
+    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    N: Network,
 {
     /// Create a new task processor
     ///
@@ -81,7 +90,7 @@ where
     ) -> Result<TaskMetadata, TaskProcessorError> {
         let (task_index, task, task_metadata) = self.task_manager.process_new_task(event).await?;
         self.tasks.insert(task_index, task);
-
+        dbg!("CREANDO TASK");
         Ok(task_metadata)
     }
 
@@ -96,7 +105,7 @@ where
     /// The task response digest
     pub async fn process_task_response(&mut self, response: TaskResponse<TM::Output>) -> B256 {
         let digest = alloy::primitives::keccak256(response.encode());
-
+        dbg!("PROCESANDO RESPUESTA");
         self.task_responses
             .entry(response.task_index)
             .or_default()

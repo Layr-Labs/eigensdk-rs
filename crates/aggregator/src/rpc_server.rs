@@ -1,13 +1,16 @@
 use std::fmt::Debug;
 
+use crate::{AggregatorError, SignedTaskResponse};
+use alloy::{
+    contract::private::{Provider, Transport},
+    network::Network,
+};
 use eigen_services_blsaggregation::bls_agg::{ServiceHandle, TaskSignature};
 use eigen_task_processor::{
     task_manager::TaskManagerContract, task_response::TaskResponse, IndexingTaskProcessor,
 };
 use tarpc::{context::Context, ServerError};
 use tracing::info;
-
-use crate::{AggregatorError, SignedTaskResponse};
 
 #[tarpc::service]
 /// This is the service definition. It defines one RPC, [`process_signed_task_response`].
@@ -29,19 +32,25 @@ pub trait ProcessSignedTaskResponse {
 
 #[derive(Debug, Clone)]
 /// Server for the ProcessSignedTaskResponse RPC
-pub struct ProcessSignedTaskResponseServer<TM>
+pub struct ProcessSignedTaskResponseServer<TM, T, P, N>
 where
-    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
+    T: Transport + Clone + Send + Sync + 'static,
+    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    N: Network,
 {
-    task_processor: IndexingTaskProcessor<TM>,
+    task_processor: IndexingTaskProcessor<TM, T, P, N>,
     service_handle: ServiceHandle,
 }
 
 /// Implementation of the ProcessSignedTaskResponse trait for the ProcessSignedTaskResponseServer
 /// The async method serves the RPC request and processes the signed task response
-impl<TM> ProcessSignedTaskResponse for ProcessSignedTaskResponseServer<TM>
+impl<TM, T, P, N> ProcessSignedTaskResponse for ProcessSignedTaskResponseServer<TM, T, P, N>
 where
-    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
+    T: Transport + Clone + Send + Sync + 'static,
+    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    N: Network,
 {
     async fn process_signed_task_response(
         mut self,
@@ -49,6 +58,11 @@ where
         signed_task_response: String,
     ) -> Result<bool, ServerError> {
         let service_handle = &self.service_handle;
+
+        info!(
+            "RECIBIENDO RESPUESTA DEL OPERATOR: {}",
+            &signed_task_response
+        );
         let parsed: SignedTaskResponse<TaskResponse<TM::Output>> =
             serde_json::from_str(&signed_task_response).map_err(|_| {
                 ServerError::new(
@@ -69,9 +83,12 @@ where
     }
 }
 
-impl<TM> ProcessSignedTaskResponseServer<TM>
+impl<TM, T, P, N> ProcessSignedTaskResponseServer<TM, T, P, N>
 where
-    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
+    T: Transport + Clone + Send + Sync + 'static,
+    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    N: Network,
 {
     /// Creates a new [`ProcessSignedTaskResponseServer`]
     ///
@@ -83,7 +100,10 @@ where
     /// # Returns
     ///
     /// * `Self` - The [`ProcessSignedTaskResponseServer`]
-    pub fn new(task_processor: IndexingTaskProcessor<TM>, service_handle: ServiceHandle) -> Self {
+    pub fn new(
+        task_processor: IndexingTaskProcessor<TM, T, P, N>,
+        service_handle: ServiceHandle,
+    ) -> Self {
         Self {
             task_processor,
             service_handle,
@@ -102,10 +122,11 @@ where
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_signed_task_response(
-        task_processor: &mut IndexingTaskProcessor<TM>,
+        task_processor: &mut IndexingTaskProcessor<TM, T, P, N>,
         service_handle: &ServiceHandle,
         signed_task_response: SignedTaskResponse<TaskResponse<TM::Output>>,
     ) -> Result<(), AggregatorError> {
+        dbg!("RECIBIENDO RESPUESTA DEL OPERATOR");
         let SignedTaskResponse {
             task_response,
             signature,

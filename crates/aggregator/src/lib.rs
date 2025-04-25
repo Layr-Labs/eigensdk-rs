@@ -33,6 +33,10 @@ use tarpc::server::{self, Channel};
 use tarpc::tokio_serde::formats::Json;
 use tracing::info;
 
+use alloy::{
+    contract::private::{Provider as ProviderTrait, Transport},
+    network::Network,
+};
 pub use config::AggregatorConfig;
 pub use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
@@ -46,20 +50,26 @@ pub use traits::{
 
 /// Aggregator
 #[derive(Debug)]
-pub struct Aggregator<TM>
+pub struct Aggregator<TM, T, P, N>
 where
-    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
+    T: Transport + Clone + Send + Sync + 'static,
+    P: ProviderTrait<T, N> + Clone + 'static,
+    N: Network,
 {
     port_address: String,
-    task_processor: IndexingTaskProcessor<TM>,
+    task_processor: IndexingTaskProcessor<TM, T, P, N>,
     service_handle: ServiceHandle,
     aggregated_response_receiver: AggregateReceiver,
     ws_rpc_url: String,
 }
 
-impl<TM> Aggregator<TM>
+impl<TM, T, P, N> Aggregator<TM, T, P, N>
 where
-    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
+    T: Transport + Clone + Send + Sync + 'static,
+    P: ProviderTrait<T, N> + Clone + Send + Sync + 'static,
+    N: Network,
 {
     /// Creates a new aggregator
     ///
@@ -72,7 +82,7 @@ where
     /// * `Self` - The aggregator
     pub async fn new(
         config: AggregatorConfig,
-        task_processor: IndexingTaskProcessor<TM>,
+        task_processor: IndexingTaskProcessor<TM, T, P, N>,
     ) -> Result<Self, AggregatorError> {
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             get_logger(),
@@ -172,7 +182,7 @@ where
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn start_server(
         port_address: String,
-        task_processor: IndexingTaskProcessor<TM>,
+        task_processor: IndexingTaskProcessor<TM, T, P, N>,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let addr: SocketAddr = port_address.parse().map_err(|e| {
@@ -220,7 +230,7 @@ where
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_tasks(
         ws_rpc_url: String,
-        mut task_processor: IndexingTaskProcessor<TM>,
+        mut task_processor: IndexingTaskProcessor<TM, T, P, N>,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
@@ -254,13 +264,16 @@ where
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_aggregated_signatures(
-        task_processor: IndexingTaskProcessor<TM>,
+        task_processor: IndexingTaskProcessor<TM, T, P, N>,
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
+            dbg!("ESPERANDO RESPUESTA");
             let service_response = aggregated_response_receiver
                 .receive_aggregated_response()
                 .await?;
+
+            dbg!("RECIBIENDO RESPUESTA");
 
             task_processor
                 .process_aggregated_response(service_response)

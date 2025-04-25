@@ -7,7 +7,7 @@ use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureChecke
 use serde::{de::DeserializeOwned, Serialize};
 
 /// Task manager contract trait. It wraps the contract's types and functions.
-pub trait TaskManagerContract {
+pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
     /// Type for inputs of each task
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
