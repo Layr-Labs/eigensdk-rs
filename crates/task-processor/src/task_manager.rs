@@ -1,7 +1,8 @@
-use std::fmt::Debug;
+use std::{fmt::Debug, future::Future};
 
 use crate::{task::Task, task_response::TaskResponse};
 use alloy::sol_types::{SolEvent, SolValue};
+use eigen_services_blsaggregation::bls_agg::TaskMetadata;
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use serde::{de::DeserializeOwned, Serialize};
 
@@ -16,14 +17,6 @@ pub trait TaskManagerContract {
     /// New task event
     type NewTaskEvent: SolEvent;
 
-    // DAMIAN:
-    // We have a problem with these methods: they are very tightly coupled to
-    // the bindings. For example, `create_new_task` from the binding expects
-    // an `IncredibleSquaringTaskManager::Task`, and the same applies to
-    // `TaskResponse`. If we want to use this interface, the user should
-    // re-create the `IncredibleSquaringTaskManager::Task` using the values
-    // of our Task struct. I think it feels weird.
-
     /// Respond to a task
     ///
     /// # Arguments
@@ -36,5 +29,21 @@ pub trait TaskManagerContract {
         task: Task<Self::Input>,
         response: TaskResponse<Self::Output>,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
-    );
+    ) -> impl Future + Send;
+
+    /// Process a new task
+    ///
+    /// # Arguments
+    ///
+    /// * `event` - The new task event
+    ///
+    /// # Returns
+    ///
+    /// * `task_index` - The task index
+    /// * `task` - The task
+    /// * `task_metadata` - The task metadata
+    fn process_new_task(
+        &mut self,
+        event: Self::NewTaskEvent,
+    ) -> impl Future<Output = (u32, Task<Self::Input>, TaskMetadata)> + Send;
 }

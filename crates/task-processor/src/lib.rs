@@ -10,15 +10,12 @@ use eigen_utils::slashing::middleware::{
     iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
     iblssignaturechecker::BN254::{G1Point, G2Point},
 };
-use new_task_event_generic::NewTaskEventGeneric;
 use std::{collections::HashMap, fmt::Debug, time::Duration};
 use task::Task;
 use task_manager::TaskManagerContract;
 use task_response::TaskResponse;
 use tracing::info;
 
-/// New task event generic
-pub mod new_task_event_generic;
 /// Task
 pub mod task;
 /// Task manager trait
@@ -80,20 +77,11 @@ where
     /// # Returns
     ///
     /// The [`TaskMetadata`]
-    pub async fn process_new_task(
-        &mut self,
-        event: NewTaskEventGeneric<TM::Input>,
-    ) -> TaskMetadata {
-        self.tasks.insert(event.task_index, event.task.clone());
+    pub async fn handle_new_task(&mut self, event: TM::NewTaskEvent) -> TaskMetadata {
+        let (task_index, task, task_metadata) = self.task_manager.process_new_task(event).await;
+        self.tasks.insert(task_index, task);
 
-        TaskMetadata::new(
-            event.task_index,
-            u64::from(event.task.task_created_block),
-            event.task.quorum_numbers.to_vec(),
-            vec![event.task.quorum_threshold_percentage],
-            self.task_timeout,
-        )
-        .with_window_duration(self.window_duration)
+        task_metadata
     }
 
     /// Processes a task response
@@ -175,11 +163,9 @@ where
             .cloned()
             .unwrap();
 
-        self.task_manager.respond_to_task(
-            task.clone(),
-            task_response,
-            non_signer_stakes_and_signature,
-        );
+        self.task_manager
+            .respond_to_task(task.clone(), task_response, non_signer_stakes_and_signature)
+            .await;
 
         info!("Aggregated response sent to contract");
     }
