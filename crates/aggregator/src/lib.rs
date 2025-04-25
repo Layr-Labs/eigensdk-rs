@@ -27,6 +27,7 @@ use eigen_task_processor::task_manager::TaskManagerContract;
 use eigen_task_processor::IndexingTaskProcessor;
 use futures_util::{future, StreamExt};
 use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
+use serde::Serialize;
 use std::fmt::Debug;
 use std::net::SocketAddr;
 use tarpc::server::{self, Channel};
@@ -229,15 +230,11 @@ impl<TM: TaskManagerContract + Send + Sync + 'static + Clone + Debug> Aggregator
             .into_stream()
             .next()
             .await
-            .and_then(|log| log.log_decode().ok())
-            .map(
-                |v: alloy::rpc::types::Log<
-                    eigen_task_processor::new_task_event_generic::NewTaskEventGeneric<
-                        <TM as TaskManagerContract>::Input,
-                    >,
-                >| v.inner.data,
-            )
         {
+            let data = serde_json::to_string(&event).unwrap();
+            dbg!(&data);
+            // alloy::rpc::types::Log<<TP as TaskProcessor>::NewTaskEvent>
+
             // let metadata = task_processor
             //     .process_new_task(event)
             //     .await

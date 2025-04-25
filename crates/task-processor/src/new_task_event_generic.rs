@@ -1,4 +1,4 @@
-use alloy::sol_types::SolValue;
+use alloy::sol_types::{SolEvent, SolValue};
 
 use crate::task::Task;
 
