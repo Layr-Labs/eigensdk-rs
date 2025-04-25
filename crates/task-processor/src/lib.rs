@@ -1,4 +1,5 @@
 //! Task manager
+#![allow(missing_docs)]
 
 use alloy::{primitives::B256, sol_types::SolValue};
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
@@ -57,7 +58,7 @@ where
         event: NewTaskEventGeneric<TM::Input>,
         task_timeout: Duration,    // TODO: Check if this is correct
         window_duration: Duration, // TODO: Check if this is correct
-    ) {
+    ) -> TaskMetadata {
         self.tasks.insert(event.task_index, event.task.clone());
 
         TaskMetadata::new(
@@ -67,7 +68,7 @@ where
             vec![event.task.quorum_threshold_percentage],
             task_timeout,
         )
-        .with_window_duration(window_duration);
+        .with_window_duration(window_duration)
     }
 
     // TODO: Return Result type

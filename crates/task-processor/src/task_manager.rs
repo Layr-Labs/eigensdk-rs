@@ -1,6 +1,9 @@
 use std::time::Duration;
 
-use crate::{non_signer::NonSignerStakesAndSignature, task::Task, task_response::TaskResponse};
+use crate::{
+    new_task_event_generic::NewTaskEventGeneric, non_signer::NonSignerStakesAndSignature,
+    task::Task, task_response::TaskResponse,
+};
 use eigen_services_blsaggregation::bls_agg::TaskMetadata;
 
 pub trait TaskManagerContract {
@@ -14,7 +17,7 @@ pub trait TaskManagerContract {
     type Output: Clone;
 
     /// New task event
-    type NewTaskEvent;
+    type EventSignature: AsRef<str>;
 
     // DAMIAN:
     // We have a problem with these methods: they are very tightly coupled to
@@ -35,7 +38,7 @@ pub trait TaskManagerContract {
 
     fn process_new_task(
         &self,
-        event: Self::NewTaskEvent,
+        event: NewTaskEventGeneric<Self::Input>,
         task_timeout: Duration,
         window_duration: Duration,
     ) -> TaskMetadata;
