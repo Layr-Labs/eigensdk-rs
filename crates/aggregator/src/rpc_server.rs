@@ -31,7 +31,7 @@ pub trait ProcessSignedTaskResponse {
 /// Server for the ProcessSignedTaskResponse RPC
 pub struct ProcessSignedTaskResponseServer<TM>
 where
-    TM: TaskManagerContract + Debug,
+    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
 {
     task_processor: IndexingTaskProcessor<TM>,
     service_handle: ServiceHandle,
@@ -39,8 +39,9 @@ where
 
 /// Implementation of the ProcessSignedTaskResponse trait for the ProcessSignedTaskResponseServer
 /// The async method serves the RPC request and processes the signed task response
-impl<TM: TaskManagerContract + Debug> ProcessSignedTaskResponse
-    for ProcessSignedTaskResponseServer<TM>
+impl<TM> ProcessSignedTaskResponse for ProcessSignedTaskResponseServer<TM>
+where
+    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
 {
     async fn process_signed_task_response(
         mut self,
@@ -68,7 +69,10 @@ impl<TM: TaskManagerContract + Debug> ProcessSignedTaskResponse
     }
 }
 
-impl<TM: TaskManagerContract + Debug> ProcessSignedTaskResponseServer<TM> {
+impl<TM> ProcessSignedTaskResponseServer<TM>
+where
+    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+{
     /// Creates a new [`ProcessSignedTaskResponseServer`]
     ///
     /// # Arguments

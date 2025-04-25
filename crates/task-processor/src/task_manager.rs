@@ -1,6 +1,6 @@
 use std::{fmt::Debug, future::Future};
 
-use crate::{task::Task, task_response::TaskResponse};
+use crate::{task::Task, task_response::TaskResponse, TaskProcessorError};
 use alloy::sol_types::{SolEvent, SolValue};
 use eigen_services_blsaggregation::bls_agg::TaskMetadata;
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
@@ -15,7 +15,7 @@ pub trait TaskManagerContract {
     type Output: Clone + SolValue + Send + Sync + 'static + Debug + Serialize + DeserializeOwned;
 
     /// New task event
-    type NewTaskEvent: SolEvent;
+    type NewTaskEvent: SolEvent + Send + Sync + 'static;
 
     /// Respond to a task
     ///
@@ -29,7 +29,7 @@ pub trait TaskManagerContract {
         task: Task<Self::Input>,
         response: TaskResponse<Self::Output>,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
-    ) -> impl Future + Send;
+    ) -> impl Future<Output = Result<(), TaskProcessorError>> + Send;
 
     /// Process a new task
     ///
@@ -45,5 +45,5 @@ pub trait TaskManagerContract {
     fn process_new_task(
         &mut self,
         event: Self::NewTaskEvent,
-    ) -> impl Future<Output = (u32, Task<Self::Input>, TaskMetadata)> + Send;
+    ) -> impl Future<Output = Result<(u32, Task<Self::Input>, TaskMetadata), TaskProcessorError>> + Send;
 }

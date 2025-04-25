@@ -10,7 +10,7 @@ use eigen_utils::slashing::middleware::{
     iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
     iblssignaturechecker::BN254::{G1Point, G2Point},
 };
-use std::{collections::HashMap, fmt::Debug, time::Duration};
+use std::{collections::HashMap, fmt::Debug};
 use task::Task;
 use task_manager::TaskManagerContract;
 use task_response::TaskResponse;
@@ -23,11 +23,19 @@ pub mod task_manager;
 /// Task response
 pub mod task_response;
 
+/// Error returned by the task processor
+pub type TaskProcessorError = Box<dyn core::error::Error + Send>;
+
+/// Utility function for boxing errors
+pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskProcessorError {
+    Box::new(e)
+}
+
 /// Indexing task processor
 #[derive(Debug, Clone)]
 pub struct IndexingTaskProcessor<TM>
 where
-    TM: TaskManagerContract + Debug,
+    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
 {
     /// Hashmap to store the created tasks
     tasks: HashMap<u32, Task<TM::Input>>,
@@ -35,34 +43,26 @@ where
     task_responses: HashMap<u32, HashMap<TaskResponseDigest, TaskResponse<TM::Output>>>,
     /// Avs writer
     task_manager: TM,
-    /// Task timeout
-    task_timeout: Duration,
-    /// Window duration
-    window_duration: Duration,
 }
 
 impl<TM> IndexingTaskProcessor<TM>
 where
-    TM: TaskManagerContract + Debug,
+    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
 {
     /// Create a new task processor
     ///
     /// # Arguments
     ///
     /// * `task_manager` - The task manager
-    /// * `task_timeout` - The task timeout
-    /// * `window_duration` - The window duration
     ///
     /// # Returns
     ///
     /// A new task processor
-    pub fn new(task_manager: TM, task_timeout: Duration, window_duration: Duration) -> Self {
+    pub fn new(task_manager: TM) -> Self {
         Self {
             tasks: HashMap::default(),
             task_responses: HashMap::default(),
             task_manager,
-            task_timeout,
-            window_duration,
         }
     }
 
@@ -71,17 +71,18 @@ where
     /// # Arguments
     ///
     /// * `event` - The new task event
-    /// * `task_timeout` - The task timeout
-    /// * `window_duration` - The window duration
     ///
     /// # Returns
     ///
     /// The [`TaskMetadata`]
-    pub async fn handle_new_task(&mut self, event: TM::NewTaskEvent) -> TaskMetadata {
-        let (task_index, task, task_metadata) = self.task_manager.process_new_task(event).await;
+    pub async fn handle_new_task(
+        &mut self,
+        event: TM::NewTaskEvent,
+    ) -> Result<TaskMetadata, TaskProcessorError> {
+        let (task_index, task, task_metadata) = self.task_manager.process_new_task(event).await?;
         self.tasks.insert(task_index, task);
 
-        task_metadata
+        Ok(task_metadata)
     }
 
     /// Processes a task response
@@ -114,7 +115,10 @@ where
     /// # Returns
     ///
     /// The aggregated response digest
-    pub async fn process_aggregated_response(&self, response: BlsAggregationServiceResponse) {
+    pub async fn process_aggregated_response(
+        &self,
+        response: BlsAggregationServiceResponse,
+    ) -> Result<(), TaskProcessorError> {
         info!(
             "Aggregated response received for task {}: {:?}",
             response.task_index, response.task_response_digest
@@ -165,8 +169,9 @@ where
 
         self.task_manager
             .respond_to_task(task.clone(), task_response, non_signer_stakes_and_signature)
-            .await;
+            .await?;
 
         info!("Aggregated response sent to contract");
+        Ok(())
     }
 }
