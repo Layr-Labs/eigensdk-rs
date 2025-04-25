@@ -11,7 +11,7 @@ use eigen_utils::slashing::middleware::{
     iblssignaturechecker::BN254::{G1Point, G2Point},
 };
 use new_task_event_generic::NewTaskEventGeneric;
-use std::{collections::HashMap, time::Duration};
+use std::{collections::HashMap, fmt::Debug, time::Duration};
 use task::Task;
 use task_manager::TaskManagerContract;
 use task_response::TaskResponse;
@@ -27,10 +27,10 @@ pub mod task_manager;
 pub mod task_response;
 
 /// Indexing task processor
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct IndexingTaskProcessor<TM>
 where
-    TM: TaskManagerContract,
+    TM: TaskManagerContract + Debug,
 {
     /// Hashmap to store the created tasks
     tasks: HashMap<u32, Task<TM::Input>>,
@@ -46,7 +46,7 @@ where
 
 impl<TM> IndexingTaskProcessor<TM>
 where
-    TM: TaskManagerContract,
+    TM: TaskManagerContract + Debug,
 {
     /// Create a new task processor
     ///
@@ -80,7 +80,10 @@ where
     /// # Returns
     ///
     /// The [`TaskMetadata`]
-    pub fn process_new_task(&mut self, event: NewTaskEventGeneric<TM::Input>) -> TaskMetadata {
+    pub async fn process_new_task(
+        &mut self,
+        event: NewTaskEventGeneric<TM::Input>,
+    ) -> TaskMetadata {
         self.tasks.insert(event.task_index, event.task.clone());
 
         TaskMetadata::new(

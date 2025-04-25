@@ -23,12 +23,14 @@ use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle,
 };
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+use eigen_task_processor::task_manager::TaskManagerContract;
+use eigen_task_processor::IndexingTaskProcessor;
 use futures_util::{future, StreamExt};
 use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
-use std::{net::SocketAddr, sync::Arc};
+use std::fmt::Debug;
+use std::net::SocketAddr;
 use tarpc::server::{self, Channel};
 use tarpc::tokio_serde::formats::Json;
-use tokio::sync::Mutex;
 use tracing::info;
 
 pub use config::AggregatorConfig;
@@ -44,15 +46,15 @@ pub use traits::{
 
 /// Aggregator
 #[derive(Debug)]
-pub struct Aggregator<TP> {
+pub struct Aggregator<TM: TaskManagerContract + Debug> {
     port_address: String,
-    task_processor: Arc<Mutex<TP>>,
+    task_processor: IndexingTaskProcessor<TM>,
     service_handle: ServiceHandle,
     aggregated_response_receiver: AggregateReceiver,
     ws_rpc_url: String,
 }
 
-impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
+impl<TM: TaskManagerContract + Send + Sync + 'static + Clone + Debug> Aggregator<TM> {
     /// Creates a new aggregator
     ///
     /// # Arguments
@@ -64,7 +66,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     /// * `Self` - The aggregator
     pub async fn new(
         config: AggregatorConfig,
-        task_processor: TP,
+        task_processor: IndexingTaskProcessor<TM>,
     ) -> Result<Self, AggregatorError> {
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             get_logger(),
@@ -99,7 +101,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
             BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
         Ok(Self {
             port_address: config.server_address,
-            task_processor: Arc::new(Mutex::new(task_processor)),
+            task_processor,
             service_handle,
             aggregated_response_receiver,
             ws_rpc_url: config.ws_rpc_url,
@@ -119,20 +121,20 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     pub async fn start(self) -> Result<(), AggregatorError> {
         info!("Starting aggregator");
 
-        let task_processor = self.task_processor.clone();
+        let task_processor = self.task_processor;
         let service_handle = self.service_handle.clone();
         let port_address = self.port_address.clone();
 
         // Spawn three tasks: one for the server that receives signature, one for processing tasks, and another to process aggregated signatures
         let server_handle = tokio::spawn(Self::start_server(
             port_address,
-            task_processor.clone(),
+            task_processor,
             service_handle.clone(),
         ));
 
         let process_handle = tokio::spawn(Self::process_tasks(
             self.ws_rpc_url,
-            task_processor.clone(),
+            task_processor,
             service_handle,
         ));
         let aggregate_handle = tokio::spawn(Self::process_aggregated_signatures(
@@ -165,7 +167,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn start_server(
         port_address: String,
-        task_processor: Arc<Mutex<TP>>,
+        task_processor: IndexingTaskProcessor<TM>,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let addr: SocketAddr = port_address.parse().map_err(|e| {
@@ -214,11 +216,11 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_tasks(
         ws_rpc_url: String,
-        task_processor: Arc<Mutex<TP>>,
+        task_processor: IndexingTaskProcessor<TM>,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
-        let filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
+        let filter = Filter::new().event_signature(TM::NewTaskEvent::SIGNATURE_HASH);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
 
         while let Some(event) = provider
@@ -228,15 +230,19 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
             .next()
             .await
             .and_then(|log| log.log_decode().ok())
-            .map(|v| v.inner.data)
+            .map(
+                |v: alloy::rpc::types::Log<
+                    eigen_task_processor::new_task_event_generic::NewTaskEventGeneric<
+                        <TM as TaskManagerContract>::Input,
+                    >,
+                >| v.inner.data,
+            )
         {
-            let metadata = task_processor
-                .lock()
-                .await
-                .process_new_task(event)
-                .await
-                .map_err(AggregatorError::TaskProcessorError)?;
-            service_handle.initialize_task(metadata).await?;
+            // let metadata = task_processor
+            //     .process_new_task(event)
+            //     .await
+            //     .map_err(AggregatorError::TaskProcessorError)?;
+            // service_handle.initialize_task(metadata).await?;
         }
 
         Ok(())
@@ -253,7 +259,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_aggregated_signatures(
-        task_processor: Arc<Mutex<TP>>,
+        task_processor: IndexingTaskProcessor<TM>,
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
@@ -262,11 +268,8 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
                 .await?;
 
             task_processor
-                .lock()
-                .await
                 .process_aggregated_response(service_response)
-                .await
-                .map_err(AggregatorError::TaskProcessorError)?;
+                .await;
         }
     }
 }

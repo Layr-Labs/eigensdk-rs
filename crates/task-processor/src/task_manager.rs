@@ -1,17 +1,20 @@
+use std::fmt::Debug;
+
 use crate::{task::Task, task_response::TaskResponse};
-use alloy::sol_types::SolValue;
+use alloy::sol_types::{SolEvent, SolValue};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
+use serde::{de::DeserializeOwned, Serialize};
 
 /// Task manager contract trait. It wraps the contract's types and functions.
 pub trait TaskManagerContract {
     /// Type for inputs of each task
-    type Input: Clone + SolValue;
+    type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
     /// Type for outputs of each task
-    type Output: Clone + SolValue;
+    type Output: Clone + SolValue + Send + Sync + 'static + Debug + Serialize + DeserializeOwned;
 
     /// New task event
-    type EventSignature: AsRef<str>;
+    type NewTaskEvent: SolEvent;
 
     // DAMIAN:
     // We have a problem with these methods: they are very tightly coupled to

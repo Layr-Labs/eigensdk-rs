@@ -1,10 +1,13 @@
-use std::sync::Arc;
+use std::fmt::Debug;
 
-use crate::{AggregatorError, SignedTaskResponse, TaskProcessor, TaskResponse};
 use eigen_services_blsaggregation::bls_agg::{ServiceHandle, TaskSignature};
+use eigen_task_processor::{
+    task_manager::TaskManagerContract, task_response::TaskResponse, IndexingTaskProcessor,
+};
 use tarpc::{context::Context, ServerError};
-use tokio::sync::Mutex;
 use tracing::info;
+
+use crate::{AggregatorError, SignedTaskResponse};
 
 #[tarpc::service]
 /// This is the service definition. It defines one RPC, [`process_signed_task_response`].
@@ -26,27 +29,26 @@ pub trait ProcessSignedTaskResponse {
 
 #[derive(Debug, Clone)]
 /// Server for the ProcessSignedTaskResponse RPC
-pub struct ProcessSignedTaskResponseServer<TP>
+pub struct ProcessSignedTaskResponseServer<TM>
 where
-    TP: Clone,
+    TM: TaskManagerContract + Debug,
 {
-    task_processor: Arc<Mutex<TP>>,
+    task_processor: IndexingTaskProcessor<TM>,
     service_handle: ServiceHandle,
 }
 
 /// Implementation of the ProcessSignedTaskResponse trait for the ProcessSignedTaskResponseServer
 /// The async method serves the RPC request and processes the signed task response
-impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponse
-    for ProcessSignedTaskResponseServer<TP>
+impl<TM: TaskManagerContract + Debug> ProcessSignedTaskResponse
+    for ProcessSignedTaskResponseServer<TM>
 {
     async fn process_signed_task_response(
-        self,
+        mut self,
         _ctx: Context,
         signed_task_response: String,
     ) -> Result<bool, ServerError> {
-        let task_processor_clone = self.task_processor.clone();
         let service_handle = &self.service_handle;
-        let parsed: SignedTaskResponse<TP::TaskResponse> =
+        let parsed: SignedTaskResponse<TaskResponse<TM::Output>> =
             serde_json::from_str(&signed_task_response).map_err(|_| {
                 ServerError::new(
                     std::io::ErrorKind::InvalidInput,
@@ -54,7 +56,7 @@ impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponse
                 )
             })?;
 
-        Self::process_signed_task_response(task_processor_clone, service_handle, parsed)
+        Self::process_signed_task_response(&mut self.task_processor, service_handle, parsed)
             .await
             .map_err(|_| {
                 ServerError::new(
@@ -66,7 +68,7 @@ impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponse
     }
 }
 
-impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponseServer<TP> {
+impl<TM: TaskManagerContract + Debug> ProcessSignedTaskResponseServer<TM> {
     /// Creates a new [`ProcessSignedTaskResponseServer`]
     ///
     /// # Arguments
@@ -77,7 +79,7 @@ impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponseServer<TP> 
     /// # Returns
     ///
     /// * `Self` - The [`ProcessSignedTaskResponseServer`]
-    pub fn new(task_processor: Arc<Mutex<TP>>, service_handle: ServiceHandle) -> Self {
+    pub fn new(task_processor: IndexingTaskProcessor<TM>, service_handle: ServiceHandle) -> Self {
         Self {
             task_processor,
             service_handle,
@@ -96,29 +98,24 @@ impl<TP: TaskProcessor + std::clone::Clone> ProcessSignedTaskResponseServer<TP> 
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_signed_task_response(
-        task_processor: Arc<Mutex<TP>>,
+        task_processor: &mut IndexingTaskProcessor<TM>,
         service_handle: &ServiceHandle,
-        signed_task_response: SignedTaskResponse<TP::TaskResponse>,
+        signed_task_response: SignedTaskResponse<TaskResponse<TM::Output>>,
     ) -> Result<(), AggregatorError> {
         let SignedTaskResponse {
             task_response,
             signature,
             operator_id,
         } = signed_task_response;
-        let task_index = task_response.task_index();
+        let task_index = task_response.task_index;
 
-        let task_response_digest = task_processor
-            .lock()
-            .await
-            .process_task_response(task_response)
-            .await
-            .map_err(AggregatorError::TaskProcessorError)?;
+        let task_response_digest = task_processor.process_task_response(task_response).await;
 
         let task_signature =
             TaskSignature::new(task_index, task_response_digest, signature, operator_id);
 
         service_handle.process_signature(task_signature).await?;
-        info!("processed signature for index {:?}", task_index);
+        info!("processed signature for index {}", task_index);
 
         Ok(())
     }
