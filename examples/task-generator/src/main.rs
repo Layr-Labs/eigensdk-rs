@@ -3,17 +3,16 @@ use alloy::{
     network::Network,
 };
 use alloy::{
-    contract::SolCallBuilder,
     network::EthereumWallet,
     primitives::{Address, U256},
     providers::ProviderBuilder,
     signers::local::PrivateKeySigner,
     transports::http::reqwest::Url,
 };
-use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
-    createNewTaskCall, IIncredibleSquaringTaskManagerInstance,
+use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::IIncredibleSquaringTaskManagerInstance;
+use eigen_task_generator::{
+    error::TaskGeneratorError, task_manager::TaskManagerContract, TaskGeneratorBuilder,
 };
-use eigen_task_generator::{task_manager::TaskManagerContract, TaskGeneratorBuilder};
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use std::{str::FromStr, time::Duration};
 
@@ -30,19 +29,22 @@ use std::{str::FromStr, time::Duration};
 // impl<T, P, N> TaskManagerContract<U256, T, P, N> for TaskManagerWrapper<T, P, N> { ... }
 impl<T, P, N> TaskManagerContract<U256, T, P, N> for IIncredibleSquaringTaskManagerInstance<T, P, N>
 where
-    T: Transport + Clone,
+    T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
     N: Network,
 {
-    type Call = createNewTaskCall;
-
-    fn create_new_task(
+    async fn create_new_task(
         &self,
         input: U256,
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
-    ) -> SolCallBuilder<T, &P, Self::Call, N> {
-        self.createNewTask(input, quorum_threshold.into(), quorums.into())
+    ) -> Result<N::ReceiptResponse, TaskGeneratorError> {
+        Ok(self
+            .createNewTask(input, quorum_threshold.into(), quorums.into())
+            .send()
+            .await?
+            .get_receipt()
+            .await?)
     }
 }
 
