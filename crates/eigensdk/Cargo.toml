@@ -25,7 +25,7 @@ eigen-services-avsregistry = { workspace = true, optional = true }
 eigen-services-blsaggregation = { workspace = true, optional = true }
 eigen-services-operatorsinfo = { workspace = true, optional = true }
 eigen-signer = { workspace = true, optional = true }
-eigen-task-generator = { workspace = true, optional = true }
+eigen-task-spammer = { workspace = true, optional = true }
 eigen-testing-utils = { workspace = true, optional = true }
 eigen-types = { workspace = true, optional = true }
 eigen-utils = { workspace = true, optional = true }
@@ -56,7 +56,7 @@ full = [
     "services-blsaggregation",
     "services-operatorsinfo",
     "signer",
-    "task-generator",
+    "task-spammer",
     "testing-utils",
     "nodeapi",
     "metrics-collectors-economic",
@@ -115,4 +115,4 @@ challenger = ["dep:eigen-challenger"]
 operator = ["dep:eigen-operator"]
 
 # task generator
-task-generator = ["dep:eigen-task-generator"]
+task-spammer = ["dep:eigen-task-spammer"]

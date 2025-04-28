@@ -10,8 +10,8 @@ use alloy::{
     transports::http::reqwest::Url,
 };
 use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::IIncredibleSquaringTaskManagerInstance;
-use eigen_task_generator::{
-    error::TaskGeneratorError, task_manager::TaskManagerContract, TaskGeneratorBuilder,
+use eigen_task_spammer::{
+    error::TaskSpammerError, task_manager::TaskManagerContract, TaskSpammerBuilder,
 };
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use std::{str::FromStr, time::Duration};
@@ -38,7 +38,7 @@ where
         input: U256,
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
-    ) -> Result<N::ReceiptResponse, TaskGeneratorError> {
+    ) -> Result<N::ReceiptResponse, TaskSpammerError> {
         Ok(self
             .createNewTask(input, quorum_threshold.into(), quorums.into())
             .send()
@@ -64,7 +64,7 @@ async fn main() {
 
     let contract = IIncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
-    TaskGeneratorBuilder::new(contract)
+    TaskSpammerBuilder::new(contract)
         .with_iter((0..).map(U256::from))
         .with_quorum(50, vec![0])
         .with_interval(Duration::from_secs(10))
