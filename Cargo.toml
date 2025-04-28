@@ -149,3 +149,4 @@ alloy = { version = "0.13", features = [
     "rlp",
     "json-rpc",
 ] }
+alloy-rlp = "0.3"

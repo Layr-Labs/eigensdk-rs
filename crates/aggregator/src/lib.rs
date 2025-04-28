@@ -11,10 +11,14 @@ pub mod signed_task_response;
 /// Traits
 pub mod traits;
 
+use alloy::dyn_abi::abi::{decode, decode_params};
+use alloy::dyn_abi::{DynSolValue, SolType};
+use alloy::primitives::{Bytes, U256};
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
 use alloy::rpc::types::Filter;
-use alloy::sol_types::SolEvent;
+use alloy::sol_types::{SolEvent, SolValue};
+use alloy_rlp::{decode_exact, Decodable, RlpDecodable, RlpEncodable};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
 use eigen_logging::get_logger;
@@ -64,12 +68,11 @@ where
     ws_rpc_url: String,
 }
 
-impl<TM, T, P, N> Aggregator<TM, T, P, N>
+impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP>
 where
-    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
-    T: Transport + Clone + Send + Sync + 'static,
-    P: ProviderTrait<T, N> + Clone + Send + Sync + 'static,
-    N: Network,
+    TP::Input: SolValue,
+    <TP as TaskProcessor>::Input:
+        From<<<<TP as TaskProcessor>::Input as SolValue>::SolType as SolType>::RustType>,
 {
     /// Creates a new aggregator
     ///
@@ -237,17 +240,29 @@ where
         let filter = Filter::new().event_signature(TM::NewTaskEvent::SIGNATURE_HASH);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
 
-        while let Some(event) = provider
+        while let Some(log) = provider
             .subscribe_logs(&filter)
             .await?
             .into_stream()
             .next()
             .await
-            .and_then(|log| log.log_decode().ok())
-            .map(|v| v.inner.data)
         {
-            let metadata = task_processor.handle_new_task(event).await?;
-            service_handle.initialize_task(metadata).await?;
+            dbg!(TP::NewTaskEvent::SIGNATURE);
+            dbg!(TP::NewTaskEvent::SIGNATURE_HASH);
+            dbg!(&log);
+            dbg!("raw.len() = {}", log.inner.data.data.0.len());
+
+            let raw = &log.inner.data.data.0;
+            let inner = &raw[32..];
+
+            let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
+                <(
+                    <TP::Input as SolValue>::SolType,
+                    <u32 as SolValue>::SolType,
+                    <Bytes as SolValue>::SolType,
+                    <u32 as SolValue>::SolType,
+                )>::abi_decode_params(&inner, false)
+                .unwrap();
         }
 
         Ok(())
@@ -280,4 +295,28 @@ where
                 .await?;
         }
     }
+}
+
+#[derive(Debug)]
+struct GenericEvent<Input>
+where
+    Input: SolValue,
+{
+    task_index: u32,
+    task: Task<Input>,
+}
+
+#[derive(Debug)]
+pub struct Task<Input>
+where
+    Input: SolValue,
+{
+    #[allow(missing_docs)]
+    pub input: Input,
+    #[allow(missing_docs)]
+    pub task_created_block: u32,
+    #[allow(missing_docs)]
+    pub quorum_numbers: Bytes,
+    #[allow(missing_docs)]
+    pub quorum_threshold_percentage: u32,
 }
