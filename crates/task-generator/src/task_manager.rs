@@ -1,11 +1,11 @@
-use alloy::{contract::SolCallBuilder, sol_types::SolCall};
+use alloy::network::Network;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
+use std::future::Future;
+
+use crate::error::TaskGeneratorError;
 
 /// Task manager contract trait
-pub trait TaskManagerContract<Input, T, P, N: alloy::network::Network> {
-    /// Call type that will be used to create a new task
-    type Call: SolCall;
-
+pub trait TaskManagerContract<Input, T, P, N: Network> {
     /// Create a new task
     ///
     /// # Arguments
@@ -16,11 +16,11 @@ pub trait TaskManagerContract<Input, T, P, N: alloy::network::Network> {
     ///
     /// # Returns
     ///
-    /// * `SolCallBuilder<T, &P, Self::Call, N>` - The call builder for the task
+    /// * `Result<N::ReceiptResponse, TaskGeneratorError>` - The result of the task
     fn create_new_task(
         &self,
         input: Input,
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
-    ) -> SolCallBuilder<T, &P, Self::Call, N>;
+    ) -> impl Future<Output = Result<N::ReceiptResponse, TaskGeneratorError>> + Send;
 }
