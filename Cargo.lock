@@ -3111,7 +3111,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigen-task-generator"
+name = "eigen-task-spammer"
 version = "0.5.0"
 dependencies = [
  "alloy",
@@ -3191,7 +3191,7 @@ dependencies = [
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
  "eigen-signer",
- "eigen-task-generator",
+ "eigen-task-spammer",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
@@ -3771,12 +3771,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "examples-task-generator"
+name = "examples-task-spammer"
 version = "0.5.0"
 dependencies = [
  "alloy",
  "async-trait",
- "eigen-task-generator",
+ "eigen-task-spammer",
  "eigen-types",
  "tokio",
  "tracing",

@@ -2,7 +2,7 @@ use alloy::network::Network;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use std::future::Future;
 
-use crate::error::TaskGeneratorError;
+use crate::error::TaskSpammerError;
 
 /// Task manager contract trait
 pub trait TaskManagerContract<Input, T, P, N: Network> {
@@ -16,11 +16,11 @@ pub trait TaskManagerContract<Input, T, P, N: Network> {
     ///
     /// # Returns
     ///
-    /// * `Result<N::ReceiptResponse, TaskGeneratorError>` - The result of the task
+    /// * `Result<N::ReceiptResponse, TaskSpammerError>` - The result of the task
     fn create_new_task(
         &self,
         input: Input,
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
-    ) -> impl Future<Output = Result<N::ReceiptResponse, TaskGeneratorError>> + Send;
+    ) -> impl Future<Output = Result<N::ReceiptResponse, TaskSpammerError>> + Send;
 }
