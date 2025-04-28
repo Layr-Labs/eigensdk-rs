@@ -1,9 +1,13 @@
 use super::task_response::TaskResponse;
-use alloy::primitives::B256;
 use alloy::sol_types::SolEvent;
+use alloy::{primitives::B256, sol_types::SolValue};
+use alloy_rlp::Decodable;
 use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
 };
+use serde::de::DeserializeOwned;
+use serde::Deserializer;
+use std::fmt::Debug;
 use std::future::Future;
 
 /// Error returned by the task processor
@@ -21,6 +25,9 @@ pub trait TaskProcessor {
 
     /// Response type expected by the task processor
     type TaskResponse: TaskResponse + Send + Sync + 'static;
+
+    /// Input type expected by the task processor
+    type Input: Clone + SolValue + Decodable + Debug;
 
     /// Processes a task, returning metadata related to signature aggregation
     fn process_new_task(

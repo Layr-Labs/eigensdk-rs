@@ -27,6 +27,7 @@ tokio.workspace = true
 thiserror.workspace = true
 futures-util.workspace = true
 serde_json.workspace = true
+alloy-rlp.workspace = true
 
 # RPC Server
 tarpc = { version = "0.36", features = ["full"] }

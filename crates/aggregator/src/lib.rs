@@ -11,10 +11,15 @@ pub mod signed_task_response;
 /// Traits
 pub mod traits;
 
+use alloy::dyn_abi::abi::decode_params;
+use alloy::dyn_abi::Decoder;
+use alloy::primitives::Bytes;
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
 use alloy::rpc::types::Filter;
-use alloy::sol_types::SolEvent;
+use alloy::sol_types::{SolEvent, SolValue};
+use alloy_rlp::{decode_exact, Decodable};
+use alloy_rlp::{RlpDecodable, RlpEncodable};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
 use eigen_logging::get_logger;
@@ -227,16 +232,25 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
             .into_stream()
             .next()
             .await
-            .and_then(|log| log.log_decode().ok())
-            .map(|v| v.inner.data)
+        // .and_then(|log| log.log_decode().ok())
+        // .map(|v| v.inner.data)
         {
-            let metadata = task_processor
-                .lock()
-                .await
-                .process_new_task(event)
-                .await
-                .map_err(AggregatorError::TaskProcessorError)?;
-            service_handle.initialize_task(metadata).await?;
+            // task_index viene del topic (si es indexed)
+            let task_index = u32::from_be_bytes(event.topics()[1][28..32].try_into().unwrap());
+
+            // Campos del data
+            let task_created_block = u32::abi_decode(&mut decoder, false).unwrap();
+            let quorum_numbers = Bytes::abi_decode(&mut decoder, false).unwrap();
+            let quorum_threshold_percentage = u8::abi_decode(&mut decoder, false).unwrap();
+            let input = <TP::Input>::abi_decode_params(&mut decoder, false).unwrap();
+
+            // let metadata = task_processor
+            //     .lock()
+            //     .await
+            //     .process_new_task(event)
+            //     .await
+            //     .map_err(AggregatorError::TaskProcessorError)?;
+            // service_handle.initialize_task(metadata).await?;
         }
 
         Ok(())
@@ -269,4 +283,28 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
                 .map_err(AggregatorError::TaskProcessorError)?;
         }
     }
+}
+
+#[derive(Debug, RlpEncodable, RlpDecodable)]
+struct GenericEvent<Input>
+where
+    Input: Clone + Decodable,
+{
+    task_index: u32,
+    task: Task<Input>,
+}
+
+#[derive(Debug, RlpEncodable, RlpDecodable)]
+pub struct Task<Input>
+where
+    Input: Clone + Decodable,
+{
+    #[allow(missing_docs)]
+    pub input: Input,
+    #[allow(missing_docs)]
+    pub task_created_block: u32,
+    #[allow(missing_docs)]
+    pub quorum_numbers: Bytes,
+    #[allow(missing_docs)]
+    pub quorum_threshold_percentage: u8,
 }
