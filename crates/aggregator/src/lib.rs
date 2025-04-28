@@ -13,6 +13,7 @@ pub mod traits;
 
 use alloy::dyn_abi::abi::{decode, decode_params};
 use alloy::dyn_abi::{DynSolValue, SolType};
+use alloy::primitives::aliases::B32;
 use alloy::primitives::{Bytes, U256};
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
@@ -27,6 +28,7 @@ use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle,
 };
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+use eigen_task_processor::task::Task;
 use eigen_task_processor::task_manager::TaskManagerContract;
 use eigen_task_processor::IndexingTaskProcessor;
 use futures_util::{future, StreamExt};
@@ -68,11 +70,16 @@ where
     ws_rpc_url: String,
 }
 
-impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP>
+impl<TM, T, P, N> Aggregator<TM, T, P, N>
 where
-    TP::Input: SolValue,
-    <TP as TaskProcessor>::Input:
-        From<<<<TP as TaskProcessor>::Input as SolValue>::SolType as SolType>::RustType>,
+    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
+    T: Transport + Clone + Send + Sync + 'static,
+    P: ProviderTrait<T, N> + Clone + 'static,
+    N: Network,
+    TM::Input: SolValue,
+    <TM as TaskManagerContract<T, P, N>>::Input: From<
+        <<<TM as TaskManagerContract<T, P, N>>::Input as SolValue>::SolType as SolType>::RustType,
+    >,
 {
     /// Creates a new aggregator
     ///
@@ -247,22 +254,33 @@ where
             .next()
             .await
         {
-            dbg!(TP::NewTaskEvent::SIGNATURE);
-            dbg!(TP::NewTaskEvent::SIGNATURE_HASH);
+            dbg!("Recibiendo log");
             dbg!(&log);
-            dbg!("raw.len() = {}", log.inner.data.data.0.len());
+            let topic_task_index: &alloy::primitives::FixedBytes<32> = log.topics().get(1).unwrap(); // Handle the case where the topic is not present
+            let task_index = topic_task_index.0;
+            dbg!(&task_index);
 
             let raw = &log.inner.data.data.0;
             let inner = &raw[32..];
 
             let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
                 <(
-                    <TP::Input as SolValue>::SolType,
+                    <TM::Input as SolValue>::SolType,
                     <u32 as SolValue>::SolType,
                     <Bytes as SolValue>::SolType,
                     <u32 as SolValue>::SolType,
-                )>::abi_decode_params(&inner, false)
+                )>::abi_decode_params(inner, false)
                 .unwrap();
+
+            let task = Task::<TM::Input> {
+                input: input.into(),
+                task_created_block,
+                quorum_numbers,
+                quorum_threshold_percentage,
+            };
+
+            let task_metadata = task_processor.handle_new_task(0, task).await?;
+            service_handle.initialize_task(task_metadata).await?;
         }
 
         Ok(())
@@ -295,28 +313,4 @@ where
                 .await?;
         }
     }
-}
-
-#[derive(Debug)]
-struct GenericEvent<Input>
-where
-    Input: SolValue,
-{
-    task_index: u32,
-    task: Task<Input>,
-}
-
-#[derive(Debug)]
-pub struct Task<Input>
-where
-    Input: SolValue,
-{
-    #[allow(missing_docs)]
-    pub input: Input,
-    #[allow(missing_docs)]
-    pub task_created_block: u32,
-    #[allow(missing_docs)]
-    pub quorum_numbers: Bytes,
-    #[allow(missing_docs)]
-    pub quorum_threshold_percentage: u32,
 }

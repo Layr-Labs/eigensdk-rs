@@ -2,7 +2,6 @@ use std::{fmt::Debug, future::Future};
 
 use crate::{task::Task, task_response::TaskResponse, TaskProcessorError};
 use alloy::sol_types::{SolEvent, SolValue};
-use eigen_services_blsaggregation::bls_agg::TaskMetadata;
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use serde::de::DeserializeOwned;
 
@@ -15,7 +14,7 @@ pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
     type Output: Clone + SolValue + Send + Sync + 'static + Debug + DeserializeOwned;
 
     /// New task event
-    type NewTaskEvent: SolEvent + Send + Sync + 'static;
+    type NewTaskEvent: SolEvent;
 
     /// Respond to a task
     ///
@@ -30,20 +29,4 @@ pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
         response: TaskResponse<Self::Output>,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
     ) -> impl Future<Output = Result<(), TaskProcessorError>> + Send;
-
-    /// Process a new task
-    ///
-    /// # Arguments
-    ///
-    /// * `event` - The new task event
-    ///
-    /// # Returns
-    ///
-    /// * `task_index` - The task index
-    /// * `task` - The task
-    /// * `task_metadata` - The task metadata
-    fn process_new_task(
-        &mut self,
-        event: Self::NewTaskEvent,
-    ) -> impl Future<Output = Result<(u32, Task<Self::Input>, TaskMetadata), TaskProcessorError>> + Send;
 }

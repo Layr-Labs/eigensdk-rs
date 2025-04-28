@@ -14,6 +14,7 @@ use eigen_utils::slashing::middleware::{
     iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
     iblssignaturechecker::BN254::{G1Point, G2Point},
 };
+use std::time::Duration;
 use std::{collections::HashMap, fmt::Debug};
 use task::Task;
 use task_manager::TaskManagerContract;
@@ -86,12 +87,24 @@ where
     /// The [`TaskMetadata`]
     pub async fn handle_new_task(
         &mut self,
-        event: TM::NewTaskEvent,
+        task_index: u32,
+        task: Task<TM::Input>,
     ) -> Result<TaskMetadata, TaskProcessorError> {
-        let (task_index, task, task_metadata) = self.task_manager.process_new_task(event).await?;
-        self.tasks.insert(task_index, task);
+        self.tasks.insert(task_index, task.clone());
         dbg!("CREANDO TASK");
-        Ok(task_metadata)
+
+        let quorum_numbers: Vec<u8> = task.quorum_numbers.into();
+        let quorum_threshold_percentages =
+            std::iter::repeat_n(task.quorum_threshold_percentage as u8, quorum_numbers.len())
+                .collect();
+        Ok(TaskMetadata::new(
+            task_index,
+            task.task_created_block.into(),
+            quorum_numbers,
+            quorum_threshold_percentages,
+            std::time::Duration::from_secs(60),
+        )
+        .with_window_duration(Duration::from_secs(15)))
     }
 
     /// Processes a task response

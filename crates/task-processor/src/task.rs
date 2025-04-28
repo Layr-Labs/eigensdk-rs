@@ -1,11 +1,8 @@
-use alloy::sol_types::{private::Bytes, SolValue};
+use alloy::sol_types::private::Bytes;
 /// Task abstraction
 #[allow(non_snake_case)]
 #[derive(Debug, Clone)]
-pub struct Task<Input>
-where
-    Input: Clone + SolValue,
-{
+pub struct Task<Input> {
     #[allow(missing_docs)]
     pub input: Input,
     #[allow(missing_docs)]
@@ -13,5 +10,5 @@ where
     #[allow(missing_docs)]
     pub quorum_numbers: Bytes,
     #[allow(missing_docs)]
-    pub quorum_threshold_percentage: u8,
+    pub quorum_threshold_percentage: u32,
 }
