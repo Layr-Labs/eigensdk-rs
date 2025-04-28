@@ -17,6 +17,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Added a method `get_operator_socket` to retrieve the socket from the `AvsRegistryServiceChainCaller` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464).
+
 * Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
 
 ### Breaking Changes 🛠
@@ -100,7 +102,7 @@ Alternate implementation which directly queries from middleware using view call 
         .unwrap();
   ```
 
-* Added field `socket` to `OperatorInfo` and a method `get_operator_socket` to retrieve the socket from the `AvsRegistryServiceChainCaller` in PR [463](https://github.com/Layr-Labs/eigensdk-rs/pull/463).
+* Added field `socket` to `OperatorInfo` in PR[#464](https://github.com/Layr-Labs/eigensdk-rs/pull/464)
 
   ```rust
     // BEFORE
