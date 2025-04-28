@@ -59,12 +59,8 @@ pub struct Aggregator<TP> {
 impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP>
 where
     TP::Input: SolValue,
-    (<TP as TaskProcessor>::Input, u32, Bytes, u32): From<(
-        <<<TP as TaskProcessor>::Input as SolValue>::SolType as SolType>::RustType,
-        u32,
-        Bytes,
-        u32,
-    )>,
+    <TP as TaskProcessor>::Input:
+        From<<<<TP as TaskProcessor>::Input as SolValue>::SolType as SolType>::RustType>,
 {
     /// Creates a new aggregator
     ///
@@ -252,11 +248,17 @@ where
             let inner = &raw[32..];
 
             let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
-                <(TP::Input, u32, Bytes, u32)>::abi_decode_params(&inner, false).unwrap();
-            dbg!(input);
-            dbg!(task_created_block);
-            dbg!(quorum_numbers);
-            dbg!(quorum_threshold_percentage);
+                <(
+                    <TP::Input as SolValue>::SolType,
+                    <u32 as SolValue>::SolType,
+                    <Bytes as SolValue>::SolType,
+                    <u32 as SolValue>::SolType,
+                )>::abi_decode_params(&inner, false)
+                .unwrap();
+            // dbg!(input);
+            // dbg!(task_created_block);
+            // dbg!(quorum_numbers);
+            // dbg!(quorum_threshold_percentage);
 
             // let metadata = task_processor
             //     .lock()
