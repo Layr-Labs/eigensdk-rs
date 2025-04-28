@@ -154,8 +154,8 @@ impl<I, TM, T, P, N, Input> TaskGenerator<I, TM, T, P, N, Input>
 where
     TM: TaskManagerContract<Input, T, P, N> + Send + Sync,
     T: Transport + Clone + Send + Sync,
-    P: Provider<T, N> + Send + Sync,
-    N: Network + Send + Sync,
+    P: Provider<T, N>,
+    N: Network,
 {
     /// Run the task generator
     /// This will create N tasks, where N is the number of items in the iterator
@@ -172,9 +172,6 @@ where
         for input in self.iter {
             self.task_manager
                 .create_new_task(input, self.quorum_threshold, self.quorums.clone())
-                .send()
-                .await?
-                .get_receipt()
                 .await?;
             sleep(self.interval).await;
         }
