@@ -168,6 +168,15 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
             .ok_or(AvsRegistryError::GetOperatorInfo)
     }
 
+    /// Returns the operator socket for the given operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id
+    ///
+    /// # Returns
+    ///
+    /// The operator socket
     async fn get_operator_socket(&self, operator_id: [u8; 32]) -> Result<String, AvsRegistryError> {
         let operator_addr = self.avs_registry.get_operator_from_id(operator_id).await?;
         self.operators_info_service
