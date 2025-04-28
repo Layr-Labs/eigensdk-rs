@@ -11,15 +11,14 @@ pub mod signed_task_response;
 /// Traits
 pub mod traits;
 
-use alloy::dyn_abi::abi::decode_params;
-use alloy::dyn_abi::Decoder;
-use alloy::primitives::Bytes;
+use alloy::dyn_abi::abi::{decode, decode_params};
+use alloy::dyn_abi::{DynSolValue, SolType};
+use alloy::primitives::{Bytes, U256};
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
 use alloy::rpc::types::Filter;
 use alloy::sol_types::{SolEvent, SolValue};
-use alloy_rlp::{decode_exact, Decodable};
-use alloy_rlp::{RlpDecodable, RlpEncodable};
+use alloy_rlp::{decode_exact, Decodable, RlpDecodable, RlpEncodable};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
 use eigen_logging::get_logger;
@@ -57,7 +56,10 @@ pub struct Aggregator<TP> {
     ws_rpc_url: String,
 }
 
-impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
+impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP>
+where
+    TP::Input: SolValue,
+{
     /// Creates a new aggregator
     ///
     /// # Arguments
@@ -226,23 +228,28 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
         let filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
 
-        while let Some(event) = provider
+        while let Some(log) = provider
             .subscribe_logs(&filter)
             .await?
             .into_stream()
             .next()
             .await
-        // .and_then(|log| log.log_decode().ok())
-        // .map(|v| v.inner.data)
+        // .and_then(|log| SolValue::abi_decode(&log.inner.data.data.0, false).ok())
+        // .map(|v: alloy::rpc::types::Log<GenericEvent<TP::Input>>| v.inner.data)
         {
-            // task_index viene del topic (si es indexed)
-            let task_index = u32::from_be_bytes(event.topics()[1][28..32].try_into().unwrap());
+            dbg!(TP::NewTaskEvent::SIGNATURE);
+            dbg!(TP::NewTaskEvent::SIGNATURE_HASH);
+            dbg!(&log);
+            dbg!("raw.len() = {}", log.inner.data.data.0.len());
+            let ev = TP::NewTaskEvent::decode_log(&log, false).expect("decode_log");
 
-            // Campos del data
-            let task_created_block = u32::abi_decode(&mut decoder, false).unwrap();
-            let quorum_numbers = Bytes::abi_decode(&mut decoder, false).unwrap();
-            let quorum_threshold_percentage = u8::abi_decode(&mut decoder, false).unwrap();
-            let input = <TP::Input>::abi_decode_params(&mut decoder, false).unwrap();
+            let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
+                <(U256, u32, Bytes, u32)>::abi_decode_params(&log.inner.data.data.0, false)
+                    .unwrap();
+            dbg!(input);
+            dbg!(task_created_block);
+            dbg!(quorum_numbers);
+            dbg!(quorum_threshold_percentage);
 
             // let metadata = task_processor
             //     .lock()
@@ -285,19 +292,19 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     }
 }
 
-#[derive(Debug, RlpEncodable, RlpDecodable)]
+#[derive(Debug)]
 struct GenericEvent<Input>
 where
-    Input: Clone + Decodable,
+    Input: SolValue,
 {
     task_index: u32,
     task: Task<Input>,
 }
 
-#[derive(Debug, RlpEncodable, RlpDecodable)]
+#[derive(Debug)]
 pub struct Task<Input>
 where
-    Input: Clone + Decodable,
+    Input: SolValue,
 {
     #[allow(missing_docs)]
     pub input: Input,
@@ -306,5 +313,5 @@ where
     #[allow(missing_docs)]
     pub quorum_numbers: Bytes,
     #[allow(missing_docs)]
-    pub quorum_threshold_percentage: u8,
+    pub quorum_threshold_percentage: u32,
 }

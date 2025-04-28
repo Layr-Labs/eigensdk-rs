@@ -1,4 +1,5 @@
 use super::task_response::TaskResponse;
+use alloy::dyn_abi::SolType;
 use alloy::sol_types::SolEvent;
 use alloy::{primitives::B256, sol_types::SolValue};
 use alloy_rlp::Decodable;
@@ -20,14 +21,13 @@ pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskProcessorE
 
 /// Abstracts task-specific behaviour
 pub trait TaskProcessor {
-    /// Event type expected by the task processor
     type NewTaskEvent: SolEvent + Send + Sync + 'static;
 
     /// Response type expected by the task processor
     type TaskResponse: TaskResponse + Send + Sync + 'static;
 
     /// Input type expected by the task processor
-    type Input: Clone + SolValue + Decodable + Debug;
+    type Input: SolValue + Debug;
 
     /// Processes a task, returning metadata related to signature aggregation
     fn process_new_task(
