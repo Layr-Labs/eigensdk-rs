@@ -13,7 +13,10 @@ where
     pub response: Output,
 }
 
-impl<Output: Clone + SolValue> TaskResponse<Output> {
+impl<Output> TaskResponse<Output>
+where
+    Output: Clone + SolValue,
+{
     /// Abi encode the task response
     ///
     /// # Returns

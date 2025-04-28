@@ -4,7 +4,7 @@ use crate::{task::Task, task_response::TaskResponse, TaskProcessorError};
 use alloy::sol_types::{SolEvent, SolValue};
 use eigen_services_blsaggregation::bls_agg::TaskMetadata;
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
-use serde::{de::DeserializeOwned, Serialize};
+use serde::de::DeserializeOwned;
 
 /// Task manager contract trait. It wraps the contract's types and functions.
 pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
@@ -12,7 +12,7 @@ pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
     /// Type for outputs of each task
-    type Output: Clone + SolValue + Send + Sync + 'static + Debug + Serialize + DeserializeOwned;
+    type Output: Clone + SolValue + Send + Sync + 'static + Debug + DeserializeOwned;
 
     /// New task event
     type NewTaskEvent: SolEvent + Send + Sync + 'static;

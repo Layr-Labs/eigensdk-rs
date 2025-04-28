@@ -116,7 +116,7 @@ impl Operator {
     where
         Event: SolEvent,
         F: Fn(Event) -> Result<Response, OperatorError>,
-        Response: SolType + SolValue + Serialize + for<'de> Deserialize<'de>,
+        Response: SolType + SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
     {
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
