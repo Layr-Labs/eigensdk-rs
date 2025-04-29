@@ -25,6 +25,7 @@ use eigen_services_blsaggregation::bls_agg::{
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_task_processor::task::Task;
 use eigen_task_processor::task_manager::TaskManagerContract;
+use eigen_task_processor::task_processor::TaskProcessor;
 use eigen_task_processor::IndexingTaskProcessor;
 use futures_util::{future, StreamExt};
 use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
@@ -231,7 +232,7 @@ where
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_tasks(
         ws_rpc_url: String,
-        task_processor: IndexingTaskProcessor<TM, T, P, N>,
+        mut task_processor: IndexingTaskProcessor<TM, T, P, N>,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
@@ -246,7 +247,7 @@ where
             .await
         {
             let (task_index, task) = Self::decode_event(&log)?;
-            let task_metadata = task_processor.handle_new_task(task_index, task).await;
+            let task_metadata = task_processor.process_new_task(task_index, task).await?;
             service_handle.initialize_task(task_metadata).await?;
         }
 

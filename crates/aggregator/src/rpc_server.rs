@@ -7,7 +7,8 @@ use alloy::{
 };
 use eigen_services_blsaggregation::bls_agg::{ServiceHandle, TaskSignature};
 use eigen_task_processor::{
-    task_manager::TaskManagerContract, task_response::TaskResponse, IndexingTaskProcessor,
+    task_manager::TaskManagerContract, task_processor::TaskProcessor, task_response::TaskResponse,
+    IndexingTaskProcessor,
 };
 use tarpc::{context::Context, ServerError};
 use tracing::info;
@@ -128,7 +129,7 @@ where
         } = signed_task_response;
         let task_index = task_response.task_index;
 
-        let task_response_digest = task_processor.process_task_response(task_response).await;
+        let task_response_digest = task_processor.process_task_response(task_response).await?;
 
         let task_signature =
             TaskSignature::new(task_index, task_response_digest, signature, operator_id);
