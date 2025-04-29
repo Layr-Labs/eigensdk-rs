@@ -1,14 +1,14 @@
 use alloy::sol_types::private::Bytes;
+
 /// Task abstraction
-#[allow(non_snake_case)]
 #[derive(Debug, Clone)]
 pub struct Task<Input> {
-    #[allow(missing_docs)]
+    /// Generic input
     pub input: Input,
-    #[allow(missing_docs)]
+    /// Task created block
     pub task_created_block: u32,
-    #[allow(missing_docs)]
+    /// Quorum numbers
     pub quorum_numbers: Bytes,
-    #[allow(missing_docs)]
+    /// Quorum threshold percentage
     pub quorum_threshold_percentage: u32,
 }
