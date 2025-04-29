@@ -36,7 +36,7 @@ pub struct ProcessSignedTaskResponseServer<TM, T, P, N>
 where
     TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    P: Provider<T, N>,
     N: Network,
 {
     task_processor: IndexingTaskProcessor<TM, T, P, N>,
@@ -49,7 +49,7 @@ impl<TM, T, P, N> ProcessSignedTaskResponse for ProcessSignedTaskResponseServer<
 where
     TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    P: Provider<T, N>,
     N: Network,
 {
     async fn process_signed_task_response(
@@ -82,7 +82,7 @@ impl<TM, T, P, N> ProcessSignedTaskResponseServer<TM, T, P, N>
 where
     TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    P: Provider<T, N>,
     N: Network,
 {
     /// Creates a new [`ProcessSignedTaskResponseServer`]

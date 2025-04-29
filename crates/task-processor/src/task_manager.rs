@@ -31,6 +31,10 @@ pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
     /// * `task` - The task
     /// * `response` - The response
     /// * `non_signer_stakes_and_signature` - The non-signer stakes and signature
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), TaskManagerError>` - The result of the operation
     fn respond_to_task(
         &self,
         task: Task<Self::Input>,

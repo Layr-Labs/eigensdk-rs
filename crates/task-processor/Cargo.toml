@@ -11,6 +11,7 @@ description = "eigen layer task processor"
 workspace = true
 
 [dependencies]
+ark-ec.workspace = true
 alloy.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-services-blsaggregation.workspace = true
