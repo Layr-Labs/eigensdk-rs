@@ -41,7 +41,7 @@ pub struct IndexingTaskProcessor<TM, T, P, N>
 where
     TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    P: Provider<T, N>,
     N: Network,
 {
     /// Hashmap to store the created tasks
@@ -56,7 +56,7 @@ impl<TM, T, P, N> IndexingTaskProcessor<TM, T, P, N>
 where
     TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    P: Provider<T, N>,
     N: Network,
 {
     /// Create a new task processor
