@@ -1,27 +1,15 @@
-[workspace]
-members = [
+[package]
+name = "incredible-summation"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license-file.workspace = true
+authors.workspace = true
+description = "incredible-summation example"
 
-]
+[lints]
+workspace = true
 
-resolver = "2"
-
-[workspace.package]
-version = "0.0.1-alpha"
-edition = "2021"
-rust-version = "1.81"
-repository = "https://github.com/Layr-Labs/eigensdk-rs"
-homepage = ""
-license-file = "LICENSE"
-
-
-[workspace.lints]
-rust.missing_debug_implementations = "warn"
-rust.missing_docs = "warn"
-rust.unreachable_pub = "warn"
-rust.unused_must_use = "deny"
-rust.rust_2018_idioms = { level = "deny", priority = -1 }
-rustdoc.all = "warn"
-
-
-[workspace.dependencies]
-eigensdk = { path = "../../crates/eigensdk" , features = ["full"] }
+[dependencies]
+eigen-aggregator.workspace = true

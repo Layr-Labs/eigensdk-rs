@@ -4708,6 +4708,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "incredible-summation"
+version = "0.5.0"
+dependencies = [
+ "eigen-aggregator",
+]
+
+[[package]]
 name = "indenter"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
