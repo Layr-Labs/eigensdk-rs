@@ -58,11 +58,6 @@ where
         signed_task_response: String,
     ) -> Result<bool, ServerError> {
         let service_handle = &self.service_handle;
-
-        info!(
-            "RECIBIENDO RESPUESTA DEL OPERATOR: {}",
-            &signed_task_response
-        );
         let parsed: SignedTaskResponse<TaskResponse<TM::Output>> =
             serde_json::from_str(&signed_task_response).map_err(|_| {
                 ServerError::new(
