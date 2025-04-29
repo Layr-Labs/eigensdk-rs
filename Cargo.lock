@@ -2734,7 +2734,6 @@ name = "eigen-aggregator"
 version = "0.5.0"
 dependencies = [
  "alloy",
- "alloy-rlp",
  "eigen-client-avsregistry",
  "eigen-common",
  "eigen-crypto-bls",
