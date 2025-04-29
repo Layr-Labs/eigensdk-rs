@@ -13,7 +13,7 @@ use alloy::dyn_abi::SolType;
 use alloy::primitives::Bytes;
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
-use alloy::rpc::types::Filter;
+use alloy::rpc::types::{Filter, Log};
 use alloy::sol_types::{SolEvent, SolValue};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
@@ -245,40 +245,8 @@ where
             .next()
             .await
         {
-            // event NewTaskCreated(uint32 indexed taskIndex, Task task);
-            // Since taskIndex is indexed type, it is present in the topics array
-            let task_index = log
-                .topics()
-                .get(1)
-                .ok_or(AggregatorError::TaskIndexMissingInTopics)?
-                .0;
-            dbg!(&task_index);
-
-            //
-            let data = log
-                .inner
-                .data
-                .data
-                .0
-                .get(32..)
-                .ok_or(AggregatorError::InvalidTaskData)?;
-
-            let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
-                <(
-                    <TM::Input as SolValue>::SolType,
-                    <u32 as SolValue>::SolType,
-                    <Bytes as SolValue>::SolType,
-                    <u32 as SolValue>::SolType,
-                )>::abi_decode_params(data, false)?;
-
-            let task = Task::<TM::Input> {
-                input: input.into(),
-                task_created_block,
-                quorum_numbers,
-                quorum_threshold_percentage,
-            };
-
-            let task_metadata = task_processor.handle_new_task(0, task).await?;
+            let (task_index, task) = Self::decode_event(&log)?;
+            let task_metadata = task_processor.handle_new_task(task_index, task).await;
             service_handle.initialize_task(task_metadata).await?;
         }
 
@@ -308,5 +276,50 @@ where
                 .process_aggregated_response(service_response)
                 .await?;
         }
+    }
+
+    /// Decode the log of the NewTaskCreated event to get the task index and the task
+    fn decode_event(log: &Log) -> Result<(u32, Task<TM::Input>), AggregatorError> {
+        // event NewTaskCreated(uint32 indexed taskIndex, Task task);
+        // Since taskIndex is indexed type, it is present in the topics array
+        let task_index_bytes: [u8; 32] = log
+            .topics()
+            .get(1)
+            .ok_or(AggregatorError::TaskIndexMissingInTopics)?
+            .0;
+
+        // u32 values are stored in the last 4 bytes of a 32 bytes array (left-padded).
+        let u32_bytes: [u8; 4] = task_index_bytes[28..32]
+            .try_into()
+            .map_err(|_| AggregatorError::InvalidTaskIndexConversion)?;
+        let task_index = u32::from_be_bytes(u32_bytes);
+
+        // Skip the first 32 bytes of the ABI-encoded data (the dynamic offset pointer)
+        // so we can decode the actual tuple payload that follows.
+        let data = log
+            .inner
+            .data
+            .data
+            .0
+            .get(32..)
+            .ok_or(AggregatorError::InvalidTaskData)?;
+
+        let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
+            <(
+                <TM::Input as SolValue>::SolType,
+                <u32 as SolValue>::SolType,
+                <Bytes as SolValue>::SolType,
+                <u32 as SolValue>::SolType,
+            )>::abi_decode_params(data, false)?;
+
+        Ok((
+            task_index,
+            Task::<TM::Input> {
+                input: input.into(),
+                task_created_block,
+                quorum_numbers,
+                quorum_threshold_percentage,
+            },
+        ))
     }
 }

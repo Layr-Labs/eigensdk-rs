@@ -16,9 +16,9 @@ use bindings::iincrediblesquaringtaskmanager::IncredibleSquaringTaskManager::New
 use bindings::iincrediblesquaringtaskmanager::BN254::{G1Point, G2Point};
 use eigen_aggregator::{Aggregator, AggregatorConfig};
 use eigen_task_processor::task::Task;
-use eigen_task_processor::task_manager::TaskManagerContract;
+use eigen_task_processor::task_manager::{TaskManagerContract, TaskManagerError};
 use eigen_task_processor::task_response::TaskResponse;
-use eigen_task_processor::{IndexingTaskProcessor, TaskProcessorError};
+use eigen_task_processor::IndexingTaskProcessor;
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use std::str::FromStr;
 
@@ -39,7 +39,7 @@ where
         task: Task<Self::Input>,
         response: TaskResponse<Self::Output>,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
-    ) -> Result<(), TaskProcessorError> {
+    ) -> Result<(), TaskManagerError> {
         let contract_task = ContractTask {
             numberToBeSquared: task.input,
             taskCreatedBlock: task.task_created_block,

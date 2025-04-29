@@ -2,6 +2,7 @@ use alloy::transports::{RpcError, TransportErrorKind};
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_services_blsaggregation::bls_aggregation_service_error::BlsAggregationServiceError;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceError;
+use eigen_task_processor::error::TaskProcessorError;
 use thiserror::Error;
 
 /// Error returned by chainio
@@ -46,4 +47,12 @@ pub enum AggregatorError {
     /// Invalid task data
     #[error("Invalid task data")]
     InvalidTaskData,
+
+    /// Invalid task index conversion
+    #[error("Invalid task index conversion")]
+    InvalidTaskIndexConversion,
+
+    /// Task processor error
+    #[error("Task processor error")]
+    IndexingTaskProcessorError(#[from] TaskProcessorError),
 }
