@@ -245,14 +245,23 @@ where
             .next()
             .await
         {
-            dbg!("Recibiendo log");
-            dbg!(&log);
-            let topic_task_index: &alloy::primitives::FixedBytes<32> = log.topics().get(1).unwrap(); // Handle the case where the topic is not present
-            let task_index = topic_task_index.0;
+            // event NewTaskCreated(uint32 indexed taskIndex, Task task);
+            // Since taskIndex is indexed type, it is present in the topics array
+            let task_index = log
+                .topics()
+                .get(1)
+                .ok_or(AggregatorError::TaskIndexMissingInTopics)?
+                .0;
             dbg!(&task_index);
 
-            let raw = &log.inner.data.data.0;
-            let inner = &raw[32..];
+            //
+            let data = log
+                .inner
+                .data
+                .data
+                .0
+                .get(32..)
+                .ok_or(AggregatorError::InvalidTaskData)?;
 
             let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
                 <(
@@ -260,8 +269,7 @@ where
                     <u32 as SolValue>::SolType,
                     <Bytes as SolValue>::SolType,
                     <u32 as SolValue>::SolType,
-                )>::abi_decode_params(inner, false)
-                .unwrap();
+                )>::abi_decode_params(data, false)?;
 
             let task = Task::<TM::Input> {
                 input: input.into(),
@@ -292,12 +300,9 @@ where
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
-            dbg!("ESPERANDO RESPUESTA");
             let service_response = aggregated_response_receiver
                 .receive_aggregated_response()
                 .await?;
-
-            dbg!("RECIBIENDO RESPUESTA");
 
             task_processor
                 .process_aggregated_response(service_response)

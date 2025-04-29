@@ -126,7 +126,6 @@ where
         service_handle: &ServiceHandle,
         signed_task_response: SignedTaskResponse<TaskResponse<TM::Output>>,
     ) -> Result<(), AggregatorError> {
-        dbg!("RECIBIENDO RESPUESTA DEL OPERATOR");
         let SignedTaskResponse {
             task_response,
             signature,

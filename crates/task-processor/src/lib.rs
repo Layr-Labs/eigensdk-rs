@@ -91,7 +91,6 @@ where
         task: Task<TM::Input>,
     ) -> Result<TaskMetadata, TaskProcessorError> {
         self.tasks.insert(task_index, task.clone());
-        dbg!("CREANDO TASK");
 
         let quorum_numbers: Vec<u8> = task.quorum_numbers.into();
         let quorum_threshold_percentages =
@@ -118,7 +117,7 @@ where
     /// The task response digest
     pub async fn process_task_response(&mut self, response: TaskResponse<TM::Output>) -> B256 {
         let digest = alloy::primitives::keccak256(response.encode());
-        dbg!("PROCESANDO RESPUESTA");
+
         self.task_responses
             .entry(response.task_index)
             .or_default()

@@ -38,4 +38,12 @@ pub enum AggregatorError {
     /// Error returned by the [`TaskProcessor`](crate::traits::TaskProcessor)
     #[error("Task Processing failed")]
     TaskProcessorError(#[from] Box<dyn std::error::Error + Send>),
+
+    /// Task index missing in topics
+    #[error("Task index missing in topics")]
+    TaskIndexMissingInTopics,
+
+    /// Invalid task data
+    #[error("Invalid task data")]
+    InvalidTaskData,
 }
