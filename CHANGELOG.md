@@ -19,6 +19,10 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 * Added a method `get_operator_socket` to retrieve the socket from the `AvsRegistryServiceChainCaller` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464).
 
+  ```rust
+    let socket = self.get_operator_socket(*operator.operatorId).await.unwrap();
+  ```
+
 * Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
 
 ### Breaking Changes 🛠
