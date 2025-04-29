@@ -314,13 +314,13 @@ impl ELChainWriter {
     /// (determined by the root_index on the claim). Earnings are cumulative so earners can claim to
     /// the latest distribution root and the contract will compute the difference between their earning
     /// and claimed amounts. The difference is transferred to the earner address.
-    /// If a claimer has not been set (see [`set_claimer_for`]), only the earner can claim. Otherwise, only
+    /// If a claimer has not been set (see [`Self::set_claimer_for`]), only the earner can claim. Otherwise, only
     /// the claimer can claim.
     ///
     /// # Arguments
     ///
     /// * `claim` - The RewardsMerkleClaim object containing the claim.
-    /// * `earnerAddress` - The address of the earner for whom to process the claim.
+    /// * `earner_address` - The address of the earner for whom to process the claim.
     ///
     /// # Returns
     ///
@@ -349,7 +349,7 @@ impl ELChainWriter {
     /// (determined by the root_index on the claim). Earnings are cumulative so earners can claim to
     /// the latest distribution root and the contract will compute the difference between their earning
     /// and claimed amounts. The difference is transferred to the earner address.
-    /// If a claimer has not been set (see [`set_claimer_for`]), only the earner can claim. Otherwise, only
+    /// If a claimer has not been set (see [`Self::set_claimer_for`]), only the earner can claim. Otherwise, only
     /// the claimer can claim.
     ///
     /// # Arguments
@@ -768,7 +768,7 @@ impl ELChainWriter {
     /// while replacing existing operators in full quorums. If the operator
     /// has any stake allocated to these operator sets, it immediately becomes slashable.
     ///
-    /// This method performs similar steps to [`register_for_operator_sets`], except that
+    /// This method performs similar steps to [`Self::register_for_operator_sets`], except that
     /// for each quorum where the new Operator total exceeds the `maxOperatorCount`,
     /// the `operatorKickParams` are used to deregister a current Operator to make room for the new one.
     ///

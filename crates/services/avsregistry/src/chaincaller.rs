@@ -23,7 +23,12 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
     ///
     /// # Arguments
     ///
+    /// * `avs_registry` - The AVS Registry reader
     /// * `operators_info_service` - The operator info service
+    ///
+    /// # Returns
+    ///
+    /// A new instance of the [`AvsRegistryServiceChainCaller`]
     pub fn new(avs_registry: R, operators_info_service: S) -> Self {
         Self {
             avs_registry,

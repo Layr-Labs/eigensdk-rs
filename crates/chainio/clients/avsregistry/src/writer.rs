@@ -350,7 +350,7 @@ impl AvsRegistryChainWriter {
 
     /// Updates the stake of their entire operator set
     ///
-    /// Is used by avs teams running https://github.com/Layr-Labs/avs-sync to updates
+    /// Is used by avs teams running <https://github.com/Layr-Labs/avs-sync> to updates
     /// the stake of their entire operator set.
     /// Because of high gas costs of this operation, it typically needs to be called
     /// for every quorum, or perhaps for a small grouping of quorums

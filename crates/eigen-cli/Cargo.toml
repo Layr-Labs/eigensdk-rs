@@ -7,6 +7,12 @@ repository.workspace = true
 description = "eigen layer cli"
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 alloy.workspace = true
 ark-ec.workspace = true
@@ -32,6 +38,9 @@ uuid.workspace = true
 
 
 [dev-dependencies]
-eigen-testing-utils.workspace = true
+# We don't use workspace due to:
+# https://github.com/rust-lang/cargo/issues/4242#issuecomment-2578428685
+eigen-testing-utils = { path = "../../tests/testing-utils" }
+
 rstest.workspace = true
 tempfile.workspace = true
