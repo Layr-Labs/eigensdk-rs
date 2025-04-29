@@ -102,7 +102,7 @@ Alternate implementation which directly queries from middleware using view call 
         .unwrap();
   ```
 
-* Added field `socket` to `OperatorInfo` in PR[#464](https://github.com/Layr-Labs/eigensdk-rs/pull/464)
+* Added field `socket` to `OperatorInfo` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464)
 
   ```rust
     // BEFORE
