@@ -62,12 +62,6 @@ where
             Y: non_signer_stakes_and_signature.sigma.Y,
         };
 
-        // let mut quorum_apks = Vec::<G1Point>::new();
-        // for pub_key in response.quorum_apks_g1.iter() {
-        //     let g1 = convert_to_g1_point(pub_key.g1()).unwrap();
-        //     quorum_apks.push(G1Point { X: g1.X, Y: g1.Y })
-        // }
-
         let quorum_apks = non_signer_stakes_and_signature
             .quorumApks
             .iter()

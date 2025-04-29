@@ -8,18 +8,13 @@ pub mod error;
 pub mod rpc_server;
 /// Signed Task Response
 pub mod signed_task_response;
-/// Traits
-pub mod traits;
 
-use alloy::dyn_abi::abi::{decode, decode_params};
-use alloy::dyn_abi::{DynSolValue, SolType};
-use alloy::primitives::aliases::B32;
-use alloy::primitives::{Bytes, U256};
+use alloy::dyn_abi::SolType;
+use alloy::primitives::Bytes;
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
 use alloy::rpc::types::Filter;
 use alloy::sol_types::{SolEvent, SolValue};
-use alloy_rlp::{decode_exact, Decodable, RlpDecodable, RlpEncodable};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
 use eigen_logging::get_logger;
@@ -49,10 +44,6 @@ pub use eigen_services_blsaggregation::{
 };
 pub use error::AggregatorError;
 pub use signed_task_response::SignedTaskResponse;
-pub use traits::{
-    task_processor::{TaskProcessor, TaskProcessorError},
-    task_response::TaskResponse,
-};
 
 /// Aggregator
 #[derive(Debug)]
