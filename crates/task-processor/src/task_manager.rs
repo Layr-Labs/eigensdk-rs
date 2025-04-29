@@ -1,9 +1,17 @@
 use std::{fmt::Debug, future::Future};
 
-use crate::{task::Task, task_response::TaskResponse, TaskProcessorError};
+use crate::{task::Task, task_response::TaskResponse};
 use alloy::sol_types::{SolEvent, SolValue};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use serde::de::DeserializeOwned;
+
+/// Error returned by the task processor
+pub type TaskManagerError = Box<dyn core::error::Error + Send>;
+
+/// Utility function for boxing errors
+pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskManagerError {
+    Box::new(e)
+}
 
 /// Task manager contract trait. It wraps the contract's types and functions.
 pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
@@ -28,5 +36,5 @@ pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
         task: Task<Self::Input>,
         response: TaskResponse<Self::Output>,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
-    ) -> impl Future<Output = Result<(), TaskProcessorError>> + Send;
+    ) -> impl Future<Output = Result<(), TaskManagerError>> + Send;
 }

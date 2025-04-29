@@ -14,26 +14,22 @@ use eigen_utils::slashing::middleware::{
     iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
     iblssignaturechecker::BN254::{G1Point, G2Point},
 };
+use error::TaskProcessorError;
 use std::time::Duration;
 use std::{collections::HashMap, fmt::Debug};
 use task::Task;
 use task_manager::TaskManagerContract;
 use task_response::TaskResponse;
 use tracing::info;
+
+/// Task processor error
+pub mod error;
 /// Task
 pub mod task;
 /// Task manager trait
 pub mod task_manager;
 /// Task response
 pub mod task_response;
-
-/// Error returned by the task processor
-pub type TaskProcessorError = Box<dyn core::error::Error + Send>;
-
-/// Utility function for boxing errors
-pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskProcessorError {
-    Box::new(e)
-}
 
 /// Indexing task processor
 #[derive(Debug, Clone)]
@@ -89,21 +85,21 @@ where
         &mut self,
         task_index: u32,
         task: Task<TM::Input>,
-    ) -> Result<TaskMetadata, TaskProcessorError> {
+    ) -> TaskMetadata {
         self.tasks.insert(task_index, task.clone());
 
         let quorum_numbers: Vec<u8> = task.quorum_numbers.into();
         let quorum_threshold_percentages =
             std::iter::repeat_n(task.quorum_threshold_percentage as u8, quorum_numbers.len())
                 .collect();
-        Ok(TaskMetadata::new(
+        TaskMetadata::new(
             task_index,
             task.task_created_block.into(),
             quorum_numbers,
             quorum_threshold_percentages,
-            std::time::Duration::from_secs(60),
+            std::time::Duration::from_secs(60), // TODO: Make this configurable
         )
-        .with_window_duration(Duration::from_secs(15)))
+        .with_window_duration(Duration::from_secs(15)) // TODO: Make this configurable
     }
 
     /// Processes a task response
@@ -148,13 +144,13 @@ where
         let mut non_signer_pub_keys = Vec::<G1Point>::new();
         // TODO: Review if x is some
         for pub_key in response.non_signers_pub_keys_g1.iter() {
-            let g1 = convert_to_g1_point(pub_key.g1()).unwrap();
+            let g1 = convert_to_g1_point(pub_key.g1())?;
             non_signer_pub_keys.push(G1Point { X: g1.X, Y: g1.Y })
         }
 
         let mut quorum_apks = Vec::<G1Point>::new();
         for pub_key in response.quorum_apks_g1.iter() {
-            let g1 = convert_to_g1_point(pub_key.g1()).unwrap();
+            let g1 = convert_to_g1_point(pub_key.g1())?;
             quorum_apks.push(G1Point { X: g1.X, Y: g1.Y })
         }
 
@@ -163,34 +159,34 @@ where
             nonSignerQuorumBitmapIndices: response.non_signer_quorum_bitmap_indices,
             quorumApks: quorum_apks,
             apkG2: G2Point {
-                X: convert_to_g2_point(response.signers_apk_g2.g2()).unwrap().X,
-                Y: convert_to_g2_point(response.signers_apk_g2.g2()).unwrap().Y,
+                X: convert_to_g2_point(response.signers_apk_g2.g2())?.X,
+                Y: convert_to_g2_point(response.signers_apk_g2.g2())?.Y,
             },
             sigma: G1Point {
-                X: convert_to_g1_point(response.signers_agg_sig_g1.g1_point().g1())
-                    .unwrap()
-                    .X,
-                Y: convert_to_g1_point(response.signers_agg_sig_g1.g1_point().g1())
-                    .unwrap()
-                    .Y,
+                X: convert_to_g1_point(response.signers_agg_sig_g1.g1_point().g1())?.X,
+                Y: convert_to_g1_point(response.signers_agg_sig_g1.g1_point().g1())?.Y,
             },
             quorumApkIndices: response.quorum_apk_indices,
             totalStakeIndices: response.total_stake_indices,
             nonSignerStakeIndices: response.non_signer_stake_indices,
         };
 
-        let task = self.tasks.get(&response.task_index).unwrap();
+        let task = self
+            .tasks
+            .get(&response.task_index)
+            .ok_or(TaskProcessorError::TaskNotFound)?;
 
         let task_response = self
             .task_responses
             .get(&response.task_index)
             .and_then(|map| map.get(&response.task_response_digest))
             .cloned()
-            .unwrap();
+            .ok_or(TaskProcessorError::TaskResponseNotFound)?;
 
         self.task_manager
             .respond_to_task(task.clone(), task_response, non_signer_stakes_and_signature)
-            .await?;
+            .await
+            .map_err(TaskProcessorError::TaskManagerError)?;
 
         info!("Aggregated response sent to contract");
         Ok(())
