@@ -5,6 +5,7 @@ use alloy::{
     contract::private::{Provider, Transport},
     network::Network,
 };
+use ark_ec::AffineRepr;
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
 use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
@@ -85,11 +86,7 @@ where
     /// # Returns
     ///
     /// The [`TaskMetadata`]
-    pub async fn handle_new_task(
-        &mut self,
-        task_index: u32,
-        task: Task<TM::Input>,
-    ) -> TaskMetadata {
+    pub async fn handle_new_task(&self, task_index: u32, task: Task<TM::Input>) -> TaskMetadata {
         self.tasks.lock().await.insert(task_index, task.clone());
 
         let quorum_numbers: Vec<u8> = task.quorum_numbers.into();
@@ -115,7 +112,7 @@ where
     /// # Returns
     ///
     /// The task response digest
-    pub async fn process_task_response(&mut self, response: TaskResponse<TM::Output>) -> B256 {
+    pub async fn process_task_response(&self, response: TaskResponse<TM::Output>) -> B256 {
         let digest = alloy::primitives::keccak256(response.encode());
 
         self.task_responses
@@ -148,10 +145,16 @@ where
         );
 
         let mut non_signer_pub_keys = Vec::<G1Point>::new();
-        // TODO: Review if x is some
         for pub_key in response.non_signers_pub_keys_g1.iter() {
-            let g1 = convert_to_g1_point(pub_key.g1())?;
-            non_signer_pub_keys.push(G1Point { X: g1.X, Y: g1.Y })
+            if pub_key.g1().x().is_some() {
+                let g1 = convert_to_g1_point(pub_key.g1())?;
+                non_signer_pub_keys.push(G1Point { X: g1.X, Y: g1.Y })
+            } else {
+                info!(
+                    "Zero non_signers for the task index :{:?}",
+                    response.task_index
+                );
+            }
         }
 
         let mut quorum_apks = Vec::<G1Point>::new();
@@ -160,17 +163,20 @@ where
             quorum_apks.push(G1Point { X: g1.X, Y: g1.Y })
         }
 
+        let apk_g2 = convert_to_g2_point(response.signers_apk_g2.g2())?;
+        let sigma = convert_to_g1_point(response.signers_agg_sig_g1.g1_point().g1())?;
+
         let non_signer_stakes_and_signature = NonSignerStakesAndSignature {
             nonSignerPubkeys: non_signer_pub_keys,
             nonSignerQuorumBitmapIndices: response.non_signer_quorum_bitmap_indices,
             quorumApks: quorum_apks,
             apkG2: G2Point {
-                X: convert_to_g2_point(response.signers_apk_g2.g2())?.X,
-                Y: convert_to_g2_point(response.signers_apk_g2.g2())?.Y,
+                X: apk_g2.X,
+                Y: apk_g2.Y,
             },
             sigma: G1Point {
-                X: convert_to_g1_point(response.signers_agg_sig_g1.g1_point().g1())?.X,
-                Y: convert_to_g1_point(response.signers_agg_sig_g1.g1_point().g1())?.Y,
+                X: sigma.X,
+                Y: sigma.Y,
             },
             quorumApkIndices: response.quorum_apk_indices,
             totalStakeIndices: response.total_stake_indices,
@@ -195,7 +201,7 @@ where
         };
 
         self.task_manager
-            .respond_to_task(task.clone(), task_response, non_signer_stakes_and_signature)
+            .respond_to_task(task, task_response, non_signer_stakes_and_signature)
             .await
             .map_err(TaskProcessorError::TaskManagerError)?;
 

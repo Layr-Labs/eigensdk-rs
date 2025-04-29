@@ -36,7 +36,7 @@ pub struct ProcessSignedTaskResponseServer<TM, T, P, N>
 where
     TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    P: Provider<T, N>,
     N: Network,
 {
     task_processor: IndexingTaskProcessor<TM, T, P, N>,
@@ -49,7 +49,7 @@ impl<TM, T, P, N> ProcessSignedTaskResponse for ProcessSignedTaskResponseServer<
 where
     TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    P: Provider<T, N>,
     N: Network,
 {
     async fn process_signed_task_response(
@@ -58,11 +58,6 @@ where
         signed_task_response: String,
     ) -> Result<bool, ServerError> {
         let service_handle = &self.service_handle;
-
-        info!(
-            "RECIBIENDO RESPUESTA DEL OPERATOR: {}",
-            &signed_task_response
-        );
         let parsed: SignedTaskResponse<TaskResponse<TM::Output>> =
             serde_json::from_str(&signed_task_response).map_err(|_| {
                 ServerError::new(
@@ -87,7 +82,7 @@ impl<TM, T, P, N> ProcessSignedTaskResponseServer<TM, T, P, N>
 where
     TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N> + Clone + Send + Sync + 'static,
+    P: Provider<T, N>,
     N: Network,
 {
     /// Creates a new [`ProcessSignedTaskResponseServer`]

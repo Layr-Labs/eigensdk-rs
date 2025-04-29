@@ -3116,6 +3116,7 @@ name = "eigen-task-processor"
 version = "0.5.0"
 dependencies = [
  "alloy",
+ "ark-ec 0.5.0",
  "eigen-crypto-bls",
  "eigen-services-blsaggregation",
  "eigen-types",
