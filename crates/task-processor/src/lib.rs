@@ -33,6 +33,8 @@ pub mod task_manager;
 /// Task response
 pub mod task_response;
 
+type TaskResponsesMap<O> = HashMap<u32, HashMap<TaskResponseDigest, TaskResponse<O>>>;
+
 /// Indexing task processor
 #[derive(Debug, Clone)]
 pub struct IndexingTaskProcessor<TM, T, P, N>
@@ -45,7 +47,7 @@ where
     /// Hashmap to store the created tasks
     tasks: Arc<Mutex<HashMap<u32, Task<TM::Input>>>>,
     /// Hashmap to store the task responses
-    task_responses: Arc<Mutex<HashMap<u32, HashMap<TaskResponseDigest, TaskResponse<TM::Output>>>>>,
+    task_responses: Arc<Mutex<TaskResponsesMap<TM::Output>>>,
     /// Avs writer
     task_manager: TM,
 }
