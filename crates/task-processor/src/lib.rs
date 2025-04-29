@@ -21,6 +21,7 @@ use std::time::Duration;
 use std::{collections::HashMap, fmt::Debug};
 use task::Task;
 use task_manager::TaskManagerContract;
+use task_processor::TaskProcessor;
 use task_response::TaskResponse;
 use tokio::sync::Mutex;
 use tracing::info;
@@ -31,6 +32,8 @@ pub mod error;
 pub mod task;
 /// Task manager trait
 pub mod task_manager;
+/// Task processor trait
+pub mod task_processor;
 /// Task response
 pub mod task_response;
 
@@ -76,43 +79,46 @@ where
             task_manager,
         }
     }
+}
 
-    /// Recieves a event and creates the [`TaskMetadata`]
-    ///
-    /// # Arguments
-    ///
-    /// * `event` - The new task event
-    ///
-    /// # Returns
-    ///
-    /// The [`TaskMetadata`]
-    pub async fn handle_new_task(&self, task_index: u32, task: Task<TM::Input>) -> TaskMetadata {
+impl<TM, T, P, N> TaskProcessor for IndexingTaskProcessor<TM, T, P, N>
+where
+    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
+    T: Transport + Clone + Send + Sync + 'static,
+    P: Provider<T, N>,
+    N: Network,
+{
+    type NewTaskEvent = TM::NewTaskEvent;
+
+    type Output = TM::Output;
+
+    type Input = TM::Input;
+
+    async fn process_new_task(
+        &mut self,
+        task_index: u32,
+        task: Task<TM::Input>,
+    ) -> Result<TaskMetadata, TaskProcessorError> {
         self.tasks.lock().await.insert(task_index, task.clone());
 
         let quorum_numbers: Vec<u8> = task.quorum_numbers.into();
         let quorum_threshold_percentages =
             std::iter::repeat_n(task.quorum_threshold_percentage as u8, quorum_numbers.len())
                 .collect();
-        TaskMetadata::new(
+        Ok(TaskMetadata::new(
             task_index,
             task.task_created_block.into(),
             quorum_numbers,
             quorum_threshold_percentages,
             std::time::Duration::from_secs(60), // TODO: Make this configurable
         )
-        .with_window_duration(Duration::from_secs(15)) // TODO: Make this configurable
+        .with_window_duration(Duration::from_secs(15))) // TODO: Make this configurable
     }
 
-    /// Processes a task response
-    ///
-    /// # Arguments
-    ///
-    /// * `response` - The task response
-    ///
-    /// # Returns
-    ///
-    /// The task response digest
-    pub async fn process_task_response(&self, response: TaskResponse<TM::Output>) -> B256 {
+    async fn process_task_response(
+        &mut self,
+        response: TaskResponse<TM::Output>,
+    ) -> Result<B256, TaskProcessorError> {
         let digest = alloy::primitives::keccak256(response.encode());
 
         self.task_responses
@@ -123,19 +129,10 @@ where
             .entry(digest)
             .or_insert(response);
 
-        digest
+        Ok(digest)
     }
 
-    /// Processes an aggregated response and sends it to the contract
-    ///
-    /// # Arguments
-    ///
-    /// * `response` - The BLS Aggregated Response
-    ///
-    /// # Returns
-    ///
-    /// The aggregated response digest
-    pub async fn process_aggregated_response(
+    async fn process_aggregated_response(
         &self,
         response: BlsAggregationServiceResponse,
     ) -> Result<(), TaskProcessorError> {
