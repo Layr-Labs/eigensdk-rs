@@ -231,7 +231,7 @@ where
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_tasks(
         ws_rpc_url: String,
-        mut task_processor: IndexingTaskProcessor<TM, T, P, N>,
+        task_processor: IndexingTaskProcessor<TM, T, P, N>,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
