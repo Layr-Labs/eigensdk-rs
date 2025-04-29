@@ -15,11 +15,13 @@ use eigen_utils::slashing::middleware::{
     iblssignaturechecker::BN254::{G1Point, G2Point},
 };
 use error::TaskProcessorError;
+use std::sync::Arc;
 use std::time::Duration;
 use std::{collections::HashMap, fmt::Debug};
 use task::Task;
 use task_manager::TaskManagerContract;
 use task_response::TaskResponse;
+use tokio::sync::Mutex;
 use tracing::info;
 
 /// Task processor error
@@ -41,9 +43,9 @@ where
     N: Network,
 {
     /// Hashmap to store the created tasks
-    tasks: HashMap<u32, Task<TM::Input>>,
+    tasks: Arc<Mutex<HashMap<u32, Task<TM::Input>>>>,
     /// Hashmap to store the task responses
-    task_responses: HashMap<u32, HashMap<TaskResponseDigest, TaskResponse<TM::Output>>>,
+    task_responses: Arc<Mutex<HashMap<u32, HashMap<TaskResponseDigest, TaskResponse<TM::Output>>>>>,
     /// Avs writer
     task_manager: TM,
 }
@@ -66,8 +68,8 @@ where
     /// A new task processor
     pub fn new(task_manager: TM) -> Self {
         Self {
-            tasks: HashMap::default(),
-            task_responses: HashMap::default(),
+            tasks: Arc::new(Mutex::new(HashMap::default())),
+            task_responses: Arc::new(Mutex::new(HashMap::default())),
             task_manager,
         }
     }
@@ -86,7 +88,7 @@ where
         task_index: u32,
         task: Task<TM::Input>,
     ) -> TaskMetadata {
-        self.tasks.insert(task_index, task.clone());
+        self.tasks.lock().await.insert(task_index, task.clone());
 
         let quorum_numbers: Vec<u8> = task.quorum_numbers.into();
         let quorum_threshold_percentages =
@@ -115,6 +117,8 @@ where
         let digest = alloy::primitives::keccak256(response.encode());
 
         self.task_responses
+            .lock()
+            .await
             .entry(response.task_index)
             .or_default()
             .entry(digest)
@@ -171,17 +175,22 @@ where
             nonSignerStakeIndices: response.non_signer_stake_indices,
         };
 
-        let task = self
-            .tasks
-            .get(&response.task_index)
-            .ok_or(TaskProcessorError::TaskNotFound)?;
+        let (task, task_response) = {
+            let tasks_lock = self.tasks.lock().await;
+            let task = tasks_lock
+                .get(&response.task_index)
+                .ok_or(TaskProcessorError::TaskNotFound)?
+                .clone();
 
-        let task_response = self
-            .task_responses
-            .get(&response.task_index)
-            .and_then(|map| map.get(&response.task_response_digest))
-            .cloned()
-            .ok_or(TaskProcessorError::TaskResponseNotFound)?;
+            let responses_lock = self.task_responses.lock().await;
+            let task_response = responses_lock
+                .get(&response.task_index)
+                .and_then(|map| map.get(&response.task_response_digest))
+                .ok_or(TaskProcessorError::TaskResponseNotFound)?
+                .clone();
+
+            (task, task_response)
+        };
 
         self.task_manager
             .respond_to_task(task.clone(), task_response, non_signer_stakes_and_signature)
