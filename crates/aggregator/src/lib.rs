@@ -279,6 +279,14 @@ where
     }
 
     /// Decode the log of the NewTaskCreated event to get the task index and the task
+    ///
+    /// # Arguments
+    ///
+    /// * `log` - The log of the NewTaskCreated event
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(u32, Task<TM::Input>), AggregatorError>` - The task index and the task
     fn decode_event(log: &Log) -> Result<(u32, Task<TM::Input>), AggregatorError> {
         // event NewTaskCreated(uint32 indexed taskIndex, Task task);
         // Since taskIndex is indexed type, it is present in the topics array
