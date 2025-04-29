@@ -11,11 +11,13 @@ description = "aggregator example"
 [dependencies]
 alloy.workspace = true
 eigen-client-avsregistry.workspace = true
+eigen-common.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-logging.workspace = true
+eigen-task-processor.workspace = true
 eigen-testing-utils.workspace = true
 eigen-types.workspace = true
-eigen-common.workspace = true
+eigen-utils.workspace = true
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 eigen-aggregator.workspace = true
 serde.workspace = true
