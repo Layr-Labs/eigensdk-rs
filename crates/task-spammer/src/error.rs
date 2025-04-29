@@ -4,8 +4,8 @@ use alloy::contract::Error as AlloyError;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
-/// Task Generator Errors
-pub enum TaskGeneratorError {
+/// Task Spammer Errors
+pub enum TaskSpammerError {
     /// Quorum threshold not set
     #[error("Quorum threshold not set")]
     QuorumThresholdNotSet,

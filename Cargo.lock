@@ -3113,18 +3113,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigen-task-generator"
-version = "0.5.0"
-dependencies = [
- "alloy",
- "eigen-types",
- "thiserror 1.0.69",
- "tokio",
- "tokio-util",
- "tracing",
-]
-
-[[package]]
 name = "eigen-task-processor"
 version = "0.5.0"
 dependencies = [
@@ -3134,6 +3122,18 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
+name = "eigen-task-spammer"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "eigen-types",
  "thiserror 1.0.69",
  "tokio",
  "tokio-util",
@@ -3209,8 +3209,8 @@ dependencies = [
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
  "eigen-signer",
- "eigen-task-generator",
  "eigen-task-processor",
+ "eigen-task-spammer",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
@@ -3792,12 +3792,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "examples-task-generator"
+name = "examples-task-spammer"
 version = "0.5.0"
 dependencies = [
  "alloy",
  "async-trait",
- "eigen-task-generator",
+ "eigen-task-spammer",
  "eigen-types",
  "tokio",
  "tracing",

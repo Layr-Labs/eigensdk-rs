@@ -6,19 +6,19 @@ use alloy::{
     network::Network,
 };
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
-use error::TaskGeneratorError;
+use error::TaskSpammerError;
 use std::time::Duration;
 use task_manager::TaskManagerContract;
 use tokio::time::sleep;
 
-/// Task generator errors
+/// Task spammer errors
 pub mod error;
 /// Task manager contract trait
 pub mod task_manager;
 
-/// Task generator builder
+/// Task spammer builder
 #[derive(Debug)]
-pub struct TaskGeneratorBuilder<I, TM, T, P, N, Input> {
+pub struct TaskSpammerBuilder<I, TM, T, P, N, Input> {
     iter: Option<I>,
     interval: Duration,
     quorum_threshold: Option<QuorumThresholdPercentage>,
@@ -27,14 +27,14 @@ pub struct TaskGeneratorBuilder<I, TM, T, P, N, Input> {
     _phantom: std::marker::PhantomData<(T, P, N, Input)>,
 }
 
-impl<I, TM, T, P, N, Input> TaskGeneratorBuilder<I, TM, T, P, N, Input>
+impl<I, TM, T, P, N, Input> TaskSpammerBuilder<I, TM, T, P, N, Input>
 where
     TM: TaskManagerContract<Input, T, P, N>,
     T: Transport + Clone,
     P: Provider<T, N>,
     N: Network,
 {
-    /// Create a new task generator builder
+    /// Create a new task spammer builder
     ///
     /// # Arguments
     ///
@@ -42,7 +42,7 @@ where
     ///
     /// # Returns
     ///
-    /// A new task generator builder.
+    /// A new task spammer builder.
     pub fn new(task_manager: TM) -> Self {
         Self {
             iter: None,
@@ -63,13 +63,13 @@ where
     ///
     /// # Returns
     ///
-    /// * `TaskGeneratorBuilder` - The builder for the task generator
-    pub fn with_iter(self, iter: I) -> TaskGeneratorBuilder<I, TM, T, P, N, Input>
+    /// * `TaskSpammerBuilder` - The builder for the task spammer
+    pub fn with_iter(self, iter: I) -> TaskSpammerBuilder<I, TM, T, P, N, Input>
     where
         I: Iterator + Send + 'static,
         I::Item: Send,
     {
-        TaskGeneratorBuilder {
+        TaskSpammerBuilder {
             iter: Some(iter),
             interval: self.interval,
             quorum_threshold: self.quorum_threshold,
@@ -87,7 +87,7 @@ where
     ///
     /// # Returns
     ///
-    /// * `TaskGeneratorBuilder` - The builder for the task generator
+    /// * `TaskSpammerBuilder` - The builder for the task spammer
     pub fn with_interval(mut self, interval: Duration) -> Self {
         self.interval = interval;
         self
@@ -103,7 +103,7 @@ where
     ///
     /// # Returns
     ///
-    /// * `TaskGeneratorBuilder` - The builder for the task generator
+    /// * `TaskSpammerBuilder` - The builder for the task spammer
     pub fn with_quorum(
         mut self,
         quorum_threshold: QuorumThresholdPercentage,
@@ -114,34 +114,34 @@ where
         self
     }
 
-    /// Build the task generator
+    /// Build the task spammer
     ///
     /// # Returns
     ///
-    /// * `TaskGenerator` - The task generator to be run
-    pub fn build(self) -> Result<TaskGenerator<I, TM, T, P, N, Input>, TaskGeneratorError>
+    /// * `TaskSpammer` - The task spammer to be run
+    pub fn build(self) -> Result<TaskSpammer<I, TM, T, P, N, Input>, TaskSpammerError>
     where
         TM: TaskManagerContract<Input, T, P, N>,
         T: Transport + Clone,
         P: Provider<T, N>,
         N: Network,
     {
-        Ok(TaskGenerator {
-            iter: self.iter.ok_or(TaskGeneratorError::IteratorNotSet)?,
+        Ok(TaskSpammer {
+            iter: self.iter.ok_or(TaskSpammerError::IteratorNotSet)?,
             interval: self.interval,
             quorum_threshold: self
                 .quorum_threshold
-                .ok_or(TaskGeneratorError::QuorumThresholdNotSet)?,
-            quorums: self.quorums.ok_or(TaskGeneratorError::QuorumNotSet)?,
+                .ok_or(TaskSpammerError::QuorumThresholdNotSet)?,
+            quorums: self.quorums.ok_or(TaskSpammerError::QuorumNotSet)?,
             task_manager: self.task_manager,
             _phantom: std::marker::PhantomData,
         })
     }
 }
 
-/// Task generator struct
+/// Task spammer struct
 #[derive(Debug)]
-pub struct TaskGenerator<I, TM, T, P, N, Input> {
+pub struct TaskSpammer<I, TM, T, P, N, Input> {
     iter: I,
     interval: Duration,
     quorum_threshold: QuorumThresholdPercentage,
@@ -150,21 +150,21 @@ pub struct TaskGenerator<I, TM, T, P, N, Input> {
     _phantom: std::marker::PhantomData<(T, P, N, Input)>,
 }
 
-impl<I, TM, T, P, N, Input> TaskGenerator<I, TM, T, P, N, Input>
+impl<I, TM, T, P, N, Input> TaskSpammer<I, TM, T, P, N, Input>
 where
     TM: TaskManagerContract<Input, T, P, N> + Send + Sync,
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
     N: Network,
 {
-    /// Run the task generator
+    /// Run the task spammer
     /// This will create N tasks, where N is the number of items in the iterator
     /// We use the elements of the iterator as input for the task manager contract
     ///
     /// # Returns
     ///
-    /// * `Result<(), TaskGeneratorError>` - The result of the task generator
-    pub async fn run(self) -> Result<(), TaskGeneratorError>
+    /// * `Result<(), TaskSpammerError>` - The result of the task spammer
+    pub async fn run(self) -> Result<(), TaskSpammerError>
     where
         I: Iterator<Item = Input> + Send,
         I::Item: Clone + Send + 'static,

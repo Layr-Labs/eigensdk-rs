@@ -110,11 +110,11 @@ pub use eigen_challenger as challenger;
 #[cfg(feature = "operator")]
 pub use eigen_operator as operator;
 
-/* ------------------------------------ Task Generator Re-exports -------------------------------- */
+/* ------------------------------------ Task Spammer Re-exports -------------------------------- */
 
 #[doc(inline)]
-#[cfg(feature = "task-generator")]
-pub use eigen_task_generator as task_generator;
+#[cfg(feature = "task-spammer")]
+pub use eigen_task_spammer as task_spammer;
 
 /* ------------------------------------ Task Processor Re-exports -------------------------------- */
 
