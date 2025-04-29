@@ -13,19 +13,13 @@ where
     pub response: Output,
 }
 
-impl<Output> TaskResponse<Output>
-where
-    Output: Clone + SolValue,
-{
+impl<Output: Clone + SolValue> TaskResponse<Output> {
     /// Abi encode the task response
     ///
     /// # Returns
     ///
     /// The abi encoded task response
     pub fn encode(&self) -> Vec<u8> {
-        let mut bytes = vec![];
-        bytes.extend(self.task_index.abi_encode());
-        bytes.extend(self.response.abi_encode());
-        bytes
+        (self.task_index, self.response.clone()).abi_encode()
     }
 }
