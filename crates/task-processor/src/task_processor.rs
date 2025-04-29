@@ -3,6 +3,7 @@ use alloy::{primitives::B256, sol_types::SolValue};
 use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
 };
+use serde::de::DeserializeOwned;
 use std::future::Future;
 
 use crate::error::TaskProcessorError;
@@ -18,7 +19,7 @@ pub trait TaskProcessor {
     type Input: SolValue + Send + Sync + 'static + Clone;
 
     /// Response type expected by the task processor
-    type Output: SolValue + Send + Sync + 'static + Clone;
+    type Output: SolValue + Send + Sync + 'static + Clone + DeserializeOwned;
 
     /// Creates the [`TaskMetadata`]
     ///
