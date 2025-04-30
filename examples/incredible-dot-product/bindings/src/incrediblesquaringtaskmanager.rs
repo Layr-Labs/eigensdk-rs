@@ -1289,7 +1289,7 @@ pub mod IIncredibleSquaringTaskManager {
     struct DotProductInput { uint256[] a; uint256[] b; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
+    #[derive(Clone, Debug, Serialize, Deserialize)]
     pub struct DotProductInput {
         #[allow(missing_docs)]
         pub a: alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
@@ -1478,7 +1478,7 @@ pub mod IIncredibleSquaringTaskManager {
     struct DotProductResult { uint256 resultHigh; uint256 resultLow; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
+    #[derive(Clone, Debug, Serialize, Deserialize)]
     pub struct DotProductResult {
         #[allow(missing_docs)]
         pub resultHigh: alloy::sol_types::private::primitives::aliases::U256,
@@ -2320,6 +2320,8 @@ pub mod IIncredibleSquaringTaskManager {
         }
     };
     use alloy::contract as alloy_contract;
+    use serde::Deserialize;
+    use serde::Serialize;
     /**Creates a new wrapper around an on-chain [`IIncredibleSquaringTaskManager`](self) contract instance.
 
     See the [wrapper's documentation](`IIncredibleSquaringTaskManagerInstance`) for more details.*/

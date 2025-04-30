@@ -4722,7 +4722,9 @@ dependencies = [
  "alloy",
  "bindings",
  "eigensdk",
+ "serde",
  "tokio",
+ "toml",
 ]
 
 [[package]]
