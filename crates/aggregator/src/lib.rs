@@ -8,13 +8,14 @@ pub mod error;
 pub mod rpc_server;
 /// Signed Task Response
 pub mod signed_task_response;
-/// Traits
-pub mod traits;
 
+use alloy::dyn_abi::SolType;
+use alloy::primitives::Bytes;
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
-use alloy::rpc::types::Filter;
-use alloy::sol_types::SolEvent;
+use alloy::rpc::types::{Filter, Log};
+use alloy::sol_types::{SolEvent, SolValue};
+pub use config::AggregatorConfig;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
 use eigen_logging::get_logger;
@@ -22,37 +23,38 @@ use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle,
 };
-use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-use futures_util::{future, StreamExt};
-use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
-use std::{net::SocketAddr, sync::Arc};
-use tarpc::server::{self, Channel};
-use tarpc::tokio_serde::formats::Json;
-use tokio::sync::Mutex;
-use tracing::info;
-
-pub use config::AggregatorConfig;
 pub use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
 };
+use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+use eigen_task_processor::task::Task;
+use eigen_task_processor::task_processor::TaskProcessor;
 pub use error::AggregatorError;
+use futures_util::{future, StreamExt};
+use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
 pub use signed_task_response::SignedTaskResponse;
-pub use traits::{
-    task_processor::{TaskProcessor, TaskProcessorError},
-    task_response::TaskResponse,
-};
+use std::fmt::Debug;
+use std::net::SocketAddr;
+use tarpc::server::{self, Channel};
+use tarpc::tokio_serde::formats::Json;
+use tracing::info;
 
 /// Aggregator
 #[derive(Debug)]
 pub struct Aggregator<TP> {
     port_address: String,
-    task_processor: Arc<Mutex<TP>>,
+    task_processor: TP,
     service_handle: ServiceHandle,
     aggregated_response_receiver: AggregateReceiver,
     ws_rpc_url: String,
 }
 
-impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
+impl<TP> Aggregator<TP>
+where
+    TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    <TP as TaskProcessor>::Input:
+        From<<<<TP as TaskProcessor>::Input as SolValue>::SolType as SolType>::RustType>,
+{
     /// Creates a new aggregator
     ///
     /// # Arguments
@@ -99,7 +101,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
             BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
         Ok(Self {
             port_address: config.server_address,
-            task_processor: Arc::new(Mutex::new(task_processor)),
+            task_processor,
             service_handle,
             aggregated_response_receiver,
             ws_rpc_url: config.ws_rpc_url,
@@ -119,24 +121,23 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     pub async fn start(self) -> Result<(), AggregatorError> {
         info!("Starting aggregator");
 
-        let task_processor = self.task_processor.clone();
         let service_handle = self.service_handle.clone();
         let port_address = self.port_address.clone();
 
         // Spawn three tasks: one for the server that receives signature, one for processing tasks, and another to process aggregated signatures
         let server_handle = tokio::spawn(Self::start_server(
             port_address,
-            task_processor.clone(),
+            self.task_processor.clone(),
             service_handle.clone(),
         ));
 
         let process_handle = tokio::spawn(Self::process_tasks(
             self.ws_rpc_url,
-            task_processor.clone(),
+            self.task_processor.clone(),
             service_handle,
         ));
         let aggregate_handle = tokio::spawn(Self::process_aggregated_signatures(
-            task_processor,
+            self.task_processor,
             self.aggregated_response_receiver,
         ));
 
@@ -165,14 +166,13 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn start_server(
         port_address: String,
-        task_processor: Arc<Mutex<TP>>,
+        task_processor: TP,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let addr: SocketAddr = port_address.parse().map_err(|e| {
             AggregatorError::IOError(std::io::Error::new(std::io::ErrorKind::InvalidInput, e))
         })?;
 
-        let task_processor_clone = task_processor.clone();
         let service_handle_clone = service_handle.clone();
 
         let mut listener = tarpc::serde_transport::tcp::listen(&addr, Json::default).await?;
@@ -183,8 +183,8 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
             .filter_map(|r| future::ready(r.ok()))
             .map(server::BaseChannel::with_defaults)
             .for_each_concurrent(None, |channel| {
-                let task_processor = task_processor_clone.clone();
                 let service_handle = service_handle_clone.clone();
+                let task_processor = task_processor.clone();
                 async move {
                     let server =
                         ProcessSignedTaskResponseServer::new(task_processor, service_handle);
@@ -214,29 +214,23 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_tasks(
         ws_rpc_url: String,
-        task_processor: Arc<Mutex<TP>>,
+        mut task_processor: TP,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
         let filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
 
-        while let Some(event) = provider
+        while let Some(log) = provider
             .subscribe_logs(&filter)
             .await?
             .into_stream()
             .next()
             .await
-            .and_then(|log| log.log_decode().ok())
-            .map(|v| v.inner.data)
         {
-            let metadata = task_processor
-                .lock()
-                .await
-                .process_new_task(event)
-                .await
-                .map_err(AggregatorError::TaskProcessorError)?;
-            service_handle.initialize_task(metadata).await?;
+            let (task_index, task) = Self::decode_event(&log)?;
+            let task_metadata = task_processor.process_new_task(task_index, task).await?;
+            service_handle.initialize_task(task_metadata).await?;
         }
 
         Ok(())
@@ -253,7 +247,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_aggregated_signatures(
-        task_processor: Arc<Mutex<TP>>,
+        task_processor: TP,
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
@@ -262,11 +256,62 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
                 .await?;
 
             task_processor
-                .lock()
-                .await
                 .process_aggregated_response(service_response)
-                .await
-                .map_err(AggregatorError::TaskProcessorError)?;
+                .await?;
         }
+    }
+
+    /// Decode the log of the NewTaskCreated event to get the task index and the task
+    ///
+    /// # Arguments
+    ///
+    /// * `log` - The log of the NewTaskCreated event
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(u32, Task<TP::Input>), AggregatorError>` - The task index and the task
+    fn decode_event(log: &Log) -> Result<(u32, Task<TP::Input>), AggregatorError> {
+        // event NewTaskCreated(uint32 indexed taskIndex, Task task);
+        // Since taskIndex is indexed type, it is present in the topics array
+        // The first element of the topic is the event hash signature, the second is the taskIndex
+        let bytes: [u8; 32] = log
+            .topics()
+            .get(1)
+            .ok_or(AggregatorError::TaskIndexMissingInTopics)?
+            .0;
+
+        // u32 values are stored in the last 4 bytes of a 32 bytes array (left-padded).
+        let task_index_bytes: [u8; 4] = bytes[28..32]
+            .try_into()
+            .map_err(|_| AggregatorError::InvalidTaskIndexConversion)?;
+        let task_index = u32::from_be_bytes(task_index_bytes);
+
+        // Skip the first 32 bytes of the ABI-encoded data (the dynamic offset pointer)
+        // so we can decode the actual tuple payload that follows.
+        let data = log
+            .inner
+            .data
+            .data
+            .0
+            .get(32..)
+            .ok_or(AggregatorError::InvalidTaskData)?;
+
+        let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
+            <(
+                <TP::Input as SolValue>::SolType,
+                <u32 as SolValue>::SolType,
+                <Bytes as SolValue>::SolType,
+                <u32 as SolValue>::SolType,
+            )>::abi_decode_params(data, false)?;
+
+        Ok((
+            task_index,
+            Task::<TP::Input> {
+                input: input.into(),
+                task_created_block,
+                quorum_numbers,
+                quorum_threshold_percentage,
+            },
+        ))
     }
 }

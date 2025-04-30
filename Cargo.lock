@@ -2741,6 +2741,7 @@ dependencies = [
  "eigen-services-avsregistry",
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
+ "eigen-task-processor",
  "eigen-types",
  "eigen-utils",
  "futures-util",
@@ -3111,6 +3112,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigen-task-processor"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "ark-ec 0.5.0",
+ "eigen-crypto-bls",
+ "eigen-services-blsaggregation",
+ "eigen-types",
+ "eigen-utils",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
 name = "eigen-task-spammer"
 version = "0.5.0"
 dependencies = [
@@ -3191,6 +3209,7 @@ dependencies = [
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
  "eigen-signer",
+ "eigen-task-processor",
  "eigen-task-spammer",
  "eigen-testing-utils",
  "eigen-types",
@@ -3679,17 +3698,11 @@ version = "0.5.0"
 dependencies = [
  "alloy",
  "eigen-aggregator",
- "eigen-client-avsregistry",
- "eigen-common",
  "eigen-crypto-bls",
- "eigen-logging",
- "eigen-testing-utils",
- "eigen-types",
+ "eigen-task-processor",
+ "eigen-utils",
  "serde",
- "serde_json",
- "tarpc",
  "tokio",
- "tracing",
 ]
 
 [[package]]
@@ -7235,9 +7248,9 @@ dependencies = [
 
 [[package]]
 name = "signature"
-version = "2.2.0"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "77549399552de45a898a580c1b41d445bf730df867cc44e6c0233bbc4b8329de"
+checksum = "8fe458c98333f9c8152221191a77e2a44e8325d0193484af2e9421a53019e57d"
 dependencies = [
  "digest 0.10.7",
  "rand_core 0.6.4",
