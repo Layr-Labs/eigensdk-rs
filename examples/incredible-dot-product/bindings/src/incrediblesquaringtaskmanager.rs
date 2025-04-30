@@ -1926,7 +1926,7 @@ pub mod IIncredibleSquaringTaskManager {
     struct TaskResponse { uint32 referenceTaskIndex; DotProductResult output; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
+    #[derive(Clone, Serialize, Deserialize)]
     pub struct TaskResponse {
         #[allow(missing_docs)]
         pub referenceTaskIndex: u32,
