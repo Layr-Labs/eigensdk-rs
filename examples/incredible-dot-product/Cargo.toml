@@ -1,0 +1,17 @@
+[package]
+name    = "incredible-dot-product"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+alloy = { version = "0.13", features = [
+    "sol-types",
+    "contract",
+    "full",
+    "signer-aws",
+    "rlp",
+    "json-rpc",
+] }
+bindings = { path = "./bindings" }
+eigensdk = { path = "../../crates/eigensdk", features = ["full"] }
+tokio = { version = "1.41", features = ["test-util", "full", "sync"] }

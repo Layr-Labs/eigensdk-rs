@@ -1,0 +1,15 @@
+[package]
+name = "bindings"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+description = "alloy bindings "
+
+[lib]
+name = "incredible_bindings"
+path = "src/mod.rs"
+
+[dependencies]
+alloy = {workspace = true, features = ["sol-types", "contract"]}
+serde.workspace = true

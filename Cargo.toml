@@ -30,7 +30,7 @@ members = [
     "examples/avsregistry-read",
     "examples/avsregistry-write",
     "examples/challenger/",
-    "examples/incredible-summation/",
+    "examples/incredible-dot-product/",
     "examples/info-operator-service/",
     "examples/operator/",
     "examples/task-spammer/",

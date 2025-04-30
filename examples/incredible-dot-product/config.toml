@@ -14,7 +14,6 @@ operator_state_retriever = "0xdbc43ba45381e02825b14322cddd15ec4b3164e6"
 [task_manager_config]
 signer = "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
 
-
 [contracts_addresses]
 task_manager = "0x7969c5ed335650692bc04293b07f5bf2e7a673c0"
 service_manager = "0xb7278a61aa25c888815afc32ad3cc52ff24fe575"

@@ -18,7 +18,7 @@ interface IIncredibleSquaringTaskManager {
 
     // STRUCTS
     struct Task {
-        uint256 numberToBeSquared;
+        DotProductInput input;
         uint32 taskCreatedBlock;
         // task submitter decides on the criteria for a task to be completed
         // note that this does not mean the task was "correctly" answered (i.e. the number was squared correctly)
@@ -30,13 +30,24 @@ interface IIncredibleSquaringTaskManager {
         uint32 quorumThresholdPercentage;
     }
 
+    // Scalar is a struct that contains two arrays of uint256.
+    struct DotProductInput {
+        uint256[] a;
+        uint256[] b;
+    }
+
     // Task response is hashed and signed by operators.
     // these signatures are aggregated and sent to the contract as response.
     struct TaskResponse {
         // Can be obtained by the operator from the event NewTaskCreated.
         uint32 referenceTaskIndex;
         // This is just the response that the operator has to compute by itself.
-        uint256 numberSquared;
+        DotProductResult output;
+    }
+
+    struct DotProductResult {
+        uint256 resultHigh;
+        uint256 resultLow;
     }
 
     // Extra information related to taskResponse, which is filled inside the contract.
@@ -49,8 +60,14 @@ interface IIncredibleSquaringTaskManager {
 
     // FUNCTIONS
     // NOTE: this function creates new task.
-    function createNewTask(uint256 numberToBeSquared, uint32 quorumThresholdPercentage, bytes calldata quorumNumbers)
+    function createNewTask(DotProductInput calldata input, uint32 quorumThresholdPercentage, bytes calldata quorumNumbers)
         external;
+
+    function respondToTask(
+        Task calldata task,
+        TaskResponse calldata taskResponse,
+        NonSignerStakesAndSignature memory nonSignerStakesAndSignature
+    ) external;
 
     /// @notice Returns the current 'taskNumber' for the middleware
     function taskNumber() external view returns (uint32);

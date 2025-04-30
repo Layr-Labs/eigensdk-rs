@@ -1807,6 +1807,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "bindings"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "serde",
+]
+
+[[package]]
 name = "bit-set"
 version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4708,13 +4716,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "incredible-summation"
-version = "0.5.0"
+name = "incredible-dot-product"
+version = "0.1.0"
 dependencies = [
  "alloy",
- "eigen-aggregator",
- "serde",
- "toml",
+ "bindings",
+ "eigensdk",
+ "tokio",
 ]
 
 [[package]]
