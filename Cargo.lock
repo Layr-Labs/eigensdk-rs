@@ -3698,17 +3698,11 @@ version = "0.5.0"
 dependencies = [
  "alloy",
  "eigen-aggregator",
- "eigen-client-avsregistry",
- "eigen-common",
  "eigen-crypto-bls",
- "eigen-logging",
- "eigen-testing-utils",
- "eigen-types",
+ "eigen-task-processor",
+ "eigen-utils",
  "serde",
- "serde_json",
- "tarpc",
  "tokio",
- "tracing",
 ]
 
 [[package]]
