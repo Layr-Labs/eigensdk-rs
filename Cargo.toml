@@ -33,7 +33,8 @@ members = [
     "examples/operator/",
     "examples/task-spammer/",
     "tests/testing-utils/",
-    "tests/integration/", "examples/incredible-squaring",
+    "tests/integration/",
+    "examples/incredible-squaring",
 ]
 resolver = "2"
 
