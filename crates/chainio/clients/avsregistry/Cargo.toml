@@ -8,6 +8,12 @@ rust-version.workspace = true
 repository.workspace = true
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 alloy.workspace = true
 async-trait.workspace = true
@@ -26,7 +32,10 @@ tracing.workspace = true
 workspace = true
 
 [dev-dependencies]
-eigen-testing-utils.workspace = true
+# We don't use workspace due to:
+# https://github.com/rust-lang/cargo/issues/4242#issuecomment-2578428685
+eigen-testing-utils = { path = "../../../../tests/testing-utils" }
+
 hex = "0.4.3"
 once_cell.workspace = true
 tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }

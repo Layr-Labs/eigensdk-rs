@@ -69,7 +69,6 @@ clippy.question_mark = "warn"
 clippy.implicit_return = "allow"
 
 [workspace.dependencies]
-eigen-client-avsregistry = { version = "0.5.0", path = "crates/chainio/clients/avsregistry" }
 ark-bn254 = "0.5.0"
 ark-ec = "0.5.0"
 ark-ff = "0.5.0"
@@ -79,10 +78,13 @@ aws-config = "1.5.9"
 aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
+
+# eigensdk
 eigen-aggregator = { version = "0.5.0", path = "crates/aggregator/" }
 eigen-challenger = { version = "0.5.0", path = "crates/challenger/" }
 eigen-common = { version = "0.5.0", path = "crates/common/" }
 eigen-client-elcontracts = { version = "0.5.0", path = "crates/chainio/clients/elcontracts" }
+eigen-client-avsregistry = { version = "0.5.0", path = "crates/chainio/clients/avsregistry" }
 eigen-client-eth = { version = "0.5.0", path = "crates/chainio/clients/eth" }
 eigen-client-fireblocks = { version = "0.5.0", path = "crates/chainio/clients/fireblocks" }
 eigen-crypto-bls = { version = "0.5.0", path = "crates/crypto/bls/" }
@@ -103,6 +105,8 @@ eigen-utils = { version = "0.5.0", path = "crates/utils/" }
 eigen-nodeapi = { version = "0.5.0", path = "crates/nodeapi/" }
 field_info = { version = "0.1.0", path = "crates/field_info/" }
 field_info_derive = { version = "0.1.0", path = "crates/field_info_derive/" }
+
+
 eth-keystore = "0.5"
 ethers = "2.0"
 ethers-signers = "2.0"

@@ -10,7 +10,7 @@ pub enum BlsKeystore {
 
 impl BlsKeystore {
     /// Create a new [`BlsKeystore`] instance.
-    /// [`BlsKeystore::Pbkdft`] or [`BlsKeystore::Scrypt`]
+    /// [`BlsKeystore::Pbkdf2`] or [`BlsKeystore::Scrypt`]
     pub fn new_keystore(
         self,
         secret_key: String,

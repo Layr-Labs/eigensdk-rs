@@ -136,6 +136,10 @@ open target/llvm-cov/html/index.html
 
 Rolling `MSRV` policy of 6 months. The current `MSRV` is 1.79
 
+## Release process
+
+The step-by-step process to make a release is documented in [`RELEASE.md`](./RELEASE.md).
+
 ## Disclaimer
 
 🚧 EigenSDK-rs is under active development and has not been audited. EigenSDK-rs is rapidly being upgraded, features may be added, removed or otherwise improved or modified and interfaces will have breaking changes. EigenSDK-rs should be used only for testing purposes and not in production. EigenSDK-rs is provided "as is" and Eigen Labs, Inc. does not guarantee its functionality or provide support for its use in production. 🚧

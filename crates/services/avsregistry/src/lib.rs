@@ -1,3 +1,195 @@
+//! AVS Registry Service
+//!
+//! This service is used to get the AVS state of the operators and the quorums.
+//!
+//! ## Introduction
+//!
+//! The [`AvsRegistryServiceChainCaller`] allows to get the AVS state of the operators and the quorums at any block.
+//! This service is used by the `BLS Aggregator service` and use under the hood the `OperatorInfoService` to get the operator info.
+//!
+//! ## Main Components
+//!
+//! ### OperatorAvsState
+//!
+//! Represents the AVS state of an operator.
+//!
+//! - `operator_id`: Operator ID
+//! - `operator_info`: Operator info public key
+//! - `stake_per_quorum`: Stake per quorum
+//! - `block_num`: Block number
+//!
+//! ### QuorumAvsState
+//!
+//! Represents the AVS state of a quorum.
+//!
+//! - `quorum_num`: Quorum number
+//! - `total_stake`: Total stake
+//! - `agg_pub_key_g1`: Aggregated G1 public key
+//! - `block_num`: Block number
+//!
+//! ## Usage
+//!
+//! ### Initialize the service
+//!
+//! To initialize the service, you need to provide an `AvsRegistryReader` and an `OperatorInfoService` and call the [`new`] method.
+//!
+//! ```rust,no_run
+//!# use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
+//!# use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+//!# use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
+//!# use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
+//!# use eigen_types::test::TestOperator;
+//!# use eigen_crypto_bls::BlsKeyPair;
+//!# use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
+//!# use eigen_types::operator::{OperatorInfo, OperatorPubKeys, QuorumNum};
+//!# use std::collections::HashMap;
+//!# use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
+//!# use alloy::primitives::{FixedBytes, U256, Address};
+//!# fn example () {
+//!#     let operator_id = FixedBytes::from_slice(&[1]);
+//!#     let test_operator = TestOperator {
+//!#         operator_id,
+//!#         bls_keypair: BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap(),
+//!#         stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
+//!#     };
+//!#     let operator_address = Address::from(FIRST_ADDRESS);
+//!#     let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
+//!#     let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
+//!#
+//!     let avs_registry_service =
+//!         AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service);
+//!# }
+//! ```
+//!
+//! ### Get the AVS state of the operators and the quorums at a specific block
+//!
+//! To get the state of the operator in a specific quorum at a specific block, you can use the [`get_operators_avs_state_at_block`] method.
+//! The list of quorum nums and the list of operators stakes in quorums should have the same length.
+//! The method returns a hashmap with the operator ID as the key and the `OperatorAvsState` as the value.
+//!
+//! ```rust,no_run
+//!# use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
+//!# use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+//!# use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
+//!# use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
+//!# use eigen_types::test::TestOperator;
+//!# use eigen_crypto_bls::BlsKeyPair;
+//!# use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
+//!# use eigen_types::operator::{OperatorInfo, OperatorPubKeys, QuorumNum};
+//!# use std::collections::HashMap;
+//!# use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
+//!# use alloy::primitives::{FixedBytes, U256, Address};
+//!# use eigen_services_avsregistry::AvsRegistryService;
+//!# async fn example () {
+//!#     let operator_id = FixedBytes::from_slice(&[1]);
+//!#     let test_operator = TestOperator {
+//!#         operator_id,
+//!#         bls_keypair: BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap(),
+//!#         stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
+//!#     };
+//!#     let operator_address = Address::from(FIRST_ADDRESS);
+//!#     let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
+//!#     let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
+//!#
+//!#     let avs_registry_service =
+//!#         AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service);
+//!#
+//!#     let block_num = 1;
+//!#     let quorum_nums = vec![1];
+//!     let operator_avs_state = avs_registry_service
+//!         .get_operators_avs_state_at_block(block_num, &quorum_nums)
+//!         .await
+//!         .unwrap();
+//!# }
+//! ```
+//!
+//! To get the state of the quorum at a specific block, you can use the [`get_quorums_avs_state_at_block`] method.
+//! The method returns a hashmap with the quorum number as the key and the `QuorumAvsState` as the value.
+//!
+//! ```rust,no_run
+//!# use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
+//!# use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+//!# use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
+//!# use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
+//!# use eigen_types::test::TestOperator;
+//!# use eigen_crypto_bls::BlsKeyPair;
+//!# use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
+//!# use eigen_types::operator::{OperatorInfo, OperatorPubKeys, QuorumNum};
+//!# use std::collections::HashMap;
+//!# use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
+//!# use alloy::primitives::{FixedBytes, U256, Address};
+//!# use eigen_services_avsregistry::AvsRegistryService;
+//!# async fn example () {
+//!#     let operator_id = FixedBytes::from_slice(&[1]);
+//!#     let test_operator = TestOperator {
+//!#         operator_id,
+//!#         bls_keypair: BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap(),
+//!#         stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
+//!#     };
+//!#     let operator_address = Address::from(FIRST_ADDRESS);
+//!#     let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
+//!#     let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
+//!#
+//!#     let avs_registry_service =
+//!#         AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service);
+//!#
+//!#     let block_num = 1;
+//!#     let quorum_nums = vec![1];
+//!     let quorum_state_per_number = avs_registry_service
+//!         .get_quorums_avs_state_at_block(&quorum_nums, block_num)
+//!         .await
+//!         .unwrap();
+//!# }
+//! ```
+//!
+//! ### Get the signatures indices of quorum members for a specific block
+//!
+//! To get the signatures indices of quorum members for a specific block, you can use the [`get_check_signatures_indices`] method.
+//!
+//! ```rust,no_run
+//!# use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
+//!# use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+//!# use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
+//!# use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
+//!# use eigen_types::test::TestOperator;
+//!# use eigen_crypto_bls::BlsKeyPair;
+//!# use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
+//!# use eigen_types::operator::{OperatorInfo, OperatorPubKeys, QuorumNum};
+//!# use std::collections::HashMap;
+//!# use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
+//!# use alloy::primitives::{FixedBytes, U256, Address};
+//!# use eigen_services_avsregistry::AvsRegistryService;
+//!# async fn example () {
+//!#     let operator_id = FixedBytes::from_slice(&[1]);
+//!#     let test_operator = TestOperator {
+//!#         operator_id,
+//!#         bls_keypair: BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap(),
+//!#         stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
+//!#     };
+//!#     let operator_address = Address::from(FIRST_ADDRESS);
+//!#     let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
+//!#     let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
+//!#
+//!#     let avs_registry_service =
+//!#         AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service);
+//!#
+//!#     let block_num = 1;
+//!#     let quorum_nums = vec![1];
+//!#     let non_signer_operator_ids = vec![];
+//!     let check_signatures_indices = avs_registry_service
+//!         .get_check_signatures_indices(block_num, quorum_nums, non_signer_operator_ids)
+//!         .await
+//!         .unwrap();
+//!# }
+//! ```
+//!
+//! [`AvsRegistryServiceChainCaller`]: chaincaller::AvsRegistryServiceChainCaller
+//! [`new`]: chaincaller::AvsRegistryServiceChainCaller::new()
+//! [`get_operators_avs_state_at_block`]: chaincaller::AvsRegistryServiceChainCaller::get_operators_avs_state_at_block()
+//! [`get_quorums_avs_state_at_block`]: chaincaller::AvsRegistryServiceChainCaller::get_quorums_avs_state_at_block()
+//! [`get_check_signatures_indices`]: chaincaller::AvsRegistryServiceChainCaller::get_check_signatures_indices()
+//!
+
 #![doc(
     html_logo_url = "https://github.com/Layr-Labs/eigensdk-rs/assets/91280922/bd13caec-3c00-4afc-839a-b83d2890beb5",
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
@@ -13,6 +205,7 @@ use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
 use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 
 pub mod chaincaller;
+#[doc(hidden)]
 pub mod fake_avs_registry_service;
 
 #[async_trait]

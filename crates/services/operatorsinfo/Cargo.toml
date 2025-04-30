@@ -8,6 +8,12 @@ rust-version.workspace = true
 repository.workspace = true
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 alloy.workspace = true
 async-trait.workspace = true
@@ -25,9 +31,12 @@ futures.workspace = true
 eyre.workspace = true
 
 [dev-dependencies]
-eigen-testing-utils.workspace = true
-eigen-logging.workspace = true
-eigen-client-elcontracts.workspace = true
+# We don't use workspace due to:
+# https://github.com/rust-lang/cargo/issues/4242#issuecomment-2578428685
+eigen-testing-utils = { path = "../../../tests/testing-utils" }
+eigen-logging = { path = "../../logging" }
+eigen-client-elcontracts = { path = "../../chainio/clients/elcontracts" }
+
 ark-bn254.workspace = true
 ark-std = { version = "0.4.0", default-features = false }
 ark-ff.workspace = true
