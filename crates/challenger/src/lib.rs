@@ -7,7 +7,9 @@ use futures_util::StreamExt;
 use tracing::info;
 
 pub mod challenger;
+pub mod challenger_processor;
 pub mod error;
+pub mod task_manager;
 
 /// Main Challenger struct
 #[derive(Debug)]
@@ -30,18 +32,14 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
         let ws_provider = get_ws_provider(&self.ws_url).await?;
 
         // Subscribe to NewTaskEvent
-        let task_filter = Filter::new().event_signature(
-            <<TP as ChallengerTaskProcessor>::NewTaskEvent as SolEvent>::SIGNATURE_HASH,
-        );
+        let task_filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
         let mut task_stream = ws_provider
             .subscribe_logs(&task_filter)
             .await?
             .into_stream();
 
         // Subscribe to TaskResponseEvent
-        let responded_filter = Filter::new().event_signature(
-            <<TP as ChallengerTaskProcessor>::TaskResponseEvent as SolEvent>::SIGNATURE_HASH,
-        );
+        let responded_filter = Filter::new().event_signature(TP::TaskResponseEvent::SIGNATURE_HASH);
         let mut responded_stream = ws_provider
             .subscribe_logs(&responded_filter)
             .await?
@@ -50,16 +48,10 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
         loop {
             tokio::select! {
                 Some(log) = task_stream.next() => {
-                    let decode = log.log_decode::<TP::NewTaskEvent>().ok();
-                    if let Some(decoded) = decode {
-                        self.task_processor.handle_task_creation(decoded);
-                    }
+                    self.task_processor.handle_task_creation(log).await?;
                 },
                 Some(log) = responded_stream.next() => {
-                    let decode = log.log_decode::<TP::TaskResponseEvent>().ok();
-                    if let Some(decoded) = decode {
-                        self.task_processor.handle_task_response(decoded);
-                    }
+                    self.task_processor.handle_task_response(log).await?;
                 },
                 else => {
                     // If both streams are exhausted, break the loop.

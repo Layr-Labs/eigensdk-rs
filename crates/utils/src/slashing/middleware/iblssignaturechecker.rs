@@ -21,7 +21,7 @@ pub mod BN254 {
     struct G1Point { uint256 X; uint256 Y; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub struct G1Point {
         #[allow(missing_docs)]
         pub X: alloy::sol_types::private::primitives::aliases::U256,
