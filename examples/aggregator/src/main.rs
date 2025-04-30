@@ -21,6 +21,7 @@ use eigen_task_processor::task_response::TaskResponse;
 use eigen_task_processor::IndexingTaskProcessor;
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use std::str::FromStr;
+use std::time::Duration;
 
 pub mod bindings;
 
