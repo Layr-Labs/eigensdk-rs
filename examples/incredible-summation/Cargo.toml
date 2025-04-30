@@ -9,7 +9,21 @@ authors.workspace = true
 description = "incredible-summation example"
 
 [lints]
-workspace = true
+rustdoc.all = "warn"
+# clippy.unwrap_used = "warn"
+clippy.expect_used = "warn"
+clippy.panic = "warn"
+clippy.todo = "warn"
+clippy.indexing_slicing = "warn"
+clippy.string_slice = "warn"
+clippy.panic_in_result_fn = "warn"
+clippy.panicking_overflow_checks = "warn"
+clippy.question_mark = "warn"
+clippy.implicit_return = "allow"
 
 [dependencies]
+alloy.workspace = true
 eigen-aggregator.workspace = true
+serde.workspace = true
+
+toml = "0.8.22"
