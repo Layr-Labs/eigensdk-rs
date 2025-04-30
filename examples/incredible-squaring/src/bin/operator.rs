@@ -5,10 +5,7 @@ use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
 use eigen_operator::{error::OperatorError, Operator};
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
-use incredible_squaring::{
-    bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated,
-    NumberSquared,
-};
+use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
 
 fn square(event: NewTaskCreated) -> Result<NumberSquared, OperatorError> {
     let square = event.task.numberToBeSquared * event.task.numberToBeSquared;

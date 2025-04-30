@@ -16,18 +16,24 @@ eigen-logging.workspace = true
 eigen-testing-utils.workspace = true
 eigen-types.workspace = true
 eigen-common.workspace = true
-tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+eigen-task-processor.workspace = true
 eigen-aggregator.workspace = true
+eigen-operator.workspace = true
+eigen-utils.workspace = true
+
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 serde.workspace = true
 tracing.workspace = true
 serde_json.workspace = true
 ark-ec.workspace = true
 
-# tarpc = { version = "0.36", features = ["full"] }
-
 [[bin]]
 name = "incredible-squaring-aggregator"
 path = "src/bin/aggregator.rs"
+
+[[bin]]
+name = "incredible-squaring-operator"
+path = "src/bin/operator.rs"
 
 
 [lints]
