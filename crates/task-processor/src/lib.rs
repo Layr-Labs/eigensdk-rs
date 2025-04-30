@@ -1,8 +1,6 @@
 //! Task manager
 
-use alloy::dyn_abi::SolType;
 use alloy::primitives::B256;
-use alloy::sol_types::SolValue;
 use alloy::{
     contract::private::{Provider, Transport},
     network::Network,
