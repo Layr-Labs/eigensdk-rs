@@ -26,6 +26,8 @@ where
     P: Provider<T, N>,
     N: Network,
 {
+    // type Input = DotProductInput;
+
     async fn create_new_task(
         &self,
         input: DotProductInput,
