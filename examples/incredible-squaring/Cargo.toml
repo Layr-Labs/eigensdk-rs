@@ -21,6 +21,7 @@ eigen-aggregator.workspace = true
 serde.workspace = true
 tracing.workspace = true
 serde_json.workspace = true
+ark-ec.workspace = true
 
 # tarpc = { version = "0.36", features = ["full"] }
 
