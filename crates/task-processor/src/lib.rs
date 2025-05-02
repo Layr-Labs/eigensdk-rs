@@ -54,6 +54,10 @@ where
     task_responses: Arc<Mutex<TaskResponsesMap<TM::Output>>>,
     /// Avs writer
     task_manager: TM,
+    /// Time that the task will be available for processing
+    task_timeout: Duration,
+    /// Time that a completed task will be available for receiving aggregated responses
+    task_window_duration: Duration,
 }
 
 impl<TM, T, P, N> IndexingTaskProcessor<TM, T, P, N>
@@ -72,11 +76,13 @@ where
     /// # Returns
     ///
     /// A new task processor
-    pub fn new(task_manager: TM) -> Self {
+    pub fn new(task_manager: TM, task_timeout: Duration, task_window_duration: Duration) -> Self {
         Self {
             tasks: Arc::new(Mutex::new(HashMap::default())),
             task_responses: Arc::new(Mutex::new(HashMap::default())),
             task_manager,
+            task_timeout,
+            task_window_duration,
         }
     }
 }
@@ -110,9 +116,9 @@ where
             task.task_created_block.into(),
             quorum_numbers,
             quorum_threshold_percentages,
-            std::time::Duration::from_secs(60), // TODO: Make this configurable
+            self.task_timeout,
         )
-        .with_window_duration(Duration::from_secs(15))) // TODO: Make this configurable
+        .with_window_duration(self.task_window_duration))
     }
 
     async fn process_task_response(
@@ -200,9 +206,7 @@ where
         self.task_manager
             .respond_to_task(task, task_response, non_signer_stakes_and_signature)
             .await
-            .map_err(TaskProcessorError::TaskManagerError)?;
-
-        info!("Aggregated response sent to contract");
-        Ok(())
+            .map_err(TaskProcessorError::TaskManagerError)
+            .inspect(|_| info!("Aggregated response sent to contract"))
     }
 }

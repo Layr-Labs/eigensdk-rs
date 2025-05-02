@@ -21,6 +21,7 @@ use eigen_task_processor::task_response::TaskResponse;
 use eigen_task_processor::IndexingTaskProcessor;
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use std::str::FromStr;
+use std::time::Duration;
 
 pub mod bindings;
 
@@ -120,7 +121,8 @@ async fn main() {
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
 
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
-    let task_processor = IndexingTaskProcessor::new(contract);
+    let task_processor =
+        IndexingTaskProcessor::new(contract, Duration::from_secs(60), Duration::from_secs(15));
 
     let config = AggregatorConfig {
         server_address: "http://localhost:8080".to_string(),
