@@ -4,6 +4,8 @@ use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point; // 
 use serde::de::DeserializeOwned;
 use std::{fmt::Debug, future::Future};
 
+use crate::challenger_processor::TaskResponseData;
+
 /// Error returned by the task processor
 pub type TaskManagerError = Box<dyn core::error::Error + Send>;
 
@@ -19,9 +21,6 @@ pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
 
     /// Type for outputs of each task
     type Output: Clone + SolValue + Send + Sync + 'static + Debug + DeserializeOwned;
-
-    /// Type for task response metadata
-    type TaskResponseMetadata: Clone + SolValue + Send + Sync + 'static + Debug;
 
     /// New task event
     type NewTaskEvent: SolEvent + Send + Sync + 'static;
@@ -45,7 +44,7 @@ pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
         &self,
         task: Task<Self::Input>,
         task_response: TaskResponse<Self::Output>,
-        task_response_metadata: Self::TaskResponseMetadata,
+        task_response_metadata: TaskResponseData<Self::Output>,
         pubkeys_of_non_signing_operators: Vec<G1Point>,
     ) -> impl Future<Output = Result<(), TaskManagerError>> + Send;
 }

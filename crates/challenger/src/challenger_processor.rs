@@ -9,6 +9,7 @@ use alloy::{
     rpc::types::Log,
     sol_types::SolValue,
 };
+use eigen_task_processor::task_response;
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap; // Check which type to use
@@ -44,9 +45,8 @@ where
 impl<TM, T, P, N> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, T, P, N>
 where
     TM: TaskManagerContract<T, P, N> + Send + Sync + 'static,
-    <TM as TaskManagerContract<T, P, N>>::Input: From<
-        <<<TM as TaskManagerContract<T, P, N>>::Input as SolValue>::SolType as SolType>::RustType,
-    >,
+    TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
+    TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
     N: Network,
@@ -107,20 +107,22 @@ where
         let data = log.inner.data.data.0.get(32..).unwrap();
 
         // Decode TaskResponse<Output>
-        let (task_response, task_response_metadata) = <((
-            <TM::Output as SolValue>::SolType,
-            <TM::TaskResponseMetadata as SolValue>::SolType,
-        ))>::abi_decode_params(data, false)?;
+        let ((task_index, response), task_response_metadata) =
+            <(
+                (
+                    <u32 as SolValue>::SolType,
+                    <TM::Output as SolValue>::SolType,
+                ),
+                <TaskResponseMetadata as SolType>::SolType,
+            )>::abi_decode_params(data, false)?;
 
-        // let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
-        //     <(
-        //         <TM::Input as SolValue>::SolType,
-        //         <u32 as SolValue>::SolType,
-        //         <Bytes as SolValue>::SolType,
-        //         <u32 as SolValue>::SolType,
-        //     )>::abi_decode_params(data, false)?;
+        let task_response = TaskResponse::<TM::Output> {
+            task_index,
+            response: response.into(),
+        };
 
-        self.task_responses.insert(task_index, task);
+        self.task_responses
+            .insert(task_index, task_response_metadata);
 
         Ok(())
     }
