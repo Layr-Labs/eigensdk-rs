@@ -276,8 +276,8 @@ mod tests {
         let calldata = full_bytes.get(4..).unwrap();
 
         let (
-            (input, task_created_block, quorum_numbers, quorum_threshold),
-            (resp_index, resp_value),
+            (input, task_created_block, _, _),
+            (task_index_response, response),
             non_signer_stakes_and_signature,
         ) = <(
             (
@@ -294,74 +294,38 @@ mod tests {
         assert_eq!(input, U256::ONE);
         assert_eq!(task_created_block, 226);
 
-        dbg!(&input);
-        dbg!(&task_created_block);
-        dbg!(&quorum_numbers);
-        dbg!(&quorum_threshold);
-        dbg!(&resp_index);
-        dbg!(&resp_value);
+        assert_eq!(task_index_response, 0);
+        assert_eq!(response, U256::ONE);
+        assert_eq!(non_signer_stakes_and_signature.totalStakeIndices, vec![2]);
 
-        dbg!(&non_signer_stakes_and_signature.nonSignerQuorumBitmapIndices);
-        dbg!(&non_signer_stakes_and_signature.nonSignerPubkeys);
-        dbg!(&non_signer_stakes_and_signature.quorumApks);
-        dbg!(&non_signer_stakes_and_signature.apkG2.X);
-        dbg!(&non_signer_stakes_and_signature.apkG2.Y);
-        dbg!(&non_signer_stakes_and_signature.sigma);
-        dbg!(&non_signer_stakes_and_signature.quorumApkIndices);
-        dbg!(&non_signer_stakes_and_signature.totalStakeIndices);
-        dbg!(&non_signer_stakes_and_signature.nonSignerStakeIndices);
+        let expected_pub_key = G1Point {
+            X: U256::from_str_radix(
+                "277950648056014144722774518899051149098728246263316284984520891067822832300",
+                10,
+            )
+            .unwrap(),
+            Y: U256::from_str_radix(
+                "16927236637669640540790285431111034664564710839671197540688155537113438534238",
+                10,
+            )
+            .unwrap(),
+        };
+
+        assert_eq!(
+            non_signer_stakes_and_signature
+                .nonSignerPubkeys
+                .first()
+                .unwrap()
+                .X,
+            expected_pub_key.X
+        );
+        assert_eq!(
+            non_signer_stakes_and_signature
+                .nonSignerPubkeys
+                .first()
+                .unwrap()
+                .Y,
+            expected_pub_key.Y
+        );
     }
 }
-
-// [crates/challenger/src/lib.rs:313:37] &non_signer_stakes_and_signature.nonSignerQuorumBitmapIndices = [
-//     0,
-// ]
-// [crates/challenger/src/lib.rs:317:37] &non_signer_stakes_and_signature.nonSignerPubkeys = [
-//     G1Point {
-//         X: 654664748928620715566514527065607787384626422829919343002201686008542704547,
-//         Y: 7621327703448327618781037368416970306376555821575350939064407036501507659447,
-//     },
-// ]
-// [crates/challenger/src/lib.rs:318:37] &non_signer_stakes_and_signature.quorumApks = [
-//     G1Point {
-//         X: 7964125228722572089656024624376404278103991282289546786906381622307030924036,
-//         Y: 6554689388489757183511003517144056361864546334706404705248008103119568907916,
-//     },
-// ]
-// [crates/challenger/src/lib.rs:319:37] &non_signer_stakes_and_signature.apkG2.X = [
-//     15529400123788596166111036611862227541174221446291015207340396747864347375335,
-//     6834287759893774453556191528501556195232162436167606874229072410417955767882,
-// ]
-// [crates/challenger/src/lib.rs:320:37] &non_signer_stakes_and_signature.apkG2.Y = [
-//     19775028091101520702581412350510183088819198056772055625089714355379667714558,
-//     7616309349481520605447660298084926776417001188005125143383153219707218450524,
-// ]
-// [crates/challenger/src/lib.rs:321:37] &non_signer_stakes_and_signature.sigma = G1Point {
-//     X: 1312049784969277144056924076571936191139815392473463334460322317232410039641,
-//     Y: 17014461013066869420407143569658227866867755252921953503605018956512343044680,
-// }
-// [crates/challenger/src/lib.rs:322:37] &non_signer_stakes_and_signature.quorumApkIndices = [
-//     2,
-// ]
-// [crates/challenger/src/lib.rs:323:37] &non_signer_stakes_and_signature.totalStakeIndices = [
-//     2,
-// ]
-// [crates/challenger/src/lib.rs:324:37] &non_signer_stakes_and_signature.nonSignerStakeIndices = [
-//     [
-//         0,
-//     ],
-// ]
-// [crates/challenger/src/lib.rs:335:37] &non_signing_operator_pub_keys = [
-//     G1Point {
-//         X: 654664748928620715566514527065607787384626422829919343002201686008542704547,
-//         Y: 7621327703448327618781037368416970306376555821575350939064407036501507659447,
-//     },
-// ]
-// [crates/challenger/src/lib.rs:257:9] &non_signing_operator_pub_keys_result = Ok(
-//     [
-//         G1Point {
-//             X: 654664748928620715566514527065607787384626422829919343002201686008542704547,
-//             Y: 7621327703448327618781037368416970306376555821575350939064407036501507659447,
-//         },
-//     ],
-// )
