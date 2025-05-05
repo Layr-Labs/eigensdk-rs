@@ -222,22 +222,22 @@ where
             .ok_or(ChallengerError::InvalidCalldata)?;
 
         // Decode tuple of the form: Task<TM::Input>, TaskResponse<TM::Output>, NonSignerStakesAndSignature)
-        let (_, _, non_signer_stakes_and_signature) =
-            <(
-                (
-                    <TP::Input as SolValue>::SolType,
-                    <u32 as SolValue>::SolType,
-                    <Bytes as SolValue>::SolType,
-                    <u32 as SolValue>::SolType,
-                ),
-                (
-                    <u32 as SolValue>::SolType,
-                    <TP::Output as SolValue>::SolType,
-                ),
-                <NonSignerStakesAndSignature as SolValue>::SolType,
-            )>::abi_decode_params(calldata, false)?;
+        let decoded_calldata = <(
+            (
+                <TP::Input as SolValue>::SolType,
+                <u32 as SolValue>::SolType,
+                <Bytes as SolValue>::SolType,
+                <u32 as SolValue>::SolType,
+            ),
+            (
+                <u32 as SolValue>::SolType,
+                <TP::Output as SolValue>::SolType,
+            ),
+            <NonSignerStakesAndSignature as SolValue>::SolType,
+        )>::abi_decode_params(calldata, false)?;
 
-        Ok(non_signer_stakes_and_signature
+        Ok(decoded_calldata
+            .2
             .nonSignerPubkeys
             .into_iter()
             .map(|pk| G1Point { X: pk.X, Y: pk.Y })
