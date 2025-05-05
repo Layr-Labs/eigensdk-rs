@@ -4,7 +4,7 @@ use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point; // 
 use serde::de::DeserializeOwned;
 use std::{fmt::Debug, future::Future};
 
-use crate::challenger_processor::TaskResponseData;
+use crate::challenger_processor::TaskResponseMetadataSol;
 
 /// Error returned by the task processor
 pub type TaskManagerError = Box<dyn core::error::Error + Send>;
@@ -44,7 +44,7 @@ pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
         &self,
         task: Task<Self::Input>,
         task_response: TaskResponse<Self::Output>,
-        task_response_metadata: TaskResponseData<Self::Output>,
+        task_response_metadata: TaskResponseMetadataSol,
         pubkeys_of_non_signing_operators: Vec<G1Point>,
     ) -> impl Future<Output = Result<(), TaskManagerError>> + Send;
 }
