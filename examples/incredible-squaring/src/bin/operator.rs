@@ -1,23 +1,18 @@
 #![allow(missing_docs)]
 
-use alloy::primitives::address;
-use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
-    NewTaskCreated, TaskResponse,
-};
+use alloy::primitives::{address, U256};
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
 use eigen_operator::{error::OperatorError, Operator};
+use eigen_task_processor::task_response::TaskResponse;
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
+use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
 
-// Allow warnings in auto-generated code
-#[allow(warnings)]
-pub mod bindings;
-
-fn square(event: NewTaskCreated) -> Result<TaskResponse, OperatorError> {
+fn square(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
     let square = event.task.numberToBeSquared * event.task.numberToBeSquared;
     Ok(TaskResponse {
-        referenceTaskIndex: event.taskIndex,
-        numberSquared: square,
+        task_index: event.taskIndex,
+        response: square,
     })
 }
 

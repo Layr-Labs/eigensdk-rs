@@ -4,13 +4,14 @@ use alloy::{
     primitives::{keccak256, Address},
     providers::{Provider, ProviderBuilder, WsConnect},
     rpc::types::Filter,
-    sol_types::{SolEvent, SolType, SolValue},
+    sol_types::{SolEvent, SolValue},
 };
 use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
+use eigen_task_processor::task_response::TaskResponse;
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
@@ -110,11 +111,11 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation.
-    pub async fn start<Event, F, Response>(&self, compute_logic: F) -> Result<(), OperatorError>
+    pub async fn start<Event, F, Output>(&self, compute_logic: F) -> Result<(), OperatorError>
     where
         Event: SolEvent,
-        F: Fn(Event) -> Result<Response, OperatorError>,
-        Response: SolType + SolValue + Serialize + for<'de> Deserialize<'de>,
+        F: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
+        Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
     {
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
@@ -163,12 +164,12 @@ impl Operator {
     fn sign_task_response<Response>(
         key_pair: &BlsKeyPair,
         operator_id: &OperatorId,
-        task_response: Response,
-    ) -> Result<SignedTaskResponse<Response>, OperatorError>
+        task_response: TaskResponse<Response>,
+    ) -> Result<SignedTaskResponse<TaskResponse<Response>>, OperatorError>
     where
-        Response: SolType + SolValue + Serialize + for<'de> Deserialize<'de>,
+        Response: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
     {
-        let encoded = task_response.abi_encode();
+        let encoded = task_response.encode();
         let hash_msg = keccak256(encoded);
         let signed_msg = key_pair.sign_message(&hash_msg);
         let signed_task_response = SignedTaskResponse::new(task_response, signed_msg, *operator_id);

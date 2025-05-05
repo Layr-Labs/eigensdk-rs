@@ -1,7 +1,14 @@
 // use std::collections::HashMap;
 
-fn main() {
-    println!("Hello, world!");
+use eigen_challenger::{challenger::ChallengerTaskProcessor, Challenger};
+use incredible_squaring::bindings::incrediblesquaringtaskmanager::{
+    IIncredibleSquaringTaskManager::{Task, TaskResponse},
+    IncredibleSquaringTaskManager::{NewTaskCreated, TaskResponded},
+};
+
+struct ChallengerTaskProcessorImpl {
+    tasks: HashMap<u32, Task>,
+    task_responses: HashMap<u32, TaskResponse>,
 }
 
 // use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{

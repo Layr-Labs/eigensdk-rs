@@ -1,31 +1,30 @@
-use alloy::network::EthereumWallet;
-use alloy::primitives::{Address, U256};
-use alloy::providers::ProviderBuilder;
-use alloy::signers::local::PrivateKeySigner;
-use alloy::transports::http::reqwest::Url;
+//! Example AVS which squares a number1
+
 use alloy::{
     contract::private::{Provider, Transport},
     network::Network,
+    primitives::U256,
 };
-use bindings::iincrediblesquaringtaskmanager::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature;
-use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
+use bindings::incrediblesquaringtaskmanager::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature;
+use bindings::incrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
     Task as ContractTask, TaskResponse as ContractTaskResponse,
 };
-use bindings::iincrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
-use bindings::iincrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
-use bindings::iincrediblesquaringtaskmanager::BN254::{G1Point, G2Point};
-use eigen_aggregator::{Aggregator, AggregatorConfig};
-use eigen_task_processor::task::Task;
-use eigen_task_processor::task_manager::{TaskManagerContract, TaskManagerError};
-use eigen_task_processor::task_response::TaskResponse;
-use eigen_task_processor::IndexingTaskProcessor;
+use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
+use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
+use bindings::incrediblesquaringtaskmanager::BN254::{G1Point, G2Point};
+use eigen_task_processor::{
+    task::Task, task_manager::TaskManagerError, task_response::TaskResponse,
+};
+use eigen_task_spammer::error::TaskSpammerError;
+use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
-use std::str::FromStr;
-use std::time::Duration;
 
+// Allow warnings in auto-generated code
+#[allow(warnings)]
 pub mod bindings;
 
-impl<T, P, N> TaskManagerContract<T, P, N> for IncredibleSquaringTaskManagerInstance<T, P, N>
+impl<T, P, N> eigen_task_processor::task_manager::TaskManagerContract<T, P, N>
+    for IncredibleSquaringTaskManagerInstance<T, P, N>
 where
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
@@ -106,32 +105,35 @@ where
     }
 }
 
-#[tokio::main]
-async fn main() {
-    let registry_coordinator =
-        Address::from_str("0x7969c5ed335650692bc04293b07f5bf2e7a673c0").unwrap();
-    let operator_state_retriever =
-        Address::from_str("0x1429859428c0abc9c2c47c8ee9fbaf82cfa0f20f").unwrap();
-    let http_rpc_url = "http://localhost:8545".to_string();
-    let signer = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-    let task_manager_address =
-        Address::from_str("0x742d35cc6634c0532925a3b844f51254ab06f58e").unwrap();
-    let url = Url::parse(&http_rpc_url).unwrap();
-    let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
-
-    let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
-    let task_processor =
-        IndexingTaskProcessor::new(contract, Duration::from_secs(60), Duration::from_secs(15));
-
-    let config = AggregatorConfig {
-        server_address: "http://localhost:8080".to_string(),
-        http_rpc_url: "http://localhost:8545".to_string(),
-        ws_rpc_url: "ws://localhost:8545".to_string(),
-        registry_coordinator,
-        operator_state_retriever,
-    };
-
-    let aggregator = Aggregator::new(config, task_processor).await.unwrap();
-    aggregator.start().await.unwrap();
+// Implement the TaskManagerContract trait for the task manager contract.
+// You need to specify the input type of the task. In this case, U256.
+// You also need to specify the call type of the task manager contract. `createNewTask` uses `createNewTaskCall`.
+// You also need to specify the provider and network types.
+//
+// NOTE: When you are implementing this, you will have an exteranl trait `TaskManagerContract` and and external struct
+// `CONTRACT_NAME_INSTANCE`, so it will throw an error. You can wrap the external struct in a newtype to avoid this.
+// Example:
+// struct TaskManagerWrapper<T, P, N>(IncredibleSquaringTaskManagerInstance<T, P, N>);
+//
+// impl<T, P, N> TaskManagerContract<U256, T, P, N> for TaskManagerWrapper<T, P, N> { ... }
+impl<T, P, N> eigen_task_spammer::task_manager::TaskManagerContract<U256, T, P, N>
+    for IncredibleSquaringTaskManagerInstance<T, P, N>
+where
+    T: Transport + Clone + Send + Sync,
+    P: Provider<T, N>,
+    N: Network,
+{
+    async fn create_new_task(
+        &self,
+        input: U256,
+        quorum_threshold: QuorumThresholdPercentage,
+        quorums: Vec<QuorumNum>,
+    ) -> Result<N::ReceiptResponse, TaskSpammerError> {
+        Ok(self
+            .createNewTask(input, quorum_threshold.into(), quorums.into())
+            .send()
+            .await?
+            .get_receipt()
+            .await?)
+    }
 }
