@@ -28,7 +28,6 @@ members = [
     "examples/anvil-utils",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
-    "examples/challenger/",
     "examples/info-operator-service/",
     "tests/testing-utils/",
     "tests/integration/",

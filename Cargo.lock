@@ -3741,30 +3741,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "examples-challenger"
-version = "0.5.0"
-dependencies = [
- "alloy",
- "eigen-challenger",
- "eigen-types",
- "tokio",
- "tokio-util",
- "tracing",
-]
-
-[[package]]
-name = "examples-task-spammer"
-version = "0.5.0"
-dependencies = [
- "alloy",
- "async-trait",
- "eigen-task-spammer",
- "eigen-types",
- "tokio",
- "tracing",
-]
-
-[[package]]
 name = "eyre"
 version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4683,6 +4659,7 @@ dependencies = [
  "alloy",
  "ark-ec 0.5.0",
  "eigen-aggregator",
+ "eigen-challenger",
  "eigen-client-avsregistry",
  "eigen-common",
  "eigen-crypto-bls",
