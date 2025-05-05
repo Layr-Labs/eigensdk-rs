@@ -271,6 +271,7 @@ mod tests {
         assert_eq!(metadata.taskResponsedBlock, 227);
     }
 
+    // The data of the transaction was taken from the IS example, it is the calldata of respondToTask function
     #[tokio::test]
     async fn test_decode_non_signing_operator_pub_keys() {
         let raw_hex = "0x5baec9a0\
