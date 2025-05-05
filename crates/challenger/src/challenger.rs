@@ -23,7 +23,8 @@ pub trait ChallengerTaskProcessor {
     ///
     /// # Arguments
     ///
-    /// * `log` - The log of the new task creation
+    /// * `task_index` - The index of the task
+    /// * `task` - The task
     ///
     /// # Returns
     ///
@@ -38,19 +39,19 @@ pub trait ChallengerTaskProcessor {
     ///
     /// # Arguments
     ///
-    /// * `log` - The log of the task response
-    /// * `is_response_correct` - The logic to check if the response is correct
+    /// * `task_index` - The index of the task
+    /// * `task_response` - The task response
+    /// * `task_response_metadata` - The metadata of the task response
+    /// * `non_signing_operator_pub_keys` - The public keys of the non-signing operators
     ///
     /// # Returns
     ///
     /// * `Result<(), ChallengerError>` - The result of the operation
     fn handle_task_response(
-        &mut self,
+        &self,
         task_index: u32,
         task_response: TaskResponse<Self::Output>,
         task_response_metadata: TaskResponseMetadataSol,
         non_signing_operator_pub_keys: Vec<G1Point>,
-        is_response_correct: impl Fn(Task<Self::Input>, TaskResponse<Self::Output>) -> Result<bool, ChallengerError>
-            + Send,
     ) -> impl Future<Output = Result<(), ChallengerError>> + Send;
 }
