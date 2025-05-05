@@ -63,18 +63,8 @@ where
     ///
     /// # Arguments
     ///
-    /// * `is_response_correct` - The logic to check if the response is correct
-    ///
     /// # Returns
-    pub async fn start_challenger<F>(
-        &mut self,
-        is_response_correct: F,
-    ) -> Result<(), ChallengerError>
-    where
-        F: Fn(Task<TP::Input>, TaskResponse<TP::Output>) -> Result<bool, ChallengerError>
-            + Send
-            + Sync,
-    {
+    pub async fn start_challenger(&mut self) -> Result<(), ChallengerError> {
         info!("challenger crate launched");
 
         let ws_provider = get_ws_provider(&self.ws_url).await?;
@@ -108,7 +98,6 @@ where
                             task_response,
                             task_response_metadata,
                             non_signing_operator_pub_keys,
-                            &is_response_correct,
                         )
                         .await?;
                 },
