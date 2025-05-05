@@ -18,6 +18,7 @@ use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
+use tracing::error;
 
 // Metadata of the task response
 sol! {
@@ -31,7 +32,7 @@ sol! {
 #[derive(Debug)]
 pub struct IndexingChallengerProcessor<TM, T, P, N>
 where
-    TM: TaskManagerContract<T, P, N> + Send + Sync + 'static,
+    TM: TaskManagerContract<T, P, N> + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync,
     P: PrivateProvider<T, N>,
     N: Network,
@@ -43,7 +44,7 @@ where
 
 impl<TM, T, P, N> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, T, P, N>
 where
-    TM: TaskManagerContract<T, P, N> + Send + Sync + 'static,
+    TM: TaskManagerContract<T, P, N> + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     T: Transport + Clone + Send + Sync,
@@ -128,19 +129,28 @@ where
 
         let non_signing_operator_pub_keys = self.get_non_signing_operator_pub_keys(log).await?;
 
-        if let Some(task) = self.tasks.get(&task_index) {
-            if !is_response_correct(task.clone(), task_response.clone())? {
-                // TODO: Call the challenge in another thread?
-                self.task_manager
+        if let Some(task) = self
+            .tasks
+            .get(&task_index)
+            .cloned()
+            .filter(|t| !is_response_correct(t.clone(), task_response.clone()).unwrap_or(false))
+        {
+            let tm = self.task_manager.clone();
+
+            tokio::spawn(async move {
+                if let Err(e) = tm
                     .raise_challenge(
-                        task.clone(),
+                        task,
                         task_response,
                         task_response_metadata,
                         non_signing_operator_pub_keys,
                     )
-                    .await?;
-            }
-        };
+                    .await
+                {
+                    error!("raise_challenge failed: {:?}", e);
+                }
+            });
+        }
 
         Ok(())
     }
@@ -148,7 +158,7 @@ where
 
 impl<TM, T, P, N> IndexingChallengerProcessor<TM, T, P, N>
 where
-    TM: TaskManagerContract<T, P, N> + Send + Sync + 'static,
+    TM: TaskManagerContract<T, P, N> + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     T: Transport + Clone + Send + Sync,
