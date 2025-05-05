@@ -1,21 +1,15 @@
 use crate::{
     challenger::ChallengerTaskProcessor, error::ChallengerError, task_manager::TaskManagerContract,
 };
-use alloy::consensus::Transaction;
 use alloy::dyn_abi::SolType;
-use alloy::providers::Provider;
 use alloy::sol;
 use alloy::{
-    contract::private::{Provider as PrivateProvider, Transport},
+    contract::private::{Provider, Transport},
     network::Network,
-    primitives::Bytes,
-    rpc::types::Log,
     sol_types::SolValue,
 };
 
-use eigen_common::get_provider;
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
-use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
 use tracing::error;
@@ -34,12 +28,11 @@ pub struct IndexingChallengerProcessor<TM, T, P, N>
 where
     TM: TaskManagerContract<T, P, N> + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync,
-    P: PrivateProvider<T, N>,
+    P: Provider<T, N>,
     N: Network,
 {
     task_manager: TM,
     tasks: HashMap<u32, Task<TM::Input>>,
-    rpc_url: String,
 }
 
 impl<TM, T, P, N> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, T, P, N>
@@ -48,7 +41,7 @@ where
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     T: Transport + Clone + Send + Sync,
-    P: PrivateProvider<T, N>,
+    P: Provider<T, N>,
     N: Network,
 {
     type NewTaskEvent = TM::NewTaskEvent;
@@ -107,12 +100,11 @@ where
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     T: Transport + Clone + Send + Sync,
-    P: PrivateProvider<T, N>,
+    P: Provider<T, N>,
     N: Network,
 {
-    pub fn new(rpc_url: String, task_manager: TM) -> Self {
+    pub fn new(task_manager: TM) -> Self {
         Self {
-            rpc_url,
             task_manager,
             tasks: HashMap::new(),
         }

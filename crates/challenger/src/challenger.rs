@@ -1,9 +1,6 @@
 use std::future::Future;
 
-use alloy::{
-    rpc::types::Log,
-    sol_types::{SolEvent, SolValue},
-};
+use alloy::sol_types::{SolEvent, SolValue};
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 
