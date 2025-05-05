@@ -74,7 +74,6 @@ where
         let task_index = u32::from_be_bytes(task_index_bytes);
 
         // Skip the first 32 bytes of the ABI-encoded data (the dynamic offset pointer)
-        // so we can decode the actual tuple payload that follows.
         let data = log
             .inner
             .data
@@ -179,7 +178,12 @@ where
                 .await?
                 .ok_or(ChallengerError::TransactionNotFound(tx_hash.to_string()))?;
 
-        let calldata = tx.inner.input();
+        // The first 4 bytes are the selector, so we skip them
+        let calldata = tx
+            .inner
+            .input()
+            .get(4..)
+            .ok_or(ChallengerError::InvalidCalldata)?;
 
         // Decode tuple of the form: Task<TM::Input>, TaskResponse<TM::Output>, NonSignerStakesAndSignature)
         let (_, _, non_signer_stakes_and_signature) =
