@@ -25,16 +25,13 @@ members = [
     "crates/utils/",
     "crates/nodeapi/",
     "crates/eigensdk/",
-    "examples/aggregator/",
     "examples/anvil-utils",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
-    "examples/challenger/",
     "examples/info-operator-service/",
-    "examples/operator/",
-    "examples/task-spammer/",
     "tests/testing-utils/",
     "tests/integration/",
+    "examples/incredible-squaring",
 ]
 resolver = "2"
 

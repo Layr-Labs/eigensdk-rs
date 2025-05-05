@@ -1,11 +1,10 @@
 use std::collections::HashMap;
 
-use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
-    NewTaskCreated, Task, TaskResponded, TaskResponse,
-};
 use eigen_challenger::{challenger::ChallengerTaskProcessor, Challenger};
-
-pub mod bindings;
+use incredible_squaring::bindings::incrediblesquaringtaskmanager::{
+    IIncredibleSquaringTaskManager::{Task, TaskResponse},
+    IncredibleSquaringTaskManager::{NewTaskCreated, TaskResponded},
+};
 
 struct ChallengerTaskProcessorImpl {
     tasks: HashMap<u32, Task>,
