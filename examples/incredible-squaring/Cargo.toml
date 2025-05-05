@@ -19,6 +19,7 @@ eigen-common.workspace = true
 eigen-task-processor.workspace = true
 eigen-aggregator.workspace = true
 eigen-operator.workspace = true
+eigen-task-spammer.workspace = true
 eigen-utils.workspace = true
 
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
@@ -34,3 +35,7 @@ path = "src/bin/aggregator.rs"
 [[bin]]
 name = "incredible-squaring-operator"
 path = "src/bin/operator.rs"
+
+[[bin]]
+name = "incredible-squaring-task-spammer"
+path = "src/bin/task_spammer.rs"

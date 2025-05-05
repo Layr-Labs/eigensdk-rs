@@ -4689,6 +4689,7 @@ dependencies = [
  "eigen-logging",
  "eigen-operator",
  "eigen-task-processor",
+ "eigen-task-spammer",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
