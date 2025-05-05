@@ -18,7 +18,7 @@ pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskManagerErr
 }
 
 /// Task manager contract trait. It wraps the contract's types and functions.
-pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
+pub trait TaskManagerContract<T, P, N: Network> {
     /// Type for inputs of each task
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
@@ -45,10 +45,7 @@ pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
         response: TaskResponse<Self::Output>,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
     ) -> impl Future<Output = Result<(), TaskManagerError>> + Send;
-}
 
-/// Task manager contract trait
-pub trait TaskCreator<Input, T, P, N: Network> {
     /// Create a new task
     ///
     /// # Arguments
@@ -62,7 +59,7 @@ pub trait TaskCreator<Input, T, P, N: Network> {
     /// * `Result<N::ReceiptResponse, TaskManagerError>` - The result of the task
     fn create_new_task(
         &self,
-        input: Input,
+        input: Self::Input,
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
     ) -> impl Future<Output = Result<N::ReceiptResponse, TaskManagerError>> + Send;

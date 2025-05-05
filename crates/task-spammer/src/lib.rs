@@ -5,7 +5,7 @@ use alloy::{
     contract::private::{Provider, Transport},
     network::Network,
 };
-use eigen_task_processor::task_manager::TaskCreator;
+use eigen_task_processor::task_manager::TaskManagerContract;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use error::TaskSpammerError;
 use std::time::Duration;
@@ -25,9 +25,9 @@ pub struct TaskSpammerBuilder<I, TM, T, P, N, Input> {
     _phantom: std::marker::PhantomData<(T, P, N, Input)>,
 }
 
-impl<I, TM, T, P, N, Input> TaskSpammerBuilder<I, TM, T, P, N, Input>
+impl<I, TM, T, P, N> TaskSpammerBuilder<I, TM, T, P, N, TM::Input>
 where
-    TM: TaskCreator<Input, T, P, N>,
+    TM: TaskManagerContract<T, P, N>,
     T: Transport + Clone,
     P: Provider<T, N>,
     N: Network,
@@ -62,7 +62,7 @@ where
     /// # Returns
     ///
     /// * `TaskSpammerBuilder` - The builder for the task spammer
-    pub fn with_iter(self, iter: I) -> TaskSpammerBuilder<I, TM, T, P, N, Input>
+    pub fn with_iter(self, iter: I) -> TaskSpammerBuilder<I, TM, T, P, N, TM::Input>
     where
         I: Iterator + Send + 'static,
         I::Item: Send,
@@ -117,7 +117,7 @@ where
     /// # Returns
     ///
     /// * `TaskSpammer` - The task spammer to be run
-    pub fn build(self) -> Result<TaskSpammer<I, TM, T, P, N, Input>, TaskSpammerError> {
+    pub fn build(self) -> Result<TaskSpammer<I, TM, T, P, N, TM::Input>, TaskSpammerError> {
         Ok(TaskSpammer {
             iter: self.iter.ok_or(TaskSpammerError::IteratorNotSet)?,
             interval: self.interval,
@@ -142,9 +142,9 @@ pub struct TaskSpammer<I, TM, T, P, N, Input> {
     _phantom: std::marker::PhantomData<(T, P, N, Input)>,
 }
 
-impl<I, TM, T, P, N, Input> TaskSpammer<I, TM, T, P, N, Input>
+impl<I, TM, T, P, N> TaskSpammer<I, TM, T, P, N, TM::Input>
 where
-    TM: TaskCreator<Input, T, P, N> + Send + Sync,
+    TM: TaskManagerContract<T, P, N> + Send + Sync,
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
     N: Network,
@@ -158,7 +158,7 @@ where
     /// * `Result<(), TaskSpammerError>` - The result of the task spammer
     pub async fn run(self) -> Result<(), TaskSpammerError>
     where
-        I: Iterator<Item = Input> + Send,
+        I: Iterator<Item = TM::Input> + Send,
         I::Item: Clone + Send + 'static,
     {
         for input in self.iter {
