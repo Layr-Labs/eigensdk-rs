@@ -109,16 +109,7 @@ where
         is_response_correct: impl Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError>
             + Send,
     ) -> Result<(), ChallengerError> {
-        // event TaskResponded(TaskResponse taskResponse, TaskResponseMetadata taskResponseMetadata);
-        // Skip the first 32 bytes of the ABI-encoded data (the dynamic offset pointer)
-        // so we can decode the actual tuple payload that follows.
-        let data = log
-            .inner
-            .data
-            .data
-            .0
-            .get(32..)
-            .ok_or(ChallengerError::EmptyDecodedData)?;
+        let data = log.inner.data.data.0.clone();
 
         // Decode a tuple of the form: (TaskResponse<TM::Output>, TaskResponseMetadata)
         let ((task_index, response), task_response_metadata) =
@@ -128,14 +119,12 @@ where
                     <TM::Output as SolValue>::SolType,
                 ),
                 <TaskResponseMetadataSol as SolValue>::SolType,
-            )>::abi_decode_params(data, false)?;
+            )>::abi_decode_params(&data, false)?;
 
         let task_response = TaskResponse::<TM::Output> {
             task_index,
             response: response.into(),
         };
-
-        dbg!(&task_response);
 
         let non_signing_operator_pub_keys = self.get_non_signing_operator_pub_keys(log).await?;
 
@@ -178,14 +167,6 @@ where
         &self,
         log: Log,
     ) -> Result<Vec<G1Point>, ChallengerError> {
-        //     let data = log
-        //         .log_decode::<TM::TaskRespondedEvent>()
-        //         .map_err(|_| ChallengerError::InvalidLogDecode)?;
-
-        //     let tx_hash = data
-        //         .transaction_hash
-        //         .ok_or(ChallengerError::TransactionHashNotFound)?;
-
         let tx_hash = log
             .transaction_hash
             .ok_or(ChallengerError::TransactionHashNotFound)?;
@@ -221,5 +202,67 @@ where
             .into_iter()
             .map(|pk| G1Point { X: pk.X, Y: pk.Y })
             .collect())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use alloy::{hex::decode, primitives::U256};
+
+    use super::*;
+
+    #[tokio::test]
+    async fn test_decode_new_task_event() {
+        // Data from the log - NewTaskCreated event: (1, 226, 0, 40)
+        let raw_hex = "\
+            0000000000000000000000000000000000000000000000000000000000000020\
+            0000000000000000000000000000000000000000000000000000000000000001\
+            00000000000000000000000000000000000000000000000000000000000000e2\
+            0000000000000000000000000000000000000000000000000000000000000080\
+            0000000000000000000000000000000000000000000000000000000000000028\
+            0000000000000000000000000000000000000000000000000000000000000001\
+            0000000000000000000000000000000000000000000000000000000000000000";
+
+        let raw_bytes: Vec<u8> = decode(raw_hex).expect("hex inválido");
+
+        let data = raw_bytes.get(32..).unwrap().to_vec();
+
+        let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
+            <(
+                <U256 as SolValue>::SolType,
+                <u32 as SolValue>::SolType,
+                <Bytes as SolValue>::SolType,
+                <u32 as SolValue>::SolType,
+            )>::abi_decode_params(&data, true)
+            .unwrap();
+
+        assert_eq!(input, U256::ONE);
+        assert_eq!(task_created_block, 226);
+        assert_eq!(quorum_numbers, Bytes::from_static(&[0]));
+        assert_eq!(quorum_threshold_percentage, 40);
+    }
+
+    #[tokio::test]
+    async fn test_decode_task_response_event() {
+        let raw_hex = "\
+        0000000000000000000000000000000000000000000000000000000000000000\
+        0000000000000000000000000000000000000000000000000000000000000001\
+        00000000000000000000000000000000000000000000000000000000000000e3\
+        b569c9609dde655467765df81ebf2a34e4b9f40806475961b6676a2ec6115e61";
+
+        let raw_bytes: Vec<u8> = decode(raw_hex).unwrap();
+
+        let data = raw_bytes.as_slice();
+
+        let ((task_index, response), metadata) = <(
+            (<u32 as SolValue>::SolType, <U256 as SolValue>::SolType),
+            <TaskResponseMetadataSol as SolValue>::SolType,
+        )>::abi_decode_params(data, false)
+        .unwrap();
+
+        assert_eq!(task_index, 0);
+        assert_eq!(response, U256::ONE);
+        assert_eq!(metadata.taskResponsedBlock, 227);
+        // assert_eq!(metadata.hashOfNonSigners, Bytes::from_static(&[0]));
     }
 }
