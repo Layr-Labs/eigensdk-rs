@@ -5,19 +5,24 @@ use alloy::{
     network::Network,
     primitives::U256,
 };
-use bindings::incrediblesquaringtaskmanager::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature;
 use bindings::incrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
-    Task as ContractTask, TaskResponse as ContractTaskResponse,
+    Task as ContractTask, TaskResponse as ContractTaskResponse, TaskResponseMetadata,
 };
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
-use bindings::incrediblesquaringtaskmanager::BN254::{G1Point, G2Point};
+use bindings::incrediblesquaringtaskmanager::BN254::{G1Point as G1Binding, G2Point};
+use bindings::incrediblesquaringtaskmanager::{
+    IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature,
+    IncredibleSquaringTaskManager::TaskResponded,
+};
+use eigen_challenger::challenger_processor::TaskResponseMetadataSol;
 use eigen_task_processor::{
     task::Task, task_manager::TaskManagerError, task_response::TaskResponse,
 };
 use eigen_task_spammer::error::TaskSpammerError;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
+use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 
 // Allow warnings in auto-generated code
 #[allow(warnings)]
@@ -57,7 +62,7 @@ where
             Y: non_signer_stakes_and_signature.apkG2.Y,
         };
 
-        let sigma = G1Point {
+        let sigma = G1Binding {
             X: non_signer_stakes_and_signature.sigma.X,
             Y: non_signer_stakes_and_signature.sigma.Y,
         };
@@ -65,13 +70,13 @@ where
         let quorum_apks = non_signer_stakes_and_signature
             .quorumApks
             .iter()
-            .map(|apk| G1Point { X: apk.X, Y: apk.Y })
+            .map(|apk| G1Binding { X: apk.X, Y: apk.Y })
             .collect();
 
         let non_signer_pubkeys = non_signer_stakes_and_signature
             .nonSignerPubkeys
             .iter()
-            .map(|pubkey| G1Point {
+            .map(|pubkey| G1Binding {
                 X: pubkey.X,
                 Y: pubkey.Y,
             })
@@ -135,5 +140,64 @@ where
             .await?
             .get_receipt()
             .await?)
+    }
+}
+
+// Implement the Challenger TaskManagerContract trait for the task manager contract.
+impl<T, P, N> eigen_challenger::task_manager::TaskManagerContract<T, P, N>
+    for IncredibleSquaringTaskManagerInstance<T, P, N>
+where
+    T: Transport + Clone + Send + Sync,
+    P: Provider<T, N>,
+    N: Network,
+{
+    type Input = U256;
+    type Output = U256;
+    type NewTaskEvent = NewTaskCreated;
+    type TaskRespondedEvent = TaskResponded;
+
+    async fn raise_challenge(
+        &self,
+        task: Task<Self::Input>,
+        task_response: TaskResponse<Self::Output>,
+        task_response_metadata: TaskResponseMetadataSol,
+        pubkeys_of_non_signing_operators: Vec<G1Point>,
+    ) -> Result<(), TaskManagerError> {
+        let contract_task = ContractTask {
+            numberToBeSquared: task.input,
+            taskCreatedBlock: task.task_created_block,
+            quorumNumbers: task.quorum_numbers,
+            quorumThresholdPercentage: task.quorum_threshold_percentage,
+        };
+
+        let contract_response = ContractTaskResponse {
+            numberSquared: task_response.response,
+            referenceTaskIndex: task_response.task_index,
+        };
+
+        let task_response_metadata = TaskResponseMetadata {
+            taskResponsedBlock: task_response_metadata.taskResponsedBlock,
+            hashOfNonSigners: task_response_metadata.hashOfNonSigners,
+        };
+
+        let pubkey_non_signer = pubkeys_of_non_signing_operators
+            .iter()
+            .map(|p| G1Binding { X: p.X, Y: p.Y })
+            .collect();
+
+        self.raiseAndResolveChallenge(
+            contract_task,
+            contract_response,
+            task_response_metadata,
+            pubkey_non_signer,
+        )
+        .send()
+        .await
+        .unwrap()
+        .get_receipt()
+        .await
+        .unwrap();
+
+        Ok(())
     }
 }

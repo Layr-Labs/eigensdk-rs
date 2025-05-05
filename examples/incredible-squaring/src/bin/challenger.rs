@@ -1,74 +1,40 @@
-// use std::collections::HashMap;
+use std::str::FromStr;
 
-use eigen_challenger::{challenger::ChallengerTaskProcessor, Challenger};
-use incredible_squaring::bindings::incrediblesquaringtaskmanager::{
-    IIncredibleSquaringTaskManager::{Task, TaskResponse},
-    IncredibleSquaringTaskManager::{NewTaskCreated, TaskResponded},
+use alloy::network::EthereumWallet;
+use alloy::primitives::{Address, U256};
+use alloy::providers::ProviderBuilder;
+use alloy::signers::local::PrivateKeySigner;
+use alloy::transports::http::reqwest::Url;
+use eigen_challenger::{
+    challenger_processor::IndexingChallengerProcessor, error::ChallengerError, Challenger,
 };
+use eigen_task_processor::{task::Task, task_response::TaskResponse};
+use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 
-struct ChallengerTaskProcessorImpl {
-    tasks: HashMap<u32, Task>,
-    task_responses: HashMap<u32, TaskResponse>,
+fn is_response_correct(
+    task: Task<U256>,
+    task_response: TaskResponse<U256>,
+) -> Result<bool, ChallengerError> {
+    Ok(task.input * task.input == task_response.response)
 }
 
-// use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
-//     NewTaskCreated, Task, TaskResponded, TaskResponse,
-// };
-// use eigen_challenger::{challenger::ChallengerTaskProcessor, Challenger};
+#[tokio::main]
+async fn main() {
+    let http_rpc_url = "http://localhost:8545".to_string();
+    let ws_rpc_url = "ws://localhost:8545".to_string();
+    let signer = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+    let task_manager_address =
+        Address::from_str("0x742d35cc6634c0532925a3b844f51254ab06f58e").unwrap();
+    let url = Url::parse(&http_rpc_url).unwrap();
+    let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
+    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
 
-// pub mod bindings;
+    let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+    let task_processor = IndexingChallengerProcessor::new(ws_rpc_url.clone(), contract);
 
-// struct ChallengerTaskProcessorImpl {
-//     tasks: HashMap<u32, Task>,
-//     task_responses: HashMap<u32, TaskResponse>,
-// }
-
-// /// 1. Implement ChallengerTaskProcessor trait
-// impl ChallengerTaskProcessor for ChallengerTaskProcessorImpl {
-//     type NewTaskEvent = NewTaskCreated;
-
-//     type TaskResponseEvent = TaskResponded;
-
-//     fn handle_task_creation(&mut self, decoded: alloy::rpc::types::Log<Self::NewTaskEvent>) {
-//         let data = decoded.data();
-
-//         self.tasks.insert(data.taskIndex, data.task.clone());
-//     }
-
-//     fn handle_task_response(&mut self, decoded: alloy::rpc::types::Log<Self::TaskResponseEvent>) {
-//         let data = decoded.data();
-//         let task_index = data.taskResponse.referenceTaskIndex;
-
-//         self.task_responses
-//             .insert(task_index, data.taskResponse.clone());
-
-//         if self.tasks.contains_key(&task_index) && self.check_task_response(task_index) {
-//             self.raise_challenge(task_index);
-//         }
-//     }
-// }
-
-// impl ChallengerTaskProcessorImpl {
-//     pub fn new() -> Self {
-//         Self {
-//             tasks: HashMap::new(),
-//             task_responses: HashMap::new(),
-//         }
-//     }
-
-//     fn check_task_response(&self, _task_index: u32) -> bool {
-//         todo!()
-//     }
-
-//     fn raise_challenge(&self, _task_index: u32) {
-//         todo!()
-//     }
-// }
-
-// #[tokio::main]
-// async fn main() {
-//     let ws_url = "ws://localhost:8545";
-//     let task_processor = ChallengerTaskProcessorImpl::new();
-//     let mut challenger = Challenger::new(ws_url.to_string(), task_processor);
-//     challenger.start_challenger().await.unwrap();
-// }
+    let mut challenger = Challenger::new(ws_rpc_url.clone(), task_processor);
+    challenger
+        .start_challenger(is_response_correct)
+        .await
+        .unwrap();
+}
