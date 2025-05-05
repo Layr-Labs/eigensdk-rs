@@ -32,7 +32,8 @@ pub trait ChallengerTaskProcessor {
     /// * `Result<(), ChallengerError>` - The result of the operation
     fn handle_task_creation(
         &mut self,
-        log: Log,
+        task_index: u32,
+        task: Task<Self::Input>,
     ) -> impl Future<Output = Result<(), ChallengerError>> + Send;
 
     /// Handle the response of a task when a task response event is received
