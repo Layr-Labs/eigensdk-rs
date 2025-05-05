@@ -12,6 +12,7 @@ use alloy::{
     rpc::types::Log,
     sol_types::SolValue,
 };
+
 use eigen_common::get_provider;
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
@@ -134,6 +135,8 @@ where
             response: response.into(),
         };
 
+        dbg!(&task_response);
+
         let non_signing_operator_pub_keys = self.get_non_signing_operator_pub_keys(log).await?;
 
         if let Some(task) = self.tasks.get(&task_index) {
@@ -163,36 +166,55 @@ where
     P: PrivateProvider<T, N>,
     N: Network,
 {
+    pub fn new(rpc_url: String, task_manager: TM) -> Self {
+        Self {
+            rpc_url,
+            task_manager,
+            tasks: HashMap::new(),
+        }
+    }
+
     pub async fn get_non_signing_operator_pub_keys(
         &self,
         log: Log,
     ) -> Result<Vec<G1Point>, ChallengerError> {
+        //     let data = log
+        //         .log_decode::<TM::TaskRespondedEvent>()
+        //         .map_err(|_| ChallengerError::InvalidLogDecode)?;
+
+        //     let tx_hash = data
+        //         .transaction_hash
+        //         .ok_or(ChallengerError::TransactionHashNotFound)?;
+
         let tx_hash = log
             .transaction_hash
             .ok_or(ChallengerError::TransactionHashNotFound)?;
-
         let provider = get_provider(&self.rpc_url);
+
         // TODO: Review this, rust-analyzer is not able to infer the type of the transaction
-        let tx = provider
-            .get_transaction_by_hash(tx_hash)
-            .await?
-            .ok_or(ChallengerError::TransactionNotFound(tx_hash.to_string()))?;
+        let tx: alloy::rpc::types::Transaction =
+            provider
+                .get_transaction_by_hash(tx_hash)
+                .await?
+                .ok_or(ChallengerError::TransactionNotFound(tx_hash.to_string()))?;
+
         let calldata = tx.inner.input();
 
         // Decode tuple of the form: Task<TM::Input>, TaskResponse<TM::Output>, NonSignerStakesAndSignature)
-        let (_, _, non_signer_stakes_and_signature) = <(
-            (
-                <TM::Input as SolValue>::SolType,
-                <u32 as SolValue>::SolType,
-                <Bytes as SolValue>::SolType,
-                <u32 as SolValue>::SolType,
-            ),
-            (
-                <u32 as SolValue>::SolType,
-                <TM::Output as SolValue>::SolType,
-            ),
-            <NonSignerStakesAndSignature as SolValue>::SolType,
-        )>::abi_decode(calldata, false)?;
+        let (_, _, non_signer_stakes_and_signature) =
+            <(
+                (
+                    <TM::Input as SolValue>::SolType,
+                    <u32 as SolValue>::SolType,
+                    <Bytes as SolValue>::SolType,
+                    <u32 as SolValue>::SolType,
+                ),
+                (
+                    <u32 as SolValue>::SolType,
+                    <TM::Output as SolValue>::SolType,
+                ),
+                <NonSignerStakesAndSignature as SolValue>::SolType,
+            )>::abi_decode_params(calldata, false)?;
 
         Ok(non_signer_stakes_and_signature
             .nonSignerPubkeys

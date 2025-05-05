@@ -50,4 +50,8 @@ pub enum ChallengerError {
     /// Invalid task index conversion
     #[error("Invalid task index conversion")]
     InvalidTaskIndexConversion,
+
+    /// Invalid log decode
+    #[error("Invalid log decode")]
+    InvalidLogDecode,
 }
