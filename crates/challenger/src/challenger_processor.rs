@@ -17,8 +17,9 @@ use eigen_common::get_provider;
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
-use std::collections::HashMap; // Check which type to use
+use std::collections::HashMap;
 
+// Metadata of the task response
 sol! {
     #[derive(Debug)]
     struct TaskResponseMetadataSol {
