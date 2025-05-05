@@ -21,7 +21,7 @@ pub trait ChallengerTaskProcessor {
     /// Output type of the task
     type Output: Clone + SolValue + Send + Sync + 'static;
 
-    /// Handle a new task creation when a new task event is received
+    /// Handle the creation of a new task when a new task event is received
     ///
     /// # Arguments
     ///
@@ -35,7 +35,7 @@ pub trait ChallengerTaskProcessor {
         log: Log,
     ) -> impl Future<Output = Result<(), ChallengerError>> + Send;
 
-    /// Handle a task response when a task response event is received
+    /// Handle the response of a task when a task response event is received
     ///
     /// # Arguments
     ///
