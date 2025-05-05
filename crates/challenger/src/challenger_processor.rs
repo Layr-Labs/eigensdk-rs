@@ -71,10 +71,11 @@ where
         task_response_metadata: TaskResponseMetadataSol,
         non_signing_operator_pub_keys: Vec<G1Point>,
     ) -> Result<(), ChallengerError> {
-        if let Some(task) = self.tasks.get(&task_index).cloned().filter(|t| {
+        if let Some(task) = self.tasks.get(&task_index).filter(|&t| {
             !((self.is_response_correct)(t.clone(), task_response.clone()).unwrap_or(false))
         }) {
             let tm = self.task_manager.clone();
+            let task = task.clone();
 
             tokio::spawn(async move {
                 tm.raise_challenge(
@@ -84,7 +85,7 @@ where
                     non_signing_operator_pub_keys,
                 )
                 .await
-                .inspect_err(|e| error!("raise_challenge failed: {:?}", e))
+                .inspect_err(|e| error!("Challenge failed for task {}: {}", task_index, e))
             });
         }
 
