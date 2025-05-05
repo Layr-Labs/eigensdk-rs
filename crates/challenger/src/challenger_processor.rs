@@ -86,17 +86,14 @@ where
             let tm = self.task_manager.clone();
 
             tokio::spawn(async move {
-                if let Err(e) = tm
-                    .raise_challenge(
-                        task,
-                        task_response,
-                        task_response_metadata,
-                        non_signing_operator_pub_keys,
-                    )
-                    .await
-                {
-                    error!("raise_challenge failed: {:?}", e);
-                }
+                tm.raise_challenge(
+                    task,
+                    task_response,
+                    task_response_metadata,
+                    non_signing_operator_pub_keys,
+                )
+                .await
+                .inspect_err(|e| error!("raise_challenge failed: {:?}", e))
             });
         }
 
