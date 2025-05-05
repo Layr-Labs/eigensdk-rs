@@ -211,8 +211,7 @@ mod tests {
 
     use super::*;
 
-    // The data of the log was taken from the IS example, decodes the new task event
-    // with the input 1, quorum 0 and threshold 40% in block 226
+    // The data of the log was taken from the IS example, it creates a new task with input 1, quorum 0 and threshold 40% in block 226
     #[tokio::test]
     async fn test_decode_new_task_event() {
         // Data from the log - NewTaskCreated event: (1, 226, 0, 40)
@@ -244,8 +243,7 @@ mod tests {
         assert_eq!(quorum_threshold_percentage, 40);
     }
 
-    // The data of the log was taken from the IS example, decodes the task response event
-    // with the response 1 in block 227
+    // The data of the log was taken from the IS example, it responds with value 1 in block 227
     #[tokio::test]
     async fn test_decode_task_response_event() {
         let raw_hex = "\
@@ -269,11 +267,9 @@ mod tests {
         assert_eq!(metadata.taskResponsedBlock, 227);
     }
 
-    // The data of the transaction was taken from the IS example, it is the calldata of respondToTask
-    // with the input 1, quorum 0 and threshold 40% in block 226
     #[tokio::test]
     async fn test_decode_non_signing_operator_pub_keys() {
-        let raw_hex = "0x5baec9a0
+        let raw_hex = "0x5baec9a0\
             0000000000000000000000000000000000000000000000000000000000000080\
             0000000000000000000000000000000000000000000000000000000000000000\
             0000000000000000000000000000000000000000000000000000000000000001\
