@@ -30,11 +30,8 @@ async fn main() {
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
 
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
-    let task_processor = IndexingChallengerProcessor::new(ws_rpc_url.clone(), contract);
+    let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
 
-    let mut challenger = Challenger::new(ws_rpc_url.clone(), task_processor);
-    challenger
-        .start_challenger(is_response_correct)
-        .await
-        .unwrap();
+    let mut challenger = Challenger::new(http_rpc_url, ws_rpc_url, task_processor);
+    challenger.start_challenger().await.unwrap();
 }
