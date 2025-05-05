@@ -5,8 +5,9 @@ use alloy::{
     sol_types::{SolEvent, SolValue},
 };
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
+use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 
-use crate::error::ChallengerError;
+use crate::{challenger_processor::TaskResponseMetadataSol, error::ChallengerError};
 
 pub trait ChallengerTaskProcessor {
     /// Event type expected by the task processor
@@ -48,7 +49,10 @@ pub trait ChallengerTaskProcessor {
     /// * `Result<(), ChallengerError>` - The result of the operation
     fn handle_task_response(
         &mut self,
-        log: Log,
+        task_index: u32,
+        task_response: TaskResponse<Self::Output>,
+        task_response_metadata: TaskResponseMetadataSol,
+        non_signing_operator_pub_keys: Vec<G1Point>,
         is_response_correct: impl Fn(Task<Self::Input>, TaskResponse<Self::Output>) -> Result<bool, ChallengerError>
             + Send,
     ) -> impl Future<Output = Result<(), ChallengerError>> + Send;
