@@ -211,6 +211,7 @@ mod tests {
 
     use super::*;
 
+    // The data of the log was taken from the IS example, it creates a new task with input 1, quorum 0 and threshold 40% in block 226
     #[tokio::test]
     async fn test_decode_new_task_event() {
         // Data from the log - NewTaskCreated event: (1, 226, 0, 40)
@@ -242,6 +243,7 @@ mod tests {
         assert_eq!(quorum_threshold_percentage, 40);
     }
 
+    // The data of the log was taken from the IS example, it responds with value 1 in block 227
     #[tokio::test]
     async fn test_decode_task_response_event() {
         let raw_hex = "\
@@ -263,6 +265,103 @@ mod tests {
         assert_eq!(task_index, 0);
         assert_eq!(response, U256::ONE);
         assert_eq!(metadata.taskResponsedBlock, 227);
-        // assert_eq!(metadata.hashOfNonSigners, Bytes::from_static(&[0]));
+    }
+
+    #[tokio::test]
+    async fn test_decode_non_signing_operator_pub_keys() {
+        let full_hex = "0x5baec9a00000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000140000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000e20000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000002800000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018000000000000000000000000000000000000000000000000000000000000001c0000000000000000000000000000000000000000000000000000000000000022005ef93c6e1837bba80b06a34e998441d5f261b0ad76a8e415225bd45925d48df24e25997f59c740a8a60c865f98e08bc5147e7fb7282394370e47222e2b8973d19bdc911b43a044cb10296a0801fcc5c1c6fde70db274ba787f6a09fff1c4c902a8079e40eeca075fc24bdc26037ad71a62bdb1a43d9fd607114be25a33b0a240fa282ec956f0af83171f5ace5d00928d81fcc8c078d4bcf81332b55f5981f5222e6f3d15ced518f0865c288b89b85603533a65b53e5decd369ec6133c91cf6c000000000000000000000000000000000000000000000000000000000000028000000000000000000000000000000000000000000000000000000000000002c00000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001009d50828897fe208275d989abddcad762bf1bb1a089d5ad40ca5dc78e20faac256c79f6817fd79f3a4898e41b5212ccae66d5e9441c9c76f239a2966f24ba5e0000000000000000000000000000000000000000000000000000000000000001119b88fed50cc89205f5ebf794693f993b3e8489389c159676e9028f1a197b040e7dd29df4d13e5503470f1d7b113ec87ccb589ea361c5b3ce85a8202efa2e8c00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000";
+        let full_bytes = decode(full_hex).unwrap();
+
+        // Remove the selector - 4 bytes
+        let calldata = full_bytes.get(4..).unwrap();
+
+        let (
+            (input, task_created_block, quorum_numbers, quorum_threshold),
+            (resp_index, resp_value),
+            non_signer_stakes_and_signature,
+        ) = <(
+            (
+                <U256 as SolValue>::SolType,
+                <u32 as SolValue>::SolType,
+                <Bytes as SolValue>::SolType,
+                <u32 as SolValue>::SolType,
+            ),
+            (<u32 as SolValue>::SolType, <U256 as SolValue>::SolType),
+            <NonSignerStakesAndSignature as SolValue>::SolType,
+        )>::abi_decode_params(calldata, /*validate=*/ false)
+        .unwrap();
+
+        assert_eq!(input, U256::ONE);
+        assert_eq!(task_created_block, 226);
+
+        dbg!(&input);
+        dbg!(&task_created_block);
+        dbg!(&quorum_numbers);
+        dbg!(&quorum_threshold);
+        dbg!(&resp_index);
+        dbg!(&resp_value);
+
+        dbg!(&non_signer_stakes_and_signature.nonSignerQuorumBitmapIndices);
+        dbg!(&non_signer_stakes_and_signature.nonSignerPubkeys);
+        dbg!(&non_signer_stakes_and_signature.quorumApks);
+        dbg!(&non_signer_stakes_and_signature.apkG2.X);
+        dbg!(&non_signer_stakes_and_signature.apkG2.Y);
+        dbg!(&non_signer_stakes_and_signature.sigma);
+        dbg!(&non_signer_stakes_and_signature.quorumApkIndices);
+        dbg!(&non_signer_stakes_and_signature.totalStakeIndices);
+        dbg!(&non_signer_stakes_and_signature.nonSignerStakeIndices);
     }
 }
+
+// [crates/challenger/src/lib.rs:313:37] &non_signer_stakes_and_signature.nonSignerQuorumBitmapIndices = [
+//     0,
+// ]
+// [crates/challenger/src/lib.rs:317:37] &non_signer_stakes_and_signature.nonSignerPubkeys = [
+//     G1Point {
+//         X: 654664748928620715566514527065607787384626422829919343002201686008542704547,
+//         Y: 7621327703448327618781037368416970306376555821575350939064407036501507659447,
+//     },
+// ]
+// [crates/challenger/src/lib.rs:318:37] &non_signer_stakes_and_signature.quorumApks = [
+//     G1Point {
+//         X: 7964125228722572089656024624376404278103991282289546786906381622307030924036,
+//         Y: 6554689388489757183511003517144056361864546334706404705248008103119568907916,
+//     },
+// ]
+// [crates/challenger/src/lib.rs:319:37] &non_signer_stakes_and_signature.apkG2.X = [
+//     15529400123788596166111036611862227541174221446291015207340396747864347375335,
+//     6834287759893774453556191528501556195232162436167606874229072410417955767882,
+// ]
+// [crates/challenger/src/lib.rs:320:37] &non_signer_stakes_and_signature.apkG2.Y = [
+//     19775028091101520702581412350510183088819198056772055625089714355379667714558,
+//     7616309349481520605447660298084926776417001188005125143383153219707218450524,
+// ]
+// [crates/challenger/src/lib.rs:321:37] &non_signer_stakes_and_signature.sigma = G1Point {
+//     X: 1312049784969277144056924076571936191139815392473463334460322317232410039641,
+//     Y: 17014461013066869420407143569658227866867755252921953503605018956512343044680,
+// }
+// [crates/challenger/src/lib.rs:322:37] &non_signer_stakes_and_signature.quorumApkIndices = [
+//     2,
+// ]
+// [crates/challenger/src/lib.rs:323:37] &non_signer_stakes_and_signature.totalStakeIndices = [
+//     2,
+// ]
+// [crates/challenger/src/lib.rs:324:37] &non_signer_stakes_and_signature.nonSignerStakeIndices = [
+//     [
+//         0,
+//     ],
+// ]
+// [crates/challenger/src/lib.rs:335:37] &non_signing_operator_pub_keys = [
+//     G1Point {
+//         X: 654664748928620715566514527065607787384626422829919343002201686008542704547,
+//         Y: 7621327703448327618781037368416970306376555821575350939064407036501507659447,
+//     },
+// ]
+// [crates/challenger/src/lib.rs:257:9] &non_signing_operator_pub_keys_result = Ok(
+//     [
+//         G1Point {
+//             X: 654664748928620715566514527065607787384626422829919343002201686008542704547,
+//             Y: 7621327703448327618781037368416970306376555821575350939064407036501507659447,
+//         },
+//     ],
+// )

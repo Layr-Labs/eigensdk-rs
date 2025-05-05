@@ -54,4 +54,8 @@ pub enum ChallengerError {
     /// Invalid log decode
     #[error("Invalid log decode")]
     InvalidLogDecode,
+
+    /// Invalid calldata
+    #[error("Invalid calldata")]
+    InvalidCalldata,
 }
