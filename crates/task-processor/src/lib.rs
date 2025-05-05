@@ -206,9 +206,7 @@ where
         self.task_manager
             .respond_to_task(task, task_response, non_signer_stakes_and_signature)
             .await
-            .map_err(TaskProcessorError::TaskManagerError)?;
-
-        info!("Aggregated response sent to contract");
-        Ok(())
+            .map_err(TaskProcessorError::TaskManagerError)
+            .inspect(|_| info!("Aggregated response sent to contract"))
     }
 }
