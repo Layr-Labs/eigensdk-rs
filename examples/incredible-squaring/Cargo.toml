@@ -34,7 +34,3 @@ path = "src/bin/aggregator.rs"
 [[bin]]
 name = "incredible-squaring-operator"
 path = "src/bin/operator.rs"
-
-
-[lints]
-workspace = true
