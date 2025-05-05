@@ -1,7 +1,7 @@
 #![allow(missing_docs)]
 use alloy::{
     consensus::Transaction,
-    dyn_abi::SolType,
+    dyn_abi::{abi::TokenSeq, SolType},
     primitives::Bytes,
     providers::Provider,
     rpc::types::{Filter, Log},
@@ -22,6 +22,32 @@ pub mod challenger;
 pub mod challenger_processor;
 pub mod error;
 pub mod task_manager;
+
+/// The tuple for NewTaskCreated: (u32, Input)
+pub type NewTaskEventTuple<Input> = (
+    <Input as SolValue>::SolType,
+    <u32 as SolValue>::SolType,
+    <Bytes as SolValue>::SolType,
+    <u32 as SolValue>::SolType,
+);
+
+/// The tuple for TaskResponded: ((u32, Output), Metadata)
+pub type TaskResponseEventTuple<Output> = (
+    (<u32 as SolValue>::SolType, <Output as SolValue>::SolType),
+    <TaskResponseMetadataSol as SolValue>::SolType,
+);
+
+/// The tuple for RespondToTaskCalldata: (Input, (TaskIndex, Output), NonSignerStakesAndSignature)
+pub type RespondToTaskCalldata<Input, Output> = (
+    (
+        <Input as SolValue>::SolType,
+        <u32 as SolValue>::SolType,
+        <Bytes as SolValue>::SolType,
+        <u32 as SolValue>::SolType,
+    ),
+    (<u32 as SolValue>::SolType, <Output as SolValue>::SolType),
+    <NonSignerStakesAndSignature as SolValue>::SolType,
+);
 
 /// Main Challenger struct
 #[derive(Debug)]
@@ -141,19 +167,13 @@ where
             .ok_or(ChallengerError::EmptyDecodedData)?;
 
         // Decode Task<TM::Input>
-        let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
-            <(
-                <TP::Input as SolValue>::SolType,
-                <u32 as SolValue>::SolType,
-                <Bytes as SolValue>::SolType,
-                <u32 as SolValue>::SolType,
-            )>::abi_decode_params(data, false)?;
+        let decoded_task = decode_params::<NewTaskEventTuple<TP::Input>>(data, false)?;
 
         let task = Task::<TP::Input> {
-            input: input.into(),
-            task_created_block,
-            quorum_numbers,
-            quorum_threshold_percentage,
+            input: decoded_task.0.into(),
+            task_created_block: decoded_task.1,
+            quorum_numbers: decoded_task.2,
+            quorum_threshold_percentage: decoded_task.3,
         };
 
         Ok((task_index, task))
@@ -174,18 +194,16 @@ where
         let data = log.inner.data.data.0.clone();
 
         // Decode a tuple of the form: (TaskResponse<TM::Output>, TaskResponseMetadata)
-        let ((task_index, response), task_response_metadata) =
-            <(
-                (
-                    <u32 as SolValue>::SolType,
-                    <TP::Output as SolValue>::SolType,
-                ),
-                <TaskResponseMetadataSol as SolValue>::SolType,
-            )>::abi_decode_params(&data, false)?;
+        let decoded_task_response =
+            decode_params::<TaskResponseEventTuple<TP::Output>>(&data, false)?;
+
+        let task_index = decoded_task_response.0 .0;
+        let task_response = decoded_task_response.0 .1;
+        let task_response_metadata = decoded_task_response.1;
 
         let task_response = TaskResponse::<TP::Output> {
             task_index,
-            response: response.into(),
+            response: task_response.into(),
         };
 
         let non_signing_operator_pub_keys = self.get_non_signing_operator_pub_keys(log).await?;
@@ -222,19 +240,8 @@ where
             .ok_or(ChallengerError::InvalidCalldata)?;
 
         // Decode tuple of the form: Task<TM::Input>, TaskResponse<TM::Output>, NonSignerStakesAndSignature)
-        let decoded_calldata = <(
-            (
-                <TP::Input as SolValue>::SolType,
-                <u32 as SolValue>::SolType,
-                <Bytes as SolValue>::SolType,
-                <u32 as SolValue>::SolType,
-            ),
-            (
-                <u32 as SolValue>::SolType,
-                <TP::Output as SolValue>::SolType,
-            ),
-            <NonSignerStakesAndSignature as SolValue>::SolType,
-        )>::abi_decode_params(calldata, false)?;
+        let decoded_calldata =
+            decode_params::<RespondToTaskCalldata<TP::Input, TP::Output>>(calldata, false)?;
 
         Ok(decoded_calldata
             .2
@@ -243,6 +250,24 @@ where
             .map(|pk| G1Point { X: pk.X, Y: pk.Y })
             .collect())
     }
+}
+
+/// Decode generic type
+///
+/// # Arguments
+///
+/// * `data` - The data to decode
+/// * `validate` - Whether to validate the data
+///
+/// # Returns
+///
+/// * `Result<T::RustType, ChallengerError>` - The decoded data
+pub fn decode_params<T>(data: &[u8], validate: bool) -> Result<T::RustType, ChallengerError>
+where
+    T: SolType,
+    for<'de> <T as SolType>::Token<'de>: TokenSeq<'de>,
+{
+    Ok(T::abi_decode_params(data, validate)?)
 }
 
 #[cfg(test)]
@@ -268,13 +293,7 @@ mod tests {
         let data = raw_bytes.get(32..).unwrap().to_vec();
 
         let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
-            <(
-                <U256 as SolValue>::SolType,
-                <u32 as SolValue>::SolType,
-                <Bytes as SolValue>::SolType,
-                <u32 as SolValue>::SolType,
-            )>::abi_decode_params(&data, true)
-            .unwrap();
+            decode_params::<NewTaskEventTuple<U256>>(&data, false).unwrap();
 
         assert_eq!(input, U256::ONE);
         assert_eq!(task_created_block, 226);
@@ -295,11 +314,8 @@ mod tests {
 
         let data = raw_bytes.as_slice();
 
-        let ((task_index, response), metadata) = <(
-            (<u32 as SolValue>::SolType, <U256 as SolValue>::SolType),
-            <TaskResponseMetadataSol as SolValue>::SolType,
-        )>::abi_decode_params(data, false)
-        .unwrap();
+        let ((task_index, response), metadata) =
+            decode_params::<TaskResponseEventTuple<U256>>(data, false).unwrap();
 
         assert_eq!(task_index, 0);
         assert_eq!(response, U256::ONE);
@@ -354,17 +370,8 @@ mod tests {
         // Remove the selector - 4 bytes
         let calldata = raw_bytes.get(4..).unwrap();
 
-        let decoded_calldata = <(
-            (
-                <U256 as SolValue>::SolType,
-                <u32 as SolValue>::SolType,
-                <Bytes as SolValue>::SolType,
-                <u32 as SolValue>::SolType,
-            ),
-            (<u32 as SolValue>::SolType, <U256 as SolValue>::SolType),
-            <NonSignerStakesAndSignature as SolValue>::SolType,
-        )>::abi_decode_params(calldata, false)
-        .unwrap();
+        let decoded_calldata =
+            decode_params::<RespondToTaskCalldata<U256, U256>>(calldata, false).unwrap();
 
         let expected_pub_key = G1Point {
             X: U256::from_str_radix(
