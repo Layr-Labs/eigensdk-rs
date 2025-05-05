@@ -24,18 +24,20 @@ sol! {
 }
 
 #[derive(Debug)]
-pub struct IndexingChallengerProcessor<TM, T, P, N>
+pub struct IndexingChallengerProcessor<TM, T, P, N, F>
 where
     TM: TaskManagerContract<T, P, N> + Send + Sync + 'static + Clone,
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
     N: Network,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
 {
     task_manager: TM,
     tasks: HashMap<u32, Task<TM::Input>>,
+    is_response_correct: F,
 }
 
-impl<TM, T, P, N> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, T, P, N>
+impl<TM, T, P, N, F> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, T, P, N, F>
 where
     TM: TaskManagerContract<T, P, N> + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
@@ -43,6 +45,7 @@ where
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
     N: Network,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
 {
     type NewTaskEvent = TM::NewTaskEvent;
 
@@ -62,20 +65,15 @@ where
     }
 
     async fn handle_task_response(
-        &mut self,
+        &self,
         task_index: u32,
         task_response: TaskResponse<TM::Output>,
         task_response_metadata: TaskResponseMetadataSol,
         non_signing_operator_pub_keys: Vec<G1Point>,
-        is_response_correct: impl Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError>
-            + Send,
     ) -> Result<(), ChallengerError> {
-        if let Some(task) = self
-            .tasks
-            .get(&task_index)
-            .cloned()
-            .filter(|t| !is_response_correct(t.clone(), task_response.clone()).unwrap_or(false))
-        {
+        if let Some(task) = self.tasks.get(&task_index).cloned().filter(|t| {
+            !((self.is_response_correct)(t.clone(), task_response.clone()).unwrap_or(false))
+        }) {
             let tm = self.task_manager.clone();
 
             tokio::spawn(async move {
@@ -94,7 +92,7 @@ where
     }
 }
 
-impl<TM, T, P, N> IndexingChallengerProcessor<TM, T, P, N>
+impl<TM, T, P, N, F> IndexingChallengerProcessor<TM, T, P, N, F>
 where
     TM: TaskManagerContract<T, P, N> + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
@@ -102,11 +100,13 @@ where
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
     N: Network,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
 {
-    pub fn new(task_manager: TM) -> Self {
+    pub fn new(task_manager: TM, is_response_correct: F) -> Self {
         Self {
             task_manager,
             tasks: HashMap::new(),
+            is_response_correct,
         }
     }
 }
