@@ -5,16 +5,14 @@ use alloy::{
     contract::private::{Provider, Transport},
     network::Network,
 };
+use eigen_task_processor::task_manager::TaskCreator;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use error::TaskSpammerError;
 use std::time::Duration;
-use task_manager::TaskManagerContract;
 use tokio::time::sleep;
 
 /// Task spammer errors
 pub mod error;
-/// Task manager contract trait
-pub mod task_manager;
 
 /// Task spammer builder
 #[derive(Debug)]
@@ -29,7 +27,7 @@ pub struct TaskSpammerBuilder<I, TM, T, P, N, Input> {
 
 impl<I, TM, T, P, N, Input> TaskSpammerBuilder<I, TM, T, P, N, Input>
 where
-    TM: TaskManagerContract<Input, T, P, N>,
+    TM: TaskCreator<Input, T, P, N>,
     T: Transport + Clone,
     P: Provider<T, N>,
     N: Network,
@@ -119,13 +117,7 @@ where
     /// # Returns
     ///
     /// * `TaskSpammer` - The task spammer to be run
-    pub fn build(self) -> Result<TaskSpammer<I, TM, T, P, N, Input>, TaskSpammerError>
-    where
-        TM: TaskManagerContract<Input, T, P, N>,
-        T: Transport + Clone,
-        P: Provider<T, N>,
-        N: Network,
-    {
+    pub fn build(self) -> Result<TaskSpammer<I, TM, T, P, N, Input>, TaskSpammerError> {
         Ok(TaskSpammer {
             iter: self.iter.ok_or(TaskSpammerError::IteratorNotSet)?,
             interval: self.interval,
@@ -152,7 +144,7 @@ pub struct TaskSpammer<I, TM, T, P, N, Input> {
 
 impl<I, TM, T, P, N, Input> TaskSpammer<I, TM, T, P, N, Input>
 where
-    TM: TaskManagerContract<Input, T, P, N> + Send + Sync,
+    TM: TaskCreator<Input, T, P, N> + Send + Sync,
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
     N: Network,
