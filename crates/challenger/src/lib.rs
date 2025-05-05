@@ -2,6 +2,7 @@
 use alloy::{providers::Provider, rpc::types::Filter, sol_types::SolEvent};
 use challenger::ChallengerTaskProcessor;
 use eigen_common::get_ws_provider;
+use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use error::ChallengerError;
 use futures_util::StreamExt;
 use tracing::info;
@@ -26,7 +27,15 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
         }
     }
 
-    pub async fn start_challenger(&mut self) -> Result<(), ChallengerError> {
+    pub async fn start_challenger<F>(
+        &mut self,
+        is_response_correct: F,
+    ) -> Result<(), ChallengerError>
+    where
+        F: Fn(Task<TP::Input>, TaskResponse<TP::Output>) -> Result<bool, ChallengerError>
+            + Send
+            + Sync,
+    {
         info!("challenger crate launched");
 
         let ws_provider = get_ws_provider(&self.ws_url).await?;
@@ -51,7 +60,9 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
                     self.task_processor.handle_task_creation(log).await?;
                 },
                 Some(log) = responded_stream.next() => {
-                    self.task_processor.handle_task_response(log).await?;
+                    self.task_processor
+                        .handle_task_response(log, &is_response_correct)
+                        .await?;
                 },
                 else => {
                     // If both streams are exhausted, break the loop.
