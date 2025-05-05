@@ -129,7 +129,7 @@ where
         let non_signing_operator_pub_keys = self.get_non_signing_operator_pub_keys(log).await?;
 
         if let Some(task) = self.tasks.get(&task_index) {
-            if is_response_correct(task.clone(), task_response.clone())? {
+            if !is_response_correct(task.clone(), task_response.clone())? {
                 // TODO: Call the challenge in another thread?
                 self.task_manager
                     .raise_challenge(
