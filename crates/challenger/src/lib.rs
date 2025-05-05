@@ -15,11 +15,23 @@ pub mod task_manager;
 /// Main Challenger struct
 #[derive(Debug)]
 pub struct Challenger<TP: ChallengerTaskProcessor> {
+    /// The websocket url
     ws_url: String,
+    /// The task processor
     task_processor: TP,
 }
 
 impl<TP: ChallengerTaskProcessor> Challenger<TP> {
+    /// Create a new challenger
+    ///
+    /// # Arguments
+    ///
+    /// * `ws_url` - The websocket url
+    /// * `task_processor` - The task processor
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The challenger
     pub fn new(ws_url: String, task_processor: TP) -> Self {
         Self {
             ws_url,
@@ -27,6 +39,14 @@ impl<TP: ChallengerTaskProcessor> Challenger<TP> {
         }
     }
 
+    /// Start the service and start listening for new tasks and task responses events
+    /// It also checks if the response is correct, if not it raises a challenge.
+    ///
+    /// # Arguments
+    ///
+    /// * `is_response_correct` - The logic to check if the response is correct
+    ///
+    /// # Returns
     pub async fn start_challenger<F>(
         &mut self,
         is_response_correct: F,
