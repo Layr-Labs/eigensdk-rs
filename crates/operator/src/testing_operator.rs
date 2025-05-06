@@ -1,6 +1,6 @@
 use crate::{client::ClientAggregator, config, error::OperatorError};
 use alloy::{
-    primitives::{keccak256, Bytes},
+    primitives::keccak256,
     providers::{Provider, ProviderBuilder, WsConnect},
     rpc::types::Filter,
     sol_types::{SolEvent, SolValue},
