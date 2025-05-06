@@ -166,7 +166,7 @@ where
             .get(32..)
             .ok_or(ChallengerError::EmptyDecodedData)?;
 
-        // Decode Task<TM::Input>
+        // Decode the tuple of the form: Task<TM::Input>
         let decoded_task = decode_params::<NewTaskEventTuple<TP::Input>>(data, false)?;
 
         let task = Task::<TP::Input> {
@@ -193,7 +193,7 @@ where
     > {
         let data = log.inner.data.data.0.clone();
 
-        // Decode a tuple of the form: (TaskResponse<TM::Output>, TaskResponseMetadata)
+        // Decode the tuple of the form: (TaskResponse<TM::Output>, TaskResponseMetadata)
         let decoded_task_response =
             decode_params::<TaskResponseEventTuple<TP::Output>>(&data, false)?;
 
@@ -239,7 +239,7 @@ where
             .get(4..)
             .ok_or(ChallengerError::InvalidCalldata)?;
 
-        // Decode tuple of the form: Task<TM::Input>, TaskResponse<TM::Output>, NonSignerStakesAndSignature)
+        // Decode the tuple of the form: Task<TM::Input>, TaskResponse<TM::Output>, NonSignerStakesAndSignature
         let decoded_calldata =
             decode_params::<RespondToTaskCalldata<TP::Input, TP::Output>>(calldata, false)?;
 
@@ -273,7 +273,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy::{hex::decode, primitives::U256};
+    use alloy::{hex::decode, primitives::U256, sol};
 
     // The data of the log was taken from the IS example, it creates a new task with input 1, quorum 0 and threshold 40% in block 226
     #[tokio::test]
@@ -288,7 +288,7 @@ mod tests {
             0000000000000000000000000000000000000000000000000000000000000001\
             0000000000000000000000000000000000000000000000000000000000000000";
 
-        let raw_bytes: Vec<u8> = decode(raw_hex).expect("hex inválido");
+        let raw_bytes: Vec<u8> = decode(raw_hex).unwrap();
 
         let data = raw_bytes.get(32..).unwrap().to_vec();
 
@@ -394,5 +394,79 @@ mod tests {
             decoded_calldata.2.nonSignerPubkeys.first().unwrap().Y,
             expected_pub_key.Y
         );
+    }
+
+    #[test]
+    fn test_decode_complex_type() {
+        sol! {
+
+            event NewComplex(
+                uint32 indexed idx,
+                ComplexInputSol input
+            );
+
+            #[derive(Debug, PartialEq)]
+            struct DeepestSol {
+                uint256 big;
+                bytes    blob;
+            }
+
+            #[derive(Debug, PartialEq)]
+            struct InnerSol {
+                uint32      id;
+                DeepestSol  d;
+                uint32[]    refs;
+            }
+
+            #[derive(Debug, PartialEq)]
+            struct ComplexInputSol {
+                InnerSol inner;
+                bytes     note;
+                uint256 amount;
+            }
+        }
+
+        let deepest = DeepestSol {
+            big: U256::from(1u8),
+            blob: Bytes::from_static(&[0xA0]),
+        };
+
+        let inner = InnerSol {
+            id: 1,
+            d: deepest.clone(),
+            refs: vec![2],
+        };
+
+        let input = ComplexInputSol {
+            inner: inner.clone(),
+            note: Bytes::from_static(&[0xBB]),
+            amount: U256::from(1u8),
+        };
+
+        // Data from the log - NewComplex event: (1, ComplexInputSol)
+        let raw_hex = "\
+            0000000000000000000000000000000000000000000000000000000000000020\
+            0000000000000000000000000000000000000000000000000000000000000060\
+            0000000000000000000000000000000000000000000000000000000000000180\
+            0000000000000000000000000000000000000000000000000000000000000001\
+            0000000000000000000000000000000000000000000000000000000000000001\
+            0000000000000000000000000000000000000000000000000000000000000060\
+            00000000000000000000000000000000000000000000000000000000000000e0\
+            0000000000000000000000000000000000000000000000000000000000000001\
+            0000000000000000000000000000000000000000000000000000000000000040\
+            0000000000000000000000000000000000000000000000000000000000000001\
+            a000000000000000000000000000000000000000000000000000000000000000\
+            0000000000000000000000000000000000000000000000000000000000000001\
+            0000000000000000000000000000000000000000000000000000000000000002\
+            0000000000000000000000000000000000000000000000000000000000000001\
+            bb00000000000000000000000000000000000000000000000000000000000000";
+
+        let raw_bytes = decode(raw_hex).unwrap();
+
+        let data = raw_bytes.get(32..).unwrap();
+
+        let decoded = decode_params::<ComplexInputSol>(data, false).unwrap();
+
+        assert_eq!(decoded, input);
     }
 }
