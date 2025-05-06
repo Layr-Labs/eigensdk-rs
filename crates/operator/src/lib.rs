@@ -206,10 +206,14 @@ where
     Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
 {
     move |event| {
+        if failure_rate > 100 {
+            return Err(OperatorError::InvalidFailureRate);
+        }
+
         let mut rng = rand::thread_rng();
         let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
         if should_fail {
-            info!("Operator failed to compute task");
+            info!("Operator compute the task with a wrong response");
             failure(event)
         } else {
             info!("Operator compute the task successfully");
