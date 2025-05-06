@@ -216,7 +216,7 @@ where
         ))
     }
 
-    pub async fn get_non_signing_operator_pub_keys(
+    async fn get_non_signing_operator_pub_keys(
         &self,
         log: Log,
     ) -> Result<Vec<G1Point>, ChallengerError> {
