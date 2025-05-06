@@ -16,16 +16,16 @@ pub mod error;
 
 /// Task spammer builder
 #[derive(Debug)]
-pub struct TaskSpammerBuilder<I, TM, T, P, N, Input> {
+pub struct TaskSpammerBuilder<I, TM, T, P, N> {
     iter: Option<I>,
     interval: Duration,
     quorum_threshold: Option<QuorumThresholdPercentage>,
     quorums: Option<Vec<QuorumNum>>,
     task_manager: TM,
-    _phantom: std::marker::PhantomData<(T, P, N, Input)>,
+    _phantom: std::marker::PhantomData<(T, P, N)>,
 }
 
-impl<I, TM, T, P, N> TaskSpammerBuilder<I, TM, T, P, N, TM::Input>
+impl<I, TM, T, P, N> TaskSpammerBuilder<I, TM, T, P, N>
 where
     TM: TaskManagerContract<T, P, N>,
     T: Transport + Clone,
@@ -62,7 +62,7 @@ where
     /// # Returns
     ///
     /// * `TaskSpammerBuilder` - The builder for the task spammer
-    pub fn with_iter(self, iter: I) -> TaskSpammerBuilder<I, TM, T, P, N, TM::Input>
+    pub fn with_iter(self, iter: I) -> Self
     where
         I: Iterator + Send + 'static,
         I::Item: Send,
@@ -117,7 +117,7 @@ where
     /// # Returns
     ///
     /// * `TaskSpammer` - The task spammer to be run
-    pub fn build(self) -> Result<TaskSpammer<I, TM, T, P, N, TM::Input>, TaskSpammerError> {
+    pub fn build(self) -> Result<TaskSpammer<I, TM, T, P, N>, TaskSpammerError> {
         Ok(TaskSpammer {
             iter: self.iter.ok_or(TaskSpammerError::IteratorNotSet)?,
             interval: self.interval,
@@ -133,16 +133,16 @@ where
 
 /// Task spammer struct
 #[derive(Debug)]
-pub struct TaskSpammer<I, TM, T, P, N, Input> {
+pub struct TaskSpammer<I, TM, T, P, N> {
     iter: I,
     interval: Duration,
     quorum_threshold: QuorumThresholdPercentage,
     quorums: Vec<QuorumNum>,
     task_manager: TM,
-    _phantom: std::marker::PhantomData<(T, P, N, Input)>,
+    _phantom: std::marker::PhantomData<(T, P, N)>,
 }
 
-impl<I, TM, T, P, N> TaskSpammer<I, TM, T, P, N, TM::Input>
+impl<I, TM, T, P, N> TaskSpammer<I, TM, T, P, N>
 where
     TM: TaskManagerContract<T, P, N> + Send + Sync,
     T: Transport + Clone + Send + Sync,

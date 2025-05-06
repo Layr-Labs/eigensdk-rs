@@ -51,14 +51,13 @@ where
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
     ) -> Result<N::ReceiptResponse, TaskManagerError> {
-        Ok(self
-            .createNewTask(input, quorum_threshold.into(), quorums.into())
+        self.createNewTask(input, quorum_threshold.into(), quorums.into())
             .send()
             .await
             .map_err(box_error)?
             .get_receipt()
             .await
-            .map_err(box_error)?)
+            .map_err(box_error)
     }
 
     async fn respond_to_task(
