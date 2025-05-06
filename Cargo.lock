@@ -2767,6 +2767,7 @@ dependencies = [
  "eigen-services-avsregistry",
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
+ "eigen-task-processor",
  "eigen-types",
  "eigen-utils",
  "futures-util",
