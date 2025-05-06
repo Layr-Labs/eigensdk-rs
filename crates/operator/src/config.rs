@@ -25,7 +25,7 @@ pub struct OperatorConfig {
 }
 
 #[derive(Debug, Clone)]
-/// Operator configuration struct
+/// Testing Operator configuration struct
 pub struct TestingOperatorConfig {
     /// BLS key pair of the operator
     pub bls_key_pair: BlsKeyPair,
