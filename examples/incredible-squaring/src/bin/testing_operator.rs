@@ -23,7 +23,9 @@ fn wrong_square(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorErr
     })
 }
 
-// This example shows how to initialize an operator and start to listen for new task events.
+// This example shows how to initialize a testing operator and start to listen for new task events.
+// This operator have two different logic to compute the task response and depends on the failure rate,
+// it will fail the task.
 // For this example, Operator should be registered.
 #[tokio::main]
 async fn main() {
@@ -45,7 +47,7 @@ async fn main() {
         registry_coordinator_address,
         operator_state_retriever_address,
         aggregator_ip_port: server_address,
-        failure_rate: 100,
+        failure_rate: 80,
     };
 
     // Initialize the operator
