@@ -15,14 +15,6 @@ use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tracing::info;
 
-/// The tuple for NewTaskCreated: (u32, Input)
-pub type NewTaskEventTuple<Input> = (
-    <Input as SolValue>::SolType,
-    <u32 as SolValue>::SolType,
-    <Bytes as SolValue>::SolType,
-    <u32 as SolValue>::SolType,
-);
-
 /// USE THIS OPERATOR FOR TESTING PURPOSES ONLY
 /// Testing Operator struct handle the operator logic of processing new tasks
 /// and sending signed task responses to the aggregator. This operator will respond
