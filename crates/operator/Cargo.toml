@@ -34,6 +34,7 @@ eigen-utils.workspace = true
 url.workspace = true
 
 hex = { version = "0.4.3", features = ["alloc"] }
+rand = { version = "0.9.1", features = ["thread_rng"] }
 
 # RPC Server
 tarpc = { version = "0.36", features = ["full"] }
