@@ -1,7 +1,7 @@
 //! Operator common functions.
 
 use alloy::{
-    primitives::{keccak256, Address},
+    primitives::keccak256,
     providers::{Provider, ProviderBuilder, WsConnect},
     rpc::types::Filter,
     sol_types::{SolEvent, SolValue},
@@ -20,6 +20,8 @@ use tracing::info;
 
 /// Tarpc Client
 pub mod client;
+/// Operator config
+pub mod config;
 /// Error
 pub mod error;
 
@@ -53,18 +55,20 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<Self, OperatorError>` - The operator.
-    #[allow(clippy::too_many_arguments)]
     pub async fn new(
-        key_pair: &BlsKeyPair,
-        operator_address: Address,
-        operator_name: &str,
         logger: SharedLogger,
-        ws_rpc_url: &str,
-        http_rpc_url: &str,
-        registry_coordinator_address: Address,
-        operator_state_retriever_address: Address,
-        aggregator_ip_port: String,
+        config: config::OperatorConfig,
     ) -> Result<Self, OperatorError> {
+        let config::OperatorConfig {
+            bls_key_pair,
+            operator_address,
+            operator_name,
+            ws_rpc_url,
+            http_rpc_url,
+            registry_coordinator_address,
+            operator_state_retriever_address,
+            aggregator_ip_port,
+        } = config;
         let avs_registry_reader = AvsRegistryChainReader::new(
             logger,
             registry_coordinator_address,
@@ -95,7 +99,7 @@ impl Operator {
             operator_name: operator_name.to_string(),
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
-            key_pair: key_pair.clone(),
+            key_pair: bls_key_pair.clone(),
         })
     }
 
