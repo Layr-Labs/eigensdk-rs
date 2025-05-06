@@ -1,45 +1,42 @@
-//! Operator common functions.
-
-pub use crate::testing_operator::TestingOperator;
+use crate::{client::ClientAggregator, config, error::OperatorError};
 use alloy::{
-    primitives::keccak256,
+    primitives::{keccak256, Bytes},
     providers::{Provider, ProviderBuilder, WsConnect},
     rpc::types::Filter,
     sol_types::{SolEvent, SolValue},
 };
-use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_crypto_bls::BlsKeyPair;
+use eigen_crypto_bls::{BlsKeyPair, OperatorId};
 use eigen_logging::logger::SharedLogger;
 use eigen_task_processor::task_response::TaskResponse;
-use eigen_types::operator::OperatorId;
-use error::OperatorError;
 use futures_util::StreamExt;
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tracing::info;
 
-/// Tarpc Client
-pub mod client;
-/// Operator config
-pub mod config;
-/// Error
-pub mod error;
-/// Testing Operator struct
-pub mod testing_operator;
+/// The tuple for NewTaskCreated: (u32, Input)
+pub type NewTaskEventTuple<Input> = (
+    <Input as SolValue>::SolType,
+    <u32 as SolValue>::SolType,
+    <Bytes as SolValue>::SolType,
+    <u32 as SolValue>::SolType,
+);
 
-/// Operator struct to handle the operator logic of processing new tasks
-/// and sending signed task responses to the aggregator.
+/// Testing Operator struct to handle the operator logic of processing new tasks
+/// and sending signed task responses to the aggregator. This operator will respond
+/// incorrectly with a chance of `failure_rate`.
 #[derive(Debug)]
-pub struct Operator {
+pub struct TestingOperator {
     operator_id: OperatorId,
     operator_name: String,
     client_aggregator: ClientAggregator,
     ws_rpc_url: String,
     key_pair: BlsKeyPair,
+    failure_rate: u8,
 }
 
-impl Operator {
+impl TestingOperator {
     /// Initialize a new operator.
     /// This method does not register the operator.
     ///
@@ -54,15 +51,16 @@ impl Operator {
     /// * `registry_coordinator_address` - The address of the registry coordinator.
     /// * `operator_state_retriever_address` - The address of the operator state retriever.
     /// * `aggregator_ip_port` - The IP and port of the aggregator.
+    /// * `failure_rate` - The chance (0 - 100) that the operator will respond incorrectly.
     ///
     /// # Returns
     ///
     /// * `Result<Self, OperatorError>` - The operator.
     pub async fn new(
         logger: SharedLogger,
-        config: config::OperatorConfig,
+        config: config::TestingOperatorConfig,
     ) -> Result<Self, OperatorError> {
-        let config::OperatorConfig {
+        let config::TestingOperatorConfig {
             bls_key_pair,
             operator_address,
             operator_name,
@@ -71,6 +69,7 @@ impl Operator {
             registry_coordinator_address,
             operator_state_retriever_address,
             aggregator_ip_port,
+            failure_rate,
         } = config;
         let avs_registry_reader = AvsRegistryChainReader::new(
             logger,
@@ -103,6 +102,7 @@ impl Operator {
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
             key_pair: bls_key_pair.clone(),
+            failure_rate,
         })
     }
 
@@ -114,14 +114,20 @@ impl Operator {
     ///
     /// * `self` - The operator.
     /// * `compute_logic` - The logic to compute the task response.
+    /// * `failure_logic` - The logic to give a wrong task response.
     ///
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation.
-    pub async fn start<Event, F, Output>(&self, compute_logic: F) -> Result<(), OperatorError>
+    pub async fn start<Event, FC, FF, Output>(
+        &self,
+        compute_logic: FC,
+        failure_logic: FF,
+    ) -> Result<(), OperatorError>
     where
         Event: SolEvent,
-        F: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
+        FC: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
+        FF: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
         Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
     {
         let ws = WsConnect::new(&self.ws_rpc_url);
@@ -146,7 +152,18 @@ impl Operator {
 
             info!("{} picked up a new task", self.operator_name);
 
-            let task_response = compute_logic(data)?;
+            // Generate a boolean with probability of `failure_rate`
+            let mut rng = rand::rng();
+            let should_fail = rng.random_bool(self.failure_rate as f64 / 100.0);
+
+            let task_response: TaskResponse<Output> = if should_fail {
+                info!("{} is failing this task on purpose", self.operator_name);
+                failure_logic(data)?
+            } else {
+                info!("{} is computing the task", self.operator_name);
+                compute_logic(data)?
+            };
+
             let signed_task_response =
                 Self::sign_task_response(&self.key_pair, &self.operator_id, task_response)?;
             self.client_aggregator
