@@ -13,6 +13,7 @@ workspace = true
 [dependencies]
 alloy.workspace = true
 eigen-types.workspace = true
+eigen-task-processor.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 tokio.workspace = true
