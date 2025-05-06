@@ -1,6 +1,5 @@
 //! Operator common functions.
 
-pub use crate::testing_operator::TestingOperator;
 use alloy::{
     primitives::keccak256,
     providers::{Provider, ProviderBuilder, WsConnect},
@@ -16,6 +15,7 @@ use eigen_task_processor::task_response::TaskResponse;
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tracing::info;
 
@@ -25,8 +25,6 @@ pub mod client;
 pub mod config;
 /// Error
 pub mod error;
-/// Testing Operator struct
-pub mod testing_operator;
 
 /// Operator struct to handle the operator logic of processing new tasks
 /// and sending signed task responses to the aggregator.
@@ -182,5 +180,40 @@ impl Operator {
         let signed_task_response = SignedTaskResponse::new(task_response, signed_msg, *operator_id);
         info!("Operator signed task response");
         Ok(signed_task_response)
+    }
+}
+
+/// Helper to wrap both compute and failure logic in a single closure.
+/// USE THIS FOR TESTING PURPOSES ONLY
+///
+/// # Arguments
+///
+/// * `compute` - The compute logic.
+/// * `failure` - The failure logic.
+/// * `failure_rate` - The failure rate.
+///
+/// # Returns
+///
+/// * `impl Fn(Event) -> Result<TaskResponse<O>, OperatorError>` - The wrapped logic.
+pub fn with_failures<Event, Output, C, F>(
+    compute: C,
+    failure: F,
+    failure_rate: u8,
+) -> impl Fn(Event) -> Result<TaskResponse<Output>, OperatorError>
+where
+    C: Fn(Event) -> Result<TaskResponse<Output>, OperatorError> + Clone + 'static,
+    F: Fn(Event) -> Result<TaskResponse<Output>, OperatorError> + Clone + 'static,
+    Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
+{
+    move |event| {
+        let mut rng = rand::thread_rng();
+        let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
+        if should_fail {
+            info!("Operator failed to compute task");
+            failure(event)
+        } else {
+            info!("Operator compute the task successfully");
+            compute(event)
+        }
     }
 }
