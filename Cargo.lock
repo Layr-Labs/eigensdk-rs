@@ -3135,6 +3135,7 @@ name = "eigen-task-spammer"
 version = "0.5.0"
 dependencies = [
  "alloy",
+ "eigen-task-processor",
  "eigen-types",
  "thiserror 1.0.69",
  "tokio",
