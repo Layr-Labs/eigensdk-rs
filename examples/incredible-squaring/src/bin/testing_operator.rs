@@ -50,10 +50,10 @@ async fn main() {
         failure_rate: 80,
     };
 
-    // Initialize the operator
+    // Initialize the testing operator
     let operator = TestingOperator::new(logger, config).await.unwrap();
 
     // Subscribe to the new task events and start listening. When a new task is created,
-    // the operator will process it and send the signed task response to the aggregator.
+    // the operator will process it. There are a `failure_rate` chance that the operator will fail the task.
     operator.start(square, wrong_square).await.unwrap();
 }

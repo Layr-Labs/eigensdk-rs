@@ -23,8 +23,8 @@ pub type NewTaskEventTuple<Input> = (
     <u32 as SolValue>::SolType,
 );
 
-/// USE THIS OPERATOR FOR TESTING PURPOSES ONLY.
-/// Testing Operator struct to handle the operator logic of processing new tasks
+/// USE THIS OPERATOR FOR TESTING PURPOSES ONLY
+/// Testing Operator struct handle the operator logic of processing new tasks
 /// and sending signed task responses to the aggregator. This operator will respond
 /// incorrectly with a chance of `failure_rate`.
 #[derive(Debug)]
