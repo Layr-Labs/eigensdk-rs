@@ -148,9 +148,10 @@ impl<'de> Deserialize<'de> for BlsG2Point {
 }
 
 /// Bls key pair with public key on G1
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone /*Serialize, Deserialize*/)]
 pub struct BlsKeyPair {
     /// Private Key
+    //#[serde(deserialize_with = "path")]
     priv_key: Fr,
     /// Public Key on G1
     pub_key: BlsG1Point,
@@ -738,5 +739,10 @@ mod tests {
             )
             .unwrap()
         );
+    }
+
+    #[test]
+    fn test_bls_key_pair() {
+        BlsKeyPair
     }
 }

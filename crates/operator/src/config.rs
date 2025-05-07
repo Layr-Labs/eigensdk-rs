@@ -1,7 +1,9 @@
+use super::operator_register_config::OperatorRegistrationConfig;
 use alloy::primitives::Address;
 use eigen_crypto_bls::BlsKeyPair;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 /// Operator configuration struct
 pub struct OperatorConfig {
     /// BLS key pair of the operator
@@ -22,4 +24,6 @@ pub struct OperatorConfig {
     pub operator_state_retriever_address: Address,
     /// IP and port of the aggregator
     pub aggregator_ip_port: String,
+
+    pub registration: Option<OperatorRegistrationConfig>,
 }
