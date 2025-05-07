@@ -16,10 +16,10 @@ use bindings::incrediblesquaringtaskmanager::{
     IncredibleSquaringTaskManager::TaskResponded,
 };
 use eigen_task_processor::{
-    response_metadata::TaskResponseMetadataSol,
     task::Task,
     task_manager::{box_error, TaskManagerContract, TaskManagerError},
     task_response::TaskResponse,
+    task_response_metadata_sol::TaskResponseMetadataSol,
 };
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;

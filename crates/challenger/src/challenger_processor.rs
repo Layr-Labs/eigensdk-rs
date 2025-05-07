@@ -6,8 +6,8 @@ use alloy::{
     sol_types::SolValue,
 };
 
-use eigen_task_processor::response_metadata::TaskResponseMetadataSol;
 use eigen_task_processor::task_manager::TaskManagerContract;
+use eigen_task_processor::task_response_metadata_sol::TaskResponseMetadataSol;
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;

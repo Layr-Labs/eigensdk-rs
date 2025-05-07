@@ -10,7 +10,7 @@ use alloy::{
 use challenger::ChallengerTaskProcessor;
 use eigen_common::{get_provider, get_ws_provider};
 use eigen_task_processor::{
-    response_metadata::TaskResponseMetadataSol, task::Task, task_response::TaskResponse,
+    task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
 };
 use eigen_utils::slashing::middleware::iblssignaturechecker::{
     IBLSSignatureCheckerTypes::NonSignerStakesAndSignature, BN254::G1Point,

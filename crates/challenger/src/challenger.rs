@@ -2,7 +2,7 @@ use std::future::Future;
 
 use alloy::sol_types::{SolEvent, SolValue};
 use eigen_task_processor::{
-    response_metadata::TaskResponseMetadataSol, task::Task, task_response::TaskResponse,
+    task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
 };
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 

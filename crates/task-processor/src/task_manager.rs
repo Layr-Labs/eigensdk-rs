@@ -1,6 +1,8 @@
 use std::{fmt::Debug, future::Future};
 
-use crate::{response_metadata::TaskResponseMetadataSol, task::Task, task_response::TaskResponse};
+use crate::{
+    task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
+};
 use alloy::{
     network::Network,
     sol_types::{SolEvent, SolValue},
