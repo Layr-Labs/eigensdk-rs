@@ -15,8 +15,8 @@ use bindings::incrediblesquaringtaskmanager::{
     IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature,
     IncredibleSquaringTaskManager::TaskResponded,
 };
-use eigen_challenger::challenger_processor::TaskResponseMetadataSol;
 use eigen_task_processor::{
+    response_metadata::TaskResponseMetadataSol,
     task::Task,
     task_manager::{box_error, TaskManagerContract, TaskManagerError},
     task_response::TaskResponse,
@@ -49,6 +49,7 @@ where
     type Input = U256;
     type Output = U256;
     type NewTaskEvent = NewTaskCreated;
+    type TaskRespondedEvent = TaskResponded;
 
     async fn create_new_task(
         &self,
@@ -134,20 +135,6 @@ where
 
         Ok(())
     }
-}
-
-// Implement the Challenger TaskManagerContract trait for the task manager contract.
-impl<T, P, N> eigen_challenger::task_manager::TaskManagerContract<T, P, N>
-    for IncredibleSquaringTaskManagerInstance<T, P, N>
-where
-    T: Transport + Clone + Send + Sync,
-    P: Provider<T, N>,
-    N: Network,
-{
-    type Input = U256;
-    type Output = U256;
-    type NewTaskEvent = NewTaskCreated;
-    type TaskRespondedEvent = TaskResponded;
 
     async fn raise_challenge(
         &self,
