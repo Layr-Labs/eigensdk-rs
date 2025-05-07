@@ -195,14 +195,15 @@ impl Operator {
 /// # Returns
 ///
 /// * `impl Fn(Event) -> Result<TaskResponse<O>, OperatorError>` - The wrapped logic.
+#[cfg(feature = "operator-testing")]
 pub fn compute_with_failures<Event, Output, C, F>(
     correct_logic: C,
     incorrect_logic: F,
     failure_rate: u8,
 ) -> impl Fn(Event) -> Result<TaskResponse<Output>, OperatorError>
 where
-    C: Fn(Event) -> Result<TaskResponse<Output>, OperatorError> + Clone + 'static,
-    F: Fn(Event) -> Result<TaskResponse<Output>, OperatorError> + Clone + 'static,
+    C: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
+    F: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
     Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
 {
     move |event| {

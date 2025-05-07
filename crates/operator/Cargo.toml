@@ -41,4 +41,4 @@ tarpc = { version = "0.36", features = ["full"] }
 
 [features]
 default = []
-integration_tests = []
+operator-testing = []

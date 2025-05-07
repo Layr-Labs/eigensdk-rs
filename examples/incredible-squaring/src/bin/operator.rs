@@ -21,7 +21,7 @@ fn square(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
 fn wrong_square(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
     Ok(TaskResponse {
         task_index: event.taskIndex,
-        response: U256::from(28),
+        response: U256::from(42),
     })
 }
 
