@@ -10,14 +10,21 @@ use eigensdk::{
         task::Task,
         task_manager::{TaskManagerContract, TaskManagerError},
         task_response::TaskResponse,
+        task_response_metadata_sol::TaskResponseMetadataSol,
     },
     types::operator::{QuorumNum, QuorumThresholdPercentage},
-    utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
+    utils::slashing::middleware::{
+        iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
+        iblssignaturechecker::BN254::G1Point,
+    },
 };
 use incredible_bindings::incredibledotproducttaskmanager::IIncredibleDotProductTaskManager::{
-    Task as ContractTask, TaskResponse as ContractTaskResponse,
+    Task as ContractTask, TaskResponse as ContractTaskResponse, TaskResponseMetadata,
 };
-use incredible_bindings::incredibledotproducttaskmanager::BN254::{G1Point, G2Point};
+use incredible_bindings::incredibledotproducttaskmanager::BN254::{
+    G1Point as G1Binding, G2Point as G2Binding,
+};
+
 use incredible_bindings::incredibledotproducttaskmanager::{
     IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature,
     IncredibleDotProductTaskManager::TaskResponded,
@@ -43,6 +50,7 @@ where
     type Input = DotProductInput;
     type Output = U256;
     type NewTaskEvent = NewTaskCreated;
+    type TaskRespondedEvent = TaskResponded;
 
     async fn respond_to_task(
         &self,
@@ -62,12 +70,12 @@ where
             result: response.response,
         };
 
-        let apk_g2 = G2Point {
+        let apk_g2 = G2Binding {
             X: non_signer_stakes_and_signature.apkG2.X,
             Y: non_signer_stakes_and_signature.apkG2.Y,
         };
 
-        let sigma = G1Point {
+        let sigma = G1Binding {
             X: non_signer_stakes_and_signature.sigma.X,
             Y: non_signer_stakes_and_signature.sigma.Y,
         };
@@ -75,13 +83,13 @@ where
         let quorum_apks = non_signer_stakes_and_signature
             .quorumApks
             .iter()
-            .map(|apk| G1Point { X: apk.X, Y: apk.Y })
+            .map(|apk| G1Binding { X: apk.X, Y: apk.Y })
             .collect();
 
         let non_signer_pubkeys = non_signer_stakes_and_signature
             .nonSignerPubkeys
             .iter()
-            .map(|pubkey| G1Point {
+            .map(|pubkey| G1Binding {
                 X: pubkey.X,
                 Y: pubkey.Y,
             })
@@ -131,32 +139,50 @@ where
             .await
             .unwrap())
     }
-}
 
-// TODO: Try to move logic to TaskManagerContract trait
-impl<T, P, N> eigensdk::challenger::task_manager::TaskManagerContract
-    for TaskManagerWrapper<T, P, N>
-where
-    T: Transport + Clone + Send + Sync,
-    P: Provider<T, N>,
-    N: Network,
-{
-    type Input = DotProductInput;
-    type Output = U256;
-    type TaskRespondedEvent = TaskResponded;
-    type NewTaskEvent = NewTaskCreated;
-
-    fn raise_challenge(
+    async fn raise_challenge(
         &self,
         task: Task<Self::Input>,
         task_response: TaskResponse<Self::Output>,
-        task_response_metadata: eigensdk::challenger::challenger_processor::TaskResponseMetadataSol,
-        pubkeys_of_non_signing_operators: Vec<
-            eigensdk::utils::slashing::middleware::iblssignaturechecker::BN254::G1Point,
-        >,
-    ) -> impl std::prelude::rust_2024::Future<
-        Output = Result<(), eigensdk::challenger::task_manager::TaskManagerError>,
-    > + Send {
-        todo!()
+        task_response_metadata: TaskResponseMetadataSol,
+        pubkeys_of_non_signing_operators: Vec<G1Point>,
+    ) -> Result<(), TaskManagerError> {
+        let contract_task = ContractTask {
+            pointsToMultiply: task.input,
+            taskCreatedBlock: task.task_created_block,
+            quorumNumbers: task.quorum_numbers,
+            quorumThresholdPercentage: task.quorum_threshold_percentage,
+        };
+
+        let contract_response = ContractTaskResponse {
+            result: task_response.response,
+            referenceTaskIndex: task_response.task_index,
+        };
+
+        let task_response_metadata = TaskResponseMetadata {
+            taskRespondedBlock: task_response_metadata.taskResponsedBlock,
+            hashOfNonSigners: task_response_metadata.hashOfNonSigners,
+        };
+
+        let pubkey_non_signer = pubkeys_of_non_signing_operators
+            .iter()
+            .map(|p| G1Binding { X: p.X, Y: p.Y })
+            .collect();
+
+        self.0
+            .raiseAndResolveChallenge(
+                contract_task,
+                contract_response,
+                task_response_metadata,
+                pubkey_non_signer,
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        Ok(())
     }
 }

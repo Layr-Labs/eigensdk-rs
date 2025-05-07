@@ -1,28 +1,16 @@
-use alloy::{
-    consensus::Transaction,
-    contract::private::{Provider as PrivateProvider, Transport},
-    network::Network,
-    primitives::U256,
-    providers::Provider,
-    sol_types::SolCall,
-};
+use alloy::primitives::U256;
 use eigensdk::{
     challenger::{
-        challenger::ChallengerTaskProcessor, challenger_processor::IndexingChallengerProcessor,
-        Challenger,
+        challenger_processor::IndexingChallengerProcessor, error::ChallengerError, Challenger,
     },
-    common::{get_provider, get_signer},
+    common::get_signer,
     task_processor::{task::Task, task_response::TaskResponse},
 };
 use incredible_bindings::incredibledotproducttaskmanager::{
-    IIncredibleDotProductTaskManager::{DotProductInput, Task, TaskResponse, TaskResponseMetadata},
-    IncredibleDotProductTaskManager::{
-        respondToTaskCall, IncredibleDotProductTaskManagerInstance, NewTaskCreated, TaskResponded,
-    },
-    BN254::G1Point,
+    IIncredibleDotProductTaskManager::DotProductInput,
+    IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
-use incredible_dot_product::config::Config;
-use std::collections::HashMap;
+use incredible_dot_product::{config::Config, TaskManagerWrapper};
 
 #[tokio::main]
 async fn main() {
@@ -31,7 +19,9 @@ async fn main() {
 
     let contract =
         IncredibleDotProductTaskManagerInstance::new(config.contract_address.task_manager, wallet);
-    let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
+    let contract_wrapper = TaskManagerWrapper(contract);
+
+    let task_processor = IndexingChallengerProcessor::new(contract_wrapper, is_response_correct);
     let mut challenger = Challenger::new(
         config.rpc_config.ws_rpc_url.to_string(),
         config.rpc_config.http_rpc_url.to_string(),
@@ -40,7 +30,10 @@ async fn main() {
     challenger.start_challenger().await.unwrap();
 }
 
-fn is_response_correct(task: Task<DotProductInput>, task_response: TaskResponse<U256>) -> bool {
+fn is_response_correct(
+    task: Task<DotProductInput>,
+    task_response: TaskResponse<U256>,
+) -> Result<bool, ChallengerError> {
     let input = task.input;
 
     let result = input
@@ -49,5 +42,5 @@ fn is_response_correct(task: Task<DotProductInput>, task_response: TaskResponse<
         .zip(input.Y.iter())
         .fold(U256::ZERO, |acc, (a, b)| acc + (*a) * (*b));
 
-    result == task_response.response
+    Ok(result == task_response.response)
 }
