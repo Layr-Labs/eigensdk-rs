@@ -3,7 +3,8 @@
 use alloy::{
     contract::private::{Provider, Transport},
     network::Network,
-    primitives::U256,
+    primitives::{B256, U256},
+    sol_types::SolEvent,
 };
 use bindings::incrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
     Task as ContractTask, TaskResponse as ContractTaskResponse, TaskResponseMetadata,
@@ -48,8 +49,8 @@ where
 {
     type Input = U256;
     type Output = U256;
-    type NewTaskEvent = NewTaskCreated;
-    type TaskRespondedEvent = TaskResponded;
+    const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+    const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
 
     async fn create_new_task(
         &self,
