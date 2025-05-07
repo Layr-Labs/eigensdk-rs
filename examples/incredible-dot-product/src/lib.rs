@@ -14,11 +14,14 @@ use eigensdk::{
     types::operator::{QuorumNum, QuorumThresholdPercentage},
     utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
 };
-use incredible_bindings::incredibledotproducttaskmanager::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature;
 use incredible_bindings::incredibledotproducttaskmanager::IIncredibleDotProductTaskManager::{
     Task as ContractTask, TaskResponse as ContractTaskResponse,
 };
 use incredible_bindings::incredibledotproducttaskmanager::BN254::{G1Point, G2Point};
+use incredible_bindings::incredibledotproducttaskmanager::{
+    IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature,
+    IncredibleDotProductTaskManager::TaskResponded,
+};
 use incredible_bindings::incredibledotproducttaskmanager::{
     IIncredibleDotProductTaskManager::DotProductInput,
     IncredibleDotProductTaskManager::{IncredibleDotProductTaskManagerInstance, NewTaskCreated},
@@ -127,5 +130,33 @@ where
             .get_receipt()
             .await
             .unwrap())
+    }
+}
+
+// TODO: Try to move logic to TaskManagerContract trait
+impl<T, P, N> eigensdk::challenger::task_manager::TaskManagerContract
+    for TaskManagerWrapper<T, P, N>
+where
+    T: Transport + Clone + Send + Sync,
+    P: Provider<T, N>,
+    N: Network,
+{
+    type Input = DotProductInput;
+    type Output = U256;
+    type TaskRespondedEvent = TaskResponded;
+    type NewTaskEvent = NewTaskCreated;
+
+    fn raise_challenge(
+        &self,
+        task: Task<Self::Input>,
+        task_response: TaskResponse<Self::Output>,
+        task_response_metadata: eigensdk::challenger::challenger_processor::TaskResponseMetadataSol,
+        pubkeys_of_non_signing_operators: Vec<
+            eigensdk::utils::slashing::middleware::iblssignaturechecker::BN254::G1Point,
+        >,
+    ) -> impl std::prelude::rust_2024::Future<
+        Output = Result<(), eigensdk::challenger::task_manager::TaskManagerError>,
+    > + Send {
+        todo!()
     }
 }
