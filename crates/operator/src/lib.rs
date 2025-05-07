@@ -183,21 +183,21 @@ impl Operator {
     }
 }
 
-/// Helper to wrap both compute and failure logic in a single closure.
+/// Helper to wrap both correct and incorrect logic in a single closure.
 /// USE THIS FOR TESTING PURPOSES ONLY
 ///
 /// # Arguments
 ///
-/// * `compute` - The compute logic.
-/// * `failure` - The failure logic.
+/// * `correct_logic` - The correct logic to respond to the task.
+/// * `incorrect_logic` - The incorrect logic to respond to the task.
 /// * `failure_rate` - The failure rate.
 ///
 /// # Returns
 ///
 /// * `impl Fn(Event) -> Result<TaskResponse<O>, OperatorError>` - The wrapped logic.
-pub fn with_failures<Event, Output, C, F>(
-    compute: C,
-    failure: F,
+pub fn compute_with_failures<Event, Output, C, F>(
+    correct_logic: C,
+    incorrect_logic: F,
     failure_rate: u8,
 ) -> impl Fn(Event) -> Result<TaskResponse<Output>, OperatorError>
 where
@@ -214,10 +214,10 @@ where
         let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
         if should_fail {
             info!("Operator compute the task with a wrong response");
-            failure(event)
+            incorrect_logic(event)
         } else {
             info!("Operator compute the task successfully");
-            compute(event)
+            correct_logic(event)
         }
     }
 }
