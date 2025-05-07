@@ -1,5 +1,6 @@
 use crate::{challenger::ChallengerTaskProcessor, error::ChallengerError};
 use alloy::dyn_abi::SolType;
+use alloy::primitives::B256;
 use alloy::sol_types::SolValue;
 
 use eigen_task_processor::task_manager::TaskManagerContract;
@@ -27,13 +28,15 @@ where
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
 {
-    type NewTaskEvent = TM::NewTaskEvent;
-
-    type TaskResponseEvent = TM::TaskRespondedEvent;
-
     type Input = TM::Input;
 
     type Output = TM::Output;
+
+    /// New task event
+    const NEW_TASK_EVENT_SELECTOR: B256 = TM::NEW_TASK_EVENT_SELECTOR;
+
+    /// Task responded event
+    const TASK_RESPONDED_EVENT_SELECTOR: B256 = TM::TASK_RESPONDED_EVENT_SELECTOR;
 
     async fn handle_task_creation(
         &mut self,

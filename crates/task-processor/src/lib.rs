@@ -83,11 +83,11 @@ impl<TM> TaskProcessor for IndexingTaskProcessor<TM>
 where
     TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
 {
-    type NewTaskEvent = TM::NewTaskEvent;
-
     type Output = TM::Output;
 
     type Input = TM::Input;
+
+    const NEW_TASK_EVENT_SELECTOR: B256 = TM::NEW_TASK_EVENT_SELECTOR;
 
     async fn process_new_task(
         &mut self,
