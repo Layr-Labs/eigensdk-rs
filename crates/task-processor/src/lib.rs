@@ -36,6 +36,8 @@ pub mod task_manager;
 pub mod task_processor;
 /// Task response
 pub mod task_response;
+/// Task response metadata
+pub mod task_response_metadata_sol;
 
 type TaskResponsesMap<O> = HashMap<u32, HashMap<TaskResponseDigest, TaskResponse<O>>>;
 

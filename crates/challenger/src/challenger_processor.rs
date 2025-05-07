@@ -1,27 +1,17 @@
-use crate::{
-    challenger::ChallengerTaskProcessor, error::ChallengerError, task_manager::TaskManagerContract,
-};
+use crate::{challenger::ChallengerTaskProcessor, error::ChallengerError};
 use alloy::dyn_abi::SolType;
-use alloy::sol;
 use alloy::{
     contract::private::{Provider, Transport},
     network::Network,
     sol_types::SolValue,
 };
 
+use eigen_task_processor::task_manager::TaskManagerContract;
+use eigen_task_processor::task_response_metadata_sol::TaskResponseMetadataSol;
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
 use tracing::error;
-
-// Metadata of the task response
-sol! {
-    #[derive(Debug)]
-    struct TaskResponseMetadataSol {
-        uint32 taskResponsedBlock;
-        bytes32 hashOfNonSigners;
-    }
-}
 
 #[derive(Debug)]
 pub struct IndexingChallengerProcessor<TM, T, P, N, F>
