@@ -1,5 +1,3 @@
-pub mod config;
-
 use alloy::{
     contract::private::{Provider, Transport},
     network::Network,
@@ -34,6 +32,9 @@ use incredible_bindings::incredibledotproducttaskmanager::{
     IncredibleDotProductTaskManager::{IncredibleDotProductTaskManagerInstance, NewTaskCreated},
 };
 use tracing::info;
+
+pub mod config;
+pub mod utils;
 
 // We need to implement this struct to avoid "must be used as the type parameter for some local type" error
 // With the new struct, there is no problem when implementing the TaskManagerContract trait to the external binding struct
@@ -172,8 +173,7 @@ where
             .map(|p| G1Binding { X: p.X, Y: p.Y })
             .collect();
 
-        let receipt = self
-            .0
+        self.0
             .raiseAndResolveChallenge(
                 contract_task,
                 contract_response,
