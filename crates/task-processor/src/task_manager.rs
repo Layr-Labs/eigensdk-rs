@@ -1,7 +1,11 @@
 use std::{fmt::Debug, future::Future};
 
 use crate::{task::Task, task_response::TaskResponse};
-use alloy::sol_types::{SolEvent, SolValue};
+use alloy::{
+    network::Network,
+    sol_types::{SolEvent, SolValue},
+};
+use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use serde::de::DeserializeOwned;
 
@@ -14,7 +18,7 @@ pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskManagerErr
 }
 
 /// Task manager contract trait. It wraps the contract's types and functions.
-pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
+pub trait TaskManagerContract<T, P, N: Network> {
     /// Type for inputs of each task
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
@@ -41,4 +45,22 @@ pub trait TaskManagerContract<T, P, N: alloy::network::Network> {
         response: TaskResponse<Self::Output>,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
     ) -> impl Future<Output = Result<(), TaskManagerError>> + Send;
+
+    /// Create a new task
+    ///
+    /// # Arguments
+    ///
+    /// * `input` - Generic input of the task
+    /// * `quorum_threshold` - The quorum threshold for the task
+    /// * `quorums` - The quorums for the task
+    ///
+    /// # Returns
+    ///
+    /// * `Result<N::ReceiptResponse, TaskManagerError>` - The result of the task
+    fn create_new_task(
+        &self,
+        input: Self::Input,
+        quorum_threshold: QuorumThresholdPercentage,
+        quorums: Vec<QuorumNum>,
+    ) -> impl Future<Output = Result<N::ReceiptResponse, TaskManagerError>> + Send;
 }

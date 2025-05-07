@@ -2775,6 +2775,7 @@ dependencies = [
  "eigen-services-avsregistry",
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
+ "eigen-task-processor",
  "eigen-types",
  "eigen-utils",
  "futures-util",
@@ -3011,6 +3012,7 @@ dependencies = [
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",
+ "eigen-task-processor",
  "eigen-types",
  "eigen-utils",
  "futures-util",
@@ -3141,6 +3143,7 @@ name = "eigen-task-spammer"
 version = "0.5.0"
 dependencies = [
  "alloy",
+ "eigen-task-processor",
  "eigen-types",
  "thiserror 1.0.69",
  "tokio",
@@ -3701,19 +3704,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "examples-aggregator"
-version = "0.5.0"
-dependencies = [
- "alloy",
- "eigen-aggregator",
- "eigen-crypto-bls",
- "eigen-task-processor",
- "eigen-utils",
- "serde",
- "tokio",
-]
-
-[[package]]
 name = "examples-anvil-utils"
 version = "0.5.0"
 dependencies = [
@@ -3758,49 +3748,6 @@ dependencies = [
  "eyre",
  "lazy_static",
  "tokio",
-]
-
-[[package]]
-name = "examples-challenger"
-version = "0.5.0"
-dependencies = [
- "alloy",
- "eigen-challenger",
- "eigen-types",
- "tokio",
- "tokio-util",
- "tracing",
-]
-
-[[package]]
-name = "examples-operator"
-version = "0.5.0"
-dependencies = [
- "alloy",
- "eigen-aggregator",
- "eigen-client-avsregistry",
- "eigen-common",
- "eigen-crypto-bls",
- "eigen-logging",
- "eigen-operator",
- "eigen-testing-utils",
- "eigen-types",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "examples-task-spammer"
-version = "0.5.0"
-dependencies = [
- "alloy",
- "async-trait",
- "eigen-task-spammer",
- "eigen-types",
- "tokio",
- "tracing",
 ]
 
 [[package]]
@@ -4725,6 +4672,30 @@ dependencies = [
  "serde",
  "tokio",
  "toml",
+]
+
+[[package]]
+name = "incredible-squaring"
+version = "0.5.0"
+dependencies = [
+ "alloy",
+ "ark-ec 0.5.0",
+ "eigen-aggregator",
+ "eigen-challenger",
+ "eigen-client-avsregistry",
+ "eigen-common",
+ "eigen-crypto-bls",
+ "eigen-logging",
+ "eigen-operator",
+ "eigen-task-processor",
+ "eigen-task-spammer",
+ "eigen-testing-utils",
+ "eigen-types",
+ "eigen-utils",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]

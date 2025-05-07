@@ -20,6 +20,7 @@ eigen-common.workspace = true
 eigen-services-operatorsinfo.workspace = true
 eigen-logging.workspace = true
 eigen-client-avsregistry.workspace = true
+eigen-task-processor.workspace = true
 eigen-services-avsregistry.workspace = true
 eigen-services-blsaggregation.workspace = true
 eigen-utils.workspace = true

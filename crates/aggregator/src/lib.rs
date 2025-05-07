@@ -273,17 +273,18 @@ where
     fn decode_event(log: &Log) -> Result<(u32, Task<TP::Input>), AggregatorError> {
         // event NewTaskCreated(uint32 indexed taskIndex, Task task);
         // Since taskIndex is indexed type, it is present in the topics array
-        let task_index_bytes: [u8; 32] = log
+        // The first element of the topic is the event hash signature, the second is the taskIndex
+        let bytes: [u8; 32] = log
             .topics()
             .get(1)
             .ok_or(AggregatorError::TaskIndexMissingInTopics)?
             .0;
 
         // u32 values are stored in the last 4 bytes of a 32 bytes array (left-padded).
-        let u32_bytes: [u8; 4] = task_index_bytes[28..32]
+        let task_index_bytes: [u8; 4] = bytes[28..32]
             .try_into()
             .map_err(|_| AggregatorError::InvalidTaskIndexConversion)?;
-        let task_index = u32::from_be_bytes(u32_bytes);
+        let task_index = u32::from_be_bytes(task_index_bytes);
 
         // Skip the first 32 bytes of the ABI-encoded data (the dynamic offset pointer)
         // so we can decode the actual tuple payload that follows.
