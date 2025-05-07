@@ -1,32 +1,35 @@
-use alloy::primitives::U256;
+use std::str::FromStr;
+
+use alloy::primitives::{Address, U256};
 use eigensdk::{
     challenger::{
         challenger_processor::IndexingChallengerProcessor, error::ChallengerError, Challenger,
     },
     common::get_signer,
+    logging::{init_logger, log_level::LogLevel},
     task_processor::{task::Task, task_response::TaskResponse},
+    testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use incredible_bindings::incredibledotproducttaskmanager::{
     IIncredibleDotProductTaskManager::DotProductInput,
     IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
-use incredible_dot_product::{config::Config, TaskManagerWrapper};
+use incredible_dot_product::TaskManagerWrapper;
 
 #[tokio::main]
 async fn main() {
-    let config = Config::load_from("config.toml");
-    let wallet = get_signer(&config.rpc_config.signer, &config.rpc_config.http_rpc_url);
+    init_logger(LogLevel::Info);
+    let http_rpc_url = "http://localhost:8545".to_string();
+    let ws_rpc_url = "ws://localhost:8545".to_string();
+    let wallet = get_signer(FIRST_PRIVATE_KEY, &http_rpc_url);
+    let task_manager_address =
+        Address::from_str("0x7bc06c482dead17c0e297afbc32f6e63d3846650").unwrap();
 
-    let contract =
-        IncredibleDotProductTaskManagerInstance::new(config.contract_address.task_manager, wallet);
+    let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
     let contract_wrapper = TaskManagerWrapper(contract);
 
     let task_processor = IndexingChallengerProcessor::new(contract_wrapper, is_response_correct);
-    let mut challenger = Challenger::new(
-        config.rpc_config.ws_rpc_url.to_string(),
-        config.rpc_config.http_rpc_url.to_string(),
-        task_processor,
-    );
+    let mut challenger = Challenger::new(http_rpc_url, ws_rpc_url, task_processor);
     challenger.start_challenger().await.unwrap();
 }
 

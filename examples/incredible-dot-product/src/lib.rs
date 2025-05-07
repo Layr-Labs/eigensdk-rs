@@ -33,7 +33,6 @@ use incredible_bindings::incredibledotproducttaskmanager::{
 };
 use tracing::info;
 
-pub mod config;
 pub mod utils;
 
 // We need to implement this struct to avoid "must be used as the type parameter for some local type" error
@@ -60,6 +59,10 @@ where
         response: TaskResponse<Self::Output>,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
     ) -> Result<(), TaskManagerError> {
+        dbg!("Responding to task");
+        dbg!(&task);
+        dbg!(&response);
+
         let contract_task = ContractTask {
             pointsToMultiply: task.input,
             quorumNumbers: task.quorum_numbers,
@@ -131,6 +134,7 @@ where
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
     ) -> Result<N::ReceiptResponse, TaskManagerError> {
+        dbg!("Creating new task");
         Ok(self
             .0
             .createNewTask(input, quorum_threshold.into(), quorums.into())
