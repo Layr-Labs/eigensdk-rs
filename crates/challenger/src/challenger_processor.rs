@@ -1,10 +1,6 @@
 use crate::{challenger::ChallengerTaskProcessor, error::ChallengerError};
 use alloy::dyn_abi::SolType;
-use alloy::{
-    contract::private::{Provider, Transport},
-    network::Network,
-    sol_types::SolValue,
-};
+use alloy::sol_types::SolValue;
 
 use eigen_task_processor::task_manager::TaskManagerContract;
 use eigen_task_processor::task_response_metadata_sol::TaskResponseMetadataSol;
@@ -14,12 +10,9 @@ use std::collections::HashMap;
 use tracing::error;
 
 #[derive(Debug)]
-pub struct IndexingChallengerProcessor<TM, T, P, N, F>
+pub struct IndexingChallengerProcessor<TM, F>
 where
-    TM: TaskManagerContract<T, P, N> + Send + Sync + 'static + Clone,
-    T: Transport + Clone + Send + Sync,
-    P: Provider<T, N>,
-    N: Network,
+    TM: TaskManagerContract + Send + Sync + 'static + Clone,
     F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
 {
     task_manager: TM,
@@ -27,14 +20,11 @@ where
     is_response_correct: F,
 }
 
-impl<TM, T, P, N, F> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, T, P, N, F>
+impl<TM, F> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, F>
 where
-    TM: TaskManagerContract<T, P, N> + Send + Sync + 'static + Clone,
+    TM: TaskManagerContract + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    T: Transport + Clone + Send + Sync,
-    P: Provider<T, N>,
-    N: Network,
     F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
 {
     type NewTaskEvent = TM::NewTaskEvent;
@@ -83,14 +73,11 @@ where
     }
 }
 
-impl<TM, T, P, N, F> IndexingChallengerProcessor<TM, T, P, N, F>
+impl<TM, F> IndexingChallengerProcessor<TM, F>
 where
-    TM: TaskManagerContract<T, P, N> + Send + Sync + 'static + Clone,
+    TM: TaskManagerContract + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    T: Transport + Clone + Send + Sync,
-    P: Provider<T, N>,
-    N: Network,
     F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
 {
     pub fn new(task_manager: TM, is_response_correct: F) -> Self {

@@ -40,7 +40,7 @@ pub mod bindings;
 // struct TaskManagerWrapper<T, P, N>(IncredibleSquaringTaskManagerInstance<T, P, N>);
 //
 // impl<T, P, N> TaskManagerContract<U256, T, P, N> for TaskManagerWrapper<T, P, N> { ... }
-impl<T, P, N> TaskManagerContract<T, P, N> for IncredibleSquaringTaskManagerInstance<T, P, N>
+impl<T, P, N> TaskManagerContract for IncredibleSquaringTaskManagerInstance<T, P, N>
 where
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
@@ -56,7 +56,7 @@ where
         input: U256,
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
-    ) -> Result<N::ReceiptResponse, TaskManagerError> {
+    ) -> Result<(), TaskManagerError> {
         self.createNewTask(input, quorum_threshold.into(), quorums.into())
             .send()
             .await
@@ -64,6 +64,7 @@ where
             .get_receipt()
             .await
             .map_err(box_error)
+            .map(|_| ())
     }
 
     async fn respond_to_task(
