@@ -1,8 +1,7 @@
 use alloy::contract::Error as AlloyError;
 use alloy::sol_types::Error as AlloySolTypeError;
+use eigen_task_processor::task_manager::TaskManagerError;
 use thiserror::Error;
-
-use crate::task_manager::TaskManagerError;
 
 /// Error returned by chainio
 #[derive(Debug, Error)]
