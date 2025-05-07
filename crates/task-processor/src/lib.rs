@@ -28,6 +28,8 @@ use tracing::info;
 
 /// Task processor error
 pub mod error;
+/// Task response metadata
+pub mod response_metadata;
 /// Task
 pub mod task;
 /// Task manager trait
