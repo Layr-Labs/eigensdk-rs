@@ -2,13 +2,11 @@ use alloy::primitives::U256;
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
-    operator::{error::OperatorError, Operator},
+    operator::{config::OperatorConfig, error::OperatorError, Operator},
+    task_processor::task_response::TaskResponse,
     testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY},
 };
-use incredible_bindings::incrediblesquaringtaskmanager::{
-    IIncredibleSquaringTaskManager::{DotProductResult, TaskResponse},
-    IncredibleSquaringTaskManager::NewTaskCreated,
-};
+use incredible_bindings::incredibledotproducttaskmanager::IncredibleDotProductTaskManager::NewTaskCreated;
 use incredible_dot_product::config::Config;
 
 #[tokio::main]
@@ -25,35 +23,62 @@ async fn main() {
     let operator_state_retriever_address = config.contract_address.operator_state_retriever;
     let aggregator_ip_port = config.aggregator_config.server_address;
 
-    let operator = Operator::new(
-        &bls_key_pair,
+    let operator_config = OperatorConfig {
+        bls_key_pair,
         operator_address,
-        operator_name,
-        logger,
-        &ws_rpc_url,
-        &http_rpc_url,
+        operator_name: operator_name.to_string(),
+        ws_rpc_url: ws_rpc_url.to_string(),
+        http_rpc_url: http_rpc_url.to_string(),
         registry_coordinator_address,
         operator_state_retriever_address,
         aggregator_ip_port,
-    )
-    .await
-    .unwrap();
+    };
+    let operator = Operator::new(logger, operator_config).await.unwrap();
 
     // TODO: Review bounds in SDK. I have to derive Serialize and Deserialize for TaskResponse in the bindings
-    // FIX: Some methods related to the operator are <Response> or <SignedResponse<Response>>
-    //      and needs to be updated to <TaskResponse<Response>> and SignedResponse<TaskResponse<Response>>
-    //      This will break when sending the RPC request to the aggregator
     operator.start(dot_product).await.unwrap();
 }
 
-fn dot_product(event: NewTaskCreated) -> Result<TaskResponse, OperatorError> {
-    let result = DotProductResult {
-        resultHigh: U256::ONE,
-        resultLow: U256::ONE,
-    };
+/// Computes the dot product of a pair of points
+///
+/// # Arguments
+///
+/// * `event` - The event containing the task
+///
+/// # Returns
+///
+/// * `Result<TaskResponse<U256>, OperatorError>` - The task response
+fn dot_product(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
+    let input = event.task.pointsToMultiply;
+
+    let result = input
+        .X
+        .iter()
+        .zip(input.Y.iter())
+        .fold(U256::ZERO, |acc, (a, b)| acc + (*a) * (*b));
 
     Ok(TaskResponse {
-        referenceTaskIndex: event.taskIndex,
-        output: result,
+        task_index: event.taskIndex,
+        response: result,
+    })
+}
+
+/// Computes an invalid dot product of a pair of points
+/// This function is used to test the slashing mechanism when the operator returns a wrong response
+///
+/// # Arguments
+///
+/// * `event` - The event containing the task
+///
+/// # Returns
+///
+/// * `Result<TaskResponse<U256>, OperatorError>` - The wrong task response
+#[allow(dead_code)]
+fn invalid_dot_product(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
+    let result = U256::MAX;
+
+    Ok(TaskResponse {
+        task_index: event.taskIndex,
+        response: result,
     })
 }

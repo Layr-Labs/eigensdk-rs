@@ -18,32 +18,6 @@ use incredible_bindings::incrediblesquaringtaskmanager::{
 };
 use incredible_dot_product::config::Config;
 
-struct TaskManagerWrapper<T, P, N>(pub IncredibleSquaringTaskManagerInstance<T, P, N>);
-
-impl<T, P, N> TaskManagerContract<DotProductInput, T, P, N> for TaskManagerWrapper<T, P, N>
-where
-    T: Transport + Clone + Send + Sync,
-    P: Provider<T, N>,
-    N: Network,
-{
-    // type Input = DotProductInput;
-
-    async fn create_new_task(
-        &self,
-        input: DotProductInput,
-        quorum_threshold: QuorumThresholdPercentage,
-        quorums: Vec<QuorumNum>,
-    ) -> Result<N::ReceiptResponse, TaskSpammerError> {
-        Ok(self
-            .0
-            .createNewTask(input, quorum_threshold.into(), quorums.into())
-            .send()
-            .await?
-            .get_receipt()
-            .await?)
-    }
-}
-
 #[tokio::main]
 async fn main() {
     let config = Config::load_from("config.toml");
