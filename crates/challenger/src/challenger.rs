@@ -1,17 +1,19 @@
 use std::future::Future;
 
 use alloy::sol_types::{SolEvent, SolValue};
-use eigen_task_processor::{task::Task, task_response::TaskResponse};
+use eigen_task_processor::{
+    task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
+};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 
-use crate::{challenger_processor::TaskResponseMetadataSol, error::ChallengerError};
+use crate::error::ChallengerError;
 
 pub trait ChallengerTaskProcessor {
     /// Event type expected by the task processor
-    type NewTaskEvent: SolEvent + Send + Sync + 'static;
+    type NewTaskEvent: SolEvent;
 
     /// Response type expected by the task processor
-    type TaskResponseEvent: SolEvent + Send + Sync + 'static;
+    type TaskResponseEvent: SolEvent;
 
     /// Input type of the task
     type Input: Clone + SolValue + Send + Sync + 'static;

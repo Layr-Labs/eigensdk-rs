@@ -8,9 +8,10 @@ use alloy::{
     sol_types::{SolEvent, SolValue},
 };
 use challenger::ChallengerTaskProcessor;
-use challenger_processor::TaskResponseMetadataSol;
 use eigen_common::{get_provider, get_ws_provider};
-use eigen_task_processor::{task::Task, task_response::TaskResponse};
+use eigen_task_processor::{
+    task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
+};
 use eigen_utils::slashing::middleware::iblssignaturechecker::{
     IBLSSignatureCheckerTypes::NonSignerStakesAndSignature, BN254::G1Point,
 };
@@ -21,7 +22,6 @@ use tracing::info;
 pub mod challenger;
 pub mod challenger_processor;
 pub mod error;
-pub mod task_manager;
 
 /// The tuple for NewTaskCreated: (u32, Input)
 pub type NewTaskEventTuple<Input> = (

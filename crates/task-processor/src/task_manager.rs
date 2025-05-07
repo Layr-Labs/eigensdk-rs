@@ -1,12 +1,15 @@
 use std::{fmt::Debug, future::Future};
 
-use crate::{task::Task, task_response::TaskResponse};
+use crate::{
+    task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
+};
 use alloy::{
     network::Network,
     sol_types::{SolEvent, SolValue},
 };
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
+use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use serde::de::DeserializeOwned;
 
 /// Error returned by the task processor
@@ -27,6 +30,9 @@ pub trait TaskManagerContract<T, P, N: Network> {
 
     /// New task event
     type NewTaskEvent: SolEvent;
+
+    /// Task responded event
+    type TaskRespondedEvent: SolEvent;
 
     /// Respond to a task
     ///
@@ -63,4 +69,24 @@ pub trait TaskManagerContract<T, P, N: Network> {
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
     ) -> impl Future<Output = Result<N::ReceiptResponse, TaskManagerError>> + Send;
+
+    /// Raise challenge
+    ///
+    /// # Arguments
+    ///
+    /// * `task` - The task
+    /// * `task_response` - The task response
+    /// * `task_response_metadata` - The task response metadata
+    /// * `pubkeys_of_non_signing_operators` - The pubkeys of non-signing operators
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), TaskManagerError>` - The result of the operation
+    fn raise_challenge(
+        &self,
+        task: Task<Self::Input>,
+        task_response: TaskResponse<Self::Output>,
+        task_response_metadata: TaskResponseMetadataSol,
+        pubkeys_of_non_signing_operators: Vec<G1Point>,
+    ) -> impl Future<Output = Result<(), TaskManagerError>> + Send;
 }
