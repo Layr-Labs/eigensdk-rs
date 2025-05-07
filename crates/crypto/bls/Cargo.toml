@@ -22,5 +22,6 @@ eigen-utils.workspace = true
 
 [dev-dependencies]
 eigen-testing-utils.workspace = true
+rand = "0.8.4"
 tokio = { workspace = true, features = ["full"] }
 serde_json.workspace = true

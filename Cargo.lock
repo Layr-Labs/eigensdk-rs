@@ -2909,6 +2909,7 @@ dependencies = [
  "eigen-crypto-bn254",
  "eigen-testing-utils",
  "eigen-utils",
+ "rand 0.8.5",
  "serde",
  "serde_json",
  "thiserror 1.0.69",
