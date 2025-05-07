@@ -35,9 +35,8 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn load_from<P: AsRef<Path>>(path: P) -> Config {
+    pub fn load_from<P: AsRef<Path>>(path: P) -> Self {
         let s = fs::read_to_string(path).unwrap();
-        let config: Config = toml::from_str(&s).unwrap();
-        config
+        toml::from_str(&s).unwrap()
     }
 }

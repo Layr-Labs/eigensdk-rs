@@ -4672,6 +4672,7 @@ dependencies = [
  "serde",
  "tokio",
  "toml",
+ "tracing",
 ]
 
 [[package]]

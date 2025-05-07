@@ -33,6 +33,7 @@ use incredible_bindings::incredibledotproducttaskmanager::{
     IIncredibleDotProductTaskManager::DotProductInput,
     IncredibleDotProductTaskManager::{IncredibleDotProductTaskManagerInstance, NewTaskCreated},
 };
+use tracing::info;
 
 // We need to implement this struct to avoid "must be used as the type parameter for some local type" error
 // With the new struct, there is no problem when implementing the TaskManagerContract trait to the external binding struct
@@ -147,6 +148,8 @@ where
         task_response_metadata: TaskResponseMetadataSol,
         pubkeys_of_non_signing_operators: Vec<G1Point>,
     ) -> Result<(), TaskManagerError> {
+        info!("Raising challenge for task {:?}", task_response.task_index);
+
         let contract_task = ContractTask {
             pointsToMultiply: task.input,
             taskCreatedBlock: task.task_created_block,
@@ -169,7 +172,8 @@ where
             .map(|p| G1Binding { X: p.X, Y: p.Y })
             .collect();
 
-        self.0
+        let receipt = self
+            .0
             .raiseAndResolveChallenge(
                 contract_task,
                 contract_response,
@@ -182,6 +186,8 @@ where
             .get_receipt()
             .await
             .unwrap();
+
+        info!("Challenge raised and resolved");
 
         Ok(())
     }
