@@ -29,6 +29,9 @@ tracing.workspace = true
 serde_json.workspace = true
 ark-ec.workspace = true
 
+[lib]
+doctest = false
+
 [[bin]]
 name = "incredible-squaring-aggregator"
 path = "src/bin/aggregator.rs"
