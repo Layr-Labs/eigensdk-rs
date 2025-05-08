@@ -80,7 +80,7 @@ async fn main() -> Result<()> {
     };
     let operator = Operator::new(logger, operator_config).await?;
 
-    let logic = compute_with_failures(dot_product, invalid_dot_product, 100);
+    let logic = compute_with_failures(dot_product, invalid_dot_product, 40);
 
     // TODO: Review bounds in SDK. I have to derive Serialize and Deserialize for TaskResponse in the bindings
     operator.start(logic).await?;
