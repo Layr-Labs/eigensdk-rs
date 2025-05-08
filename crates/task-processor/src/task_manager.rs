@@ -119,7 +119,7 @@ macro_rules! impl_task_manager {
 
 #[macro_export]
 /// This macro generates a default implementation of the [`TaskManager`] trait's methods.
-/// /// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
+/// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
 macro_rules! default_contract_impl {
     () => {
         async fn create_new_task(
