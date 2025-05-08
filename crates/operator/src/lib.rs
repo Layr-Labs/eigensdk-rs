@@ -1,6 +1,7 @@
 //! Operator common functions.
 
 use alloy::{
+    dyn_abi::SolType,
     primitives::keccak256,
     providers::{Provider, ProviderBuilder, WsConnect},
     rpc::types::Filter,
@@ -120,7 +121,8 @@ impl Operator {
     where
         Event: SolEvent,
         F: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
-        Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
+        Output: SolValue + Clone,
+        Output: From<<<Output as SolValue>::SolType as SolType>::RustType>,
     {
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
@@ -148,7 +150,7 @@ impl Operator {
             let signed_task_response =
                 Self::sign_task_response(&self.key_pair, &self.operator_id, task_response)?;
             self.client_aggregator
-                .send_signed_task_response(signed_task_response)
+                .send_signed_task_response(signed_task_response.encode())
                 .await?;
         }
 
@@ -170,9 +172,10 @@ impl Operator {
         key_pair: &BlsKeyPair,
         operator_id: &OperatorId,
         task_response: TaskResponse<Response>,
-    ) -> Result<SignedTaskResponse<TaskResponse<Response>>, OperatorError>
+    ) -> Result<SignedTaskResponse<Response>, OperatorError>
     where
-        Response: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
+        Response: SolValue + Clone,
+        Response: From<<<Response as SolValue>::SolType as SolType>::RustType>,
     {
         let encoded = task_response.encode();
         let hash_msg = keccak256(encoded);
@@ -204,7 +207,7 @@ pub fn compute_with_failures<Event, Output, C, F>(
 where
     C: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
     F: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
-    Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
+    Output: SolValue + Clone,
 {
     move |event| {
         if failure_rate > 100 {

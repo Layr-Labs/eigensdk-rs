@@ -1,8 +1,9 @@
 use std::fmt::Debug;
 
 use crate::{AggregatorError, SignedTaskResponse};
+use alloy::{dyn_abi::SolType, sol_types::SolValue};
 use eigen_services_blsaggregation::bls_agg::{ServiceHandle, TaskSignature};
-use eigen_task_processor::{task_processor::TaskProcessor, task_response::TaskResponse};
+use eigen_task_processor::task_processor::TaskProcessor;
 use tarpc::{context::Context, ServerError};
 use tracing::info;
 
@@ -20,7 +21,7 @@ pub trait ProcessSignedTaskResponse {
     ///
     /// * `Result<bool, ServerError>` - The result of the operation
     async fn process_signed_task_response(
-        signed_task_response: String,
+        signed_task_response: Vec<u8>,
     ) -> Result<bool, ServerError>;
 }
 
@@ -29,6 +30,7 @@ pub trait ProcessSignedTaskResponse {
 pub struct ProcessSignedTaskResponseServer<TP>
 where
     TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
     task_processor: TP,
     service_handle: ServiceHandle,
@@ -39,20 +41,15 @@ where
 impl<TP> ProcessSignedTaskResponse for ProcessSignedTaskResponseServer<TP>
 where
     TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
     async fn process_signed_task_response(
         mut self,
         _ctx: Context,
-        signed_task_response: String,
+        signed_task_response: Vec<u8>,
     ) -> Result<bool, ServerError> {
         let service_handle = &self.service_handle;
-        let parsed: SignedTaskResponse<TP::Output> = serde_json::from_str(&signed_task_response)
-            .map_err(|_| {
-                ServerError::new(
-                    std::io::ErrorKind::InvalidInput,
-                    "Invalid signed task response".to_string(),
-                )
-            })?;
+        let parsed = SignedTaskResponse::<TP::Output>::decode(&signed_task_response);
 
         Self::process_signed_task_response(&mut self.task_processor, service_handle, parsed)
             .await
@@ -69,6 +66,7 @@ where
 impl<TP> ProcessSignedTaskResponseServer<TP>
 where
     TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
     /// Creates a new [`ProcessSignedTaskResponseServer`]
     ///

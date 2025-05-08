@@ -1,5 +1,4 @@
 use eigen_aggregator::rpc_server::ProcessSignedTaskResponseClient;
-use serde::Serialize;
 use tarpc::tokio_serde::formats::Json;
 use tokio::time::{sleep, Duration};
 use tracing::{error, info};
@@ -46,16 +45,15 @@ impl ClientAggregator {
     /// * `Result<(), OperatorError>` - The result of the operation
     pub async fn send_signed_task_response(
         &self,
-        signed_task_response: impl Serialize,
+        signed_task_response: Vec<u8>,
     ) -> Result<(), OperatorError> {
         let mut delay = Duration::from_secs(1);
 
         for _ in 0..5 {
-            let signed_task_string = serde_json::to_string(&signed_task_response)?;
             let ctx = tarpc::context::current();
             let response = self
                 .client
-                .process_signed_task_response(ctx, signed_task_string)
+                .process_signed_task_response(ctx, signed_task_response.clone())
                 .await?;
 
             if response.is_ok() {
