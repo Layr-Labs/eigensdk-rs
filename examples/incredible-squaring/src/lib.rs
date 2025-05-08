@@ -4,7 +4,7 @@ use alloy::primitives::U256;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::TaskResponded;
-use eigen_task_processor::{default_contract_impl, impl_task_manager};
+use eigen_task_processor::impl_task_manager;
 
 // Allow warnings in auto-generated code
 #[allow(warnings)]

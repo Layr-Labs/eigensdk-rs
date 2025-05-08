@@ -112,7 +112,7 @@ macro_rules! impl_task_manager {
             const TASK_RESPONDED_EVENT_SELECTOR: ::alloy::primitives::B256 =
                 <$task_responded_event as ::alloy::sol_types::SolEvent>::SIGNATURE_HASH;
 
-            default_contract_impl! {}
+            $crate::default_contract_impl! {}
         }
     };
 }
