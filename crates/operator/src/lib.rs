@@ -13,9 +13,7 @@ use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
 use eigen_task_processor::task_manager::TaskManagerError;
-use eigen_task_processor::{
-    task::Task, task_manager::TaskManagerContract, task_response::TaskResponse,
-};
+use eigen_task_processor::{task::Task, task_manager::TaskManager, task_response::TaskResponse};
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
@@ -125,9 +123,9 @@ impl Operator {
         compute_logic: impl Fn(u32, TM::Input) -> Result<TM::Output, TaskManagerError>,
     ) -> Result<(), OperatorError>
     where
-        TM: TaskManagerContract,
-        <TM as TaskManagerContract>::Input:
-            From<<<<TM as TaskManagerContract>::Input as SolValue>::SolType as SolType>::RustType>,
+        TM: TaskManager,
+        <TM as TaskManager>::Input:
+            From<<<<TM as TaskManager>::Input as SolValue>::SolType as SolType>::RustType>,
         TM::Output: Serialize + for<'de> Deserialize<'de> + Clone,
     {
         let ws = WsConnect::new(&self.ws_rpc_url);
@@ -203,9 +201,9 @@ impl Operator {
 /// * `Result<(u32, Task<TP::Input>), AggregatorError>` - The task index and the task
 fn decode_event<TM>(log: &Log) -> Result<(u32, Task<TM::Input>), OperatorError>
 where
-    TM: TaskManagerContract,
-    <TM as TaskManagerContract>::Input:
-        From<<<<TM as TaskManagerContract>::Input as SolValue>::SolType as SolType>::RustType>,
+    TM: TaskManager,
+    <TM as TaskManager>::Input:
+        From<<<<TM as TaskManager>::Input as SolValue>::SolType as SolType>::RustType>,
 {
     // event NewTaskCreated(uint32 indexed taskIndex, Task task);
     // Since taskIndex is indexed type, it is present in the topics array

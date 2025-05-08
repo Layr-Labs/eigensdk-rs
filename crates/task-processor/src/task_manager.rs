@@ -5,10 +5,11 @@ use crate::{
 };
 use alloy::primitives::B256;
 use alloy::sol_types::SolValue;
-use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
-use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
-use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use serde::de::DeserializeOwned;
+
+pub use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
+pub use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
+pub use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 
 /// Error returned by the task processor
 pub type TaskManagerError = Box<dyn core::error::Error + Send>;
@@ -19,7 +20,7 @@ pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskManagerErr
 }
 
 /// Task manager contract trait. It wraps the contract's types and functions.
-pub trait TaskManagerContract {
+pub trait TaskManager {
     /// Type for inputs of each task
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
@@ -87,4 +88,166 @@ pub trait TaskManagerContract {
         task_response_metadata: TaskResponseMetadataSol,
         pubkeys_of_non_signing_operators: Vec<G1Point>,
     ) -> impl Future<Output = Result<(), TaskManagerError>> + Send;
+}
+
+#[macro_export]
+/// Implements the [`TaskManager`] trait for the given contract.
+/// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
+macro_rules! impl_task_manager {
+    (Contract = $contract:ident,
+        Input = $input:ty,
+        Output = $output:ty,
+        NewTaskEvent = $new_task_event:ty,
+        TaskRespondedEvent = $task_responded_event:ty $(,)*) => {
+        impl<T, P, N> $crate::task_manager::TaskManager for $contract<T, P, N>
+        where
+            T: ::alloy::contract::private::Transport + Clone + Send + Sync,
+            P: ::alloy::contract::private::Provider<T, N>,
+            N: ::alloy::network::Network,
+        {
+            type Input = $input;
+            type Output = $output;
+            const NEW_TASK_EVENT_SELECTOR: ::alloy::primitives::B256 =
+                <$new_task_event as ::alloy::sol_types::SolEvent>::SIGNATURE_HASH;
+            const TASK_RESPONDED_EVENT_SELECTOR: ::alloy::primitives::B256 =
+                <$task_responded_event as ::alloy::sol_types::SolEvent>::SIGNATURE_HASH;
+
+            $crate::default_contract_impl! {}
+        }
+    };
+}
+
+#[macro_export]
+/// This macro generates a default implementation of the [`TaskManager`] trait's methods.
+/// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
+macro_rules! default_contract_impl {
+    () => {
+        async fn create_new_task(
+            &self,
+            input: Self::Input,
+            quorum_threshold: $crate::task_manager::QuorumThresholdPercentage,
+            quorums: Vec<$crate::task_manager::QuorumNum>,
+        ) -> Result<(), $crate::task_manager::TaskManagerError> {
+            self.createNewTask(input, quorum_threshold.into(), quorums.into())
+                .send()
+                .await
+                .map_err($crate::task_manager::box_error)?
+                .get_receipt()
+                .await
+                .map_err($crate::task_manager::box_error)?;
+
+            Ok(())
+        }
+
+        async fn respond_to_task(
+            &self,
+            task: $crate::task::Task<Self::Input>,
+            task_response: $crate::task_response::TaskResponse<Self::Output>,
+            non_signer_stakes_and_signature: $crate::task_manager::NonSignerStakesAndSignature,
+        ) -> Result<(), $crate::task_manager::TaskManagerError> {
+            let contract_task = (
+                task.input,
+                task.task_created_block,
+                task.quorum_numbers,
+                task.quorum_threshold_percentage,
+            )
+                .into();
+
+            let contract_response = (task_response.task_index, task_response.response).into();
+
+            let apk_g2 = (
+                non_signer_stakes_and_signature.apkG2.X,
+                non_signer_stakes_and_signature.apkG2.Y,
+            )
+                .into();
+
+            let sigma = (
+                non_signer_stakes_and_signature.sigma.X,
+                non_signer_stakes_and_signature.sigma.Y,
+            )
+                .into();
+
+            let quorum_apks = non_signer_stakes_and_signature
+                .quorumApks
+                .iter()
+                .map(|apk| (apk.X, apk.Y).into())
+                .collect();
+
+            let non_signer_pubkeys = non_signer_stakes_and_signature
+                .nonSignerPubkeys
+                .iter()
+                .map(|pubkey| (pubkey.X, pubkey.Y).into())
+                .collect();
+
+            let non_signer_stakes_and_signature = (
+                non_signer_stakes_and_signature.nonSignerQuorumBitmapIndices,
+                non_signer_pubkeys,
+                quorum_apks,
+                apk_g2,
+                sigma,
+                non_signer_stakes_and_signature.quorumApkIndices,
+                non_signer_stakes_and_signature.totalStakeIndices,
+                non_signer_stakes_and_signature.nonSignerStakeIndices,
+            )
+                .into();
+
+            self.respondToTask(
+                contract_task,
+                contract_response,
+                non_signer_stakes_and_signature,
+            )
+            .send()
+            .await
+            .map_err($crate::task_manager::box_error)?
+            .get_receipt()
+            .await
+            .map_err($crate::task_manager::box_error)?;
+
+            Ok(())
+        }
+
+        async fn raise_challenge(
+            &self,
+            task: $crate::task::Task<Self::Input>,
+            task_response: $crate::task_response::TaskResponse<Self::Output>,
+            task_response_metadata: $crate::task_response_metadata_sol::TaskResponseMetadataSol,
+            pubkeys_of_non_signing_operators: Vec<$crate::task_manager::G1Point>,
+        ) -> Result<(), $crate::task_manager::TaskManagerError> {
+            let contract_task = (
+                task.input,
+                task.task_created_block,
+                task.quorum_numbers,
+                task.quorum_threshold_percentage,
+            )
+                .into();
+
+            let contract_response = (task_response.task_index, task_response.response).into();
+
+            let task_response_metadata = (
+                task_response_metadata.taskResponsedBlock,
+                task_response_metadata.hashOfNonSigners,
+            )
+                .into();
+
+            let pubkey_non_signer = pubkeys_of_non_signing_operators
+                .iter()
+                .map(|p| (p.X, p.Y).into())
+                .collect();
+
+            self.raiseAndResolveChallenge(
+                contract_task,
+                contract_response,
+                task_response_metadata,
+                pubkey_non_signer,
+            )
+            .send()
+            .await
+            .map_err($crate::task_manager::box_error)?
+            .get_receipt()
+            .await
+            .map_err($crate::task_manager::box_error)?;
+
+            Ok(())
+        }
+    };
 }

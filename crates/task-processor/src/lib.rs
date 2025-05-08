@@ -16,7 +16,7 @@ use std::sync::Arc;
 use std::time::Duration;
 use std::{collections::HashMap, fmt::Debug};
 use task::Task;
-use task_manager::TaskManagerContract;
+use task_manager::TaskManager;
 use task_processor::TaskProcessor;
 use task_response::TaskResponse;
 use tokio::sync::Mutex;
@@ -41,7 +41,7 @@ type TaskResponsesMap<O> = HashMap<u32, HashMap<TaskResponseDigest, TaskResponse
 #[derive(Debug, Clone)]
 pub struct IndexingTaskProcessor<TM>
 where
-    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
     /// Hashmap to store the created tasks
     tasks: Arc<Mutex<HashMap<u32, Task<TM::Input>>>>,
@@ -57,7 +57,7 @@ where
 
 impl<TM> IndexingTaskProcessor<TM>
 where
-    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
     /// Create a new task processor
     ///
@@ -81,7 +81,7 @@ where
 
 impl<TM> TaskProcessor for IndexingTaskProcessor<TM>
 where
-    TM: TaskManagerContract + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
     type Output = TM::Output;
 
