@@ -19,8 +19,7 @@ pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskManagerErr
     Box::new(e)
 }
 
-/// Task manager contract trait. It wraps the contract's types and functions.
-pub trait TaskManager {
+pub trait TaskManagerDefs {
     /// Type for inputs of each task
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
@@ -32,7 +31,10 @@ pub trait TaskManager {
 
     /// Task responded event
     const TASK_RESPONDED_EVENT_SELECTOR: B256;
+}
 
+/// Task manager contract trait. It wraps the contract's types and functions.
+pub trait TaskManager: TaskManagerDefs {
     /// Respond to a task
     ///
     /// # Arguments
@@ -90,6 +92,17 @@ pub trait TaskManager {
     ) -> impl Future<Output = Result<(), TaskManagerError>> + Send;
 }
 
+// #[macro_export]
+// /// Implements the [`TaskManager`] trait for the given contract.
+// /// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
+// macro_rules! impl_task_manager_from_defs_and_contract {
+//     (Contract = $contract:ident,
+//         Input = $input:ty,
+//         Output = $output:ty,
+//         NewTaskEvent = $new_task_event:ty,
+//         TaskRespondedEvent = $task_responded_event:ty $(,)*) => {};
+// }
+
 #[macro_export]
 /// Implements the [`TaskManager`] trait for the given contract.
 /// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
@@ -99,7 +112,7 @@ macro_rules! impl_task_manager {
         Output = $output:ty,
         NewTaskEvent = $new_task_event:ty,
         TaskRespondedEvent = $task_responded_event:ty $(,)*) => {
-        impl<T, P, N> $crate::task_manager::TaskManager for $contract<T, P, N>
+        impl<T, P, N> $crate::task_manager::TaskManagerDefs for $contract<T, P, N>
         where
             T: ::alloy::contract::private::Transport + Clone + Send + Sync,
             P: ::alloy::contract::private::Provider<T, N>,
@@ -111,7 +124,14 @@ macro_rules! impl_task_manager {
                 <$new_task_event as ::alloy::sol_types::SolEvent>::SIGNATURE_HASH;
             const TASK_RESPONDED_EVENT_SELECTOR: ::alloy::primitives::B256 =
                 <$task_responded_event as ::alloy::sol_types::SolEvent>::SIGNATURE_HASH;
+        }
 
+        impl<T, P, N> $crate::task_manager::TaskManager for $contract<T, P, N>
+        where
+            T: ::alloy::contract::private::Transport + Clone + Send + Sync,
+            P: ::alloy::contract::private::Provider<T, N>,
+            N: ::alloy::network::Network,
+        {
             $crate::default_contract_impl! {}
         }
     };
