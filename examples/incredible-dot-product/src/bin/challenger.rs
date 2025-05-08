@@ -33,6 +33,16 @@ async fn main() {
     challenger.start_challenger().await.unwrap();
 }
 
+/// Checks if the operator response is correct
+///
+/// # Arguments
+///
+/// * `task` - The task
+/// * `task_response` - The task response
+///
+/// # Returns
+///
+/// * `Result<bool, ChallengerError>` - The result of the operation
 fn is_response_correct(
     task: Task<DotProductInput>,
     task_response: TaskResponse<U256>,

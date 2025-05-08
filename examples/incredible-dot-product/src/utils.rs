@@ -107,7 +107,19 @@ pub async fn setup_operator(
     Ok(())
 }
 
-/// Registers operator on eigenlayer and avs
+/// Registers Operator in EigenLayer
+///
+/// # Arguments
+///
+/// * `metadata_uri` - The metadata URI for the operator
+/// * `allocation_delay` - The allocation delay for the operator
+/// * `signer` - The signer for the operator
+/// * `el_chain_reader` - The EL chain reader
+/// * `el_chain_writer` - The EL chain writer
+///
+/// # Returns
+///
+/// * `eyre::Result<()>` - The result of the operation
 async fn register_operator_with_el(
     metadata_uri: String,
     allocation_delay: u32,
@@ -134,7 +146,17 @@ async fn register_operator_with_el(
     Ok(())
 }
 
-/// set allocation delay
+/// Sets the allocation delay for the operator
+///
+/// # Arguments
+///
+/// * `allocation_delay` - The allocation delay for the operator
+/// * `signer` - The signer for the operator
+/// * `el_chain_writer` - The EL chain writer
+///
+/// # Returns
+///
+/// * `eyre::Result<FixedBytes<32>>` - The result of the operation
 async fn set_allocation_delay(
     allocation_delay: u32,
     signer: LocalSigner<SigningKey>,
@@ -145,7 +167,16 @@ async fn set_allocation_delay(
         .await?)
 }
 
-/// Creates Total Delegated stake
+/// Creates Total Delegated Stake Quorum
+///
+/// # Arguments
+///
+/// * `strategy_address` - The address of the strategy
+/// * `avs_registry_writer` - The AVS registry writer
+///
+/// # Returns
+///
+/// * `eyre::Result<FixedBytes<32>>` - The result of the operation
 async fn create_total_delegated_stake_quorum(
     strategy_address: Address,
     avs_registry_writer: AvsRegistryChainWriter,
@@ -167,7 +198,20 @@ async fn create_total_delegated_stake_quorum(
     Ok(s)
 }
 
-#[allow(clippy::too_many_arguments)]
+/// Register Operator for Operator Sets
+///
+/// # Arguments
+///
+/// * `operator_set_id` - The ID of the operator set
+/// * `bls_key_pair` - The BLS key pair for the operator
+/// * `avs` - The address of the AVS
+/// * `socket` - The socket for the operator
+/// * `signer` - The signer for the operator
+/// * `el_chain_writer` - The EL chain writer
+///
+/// # Returns
+///
+/// * `eyre::Result<FixedBytes<32>>` - The result of the operation
 async fn register_for_operator_sets(
     operator_set_id: u32,
     bls_key_pair: BlsKeyPair,
@@ -187,6 +231,17 @@ async fn register_for_operator_sets(
         .await?)
 }
 
+/// Deposits ERC20 into Strategy
+///
+/// # Arguments
+///
+/// * `strategy_address` - The address of the strategy
+/// * `amount` - The amount to deposit
+/// * `el_writer` - The EL chain writer
+///
+/// # Returns
+///
+/// * `Result<(), ElContractsError>` - The result of the operation
 async fn deposit_into_strategy(
     strategy_address: Address,
     amount: U256,
