@@ -9,6 +9,8 @@ use alloy::{
 use eigensdk::client_avsregistry::writer::AvsRegistryChainWriter;
 use eigensdk::client_elcontracts::error::ElContractsError;
 use eigensdk::crypto_bls::BlsKeyPair;
+use eigensdk::utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
+use eigensdk::utils::slashing::core::allocationmanager::IAllocationManagerTypes::AllocateParams;
 use eigensdk::utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
 use eigensdk::utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
 use eigensdk::{
@@ -30,6 +32,7 @@ pub async fn setup_operator(
     allocation_delay: u32,
     operator_set_id: u32,
     deposit_tokens: U256,
+    new_magnitude: Vec<u64>,
     permission_controller_address: Address,
     rewards_coordinator_address: Address,
     allocation_manager: Address,
@@ -72,8 +75,7 @@ pub async fn setup_operator(
         registry_coordinator_address,
         avs,
     )
-    .await
-    .unwrap();
+    .await?;
 
     create_total_delegated_stake_quorum(erc20_strategy_address, avs_registry_writer).await?;
 
@@ -93,6 +95,16 @@ pub async fn setup_operator(
     .await?;
 
     set_allocation_delay(allocation_delay, signer.clone(), el_chain_writer.clone()).await?;
+
+    modify_allocation_for_operator(
+        operator_set_id,
+        avs,
+        vec![erc20_strategy_address],
+        new_magnitude,
+        el_chain_writer.clone(),
+        signer.address(),
+    )
+    .await?;
 
     register_for_operator_sets(
         operator_set_id,
@@ -251,4 +263,25 @@ async fn deposit_into_strategy(
         .deposit_erc20_into_strategy(strategy_address, amount)
         .await?;
     Ok(())
+}
+
+pub async fn modify_allocation_for_operator(
+    operator_set_id: u32,
+    avs: Address,
+    strategies: Vec<Address>,
+    new_magnitude: Vec<u64>,
+    el_writer: ELChainWriter,
+    operator_address: Address,
+) -> eyre::Result<FixedBytes<32>> {
+    let allocate_params = vec![AllocateParams {
+        operatorSet: OperatorSet {
+            avs,
+            id: operator_set_id,
+        },
+        strategies,
+        newMagnitudes: new_magnitude,
+    }];
+    Ok(el_writer
+        .modify_allocations(operator_address, allocate_params)
+        .await?)
 }

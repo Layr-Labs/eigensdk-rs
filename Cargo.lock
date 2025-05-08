@@ -4670,6 +4670,7 @@ version = "0.1.0"
 dependencies = [
  "alloy",
  "bindings",
+ "eigen-operator",
  "eigensdk",
  "eyre",
  "serde",

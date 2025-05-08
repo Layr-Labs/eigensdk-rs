@@ -4,7 +4,7 @@ use alloy::primitives::{Address, U256};
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
-    operator::{config::OperatorConfig, error::OperatorError, Operator},
+    operator::{compute_with_failures, config::OperatorConfig, error::OperatorError, Operator},
     task_processor::task_response::TaskResponse,
     testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
 };
@@ -52,7 +52,8 @@ async fn main() {
         "socket".to_string(),
         0,
         0,
-        U256::from_str("1000000000000000000").unwrap(),
+        U256::from_str("5000000000000000000000").unwrap(),
+        vec![1000000000000000000],
         permission_controller_address,
         rewards_coordinator_address,
         allocation_manager,
@@ -80,8 +81,10 @@ async fn main() {
     };
     let operator = Operator::new(logger, operator_config).await.unwrap();
 
+    let logic = compute_with_failures(dot_product, invalid_dot_product, 100);
+
     // TODO: Review bounds in SDK. I have to derive Serialize and Deserialize for TaskResponse in the bindings
-    operator.start(dot_product).await.unwrap();
+    operator.start(logic).await.unwrap();
 }
 
 /// Computes the dot product of a pair of points

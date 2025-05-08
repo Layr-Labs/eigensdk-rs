@@ -1,6 +1,6 @@
 use alloy::{
     contract::private::{Provider, Transport},
-    network::Network,
+    network::{Network, ReceiptResponse},
     primitives::{B256, U256},
     sol_types::SolEvent,
 };
@@ -173,7 +173,8 @@ where
             .map(|p| G1Binding { X: p.X, Y: p.Y })
             .collect();
 
-        self.0
+        let tx_hash = self
+            .0
             .raiseAndResolveChallenge(
                 contract_task,
                 contract_response,
@@ -185,9 +186,10 @@ where
             .unwrap()
             .get_receipt()
             .await
+            .map(|tx| tx.transaction_hash())
             .unwrap();
 
-        info!("Challenge raised and resolved");
+        info!("Challenge raised and resolved with tx hash: {:?}", tx_hash);
 
         Ok(())
     }
