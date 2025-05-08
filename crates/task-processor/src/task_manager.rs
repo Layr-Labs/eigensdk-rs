@@ -134,8 +134,9 @@ macro_rules! default_contract_impl {
                 .map_err($crate::task_manager::box_error)?
                 .get_receipt()
                 .await
-                .map_err($crate::task_manager::box_error)
-                .map(|_| ())
+                .map_err($crate::task_manager::box_error)?;
+
+            Ok(())
         }
 
         async fn respond_to_task(
@@ -197,10 +198,10 @@ macro_rules! default_contract_impl {
             )
             .send()
             .await
-            .unwrap()
+            .map_err($crate::task_manager::box_error)?
             .get_receipt()
             .await
-            .unwrap();
+            .map_err($crate::task_manager::box_error)?;
 
             Ok(())
         }
@@ -241,10 +242,10 @@ macro_rules! default_contract_impl {
             )
             .send()
             .await
-            .unwrap()
+            .map_err($crate::task_manager::box_error)?
             .get_receipt()
             .await
-            .unwrap();
+            .map_err($crate::task_manager::box_error)?;
 
             Ok(())
         }
