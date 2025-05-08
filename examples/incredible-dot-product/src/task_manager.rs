@@ -1,7 +1,8 @@
 use alloy::{
     contract::private::{Provider, Transport},
     network::Network,
-    primitives::U256,
+    primitives::{B256, U256},
+    sol_types::SolEvent,
 };
 use eigensdk::{
     task_processor::{
@@ -38,7 +39,7 @@ use tracing::info;
 #[derive(Clone, Debug)]
 pub struct TaskManagerWrapper<T, P, N>(pub IncredibleDotProductTaskManagerInstance<T, P, N>);
 
-impl<T, P, N> TaskManagerContract<T, P, N> for TaskManagerWrapper<T, P, N>
+impl<T, P, N> TaskManagerContract for TaskManagerWrapper<T, P, N>
 where
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
@@ -48,8 +49,8 @@ where
     //       I need to derive Debug, Serialize and Deserialize for DotProductInput and DotProductResult in the bindings
     type Input = DotProductInput;
     type Output = U256;
-    type NewTaskEvent = NewTaskCreated;
-    type TaskRespondedEvent = TaskResponded;
+    const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+    const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
 
     async fn respond_to_task(
         &self,
@@ -127,17 +128,18 @@ where
         input: DotProductInput,
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
-    ) -> Result<N::ReceiptResponse, TaskManagerError> {
+    ) -> Result<(), TaskManagerError> {
         info!("Creating new task");
-        Ok(self
-            .0
+        self.0
             .createNewTask(input, quorum_threshold.into(), quorums.into())
             .send()
             .await
             .unwrap()
             .get_receipt()
             .await
-            .unwrap())
+            .unwrap();
+
+        Ok(())
     }
 
     async fn raise_challenge(
