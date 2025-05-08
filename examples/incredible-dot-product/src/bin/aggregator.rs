@@ -23,11 +23,11 @@ async fn main() -> Result<()> {
         &http_rpc_url,
     );
     let aggregator_ip_port = "127.0.0.1:8080".to_string();
-    let task_manager_address = Address::from_str("0x7bc06c482dead17c0e297afbc32f6e63d3846650")?;
+    let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
     let registry_coordinator_address =
-        Address::from_str("0xfd471836031dc5108809d173a067e8486b9047a3")?;
+        Address::from_str("0x7bc06c482dead17c0e297afbc32f6e63d3846650")?;
     let operator_state_retriever_address =
-        Address::from_str("0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154")?;
+        Address::from_str("0x4c5859f0f772848b2d91f1d83e2fe57935348029")?;
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
     let wrapper_contract = TaskManagerWrapper(contract);

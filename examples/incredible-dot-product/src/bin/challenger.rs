@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
     let http_rpc_url = "http://localhost:8545".to_string();
     let ws_rpc_url = "ws://localhost:8545".to_string();
     let wallet = get_signer(FIRST_PRIVATE_KEY, &http_rpc_url);
-    let task_manager_address = Address::from_str("0x7bc06c482dead17c0e297afbc32f6e63d3846650")?;
+    let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
     let contract_wrapper = TaskManagerWrapper(contract);

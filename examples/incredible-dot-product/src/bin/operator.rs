@@ -35,11 +35,11 @@ async fn main() -> Result<()> {
     let permission_controller_address =
         Address::from_str("0x59b670e9fa9d0a427751af201d676719a970857b")?;
     let strategy_address = Address::from_str("0x2b961e3959b79326a8e7f64ef0d2d825707669b5")?;
-    let avs = Address::from_str("0xcd8a1c3ba11cf5ecfa6267617243239504a98d90")?;
+    let avs = Address::from_str("0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154")?;
     let registry_coordinator_address =
-        Address::from_str("0xfd471836031dc5108809d173a067e8486b9047a3")?;
+        Address::from_str("0x7bc06c482dead17c0e297afbc32f6e63d3846650")?;
     let operator_state_retriever_address =
-        Address::from_str("0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154")?;
+        Address::from_str("0x4c5859f0f772848b2d91f1d83e2fe57935348029")?;
 
     setup_operator(
         bls_key_pair.clone(),
