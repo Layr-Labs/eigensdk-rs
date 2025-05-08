@@ -46,8 +46,8 @@ where
         signed_task_response: String,
     ) -> Result<bool, ServerError> {
         let service_handle = &self.service_handle;
-        let parsed: SignedTaskResponse<TaskResponse<TP::Output>> =
-            serde_json::from_str(&signed_task_response).map_err(|_| {
+        let parsed: SignedTaskResponse<TP::Output> = serde_json::from_str(&signed_task_response)
+            .map_err(|_| {
                 ServerError::new(
                     std::io::ErrorKind::InvalidInput,
                     "Invalid signed task response".to_string(),
@@ -101,7 +101,7 @@ where
     async fn process_signed_task_response(
         task_processor: &mut TP,
         service_handle: &ServiceHandle,
-        signed_task_response: SignedTaskResponse<TaskResponse<TP::Output>>,
+        signed_task_response: SignedTaskResponse<TP::Output>,
     ) -> Result<(), AggregatorError> {
         let SignedTaskResponse {
             task_response,

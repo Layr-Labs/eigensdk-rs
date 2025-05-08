@@ -1,19 +1,26 @@
+use alloy::sol_types::SolValue;
 use eigen_crypto_bls::Signature;
+use eigen_task_processor::task_response::TaskResponse;
 use eigen_types::operator::OperatorId;
-use serde::{Deserialize, Serialize};
 
 /// Signed Task Response
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SignedTaskResponse<T> {
+#[derive(Debug, Clone)]
+pub struct SignedTaskResponse<T>
+where
+    T: SolValue + Clone,
+{
     /// A response to a task
-    pub task_response: T,
+    pub task_response: TaskResponse<T>,
     /// Signature of the task response
     pub signature: Signature,
     /// ID of the operator corresponding to the signature
     pub operator_id: OperatorId,
 }
 
-impl<T: Serialize + for<'de> Deserialize<'de>> SignedTaskResponse<T> {
+impl<T> SignedTaskResponse<T>
+where
+    T: SolValue + Clone,
+{
     /// Create a new [`SignedTaskResponse`]
     ///
     /// # Arguments
@@ -25,7 +32,11 @@ impl<T: Serialize + for<'de> Deserialize<'de>> SignedTaskResponse<T> {
     /// # Returns
     ///
     /// A new [`SignedTaskResponse`] containing the task response, signature, and operator ID.
-    pub fn new(task_response: T, bls_signature: Signature, operator_id: OperatorId) -> Self {
+    pub fn new(
+        task_response: TaskResponse<T>,
+        bls_signature: Signature,
+        operator_id: OperatorId,
+    ) -> Self {
         Self {
             task_response,
             signature: bls_signature,
