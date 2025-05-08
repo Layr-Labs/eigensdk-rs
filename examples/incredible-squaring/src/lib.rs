@@ -6,16 +6,9 @@ use alloy::{
     primitives::{B256, U256},
     sol_types::SolEvent,
 };
-use bindings::incrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
-    Task as ContractTask, TaskResponse as ContractTaskResponse, TaskResponseMetadata,
-};
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
-use bindings::incrediblesquaringtaskmanager::BN254::{G1Point as G1Binding, G2Point};
-use bindings::incrediblesquaringtaskmanager::{
-    IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature,
-    IncredibleSquaringTaskManager::TaskResponded,
-};
+use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::TaskResponded;
 use eigen_task_processor::{
     task::Task,
     task_manager::{box_error, TaskManagerContract, TaskManagerError},
@@ -71,57 +64,54 @@ where
     async fn respond_to_task(
         &self,
         task: Task<Self::Input>,
-        response: TaskResponse<Self::Output>,
+        task_response: TaskResponse<Self::Output>,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
     ) -> Result<(), TaskManagerError> {
-        let contract_task = ContractTask {
-            numberToBeSquared: task.input,
-            taskCreatedBlock: task.task_created_block,
-            quorumNumbers: task.quorum_numbers,
-            quorumThresholdPercentage: task.quorum_threshold_percentage,
-        };
+        let contract_task = (
+            task.input,
+            task.task_created_block,
+            task.quorum_numbers,
+            task.quorum_threshold_percentage,
+        )
+            .into();
 
-        let contract_response = ContractTaskResponse {
-            numberSquared: response.response,
-            referenceTaskIndex: response.task_index,
-        };
+        let contract_response = (task_response.task_index, task_response.response).into();
 
-        let apk_g2 = G2Point {
-            X: non_signer_stakes_and_signature.apkG2.X,
-            Y: non_signer_stakes_and_signature.apkG2.Y,
-        };
+        let apk_g2 = (
+            non_signer_stakes_and_signature.apkG2.X,
+            non_signer_stakes_and_signature.apkG2.Y,
+        )
+            .into();
 
-        let sigma = G1Binding {
-            X: non_signer_stakes_and_signature.sigma.X,
-            Y: non_signer_stakes_and_signature.sigma.Y,
-        };
+        let sigma = (
+            non_signer_stakes_and_signature.sigma.X,
+            non_signer_stakes_and_signature.sigma.Y,
+        )
+            .into();
 
         let quorum_apks = non_signer_stakes_and_signature
             .quorumApks
             .iter()
-            .map(|apk| G1Binding { X: apk.X, Y: apk.Y })
+            .map(|apk| (apk.X, apk.Y).into())
             .collect();
 
         let non_signer_pubkeys = non_signer_stakes_and_signature
             .nonSignerPubkeys
             .iter()
-            .map(|pubkey| G1Binding {
-                X: pubkey.X,
-                Y: pubkey.Y,
-            })
+            .map(|pubkey| (pubkey.X, pubkey.Y).into())
             .collect();
 
-        let non_signer_stakes_and_signature = ContractNonSignerStakesAndSignature {
-            nonSignerStakeIndices: non_signer_stakes_and_signature.nonSignerStakeIndices,
-            nonSignerQuorumBitmapIndices: non_signer_stakes_and_signature
-                .nonSignerQuorumBitmapIndices,
-            quorumApkIndices: non_signer_stakes_and_signature.quorumApkIndices,
-            totalStakeIndices: non_signer_stakes_and_signature.totalStakeIndices,
-            apkG2: apk_g2,
-            quorumApks: quorum_apks,
-            nonSignerPubkeys: non_signer_pubkeys,
+        let non_signer_stakes_and_signature = (
+            non_signer_stakes_and_signature.nonSignerQuorumBitmapIndices,
+            non_signer_pubkeys,
+            quorum_apks,
+            apk_g2,
             sigma,
-        };
+            non_signer_stakes_and_signature.quorumApkIndices,
+            non_signer_stakes_and_signature.totalStakeIndices,
+            non_signer_stakes_and_signature.nonSignerStakeIndices,
+        )
+            .into();
 
         self.respondToTask(
             contract_task,
@@ -145,26 +135,25 @@ where
         task_response_metadata: TaskResponseMetadataSol,
         pubkeys_of_non_signing_operators: Vec<G1Point>,
     ) -> Result<(), TaskManagerError> {
-        let contract_task = ContractTask {
-            numberToBeSquared: task.input,
-            taskCreatedBlock: task.task_created_block,
-            quorumNumbers: task.quorum_numbers,
-            quorumThresholdPercentage: task.quorum_threshold_percentage,
-        };
+        let contract_task = (
+            task.input,
+            task.task_created_block,
+            task.quorum_numbers,
+            task.quorum_threshold_percentage,
+        )
+            .into();
 
-        let contract_response = ContractTaskResponse {
-            numberSquared: task_response.response,
-            referenceTaskIndex: task_response.task_index,
-        };
+        let contract_response = (task_response.task_index, task_response.response).into();
 
-        let task_response_metadata = TaskResponseMetadata {
-            taskResponsedBlock: task_response_metadata.taskResponsedBlock,
-            hashOfNonSigners: task_response_metadata.hashOfNonSigners,
-        };
+        let task_response_metadata = (
+            task_response_metadata.taskResponsedBlock,
+            task_response_metadata.hashOfNonSigners,
+        )
+            .into();
 
         let pubkey_non_signer = pubkeys_of_non_signing_operators
             .iter()
-            .map(|p| G1Binding { X: p.X, Y: p.Y })
+            .map(|p| (p.X, p.Y).into())
             .collect();
 
         self.raiseAndResolveChallenge(
