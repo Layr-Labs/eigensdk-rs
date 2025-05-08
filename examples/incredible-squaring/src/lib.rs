@@ -3,7 +3,8 @@
 use alloy::{
     contract::private::{Provider, Transport},
     network::Network,
-    primitives::U256,
+    primitives::{B256, U256},
+    sol_types::SolEvent,
 };
 use bindings::incrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
     Task as ContractTask, TaskResponse as ContractTaskResponse, TaskResponseMetadata,
@@ -40,7 +41,7 @@ pub mod bindings;
 // struct TaskManagerWrapper<T, P, N>(IncredibleSquaringTaskManagerInstance<T, P, N>);
 //
 // impl<T, P, N> TaskManagerContract<U256, T, P, N> for TaskManagerWrapper<T, P, N> { ... }
-impl<T, P, N> TaskManagerContract<T, P, N> for IncredibleSquaringTaskManagerInstance<T, P, N>
+impl<T, P, N> TaskManagerContract for IncredibleSquaringTaskManagerInstance<T, P, N>
 where
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
@@ -48,15 +49,15 @@ where
 {
     type Input = U256;
     type Output = U256;
-    type NewTaskEvent = NewTaskCreated;
-    type TaskRespondedEvent = TaskResponded;
+    const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+    const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
 
     async fn create_new_task(
         &self,
         input: U256,
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
-    ) -> Result<N::ReceiptResponse, TaskManagerError> {
+    ) -> Result<(), TaskManagerError> {
         self.createNewTask(input, quorum_threshold.into(), quorums.into())
             .send()
             .await
@@ -64,6 +65,7 @@ where
             .get_receipt()
             .await
             .map_err(box_error)
+            .map(|_| ())
     }
 
     async fn respond_to_task(

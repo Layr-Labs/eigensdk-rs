@@ -3,10 +3,8 @@ use std::{fmt::Debug, future::Future};
 use crate::{
     task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
 };
-use alloy::{
-    network::Network,
-    sol_types::{SolEvent, SolValue},
-};
+use alloy::primitives::B256;
+use alloy::sol_types::SolValue;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
@@ -21,7 +19,7 @@ pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskManagerErr
 }
 
 /// Task manager contract trait. It wraps the contract's types and functions.
-pub trait TaskManagerContract<T, P, N: Network> {
+pub trait TaskManagerContract {
     /// Type for inputs of each task
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
@@ -29,10 +27,10 @@ pub trait TaskManagerContract<T, P, N: Network> {
     type Output: Clone + SolValue + Send + Sync + 'static + Debug + DeserializeOwned;
 
     /// New task event
-    type NewTaskEvent: SolEvent;
+    const NEW_TASK_EVENT_SELECTOR: B256;
 
     /// Task responded event
-    type TaskRespondedEvent: SolEvent;
+    const TASK_RESPONDED_EVENT_SELECTOR: B256;
 
     /// Respond to a task
     ///
@@ -68,7 +66,7 @@ pub trait TaskManagerContract<T, P, N: Network> {
         input: Self::Input,
         quorum_threshold: QuorumThresholdPercentage,
         quorums: Vec<QuorumNum>,
-    ) -> impl Future<Output = Result<N::ReceiptResponse, TaskManagerError>> + Send;
+    ) -> impl Future<Output = Result<(), TaskManagerError>> + Send;
 
     /// Raise challenge
     ///
