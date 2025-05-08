@@ -3,7 +3,7 @@ use alloy::dyn_abi::SolType;
 use alloy::primitives::B256;
 use alloy::sol_types::SolValue;
 
-use eigen_task_processor::task_manager::TaskManagerContract;
+use eigen_task_processor::task_manager::TaskManager;
 use eigen_task_processor::task_response_metadata_sol::TaskResponseMetadataSol;
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
@@ -13,7 +13,7 @@ use tracing::error;
 #[derive(Debug)]
 pub struct IndexingChallengerProcessor<TM, F>
 where
-    TM: TaskManagerContract + Send + Sync + 'static + Clone,
+    TM: TaskManager + Send + Sync + 'static + Clone,
     F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
 {
     task_manager: TM,
@@ -23,7 +23,7 @@ where
 
 impl<TM, F> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, F>
 where
-    TM: TaskManagerContract + Send + Sync + 'static + Clone,
+    TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
@@ -78,7 +78,7 @@ where
 
 impl<TM, F> IndexingChallengerProcessor<TM, F>
 where
-    TM: TaskManagerContract + Send + Sync + 'static + Clone,
+    TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,

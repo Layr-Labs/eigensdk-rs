@@ -20,7 +20,7 @@ pub fn box_error<E: core::error::Error + Send + 'static>(e: E) -> TaskManagerErr
 }
 
 /// Task manager contract trait. It wraps the contract's types and functions.
-pub trait TaskManagerContract {
+pub trait TaskManager {
     /// Type for inputs of each task
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
@@ -91,7 +91,7 @@ pub trait TaskManagerContract {
 }
 
 #[macro_export]
-/// Implements the [`TaskManagerContract`] trait for the given contract.
+/// Implements the [`TaskManager`] trait for the given contract.
 /// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
 macro_rules! impl_task_manager {
     (Contract = $contract:ident,
@@ -99,7 +99,7 @@ macro_rules! impl_task_manager {
         Output = $output:ty,
         NewTaskEvent = $new_task_event:ty,
         TaskRespondedEvent = $task_responded_event:ty $(,)*) => {
-        impl<T, P, N> $crate::task_manager::TaskManagerContract for $contract<T, P, N>
+        impl<T, P, N> $crate::task_manager::TaskManager for $contract<T, P, N>
         where
             T: ::alloy::contract::private::Transport + Clone + Send + Sync,
             P: ::alloy::contract::private::Provider<T, N>,
@@ -118,7 +118,7 @@ macro_rules! impl_task_manager {
 }
 
 #[macro_export]
-/// This macro generates a default implementation of the [`TaskManagerContract`] trait's methods.
+/// This macro generates a default implementation of the [`TaskManager`] trait's methods.
 /// /// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
 macro_rules! default_contract_impl {
     () => {
