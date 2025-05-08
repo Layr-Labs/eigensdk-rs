@@ -3,7 +3,7 @@ use alloy::dyn_abi::SolType;
 use alloy::primitives::B256;
 use alloy::sol_types::SolValue;
 
-use eigen_task_processor::task_manager::TaskManagerContract;
+use eigen_task_processor::task_manager::{TaskManagerContract, TaskManagerError};
 use eigen_task_processor::task_response_metadata_sol::TaskResponseMetadataSol;
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
@@ -14,7 +14,9 @@ use tracing::error;
 pub struct IndexingChallengerProcessor<TM, F>
 where
     TM: TaskManagerContract + Send + Sync + 'static + Clone,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>
+        + Send
+        + Sync,
 {
     task_manager: TM,
     tasks: HashMap<u32, Task<TM::Input>>,
@@ -26,7 +28,9 @@ where
     TM: TaskManagerContract + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>
+        + Send
+        + Sync,
 {
     type Input = TM::Input;
 
@@ -55,6 +59,7 @@ where
         non_signing_operator_pub_keys: Vec<G1Point>,
     ) -> Result<(), ChallengerError> {
         if let Some(task) = self.tasks.get(&task_index).filter(|&t| {
+            // TODO: handle the error
             !((self.is_response_correct)(t.clone(), task_response.clone()).unwrap_or(false))
         }) {
             let tm = self.task_manager.clone();
@@ -81,7 +86,9 @@ where
     TM: TaskManagerContract + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, ChallengerError> + Send + Sync,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>
+        + Send
+        + Sync,
 {
     pub fn new(task_manager: TM, is_response_correct: F) -> Self {
         Self {
@@ -90,4 +97,17 @@ where
             is_response_correct,
         }
     }
+}
+
+pub fn verifier_from_compute_function<Input, Output>(
+    compute_response: impl Fn(u32, Input) -> Result<Output, TaskManagerError>,
+) -> impl Fn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>
+where
+    Output: SolValue + Clone + PartialEq,
+{
+    let is_response_correct = move |task: Task<Input>, task_response: TaskResponse<Output>| {
+        let computed_response = compute_response(task_response.task_index, task.input)?;
+        Ok(computed_response == task_response.response)
+    };
+    is_response_correct
 }

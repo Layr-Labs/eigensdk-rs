@@ -12,6 +12,7 @@ use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
+use eigen_task_processor::task_manager::TaskManagerError;
 use eigen_task_processor::{
     task::Task, task_manager::TaskManagerContract, task_response::TaskResponse,
 };
@@ -121,7 +122,7 @@ impl Operator {
     /// * `Result<(), OperatorError>` - The result of the operation.
     pub async fn start<TM>(
         &self,
-        compute_logic: impl Fn(u32, TM::Input) -> Result<TM::Output, OperatorError>,
+        compute_logic: impl Fn(u32, TM::Input) -> Result<TM::Output, TaskManagerError>,
     ) -> Result<(), OperatorError>
     where
         TM: TaskManagerContract,
@@ -262,23 +263,25 @@ where
 ///
 /// # Returns
 ///
-/// * `impl Fn(Event) -> Result<TaskResponse<O>, OperatorError>` - The wrapped logic.
+/// * `impl Fn(Event) -> Result<TaskResponse<O>, TaskManagerError>` - The wrapped logic.
+///
+/// # Panics
+///
+/// Panics if `failure_rate` is greater than 100.
 #[cfg(feature = "operator-testing")]
 pub fn compute_with_failures<Input, Output, C, F>(
     correct_logic: C,
     incorrect_logic: F,
     failure_rate: u8,
-) -> impl Fn(u32, Input) -> Result<Output, OperatorError>
+) -> impl Fn(u32, Input) -> Result<Output, TaskManagerError>
 where
-    C: Fn(u32, Input) -> Result<Output, OperatorError>,
-    F: Fn(u32, Input) -> Result<Output, OperatorError>,
+    C: Fn(u32, Input) -> Result<Output, TaskManagerError>,
+    F: Fn(u32, Input) -> Result<Output, TaskManagerError>,
     Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
 {
-    move |task_index, input: Input| {
-        if failure_rate > 100 {
-            return Err(OperatorError::InvalidFailureRate);
-        }
+    assert!(failure_rate <= 100);
 
+    move |task_index, input: Input| {
         let mut rng = rand::thread_rng();
         let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
         if should_fail {

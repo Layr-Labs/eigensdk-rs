@@ -7,19 +7,12 @@ use alloy::{
 use eigen_common::SdkProvider;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
-use eigen_operator::{
-    compute_with_failures, config::OperatorConfig, error::OperatorError, Operator,
-};
+use eigen_operator::{compute_with_failures, config::OperatorConfig, Operator};
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
-use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
-
-fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, OperatorError> {
-    Ok(number_to_be_squared * number_to_be_squared)
-}
-
-fn wrong_square(_task_index: u32, _number_to_be_squared: U256) -> Result<U256, OperatorError> {
-    Ok(U256::from(42))
-}
+use incredible_squaring::{
+    bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
+    square,
+};
 
 // This example shows how to initialize an operator and start to listen for new task events.
 // For this example, Operator should be registered.
@@ -48,7 +41,7 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
 
-    let logic = compute_with_failures(square, wrong_square, 60);
+    let logic = compute_with_failures(square, |_, _| Ok(U256::from(42)), 60);
 
     // Subscribe to the new task events and start listening. When a new task is created,
     // the operator will process it and send the signed task response to the aggregator.
