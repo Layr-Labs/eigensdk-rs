@@ -8,7 +8,6 @@ use alloy::sol_types::SolValue;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
-use serde::de::DeserializeOwned;
 
 /// Error returned by the task processor
 pub type TaskManagerError = Box<dyn core::error::Error + Send>;
@@ -24,7 +23,7 @@ pub trait TaskManagerContract {
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
     /// Type for outputs of each task
-    type Output: Clone + SolValue + Send + Sync + 'static + Debug + DeserializeOwned;
+    type Output: Clone + SolValue + Send + Sync + 'static + Debug;
 
     /// New task event
     const NEW_TASK_EVENT_SELECTOR: B256;

@@ -17,7 +17,6 @@ eigen-crypto-bls.workspace = true
 eigen-services-blsaggregation.workspace = true
 eigen-types.workspace = true
 eigen-utils.workspace = true
-serde.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 tokio.workspace = true
