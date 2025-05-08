@@ -38,4 +38,7 @@ pub enum OperatorError {
     /// Max retry attempts exceeded
     #[error("Max retry attempts exceeded")]
     MaxRetryExceeded,
+    /// Invalid failure rate
+    #[error("Invalid failure rate. Must be between 0 and 100.")]
+    InvalidFailureRate,
 }

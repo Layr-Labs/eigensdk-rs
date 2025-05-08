@@ -27,6 +27,7 @@ reqwest.workspace = true
 tokio.workspace = true
 serde_json.workspace = true
 tracing.workspace = true
+rand.workspace = true
 rand_core.workspace = true
 eigen-logging.workspace = true
 eigen-crypto-bn254.workspace = true
@@ -40,4 +41,4 @@ tarpc = { version = "0.36", features = ["full"] }
 
 [features]
 default = []
-integration_tests = []
+operator-testing = []

@@ -3,7 +3,9 @@
 use alloy::primitives::{address, U256};
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
-use eigen_operator::{config::OperatorConfig, error::OperatorError, Operator};
+use eigen_operator::{
+    compute_with_failures, config::OperatorConfig, error::OperatorError, Operator,
+};
 use eigen_task_processor::task_response::TaskResponse;
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
 use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
@@ -13,6 +15,13 @@ fn square(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
     Ok(TaskResponse {
         task_index: event.taskIndex,
         response: square,
+    })
+}
+
+fn wrong_square(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
+    Ok(TaskResponse {
+        task_index: event.taskIndex,
+        response: U256::from(42),
     })
 }
 
@@ -43,7 +52,9 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
 
+    let logic = compute_with_failures(square, wrong_square, 60);
+
     // Subscribe to the new task events and start listening. When a new task is created,
     // the operator will process it and send the signed task response to the aggregator.
-    operator.start(square).await.unwrap();
+    operator.start(logic).await.unwrap();
 }
