@@ -265,6 +265,20 @@ async fn deposit_into_strategy(
     Ok(())
 }
 
+/// Modifies the allocation magnitude for the operator in specific strategies
+///
+/// # Arguments
+///
+/// * `operator_set_id` - The ID of the operator set
+/// * `avs` - The address of the AVS
+/// * `strategies` - The strategies to modify the allocation for
+/// * `new_magnitude` - The new magnitude for the allocation
+/// * `el_writer` - The EL chain writer
+/// * `operator_address` - The address of the operator
+///
+/// # Returns
+///
+/// * `eyre::Result<FixedBytes<32>>` - The result of the operation
 pub async fn modify_allocation_for_operator(
     operator_set_id: u32,
     avs: Address,
