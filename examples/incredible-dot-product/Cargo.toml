@@ -3,9 +3,6 @@ name    = "incredible-dot-product"
 version = "0.1.0"
 edition = "2021"
 
-[lints]
-workspace = true
-
 [dependencies]
 alloy = { version = "0.13", features = [
     "sol-types",
