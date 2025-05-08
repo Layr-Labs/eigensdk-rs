@@ -33,6 +33,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 * Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
 * Bump middleware to [v1.3.0](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.0) in PR [443](https://github.com/Layr-Labs/eigensdk-rs/pull/443).
+* Bump middleware to [v1.3.1](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.1) in PR [488](https://github.com/Layr-Labs/eigensdk-rs/pull/488).
 * Added an additional implementation for `OperatorInfoService` for retrieving operator BLS pubkeys and sockets directly from middleware in [#414](https://github.com/Layr-Labs/eigensdk-rs/pull/414). The new `OperatorInfoOnChain` is more stable and efficient since it doesn't subscribe or fetch events, but it requires functionality from the recent v1.3.0 middleware release.
 
   Old Implementation which indexes middleware events:
