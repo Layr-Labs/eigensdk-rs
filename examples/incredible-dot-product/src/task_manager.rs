@@ -7,14 +7,13 @@ use alloy::{
 use eigensdk::{
     task_processor::{
         task::Task,
-        task_manager::{TaskManagerContract, TaskManagerError},
+        task_manager::{box_error, TaskManagerContract, TaskManagerError},
         task_response::TaskResponse,
         task_response_metadata_sol::TaskResponseMetadataSol,
     },
     types::operator::{QuorumNum, QuorumThresholdPercentage},
-    utils::slashing::middleware::{
-        iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
-        iblssignaturechecker::BN254::G1Point,
+    utils::slashing::middleware::iblssignaturechecker::{
+        IBLSSignatureCheckerTypes::NonSignerStakesAndSignature, BN254::G1Point,
     },
 };
 use incredible_bindings::incredibledotproducttaskmanager::IIncredibleDotProductTaskManager::{
@@ -36,6 +35,7 @@ use tracing::info;
 
 // We need to implement this struct to avoid "must be used as the type parameter for some local type" error
 // With the new struct, there is no problem when implementing the TaskManagerContract trait to the external binding struct
+/// Wrapper for the TaskManagerContract trait
 #[derive(Clone, Debug)]
 pub struct TaskManagerWrapper<T, P, N>(pub IncredibleDotProductTaskManagerInstance<T, P, N>);
 
@@ -115,10 +115,10 @@ where
             )
             .send()
             .await
-            .unwrap()
+            .map_err(box_error)?
             .get_receipt()
             .await
-            .unwrap();
+            .map_err(box_error)?;
 
         Ok(())
     }
@@ -134,10 +134,10 @@ where
             .createNewTask(input, quorum_threshold.into(), quorums.into())
             .send()
             .await
-            .unwrap()
+            .map_err(box_error)?
             .get_receipt()
             .await
-            .unwrap();
+            .map_err(box_error)?;
 
         Ok(())
     }
@@ -183,11 +183,11 @@ where
             )
             .send()
             .await
-            .unwrap()
+            .map_err(box_error)?
             .get_receipt()
             .await
             .map(|tx| tx.transaction_hash())
-            .unwrap();
+            .map_err(box_error)?;
 
         info!("Challenge raised and resolved with tx hash: {:?}", tx_hash);
 
