@@ -15,6 +15,7 @@ use eigen_task_processor::task_response::TaskResponse;
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tracing::info;
 
@@ -179,5 +180,45 @@ impl Operator {
         let signed_task_response = SignedTaskResponse::new(task_response, signed_msg, *operator_id);
         info!("Operator signed task response");
         Ok(signed_task_response)
+    }
+}
+
+/// Helper to wrap both correct and incorrect logic in a single closure.
+/// USE THIS FOR TESTING PURPOSES ONLY
+///
+/// # Arguments
+///
+/// * `correct_logic` - The correct logic to respond to the task.
+/// * `incorrect_logic` - The incorrect logic to respond to the task.
+/// * `failure_rate` - The failure rate.
+///
+/// # Returns
+///
+/// * `impl Fn(Event) -> Result<TaskResponse<O>, OperatorError>` - The wrapped logic.
+#[cfg(feature = "operator-testing")]
+pub fn compute_with_failures<Event, Output, C, F>(
+    correct_logic: C,
+    incorrect_logic: F,
+    failure_rate: u8,
+) -> impl Fn(Event) -> Result<TaskResponse<Output>, OperatorError>
+where
+    C: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
+    F: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
+    Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
+{
+    move |event| {
+        if failure_rate > 100 {
+            return Err(OperatorError::InvalidFailureRate);
+        }
+
+        let mut rng = rand::thread_rng();
+        let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
+        if should_fail {
+            info!("Operator compute the task with a wrong response");
+            incorrect_logic(event)
+        } else {
+            info!("Operator compute the task successfully");
+            correct_logic(event)
+        }
     }
 }
