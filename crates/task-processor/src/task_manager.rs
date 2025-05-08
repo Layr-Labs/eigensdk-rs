@@ -88,3 +88,136 @@ pub trait TaskManagerContract {
         pubkeys_of_non_signing_operators: Vec<G1Point>,
     ) -> impl Future<Output = Result<(), TaskManagerError>> + Send;
 }
+
+#[macro_export]
+/// This macro generates a default implementation of the `TaskManagerContract` trait's methods.
+macro_rules! default_contract_impl {
+    () => {
+        async fn create_new_task(
+            &self,
+            input: Self::Input,
+            quorum_threshold: QuorumThresholdPercentage,
+            quorums: Vec<QuorumNum>,
+        ) -> Result<(), TaskManagerError> {
+            self.createNewTask(input, quorum_threshold.into(), quorums.into())
+                .send()
+                .await
+                .map_err(box_error)?
+                .get_receipt()
+                .await
+                .map_err(box_error)
+                .map(|_| ())
+        }
+
+        async fn respond_to_task(
+            &self,
+            task: Task<Self::Input>,
+            task_response: TaskResponse<Self::Output>,
+            non_signer_stakes_and_signature: NonSignerStakesAndSignature,
+        ) -> Result<(), TaskManagerError> {
+            let contract_task = (
+                task.input,
+                task.task_created_block,
+                task.quorum_numbers,
+                task.quorum_threshold_percentage,
+            )
+                .into();
+
+            let contract_response = (task_response.task_index, task_response.response).into();
+
+            let apk_g2 = (
+                non_signer_stakes_and_signature.apkG2.X,
+                non_signer_stakes_and_signature.apkG2.Y,
+            )
+                .into();
+
+            let sigma = (
+                non_signer_stakes_and_signature.sigma.X,
+                non_signer_stakes_and_signature.sigma.Y,
+            )
+                .into();
+
+            let quorum_apks = non_signer_stakes_and_signature
+                .quorumApks
+                .iter()
+                .map(|apk| (apk.X, apk.Y).into())
+                .collect();
+
+            let non_signer_pubkeys = non_signer_stakes_and_signature
+                .nonSignerPubkeys
+                .iter()
+                .map(|pubkey| (pubkey.X, pubkey.Y).into())
+                .collect();
+
+            let non_signer_stakes_and_signature = (
+                non_signer_stakes_and_signature.nonSignerQuorumBitmapIndices,
+                non_signer_pubkeys,
+                quorum_apks,
+                apk_g2,
+                sigma,
+                non_signer_stakes_and_signature.quorumApkIndices,
+                non_signer_stakes_and_signature.totalStakeIndices,
+                non_signer_stakes_and_signature.nonSignerStakeIndices,
+            )
+                .into();
+
+            self.respondToTask(
+                contract_task,
+                contract_response,
+                non_signer_stakes_and_signature,
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+            Ok(())
+        }
+
+        async fn raise_challenge(
+            &self,
+            task: Task<Self::Input>,
+            task_response: TaskResponse<Self::Output>,
+            task_response_metadata: TaskResponseMetadataSol,
+            pubkeys_of_non_signing_operators: Vec<G1Point>,
+        ) -> Result<(), TaskManagerError> {
+            let contract_task = (
+                task.input,
+                task.task_created_block,
+                task.quorum_numbers,
+                task.quorum_threshold_percentage,
+            )
+                .into();
+
+            let contract_response = (task_response.task_index, task_response.response).into();
+
+            let task_response_metadata = (
+                task_response_metadata.taskResponsedBlock,
+                task_response_metadata.hashOfNonSigners,
+            )
+                .into();
+
+            let pubkey_non_signer = pubkeys_of_non_signing_operators
+                .iter()
+                .map(|p| (p.X, p.Y).into())
+                .collect();
+
+            self.raiseAndResolveChallenge(
+                contract_task,
+                contract_response,
+                task_response_metadata,
+                pubkey_non_signer,
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+            Ok(())
+        }
+    };
+}
