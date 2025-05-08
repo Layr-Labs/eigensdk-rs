@@ -49,7 +49,13 @@ where
         signed_task_response: Vec<u8>,
     ) -> Result<bool, ServerError> {
         let service_handle = &self.service_handle;
-        let parsed = SignedTaskResponse::<TP::Output>::decode(&signed_task_response);
+        let parsed =
+            SignedTaskResponse::<TP::Output>::decode(&signed_task_response).map_err(|e| {
+                ServerError::new(
+                    std::io::ErrorKind::Other,
+                    format!("Error decoding signed task response: {}", e),
+                )
+            })?;
 
         Self::process_signed_task_response(&mut self.task_processor, service_handle, parsed)
             .await

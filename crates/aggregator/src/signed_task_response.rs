@@ -5,6 +5,8 @@ use eigen_task_processor::task_response::TaskResponse;
 use eigen_types::operator::OperatorId;
 use eigen_utils::slashing::middleware::registrycoordinator::BN254::G1Point;
 
+use crate::AggregatorError;
+
 /// Signed Task Response
 #[derive(Debug, Clone)]
 pub struct SignedTaskResponse<T>
@@ -52,27 +54,35 @@ where
     /// # Returns
     ///
     /// The abi encoded task response
-    pub fn encode(&self) -> Vec<u8> {
-        let g1_point = convert_to_g1_point(self.signature.g1_point().g1()).unwrap();
+    pub fn encode(&self) -> Result<Vec<u8>, AggregatorError> {
+        let g1_point = convert_to_g1_point(self.signature.g1_point().g1())?;
 
-        <((u32, T), G1Point, OperatorId)>::abi_encode(&(
+        Ok(<((u32, T), G1Point, OperatorId)>::abi_encode(&(
             (
                 self.task_response.task_index,
                 self.task_response.response.clone(),
             ),
             g1_point,
             self.operator_id,
-        ))
+        )))
     }
 
-    pub fn decode(data: &[u8]) -> Self {
+    /// Abi decode a signed task response
+    ///
+    /// # Arguments
+    ///
+    /// * `data` - The data to decode
+    ///
+    /// # Returns
+    ///
+    /// A new [`SignedTaskResponse`]
+    pub fn decode(data: &[u8]) -> Result<Self, AggregatorError> {
         let ((task_index, response), g1_point, operator_id) =
             <(
                 (<u32 as SolValue>::SolType, <T as SolValue>::SolType),
                 <G1Point as SolValue>::SolType,
                 <OperatorId as SolValue>::SolType,
-            )>::abi_decode_params(data, false)
-            .unwrap();
+            )>::abi_decode_params(data, false)?;
 
         let g1_affine = alloy_g1_point_to_g1_affine(g1_point);
 
@@ -81,10 +91,10 @@ where
             response: response.into(),
         };
 
-        Self {
+        Ok(Self {
             task_response,
             signature: Signature::new(g1_affine),
             operator_id,
-        }
+        })
     }
 }

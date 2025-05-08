@@ -38,4 +38,7 @@ pub enum OperatorError {
     /// Invalid failure rate
     #[error("Invalid failure rate. Must be between 0 and 100.")]
     InvalidFailureRate,
+    /// Failed to encode signed task response
+    #[error("Failed to encode signed task response")]
+    FailedToEncodeSignedTaskResponse,
 }

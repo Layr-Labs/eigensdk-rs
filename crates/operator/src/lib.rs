@@ -148,8 +148,13 @@ impl Operator {
             let task_response = compute_logic(data)?;
             let signed_task_response =
                 Self::sign_task_response(&self.key_pair, &self.operator_id, task_response)?;
+
+            let signed_task_response_encoded = signed_task_response
+                .encode()
+                .map_err(|_| OperatorError::FailedToEncodeSignedTaskResponse)?;
+
             self.client_aggregator
-                .send_signed_task_response(signed_task_response.encode())
+                .send_signed_task_response(signed_task_response_encoded)
                 .await?;
         }
 
