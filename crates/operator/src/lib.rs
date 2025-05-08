@@ -264,17 +264,17 @@ where
 ///
 /// * `impl Fn(Event) -> Result<TaskResponse<O>, OperatorError>` - The wrapped logic.
 #[cfg(feature = "operator-testing")]
-pub fn compute_with_failures<Event, Output, C, F>(
+pub fn compute_with_failures<Input, Output, C, F>(
     correct_logic: C,
     incorrect_logic: F,
     failure_rate: u8,
-) -> impl Fn(Event) -> Result<TaskResponse<Output>, OperatorError>
+) -> impl Fn(u32, Input) -> Result<Output, OperatorError>
 where
-    C: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
-    F: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
+    C: Fn(u32, Input) -> Result<Output, OperatorError>,
+    F: Fn(u32, Input) -> Result<Output, OperatorError>,
     Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
 {
-    move |event| {
+    move |task_index, input: Input| {
         if failure_rate > 100 {
             return Err(OperatorError::InvalidFailureRate);
         }
@@ -283,10 +283,10 @@ where
         let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
         if should_fail {
             info!("Operator compute the task with a wrong response");
-            incorrect_logic(event)
+            incorrect_logic(task_index, input)
         } else {
             info!("Operator compute the task successfully");
-            correct_logic(event)
+            correct_logic(task_index, input)
         }
     }
 }

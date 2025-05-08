@@ -1,28 +1,24 @@
 #![allow(missing_docs)]
 
-use alloy::primitives::{address, U256};
+use alloy::{
+    network::Ethereum,
+    primitives::{address, U256},
+};
+use eigen_common::SdkProvider;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
 use eigen_operator::{
     compute_with_failures, config::OperatorConfig, error::OperatorError, Operator,
 };
-use eigen_task_processor::task_response::TaskResponse;
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
-use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
+use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 
-fn square(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
-    let square = event.task.numberToBeSquared * event.task.numberToBeSquared;
-    Ok(TaskResponse {
-        task_index: event.taskIndex,
-        response: square,
-    })
+fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, OperatorError> {
+    Ok(number_to_be_squared * number_to_be_squared)
 }
 
-fn wrong_square(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
-    Ok(TaskResponse {
-        task_index: event.taskIndex,
-        response: U256::from(42),
-    })
+fn wrong_square(_task_index: u32, _number_to_be_squared: U256) -> Result<U256, OperatorError> {
+    Ok(U256::from(42))
 }
 
 // This example shows how to initialize an operator and start to listen for new task events.
@@ -56,5 +52,8 @@ async fn main() {
 
     // Subscribe to the new task events and start listening. When a new task is created,
     // the operator will process it and send the signed task response to the aggregator.
-    operator.start(logic).await.unwrap();
+    operator
+        .start::<IncredibleSquaringTaskManagerInstance<(), SdkProvider, Ethereum>>(logic)
+        .await
+        .unwrap();
 }
