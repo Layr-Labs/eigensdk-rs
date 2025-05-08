@@ -1,24 +1,10 @@
 //! Example AVS which squares a number
 
-use alloy::{
-    contract::private::{Provider, Transport},
-    network::Network,
-    primitives::{B256, U256},
-    sol_types::SolEvent,
-};
+use alloy::primitives::U256;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::TaskResponded;
-use eigen_task_processor::{
-    default_contract_impl,
-    task::Task,
-    task_manager::{box_error, TaskManagerContract, TaskManagerError},
-    task_response::TaskResponse,
-    task_response_metadata_sol::TaskResponseMetadataSol,
-};
-use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
-use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
-use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
+use eigen_task_processor::{default_contract_impl, impl_task_manager};
 
 // Allow warnings in auto-generated code
 #[allow(warnings)]
@@ -35,16 +21,10 @@ pub mod bindings;
 // struct TaskManagerWrapper<T, P, N>(IncredibleSquaringTaskManagerInstance<T, P, N>);
 //
 // impl<T, P, N> TaskManagerContract<U256, T, P, N> for TaskManagerWrapper<T, P, N> { ... }
-impl<T, P, N> TaskManagerContract for IncredibleSquaringTaskManagerInstance<T, P, N>
-where
-    T: Transport + Clone + Send + Sync,
-    P: Provider<T, N>,
-    N: Network,
-{
-    type Input = U256;
-    type Output = U256;
-    const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
-    const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
-
-    default_contract_impl! {}
-}
+impl_task_manager!(
+    Contract = IncredibleSquaringTaskManagerInstance,
+    Input = U256,
+    Output = U256,
+    NewTaskEvent = NewTaskCreated,
+    TaskRespondedEvent = TaskResponded,
+);
