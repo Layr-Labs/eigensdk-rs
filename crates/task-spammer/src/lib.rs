@@ -1,7 +1,7 @@
 //! This is a simple task generator that can be used to create tasks for the operators.
 //! For testing purposes.
 
-use eigen_task_processor::task_manager::TaskManagerContract;
+use eigen_task_processor::task_manager::TaskManager;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use error::TaskSpammerError;
 use std::time::Duration;
@@ -22,7 +22,7 @@ pub struct TaskSpammerBuilder<I, TM> {
 
 impl<I, TM> TaskSpammerBuilder<I, TM>
 where
-    TM: TaskManagerContract,
+    TM: TaskManager,
 {
     /// Create a new task spammer builder
     ///
@@ -132,7 +132,7 @@ pub struct TaskSpammer<I, TM> {
 
 impl<I, TM> TaskSpammer<I, TM>
 where
-    TM: TaskManagerContract + Send + Sync,
+    TM: TaskManager + Send + Sync,
 {
     /// Run the task spammer
     /// This will create N tasks, where N is the number of items in the iterator
