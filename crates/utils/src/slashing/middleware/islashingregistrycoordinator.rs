@@ -1971,6 +1971,7 @@ interface ISlashingRegistryCoordinator {
     error OnlyAllocationManager();
     error OnlyEjector();
     error OperatorNotRegistered();
+    error OperatorNotRegisteredForQuorum();
     error QuorumDoesNotExist();
     error QuorumOperatorCountMismatch();
 
@@ -3293,6 +3294,11 @@ interface ISlashingRegistryCoordinator {
   },
   {
     "type": "error",
+    "name": "OperatorNotRegisteredForQuorum",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "QuorumDoesNotExist",
     "inputs": []
   },
@@ -4541,6 +4547,67 @@ pub mod ISlashingRegistryCoordinator {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OperatorNotRegistered()";
             const SELECTOR: [u8; 4] = [37u8, 236u8, 108u8, 31u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
+    /**Custom error with signature `OperatorNotRegisteredForQuorum()` and selector `0x4c74e42a`.
+    ```solidity
+    error OperatorNotRegisteredForQuorum();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OperatorNotRegisteredForQuorum {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OperatorNotRegisteredForQuorum> for UnderlyingRustTuple<'_> {
+            fn from(value: OperatorNotRegisteredForQuorum) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorNotRegisteredForQuorum {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OperatorNotRegisteredForQuorum {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OperatorNotRegisteredForQuorum()";
+            const SELECTOR: [u8; 4] = [76u8, 116u8, 228u8, 42u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -12454,6 +12521,8 @@ pub mod ISlashingRegistryCoordinator {
         #[allow(missing_docs)]
         OperatorNotRegistered(OperatorNotRegistered),
         #[allow(missing_docs)]
+        OperatorNotRegisteredForQuorum(OperatorNotRegisteredForQuorum),
+        #[allow(missing_docs)]
         QuorumDoesNotExist(QuorumDoesNotExist),
         #[allow(missing_docs)]
         QuorumOperatorCountMismatch(QuorumOperatorCountMismatch),
@@ -12476,6 +12545,7 @@ pub mod ISlashingRegistryCoordinator {
             [53u8, 75u8, 184u8, 171u8],
             [60u8, 184u8, 156u8, 151u8],
             [76u8, 68u8, 153u8, 93u8],
+            [76u8, 116u8, 228u8, 42u8],
             [102u8, 229u8, 101u8, 223u8],
             [142u8, 90u8, 238u8, 231u8],
             [170u8, 173u8, 19u8, 247u8],
@@ -12495,7 +12565,7 @@ pub mod ISlashingRegistryCoordinator {
     impl alloy_sol_types::SolInterface for ISlashingRegistryCoordinatorErrors {
         const NAME: &'static str = "ISlashingRegistryCoordinatorErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 22usize;
+        const COUNT: usize = 23usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -12548,6 +12618,9 @@ pub mod ISlashingRegistryCoordinator {
                 Self::OnlyEjector(_) => <OnlyEjector as alloy_sol_types::SolError>::SELECTOR,
                 Self::OperatorNotRegistered(_) => {
                     <OperatorNotRegistered as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::OperatorNotRegisteredForQuorum(_) => {
+                    <OperatorNotRegisteredForQuorum as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::QuorumDoesNotExist(_) => {
                     <QuorumDoesNotExist as alloy_sol_types::SolError>::SELECTOR
@@ -12692,6 +12765,22 @@ pub mod ISlashingRegistryCoordinator {
                         .map(ISlashingRegistryCoordinatorErrors::InsufficientStakeForChurn)
                     }
                     InsufficientStakeForChurn
+                },
+                {
+                    fn OperatorNotRegisteredForQuorum(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<ISlashingRegistryCoordinatorErrors>
+                    {
+                        <OperatorNotRegisteredForQuorum as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                ISlashingRegistryCoordinatorErrors::OperatorNotRegisteredForQuorum,
+                            )
+                    }
+                    OperatorNotRegisteredForQuorum
                 },
                 {
                     fn InvalidAVS(
@@ -12959,6 +13048,11 @@ pub mod ISlashingRegistryCoordinator {
                         inner,
                     )
                 }
+                Self::OperatorNotRegisteredForQuorum(inner) => {
+                    <OperatorNotRegisteredForQuorum as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::QuorumDoesNotExist(inner) => {
                     <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
@@ -13047,6 +13141,11 @@ pub mod ISlashingRegistryCoordinator {
                 }
                 Self::OperatorNotRegistered(inner) => {
                     <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
+                }
+                Self::OperatorNotRegisteredForQuorum(inner) => {
+                    <OperatorNotRegisteredForQuorum as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner, out,
+                    )
                 }
                 Self::QuorumDoesNotExist(inner) => {
                     <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
