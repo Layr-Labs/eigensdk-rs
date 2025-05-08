@@ -1,17 +1,20 @@
 //! Operator common functions.
 
 use alloy::{
-    primitives::keccak256,
+    dyn_abi::SolType,
+    primitives::{keccak256, Bytes},
     providers::{Provider, ProviderBuilder, WsConnect},
-    rpc::types::Filter,
-    sol_types::{SolEvent, SolValue},
+    rpc::types::{Filter, Log},
+    sol_types::SolValue,
 };
 use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
-use eigen_task_processor::task_response::TaskResponse;
+use eigen_task_processor::{
+    task::Task, task_manager::TaskManagerContract, task_response::TaskResponse,
+};
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
@@ -116,11 +119,15 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation.
-    pub async fn start<Event, F, Output>(&self, compute_logic: F) -> Result<(), OperatorError>
+    pub async fn start<TM>(
+        &self,
+        compute_logic: impl Fn(u32, TM::Input) -> Result<TM::Output, OperatorError>,
+    ) -> Result<(), OperatorError>
     where
-        Event: SolEvent,
-        F: Fn(Event) -> Result<TaskResponse<Output>, OperatorError>,
-        Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
+        TM: TaskManagerContract,
+        <TM as TaskManagerContract>::Input:
+            From<<<<TM as TaskManagerContract>::Input as SolValue>::SolType as SolType>::RustType>,
+        TM::Output: Serialize + for<'de> Deserialize<'de> + Clone,
     {
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
@@ -128,7 +135,7 @@ impl Operator {
             .await
             .map_err(|_| OperatorError::TransportError)?;
 
-        let filter = Filter::new().event_signature(Event::SIGNATURE_HASH);
+        let filter = Filter::new().event_signature(TM::NEW_TASK_EVENT_SELECTOR);
         let sub = provider
             .subscribe_logs(&filter)
             .await
@@ -136,15 +143,15 @@ impl Operator {
         let mut stream = sub.into_stream();
 
         while let Some(log) = stream.next().await {
-            let data: Event = log
-                .log_decode()
-                .map_err(|_| OperatorError::SubscribeLogsError)?
-                .inner
-                .data;
+            let (task_index, task) = decode_event::<TM>(&log)?;
 
             info!("{} picked up a new task", self.operator_name);
 
-            let task_response = compute_logic(data)?;
+            let output = compute_logic(task_index, task.input)?;
+            let task_response = TaskResponse {
+                task_index,
+                response: output,
+            };
             let signed_task_response =
                 Self::sign_task_response(&self.key_pair, &self.operator_id, task_response)?;
             self.client_aggregator
@@ -181,6 +188,67 @@ impl Operator {
         info!("Operator signed task response");
         Ok(signed_task_response)
     }
+}
+
+// TODO: this was taken from the aggregator crate. We should extract this to a common crate.
+/// Decode the log of the NewTaskCreated event to get the task index and the task
+///
+/// # Arguments
+///
+/// * `log` - The log of the NewTaskCreated event
+///
+/// # Returns
+///
+/// * `Result<(u32, Task<TP::Input>), AggregatorError>` - The task index and the task
+fn decode_event<TM>(log: &Log) -> Result<(u32, Task<TM::Input>), OperatorError>
+where
+    TM: TaskManagerContract,
+    <TM as TaskManagerContract>::Input:
+        From<<<<TM as TaskManagerContract>::Input as SolValue>::SolType as SolType>::RustType>,
+{
+    // event NewTaskCreated(uint32 indexed taskIndex, Task task);
+    // Since taskIndex is indexed type, it is present in the topics array
+    // The first element of the topic is the event hash signature, the second is the taskIndex
+    let bytes: [u8; 32] = log
+        .topics()
+        .get(1)
+        .ok_or(OperatorError::SubscribeLogsError)?
+        .0;
+
+    // u32 values are stored in the last 4 bytes of a 32 bytes array (left-padded).
+    let task_index_bytes: [u8; 4] = bytes[28..32]
+        .try_into()
+        .map_err(|_| OperatorError::SubscribeLogsError)?;
+    let task_index = u32::from_be_bytes(task_index_bytes);
+
+    // Skip the first 32 bytes of the ABI-encoded data (the dynamic offset pointer)
+    // so we can decode the actual tuple payload that follows.
+    let data = log
+        .inner
+        .data
+        .data
+        .0
+        .get(32..)
+        .ok_or(OperatorError::SubscribeLogsError)?;
+
+    let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
+        <(
+            <TM::Input as SolValue>::SolType,
+            <u32 as SolValue>::SolType,
+            <Bytes as SolValue>::SolType,
+            <u32 as SolValue>::SolType,
+        )>::abi_decode_params(data, false)
+        .map_err(|_| OperatorError::SubscribeLogsError)?;
+
+    Ok((
+        task_index,
+        Task::<TM::Input> {
+            input: input.into(),
+            task_created_block,
+            quorum_numbers,
+            quorum_threshold_percentage,
+        },
+    ))
 }
 
 /// Helper to wrap both correct and incorrect logic in a single closure.
