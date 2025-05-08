@@ -1,3 +1,12 @@
+use crate::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature;
+use crate::IIncredibleDotProductTaskManager::{
+    DotProductInput, Task as ContractTask, TaskResponse as ContractTaskResponse,
+    TaskResponseMetadata,
+};
+use crate::IncredibleDotProductTaskManager::{
+    IncredibleDotProductTaskManagerInstance, NewTaskCreated, TaskResponded,
+};
+use crate::BN254::{G1Point as G1Binding, G2Point as G2Binding};
 use alloy::{
     contract::private::{Provider, Transport},
     network::{Network, ReceiptResponse},
@@ -16,30 +25,10 @@ use eigensdk::{
         IBLSSignatureCheckerTypes::NonSignerStakesAndSignature, BN254::G1Point,
     },
 };
-use incredible_bindings::incredibledotproducttaskmanager::IIncredibleDotProductTaskManager::{
-    Task as ContractTask, TaskResponse as ContractTaskResponse, TaskResponseMetadata,
-};
-use incredible_bindings::incredibledotproducttaskmanager::BN254::{
-    G1Point as G1Binding, G2Point as G2Binding,
-};
-
-use incredible_bindings::incredibledotproducttaskmanager::{
-    IBLSSignatureCheckerTypes::NonSignerStakesAndSignature as ContractNonSignerStakesAndSignature,
-    IncredibleDotProductTaskManager::TaskResponded,
-};
-use incredible_bindings::incredibledotproducttaskmanager::{
-    IIncredibleDotProductTaskManager::DotProductInput,
-    IncredibleDotProductTaskManager::{IncredibleDotProductTaskManagerInstance, NewTaskCreated},
-};
 use tracing::info;
 
-// We need to implement this struct to avoid "must be used as the type parameter for some local type" error
-// With the new struct, there is no problem when implementing the TaskManagerContract trait to the external binding struct
-/// Wrapper for the TaskManagerContract trait
-#[derive(Clone, Debug)]
-pub struct TaskManagerWrapper<T, P, N>(pub IncredibleDotProductTaskManagerInstance<T, P, N>);
-
-impl<T, P, N> TaskManagerContract for TaskManagerWrapper<T, P, N>
+/// Implementation of the TaskManagerContract trait for the IncredibleDotProductTaskManagerInstance struct
+impl<T, P, N> TaskManagerContract for IncredibleDotProductTaskManagerInstance<T, P, N>
 where
     T: Transport + Clone + Send + Sync,
     P: Provider<T, N>,
@@ -107,18 +96,17 @@ where
             sigma,
         };
 
-        self.0
-            .respondToTask(
-                contract_task,
-                contract_response,
-                non_signer_stakes_and_signature,
-            )
-            .send()
-            .await
-            .map_err(box_error)?
-            .get_receipt()
-            .await
-            .map_err(box_error)?;
+        self.respondToTask(
+            contract_task,
+            contract_response,
+            non_signer_stakes_and_signature,
+        )
+        .send()
+        .await
+        .map_err(box_error)?
+        .get_receipt()
+        .await
+        .map_err(box_error)?;
 
         Ok(())
     }
@@ -130,8 +118,7 @@ where
         quorums: Vec<QuorumNum>,
     ) -> Result<(), TaskManagerError> {
         info!("Creating new task");
-        self.0
-            .createNewTask(input, quorum_threshold.into(), quorums.into())
+        self.createNewTask(input, quorum_threshold.into(), quorums.into())
             .send()
             .await
             .map_err(box_error)?
@@ -174,7 +161,6 @@ where
             .collect();
 
         let tx_hash = self
-            .0
             .raiseAndResolveChallenge(
                 contract_task,
                 contract_response,

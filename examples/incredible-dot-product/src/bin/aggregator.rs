@@ -10,8 +10,7 @@ use eigensdk::{
     task_processor::IndexingTaskProcessor,
 };
 use eyre::Result;
-use incredible_bindings::incredibledotproducttaskmanager::IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance;
-use incredible_dot_product::TaskManagerWrapper;
+use incredible_dot_product::IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -30,13 +29,9 @@ async fn main() -> Result<()> {
         Address::from_str("0x4c5859f0f772848b2d91f1d83e2fe57935348029")?;
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
-    let wrapper_contract = TaskManagerWrapper(contract);
 
-    let task_processor = IndexingTaskProcessor::new(
-        wrapper_contract,
-        Duration::from_secs(10),
-        Duration::from_secs(2),
-    );
+    let task_processor =
+        IndexingTaskProcessor::new(contract, Duration::from_secs(10), Duration::from_secs(2));
 
     let config = AggregatorConfig {
         server_address: aggregator_ip_port,

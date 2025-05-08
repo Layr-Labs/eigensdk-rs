@@ -7,11 +7,10 @@ use eigensdk::{
     task_spammer::TaskSpammerBuilder,
 };
 use eyre::Result;
-use incredible_bindings::incredibledotproducttaskmanager::{
+use incredible_dot_product::{
     IIncredibleDotProductTaskManager::DotProductInput,
     IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
-use incredible_dot_product::TaskManagerWrapper;
 use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
@@ -23,9 +22,8 @@ async fn main() -> Result<()> {
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
-    let wrapper = TaskManagerWrapper(contract);
 
-    TaskSpammerBuilder::new(wrapper)
+    TaskSpammerBuilder::new(contract)
         .with_iter((0..).map(|i| DotProductInput {
             X: vec![U256::from(i); 4],
             Y: vec![U256::from(i * 2); 4],

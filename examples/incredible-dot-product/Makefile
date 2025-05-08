@@ -24,7 +24,7 @@ start_docker:
 		ghcr.io/foundry-rs/foundry:latest --host 0.0.0.0
 	sleep 2
 
-RUST_BINDINGS_PATH:=bindings/src
+RUST_BINDINGS_PATH:=src/bindings
 
 generate-bindings:
 	cd contracts && forge build --force --skip test --skip script

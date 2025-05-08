@@ -16,7 +16,6 @@ alloy = { version = "0.13", features = [
     "json-rpc",
     "signer-keystore",
 ] }
-bindings = { path = "./bindings" }
 eigensdk = { path = "../../crates/eigensdk", features = ["full"] }
 eigen-operator = { workspace = true, features = ["operator-testing"] }
 eyre = "0.6"

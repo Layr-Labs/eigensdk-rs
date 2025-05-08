@@ -11,11 +11,10 @@ use eigensdk::{
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
-use incredible_bindings::incredibledotproducttaskmanager::{
+use incredible_dot_product::{
     IIncredibleDotProductTaskManager::DotProductInput,
     IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
-use incredible_dot_product::TaskManagerWrapper;
 use std::str::FromStr;
 
 #[tokio::main]
@@ -27,9 +26,8 @@ async fn main() -> Result<()> {
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
-    let contract_wrapper = TaskManagerWrapper(contract);
 
-    let task_processor = IndexingChallengerProcessor::new(contract_wrapper, is_response_correct);
+    let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
     let mut challenger = Challenger::new(http_rpc_url, ws_rpc_url, task_processor);
     challenger
         .start_challenger()
