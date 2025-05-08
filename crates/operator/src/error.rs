@@ -32,9 +32,6 @@ pub enum OperatorError {
     /// Failed to send signed task response
     #[error("Failed to send signed task response")]
     SendSignedTaskResponseError(#[from] RpcError),
-    /// Failed to serialize signed task response
-    #[error("Failed to serialize signed task response")]
-    SerializationError(#[from] serde_json::Error),
     /// Max retry attempts exceeded
     #[error("Max retry attempts exceeded")]
     MaxRetryExceeded,

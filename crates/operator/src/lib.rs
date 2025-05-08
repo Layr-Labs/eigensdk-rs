@@ -17,7 +17,6 @@ use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
 use rand::Rng;
-use serde::{Deserialize, Serialize};
 use tracing::info;
 
 /// Tarpc Client
