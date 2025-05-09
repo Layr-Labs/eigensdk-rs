@@ -81,11 +81,13 @@ bindings_slashing_host:
 	./scripts/generate_slashing_bindings.sh
 	cargo fmt --all
 	# Apply a fix for any compile issues
-	git apply --allow-empty scripts/bindings.patch
+	# Ignore any failures
+	-git apply --allow-empty scripts/bindings.patch
 	@echo "Bindings generated"
 
 .PHONY: bindings_host
 bindings_host: bindings_rewardsv2_host bindings_slashing_host
+
 .PHONY: rewardsv2-bindings
 rewardsv2-bindings:
 	@echo "Starting Docker container..."
@@ -98,11 +100,12 @@ rewardsv2-bindings:
 slashing-bindings:
 	@echo "Starting Docker container..."
 	@docker run --rm -v "$(PWD):/sdk" -w "/sdk" \
-		ghcr.io/foundry-rs/foundry:nightly \
+		ghcr.io/foundry-rs/foundry:stable \
 		-c scripts/generate_slashing_bindings.sh
 	cargo fmt --all
 	# Apply a fix for any compile issues
-	git apply --allow-empty scripts/bindings.patch
+	# Ignore any failures
+	-git apply --allow-empty scripts/bindings.patch
 
 .PHONY: bindings
 bindings: rewardsv2-bindings slashing-bindings

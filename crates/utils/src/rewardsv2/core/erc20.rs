@@ -343,6 +343,7 @@ pub mod ERC20 {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\0\xA9W`\x005`\xE0\x1C\x80c9P\x93Q\x11a\0qW\x80c9P\x93Q\x14a\x01#W\x80cp\xA0\x821\x14a\x016W\x80c\x95\xD8\x9BA\x14a\x01_W\x80c\xA4W\xC2\xD7\x14a\x01gW\x80c\xA9\x05\x9C\xBB\x14a\x01zW\x80c\xDDb\xED>\x14a\x01\x8DW`\0\x80\xFD[\x80c\x06\xFD\xDE\x03\x14a\0\xAEW\x80c\t^\xA7\xB3\x14a\0\xCCW\x80c\x18\x16\r\xDD\x14a\0\xEFW\x80c#\xB8r\xDD\x14a\x01\x01W\x80c1<\xE5g\x14a\x01\x14W[`\0\x80\xFD[a\0\xB6a\x01\xA0V[`@Qa\0\xC3\x91\x90a\x06\xC4V[`@Q\x80\x91\x03\x90\xF3[a\0\xDFa\0\xDA6`\x04a\x075V[a\x022V[`@Q\x90\x15\x15\x81R` \x01a\0\xC3V[`\x02T[`@Q\x90\x81R` \x01a\0\xC3V[a\0\xDFa\x01\x0F6`\x04a\x07_V[a\x02JV[`@Q`\x12\x81R` \x01a\0\xC3V[a\0\xDFa\x0116`\x04a\x075V[a\x02nV[a\0\xF3a\x01D6`\x04a\x07\x9BV[`\x01`\x01`\xA0\x1B\x03\x16`\0\x90\x81R` \x81\x90R`@\x90 T\x90V[a\0\xB6a\x02\x90V[a\0\xDFa\x01u6`\x04a\x075V[a\x02\x9FV[a\0\xDFa\x01\x886`\x04a\x075V[a\x03\x1FV[a\0\xF3a\x01\x9B6`\x04a\x07\xBDV[a\x03-V[```\x03\x80Ta\x01\xAF\x90a\x07\xF0V[\x80`\x1F\x01` \x80\x91\x04\x02` \x01`@Q\x90\x81\x01`@R\x80\x92\x91\x90\x81\x81R` \x01\x82\x80Ta\x01\xDB\x90a\x07\xF0V[\x80\x15a\x02(W\x80`\x1F\x10a\x01\xFDWa\x01\0\x80\x83T\x04\x02\x83R\x91` \x01\x91a\x02(V[\x82\x01\x91\x90`\0R` `\0 \x90[\x81T\x81R\x90`\x01\x01\x90` \x01\x80\x83\x11a\x02\x0BW\x82\x90\x03`\x1F\x16\x82\x01\x91[PPPPP\x90P\x90V[`\x003a\x02@\x81\x85\x85a\x03XV[P`\x01\x93\x92PPPV[`\x003a\x02X\x85\x82\x85a\x04|V[a\x02c\x85\x85\x85a\x04\xF6V[P`\x01\x94\x93PPPPV[`\x003a\x02@\x81\x85\x85a\x02\x81\x83\x83a\x03-V[a\x02\x8B\x91\x90a\x08+V[a\x03XV[```\x04\x80Ta\x01\xAF\x90a\x07\xF0V[`\x003\x81a\x02\xAD\x82\x86a\x03-V[\x90P\x83\x81\x10\x15a\x03\x12W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`%`$\x82\x01R\x7FERC20: decreased allowance below`D\x82\x01Rd zero`\xD8\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[a\x02c\x82\x86\x86\x84\x03a\x03XV[`\x003a\x02@\x81\x85\x85a\x04\xF6V[`\x01`\x01`\xA0\x1B\x03\x91\x82\x16`\0\x90\x81R`\x01` \x90\x81R`@\x80\x83 \x93\x90\x94\x16\x82R\x91\x90\x91R T\x90V[`\x01`\x01`\xA0\x1B\x03\x83\x16a\x03\xBAW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`$\x80\x82\x01R\x7FERC20: approve from the zero add`D\x82\x01Rcress`\xE0\x1B`d\x82\x01R`\x84\x01a\x03\tV[`\x01`\x01`\xA0\x1B\x03\x82\x16a\x04\x1BW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\"`$\x82\x01R\x7FERC20: approve to the zero addre`D\x82\x01Rass`\xF0\x1B`d\x82\x01R`\x84\x01a\x03\tV[`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\0\x81\x81R`\x01` \x90\x81R`@\x80\x83 \x94\x87\x16\x80\x84R\x94\x82R\x91\x82\x90 \x85\x90U\x90Q\x84\x81R\x7F\x8C[\xE1\xE5\xEB\xEC}[\xD1OqB}\x1E\x84\xF3\xDD\x03\x14\xC0\xF7\xB2)\x1E[ \n\xC8\xC7\xC3\xB9%\x91\x01`@Q\x80\x91\x03\x90\xA3PPPV[`\0a\x04\x88\x84\x84a\x03-V[\x90P`\0\x19\x81\x14a\x04\xF0W\x81\x81\x10\x15a\x04\xE3W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1D`$\x82\x01R\x7FERC20: insufficient allowance\0\0\0`D\x82\x01R`d\x01a\x03\tV[a\x04\xF0\x84\x84\x84\x84\x03a\x03XV[PPPPV[`\x01`\x01`\xA0\x1B\x03\x83\x16a\x05ZW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`%`$\x82\x01R\x7FERC20: transfer from the zero ad`D\x82\x01Rddress`\xD8\x1B`d\x82\x01R`\x84\x01a\x03\tV[`\x01`\x01`\xA0\x1B\x03\x82\x16a\x05\xBCW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`#`$\x82\x01R\x7FERC20: transfer to the zero addr`D\x82\x01Rbess`\xE8\x1B`d\x82\x01R`\x84\x01a\x03\tV[`\x01`\x01`\xA0\x1B\x03\x83\x16`\0\x90\x81R` \x81\x90R`@\x90 T\x81\x81\x10\x15a\x064W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FERC20: transfer amount exceeds b`D\x82\x01Realance`\xD0\x1B`d\x82\x01R`\x84\x01a\x03\tV[`\x01`\x01`\xA0\x1B\x03\x80\x85\x16`\0\x90\x81R` \x81\x90R`@\x80\x82 \x85\x85\x03\x90U\x91\x85\x16\x81R\x90\x81 \x80T\x84\x92\x90a\x06k\x90\x84\x90a\x08+V[\x92PP\x81\x90UP\x82`\x01`\x01`\xA0\x1B\x03\x16\x84`\x01`\x01`\xA0\x1B\x03\x16\x7F\xDD\xF2R\xAD\x1B\xE2\xC8\x9Bi\xC2\xB0h\xFC7\x8D\xAA\x95+\xA7\xF1c\xC4\xA1\x16(\xF5ZM\xF5#\xB3\xEF\x84`@Qa\x06\xB7\x91\x81R` \x01\x90V[`@Q\x80\x91\x03\x90\xA3a\x04\xF0V[`\0` \x80\x83R\x83Q\x80\x82\x85\x01R`\0[\x81\x81\x10\x15a\x06\xF1W\x85\x81\x01\x83\x01Q\x85\x82\x01`@\x01R\x82\x01a\x06\xD5V[\x81\x81\x11\x15a\x07\x03W`\0`@\x83\x87\x01\x01R[P`\x1F\x01`\x1F\x19\x16\x92\x90\x92\x01`@\x01\x93\x92PPPV[\x805`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x070W`\0\x80\xFD[\x91\x90PV[`\0\x80`@\x83\x85\x03\x12\x15a\x07HW`\0\x80\xFD[a\x07Q\x83a\x07\x19V[\x94` \x93\x90\x93\x015\x93PPPV[`\0\x80`\0``\x84\x86\x03\x12\x15a\x07tW`\0\x80\xFD[a\x07}\x84a\x07\x19V[\x92Pa\x07\x8B` \x85\x01a\x07\x19V[\x91P`@\x84\x015\x90P\x92P\x92P\x92V[`\0` \x82\x84\x03\x12\x15a\x07\xADW`\0\x80\xFD[a\x07\xB6\x82a\x07\x19V[\x93\x92PPPV[`\0\x80`@\x83\x85\x03\x12\x15a\x07\xD0W`\0\x80\xFD[a\x07\xD9\x83a\x07\x19V[\x91Pa\x07\xE7` \x84\x01a\x07\x19V[\x90P\x92P\x92\x90PV[`\x01\x81\x81\x1C\x90\x82\x16\x80a\x08\x04W`\x7F\x82\x16\x91P[` \x82\x10\x81\x14\x15a\x08%WcNH{q`\xE0\x1B`\0R`\"`\x04R`$`\0\xFD[P\x91\x90PV[`\0\x82\x19\x82\x11\x15a\x08LWcNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[P\x01\x90V\xFE\xA2dipfsX\"\x12 \xD1\xC1\xF7,\x12\xCB^\xF9]\xA9Dg\xD3\x1E\xE0xp\xF3eW\x81E\xA2\xBAv\xB8iJ\xCFD\x19\xDAdsolcC\0\x08\x0C\x003",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Approval(address,address,uint256)` and selector `0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925`.
     ```solidity
     event Approval(address indexed owner, address indexed spender, uint256 value);
@@ -463,6 +464,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Transfer(address,address,uint256)` and selector `0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef`.
     ```solidity
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -661,6 +663,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `allowance(address,address)` and selector `0xdd62ed3e`.
     ```solidity
     function allowance(address owner, address spender) external view returns (uint256);
@@ -673,6 +676,7 @@ pub mod ERC20 {
         #[allow(missing_docs)]
         pub spender: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`allowance(address,address)`](allowanceCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -796,6 +800,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `approve(address,uint256)` and selector `0x095ea7b3`.
     ```solidity
     function approve(address spender, uint256 amount) external returns (bool);
@@ -808,6 +813,7 @@ pub mod ERC20 {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`approve(address,uint256)`](approveCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -931,6 +937,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `balanceOf(address)` and selector `0x70a08231`.
     ```solidity
     function balanceOf(address account) external view returns (uint256);
@@ -941,6 +948,7 @@ pub mod ERC20 {
         #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`balanceOf(address)`](balanceOfCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1049,6 +1057,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `decimals()` and selector `0x313ce567`.
     ```solidity
     function decimals() external view returns (uint8);
@@ -1056,6 +1065,7 @@ pub mod ERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct decimalsCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`decimals()`](decimalsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1160,6 +1170,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `decreaseAllowance(address,uint256)` and selector `0xa457c2d7`.
     ```solidity
     function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool);
@@ -1172,6 +1183,7 @@ pub mod ERC20 {
         #[allow(missing_docs)]
         pub subtractedValue: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`decreaseAllowance(address,uint256)`](decreaseAllowanceCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1295,6 +1307,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `increaseAllowance(address,uint256)` and selector `0x39509351`.
     ```solidity
     function increaseAllowance(address spender, uint256 addedValue) external returns (bool);
@@ -1307,6 +1320,7 @@ pub mod ERC20 {
         #[allow(missing_docs)]
         pub addedValue: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`increaseAllowance(address,uint256)`](increaseAllowanceCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1430,6 +1444,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `name()` and selector `0x06fdde03`.
     ```solidity
     function name() external view returns (string memory);
@@ -1437,6 +1452,7 @@ pub mod ERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct nameCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`name()`](nameCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1541,6 +1557,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `symbol()` and selector `0x95d89b41`.
     ```solidity
     function symbol() external view returns (string memory);
@@ -1548,6 +1565,7 @@ pub mod ERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct symbolCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`symbol()`](symbolCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1652,6 +1670,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `totalSupply()` and selector `0x18160ddd`.
     ```solidity
     function totalSupply() external view returns (uint256);
@@ -1659,6 +1678,7 @@ pub mod ERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalSupplyCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`totalSupply()`](totalSupplyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1763,6 +1783,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transfer(address,uint256)` and selector `0xa9059cbb`.
     ```solidity
     function transfer(address to, uint256 amount) external returns (bool);
@@ -1775,6 +1796,7 @@ pub mod ERC20 {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`transfer(address,uint256)`](transferCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1898,6 +1920,7 @@ pub mod ERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transferFrom(address,address,uint256)` and selector `0x23b872dd`.
     ```solidity
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
@@ -1912,6 +1935,7 @@ pub mod ERC20 {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`transferFrom(address,address,uint256)`](transferFromCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2043,6 +2067,7 @@ pub mod ERC20 {
         }
     };
     ///Container for all the [`ERC20`](self) function calls.
+    #[derive()]
     pub enum ERC20Calls {
         #[allow(missing_docs)]
         allowance(allowanceCall),
@@ -2326,6 +2351,7 @@ pub mod ERC20 {
         }
     }
     ///Container for all the [`ERC20`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum ERC20Events {
         #[allow(missing_docs)]
         Approval(Approval),

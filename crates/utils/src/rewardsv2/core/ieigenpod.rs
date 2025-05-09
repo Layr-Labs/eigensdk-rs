@@ -19,6 +19,7 @@ library BeaconChainProofs {
 pub mod BeaconChainProofs {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct BalanceContainerProof { bytes32 balanceContainerRoot; bytes proof; }
     ```*/
@@ -218,6 +219,7 @@ pub mod BeaconChainProofs {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct BalanceProof { bytes32 pubkeyHash; bytes32 balanceRoot; bytes proof; }
     ```*/
@@ -438,6 +440,7 @@ pub mod BeaconChainProofs {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct StateRootProof { bytes32 beaconStateRoot; bytes proof; }
     ```*/
@@ -637,6 +640,7 @@ pub mod BeaconChainProofs {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct ValidatorProof { bytes32[] validatorFields; bytes proof; }
     ```*/
@@ -1788,6 +1792,7 @@ pub mod IEigenPod {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct VALIDATOR_STATUS(u8);
@@ -1897,6 +1902,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct Checkpoint { bytes32 beaconBlockRoot; uint24 proofsRemaining; uint64 podBalanceGwei; int128 balanceDeltasGwei; }
     ```*/
@@ -2157,6 +2163,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct ValidatorInfo { uint64 validatorIndex; uint64 restakedBalanceGwei; uint64 lastCheckpointedAt; VALIDATOR_STATUS status; }
     ```*/
@@ -2409,6 +2416,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `CheckpointCreated(uint64,bytes32,uint256)` and selector `0x575796133bbed337e5b39aa49a30dc2556a91e0c6c2af4b7b886ae77ebef1076`.
     ```solidity
     event CheckpointCreated(uint64 indexed checkpointTimestamp, bytes32 indexed beaconBlockRoot, uint256 validatorCount);
@@ -2531,6 +2539,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `CheckpointFinalized(uint64,int256)` and selector `0x525408c201bc1576eb44116f6478f1c2a54775b19a043bcfdc708364f74f8e44`.
     ```solidity
     event CheckpointFinalized(uint64 indexed checkpointTimestamp, int256 totalShareDeltaWei);
@@ -2645,6 +2654,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `EigenPodStaked(bytes)` and selector `0x606865b7934a25d4aed43f6cdb426403353fa4b3009c4d228407474581b01e23`.
     ```solidity
     event EigenPodStaked(bytes pubkey);
@@ -2743,6 +2753,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `NonBeaconChainETHReceived(uint256)` and selector `0x6fdd3dbdb173299608c0aa9f368735857c8842b581f8389238bf05bd04b3bf49`.
     ```solidity
     event NonBeaconChainETHReceived(uint256 amountReceived);
@@ -2843,6 +2854,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `ProofSubmitterUpdated(address,address)` and selector `0xfb8129080a19d34dceac04ba253fc50304dc86c729bd63cdca4a969ad19a5eac`.
     ```solidity
     event ProofSubmitterUpdated(address prevProofSubmitter, address newProofSubmitter);
@@ -2952,6 +2964,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `RestakedBeaconChainETHWithdrawn(address,uint256)` and selector `0x8947fd2ce07ef9cc302c4e8f0461015615d91ce851564839e91cc804c2f49d8e`.
     ```solidity
     event RestakedBeaconChainETHWithdrawn(address indexed recipient, uint256 amount);
@@ -3061,6 +3074,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `ValidatorBalanceUpdated(uint40,uint64,uint64)` and selector `0x0e5fac175b83177cc047381e030d8fb3b42b37bd1c025e22c280facad62c32df`.
     ```solidity
     event ValidatorBalanceUpdated(uint40 validatorIndex, uint64 balanceTimestamp, uint64 newValidatorBalanceGwei);
@@ -3177,6 +3191,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `ValidatorCheckpointed(uint64,uint40)` and selector `0xa91c59033c3423e18b54d0acecebb4972f9ea95aedf5f4cae3b677b02eaf3a3f`.
     ```solidity
     event ValidatorCheckpointed(uint64 indexed checkpointTimestamp, uint40 indexed validatorIndex);
@@ -3292,6 +3307,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `ValidatorRestaked(uint40)` and selector `0x2d0800bbc377ea54a08c5db6a87aafff5e3e9c8fead0eda110e40e0c10441449`.
     ```solidity
     event ValidatorRestaked(uint40 validatorIndex);
@@ -3392,6 +3408,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `ValidatorWithdrawn(uint64,uint40)` and selector `0x2a02361ffa66cf2c2da4682c2355a6adcaa9f6c227b6e6563e68480f9587626a`.
     ```solidity
     event ValidatorWithdrawn(uint64 indexed checkpointTimestamp, uint40 indexed validatorIndex);
@@ -3507,6 +3524,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `activeValidatorCount()` and selector `0x2340e8d3`.
     ```solidity
     function activeValidatorCount() external view returns (uint256);
@@ -3514,6 +3532,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct activeValidatorCountCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`activeValidatorCount()`](activeValidatorCountCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3618,6 +3637,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `checkpointBalanceExitedGwei(uint64)` and selector `0x52396a59`.
     ```solidity
     function checkpointBalanceExitedGwei(uint64) external view returns (uint64);
@@ -3628,6 +3648,7 @@ pub mod IEigenPod {
         #[allow(missing_docs)]
         pub _0: u64,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`checkpointBalanceExitedGwei(uint64)`](checkpointBalanceExitedGweiCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3736,6 +3757,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `currentCheckpoint()` and selector `0x47d28372`.
     ```solidity
     function currentCheckpoint() external view returns (Checkpoint memory);
@@ -3743,6 +3765,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currentCheckpointCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`currentCheckpoint()`](currentCheckpointCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3847,6 +3870,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `currentCheckpointTimestamp()` and selector `0x42ecff2a`.
     ```solidity
     function currentCheckpointTimestamp() external view returns (uint64);
@@ -3854,6 +3878,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currentCheckpointTimestampCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`currentCheckpointTimestamp()`](currentCheckpointTimestampCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3958,6 +3983,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `eigenPodManager()` and selector `0x4665bcda`.
     ```solidity
     function eigenPodManager() external view returns (address);
@@ -3965,6 +3991,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodManagerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`eigenPodManager()`](eigenPodManagerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4069,6 +4096,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getParentBlockRoot(uint64)` and selector `0x6c0d2d5a`.
     ```solidity
     function getParentBlockRoot(uint64 timestamp) external view returns (bytes32);
@@ -4079,6 +4107,7 @@ pub mod IEigenPod {
         #[allow(missing_docs)]
         pub timestamp: u64,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getParentBlockRoot(uint64)`](getParentBlockRootCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4187,6 +4216,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `initialize(address)` and selector `0xc4d66de8`.
     ```solidity
     function initialize(address owner) external;
@@ -4302,6 +4332,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `lastCheckpointTimestamp()` and selector `0xee94d67c`.
     ```solidity
     function lastCheckpointTimestamp() external view returns (uint64);
@@ -4309,6 +4340,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct lastCheckpointTimestampCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`lastCheckpointTimestamp()`](lastCheckpointTimestampCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4413,6 +4445,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `podOwner()` and selector `0x0b18ff66`.
     ```solidity
     function podOwner() external view returns (address);
@@ -4420,6 +4453,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct podOwnerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`podOwner()`](podOwnerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4524,6 +4558,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `proofSubmitter()` and selector `0x58753357`.
     ```solidity
     function proofSubmitter() external view returns (address);
@@ -4531,6 +4566,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct proofSubmitterCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`proofSubmitter()`](proofSubmitterCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4635,6 +4671,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `recoverTokens(address[],uint256[],address)` and selector `0xdda3346c`.
     ```solidity
     function recoverTokens(address[] memory tokenList, uint256[] memory amountsToWithdraw, address recipient) external;
@@ -4779,6 +4816,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setProofSubmitter(address)` and selector `0xd06d5587`.
     ```solidity
     function setProofSubmitter(address newProofSubmitter) external;
@@ -4896,6 +4934,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stake(bytes,bytes,bytes32)` and selector `0x9b4e4634`.
     ```solidity
     function stake(bytes memory pubkey, bytes memory signature, bytes32 depositDataRoot) external payable;
@@ -5037,6 +5076,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `startCheckpoint(bool)` and selector `0x88676cad`.
     ```solidity
     function startCheckpoint(bool revertIfNoBalance) external;
@@ -5154,6 +5194,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `validatorPubkeyHashToInfo(bytes32)` and selector `0x6fcd0e53`.
     ```solidity
     function validatorPubkeyHashToInfo(bytes32 validatorPubkeyHash) external view returns (ValidatorInfo memory);
@@ -5164,6 +5205,7 @@ pub mod IEigenPod {
         #[allow(missing_docs)]
         pub validatorPubkeyHash: alloy::sol_types::private::FixedBytes<32>,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`validatorPubkeyHashToInfo(bytes32)`](validatorPubkeyHashToInfoCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5275,6 +5317,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `validatorPubkeyToInfo(bytes)` and selector `0xb522538a`.
     ```solidity
     function validatorPubkeyToInfo(bytes memory validatorPubkey) external view returns (ValidatorInfo memory);
@@ -5285,6 +5328,7 @@ pub mod IEigenPod {
         #[allow(missing_docs)]
         pub validatorPubkey: alloy::sol_types::private::Bytes,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`validatorPubkeyToInfo(bytes)`](validatorPubkeyToInfoCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5396,6 +5440,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `validatorStatus(bytes)` and selector `0x58eaee79`.
     ```solidity
     function validatorStatus(bytes memory validatorPubkey) external view returns (VALIDATOR_STATUS);
@@ -5406,6 +5451,7 @@ pub mod IEigenPod {
         #[allow(missing_docs)]
         pub validatorPubkey: alloy::sol_types::private::Bytes,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`validatorStatus(bytes)`](validatorStatus_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5517,6 +5563,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `validatorStatus(bytes32)` and selector `0x7439841f`.
     ```solidity
     function validatorStatus(bytes32 pubkeyHash) external view returns (VALIDATOR_STATUS);
@@ -5527,6 +5574,7 @@ pub mod IEigenPod {
         #[allow(missing_docs)]
         pub pubkeyHash: alloy::sol_types::private::FixedBytes<32>,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`validatorStatus(bytes32)`](validatorStatus_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5638,6 +5686,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `verifyCheckpointProofs((bytes32,bytes),(bytes32,bytes32,bytes)[])` and selector `0xf074ba62`.
     ```solidity
     function verifyCheckpointProofs(BeaconChainProofs.BalanceContainerProof memory balanceContainerProof, BeaconChainProofs.BalanceProof[] memory proofs) external;
@@ -5776,6 +5825,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `verifyStaleBalance(uint64,(bytes32,bytes),(bytes32[],bytes))` and selector `0x039157d2`.
     ```solidity
     function verifyStaleBalance(uint64 beaconTimestamp, BeaconChainProofs.StateRootProof memory stateRootProof, BeaconChainProofs.ValidatorProof memory proof) external;
@@ -5919,6 +5969,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `verifyWithdrawalCredentials(uint64,(bytes32,bytes),uint40[],bytes[],bytes32[][])` and selector `0x3f65cf19`.
     ```solidity
     function verifyWithdrawalCredentials(uint64 beaconTimestamp, BeaconChainProofs.StateRootProof memory stateRootProof, uint40[] memory validatorIndices, bytes[] memory validatorFieldsProofs, bytes32[][] memory validatorFields) external;
@@ -6099,6 +6150,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `withdrawRestakedBeaconChainETH(address,uint256)` and selector `0xc4907442`.
     ```solidity
     function withdrawRestakedBeaconChainETH(address recipient, uint256 amount) external;
@@ -6231,6 +6283,7 @@ pub mod IEigenPod {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `withdrawableRestakedExecutionLayerGwei()` and selector `0x3474aa16`.
     ```solidity
     function withdrawableRestakedExecutionLayerGwei() external view returns (uint64);
@@ -6238,6 +6291,7 @@ pub mod IEigenPod {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawableRestakedExecutionLayerGweiCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`withdrawableRestakedExecutionLayerGwei()`](withdrawableRestakedExecutionLayerGweiCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -6347,6 +6401,7 @@ pub mod IEigenPod {
         }
     };
     ///Container for all the [`IEigenPod`](self) function calls.
+    #[derive()]
     pub enum IEigenPodCalls {
         #[allow(missing_docs)]
         activeValidatorCount(activeValidatorCountCall),
@@ -7060,6 +7115,7 @@ pub mod IEigenPod {
         }
     }
     ///Container for all the [`IEigenPod`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IEigenPodEvents {
         #[allow(missing_docs)]
         CheckpointCreated(CheckpointCreated),

@@ -16,6 +16,7 @@ library IAVSDirectory {
 pub mod IAVSDirectory {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorAVSRegistrationStatus(u8);
@@ -273,6 +274,7 @@ library ISignatureUtils {
 pub mod ISignatureUtils {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct SignatureWithSaltAndExpiry { bytes signature; bytes32 salt; uint256 expiry; }
     ```*/
@@ -1207,6 +1209,7 @@ pub mod AVSDirectory {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\x01BW`\x005`\xE0\x1C\x80c\x8D\xA5\xCB[\x11a\0\xB8W\x80c\xD7\x9A\xCE\xAB\x11a\0|W\x80c\xD7\x9A\xCE\xAB\x14a\x02\xF8W\x80c\xDF\\\xF7#\x14a\x03\x1FW\x80c\xECv\xF4B\x14a\x03FW\x80c\xF2\xFD\xE3\x8B\x14a\x03YW\x80c\xF6\x98\xDA%\x14a\x03lW\x80c\xFA\xBC\x1C\xBC\x14a\x03tW`\0\x80\xFD[\x80c\x8D\xA5\xCB[\x14a\x02\x9BW\x80c\x99&\xEE}\x14a\x02\xACW\x80c\xA1\x06\x0C\x88\x14a\x02\xBFW\x80c\xA3d\xF4\xDA\x14a\x02\xD2W\x80c\xA9\x8F\xB3U\x14a\x02\xE5W`\0\x80\xFD[\x80cI\x07]\xA3\x11a\x01\nW\x80cI\x07]\xA3\x14a\x01\xFAW\x80cY\\jg\x14a\x025W\x80cZ\xC8j\xB7\x14a\x02=W\x80c\\\x97Z\xBB\x14a\x02`W\x80cqP\x18\xA6\x14a\x02hW\x80c\x88o\x11\x95\x14a\x02pW`\0\x80\xFD[\x80c\x10\xD6z/\x14a\x01GW\x80c\x13d9\xDD\x14a\x01\\W\x80c\x17\x94\xBB<\x14a\x01oW\x80c `kp\x14a\x01\x82W\x80c7H#\xB5\x14a\x01\xBCW[`\0\x80\xFD[a\x01Za\x01U6`\x04a\x18\xABV[a\x03\x87V[\0[a\x01Za\x01j6`\x04a\x18\xCFV[a\x04CV[a\x01Za\x01}6`\x04a\x18\xE8V[a\x05\x82V[a\x01\xA9\x7F\x8C\xAD\x95h{\xA8,,\xE5\x0Et\xF7\xB7Td^Q\x17\xC3\xA5\xBE\xC8\x15\x1C\x07&\xD5\x85y\x80\xA8f\x81V[`@Q\x90\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\x01\xEAa\x01\xCA6`\x04a\x19)V[`\x99` \x90\x81R`\0\x92\x83R`@\x80\x84 \x90\x91R\x90\x82R\x90 T`\xFF\x16\x81V[`@Q\x90\x15\x15\x81R` \x01a\x01\xB3V[a\x02(a\x02\x086`\x04a\x19UV[`\x98` \x90\x81R`\0\x92\x83R`@\x80\x84 \x90\x91R\x90\x82R\x90 T`\xFF\x16\x81V[`@Qa\x01\xB3\x91\x90a\x19\xA4V[a\x01Za\x06\xACV[a\x01\xEAa\x02K6`\x04a\x19\xCCV[`fT`\x01`\xFF\x90\x92\x16\x91\x90\x91\x1B\x90\x81\x16\x14\x90V[`fTa\x01\xA9V[a\x01Za\x07sV[`eTa\x02\x83\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01a\x01\xB3V[`3T`\x01`\x01`\xA0\x1B\x03\x16a\x02\x83V[a\x01Za\x02\xBA6`\x04a\x1A_V[a\x07\x87V[a\x01\xA9a\x02\xCD6`\x04a\x1BFV[a\x0B\x1AV[a\x01Za\x02\xE06`\x04a\x18\xABV[a\x0B\xD3V[a\x01Za\x02\xF36`\x04a\x1B\x8CV[a\r<V[a\x01\xA9\x7F\xDA,\x89\xBA\xFD\xD3Gv\xA2\xB8\xBB\x9C\x83\xC8/A\x9E \xCC\x8Cg \x7Fp\xED\xD5\x82I\xB9&a\xBD\x81V[a\x02\x83\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x01Za\x03T6`\x04a\x18\xCFV[a\r\x83V[a\x01Za\x03g6`\x04a\x18\xABV[a\x0E.V[a\x01\xA9a\x0E\xA4V[a\x01Za\x03\x826`\x04a\x18\xCFV[a\x0E\xE2V[`e`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x03\xDAW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x03\xFE\x91\x90a\x1B\xFEV[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x047W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x04.\x90a\x1C\x1BV[`@Q\x80\x91\x03\x90\xFD[a\x04@\x81a\x10>V[PV[`eT`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x04\x8BW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x04\xAF\x91\x90a\x1CeV[a\x04\xCBW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x04.\x90a\x1C\x87V[`fT\x81\x81\x16\x14a\x05DW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.pause: invalid attempt `D\x82\x01R\x7Fto unpause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x04.V[`f\x81\x90U`@Q\x81\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01[`@Q\x80\x91\x03\x90\xA2PV[`\0Ta\x01\0\x90\x04`\xFF\x16\x15\x80\x80\x15a\x05\xA2WP`\0T`\x01`\xFF\x90\x91\x16\x10[\x80a\x05\xBCWP0;\x15\x80\x15a\x05\xBCWP`\0T`\xFF\x16`\x01\x14[a\x06\x1FW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`.`$\x82\x01R\x7FInitializable: contract is alrea`D\x82\x01Rm\x19\x1EH\x1A[\x9A]\x1AX[\x1A^\x99Y`\x92\x1B`d\x82\x01R`\x84\x01a\x04.V[`\0\x80T`\xFF\x19\x16`\x01\x17\x90U\x80\x15a\x06BW`\0\x80Ta\xFF\0\x19\x16a\x01\0\x17\x90U[a\x06L\x83\x83a\x115V[a\x06Ta\x12\x1FV[`\x97Ua\x06`\x84a\x12\xB6V[\x80\x15a\x06\xA6W`\0\x80Ta\xFF\0\x19\x16\x90U`@Q`\x01\x81R\x7F\x7F&\xB8?\xF9n\x1F+jh/\x138R\xF6y\x8A\t\xC4e\xDA\x95\x92\x14`\xCE\xFB8G@$\x98\x90` \x01`@Q\x80\x91\x03\x90\xA1[PPPPV[`eT`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x06\xF4W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x07\x18\x91\x90a\x1CeV[a\x074W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x04.\x90a\x1C\x87V[`\0\x19`f\x81\x90U`@Q\x90\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01`@Q\x80\x91\x03\x90\xA2V[a\x07{a\x13\x08V[a\x07\x85`\0a\x12\xB6V[V[`fT`\0\x90`\x01\x90\x81\x16\x14\x15a\x07\xDCW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x19`$\x82\x01Rx\x14\x18]\\\xD8X\x9B\x19N\x88\x1A[\x99\x19^\x08\x1A\\\xC8\x1C\x18]\\\xD9Y`:\x1B`D\x82\x01R`d\x01a\x04.V[B\x82`@\x01Q\x10\x15a\x08DW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`>`$\x82\x01R`\0\x80Q` a\x1D\xAC\x839\x81Q\x91R`D\x82\x01R\x7FVS: operator signature expired\0\0`d\x82\x01R`\x84\x01a\x04.V[`\x013`\0\x90\x81R`\x98` \x90\x81R`@\x80\x83 `\x01`\x01`\xA0\x1B\x03\x88\x16\x84R\x90\x91R\x90 T`\xFF\x16`\x01\x81\x11\x15a\x08~Wa\x08~a\x19\x8EV[\x14\x15a\x08\xE0W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`?`$\x82\x01R`\0\x80Q` a\x1D\xAC\x839\x81Q\x91R`D\x82\x01R\x7FVS: operator already registered\0`d\x82\x01R`\x84\x01a\x04.V[`\x01`\x01`\xA0\x1B\x03\x83\x16`\0\x90\x81R`\x99` \x90\x81R`@\x80\x83 \x85\x83\x01Q\x84R\x90\x91R\x90 T`\xFF\x16\x15a\tdW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`6`$\x82\x01R`\0\x80Q` a\x1D\xAC\x839\x81Q\x91R`D\x82\x01Ru\x15\x94\xCE\x88\x1C\xD8[\x1D\x08\x18[\x1C\x99XY\x1EH\x1C\xDC\x19[\x9D`R\x1B`d\x82\x01R`\x84\x01a\x04.V[`@Qc6\xB8{\xD7`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x84\x81\x16`\x04\x83\x01R\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x90cmp\xF7\xAE\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\t\xCAW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\t\xEE\x91\x90a\x1CeV[a\ndW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`M`$\x82\x01R`\0\x80Q` a\x1D\xAC\x839\x81Q\x91R`D\x82\x01R\x7FVS: operator not registered to E`d\x82\x01Rl\x1AY\xD9[\x93\x18^Y\\\x88\x1EY]`\x9A\x1B`\x84\x82\x01R`\xA4\x01a\x04.V[`\0a\nz\x843\x85` \x01Q\x86`@\x01Qa\x0B\x1AV[\x90Pa\n\x8B\x84\x82\x85`\0\x01Qa\x13bV[3`\0\x81\x81R`\x98` \x90\x81R`@\x80\x83 `\x01`\x01`\xA0\x1B\x03\x89\x16\x80\x85R\x90\x83R\x81\x84 \x80T`\x01`\xFF\x19\x91\x82\x16\x81\x17\x90\x92U`\x99\x85R\x83\x86 \x8A\x86\x01Q\x87R\x90\x94R\x93\x82\x90 \x80T\x90\x93\x16\x84\x17\x90\x92UQ\x90\x91\x7F\xF0\x95+\x1Ce'\x1D\x81\x9D9\x98=*\xBB\x04K\x9C\xAC\xE5\x9B\xCCMM\xD3\x89\xF5\x86\xEB\xDC\xB1[A\x91a\x0B\x0C\x91\x90a\x19\xA4V[`@Q\x80\x91\x03\x90\xA3PPPPV[`@\x80Q\x7F\xDA,\x89\xBA\xFD\xD3Gv\xA2\xB8\xBB\x9C\x83\xC8/A\x9E \xCC\x8Cg \x7Fp\xED\xD5\x82I\xB9&a\xBD` \x80\x83\x01\x91\x90\x91R`\x01`\x01`\xA0\x1B\x03\x87\x81\x16\x83\x85\x01R\x86\x16``\x83\x01R`\x80\x82\x01\x85\x90R`\xA0\x80\x83\x01\x85\x90R\x83Q\x80\x84\x03\x90\x91\x01\x81R`\xC0\x90\x92\x01\x90\x92R\x80Q\x91\x01 `\0\x90\x81a\x0B\x90a\x0E\xA4V[`@Qa\x19\x01`\xF0\x1B` \x82\x01R`\"\x81\x01\x91\x90\x91R`B\x81\x01\x83\x90R`b\x01`@\x80Q\x80\x83\x03`\x1F\x19\x01\x81R\x91\x90R\x80Q` \x90\x91\x01 \x97\x96PPPPPPPV[`fT`\0\x90`\x01\x90\x81\x16\x14\x15a\x0C(W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x19`$\x82\x01Rx\x14\x18]\\\xD8X\x9B\x19N\x88\x1A[\x99\x19^\x08\x1A\\\xC8\x1C\x18]\\\xD9Y`:\x1B`D\x82\x01R`d\x01a\x04.V[`\x013`\0\x90\x81R`\x98` \x90\x81R`@\x80\x83 `\x01`\x01`\xA0\x1B\x03\x87\x16\x84R\x90\x91R\x90 T`\xFF\x16`\x01\x81\x11\x15a\x0CbWa\x0Cba\x19\x8EV[\x14a\x0C\xD5W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`?`$\x82\x01R\x7FAVSDirectory.deregisterOperatorF`D\x82\x01R\x7FromAVS: operator not registered\0`d\x82\x01R`\x84\x01a\x04.V[3`\0\x81\x81R`\x98` \x90\x81R`@\x80\x83 `\x01`\x01`\xA0\x1B\x03\x87\x16\x80\x85R\x92R\x80\x83 \x80T`\xFF\x19\x16\x90UQ\x90\x91\x7F\xF0\x95+\x1Ce'\x1D\x81\x9D9\x98=*\xBB\x04K\x9C\xAC\xE5\x9B\xCCMM\xD3\x89\xF5\x86\xEB\xDC\xB1[A\x91a\r0\x91\x90a\x19\xA4V[`@Q\x80\x91\x03\x90\xA3PPV[3`\x01`\x01`\xA0\x1B\x03\x16\x7F\xA8\x9C\x1D\xC2C\xD8\x90\x8A\x96\xDD\x84\x94K\xCC\x97\xD6\xBCj\xC0\r\xD7\x8E b\x15v\xBEj<\x947\x13\x83\x83`@Qa\rw\x92\x91\x90a\x1C\xCFV[`@Q\x80\x91\x03\x90\xA2PPV[3`\0\x90\x81R`\x99` \x90\x81R`@\x80\x83 \x84\x84R\x90\x91R\x90 T`\xFF\x16\x15a\x0E\x08W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`1`$\x82\x01R\x7FAVSDirectory.cancelSalt: cannot `D\x82\x01Rp\x18\xD8[\x98\xD9[\x08\x1C\xDC\x19[\x9D\x08\x1C\xD8[\x1D`z\x1B`d\x82\x01R`\x84\x01a\x04.V[3`\0\x90\x81R`\x99` \x90\x81R`@\x80\x83 \x93\x83R\x92\x90R \x80T`\xFF\x19\x16`\x01\x17\x90UV[a\x0E6a\x13\x08V[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x0E\x9BW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01a\x04.V[a\x04@\x81a\x12\xB6V[`\0\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0F\x14\x15a\x0E\xD5WP`\x97T\x90V[a\x0E\xDDa\x12\x1FV[\x90P\x90V[`e`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0F5W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0FY\x91\x90a\x1B\xFEV[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x0F\x89W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x04.\x90a\x1C\x1BV[`fT\x19\x81\x19`fT\x19\x16\x14a\x10\x07W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.unpause: invalid attemp`D\x82\x01R\x7Ft to pause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x04.V[`f\x81\x90U`@Q\x81\x81R3\x90\x7F5\x82\xD1\x82\x8E&\xBFV\xBD\x80\x15\x02\xBC\x02\x1A\xC0\xBC\x8A\xFBW\xC8&\xE4\x98kEY<\x8F\xAD8\x9C\x90` \x01a\x05wV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x10\xCCW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`I`$\x82\x01R\x7FPausable._setPauserRegistry: new`D\x82\x01R\x7FPauserRegistry cannot be the zer`d\x82\x01Rho address`\xB8\x1B`\x84\x82\x01R`\xA4\x01a\x04.V[`eT`@\x80Q`\x01`\x01`\xA0\x1B\x03\x92\x83\x16\x81R\x91\x83\x16` \x83\x01R\x7Fn\x9F\xCDS\x98\x96\xFC\xA6\x0E\x8B\x0F\x01\xDDX\x023\xE4\x8Ak\x0F}\xF0\x13\xB8\x9B\xA7\xF5e\x86\x9A\xCD\xB6\x91\x01`@Q\x80\x91\x03\x90\xA1`e\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UV[`eT`\x01`\x01`\xA0\x1B\x03\x16\x15\x80\x15a\x11VWP`\x01`\x01`\xA0\x1B\x03\x82\x16\x15\x15[a\x11\xD8W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`G`$\x82\x01R\x7FPausable._initializePauser: _ini`D\x82\x01R\x7FtializePauser() can only be call`d\x82\x01Rfed once`\xC8\x1B`\x84\x82\x01R`\xA4\x01a\x04.V[`f\x81\x90U`@Q\x81\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01`@Q\x80\x91\x03\x90\xA2a\x12\x1B\x82a\x10>V[PPV[`@\x80Q\x80\x82\x01\x82R`\n\x81Ri\"\xB4\xB3\xB2\xB7&0\xBC\xB2\xB9`\xB1\x1B` \x91\x82\x01R\x81Q\x7F\x8C\xAD\x95h{\xA8,,\xE5\x0Et\xF7\xB7Td^Q\x17\xC3\xA5\xBE\xC8\x15\x1C\x07&\xD5\x85y\x80\xA8f\x81\x83\x01R\x7Fq\xB6%\xCF\xADD\xBA\xC6;\x13\xDB\xA0\x7F.\x1D`\x84\xEE\x04\xB6\xF8u!\x01\xEC\xE6\x12mXN\xE6\xEA\x81\x84\x01RF``\x82\x01R0`\x80\x80\x83\x01\x91\x90\x91R\x83Q\x80\x83\x03\x90\x91\x01\x81R`\xA0\x90\x91\x01\x90\x92R\x81Q\x91\x01 \x90V[`3\x80T`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\x01`\x01`\xA0\x1B\x03\x19\x83\x16\x81\x17\x90\x93U`@Q\x91\x16\x91\x90\x82\x90\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x90`\0\x90\xA3PPV[`3T`\x01`\x01`\xA0\x1B\x03\x163\x14a\x07\x85W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01\x81\x90R`$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R`d\x01a\x04.V[`\x01`\x01`\xA0\x1B\x03\x83\x16;\x15a\x14\x81W`@Qc\x0B\x13]?`\xE1\x1B\x80\x82R\x90`\x01`\x01`\xA0\x1B\x03\x85\x16\x90c\x16&\xBA~\x90a\x13\xA2\x90\x86\x90\x86\x90`\x04\x01a\x1C\xFEV[` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x13\xBFW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x13\xE3\x91\x90a\x1D[V[`\x01`\x01`\xE0\x1B\x03\x19\x16\x14a\x14|W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`S`$\x82\x01R\x7FEIP1271SignatureUtils.checkSigna`D\x82\x01R\x7Fture_EIP1271: ERC1271 signature `d\x82\x01Rr\x1D\x99\\\x9AY\x9AX\xD8]\x1A[\xDB\x88\x19\x98Z[\x19Y`j\x1B`\x84\x82\x01R`\xA4\x01a\x04.V[PPPV[\x82`\x01`\x01`\xA0\x1B\x03\x16a\x14\x95\x83\x83a\x15!V[`\x01`\x01`\xA0\x1B\x03\x16\x14a\x14|W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`G`$\x82\x01R\x7FEIP1271SignatureUtils.checkSigna`D\x82\x01R\x7Fture_EIP1271: signature not from`d\x82\x01Rf\x109\xB4\xB3\xB72\xB9`\xC9\x1B`\x84\x82\x01R`\xA4\x01a\x04.V[`\0\x80`\0a\x150\x85\x85a\x15EV[\x91P\x91Pa\x15=\x81a\x15\xB5V[P\x93\x92PPPV[`\0\x80\x82Q`A\x14\x15a\x15|W` \x83\x01Q`@\x84\x01Q``\x85\x01Q`\0\x1Aa\x15p\x87\x82\x85\x85a\x17pV[\x94P\x94PPPPa\x15\xAEV[\x82Q`@\x14\x15a\x15\xA6W` \x83\x01Q`@\x84\x01Qa\x15\x9B\x86\x83\x83a\x18]V[\x93P\x93PPPa\x15\xAEV[P`\0\x90P`\x02[\x92P\x92\x90PV[`\0\x81`\x04\x81\x11\x15a\x15\xC9Wa\x15\xC9a\x19\x8EV[\x14\x15a\x15\xD2WPV[`\x01\x81`\x04\x81\x11\x15a\x15\xE6Wa\x15\xE6a\x19\x8EV[\x14\x15a\x164W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x18`$\x82\x01R\x7FECDSA: invalid signature\0\0\0\0\0\0\0\0`D\x82\x01R`d\x01a\x04.V[`\x02\x81`\x04\x81\x11\x15a\x16HWa\x16Ha\x19\x8EV[\x14\x15a\x16\x96W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1F`$\x82\x01R\x7FECDSA: invalid signature length\0`D\x82\x01R`d\x01a\x04.V[`\x03\x81`\x04\x81\x11\x15a\x16\xAAWa\x16\xAAa\x19\x8EV[\x14\x15a\x17\x03W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\"`$\x82\x01R\x7FECDSA: invalid signature 's' val`D\x82\x01Raue`\xF0\x1B`d\x82\x01R`\x84\x01a\x04.V[`\x04\x81`\x04\x81\x11\x15a\x17\x17Wa\x17\x17a\x19\x8EV[\x14\x15a\x04@W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\"`$\x82\x01R\x7FECDSA: invalid signature 'v' val`D\x82\x01Raue`\xF0\x1B`d\x82\x01R`\x84\x01a\x04.V[`\0\x80\x7F\x7F\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF]WnsW\xA4P\x1D\xDF\xE9/Fh\x1B \xA0\x83\x11\x15a\x17\xA7WP`\0\x90P`\x03a\x18TV[\x84`\xFF\x16`\x1B\x14\x15\x80\x15a\x17\xBFWP\x84`\xFF\x16`\x1C\x14\x15[\x15a\x17\xD0WP`\0\x90P`\x04a\x18TV[`@\x80Q`\0\x80\x82R` \x82\x01\x80\x84R\x89\x90R`\xFF\x88\x16\x92\x82\x01\x92\x90\x92R``\x81\x01\x86\x90R`\x80\x81\x01\x85\x90R`\x01\x90`\xA0\x01` `@Q` \x81\x03\x90\x80\x84\x03\x90\x85Z\xFA\x15\x80\x15a\x18$W=`\0\x80>=`\0\xFD[PP`@Q`\x1F\x19\x01Q\x91PP`\x01`\x01`\xA0\x1B\x03\x81\x16a\x18MW`\0`\x01\x92P\x92PPa\x18TV[\x91P`\0\x90P[\x94P\x94\x92PPPV[`\0\x80`\x01`\x01`\xFF\x1B\x03\x83\x16\x81a\x18z`\xFF\x86\x90\x1C`\x1Ba\x1D\x85V[\x90Pa\x18\x88\x87\x82\x88\x85a\x17pV[\x93P\x93PPP\x93P\x93\x91PPV[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x04@W`\0\x80\xFD[`\0` \x82\x84\x03\x12\x15a\x18\xBDW`\0\x80\xFD[\x815a\x18\xC8\x81a\x18\x96V[\x93\x92PPPV[`\0` \x82\x84\x03\x12\x15a\x18\xE1W`\0\x80\xFD[P5\x91\x90PV[`\0\x80`\0``\x84\x86\x03\x12\x15a\x18\xFDW`\0\x80\xFD[\x835a\x19\x08\x81a\x18\x96V[\x92P` \x84\x015a\x19\x18\x81a\x18\x96V[\x92\x95\x92\x94PPP`@\x91\x90\x91\x015\x90V[`\0\x80`@\x83\x85\x03\x12\x15a\x19<W`\0\x80\xFD[\x825a\x19G\x81a\x18\x96V[\x94` \x93\x90\x93\x015\x93PPPV[`\0\x80`@\x83\x85\x03\x12\x15a\x19hW`\0\x80\xFD[\x825a\x19s\x81a\x18\x96V[\x91P` \x83\x015a\x19\x83\x81a\x18\x96V[\x80\x91PP\x92P\x92\x90PV[cNH{q`\xE0\x1B`\0R`!`\x04R`$`\0\xFD[` \x81\x01`\x02\x83\x10a\x19\xC6WcNH{q`\xE0\x1B`\0R`!`\x04R`$`\0\xFD[\x91\x90R\x90V[`\0` \x82\x84\x03\x12\x15a\x19\xDEW`\0\x80\xFD[\x815`\xFF\x81\x16\x81\x14a\x18\xC8W`\0\x80\xFD[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`@Q``\x81\x01g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x82\x82\x10\x17\x15a\x1A(Wa\x1A(a\x19\xEFV[`@R\x90V[`@Q`\x1F\x82\x01`\x1F\x19\x16\x81\x01g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x82\x82\x10\x17\x15a\x1AWWa\x1AWa\x19\xEFV[`@R\x91\x90PV[`\0\x80`@\x83\x85\x03\x12\x15a\x1ArW`\0\x80\xFD[\x825a\x1A}\x81a\x18\x96V[\x91P` \x83\x81\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x1A\x9BW`\0\x80\xFD[\x90\x85\x01\x90``\x82\x88\x03\x12\x15a\x1A\xAFW`\0\x80\xFD[a\x1A\xB7a\x1A\x05V[\x825\x82\x81\x11\x15a\x1A\xC6W`\0\x80\xFD[\x83\x01`\x1F\x81\x01\x89\x13a\x1A\xD7W`\0\x80\xFD[\x805\x83\x81\x11\x15a\x1A\xE9Wa\x1A\xE9a\x19\xEFV[a\x1A\xFB`\x1F\x82\x01`\x1F\x19\x16\x87\x01a\x1A.V[\x93P\x80\x84R\x89\x86\x82\x84\x01\x01\x11\x15a\x1B\x11W`\0\x80\xFD[\x80\x86\x83\x01\x87\x86\x017`\0\x86\x82\x86\x01\x01RPP\x81\x81R\x83\x83\x015\x84\x82\x01R`@\x83\x015`@\x82\x01R\x80\x94PPPPP\x92P\x92\x90PV[`\0\x80`\0\x80`\x80\x85\x87\x03\x12\x15a\x1B\\W`\0\x80\xFD[\x845a\x1Bg\x81a\x18\x96V[\x93P` \x85\x015a\x1Bw\x81a\x18\x96V[\x93\x96\x93\x95PPPP`@\x82\x015\x91``\x015\x90V[`\0\x80` \x83\x85\x03\x12\x15a\x1B\x9FW`\0\x80\xFD[\x825g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x1B\xB7W`\0\x80\xFD[\x81\x85\x01\x91P\x85`\x1F\x83\x01\x12a\x1B\xCBW`\0\x80\xFD[\x815\x81\x81\x11\x15a\x1B\xDAW`\0\x80\xFD[\x86` \x82\x85\x01\x01\x11\x15a\x1B\xECW`\0\x80\xFD[` \x92\x90\x92\x01\x96\x91\x95P\x90\x93PPPPV[`\0` \x82\x84\x03\x12\x15a\x1C\x10W`\0\x80\xFD[\x81Qa\x18\xC8\x81a\x18\x96V[` \x80\x82R`*\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Ri9\x90:\xB780\xBA\xB9\xB2\xB9`\xB1\x1B``\x82\x01R`\x80\x01\x90V[`\0` \x82\x84\x03\x12\x15a\x1CwW`\0\x80\xFD[\x81Q\x80\x15\x15\x81\x14a\x18\xC8W`\0\x80\xFD[` \x80\x82R`(\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Rg9\x9080\xBA\xB9\xB2\xB9`\xC1\x1B``\x82\x01R`\x80\x01\x90V[` \x81R\x81` \x82\x01R\x81\x83`@\x83\x017`\0\x81\x83\x01`@\x90\x81\x01\x91\x90\x91R`\x1F\x90\x92\x01`\x1F\x19\x16\x01\x01\x91\x90PV[\x82\x81R`\0` `@\x81\x84\x01R\x83Q\x80`@\x85\x01R`\0[\x81\x81\x10\x15a\x1D2W\x85\x81\x01\x83\x01Q\x85\x82\x01``\x01R\x82\x01a\x1D\x16V[\x81\x81\x11\x15a\x1DDW`\0``\x83\x87\x01\x01R[P`\x1F\x01`\x1F\x19\x16\x92\x90\x92\x01``\x01\x94\x93PPPPV[`\0` \x82\x84\x03\x12\x15a\x1DmW`\0\x80\xFD[\x81Q`\x01`\x01`\xE0\x1B\x03\x19\x81\x16\x81\x14a\x18\xC8W`\0\x80\xFD[`\0\x82\x19\x82\x11\x15a\x1D\xA6WcNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[P\x01\x90V\xFEAVSDirectory.registerOperatorToA\xA2dipfsX\"\x12 \xDF\x16\xB0\xD1\xBCz\\G\x86\x0B\xE5\nt\xF4$\xBCyi]\x88\xC2\xC0a\x08}\xAC\xD9\xF6<b\xD4\xF9dsolcC\0\x08\x0C\x003",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `AVSMetadataURIUpdated(address,string)` and selector `0xa89c1dc243d8908a96dd84944bcc97d6bc6ac00dd78e20621576be6a3c943713`.
     ```solidity
     event AVSMetadataURIUpdated(address indexed avs, string metadataURI);
@@ -1316,6 +1319,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Initialized(uint8)` and selector `0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498`.
     ```solidity
     event Initialized(uint8 version);
@@ -1414,6 +1418,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorAVSRegistrationStatusUpdated(address,address,uint8)` and selector `0xf0952b1c65271d819d39983d2abb044b9cace59bcc4d4dd389f586ebdcb15b41`.
     ```solidity
     event OperatorAVSRegistrationStatusUpdated(address indexed operator, address indexed avs, IAVSDirectory.OperatorAVSRegistrationStatus status);
@@ -1538,6 +1543,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OwnershipTransferred(address,address)` and selector `0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0`.
     ```solidity
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -1651,6 +1657,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Paused(address,uint256)` and selector `0xab40a374bc51de372200a8bc981af8c9ecdc08dfdaef0bb6e09f88f3c616ef3d`.
     ```solidity
     event Paused(address indexed account, uint256 newPausedStatus);
@@ -1760,6 +1767,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PauserRegistrySet(address,address)` and selector `0x6e9fcd539896fca60e8b0f01dd580233e48a6b0f7df013b89ba7f565869acdb6`.
     ```solidity
     event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
@@ -1869,6 +1877,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Unpaused(address,uint256)` and selector `0x3582d1828e26bf56bd801502bc021ac0bc8afb57c826e4986b45593c8fad389c`.
     ```solidity
     event Unpaused(address indexed account, uint256 newPausedStatus);
@@ -2041,6 +2050,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `DOMAIN_TYPEHASH()` and selector `0x20606b70`.
     ```solidity
     function DOMAIN_TYPEHASH() external view returns (bytes32);
@@ -2048,6 +2058,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DOMAIN_TYPEHASHCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`DOMAIN_TYPEHASH()`](DOMAIN_TYPEHASHCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2152,6 +2163,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `OPERATOR_AVS_REGISTRATION_TYPEHASH()` and selector `0xd79aceab`.
     ```solidity
     function OPERATOR_AVS_REGISTRATION_TYPEHASH() external view returns (bytes32);
@@ -2159,6 +2171,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OPERATOR_AVS_REGISTRATION_TYPEHASHCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`OPERATOR_AVS_REGISTRATION_TYPEHASH()`](OPERATOR_AVS_REGISTRATION_TYPEHASHCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2263,6 +2276,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `avsOperatorStatus(address,address)` and selector `0x49075da3`.
     ```solidity
     function avsOperatorStatus(address, address) external view returns (IAVSDirectory.OperatorAVSRegistrationStatus);
@@ -2275,6 +2289,7 @@ pub mod AVSDirectory {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`avsOperatorStatus(address,address)`](avsOperatorStatusCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2401,6 +2416,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `calculateOperatorAVSRegistrationDigestHash(address,address,bytes32,uint256)` and selector `0xa1060c88`.
     ```solidity
     function calculateOperatorAVSRegistrationDigestHash(address operator, address avs, bytes32 salt, uint256 expiry) external view returns (bytes32);
@@ -2417,6 +2433,7 @@ pub mod AVSDirectory {
         #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`calculateOperatorAVSRegistrationDigestHash(address,address,bytes32,uint256)`](calculateOperatorAVSRegistrationDigestHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2563,6 +2580,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `cancelSalt(bytes32)` and selector `0xec76f442`.
     ```solidity
     function cancelSalt(bytes32 salt) external;
@@ -2678,6 +2696,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegation()` and selector `0xdf5cf723`.
     ```solidity
     function delegation() external view returns (address);
@@ -2685,6 +2704,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`delegation()`](delegationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2789,6 +2809,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `deregisterOperatorFromAVS(address)` and selector `0xa364f4da`.
     ```solidity
     function deregisterOperatorFromAVS(address operator) external;
@@ -2904,6 +2925,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `domainSeparator()` and selector `0xf698da25`.
     ```solidity
     function domainSeparator() external view returns (bytes32);
@@ -2911,6 +2933,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct domainSeparatorCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`domainSeparator()`](domainSeparatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3015,6 +3038,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `initialize(address,address,uint256)` and selector `0x1794bb3c`.
     ```solidity
     function initialize(address initialOwner, address _pauserRegistry, uint256 initialPausedStatus) external;
@@ -3160,6 +3184,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `operatorSaltIsSpent(address,bytes32)` and selector `0x374823b5`.
     ```solidity
     function operatorSaltIsSpent(address, bytes32) external view returns (bool);
@@ -3172,6 +3197,7 @@ pub mod AVSDirectory {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`operatorSaltIsSpent(address,bytes32)`](operatorSaltIsSpentCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3295,6 +3321,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `owner()` and selector `0x8da5cb5b`.
     ```solidity
     function owner() external view returns (address);
@@ -3302,6 +3329,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`owner()`](ownerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3406,6 +3434,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pause(uint256)` and selector `0x136439dd`.
     ```solidity
     function pause(uint256 newPausedStatus) external;
@@ -3523,6 +3552,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauseAll()` and selector `0x595c6a67`.
     ```solidity
     function pauseAll() external;
@@ -3631,6 +3661,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused(uint8)` and selector `0x5ac86ab7`.
     ```solidity
     function paused(uint8 index) external view returns (bool);
@@ -3641,6 +3672,7 @@ pub mod AVSDirectory {
         #[allow(missing_docs)]
         pub index: u8,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3749,6 +3781,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused()` and selector `0x5c975abb`.
     ```solidity
     function paused() external view returns (uint256);
@@ -3756,6 +3789,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Call {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused()`](paused_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3860,6 +3894,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauserRegistry()` and selector `0x886f1195`.
     ```solidity
     function pauserRegistry() external view returns (address);
@@ -3867,6 +3902,7 @@ pub mod AVSDirectory {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`pauserRegistry()`](pauserRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3971,6 +4007,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `registerOperatorToAVS(address,(bytes,bytes32,uint256))` and selector `0x9926ee7d`.
     ```solidity
     function registerOperatorToAVS(address operator, ISignatureUtils.SignatureWithSaltAndExpiry memory operatorSignature) external;
@@ -4105,6 +4142,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `renounceOwnership()` and selector `0x715018a6`.
     ```solidity
     function renounceOwnership() external;
@@ -4213,6 +4251,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setPauserRegistry(address)` and selector `0x10d67a2f`.
     ```solidity
     function setPauserRegistry(address newPauserRegistry) external;
@@ -4330,6 +4369,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transferOwnership(address)` and selector `0xf2fde38b`.
     ```solidity
     function transferOwnership(address newOwner) external;
@@ -4445,6 +4485,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `unpause(uint256)` and selector `0xfabc1cbc`.
     ```solidity
     function unpause(uint256 newPausedStatus) external;
@@ -4562,6 +4603,7 @@ pub mod AVSDirectory {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `updateAVSMetadataURI(string)` and selector `0xa98fb355`.
     ```solidity
     function updateAVSMetadataURI(string memory metadataURI) external;
@@ -4680,6 +4722,7 @@ pub mod AVSDirectory {
         }
     };
     ///Container for all the [`AVSDirectory`](self) function calls.
+    #[derive()]
     pub enum AVSDirectoryCalls {
         #[allow(missing_docs)]
         DOMAIN_TYPEHASH(DOMAIN_TYPEHASHCall),
@@ -5329,6 +5372,7 @@ pub mod AVSDirectory {
         }
     }
     ///Container for all the [`AVSDirectory`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum AVSDirectoryEvents {
         #[allow(missing_docs)]
         AVSMetadataURIUpdated(AVSMetadataURIUpdated),

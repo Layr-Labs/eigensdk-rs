@@ -17,6 +17,7 @@ library ISlasher {
 pub mod ISlasher {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct MiddlewareDetails { uint32 registrationMayBeginAtBlock; uint32 contractCanSlashOperatorUntilBlock; uint32 latestUpdateBlock; }
     ```*/
@@ -247,6 +248,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct MiddlewareTimes { uint32 stalestUpdateBlock; uint32 latestServeUntilBlock; }
     ```*/
@@ -1508,6 +1510,7 @@ pub mod Slasher {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\x01\xF0W`\x005`\xE0\x1C\x80c|\xF7+\xBA\x11a\x01\x0FW\x80c\xD9\x81(\xC0\x11a\0\xA2W\x80c\xE9!\xD4\xFA\x11a\0qW\x80c\xE9!\xD4\xFA\x14a\x03\xC6W\x80c\xF2\xFD\xE3\x8B\x14a\x04LW\x80c\xF7;u\x19\x14a\x02\xA9W\x80c\xFA\xBC\x1C\xBC\x14a\x04_W`\0\x80\xFD[\x80c\xD9\x81(\xC0\x14a\x040W\x80c\xDA\x16\xE2\x9B\x14a\x03\"W\x80c\xDF\\\xF7#\x14a\x02\xBAW\x80c\xE5\x83\x986\x14a\x04>W`\0\x80\xFD[\x80c\x8D\xA5\xCB[\x11a\0\xDEW\x80c\x8D\xA5\xCB[\x14a\x03\xB5W\x80c\xA4\x9D\xB72\x14a\x03\xC6W\x80c\xC7G\x07[\x14a\x03\xDAW\x80c\xD7\xB7\xFA\x13\x14a\x03\xEEW`\0\x80\xFD[\x80c|\xF7+\xBA\x14a\x03FW\x80c\x81\x05\xE0C\x14a\x03TW\x80c\x85_\xCCJ\x14a\x03kW\x80c\x88o\x11\x95\x14a\x03\xA2W`\0\x80\xFD[\x80c9\xB7\x0E8\x11a\x01\x87W\x80co\x0C/t\x11a\x01VW\x80co\x0C/t\x14a\x03\"W\x80cqP\x18\xA6\x14a\x030W\x80cr>Y\xC7\x14a\x038W\x80crY\xA4\\\x14a\x02BW`\0\x80\xFD[\x80c9\xB7\x0E8\x14a\x02\xBAW\x80cY\\jg\x14a\x02\xD5W\x80cZ\xC8j\xB7\x14a\x02\xDDW\x80c\\\x97Z\xBB\x14a\x03\x10W`\0\x80\xFD[\x80c\x17\x94\xBB<\x11a\x01\xC3W\x80c\x17\x94\xBB<\x14a\x02/W\x80c\x18t\xE5\xAE\x14a\x02BW\x80c(&p\xFC\x14a\x02rW\x80c8\xC8\xEEd\x14a\x02\xA9W`\0\x80\xFD[\x80c\x0F\xFA\xBB\xCE\x14a\x01\xF5W\x80c\x10\xD6z/\x14a\x02\tW\x80c\x13d9\xDD\x14a\x02\x1CW\x80c\x17]2\x05\x14a\x01\xF5W[`\0\x80\xFD[a\x02\x07a\x02\x036`\x04a\x0B%V[PPV[\0[a\x02\x07a\x02\x176`\x04a\x0BZV[a\x04rV[a\x02\x07a\x02*6`\x04a\x0B~V[a\x05+V[a\x02\x07a\x02=6`\x04a\x0B\x97V[PPPV[a\x02Xa\x02P6`\x04a\x0B%V[`\0\x92\x91PPV[`@Qc\xFF\xFF\xFF\xFF\x90\x91\x16\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\x02\x85a\x02\x806`\x04a\x0B\xD8V[a\x06jV[`@\x80Q\x82Qc\xFF\xFF\xFF\xFF\x90\x81\x16\x82R` \x93\x84\x01Q\x16\x92\x81\x01\x92\x90\x92R\x01a\x02iV[a\x02\x07a\x02\xB76`\x04a\x0BZV[PV[`\0[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01a\x02iV[a\x02\x07a\x06\x85V[a\x03\0a\x02\xEB6`\x04a\x0C\x04V[`fT`\x01`\xFF\x90\x92\x16\x91\x90\x91\x1B\x90\x81\x16\x14\x90V[`@Q\x90\x15\x15\x81R` \x01a\x02iV[`fT[`@Q\x90\x81R` \x01a\x02iV[a\x02Xa\x02P6`\x04a\x0C'V[a\x02\x07a\x07LV[a\x03\x14a\x02P6`\x04a\x0B%V[a\x02\x07a\x02\x036`\x04a\x0C`V[a\x03\0a\x03b6`\x04a\x0C\xD5V[`\0\x93\x92PPPV[a\x03\x85a\x03y6`\x04a\x0C'V[`\0\x80`\0\x92P\x92P\x92V[`@\x80Q\x93\x15\x15\x84R` \x84\x01\x92\x90\x92R\x90\x82\x01R``\x01a\x02iV[`eTa\x02\xBD\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`3T`\x01`\x01`\xA0\x1B\x03\x16a\x02\xBDV[a\x03\x14a\x03\xD46`\x04a\x0BZV[P`\0\x90V[a\x02\x07a\x03\xE86`\x04a\r\x13V[PPPPV[a\x04\x01a\x03\xFC6`\x04a\x0C'V[a\x07`V[`@\x80Q\x82Qc\xFF\xFF\xFF\xFF\x90\x81\x16\x82R` \x80\x85\x01Q\x82\x16\x90\x83\x01R\x92\x82\x01Q\x90\x92\x16\x90\x82\x01R``\x01a\x02iV[a\x03\0a\x02P6`\x04a\x0C'V[a\x03\0a\x03\xD46`\x04a\x0BZV[a\x02\x07a\x04Z6`\x04a\x0BZV[a\x07\x82V[a\x02\x07a\x04m6`\x04a\x0B~V[a\x07\xF8V[`e`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x04\xC5W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x04\xE9\x91\x90a\r`V[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x05\"W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x05\x19\x90a\r}V[`@Q\x80\x91\x03\x90\xFD[a\x02\xB7\x81a\tTV[`eT`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x05sW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x05\x97\x91\x90a\r\xC7V[a\x05\xB3W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x05\x19\x90a\r\xE9V[`fT\x81\x81\x16\x14a\x06,W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.pause: invalid attempt `D\x82\x01R\x7Fto unpause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x05\x19V[`f\x81\x90U`@Q\x81\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01[`@Q\x80\x91\x03\x90\xA2PV[`@\x80Q\x80\x82\x01\x90\x91R`\0\x80\x82R` \x82\x01R[\x92\x91PPV[`eT`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x06\xCDW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x06\xF1\x91\x90a\r\xC7V[a\x07\rW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x05\x19\x90a\r\xE9V[`\0\x19`f\x81\x90U`@Q\x90\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01`@Q\x80\x91\x03\x90\xA2V[a\x07Ta\nKV[a\x07^`\0a\n\xA5V[V[`@\x80Q``\x81\x01\x82R`\0\x80\x82R` \x82\x01\x81\x90R\x91\x81\x01\x91\x90\x91Ra\x06\x7FV[a\x07\x8Aa\nKV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x07\xEFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01a\x05\x19V[a\x02\xB7\x81a\n\xA5V[`e`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x08KW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x08o\x91\x90a\r`V[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x08\x9FW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x05\x19\x90a\r}V[`fT\x19\x81\x19`fT\x19\x16\x14a\t\x1DW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.unpause: invalid attemp`D\x82\x01R\x7Ft to pause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x05\x19V[`f\x81\x90U`@Q\x81\x81R3\x90\x7F5\x82\xD1\x82\x8E&\xBFV\xBD\x80\x15\x02\xBC\x02\x1A\xC0\xBC\x8A\xFBW\xC8&\xE4\x98kEY<\x8F\xAD8\x9C\x90` \x01a\x06_V[`\x01`\x01`\xA0\x1B\x03\x81\x16a\t\xE2W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`I`$\x82\x01R\x7FPausable._setPauserRegistry: new`D\x82\x01R\x7FPauserRegistry cannot be the zer`d\x82\x01Rho address`\xB8\x1B`\x84\x82\x01R`\xA4\x01a\x05\x19V[`eT`@\x80Q`\x01`\x01`\xA0\x1B\x03\x92\x83\x16\x81R\x91\x83\x16` \x83\x01R\x7Fn\x9F\xCDS\x98\x96\xFC\xA6\x0E\x8B\x0F\x01\xDDX\x023\xE4\x8Ak\x0F}\xF0\x13\xB8\x9B\xA7\xF5e\x86\x9A\xCD\xB6\x91\x01`@Q\x80\x91\x03\x90\xA1`e\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UV[`3T`\x01`\x01`\xA0\x1B\x03\x163\x14a\x07^W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01\x81\x90R`$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R`d\x01a\x05\x19V[`3\x80T`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\x01`\x01`\xA0\x1B\x03\x19\x83\x16\x81\x17\x90\x93U`@Q\x91\x16\x91\x90\x82\x90\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x90`\0\x90\xA3PPV[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x02\xB7W`\0\x80\xFD[\x805c\xFF\xFF\xFF\xFF\x81\x16\x81\x14a\x0B W`\0\x80\xFD[\x91\x90PV[`\0\x80`@\x83\x85\x03\x12\x15a\x0B8W`\0\x80\xFD[\x825a\x0BC\x81a\n\xF7V[\x91Pa\x0BQ` \x84\x01a\x0B\x0CV[\x90P\x92P\x92\x90PV[`\0` \x82\x84\x03\x12\x15a\x0BlW`\0\x80\xFD[\x815a\x0Bw\x81a\n\xF7V[\x93\x92PPPV[`\0` \x82\x84\x03\x12\x15a\x0B\x90W`\0\x80\xFD[P5\x91\x90PV[`\0\x80`\0``\x84\x86\x03\x12\x15a\x0B\xACW`\0\x80\xFD[\x835a\x0B\xB7\x81a\n\xF7V[\x92P` \x84\x015a\x0B\xC7\x81a\n\xF7V[\x92\x95\x92\x94PPP`@\x91\x90\x91\x015\x90V[`\0\x80`@\x83\x85\x03\x12\x15a\x0B\xEBW`\0\x80\xFD[\x825a\x0B\xF6\x81a\n\xF7V[\x94` \x93\x90\x93\x015\x93PPPV[`\0` \x82\x84\x03\x12\x15a\x0C\x16W`\0\x80\xFD[\x815`\xFF\x81\x16\x81\x14a\x0BwW`\0\x80\xFD[`\0\x80`@\x83\x85\x03\x12\x15a\x0C:W`\0\x80\xFD[\x825a\x0CE\x81a\n\xF7V[\x91P` \x83\x015a\x0CU\x81a\n\xF7V[\x80\x91PP\x92P\x92\x90PV[`\0\x80` \x83\x85\x03\x12\x15a\x0CsW`\0\x80\xFD[\x825g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x0C\x8BW`\0\x80\xFD[\x81\x85\x01\x91P\x85`\x1F\x83\x01\x12a\x0C\x9FW`\0\x80\xFD[\x815\x81\x81\x11\x15a\x0C\xAEW`\0\x80\xFD[\x86` \x82`\x05\x1B\x85\x01\x01\x11\x15a\x0C\xC3W`\0\x80\xFD[` \x92\x90\x92\x01\x96\x91\x95P\x90\x93PPPPV[`\0\x80`\0``\x84\x86\x03\x12\x15a\x0C\xEAW`\0\x80\xFD[\x835a\x0C\xF5\x81a\n\xF7V[\x92Pa\r\x03` \x85\x01a\x0B\x0CV[\x91P`@\x84\x015\x90P\x92P\x92P\x92V[`\0\x80`\0\x80`\x80\x85\x87\x03\x12\x15a\r)W`\0\x80\xFD[\x845a\r4\x81a\n\xF7V[\x93Pa\rB` \x86\x01a\x0B\x0CV[\x92Pa\rP`@\x86\x01a\x0B\x0CV[\x93\x96\x92\x95P\x92\x93``\x015\x92PPV[`\0` \x82\x84\x03\x12\x15a\rrW`\0\x80\xFD[\x81Qa\x0Bw\x81a\n\xF7V[` \x80\x82R`*\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Ri9\x90:\xB780\xBA\xB9\xB2\xB9`\xB1\x1B``\x82\x01R`\x80\x01\x90V[`\0` \x82\x84\x03\x12\x15a\r\xD9W`\0\x80\xFD[\x81Q\x80\x15\x15\x81\x14a\x0BwW`\0\x80\xFD[` \x80\x82R`(\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Rg9\x9080\xBA\xB9\xB2\xB9`\xC1\x1B``\x82\x01R`\x80\x01\x90V\xFE\xA2dipfsX\"\x12 g\x0E\xC7\x80#\x9C\xF6\x91\x1F,\xC6\xA0\xE4\xBE\xA3`\xE9\xE1\xA0e-\xDF\x06J\x8D\xCB~*^\xD4\xF0\x08dsolcC\0\x08\x0C\x003",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `FrozenStatusReset(address)` and selector `0xd4cef0af27800d466fcacd85779857378b85cb61569005ff1464fa6e5ced69d8`.
     ```solidity
     event FrozenStatusReset(address indexed previouslySlashedAddress);
@@ -1613,6 +1616,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Initialized(uint8)` and selector `0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498`.
     ```solidity
     event Initialized(uint8 version);
@@ -1711,6 +1715,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `MiddlewareTimesAdded(address,uint256,uint32,uint32)` and selector `0x1b62ba64c72d01e41a2b8c46e6aeeff728ef3a4438cf1cac3d92ee12189d5649`.
     ```solidity
     event MiddlewareTimesAdded(address operator, uint256 index, uint32 stalestUpdateBlock, uint32 latestServeUntilBlock);
@@ -1834,6 +1839,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorFrozen(address,address)` and selector `0x444a84f512816ae7be8ed8a66aa88e362eb54d0988e83acc9d81746622b3ba51`.
     ```solidity
     event OperatorFrozen(address indexed slashedOperator, address indexed slashingContract);
@@ -1947,6 +1953,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OptedIntoSlashing(address,address)` and selector `0xefa9fb38e813d53c15edf501e03852843a3fed691960523391d71a092b3627d8`.
     ```solidity
     event OptedIntoSlashing(address indexed operator, address indexed contractAddress);
@@ -2060,6 +2067,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OwnershipTransferred(address,address)` and selector `0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0`.
     ```solidity
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -2173,6 +2181,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Paused(address,uint256)` and selector `0xab40a374bc51de372200a8bc981af8c9ecdc08dfdaef0bb6e09f88f3c616ef3d`.
     ```solidity
     event Paused(address indexed account, uint256 newPausedStatus);
@@ -2282,6 +2291,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PauserRegistrySet(address,address)` and selector `0x6e9fcd539896fca60e8b0f01dd580233e48a6b0f7df013b89ba7f565869acdb6`.
     ```solidity
     event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
@@ -2391,6 +2401,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `SlashingAbilityRevoked(address,address,uint32)` and selector `0x9aa1b1391f35c672ed1f3b7ece632f4513e618366bef7a2f67b7c6bc1f2d2b14`.
     ```solidity
     event SlashingAbilityRevoked(address indexed operator, address indexed contractAddress, uint32 contractCanSlashOperatorUntilBlock);
@@ -2511,6 +2522,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Unpaused(address,uint256)` and selector `0x3582d1828e26bf56bd801502bc021ac0bc8afb57c826e4986b45593c8fad389c`.
     ```solidity
     event Unpaused(address indexed account, uint256 newPausedStatus);
@@ -2698,6 +2710,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `canSlash(address,address)` and selector `0xd98128c0`.
     ```solidity
     function canSlash(address, address) external view returns (bool);
@@ -2710,6 +2723,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`canSlash(address,address)`](canSlashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2833,6 +2847,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `canWithdraw(address,uint32,uint256)` and selector `0x8105e043`.
     ```solidity
     function canWithdraw(address, uint32, uint256) external returns (bool);
@@ -2847,6 +2862,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _2: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`canWithdraw(address,uint32,uint256)`](canWithdrawCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2977,6 +2993,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `contractCanSlashOperatorUntilBlock(address,address)` and selector `0x6f0c2f74`.
     ```solidity
     function contractCanSlashOperatorUntilBlock(address, address) external view returns (uint32);
@@ -2989,6 +3006,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`contractCanSlashOperatorUntilBlock(address,address)`](contractCanSlashOperatorUntilBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3112,6 +3130,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegation()` and selector `0xdf5cf723`.
     ```solidity
     function delegation() external view returns (address);
@@ -3119,6 +3138,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`delegation()`](delegationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3223,6 +3243,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `freezeOperator(address)` and selector `0x38c8ee64`.
     ```solidity
     function freezeOperator(address) external;
@@ -3338,6 +3359,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getCorrectValueForInsertAfter(address,uint32)` and selector `0x723e59c7`.
     ```solidity
     function getCorrectValueForInsertAfter(address, uint32) external view returns (uint256);
@@ -3350,6 +3372,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _1: u32,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getCorrectValueForInsertAfter(address,uint32)`](getCorrectValueForInsertAfterCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3470,6 +3493,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getMiddlewareTimesIndexServeUntilBlock(address,uint32)` and selector `0x7259a45c`.
     ```solidity
     function getMiddlewareTimesIndexServeUntilBlock(address, uint32) external view returns (uint32);
@@ -3482,6 +3506,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _1: u32,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getMiddlewareTimesIndexServeUntilBlock(address,uint32)`](getMiddlewareTimesIndexServeUntilBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3607,6 +3632,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getMiddlewareTimesIndexStalestUpdateBlock(address,uint32)` and selector `0x1874e5ae`.
     ```solidity
     function getMiddlewareTimesIndexStalestUpdateBlock(address, uint32) external view returns (uint32);
@@ -3619,6 +3645,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _1: u32,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getMiddlewareTimesIndexStalestUpdateBlock(address,uint32)`](getMiddlewareTimesIndexStalestUpdateBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3748,6 +3775,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `initialize(address,address,uint256)` and selector `0x1794bb3c`.
     ```solidity
     function initialize(address, address, uint256) external;
@@ -3889,6 +3917,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `isFrozen(address)` and selector `0xe5839836`.
     ```solidity
     function isFrozen(address) external view returns (bool);
@@ -3899,6 +3928,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`isFrozen(address)`](isFrozenCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4007,6 +4037,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `latestUpdateBlock(address,address)` and selector `0xda16e29b`.
     ```solidity
     function latestUpdateBlock(address, address) external view returns (uint32);
@@ -4019,6 +4050,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`latestUpdateBlock(address,address)`](latestUpdateBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4142,6 +4174,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `middlewareTimesLength(address)` and selector `0xa49db732`.
     ```solidity
     function middlewareTimesLength(address) external view returns (uint256);
@@ -4152,6 +4185,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`middlewareTimesLength(address)`](middlewareTimesLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4260,6 +4294,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `operatorToMiddlewareTimes(address,uint256)` and selector `0x282670fc`.
     ```solidity
     function operatorToMiddlewareTimes(address, uint256) external view returns (ISlasher.MiddlewareTimes memory);
@@ -4272,6 +4307,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`operatorToMiddlewareTimes(address,uint256)`](operatorToMiddlewareTimesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4396,6 +4432,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `operatorWhitelistedContractsLinkedListEntry(address,address)` and selector `0x855fcc4a`.
     ```solidity
     function operatorWhitelistedContractsLinkedListEntry(address, address) external view returns (bool, uint256, uint256);
@@ -4408,6 +4445,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`operatorWhitelistedContractsLinkedListEntry(address,address)`](operatorWhitelistedContractsLinkedListEntryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4560,6 +4598,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `operatorWhitelistedContractsLinkedListSize(address)` and selector `0xe921d4fa`.
     ```solidity
     function operatorWhitelistedContractsLinkedListSize(address) external view returns (uint256);
@@ -4570,6 +4609,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`operatorWhitelistedContractsLinkedListSize(address)`](operatorWhitelistedContractsLinkedListSizeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4686,6 +4726,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `optIntoSlashing(address)` and selector `0xf73b7519`.
     ```solidity
     function optIntoSlashing(address) external;
@@ -4801,6 +4842,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `owner()` and selector `0x8da5cb5b`.
     ```solidity
     function owner() external view returns (address);
@@ -4808,6 +4850,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`owner()`](ownerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4912,6 +4955,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pause(uint256)` and selector `0x136439dd`.
     ```solidity
     function pause(uint256 newPausedStatus) external;
@@ -5029,6 +5073,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauseAll()` and selector `0x595c6a67`.
     ```solidity
     function pauseAll() external;
@@ -5137,6 +5182,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused(uint8)` and selector `0x5ac86ab7`.
     ```solidity
     function paused(uint8 index) external view returns (bool);
@@ -5147,6 +5193,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub index: u8,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5255,6 +5302,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused()` and selector `0x5c975abb`.
     ```solidity
     function paused() external view returns (uint256);
@@ -5262,6 +5310,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Call {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused()`](paused_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5366,6 +5415,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauserRegistry()` and selector `0x886f1195`.
     ```solidity
     function pauserRegistry() external view returns (address);
@@ -5373,6 +5423,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`pauserRegistry()`](pauserRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5477,6 +5528,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `recordFirstStakeUpdate(address,uint32)` and selector `0x175d3205`.
     ```solidity
     function recordFirstStakeUpdate(address, uint32) external;
@@ -5606,6 +5658,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `recordLastStakeUpdateAndRevokeSlashingAbility(address,uint32)` and selector `0x0ffabbce`.
     ```solidity
     function recordLastStakeUpdateAndRevokeSlashingAbility(address, uint32) external;
@@ -5744,6 +5797,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `recordStakeUpdate(address,uint32,uint32,uint256)` and selector `0xc747075b`.
     ```solidity
     function recordStakeUpdate(address, uint32, uint32, uint256) external;
@@ -5894,6 +5948,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `renounceOwnership()` and selector `0x715018a6`.
     ```solidity
     function renounceOwnership() external;
@@ -6002,6 +6057,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `resetFrozenStatus(address[])` and selector `0x7cf72bba`.
     ```solidity
     function resetFrozenStatus(address[] memory) external;
@@ -6120,6 +6176,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setPauserRegistry(address)` and selector `0x10d67a2f`.
     ```solidity
     function setPauserRegistry(address newPauserRegistry) external;
@@ -6237,6 +6294,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `strategyManager()` and selector `0x39b70e38`.
     ```solidity
     function strategyManager() external view returns (address);
@@ -6244,6 +6302,7 @@ pub mod Slasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyManagerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`strategyManager()`](strategyManagerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -6348,6 +6407,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transferOwnership(address)` and selector `0xf2fde38b`.
     ```solidity
     function transferOwnership(address newOwner) external;
@@ -6463,6 +6523,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `unpause(uint256)` and selector `0xfabc1cbc`.
     ```solidity
     function unpause(uint256 newPausedStatus) external;
@@ -6580,6 +6641,7 @@ pub mod Slasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `whitelistedContractDetails(address,address)` and selector `0xd7b7fa13`.
     ```solidity
     function whitelistedContractDetails(address, address) external view returns (ISlasher.MiddlewareDetails memory);
@@ -6592,6 +6654,7 @@ pub mod Slasher {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`whitelistedContractDetails(address,address)`](whitelistedContractDetailsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -6717,6 +6780,7 @@ pub mod Slasher {
         }
     };
     ///Container for all the [`Slasher`](self) function calls.
+    #[derive()]
     pub enum SlasherCalls {
         #[allow(missing_docs)]
         canSlash(canSlashCall),
@@ -7652,6 +7716,7 @@ pub mod Slasher {
         }
     }
     ///Container for all the [`Slasher`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum SlasherEvents {
         #[allow(missing_docs)]
         FrozenStatusReset(FrozenStatusReset),

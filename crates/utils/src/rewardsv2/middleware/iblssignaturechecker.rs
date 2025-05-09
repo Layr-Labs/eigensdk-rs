@@ -17,6 +17,7 @@ library BN254 {
 pub mod BN254 {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct G1Point { uint256 X; uint256 Y; }
     ```*/
@@ -206,6 +207,7 @@ pub mod BN254 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct G2Point { uint256[2] X; uint256[2] Y; }
     ```*/
@@ -821,6 +823,7 @@ pub mod IBLSSignatureChecker {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct NonSignerStakesAndSignature { uint32[] nonSignerQuorumBitmapIndices; BN254.G1Point[] nonSignerPubkeys; BN254.G1Point[] quorumApks; BN254.G2Point apkG2; BN254.G1Point sigma; uint32[] quorumApkIndices; uint32[] totalStakeIndices; uint32[][] nonSignerStakeIndices; }
     ```*/
@@ -1189,6 +1192,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct QuorumStakeTotals { uint96[] signedStakeForQuorum; uint96[] totalStakeForQuorum; }
     ```*/
@@ -1396,6 +1400,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `StaleStakesForbiddenUpdate(bool)` and selector `0x40e4ed880a29e0f6ddce307457fb75cddf4feef7d3ecb0301bfdf4976a0e2dfc`.
     ```solidity
     event StaleStakesForbiddenUpdate(bool value);
@@ -1494,6 +1499,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `blsApkRegistry()` and selector `0x5df45946`.
     ```solidity
     function blsApkRegistry() external view returns (address);
@@ -1501,6 +1507,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct blsApkRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`blsApkRegistry()`](blsApkRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1605,6 +1612,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `checkSignatures(bytes32,bytes,uint32,(uint32[],(uint256,uint256)[],(uint256,uint256)[],(uint256[2],uint256[2]),(uint256,uint256),uint32[],uint32[],uint32[][]))` and selector `0x6efb4636`.
     ```solidity
     function checkSignatures(bytes32 msgHash, bytes memory quorumNumbers, uint32 referenceBlockNumber, NonSignerStakesAndSignature memory nonSignerStakesAndSignature) external view returns (QuorumStakeTotals memory, bytes32);
@@ -1622,6 +1630,7 @@ pub mod IBLSSignatureChecker {
         pub nonSignerStakesAndSignature:
             <NonSignerStakesAndSignature as alloy::sol_types::SolType>::RustType,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`checkSignatures(bytes32,bytes,uint32,(uint32[],(uint256,uint256)[],(uint256,uint256)[],(uint256[2],uint256[2]),(uint256,uint256),uint32[],uint32[],uint32[][]))`](checkSignaturesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1778,6 +1787,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegation()` and selector `0xdf5cf723`.
     ```solidity
     function delegation() external view returns (address);
@@ -1785,6 +1795,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`delegation()`](delegationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1889,6 +1900,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `registryCoordinator()` and selector `0x6d14a987`.
     ```solidity
     function registryCoordinator() external view returns (address);
@@ -1896,6 +1908,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`registryCoordinator()`](registryCoordinatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2000,6 +2013,7 @@ pub mod IBLSSignatureChecker {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stakeRegistry()` and selector `0x68304835`.
     ```solidity
     function stakeRegistry() external view returns (address);
@@ -2007,6 +2021,7 @@ pub mod IBLSSignatureChecker {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`stakeRegistry()`](stakeRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2112,6 +2127,7 @@ pub mod IBLSSignatureChecker {
         }
     };
     ///Container for all the [`IBLSSignatureChecker`](self) function calls.
+    #[derive()]
     pub enum IBLSSignatureCheckerCalls {
         #[allow(missing_docs)]
         blsApkRegistry(blsApkRegistryCall),
@@ -2292,6 +2308,7 @@ pub mod IBLSSignatureChecker {
         }
     }
     ///Container for all the [`IBLSSignatureChecker`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IBLSSignatureCheckerEvents {
         #[allow(missing_docs)]
         StaleStakesForbiddenUpdate(StaleStakesForbiddenUpdate),

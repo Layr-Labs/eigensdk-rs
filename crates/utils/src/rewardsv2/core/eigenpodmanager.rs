@@ -754,6 +754,7 @@ pub mod EigenPodManager {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"`\x80`@R`\x046\x10a\x01\xB7W`\x005`\xE0\x1C\x80c\x88o\x11\x95\x11a\0\xECW\x80c\xB14Bq\x11a\0\x8AW\x80c\xEAM<\x9B\x11a\0dW\x80c\xEAM<\x9B\x14a\x05?W\x80c\xF2\xFD\xE3\x8B\x14a\x05sW\x80c\xF6\x84\x8D$\x14a\x05\x93W\x80c\xFA\xBC\x1C\xBC\x14a\x05\xCEW`\0\x80\xFD[\x80c\xB14Bq\x14a\x04\xCBW\x80c\xBE\xFF\xBB\x89\x14a\x04\xFFW\x80c\xC2\xC5\x1C@\x14a\x05\x1FW`\0\x80\xFD[\x80c\x9BNF4\x11a\0\xC6W\x80c\x9BNF4\x14a\x04LW\x80c\x9B\xA0bu\x14a\x04_W\x80c\xA3\x84\x06\xA3\x14a\x04\x95W\x80c\xA6\xA5\t\xBE\x14a\x04\xB5W`\0\x80\xFD[\x80c\x88o\x11\x95\x14a\x03\xE6W\x80c\x8D\xA5\xCB[\x14a\x04\x06W\x80c\x91\x04\xC3\x19\x14a\x04$W`\0\x80\xFD[\x80cY\\jg\x11a\x01YW\x80c`\xF4\x06+\x11a\x013W\x80c`\xF4\x06+\x14a\x03[W\x80cqP\x18\xA6\x14a\x03\x88W\x80ct\xCD\xD7\x98\x14a\x03\x9DW\x80c\x84\xD8\x10b\x14a\x03\xD1W`\0\x80\xFD[\x80cY\\jg\x14a\x02\xF1W\x80cZ\xC8j\xB7\x14a\x03\x06W\x80c\\\x97Z\xBB\x14a\x03FW`\0\x80\xFD[\x80c\x17\x94\xBB<\x11a\x01\x95W\x80c\x17\x94\xBB<\x14a\x021W\x80c)+{+\x14a\x02QW\x80c8{\x13\0\x14a\x02\x9DW\x80c9\xB7\x0E8\x14a\x02\xBDW`\0\x80\xFD[\x80c\x0E\x81\x07<\x14a\x01\xBCW\x80c\x10\xD6z/\x14a\x01\xEFW\x80c\x13d9\xDD\x14a\x02\x11W[`\0\x80\xFD[4\x80\x15a\x01\xC8W`\0\x80\xFD[Pa\x01\xDCa\x01\xD76`\x04a \xFCV[a\x05\xEEV[`@Q\x90\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[4\x80\x15a\x01\xFBW`\0\x80\xFD[Pa\x02\x0Fa\x02\n6`\x04a!(V[a\x08]V[\0[4\x80\x15a\x02\x1DW`\0\x80\xFD[Pa\x02\x0Fa\x02,6`\x04a!EV[a\t\x10V[4\x80\x15a\x02=W`\0\x80\xFD[Pa\x02\x0Fa\x02L6`\x04a!^V[a\nOV[4\x80\x15a\x02]W`\0\x80\xFD[Pa\x02\x85\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01a\x01\xE6V[4\x80\x15a\x02\xA9W`\0\x80\xFD[Pa\x02\x0Fa\x02\xB86`\x04a!^V[a\x0BnV[4\x80\x15a\x02\xC9W`\0\x80\xFD[Pa\x02\x85\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[4\x80\x15a\x02\xFDW`\0\x80\xFD[Pa\x02\x0Fa\x0F\x82V[4\x80\x15a\x03\x12W`\0\x80\xFD[Pa\x036a\x03!6`\x04a!\x9FV[`fT`\x01`\xFF\x90\x92\x16\x91\x90\x91\x1B\x90\x81\x16\x14\x90V[`@Q\x90\x15\x15\x81R` \x01a\x01\xE6V[4\x80\x15a\x03RW`\0\x80\xFD[P`fTa\x01\xDCV[4\x80\x15a\x03gW`\0\x80\xFD[Pa\x01\xDCa\x03v6`\x04a!(V[`\x9B` R`\0\x90\x81R`@\x90 T\x81V[4\x80\x15a\x03\x94W`\0\x80\xFD[Pa\x02\x0Fa\x10IV[4\x80\x15a\x03\xA9W`\0\x80\xFD[Pa\x02\x85\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[4\x80\x15a\x03\xDDW`\0\x80\xFD[Pa\x02\x85a\x10]V[4\x80\x15a\x03\xF2W`\0\x80\xFD[P`eTa\x02\x85\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[4\x80\x15a\x04\x12W`\0\x80\xFD[P`3T`\x01`\x01`\xA0\x1B\x03\x16a\x02\x85V[4\x80\x15a\x040W`\0\x80\xFD[Pa\x02\x85s\xBE\xAC\x0E\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEB\xEA\xC0\x81V[a\x02\x0Fa\x04Z6`\x04a\"\x0BV[a\x11GV[4\x80\x15a\x04kW`\0\x80\xFD[Pa\x02\x85a\x04z6`\x04a!(V[`\x98` R`\0\x90\x81R`@\x90 T`\x01`\x01`\xA0\x1B\x03\x16\x81V[4\x80\x15a\x04\xA1W`\0\x80\xFD[Pa\x02\x85a\x04\xB06`\x04a!(V[a\x126V[4\x80\x15a\x04\xC1W`\0\x80\xFD[Pa\x01\xDC`\x99T\x81V[4\x80\x15a\x04\xD7W`\0\x80\xFD[Pa\x02\x85\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[4\x80\x15a\x05\x0BW`\0\x80\xFD[Pa\x02\x0Fa\x05\x1A6`\x04a \xFCV[a\x13\x08V[4\x80\x15a\x05+W`\0\x80\xFD[Pa\x02\x0Fa\x05:6`\x04a \xFCV[a\x15GV[4\x80\x15a\x05KW`\0\x80\xFD[Pa\x02\x85\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[4\x80\x15a\x05\x7FW`\0\x80\xFD[Pa\x02\x0Fa\x05\x8E6`\x04a!(V[a\x19{V[4\x80\x15a\x05\x9FW`\0\x80\xFD[Pa\x036a\x05\xAE6`\x04a!(V[`\x01`\x01`\xA0\x1B\x03\x90\x81\x16`\0\x90\x81R`\x98` R`@\x90 T\x16\x15\x15\x90V[4\x80\x15a\x05\xDAW`\0\x80\xFD[Pa\x02\x0Fa\x05\xE96`\x04a!EV[a\x19\xF1V[`\x003`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14a\x06AW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x068\x90a\"\x7FV[`@Q\x80\x91\x03\x90\xFD[`\x01`\x01`\xA0\x1B\x03\x83\x16a\x06\xBDW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`:`$\x82\x01R\x7FEigenPodManager.addShares: podOw`D\x82\x01R\x7Fner cannot be zero address\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x068V[`\0\x82\x12\x15a\x07+W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`4`$\x82\x01R\x7FEigenPodManager.addShares: share`D\x82\x01Rss cannot be negative``\x1B`d\x82\x01R`\x84\x01a\x068V[a\x079c;\x9A\xCA\0\x83a\"\xF3V[\x15a\x07\xACW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`=`$\x82\x01R\x7FEigenPodManager.addShares: share`D\x82\x01R\x7Fs must be a whole Gwei amount\0\0\0`d\x82\x01R`\x84\x01a\x068V[`\x01`\x01`\xA0\x1B\x03\x83\x16`\0\x90\x81R`\x9B` R`@\x81 T\x90a\x07\xD0\x84\x83a#\x1DV[`\x01`\x01`\xA0\x1B\x03\x86\x16`\0\x81\x81R`\x9B` R`@\x90\x81\x90 \x83\x90UQ\x91\x92P\x90`\0\x80Q` a.\xB3\x839\x81Q\x91R\x90a\x08\x0F\x90\x87\x81R` \x01\x90V[`@Q\x80\x91\x03\x90\xA2\x84`\x01`\x01`\xA0\x1B\x03\x16`\0\x80Q` a%\x85\x839\x81Q\x91R\x82`@Qa\x08@\x91\x81R` \x01\x90V[`@Q\x80\x91\x03\x90\xA2a\x08R\x82\x82a\x1BMV[\x92PPP[\x92\x91PPV[`e`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x08\xB0W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x08\xD4\x91\x90a#^V[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\t\x04W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x068\x90a#{V[a\t\r\x81a\x1B\x8FV[PV[`eT`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\tXW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\t|\x91\x90a#\xC5V[a\t\x98W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x068\x90a#\xE7V[`fT\x81\x81\x16\x14a\n\x11W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.pause: invalid attempt `D\x82\x01R\x7Fto unpause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x068V[`f\x81\x90U`@Q\x81\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01[`@Q\x80\x91\x03\x90\xA2PV[`\0Ta\x01\0\x90\x04`\xFF\x16\x15\x80\x80\x15a\noWP`\0T`\x01`\xFF\x90\x91\x16\x10[\x80a\n\x89WP0;\x15\x80\x15a\n\x89WP`\0T`\xFF\x16`\x01\x14[a\n\xECW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`.`$\x82\x01R\x7FInitializable: contract is alrea`D\x82\x01Rm\x19\x1EH\x1A[\x9A]\x1AX[\x1A^\x99Y`\x92\x1B`d\x82\x01R`\x84\x01a\x068V[`\0\x80T`\xFF\x19\x16`\x01\x17\x90U\x80\x15a\x0B\x0FW`\0\x80Ta\xFF\0\x19\x16a\x01\0\x17\x90U[a\x0B\x18\x84a\x1C\x86V[a\x0B\"\x83\x83a\x1C\xD8V[\x80\x15a\x0BhW`\0\x80Ta\xFF\0\x19\x16\x90U`@Q`\x01\x81R\x7F\x7F&\xB8?\xF9n\x1F+jh/\x138R\xF6y\x8A\t\xC4e\xDA\x95\x92\x14`\xCE\xFB8G@$\x98\x90` \x01`@Q\x80\x91\x03\x90\xA1[PPPPV[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14a\x0B\xB6W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x068\x90a\"\x7FV[`\x01`\x01`\xA0\x1B\x03\x83\x16a\x0C0W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`G`$\x82\x01R`\0\x80Q` a.\xD3\x839\x81Q\x91R`D\x82\x01R\x7FTokens: podOwner cannot be zero `d\x82\x01Rfaddress`\xC8\x1B`\x84\x82\x01R`\xA4\x01a\x068V[`\x01`\x01`\xA0\x1B\x03\x82\x16a\x0C\xADW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`J`$\x82\x01R`\0\x80Q` a.\xD3\x839\x81Q\x91R`D\x82\x01R\x7FTokens: destination cannot be ze`d\x82\x01Riro address`\xB0\x1B`\x84\x82\x01R`\xA4\x01a\x068V[`\0\x81\x12\x15a\r\x1CW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`A`$\x82\x01R`\0\x80Q` a.\xD3\x839\x81Q\x91R`D\x82\x01R\x7FTokens: shares cannot be negativ`d\x82\x01R`e`\xF8\x1B`\x84\x82\x01R`\xA4\x01a\x068V[a\r*c;\x9A\xCA\0\x82a\"\xF3V[\x15a\r\x9EW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`J`$\x82\x01R`\0\x80Q` a.\xD3\x839\x81Q\x91R`D\x82\x01R\x7FTokens: shares must be a whole G`d\x82\x01Ri\x1D\xD9ZH\x18[[\xDD[\x9D`\xB2\x1B`\x84\x82\x01R`\xA4\x01a\x068V[`\x01`\x01`\xA0\x1B\x03\x83\x16`\0\x90\x81R`\x9B` R`@\x81 T\x90\x81\x12\x15a\x0F\x07W`\0a\r\xCA\x82a$/V[\x90P\x80\x83\x11\x15a\x0EaW`\x01`\x01`\xA0\x1B\x03\x85\x16`\0\x90\x81R`\x9B` R`@\x81 Ua\r\xF7\x81\x84a$LV[\x92P\x84`\x01`\x01`\xA0\x1B\x03\x16`\0\x80Q` a.\xB3\x839\x81Q\x91R\x82`@Qa\x0E\"\x91\x81R` \x01\x90V[`@Q\x80\x91\x03\x90\xA2\x84`\x01`\x01`\xA0\x1B\x03\x16`\0\x80Q` a%\x85\x839\x81Q\x91R`\0`@Qa\x0ET\x91\x81R` \x01\x90V[`@Q\x80\x91\x03\x90\xA2a\x0F\x05V[`\x01`\x01`\xA0\x1B\x03\x85\x16`\0\x90\x81R`\x9B` R`@\x81 Ta\x0E\x85\x90\x85\x90a#\x1DV[`\x01`\x01`\xA0\x1B\x03\x87\x16`\0\x81\x81R`\x9B` R`@\x90\x81\x90 \x83\x90UQ\x91\x92P\x90`\0\x80Q` a.\xB3\x839\x81Q\x91R\x90a\x0E\xC4\x90\x87\x81R` \x01\x90V[`@Q\x80\x91\x03\x90\xA2\x85`\x01`\x01`\xA0\x1B\x03\x16`\0\x80Q` a%\x85\x839\x81Q\x91R\x82`@Qa\x0E\xF5\x91\x81R` \x01\x90V[`@Q\x80\x91\x03\x90\xA2PPPPPPV[P[`\x01`\x01`\xA0\x1B\x03\x84\x81\x16`\0\x90\x81R`\x98` R`@\x90\x81\x90 T\x90QcbH:!`\xE1\x1B\x81R\x85\x83\x16`\x04\x82\x01R`$\x81\x01\x85\x90R\x91\x16\x90c\xC4\x90tB\x90`D\x01`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a\x0FdW`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x0FxW=`\0\x80>=`\0\xFD[PPPPPPPPV[`eT`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0F\xCAW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0F\xEE\x91\x90a#\xC5V[a\x10\nW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x068\x90a#\xE7V[`\0\x19`f\x81\x90U`@Q\x90\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01`@Q\x80\x91\x03\x90\xA2V[a\x10Qa\x1D\xC2V[a\x10[`\0a\x1C\x86V[V[`fT`\0\x90\x81\x90`\x01\x90\x81\x16\x14\x15a\x10\xB4W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x19`$\x82\x01Rx\x14\x18]\\\xD8X\x9B\x19N\x88\x1A[\x99\x19^\x08\x1A\\\xC8\x1C\x18]\\\xD9Y`:\x1B`D\x82\x01R`d\x01a\x068V[3`\0\x90\x81R`\x98` R`@\x90 T`\x01`\x01`\xA0\x1B\x03\x16\x15a\x116W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`3`$\x82\x01R\x7FEigenPodManager.createPod: Sende`D\x82\x01Rr\x1C\x88\x18[\x1C\x99XY\x1EH\x1A\x18\\\xC8\x18H\x1C\x1B\xD9`j\x1B`d\x82\x01R`\x84\x01a\x068V[`\0a\x11@a\x1E\x1CV[\x92PPP\x90V[`fT`\0\x90`\x01\x90\x81\x16\x14\x15a\x11\x9CW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x19`$\x82\x01Rx\x14\x18]\\\xD8X\x9B\x19N\x88\x1A[\x99\x19^\x08\x1A\\\xC8\x1C\x18]\\\xD9Y`:\x1B`D\x82\x01R`d\x01a\x068V[3`\0\x90\x81R`\x98` R`@\x90 T`\x01`\x01`\xA0\x1B\x03\x16\x80a\x11\xC5Wa\x11\xC2a\x1E\x1CV[\x90P[`@Qc&\xD3\x91\x8D`\xE2\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x82\x16\x90c\x9BNF4\x904\x90a\x11\xFB\x90\x8B\x90\x8B\x90\x8B\x90\x8B\x90\x8B\x90`\x04\x01a$\x8CV[`\0`@Q\x80\x83\x03\x81\x85\x88\x80;\x15\x80\x15a\x12\x14W`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x12(W=`\0\x80>=`\0\xFD[PPPPPPPPPPPPV[`\x01`\x01`\xA0\x1B\x03\x80\x82\x16`\0\x90\x81R`\x98` R`@\x81 T\x90\x91\x16\x80a\x08WWa\x13\x01\x83`\x01`\x01`\xA0\x1B\x03\x16`\0\x1B`@Q\x80a\t@\x01`@R\x80a\t\x0E\x81R` \x01a%\xA5a\t\x0E\x919`@\x80Q`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16` \x82\x01R\x80\x82\x01\x91\x90\x91R`\0``\x82\x01R`\x80\x01`@\x80Q`\x1F\x19\x81\x84\x03\x01\x81R\x90\x82\x90Ra\x12\xE6\x92\x91` \x01a%\x01V[`@Q` \x81\x83\x03\x03\x81R\x90`@R\x80Q\x90` \x01 a\x1F\x81V[\x93\x92PPPV[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14a\x13PW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x068\x90a\"\x7FV[`\0\x81\x12\x15a\x13\xC7W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`7`$\x82\x01R\x7FEigenPodManager.removeShares: sh`D\x82\x01R\x7Fares cannot be negative\0\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x068V[a\x13\xD5c;\x9A\xCA\0\x82a\"\xF3V[\x15a\x14JW`@\x80QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`$\x81\x01\x91\x90\x91R\x7FEigenPodManager.removeShares: sh`D\x82\x01R\x7Fares must be a whole Gwei amount`d\x82\x01R`\x84\x01a\x068V[`\x01`\x01`\xA0\x1B\x03\x82\x16`\0\x90\x81R`\x9B` R`@\x81 Ta\x14n\x90\x83\x90a%\x16V[\x90P`\0\x81\x12\x15a\x14\xFFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`O`$\x82\x01R\x7FEigenPodManager.removeShares: ca`D\x82\x01R\x7Fnnot result in pod owner having `d\x82\x01Rnnegative shares`\x88\x1B`\x84\x82\x01R`\xA4\x01a\x068V[`\x01`\x01`\xA0\x1B\x03\x83\x16`\0\x81\x81R`\x9B` R`@\x90\x81\x90 \x83\x90UQ`\0\x80Q` a%\x85\x839\x81Q\x91R\x90a\x15:\x90\x84\x81R` \x01\x90V[`@Q\x80\x91\x03\x90\xA2PPPV[`\x01`\x01`\xA0\x1B\x03\x80\x83\x16`\0\x90\x81R`\x98` R`@\x90 T\x83\x91\x163\x14a\x15\xC2W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`'`$\x82\x01R\x7FEigenPodManager.onlyEigenPod: no`D\x82\x01Rf\x1D\x08\x18H\x1C\x1B\xD9`\xCA\x1B`d\x82\x01R`\x84\x01a\x068V[`\x02`\xC9T\x14\x15a\x16\x15W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1F`$\x82\x01R\x7FReentrancyGuard: reentrant call\0`D\x82\x01R`d\x01a\x068V[`\x02`\xC9U`\x01`\x01`\xA0\x1B\x03\x83\x16a\x16\xB1W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`R`$\x82\x01R\x7FEigenPodManager.recordBeaconChai`D\x82\x01R\x7FnETHBalanceUpdate: podOwner cann`d\x82\x01Rqot be zero address`p\x1B`\x84\x82\x01R`\xA4\x01a\x068V[a\x16\xBFc;\x9A\xCA\0\x83a%UV[\x15a\x17XW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`Z`$\x82\x01R\x7FEigenPodManager.recordBeaconChai`D\x82\x01R\x7FnETHBalanceUpdate: sharesDelta m`d\x82\x01R\x7Fust be a whole Gwei amount\0\0\0\0\0\0`\x84\x82\x01R`\xA4\x01a\x068V[`\x01`\x01`\xA0\x1B\x03\x83\x16`\0\x90\x81R`\x9B` R`@\x81 T\x90a\x17|\x84\x83a#\x1DV[`\x01`\x01`\xA0\x1B\x03\x86\x16`\0\x90\x81R`\x9B` R`@\x81 \x82\x90U\x90\x91Pa\x17\xA4\x83\x83a\x1BMV[\x90P\x80\x15a\x19\x0CW`\0\x81\x12\x15a\x18oW`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16c\x13-Ig\x87s\xBE\xAC\x0E\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEB\xEA\xC0a\x18\x03\x85a$/V[`@Q`\x01`\x01`\xE0\x1B\x03\x19`\xE0\x86\x90\x1B\x16\x81R`\x01`\x01`\xA0\x1B\x03\x93\x84\x16`\x04\x82\x01R\x92\x90\x91\x16`$\x83\x01R`D\x82\x01R`d\x01`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a\x18RW`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x18fW=`\0\x80>=`\0\xFD[PPPPa\x19\x0CV[`@Qc\x14R\xB9\xD7`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x87\x81\x16`\x04\x83\x01Rs\xBE\xAC\x0E\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEB\xEA\xC0`$\x83\x01R`D\x82\x01\x83\x90R\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x90c(\xA5s\xAE\x90`d\x01`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a\x18\xF3W`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x19\x07W=`\0\x80>=`\0\xFD[PPPP[\x85`\x01`\x01`\xA0\x1B\x03\x16`\0\x80Q` a.\xB3\x839\x81Q\x91R\x86`@Qa\x195\x91\x81R` \x01\x90V[`@Q\x80\x91\x03\x90\xA2\x85`\x01`\x01`\xA0\x1B\x03\x16`\0\x80Q` a%\x85\x839\x81Q\x91R\x83`@Qa\x19f\x91\x81R` \x01\x90V[`@Q\x80\x91\x03\x90\xA2PP`\x01`\xC9UPPPPV[a\x19\x83a\x1D\xC2V[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x19\xE8W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01a\x068V[a\t\r\x81a\x1C\x86V[`e`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x1ADW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x1Ah\x91\x90a#^V[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x1A\x98W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x068\x90a#{V[`fT\x19\x81\x19`fT\x19\x16\x14a\x1B\x16W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.unpause: invalid attemp`D\x82\x01R\x7Ft to pause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x068V[`f\x81\x90U`@Q\x81\x81R3\x90\x7F5\x82\xD1\x82\x8E&\xBFV\xBD\x80\x15\x02\xBC\x02\x1A\xC0\xBC\x8A\xFBW\xC8&\xE4\x98kEY<\x8F\xAD8\x9C\x90` \x01a\nDV[`\0\x80\x83\x13a\x1BmW`\0\x82\x13a\x1BfWP`\0a\x08WV[P\x80a\x08WV[`\0\x82\x13a\x1B\x85Wa\x1B~\x83a$/V[\x90Pa\x08WV[a\x1B~\x83\x83a%\x16V[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x1C\x1DW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`I`$\x82\x01R\x7FPausable._setPauserRegistry: new`D\x82\x01R\x7FPauserRegistry cannot be the zer`d\x82\x01Rho address`\xB8\x1B`\x84\x82\x01R`\xA4\x01a\x068V[`eT`@\x80Q`\x01`\x01`\xA0\x1B\x03\x92\x83\x16\x81R\x91\x83\x16` \x83\x01R\x7Fn\x9F\xCDS\x98\x96\xFC\xA6\x0E\x8B\x0F\x01\xDDX\x023\xE4\x8Ak\x0F}\xF0\x13\xB8\x9B\xA7\xF5e\x86\x9A\xCD\xB6\x91\x01`@Q\x80\x91\x03\x90\xA1`e\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UV[`3\x80T`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\x01`\x01`\xA0\x1B\x03\x19\x83\x16\x81\x17\x90\x93U`@Q\x91\x16\x91\x90\x82\x90\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x90`\0\x90\xA3PPV[`eT`\x01`\x01`\xA0\x1B\x03\x16\x15\x80\x15a\x1C\xF9WP`\x01`\x01`\xA0\x1B\x03\x82\x16\x15\x15[a\x1D{W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`G`$\x82\x01R\x7FPausable._initializePauser: _ini`D\x82\x01R\x7FtializePauser() can only be call`d\x82\x01Rfed once`\xC8\x1B`\x84\x82\x01R`\xA4\x01a\x068V[`f\x81\x90U`@Q\x81\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01`@Q\x80\x91\x03\x90\xA2a\x1D\xBE\x82a\x1B\x8FV[PPV[`3T`\x01`\x01`\xA0\x1B\x03\x163\x14a\x10[W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01\x81\x90R`$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R`d\x01a\x068V[`\0`\x99`\0\x81Ta\x1E-\x90a%iV[\x90\x91UP`@\x80Qa\t@\x81\x01\x90\x91Ra\t\x0E\x80\x82R`\0\x91a\x1E\xCC\x91\x83\x913\x91a%\xA5` \x83\x019`@\x80Q`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16` \x82\x01R\x80\x82\x01\x91\x90\x91R`\0``\x82\x01R`\x80\x01`@\x80Q`\x1F\x19\x81\x84\x03\x01\x81R\x90\x82\x90Ra\x1E\xB8\x92\x91` \x01a%\x01V[`@Q` \x81\x83\x03\x03\x81R\x90`@Ra\x1F\xDDV[`@Qc\x18\x9A\xCD\xBD`\xE3\x1B\x81R3`\x04\x82\x01R\x90\x91P`\x01`\x01`\xA0\x1B\x03\x82\x16\x90c\xC4\xD6m\xE8\x90`$\x01`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a\x1F\x10W`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x1F$W=`\0\x80>=`\0\xFD[PP3`\0\x81\x81R`\x98` R`@\x80\x82 \x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x88\x16\x90\x81\x17\x90\x91U\x90Q\x92\x94P\x92P\x7F!\xC9\x9D\r\xB0\"\x13\xC3/\xFF[\x05\xCF\nq\x8A\xB5\xF8X\x80+\x91I\x8F\x80\xD8\"p(\x9D\x85j\x91\xA3\x91\x90PV[`@\x80Q`\x01`\x01`\xF8\x1B\x03\x19` \x80\x83\x01\x91\x90\x91Rk\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x190``\x1B\x16`!\x83\x01R`5\x82\x01\x85\x90R`U\x80\x83\x01\x85\x90R\x83Q\x80\x84\x03\x90\x91\x01\x81R`u\x90\x92\x01\x90\x92R\x80Q\x91\x01 `\0\x90a\x13\x01V[`\0\x80\x84G\x10\x15a 0W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1D`$\x82\x01R\x7FCreate2: insufficient balance\0\0\0`D\x82\x01R`d\x01a\x068V[\x82Qa ~W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01\x81\x90R`$\x82\x01R\x7FCreate2: bytecode length is zero`D\x82\x01R`d\x01a\x068V[\x83\x83Q` \x85\x01\x87\xF5\x90P`\x01`\x01`\xA0\x1B\x03\x81\x16a \xDFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x19`$\x82\x01R\x7FCreate2: Failed on deploy\0\0\0\0\0\0\0`D\x82\x01R`d\x01a\x068V[\x94\x93PPPPV[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\t\rW`\0\x80\xFD[`\0\x80`@\x83\x85\x03\x12\x15a!\x0FW`\0\x80\xFD[\x825a!\x1A\x81a \xE7V[\x94` \x93\x90\x93\x015\x93PPPV[`\0` \x82\x84\x03\x12\x15a!:W`\0\x80\xFD[\x815a\x13\x01\x81a \xE7V[`\0` \x82\x84\x03\x12\x15a!WW`\0\x80\xFD[P5\x91\x90PV[`\0\x80`\0``\x84\x86\x03\x12\x15a!sW`\0\x80\xFD[\x835a!~\x81a \xE7V[\x92P` \x84\x015a!\x8E\x81a \xE7V[\x92\x95\x92\x94PPP`@\x91\x90\x91\x015\x90V[`\0` \x82\x84\x03\x12\x15a!\xB1W`\0\x80\xFD[\x815`\xFF\x81\x16\x81\x14a\x13\x01W`\0\x80\xFD[`\0\x80\x83`\x1F\x84\x01\x12a!\xD4W`\0\x80\xFD[P\x815g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a!\xECW`\0\x80\xFD[` \x83\x01\x91P\x83` \x82\x85\x01\x01\x11\x15a\"\x04W`\0\x80\xFD[\x92P\x92\x90PV[`\0\x80`\0\x80`\0``\x86\x88\x03\x12\x15a\"#W`\0\x80\xFD[\x855g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\";W`\0\x80\xFD[a\"G\x89\x83\x8A\x01a!\xC2V[\x90\x97P\x95P` \x88\x015\x91P\x80\x82\x11\x15a\"`W`\0\x80\xFD[Pa\"m\x88\x82\x89\x01a!\xC2V[\x96\x99\x95\x98P\x96`@\x015\x94\x93PPPPV[` \x80\x82R`@\x90\x82\x01\x81\x90R\x7FEigenPodManager.onlyDelegationMa\x90\x82\x01R\x7Fnager: not the DelegationManager``\x82\x01R`\x80\x01\x90V[cNH{q`\xE0\x1B`\0R`\x12`\x04R`$`\0\xFD[`\0\x82a#\x02Wa#\x02a\"\xDDV[P\x06\x90V[cNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[`\0\x80\x82\x12\x80\x15`\x01`\x01`\xFF\x1B\x03\x84\x90\x03\x85\x13\x16\x15a#?Wa#?a#\x07V[`\x01`\xFF\x1B\x83\x90\x03\x84\x12\x81\x16\x15a#XWa#Xa#\x07V[PP\x01\x90V[`\0` \x82\x84\x03\x12\x15a#pW`\0\x80\xFD[\x81Qa\x13\x01\x81a \xE7V[` \x80\x82R`*\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Ri9\x90:\xB780\xBA\xB9\xB2\xB9`\xB1\x1B``\x82\x01R`\x80\x01\x90V[`\0` \x82\x84\x03\x12\x15a#\xD7W`\0\x80\xFD[\x81Q\x80\x15\x15\x81\x14a\x13\x01W`\0\x80\xFD[` \x80\x82R`(\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Rg9\x9080\xBA\xB9\xB2\xB9`\xC1\x1B``\x82\x01R`\x80\x01\x90V[`\0`\x01`\xFF\x1B\x82\x14\x15a$EWa$Ea#\x07V[P`\0\x03\x90V[`\0\x82\x82\x10\x15a$^Wa$^a#\x07V[P\x03\x90V[\x81\x83R\x81\x81` \x85\x017P`\0\x82\x82\x01` \x90\x81\x01\x91\x90\x91R`\x1F\x90\x91\x01`\x1F\x19\x16\x90\x91\x01\x01\x90V[``\x81R`\0a$\xA0``\x83\x01\x87\x89a$cV[\x82\x81\x03` \x84\x01Ra$\xB3\x81\x86\x88a$cV[\x91PP\x82`@\x83\x01R\x96\x95PPPPPPV[`\0\x81Q`\0[\x81\x81\x10\x15a$\xE7W` \x81\x85\x01\x81\x01Q\x86\x83\x01R\x01a$\xCDV[\x81\x81\x11\x15a$\xF6W`\0\x82\x86\x01R[P\x92\x90\x92\x01\x92\x91PPV[`\0a \xDFa%\x10\x83\x86a$\xC6V[\x84a$\xC6V[`\0\x80\x83\x12\x80\x15`\x01`\xFF\x1B\x85\x01\x84\x12\x16\x15a%4Wa%4a#\x07V[`\x01`\x01`\xFF\x1B\x03\x84\x01\x83\x13\x81\x16\x15a%OWa%Oa#\x07V[PP\x03\x90V[`\0\x82a%dWa%da\"\xDDV[P\x07\x90V[`\0`\0\x19\x82\x14\x15a%}Wa%}a#\x07V[P`\x01\x01\x90V\xFE\xD4\xDE\xF7mm+\xEDo\x14\xD5\xCD\x9A\xF7<\xC2\x91=a\x8D\0\xED\xDEBC.\x81\xC0\x9B\xFE\x07p\x98`\x80`@R`@Qa\t\x0E8\x03\x80a\t\x0E\x839\x81\x01`@\x81\x90Ra\0\"\x91a\x04`V[a\0.\x82\x82`\0a\x005V[PPa\x05\x8AV[a\0>\x83a\x01\0V[`@Q`\x01`\x01`\xA0\x1B\x03\x84\x16\x90\x7F\x1C\xF3\xB0:l\xF1\x9F\xA2\xBA\xBAM\xF1H\xE9\xDC\xAB\xED\xEA\x7F\x8A\\\x07\x84\x0E ~\\\x08\x9B\xE9]>\x90`\0\x90\xA2`\0\x82Q\x11\x80a\0\x7FWP\x80[\x15a\0\xFBWa\0\xF9\x83`\x01`\x01`\xA0\x1B\x03\x16c\\`\xDA\x1B`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\0\xC5W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\0\xE9\x91\x90a\x05 V[\x83a\x02\xA3` \x1Ba\0)\x17` \x1CV[P[PPPV[a\x01\x13\x81a\x02\xCF` \x1Ba\0U\x17` \x1CV[a\x01rW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`%`$\x82\x01R\x7FERC1967: new beacon is not a con`D\x82\x01Rd\x1D\x1C\x98X\xDD`\xDA\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[a\x01\xE6\x81`\x01`\x01`\xA0\x1B\x03\x16c\\`\xDA\x1B`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x01\xB3W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x01\xD7\x91\x90a\x05 V[a\x02\xCF` \x1Ba\0U\x17` \x1CV[a\x02KW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`0`$\x82\x01R\x7FERC1967: beacon implementation i`D\x82\x01Ro\x1C\xC8\x1B\x9B\xDD\x08\x18H\x18\xDB\xDB\x9D\x1C\x98X\xDD`\x82\x1B`d\x82\x01R`\x84\x01a\x01iV[\x80a\x02\x82\x7F\xA3\xF0\xADt\xE5B:\xEB\xFD\x80\xD3\xEFCFW\x835\xA9\xA7*\xEA\xEEY\xFFl\xB3X+5\x13=P`\0\x1Ba\x02\xDE` \x1Ba\0d\x17` \x1CV[\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UPV[``a\x02\xC8\x83\x83`@Q\x80``\x01`@R\x80`'\x81R` \x01a\x08\xE7`'\x919a\x02\xE1V[\x93\x92PPPV[`\x01`\x01`\xA0\x1B\x03\x16;\x15\x15\x90V[\x90V[```\0\x80\x85`\x01`\x01`\xA0\x1B\x03\x16\x85`@Qa\x02\xFE\x91\x90a\x05;V[`\0`@Q\x80\x83\x03\x81\x85Z\xF4\x91PP=\x80`\0\x81\x14a\x039W`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=`\0` \x84\x01>a\x03>V[``\x91P[P\x90\x92P\x90Pa\x03P\x86\x83\x83\x87a\x03ZV[\x96\x95PPPPPPV[``\x83\x15a\x03\xC6W\x82Qa\x03\xBFW`\x01`\x01`\xA0\x1B\x03\x85\x16;a\x03\xBFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1D`$\x82\x01R\x7FAddress: call to non-contract\0\0\0`D\x82\x01R`d\x01a\x01iV[P\x81a\x03\xD0V[a\x03\xD0\x83\x83a\x03\xD8V[\x94\x93PPPPV[\x81Q\x15a\x03\xE8W\x81Q\x80\x83` \x01\xFD[\x80`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x01i\x91\x90a\x05WV[\x80Q`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x04\x19W`\0\x80\xFD[\x91\x90PV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`\0[\x83\x81\x10\x15a\x04OW\x81\x81\x01Q\x83\x82\x01R` \x01a\x047V[\x83\x81\x11\x15a\0\xF9WPP`\0\x91\x01RV[`\0\x80`@\x83\x85\x03\x12\x15a\x04sW`\0\x80\xFD[a\x04|\x83a\x04\x02V[` \x84\x01Q\x90\x92P`\x01`\x01`@\x1B\x03\x80\x82\x11\x15a\x04\x99W`\0\x80\xFD[\x81\x85\x01\x91P\x85`\x1F\x83\x01\x12a\x04\xADW`\0\x80\xFD[\x81Q\x81\x81\x11\x15a\x04\xBFWa\x04\xBFa\x04\x1EV[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01\x90\x83\x82\x11\x81\x83\x10\x17\x15a\x04\xE7Wa\x04\xE7a\x04\x1EV[\x81`@R\x82\x81R\x88` \x84\x87\x01\x01\x11\x15a\x05\0W`\0\x80\xFD[a\x05\x11\x83` \x83\x01` \x88\x01a\x044V[\x80\x95PPPPPP\x92P\x92\x90PV[`\0` \x82\x84\x03\x12\x15a\x052W`\0\x80\xFD[a\x02\xC8\x82a\x04\x02V[`\0\x82Qa\x05M\x81\x84` \x87\x01a\x044V[\x91\x90\x91\x01\x92\x91PPV[` \x81R`\0\x82Q\x80` \x84\x01Ra\x05v\x81`@\x85\x01` \x87\x01a\x044V[`\x1F\x01`\x1F\x19\x16\x91\x90\x91\x01`@\x01\x92\x91PPV[a\x03N\x80a\x05\x99`\09`\0\xF3\xFE`\x80`@R6a\0\x13Wa\0\x11a\0\x17V[\0[a\0\x11[a\0'a\0\"a\0gV[a\x01\0V[V[``a\0N\x83\x83`@Q\x80``\x01`@R\x80`'\x81R` \x01a\x02\xF2`'\x919a\x01$V[\x93\x92PPPV[`\x01`\x01`\xA0\x1B\x03\x16;\x15\x15\x90V[\x90V[`\0a\0\x9A\x7F\xA3\xF0\xADt\xE5B:\xEB\xFD\x80\xD3\xEFCFW\x835\xA9\xA7*\xEA\xEEY\xFFl\xB3X+5\x13=PT`\x01`\x01`\xA0\x1B\x03\x16\x90V[`\x01`\x01`\xA0\x1B\x03\x16c\\`\xDA\x1B`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\0\xD7W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\0\xFB\x91\x90a\x02IV[\x90P\x90V[6`\0\x807`\0\x806`\0\x84Z\xF4=`\0\x80>\x80\x80\x15a\x01\x1FW=`\0\xF3[=`\0\xFD[```\0\x80\x85`\x01`\x01`\xA0\x1B\x03\x16\x85`@Qa\x01A\x91\x90a\x02\xA2V[`\0`@Q\x80\x83\x03\x81\x85Z\xF4\x91PP=\x80`\0\x81\x14a\x01|W`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=`\0` \x84\x01>a\x01\x81V[``\x91P[P\x91P\x91Pa\x01\x92\x86\x83\x83\x87a\x01\x9CV[\x96\x95PPPPPPV[``\x83\x15a\x02\rW\x82Qa\x02\x06W`\x01`\x01`\xA0\x1B\x03\x85\x16;a\x02\x06W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1D`$\x82\x01R\x7FAddress: call to non-contract\0\0\0`D\x82\x01R`d\x01[`@Q\x80\x91\x03\x90\xFD[P\x81a\x02\x17V[a\x02\x17\x83\x83a\x02\x1FV[\x94\x93PPPPV[\x81Q\x15a\x02/W\x81Q\x80\x83` \x01\xFD[\x80`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x01\xFD\x91\x90a\x02\xBEV[`\0` \x82\x84\x03\x12\x15a\x02[W`\0\x80\xFD[\x81Q`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\0NW`\0\x80\xFD[`\0[\x83\x81\x10\x15a\x02\x8DW\x81\x81\x01Q\x83\x82\x01R` \x01a\x02uV[\x83\x81\x11\x15a\x02\x9CW`\0\x84\x84\x01R[PPPPV[`\0\x82Qa\x02\xB4\x81\x84` \x87\x01a\x02rV[\x91\x90\x91\x01\x92\x91PPV[` \x81R`\0\x82Q\x80` \x84\x01Ra\x02\xDD\x81`@\x85\x01` \x87\x01a\x02rV[`\x1F\x01`\x1F\x19\x16\x91\x90\x91\x01`@\x01\x92\x91PPV\xFEAddress: low-level delegate call failed\xA2dipfsX\"\x12 \xD5\x1E\x81\xD3\xBC^\xD2\n&\xAE\xB0]\xCE~\x82\\P; a\xAAxb\x80'0\x0C\x8De\xB9\xD8\x9AdsolcC\0\x08\x0C\x003Address: low-level delegate call failedN+y\x1D\xED\xCC\xD9\xFB0\x14\x1B\x08\x8C\xAB\xF5\xC1J\x89\x12\xB5/Y7\\\x95\xC0\x10p\x0B\x8Ca\x93EigenPodManager.withdrawSharesAs\xA2dipfsX\"\x12 k\x9Bv\x8C\xF7\xCE\x0F7\xE8\xD3W\xBA\xBC\xED\xD5[\xD2\xAF\x81O\x80\xD3\xFD\x0B\xE5\xB5\x82\xCF\x16\x1A,@dsolcC\0\x08\x0C\x003",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `BeaconChainETHDeposited(address,uint256)` and selector `0x35a85cabc603f48abb2b71d9fbd8adea7c449d7f0be900ae7a2986ea369c3d0d`.
     ```solidity
     event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
@@ -863,6 +864,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `BeaconChainETHWithdrawalCompleted(address,uint256,uint96,address,address,bytes32)` and selector `0xa6bab1d55a361fcea2eee2bc9491e4f01e6cf333df03c9c4f2c144466429f7d6`.
     ```solidity
     event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares, uint96 nonce, address delegatedAddress, address withdrawer, bytes32 withdrawalRoot);
@@ -1003,6 +1005,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Initialized(uint8)` and selector `0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498`.
     ```solidity
     event Initialized(uint8 version);
@@ -1101,6 +1104,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `NewTotalShares(address,int256)` and selector `0xd4def76d6d2bed6f14d5cd9af73cc2913d618d00edde42432e81c09bfe077098`.
     ```solidity
     event NewTotalShares(address indexed podOwner, int256 newTotalShares);
@@ -1210,6 +1214,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OwnershipTransferred(address,address)` and selector `0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0`.
     ```solidity
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -1323,6 +1328,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Paused(address,uint256)` and selector `0xab40a374bc51de372200a8bc981af8c9ecdc08dfdaef0bb6e09f88f3c616ef3d`.
     ```solidity
     event Paused(address indexed account, uint256 newPausedStatus);
@@ -1432,6 +1438,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PauserRegistrySet(address,address)` and selector `0x6e9fcd539896fca60e8b0f01dd580233e48a6b0f7df013b89ba7f565869acdb6`.
     ```solidity
     event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
@@ -1541,6 +1548,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PodDeployed(address,address)` and selector `0x21c99d0db02213c32fff5b05cf0a718ab5f858802b91498f80d82270289d856a`.
     ```solidity
     event PodDeployed(address indexed eigenPod, address indexed podOwner);
@@ -1654,6 +1662,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PodSharesUpdated(address,int256)` and selector `0x4e2b791dedccd9fb30141b088cabf5c14a8912b52f59375c95c010700b8c6193`.
     ```solidity
     event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
@@ -1763,6 +1772,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Unpaused(address,uint256)` and selector `0x3582d1828e26bf56bd801502bc021ac0bc8afb57c826e4986b45593c8fad389c`.
     ```solidity
     event Unpaused(address indexed account, uint256 newPausedStatus);
@@ -1983,6 +1993,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `addShares(address,uint256)` and selector `0x0e81073c`.
     ```solidity
     function addShares(address podOwner, uint256 shares) external returns (uint256);
@@ -1995,6 +2006,7 @@ pub mod EigenPodManager {
         #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`addShares(address,uint256)`](addSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2118,6 +2130,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `beaconChainETHStrategy()` and selector `0x9104c319`.
     ```solidity
     function beaconChainETHStrategy() external view returns (address);
@@ -2125,6 +2138,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainETHStrategyCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`beaconChainETHStrategy()`](beaconChainETHStrategyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2229,6 +2243,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `createPod()` and selector `0x84d81062`.
     ```solidity
     function createPod() external returns (address);
@@ -2236,6 +2251,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createPodCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`createPod()`](createPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2340,6 +2356,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegationManager()` and selector `0xea4d3c9b`.
     ```solidity
     function delegationManager() external view returns (address);
@@ -2347,6 +2364,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationManagerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`delegationManager()`](delegationManagerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2451,6 +2469,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `eigenPodBeacon()` and selector `0x292b7b2b`.
     ```solidity
     function eigenPodBeacon() external view returns (address);
@@ -2458,6 +2477,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodBeaconCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`eigenPodBeacon()`](eigenPodBeaconCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2562,6 +2582,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `ethPOS()` and selector `0x74cdd798`.
     ```solidity
     function ethPOS() external view returns (address);
@@ -2569,6 +2590,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ethPOSCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`ethPOS()`](ethPOSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2673,6 +2695,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getPod(address)` and selector `0xa38406a3`.
     ```solidity
     function getPod(address podOwner) external view returns (address);
@@ -2683,6 +2706,7 @@ pub mod EigenPodManager {
         #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getPod(address)`](getPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2791,6 +2815,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `hasPod(address)` and selector `0xf6848d24`.
     ```solidity
     function hasPod(address podOwner) external view returns (bool);
@@ -2801,6 +2826,7 @@ pub mod EigenPodManager {
         #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`hasPod(address)`](hasPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2909,6 +2935,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `initialize(address,address,uint256)` and selector `0x1794bb3c`.
     ```solidity
     function initialize(address initialOwner, address _pauserRegistry, uint256 _initPausedStatus) external;
@@ -3054,6 +3081,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `numPods()` and selector `0xa6a509be`.
     ```solidity
     function numPods() external view returns (uint256);
@@ -3061,6 +3089,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct numPodsCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`numPods()`](numPodsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3165,6 +3194,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `owner()` and selector `0x8da5cb5b`.
     ```solidity
     function owner() external view returns (address);
@@ -3172,6 +3202,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`owner()`](ownerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3276,6 +3307,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `ownerToPod(address)` and selector `0x9ba06275`.
     ```solidity
     function ownerToPod(address) external view returns (address);
@@ -3286,6 +3318,7 @@ pub mod EigenPodManager {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`ownerToPod(address)`](ownerToPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3394,6 +3427,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pause(uint256)` and selector `0x136439dd`.
     ```solidity
     function pause(uint256 newPausedStatus) external;
@@ -3511,6 +3545,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauseAll()` and selector `0x595c6a67`.
     ```solidity
     function pauseAll() external;
@@ -3619,6 +3654,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused(uint8)` and selector `0x5ac86ab7`.
     ```solidity
     function paused(uint8 index) external view returns (bool);
@@ -3629,6 +3665,7 @@ pub mod EigenPodManager {
         #[allow(missing_docs)]
         pub index: u8,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3737,6 +3774,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused()` and selector `0x5c975abb`.
     ```solidity
     function paused() external view returns (uint256);
@@ -3744,6 +3782,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Call {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused()`](paused_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3848,6 +3887,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauserRegistry()` and selector `0x886f1195`.
     ```solidity
     function pauserRegistry() external view returns (address);
@@ -3855,6 +3895,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`pauserRegistry()`](pauserRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3959,6 +4000,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `podOwnerShares(address)` and selector `0x60f4062b`.
     ```solidity
     function podOwnerShares(address) external view returns (int256);
@@ -3969,6 +4011,7 @@ pub mod EigenPodManager {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`podOwnerShares(address)`](podOwnerSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4077,6 +4120,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `recordBeaconChainETHBalanceUpdate(address,int256)` and selector `0xc2c51c40`.
     ```solidity
     function recordBeaconChainETHBalanceUpdate(address podOwner, int256 sharesDelta) external;
@@ -4209,6 +4253,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `removeShares(address,uint256)` and selector `0xbeffbb89`.
     ```solidity
     function removeShares(address podOwner, uint256 shares) external;
@@ -4341,6 +4386,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `renounceOwnership()` and selector `0x715018a6`.
     ```solidity
     function renounceOwnership() external;
@@ -4449,6 +4495,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setPauserRegistry(address)` and selector `0x10d67a2f`.
     ```solidity
     function setPauserRegistry(address newPauserRegistry) external;
@@ -4566,6 +4613,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `slasher()` and selector `0xb1344271`.
     ```solidity
     function slasher() external view returns (address);
@@ -4573,6 +4621,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct slasherCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`slasher()`](slasherCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4677,6 +4726,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stake(bytes,bytes,bytes32)` and selector `0x9b4e4634`.
     ```solidity
     function stake(bytes memory pubkey, bytes memory signature, bytes32 depositDataRoot) external payable;
@@ -4818,6 +4868,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `strategyManager()` and selector `0x39b70e38`.
     ```solidity
     function strategyManager() external view returns (address);
@@ -4825,6 +4876,7 @@ pub mod EigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyManagerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`strategyManager()`](strategyManagerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4929,6 +4981,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transferOwnership(address)` and selector `0xf2fde38b`.
     ```solidity
     function transferOwnership(address newOwner) external;
@@ -5044,6 +5097,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `unpause(uint256)` and selector `0xfabc1cbc`.
     ```solidity
     function unpause(uint256 newPausedStatus) external;
@@ -5161,6 +5215,7 @@ pub mod EigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `withdrawSharesAsTokens(address,address,uint256)` and selector `0x387b1300`.
     ```solidity
     function withdrawSharesAsTokens(address podOwner, address destination, uint256 shares) external;
@@ -5303,6 +5358,7 @@ pub mod EigenPodManager {
         }
     };
     ///Container for all the [`EigenPodManager`](self) function calls.
+    #[derive()]
     pub enum EigenPodManagerCalls {
         #[allow(missing_docs)]
         addShares(addSharesCall),
@@ -6055,6 +6111,7 @@ pub mod EigenPodManager {
         }
     }
     ///Container for all the [`EigenPodManager`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum EigenPodManagerEvents {
         #[allow(missing_docs)]
         BeaconChainETHDeposited(BeaconChainETHDeposited),
