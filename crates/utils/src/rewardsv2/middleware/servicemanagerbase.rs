@@ -19,6 +19,7 @@ library IRewardsCoordinator {
 pub mod IRewardsCoordinator {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct OperatorDirectedRewardsSubmission { StrategyAndMultiplier[] strategiesAndMultipliers; address token; OperatorReward[] operatorRewards; uint32 startTimestamp; uint32 duration; string description; }
     ```*/
@@ -330,6 +331,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct OperatorReward { address operator; uint256 amount; }
     ```*/
@@ -527,6 +529,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct RewardsSubmission { StrategyAndMultiplier[] strategiesAndMultipliers; address token; uint256 amount; uint32 startTimestamp; uint32 duration; }
     ```*/
@@ -812,6 +815,7 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct StrategyAndMultiplier { address strategy; uint96 multiplier; }
     ```*/
@@ -1157,6 +1161,7 @@ library ISignatureUtils {
 pub mod ISignatureUtils {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct SignatureWithSaltAndExpiry { bytes signature; bytes32 salt; uint256 expiry; }
     ```*/
@@ -1950,6 +1955,7 @@ pub mod ServiceManagerBase {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Initialized(uint8)` and selector `0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498`.
     ```solidity
     event Initialized(uint8 version);
@@ -2048,6 +2054,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OwnershipTransferred(address,address)` and selector `0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0`.
     ```solidity
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -2161,6 +2168,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `RewardsInitiatorUpdated(address,address)` and selector `0xe11cddf1816a43318ca175bbc52cd0185436e9cbead7c83acc54a73e461717e3`.
     ```solidity
     event RewardsInitiatorUpdated(address prevRewardsInitiator, address newRewardsInitiator);
@@ -2270,6 +2278,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `avsDirectory()` and selector `0x6b3aa72e`.
     ```solidity
     function avsDirectory() external view returns (address);
@@ -2277,6 +2286,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct avsDirectoryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`avsDirectory()`](avsDirectoryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2381,6 +2391,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive()]
     /**Function with signature `createAVSRewardsSubmission(((address,uint96)[],address,uint256,uint32,uint32)[])` and selector `0xfce36c7d`.
     ```solidity
     function createAVSRewardsSubmission(IRewardsCoordinator.RewardsSubmission[] memory rewardsSubmissions) external;
@@ -2507,6 +2518,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive()]
     /**Function with signature `createOperatorDirectedAVSRewardsSubmission(((address,uint96)[],address,(address,uint256)[],uint32,uint32,string)[])` and selector `0xa20b99bf`.
     ```solidity
     function createOperatorDirectedAVSRewardsSubmission(IRewardsCoordinator.OperatorDirectedRewardsSubmission[] memory operatorDirectedRewardsSubmissions) external;
@@ -2646,6 +2658,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `deregisterOperatorFromAVS(address)` and selector `0xa364f4da`.
     ```solidity
     function deregisterOperatorFromAVS(address operator) external;
@@ -2761,6 +2774,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getOperatorRestakedStrategies(address)` and selector `0x33cfb7b7`.
     ```solidity
     function getOperatorRestakedStrategies(address operator) external view returns (address[] memory);
@@ -2771,6 +2785,7 @@ pub mod ServiceManagerBase {
         #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getOperatorRestakedStrategies(address)`](getOperatorRestakedStrategiesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2882,6 +2897,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getRestakeableStrategies()` and selector `0xe481af9d`.
     ```solidity
     function getRestakeableStrategies() external view returns (address[] memory);
@@ -2889,6 +2905,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getRestakeableStrategiesCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getRestakeableStrategies()`](getRestakeableStrategiesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2996,6 +3013,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `owner()` and selector `0x8da5cb5b`.
     ```solidity
     function owner() external view returns (address);
@@ -3003,6 +3021,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`owner()`](ownerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3107,6 +3126,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `registerOperatorToAVS(address,(bytes,bytes32,uint256))` and selector `0x9926ee7d`.
     ```solidity
     function registerOperatorToAVS(address operator, ISignatureUtils.SignatureWithSaltAndExpiry memory operatorSignature) external;
@@ -3241,6 +3261,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `renounceOwnership()` and selector `0x715018a6`.
     ```solidity
     function renounceOwnership() external;
@@ -3349,6 +3370,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `rewardsInitiator()` and selector `0xfc299dee`.
     ```solidity
     function rewardsInitiator() external view returns (address);
@@ -3356,6 +3378,7 @@ pub mod ServiceManagerBase {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct rewardsInitiatorCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`rewardsInitiator()`](rewardsInitiatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3460,6 +3483,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setClaimerFor(address)` and selector `0xa0169ddd`.
     ```solidity
     function setClaimerFor(address claimer) external;
@@ -3575,6 +3599,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setRewardsInitiator(address)` and selector `0x3bc28c8c`.
     ```solidity
     function setRewardsInitiator(address newRewardsInitiator) external;
@@ -3692,6 +3717,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transferOwnership(address)` and selector `0xf2fde38b`.
     ```solidity
     function transferOwnership(address newOwner) external;
@@ -3807,6 +3833,7 @@ pub mod ServiceManagerBase {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `updateAVSMetadataURI(string)` and selector `0xa98fb355`.
     ```solidity
     function updateAVSMetadataURI(string memory _metadataURI) external;
@@ -3925,6 +3952,7 @@ pub mod ServiceManagerBase {
         }
     };
     ///Container for all the [`ServiceManagerBase`](self) function calls.
+    #[derive()]
     pub enum ServiceManagerBaseCalls {
         #[allow(missing_docs)]
         avsDirectory(avsDirectoryCall),
@@ -4391,6 +4419,7 @@ pub mod ServiceManagerBase {
         }
     }
     ///Container for all the [`ServiceManagerBase`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum ServiceManagerBaseEvents {
         #[allow(missing_docs)]
         Initialized(Initialized),

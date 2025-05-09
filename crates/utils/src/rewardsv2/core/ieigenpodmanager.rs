@@ -613,6 +613,7 @@ pub mod IEigenPodManager {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `BeaconChainETHDeposited(address,uint256)` and selector `0x35a85cabc603f48abb2b71d9fbd8adea7c449d7f0be900ae7a2986ea369c3d0d`.
     ```solidity
     event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
@@ -722,6 +723,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `BeaconChainETHWithdrawalCompleted(address,uint256,uint96,address,address,bytes32)` and selector `0xa6bab1d55a361fcea2eee2bc9491e4f01e6cf333df03c9c4f2c144466429f7d6`.
     ```solidity
     event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares, uint96 nonce, address delegatedAddress, address withdrawer, bytes32 withdrawalRoot);
@@ -862,6 +864,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `NewTotalShares(address,int256)` and selector `0xd4def76d6d2bed6f14d5cd9af73cc2913d618d00edde42432e81c09bfe077098`.
     ```solidity
     event NewTotalShares(address indexed podOwner, int256 newTotalShares);
@@ -971,6 +974,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Paused(address,uint256)` and selector `0xab40a374bc51de372200a8bc981af8c9ecdc08dfdaef0bb6e09f88f3c616ef3d`.
     ```solidity
     event Paused(address indexed account, uint256 newPausedStatus);
@@ -1080,6 +1084,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PauserRegistrySet(address,address)` and selector `0x6e9fcd539896fca60e8b0f01dd580233e48a6b0f7df013b89ba7f565869acdb6`.
     ```solidity
     event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
@@ -1189,6 +1194,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PodDeployed(address,address)` and selector `0x21c99d0db02213c32fff5b05cf0a718ab5f858802b91498f80d82270289d856a`.
     ```solidity
     event PodDeployed(address indexed eigenPod, address indexed podOwner);
@@ -1302,6 +1308,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PodSharesUpdated(address,int256)` and selector `0x4e2b791dedccd9fb30141b088cabf5c14a8912b52f59375c95c010700b8c6193`.
     ```solidity
     event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
@@ -1411,6 +1418,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Unpaused(address,uint256)` and selector `0x3582d1828e26bf56bd801502bc021ac0bc8afb57c826e4986b45593c8fad389c`.
     ```solidity
     event Unpaused(address indexed account, uint256 newPausedStatus);
@@ -1520,6 +1528,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `addShares(address,uint256)` and selector `0x0e81073c`.
     ```solidity
     function addShares(address podOwner, uint256 shares) external returns (uint256);
@@ -1532,6 +1541,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`addShares(address,uint256)`](addSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1655,6 +1665,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `beaconChainETHStrategy()` and selector `0x9104c319`.
     ```solidity
     function beaconChainETHStrategy() external view returns (address);
@@ -1662,6 +1673,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainETHStrategyCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`beaconChainETHStrategy()`](beaconChainETHStrategyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1766,6 +1778,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `createPod()` and selector `0x84d81062`.
     ```solidity
     function createPod() external returns (address);
@@ -1773,6 +1786,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createPodCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`createPod()`](createPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1877,6 +1891,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `eigenPodBeacon()` and selector `0x292b7b2b`.
     ```solidity
     function eigenPodBeacon() external view returns (address);
@@ -1884,6 +1899,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodBeaconCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`eigenPodBeacon()`](eigenPodBeaconCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1988,6 +2004,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `ethPOS()` and selector `0x74cdd798`.
     ```solidity
     function ethPOS() external view returns (address);
@@ -1995,6 +2012,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ethPOSCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`ethPOS()`](ethPOSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2099,6 +2117,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getPod(address)` and selector `0xa38406a3`.
     ```solidity
     function getPod(address podOwner) external view returns (address);
@@ -2109,6 +2128,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getPod(address)`](getPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2217,6 +2237,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `hasPod(address)` and selector `0xf6848d24`.
     ```solidity
     function hasPod(address podOwner) external view returns (bool);
@@ -2227,6 +2248,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`hasPod(address)`](hasPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2335,6 +2357,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `numPods()` and selector `0xa6a509be`.
     ```solidity
     function numPods() external view returns (uint256);
@@ -2342,6 +2365,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct numPodsCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`numPods()`](numPodsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2446,6 +2470,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `ownerToPod(address)` and selector `0x9ba06275`.
     ```solidity
     function ownerToPod(address podOwner) external view returns (address);
@@ -2456,6 +2481,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`ownerToPod(address)`](ownerToPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2564,6 +2590,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pause(uint256)` and selector `0x136439dd`.
     ```solidity
     function pause(uint256 newPausedStatus) external;
@@ -2681,6 +2708,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauseAll()` and selector `0x595c6a67`.
     ```solidity
     function pauseAll() external;
@@ -2789,6 +2817,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused(uint8)` and selector `0x5ac86ab7`.
     ```solidity
     function paused(uint8 index) external view returns (bool);
@@ -2799,6 +2828,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub index: u8,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2907,6 +2937,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused()` and selector `0x5c975abb`.
     ```solidity
     function paused() external view returns (uint256);
@@ -2914,6 +2945,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Call {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused()`](paused_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3018,6 +3050,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauserRegistry()` and selector `0x886f1195`.
     ```solidity
     function pauserRegistry() external view returns (address);
@@ -3025,6 +3058,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`pauserRegistry()`](pauserRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3129,6 +3163,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `podOwnerShares(address)` and selector `0x60f4062b`.
     ```solidity
     function podOwnerShares(address podOwner) external view returns (int256);
@@ -3139,6 +3174,7 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pub podOwner: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`podOwnerShares(address)`](podOwnerSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3247,6 +3283,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `recordBeaconChainETHBalanceUpdate(address,int256)` and selector `0xc2c51c40`.
     ```solidity
     function recordBeaconChainETHBalanceUpdate(address podOwner, int256 sharesDelta) external;
@@ -3379,6 +3416,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `removeShares(address,uint256)` and selector `0xbeffbb89`.
     ```solidity
     function removeShares(address podOwner, uint256 shares) external;
@@ -3511,6 +3549,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setPauserRegistry(address)` and selector `0x10d67a2f`.
     ```solidity
     function setPauserRegistry(address newPauserRegistry) external;
@@ -3628,6 +3667,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `slasher()` and selector `0xb1344271`.
     ```solidity
     function slasher() external view returns (address);
@@ -3635,6 +3675,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct slasherCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`slasher()`](slasherCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3739,6 +3780,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stake(bytes,bytes,bytes32)` and selector `0x9b4e4634`.
     ```solidity
     function stake(bytes memory pubkey, bytes memory signature, bytes32 depositDataRoot) external payable;
@@ -3880,6 +3922,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `strategyManager()` and selector `0x39b70e38`.
     ```solidity
     function strategyManager() external view returns (address);
@@ -3887,6 +3930,7 @@ pub mod IEigenPodManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyManagerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`strategyManager()`](strategyManagerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3991,6 +4035,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `unpause(uint256)` and selector `0xfabc1cbc`.
     ```solidity
     function unpause(uint256 newPausedStatus) external;
@@ -4108,6 +4153,7 @@ pub mod IEigenPodManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `withdrawSharesAsTokens(address,address,uint256)` and selector `0x387b1300`.
     ```solidity
     function withdrawSharesAsTokens(address podOwner, address destination, uint256 shares) external;
@@ -4250,6 +4296,7 @@ pub mod IEigenPodManager {
         }
     };
     ///Container for all the [`IEigenPodManager`](self) function calls.
+    #[derive()]
     pub enum IEigenPodManagerCalls {
         #[allow(missing_docs)]
         addShares(addSharesCall),
@@ -4874,6 +4921,7 @@ pub mod IEigenPodManager {
         }
     }
     ///Container for all the [`IEigenPodManager`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IEigenPodManagerEvents {
         #[allow(missing_docs)]
         BeaconChainETHDeposited(BeaconChainETHDeposited),

@@ -19,7 +19,6 @@ library IAllocationManagerTypes {
     clippy::empty_structs_with_brackets
 )]
 pub mod IAllocationManagerTypes {
-    use super::AllocationManager::OperatorSet;
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     #[derive()]
@@ -27,7 +26,7 @@ pub mod IAllocationManagerTypes {
     struct AllocateParams { OperatorSet operatorSet; address[] strategies; uint64[] newMagnitudes; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone, Hash, PartialEq, Debug, Eq)]
+    #[derive(Clone)]
     pub struct AllocateParams {
         #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,

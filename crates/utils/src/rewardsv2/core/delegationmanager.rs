@@ -18,6 +18,7 @@ library IDelegationManager {
 pub mod IDelegationManager {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct OperatorDetails { address __deprecated_earningsReceiver; address delegationApprover; uint32 stakerOptOutWindowBlocks; }
     ```*/
@@ -240,6 +241,7 @@ pub mod IDelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct QueuedWithdrawalParams { address[] strategies; uint256[] shares; address withdrawer; }
     ```*/
@@ -461,6 +463,7 @@ pub mod IDelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct Withdrawal { address staker; address delegatedTo; address withdrawer; uint256 nonce; uint32 startBlock; address[] strategies; uint256[] shares; }
     ```*/
@@ -920,6 +923,7 @@ library ISignatureUtils {
 pub mod ISignatureUtils {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct SignatureWithExpiry { bytes signature; uint256 expiry; }
     ```*/
@@ -3043,6 +3047,7 @@ pub mod DelegationManager {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\x03BW`\x005`\xE0\x1C\x80cc[\xBD\x10\x11a\x01\xB8W\x80c\xB7\xF0n\xBE\x11a\x01\x04W\x80c\xCF\x80\x87>\x11a\0\xA2W\x80c\xF1ar\xB0\x11a\0|W\x80c\xF1ar\xB0\x14a\t\x08W\x80c\xF2\xFD\xE3\x8B\x14a\t\x1BW\x80c\xF6\x98\xDA%\x14a\t.W\x80c\xFA\xBC\x1C\xBC\x14a\t6W`\0\x80\xFD[\x80c\xCF\x80\x87>\x14a\x08\xC1W\x80c\xDA\x8B\xE8d\x14a\x08\xE2W\x80c\xEE\xA9\x06K\x14a\x08\xF5W`\0\x80\xFD[\x80c\xC4\x887Z\x11a\0\xDEW\x80c\xC4\x887Z\x14a\x07\xDEW\x80c\xC5\xE4\x80\xDB\x14a\x07\xFEW\x80c\xC9KQ\x11\x14a\x08\xA4W\x80c\xCAf\x1C\x04\x14a\x08\xB7W`\0\x80\xFD[\x80c\xB7\xF0n\xBE\x14a\x07\x84W\x80c\xBBE\xFE\xF2\x14a\x07\xA7W\x80c\xC4H\xFE\xB8\x14a\x07\xD5W`\0\x80\xFD[\x80c\x88o\x11\x95\x11a\x01qW\x80c\x91\x04\xC3\x19\x11a\x01KW\x80c\x91\x04\xC3\x19\x14a\x07\x0FW\x80c\x99\xBE\x81\xC8\x14a\x07*W\x80c\xA1x\x84\x84\x14a\x07=W\x80c\xB14Bq\x14a\x07]W`\0\x80\xFD[\x80c\x88o\x11\x95\x14a\x06\xCBW\x80c\x8D\xA5\xCB[\x14a\x06\xDEW\x80c\x90\x04\x13G\x14a\x06\xEFW`\0\x80\xFD[\x80cc[\xBD\x10\x14a\x066W\x80ce\xDA\x12d\x14a\x06IW\x80cmp\xF7\xAE\x14a\x06rW\x80cqP\x18\xA6\x14a\x06\x85W\x80cw\x8EU\xF3\x14a\x06\x8DW\x80c\x7FT\x80q\x14a\x06\xB8W`\0\x80\xFD[\x80c(\xA5s\xAE\x11a\x02\x92W\x80cFe\xBC\xDA\x11a\x020W\x80cY{6\xDA\x11a\x02\nW\x80cY{6\xDA\x14a\x05\xE5W\x80cZ\xC8j\xB7\x14a\x05\xF8W\x80c\\\x97Z\xBB\x14a\x06\x1BW\x80c`\xD7\xFA\xED\x14a\x06#W`\0\x80\xFD[\x80cFe\xBC\xDA\x14a\x05\xACW\x80cO\xC4\x0Ba\x14a\x05\xD3W\x80cY\\jg\x14a\x05\xDDW`\0\x80\xFD[\x80c9\xB7\x0E8\x11a\x02lW\x80c9\xB7\x0E8\x14a\x04\xF4W\x80c<\xDE\xB5\xE0\x14a\x053W\x80c>(9\x1D\x14a\x05bW\x80cC7s\x82\x14a\x05\x85W`\0\x80\xFD[\x80c(\xA5s\xAE\x14a\x04\xAEW\x80c)\xC7}O\x14a\x04\xC1W\x80c3@C\x96\x14a\x04\xE1W`\0\x80\xFD[\x80c\x13-Ig\x11a\x02\xFFW\x80c\x16\x92\x83e\x11a\x02\xD9W\x80c\x16\x92\x83e\x14a\x04(W\x80c\x1B\xBC\xE0\x91\x14a\x04aW\x80c `kp\x14a\x04tW\x80c\"\xBF@\xE4\x14a\x04\x9BW`\0\x80\xFD[\x80c\x13-Ig\x14a\x03\xEFW\x80c\x13d9\xDD\x14a\x04\x02W\x80c\x15\"\xBF\x02\x14a\x04\x15W`\0\x80\xFD[\x80c\x04I\xCA9\x14a\x03GW\x80c\x04\xA4\xF9y\x14a\x03mW\x80c\x0B\x9FHz\x14a\x03\x94W\x80c\r\xD8\xDD\x02\x14a\x03\xA7W\x80c\x0FX\x9EY\x14a\x03\xC7W\x80c\x10\xD6z/\x14a\x03\xDCW[`\0\x80\xFD[a\x03Za\x03U6`\x04aHNV[a\tIV[`@Q\x90\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\x03Z\x7F\x14\xBD\xE6t\xC9\xF6K*\xD0\x0E\xAA\xEEJ\x8B\xED\x1F\xAB\xEF5\xC7P~<[\x9C\xFC\x946\x90\x9A-\xAD\x81V[a\x03Za\x03\xA26`\x04aH\xB4V[a\t\xCEV[a\x03\xBAa\x03\xB56`\x04aHNV[a\n\x90V[`@Qa\x03d\x91\x90aI\x0FV[a\x03\xDAa\x03\xD56`\x04aI\xACV[a\r\xF9V[\0[a\x03\xDAa\x03\xEA6`\x04aI\xFFV[a\x0F>V[a\x03\xDAa\x03\xFD6`\x04aJ#V[a\x0F\xF1V[a\x03\xDAa\x04\x106`\x04aJdV[a\x10\xA8V[a\x03\xDAa\x04#6`\x04aJ}V[a\x11\xE7V[a\x03Za\x0466`\x04aI\xFFV[`\x01`\x01`\xA0\x1B\x03\x16`\0\x90\x81R`\x99` R`@\x90 `\x01\x01T`\x01`\xA0\x1B\x90\x04c\xFF\xFF\xFF\xFF\x16\x90V[a\x03Za\x04o6`\x04aJ#V[a\x11\xFBV[a\x03Z\x7F\x8C\xAD\x95h{\xA8,,\xE5\x0Et\xF7\xB7Td^Q\x17\xC3\xA5\xBE\xC8\x15\x1C\x07&\xD5\x85y\x80\xA8f\x81V[a\x03\xDAa\x04\xA96`\x04aJ\xE8V[a\x12)V[a\x03\xDAa\x04\xBC6`\x04aJ#V[a\x13mV[a\x03Za\x04\xCF6`\x04aI\xFFV[`\x9B` R`\0\x90\x81R`@\x90 T\x81V[a\x03\xDAa\x04\xEF6`\x04aK\x8FV[a\x14\x1DV[a\x05\x1B\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01a\x03dV[a\x05\x1Ba\x05A6`\x04aI\xFFV[`\x01`\x01`\xA0\x1B\x03\x90\x81\x16`\0\x90\x81R`\x99` R`@\x90 `\x01\x01T\x16\x90V[a\x05ua\x05p6`\x04aI\xFFV[a\x15ZV[`@Q\x90\x15\x15\x81R` \x01a\x03dV[a\x03Z\x7F9\x11\x1B\xC4\xA4\xD6\x88\xE1\xF6\x85\x12=t\x97\xD4aSp\x15*\x8E\xE4\xA0Y>d{\xD0j\xD8\xBB\x0B\x81V[a\x05\x1B\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x03Zb\x13\xC6\x80\x81V[a\x03\xDAa\x15zV[a\x03Za\x05\xF36`\x04aN\x8CV[a\x16AV[a\x05ua\x06\x066`\x04aN\xC8V[`fT`\x01`\xFF\x90\x92\x16\x91\x90\x91\x1B\x90\x81\x16\x14\x90V[`fTa\x03ZV[a\x03\xDAa\x0616`\x04aN\xF9V[a\x16qV[a\x03\xDAa\x06D6`\x04aJdV[a\x17\x0CV[a\x05\x1Ba\x06W6`\x04aI\xFFV[`\x9A` R`\0\x90\x81R`@\x90 T`\x01`\x01`\xA0\x1B\x03\x16\x81V[a\x05ua\x06\x806`\x04aI\xFFV[a\x17\x1DV[a\x03\xDAa\x17WV[a\x03Za\x06\x9B6`\x04aO\x88V[`\x98` \x90\x81R`\0\x92\x83R`@\x80\x84 \x90\x91R\x90\x82R\x90 T\x81V[a\x03\xDAa\x06\xC66`\x04aPiV[a\x17kV[`eTa\x05\x1B\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`3T`\x01`\x01`\xA0\x1B\x03\x16a\x05\x1BV[a\x07\x02a\x06\xFD6`\x04aP\xF9V[a\x19\x97V[`@Qa\x03d\x91\x90aQ\x83V[a\x05\x1Bs\xBE\xAC\x0E\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEB\xEA\xC0\x81V[a\x03\xDAa\x0786`\x04aQ\x96V[a\x1AqV[a\x03Za\x07K6`\x04aI\xFFV[`\x9F` R`\0\x90\x81R`@\x90 T\x81V[a\x05\x1B\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x05ua\x07\x926`\x04aJdV[`\x9E` R`\0\x90\x81R`@\x90 T`\xFF\x16\x81V[a\x05ua\x07\xB56`\x04aQ\xCBV[`\x9C` \x90\x81R`\0\x92\x83R`@\x80\x84 \x90\x91R\x90\x82R\x90 T`\xFF\x16\x81V[a\x03Z`\x9DT\x81V[a\x03Za\x07\xEC6`\x04aI\xFFV[`\xA1` R`\0\x90\x81R`@\x90 T\x81V[a\x08na\x08\x0C6`\x04aI\xFFV[`@\x80Q``\x80\x82\x01\x83R`\0\x80\x83R` \x80\x84\x01\x82\x90R\x92\x84\x01\x81\x90R`\x01`\x01`\xA0\x1B\x03\x94\x85\x16\x81R`\x99\x83R\x83\x90 \x83Q\x91\x82\x01\x84R\x80T\x85\x16\x82R`\x01\x01T\x93\x84\x16\x91\x81\x01\x91\x90\x91R`\x01`\xA0\x1B\x90\x92\x04c\xFF\xFF\xFF\xFF\x16\x90\x82\x01R\x90V[`@\x80Q\x82Q`\x01`\x01`\xA0\x1B\x03\x90\x81\x16\x82R` \x80\x85\x01Q\x90\x91\x16\x90\x82\x01R\x91\x81\x01Qc\xFF\xFF\xFF\xFF\x16\x90\x82\x01R``\x01a\x03dV[a\x03Za\x08\xB26`\x04aQ\xF7V[a\x1BCV[a\x03Zb\x03K\xC0\x81V[a\x08\xD4a\x08\xCF6`\x04aI\xFFV[a\x1B\xFCV[`@Qa\x03d\x92\x91\x90aRxV[a\x03\xBAa\x08\xF06`\x04aI\xFFV[a\x1F\xB4V[a\x03\xDAa\t\x036`\x04aR\x9DV[a$xV[a\x03\xDAa\t\x166`\x04aR\xF5V[a%\x95V[a\x03\xDAa\t)6`\x04aI\xFFV[a&&V[a\x03Za&\x9CV[a\x03\xDAa\tD6`\x04aJdV[a&\xDAV[`\x9DT`\0\x90\x81[\x83\x81\x10\x15a\t\xC6W`\0`\xA1`\0\x87\x87\x85\x81\x81\x10a\tqWa\tqaS\x11V[\x90P` \x02\x01` \x81\x01\x90a\t\x86\x91\x90aI\xFFV[`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x01\x90\x81R` \x01`\0 T\x90P\x82\x81\x11\x15a\t\xB5W\x80\x92P[Pa\t\xBF\x81aS=V[\x90Pa\tQV[P\x93\x92PPPV[`@\x80Q\x7F\x14\xBD\xE6t\xC9\xF6K*\xD0\x0E\xAA\xEEJ\x8B\xED\x1F\xAB\xEF5\xC7P~<[\x9C\xFC\x946\x90\x9A-\xAD` \x80\x83\x01\x91\x90\x91R`\x01`\x01`\xA0\x1B\x03\x86\x81\x16\x83\x85\x01R\x88\x81\x16``\x84\x01R\x87\x16`\x80\x83\x01R`\xA0\x82\x01\x85\x90R`\xC0\x80\x83\x01\x85\x90R\x83Q\x80\x84\x03\x90\x91\x01\x81R`\xE0\x90\x92\x01\x90\x92R\x80Q\x91\x01 `\0\x90\x81a\nLa&\x9CV[`@Qa\x19\x01`\xF0\x1B` \x82\x01R`\"\x81\x01\x91\x90\x91R`B\x81\x01\x83\x90R`b\x01`@\x80Q\x80\x83\x03`\x1F\x19\x01\x81R\x91\x90R\x80Q` \x90\x91\x01 \x98\x97PPPPPPPPV[`fT``\x90`\x01\x90`\x02\x90\x81\x16\x14\x15a\n\xC5W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aSXV[`@Q\x80\x91\x03\x90\xFD[`\0\x83`\x01`\x01`@\x1B\x03\x81\x11\x15a\n\xDFWa\n\xDFaL1V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x0B\x08W\x81` \x01` \x82\x02\x806\x837\x01\x90P[P3`\0\x90\x81R`\x9A` R`@\x81 T\x91\x92P`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90[\x85\x81\x10\x15a\r\xEEW\x86\x86\x82\x81\x81\x10a\x0BCWa\x0BCaS\x11V[\x90P` \x02\x81\x01\x90a\x0BU\x91\x90aS\x8FV[a\x0Bc\x90` \x81\x01\x90aS\xAFV[\x90P\x87\x87\x83\x81\x81\x10a\x0BwWa\x0BwaS\x11V[\x90P` \x02\x81\x01\x90a\x0B\x89\x91\x90aS\x8FV[a\x0B\x93\x90\x80aS\xAFV[\x90P\x14a\x0C\x08W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FDelegationManager.queueWithdrawa`D\x82\x01R\x7Fl: input length mismatch\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\n\xBCV[3\x87\x87\x83\x81\x81\x10a\x0C\x1BWa\x0C\x1BaS\x11V[\x90P` \x02\x81\x01\x90a\x0C-\x91\x90aS\x8FV[a\x0C>\x90``\x81\x01\x90`@\x01aI\xFFV[`\x01`\x01`\xA0\x1B\x03\x16\x14a\x0C\xBAW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`<`$\x82\x01R\x7FDelegationManager.queueWithdrawa`D\x82\x01R\x7Fl: withdrawer must be staker\0\0\0\0`d\x82\x01R`\x84\x01a\n\xBCV[a\r\xBF3\x83\x89\x89\x85\x81\x81\x10a\x0C\xD1Wa\x0C\xD1aS\x11V[\x90P` \x02\x81\x01\x90a\x0C\xE3\x91\x90aS\x8FV[a\x0C\xF4\x90``\x81\x01\x90`@\x01aI\xFFV[\x8A\x8A\x86\x81\x81\x10a\r\x06Wa\r\x06aS\x11V[\x90P` \x02\x81\x01\x90a\r\x18\x91\x90aS\x8FV[a\r\"\x90\x80aS\xAFV[\x80\x80` \x02` \x01`@Q\x90\x81\x01`@R\x80\x93\x92\x91\x90\x81\x81R` \x01\x83\x83` \x02\x80\x82\x847`\0\x92\x01\x91\x90\x91RP\x8E\x92P\x8D\x91P\x88\x90P\x81\x81\x10a\rhWa\rhaS\x11V[\x90P` \x02\x81\x01\x90a\rz\x91\x90aS\x8FV[a\r\x88\x90` \x81\x01\x90aS\xAFV[\x80\x80` \x02` \x01`@Q\x90\x81\x01`@R\x80\x93\x92\x91\x90\x81\x81R` \x01\x83\x83` \x02\x80\x82\x847`\0\x92\x01\x91\x90\x91RPa(6\x92PPPV[\x83\x82\x81Q\x81\x10a\r\xD1Wa\r\xD1aS\x11V[` \x90\x81\x02\x91\x90\x91\x01\x01R\x80a\r\xE6\x81aS=V[\x91PPa\x0B)V[P\x90\x95\x94PPPPPV[a\x0E\x023a\x15ZV[\x15a\x0E\x88W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`J`$\x82\x01R\x7FDelegationManager.registerAsOper`D\x82\x01R\x7Fator: caller is already actively`d\x82\x01Ri\x08\x19\x19[\x19Y\xD8]\x19Y`\xB2\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[a\x0E\x923\x84a-\xF6V[`@\x80Q\x80\x82\x01\x90\x91R``\x81R`\0` \x82\x01Ra\x0E\xB43\x80\x83`\0a/\xE9V[3`\x01`\x01`\xA0\x1B\x03\x16\x7F\x8E\x84\x85X:#\x10\xD4\x1F|\x82\xB9B}\x0B\xD4\x9B\xADt\xBB\x9C\xFF\x9D4\x02\xA2\x9D\x8F\x9B(\xA0\xE2\x85`@Qa\x0E\xED\x91\x90aS\xF8V[`@Q\x80\x91\x03\x90\xA23`\x01`\x01`\xA0\x1B\x03\x16\x7F\x02\xA9\x19\xED\x0E*\xCA\xD1\xDD\x90\xF1~\xF2\xFAJ\xE5F.\xE13\x91p\x03J\x851\xCC\xA4\xB6p\x80\x90\x84\x84`@Qa\x0F0\x92\x91\x90aTJV[`@Q\x80\x91\x03\x90\xA2PPPPV[`e`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0F\x91W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0F\xB5\x91\x90aTyV[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x0F\xE5W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aT\x96V[a\x0F\xEE\x81a2\x7FV[PV[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14\x80a\x10PWP3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14[a\x10lW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aT\xE0V[a\x10u\x83a\x15ZV[\x15a\x10\xA3W`\x01`\x01`\xA0\x1B\x03\x80\x84\x16`\0\x90\x81R`\x9A` R`@\x90 T\x16a\x10\xA1\x81\x85\x85\x85a3vV[P[PPPV[`eT`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x10\xF0W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x11\x14\x91\x90aU=V[a\x110W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aUZV[`fT\x81\x81\x16\x14a\x11\xA9W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.pause: invalid attempt `D\x82\x01R\x7Fto unpause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\n\xBCV[`f\x81\x90U`@Q\x81\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01[`@Q\x80\x91\x03\x90\xA2PV[a\x11\xEFa3\xF1V[a\x10\xA1\x84\x84\x84\x84a4KV[`\x01`\x01`\xA0\x1B\x03\x83\x16`\0\x90\x81R`\x9B` R`@\x81 Ta\x12 \x85\x82\x86\x86a\x1BCV[\x95\x94PPPPPV[`\0Ta\x01\0\x90\x04`\xFF\x16\x15\x80\x80\x15a\x12IWP`\0T`\x01`\xFF\x90\x91\x16\x10[\x80a\x12cWP0;\x15\x80\x15a\x12cWP`\0T`\xFF\x16`\x01\x14[a\x12\xC6W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`.`$\x82\x01R\x7FInitializable: contract is alrea`D\x82\x01Rm\x19\x1EH\x1A[\x9A]\x1AX[\x1A^\x99Y`\x92\x1B`d\x82\x01R`\x84\x01a\n\xBCV[`\0\x80T`\xFF\x19\x16`\x01\x17\x90U\x80\x15a\x12\xE9W`\0\x80Ta\xFF\0\x19\x16a\x01\0\x17\x90U[a\x12\xF3\x88\x88a6qV[a\x12\xFBa7[V[`\x97Ua\x13\x07\x89a7\xF2V[a\x13\x10\x86a8DV[a\x13\x1C\x85\x85\x85\x85a4KV[\x80\x15a\x13bW`\0\x80Ta\xFF\0\x19\x16\x90U`@Q`\x01\x81R\x7F\x7F&\xB8?\xF9n\x1F+jh/\x138R\xF6y\x8A\t\xC4e\xDA\x95\x92\x14`\xCE\xFB8G@$\x98\x90` \x01`@Q\x80\x91\x03\x90\xA1[PPPPPPPPPV[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14\x80a\x13\xCCWP3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14[a\x13\xE8W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aT\xE0V[a\x13\xF1\x83a\x15ZV[\x15a\x10\xA3W`\x01`\x01`\xA0\x1B\x03\x80\x84\x16`\0\x90\x81R`\x9A` R`@\x90 T\x16a\x10\xA1\x81\x85\x85\x85a9>V[`fT`\x02\x90`\x04\x90\x81\x16\x14\x15a\x14FW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aSXV[`\x02`\xC9T\x14\x15a\x14\x99W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1F`$\x82\x01R\x7FReentrancyGuard: reentrant call\0`D\x82\x01R`d\x01a\n\xBCV[`\x02`\xC9U`\0[\x88\x81\x10\x15a\x15IWa\x159\x8A\x8A\x83\x81\x81\x10a\x14\xBEWa\x14\xBEaS\x11V[\x90P` \x02\x81\x01\x90a\x14\xD0\x91\x90aU\xA2V[\x89\x89\x84\x81\x81\x10a\x14\xE2Wa\x14\xE2aS\x11V[\x90P` \x02\x81\x01\x90a\x14\xF4\x91\x90aS\xAFV[\x89\x89\x86\x81\x81\x10a\x15\x06Wa\x15\x06aS\x11V[\x90P` \x02\x015\x88\x88\x87\x81\x81\x10a\x15\x1FWa\x15\x1FaS\x11V[\x90P` \x02\x01` \x81\x01\x90a\x154\x91\x90aU\xB8V[a9\xB9V[a\x15B\x81aS=V[\x90Pa\x14\xA1V[PP`\x01`\xC9UPPPPPPPPV[`\x01`\x01`\xA0\x1B\x03\x90\x81\x16`\0\x90\x81R`\x9A` R`@\x90 T\x16\x15\x15\x90V[`eT`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x15\xC2W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x15\xE6\x91\x90aU=V[a\x16\x02W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aUZV[`\0\x19`f\x81\x90U`@Q\x90\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01`@Q\x80\x91\x03\x90\xA2V[`\0\x81`@Q` \x01a\x16T\x91\x90aVIV[`@Q` \x81\x83\x03\x03\x81R\x90`@R\x80Q\x90` \x01 \x90P\x91\x90PV[`fT`\x02\x90`\x04\x90\x81\x16\x14\x15a\x16\x9AW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aSXV[`\x02`\xC9T\x14\x15a\x16\xEDW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1F`$\x82\x01R\x7FReentrancyGuard: reentrant call\0`D\x82\x01R`d\x01a\n\xBCV[`\x02`\xC9Ua\x16\xFF\x86\x86\x86\x86\x86a9\xB9V[PP`\x01`\xC9UPPPPV[a\x17\x14a3\xF1V[a\x0F\xEE\x81a8DV[`\0`\x01`\x01`\xA0\x1B\x03\x82\x16\x15\x80\x15\x90a\x17QWP`\x01`\x01`\xA0\x1B\x03\x80\x83\x16`\0\x81\x81R`\x9A` R`@\x90 T\x90\x91\x16\x14[\x92\x91PPV[a\x17_a3\xF1V[a\x17i`\0a7\xF2V[V[B\x83` \x01Q\x10\x15a\x17\xEFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`A`$\x82\x01R\x7FDelegationManager.delegateToBySi`D\x82\x01R\x7Fgnature: staker signature expire`d\x82\x01R`\x19`\xFA\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[a\x17\xF8\x85a\x15ZV[\x15a\x18\x81W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`M`$\x82\x01R\x7FDelegationManager.delegateToBySi`D\x82\x01R\x7Fgnature: staker is already activ`d\x82\x01Rl\x19[\x1EH\x19\x19[\x19Y\xD8]\x19Y`\x9A\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[a\x18\x8A\x84a\x17\x1DV[a\x19\x16W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`Q`$\x82\x01R\x7FDelegationManager.delegateToBySi`D\x82\x01R\x7Fgnature: operator is not registe`d\x82\x01Rp92\xB2\x104\xB7\x10\"\xB4\xB3\xB2\xB7&0\xBC\xB2\xB9`y\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[`\0`\x9B`\0\x87`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x01\x90\x81R` \x01`\0 T\x90P`\0a\x19R\x87\x83\x88\x88` \x01Qa\x1BCV[`\x01`\x01`\xA0\x1B\x03\x88\x16`\0\x90\x81R`\x9B` R`@\x90 `\x01\x84\x01\x90U\x85Q\x90\x91Pa\x19\x82\x90\x88\x90\x83\x90aA\xA3V[a\x19\x8E\x87\x87\x86\x86a/\xE9V[PPPPPPPV[```\0\x82Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\x19\xB4Wa\x19\xB4aL1V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x19\xDDW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P`\0[\x83Q\x81\x10\x15a\t\xC6W`\x01`\x01`\xA0\x1B\x03\x85\x16`\0\x90\x81R`\x98` R`@\x81 \x85Q\x90\x91\x90\x86\x90\x84\x90\x81\x10a\x1A\x1BWa\x1A\x1BaS\x11V[` \x02` \x01\x01Q`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x01\x90\x81R` \x01`\0 T\x82\x82\x81Q\x81\x10a\x1AVWa\x1AVaS\x11V[` \x90\x81\x02\x91\x90\x91\x01\x01Ra\x1Aj\x81aS=V[\x90Pa\x19\xE3V[a\x1Az3a\x17\x1DV[a\x1A\xFCW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`G`$\x82\x01R\x7FDelegationManager.updateOperator`D\x82\x01R\x7FMetadataURI: caller must be an o`d\x82\x01Rf82\xB90\xBA7\xB9`\xC9\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[3`\x01`\x01`\xA0\x1B\x03\x16\x7F\x02\xA9\x19\xED\x0E*\xCA\xD1\xDD\x90\xF1~\xF2\xFAJ\xE5F.\xE13\x91p\x03J\x851\xCC\xA4\xB6p\x80\x90\x83\x83`@Qa\x1B7\x92\x91\x90aTJV[`@Q\x80\x91\x03\x90\xA2PPV[`@\x80Q\x7F9\x11\x1B\xC4\xA4\xD6\x88\xE1\xF6\x85\x12=t\x97\xD4aSp\x15*\x8E\xE4\xA0Y>d{\xD0j\xD8\xBB\x0B` \x80\x83\x01\x91\x90\x91R`\x01`\x01`\xA0\x1B\x03\x87\x81\x16\x83\x85\x01R\x85\x16``\x83\x01R`\x80\x82\x01\x86\x90R`\xA0\x80\x83\x01\x85\x90R\x83Q\x80\x84\x03\x90\x91\x01\x81R`\xC0\x90\x92\x01\x90\x92R\x80Q\x91\x01 `\0\x90\x81a\x1B\xB9a&\x9CV[`@Qa\x19\x01`\xF0\x1B` \x82\x01R`\"\x81\x01\x91\x90\x91R`B\x81\x01\x83\x90R`b\x01`@\x80Q\x80\x83\x03`\x1F\x19\x01\x81R\x91\x90R\x80Q` \x90\x91\x01 \x97\x96PPPPPPPV[`@Qc`\xF4\x06+`\xE0\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x82\x81\x16`\x04\x83\x01R``\x91\x82\x91`\0\x91\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x90\x91\x16\x90c`\xF4\x06+\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x1ClW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x1C\x90\x91\x90aV\\V[`@Qc\x94\xF6I\xDD`\xE0\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x86\x81\x16`\x04\x83\x01R\x91\x92P`\0\x91\x82\x91\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x90\x91\x16\x90c\x94\xF6I\xDD\x90`$\x01`\0`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x1D\0W=`\0\x80>=`\0\xFD[PPPP`@Q=`\0\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\x1D(\x91\x90\x81\x01\x90aV\xD0V[\x91P\x91P`\0\x83\x13a\x1D?W\x90\x95\x90\x94P\x92PPPV[``\x80\x83Q`\0\x14\x15a\x1D\xF9W`@\x80Q`\x01\x80\x82R\x81\x83\x01\x90\x92R\x90` \x80\x83\x01\x90\x806\x837PP`@\x80Q`\x01\x80\x82R\x81\x83\x01\x90\x92R\x92\x94P\x90P` \x80\x83\x01\x90\x806\x837\x01\x90PP\x90Ps\xBE\xAC\x0E\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEB\xEA\xC0\x82`\0\x81Q\x81\x10a\x1D\xB4Wa\x1D\xB4aS\x11V[` \x02` \x01\x01\x90`\x01`\x01`\xA0\x1B\x03\x16\x90\x81`\x01`\x01`\xA0\x1B\x03\x16\x81RPP\x84\x81`\0\x81Q\x81\x10a\x1D\xE8Wa\x1D\xE8aS\x11V[` \x02` \x01\x01\x81\x81RPPa\x1F\xA7V[\x83Qa\x1E\x06\x90`\x01aW\x8AV[`\x01`\x01`@\x1B\x03\x81\x11\x15a\x1E\x1DWa\x1E\x1DaL1V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x1EFW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x91P\x81Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\x1EbWa\x1EbaL1V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x1E\x8BW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P`\0[\x84Q\x81\x10\x15a\x1F%W\x84\x81\x81Q\x81\x10a\x1E\xACWa\x1E\xACaS\x11V[` \x02` \x01\x01Q\x83\x82\x81Q\x81\x10a\x1E\xC6Wa\x1E\xC6aS\x11V[` \x02` \x01\x01\x90`\x01`\x01`\xA0\x1B\x03\x16\x90\x81`\x01`\x01`\xA0\x1B\x03\x16\x81RPP\x83\x81\x81Q\x81\x10a\x1E\xF8Wa\x1E\xF8aS\x11V[` \x02` \x01\x01Q\x82\x82\x81Q\x81\x10a\x1F\x12Wa\x1F\x12aS\x11V[` \x90\x81\x02\x91\x90\x91\x01\x01R`\x01\x01a\x1E\x91V[Ps\xBE\xAC\x0E\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEB\xEA\xC0\x82`\x01\x84Qa\x1FJ\x91\x90aW\xA2V[\x81Q\x81\x10a\x1FZWa\x1FZaS\x11V[` \x02` \x01\x01\x90`\x01`\x01`\xA0\x1B\x03\x16\x90\x81`\x01`\x01`\xA0\x1B\x03\x16\x81RPP\x84\x81`\x01\x84Qa\x1F\x8A\x91\x90aW\xA2V[\x81Q\x81\x10a\x1F\x9AWa\x1F\x9AaS\x11V[` \x02` \x01\x01\x81\x81RPP[\x90\x97\x90\x96P\x94PPPPPV[`fT``\x90`\x01\x90`\x02\x90\x81\x16\x14\x15a\x1F\xE0W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aSXV[a\x1F\xE9\x83a\x15ZV[a iW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`D`$\x82\x01\x81\x90R\x7FDelegationManager.undelegate: st\x90\x82\x01R\x7Faker must be delegated to undele`d\x82\x01Rcgate`\xE0\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[a r\x83a\x17\x1DV[\x15a \xE5W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`=`$\x82\x01R\x7FDelegationManager.undelegate: op`D\x82\x01R\x7Ferators cannot be undelegated\0\0\0`d\x82\x01R`\x84\x01a\n\xBCV[`\x01`\x01`\xA0\x1B\x03\x83\x16a!aW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`<`$\x82\x01R\x7FDelegationManager.undelegate: ca`D\x82\x01R\x7Fnnot undelegate zero address\0\0\0\0`d\x82\x01R`\x84\x01a\n\xBCV[`\x01`\x01`\xA0\x1B\x03\x80\x84\x16`\0\x81\x81R`\x9A` R`@\x90 T\x90\x91\x16\x903\x14\x80a!\x94WP3`\x01`\x01`\xA0\x1B\x03\x82\x16\x14[\x80a!\xBBWP`\x01`\x01`\xA0\x1B\x03\x81\x81\x16`\0\x90\x81R`\x99` R`@\x90 `\x01\x01T\x163\x14[a\"-W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`=`$\x82\x01R\x7FDelegationManager.undelegate: ca`D\x82\x01R\x7Fller cannot undelegate staker\0\0\0`d\x82\x01R`\x84\x01a\n\xBCV[`\0\x80a\"9\x86a\x1B\xFCV[\x90\x92P\x90P3`\x01`\x01`\xA0\x1B\x03\x87\x16\x14a\"\x8FW\x82`\x01`\x01`\xA0\x1B\x03\x16\x86`\x01`\x01`\xA0\x1B\x03\x16\x7F\xF0\xED\xDF\x07\xE6\xEA\x14\xF3\x88\xB4~\x1E\x94\xA0\xF4d\xEC\xBD\x9E\xEDAq\x13\x0E\x0F\xC0\xE9\x9F\xB4\x03\n\x8A`@Q`@Q\x80\x91\x03\x90\xA3[\x82`\x01`\x01`\xA0\x1B\x03\x16\x86`\x01`\x01`\xA0\x1B\x03\x16\x7F\xFE\xE3\tf\xA2V\xB7\x1E\x14\xBC\x0E\xBF\xC9C\x15\xE2\x8E\xF4\xA9zq1\xA9\xE2\xB7\xA3\x10\xA7:\xF4Fv`@Q`@Q\x80\x91\x03\x90\xA3`\x01`\x01`\xA0\x1B\x03\x86\x16`\0\x90\x81R`\x9A` R`@\x90 \x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x90U\x81Qa#\x11W`@\x80Q`\0\x81R` \x81\x01\x90\x91R\x94Pa$oV[\x81Q`\x01`\x01`@\x1B\x03\x81\x11\x15a#*Wa#*aL1V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a#SW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x94P`\0[\x82Q\x81\x10\x15a$mW`@\x80Q`\x01\x80\x82R\x81\x83\x01\x90\x92R`\0\x91` \x80\x83\x01\x90\x806\x837PP`@\x80Q`\x01\x80\x82R\x81\x83\x01\x90\x92R\x92\x93P`\0\x92\x91P` \x80\x83\x01\x90\x806\x837\x01\x90PP\x90P\x84\x83\x81Q\x81\x10a#\xB9Wa#\xB9aS\x11V[` \x02` \x01\x01Q\x82`\0\x81Q\x81\x10a#\xD4Wa#\xD4aS\x11V[` \x02` \x01\x01\x90`\x01`\x01`\xA0\x1B\x03\x16\x90\x81`\x01`\x01`\xA0\x1B\x03\x16\x81RPP\x83\x83\x81Q\x81\x10a$\x06Wa$\x06aS\x11V[` \x02` \x01\x01Q\x81`\0\x81Q\x81\x10a$!Wa$!aS\x11V[` \x02` \x01\x01\x81\x81RPPa$:\x89\x87\x8B\x85\x85a(6V[\x88\x84\x81Q\x81\x10a$LWa$LaS\x11V[` \x02` \x01\x01\x81\x81RPPPP\x80\x80a$e\x90aS=V[\x91PPa#YV[P[PPPP\x91\x90PV[a$\x813a\x15ZV[\x15a$\xFFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`B`$\x82\x01R\x7FDelegationManager.delegateTo: st`D\x82\x01R\x7Faker is already actively delegat`d\x82\x01Ra\x19Y`\xF2\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[a%\x08\x83a\x17\x1DV[a%\x89W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`F`$\x82\x01R\x7FDelegationManager.delegateTo: op`D\x82\x01R\x7Ferator is not registered in Eige`d\x82\x01Re7&0\xBC\xB2\xB9`\xD1\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[a\x10\xA33\x84\x84\x84a/\xE9V[a%\x9E3a\x17\x1DV[a&\x1CW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`C`$\x82\x01R\x7FDelegationManager.modifyOperator`D\x82\x01R\x7FDetails: caller must be an opera`d\x82\x01Rb:7\xB9`\xE9\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[a\x0F\xEE3\x82a-\xF6V[a&.a3\xF1V[`\x01`\x01`\xA0\x1B\x03\x81\x16a&\x93W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01a\n\xBCV[a\x0F\xEE\x81a7\xF2V[`\0\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0F\x14\x15a&\xCDWP`\x97T\x90V[a&\xD5a7[V[\x90P\x90V[`e`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a'-W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a'Q\x91\x90aTyV[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a'\x81W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aT\x96V[`fT\x19\x81\x19`fT\x19\x16\x14a'\xFFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.unpause: invalid attemp`D\x82\x01R\x7Ft to pause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\n\xBCV[`f\x81\x90U`@Q\x81\x81R3\x90\x7F5\x82\xD1\x82\x8E&\xBFV\xBD\x80\x15\x02\xBC\x02\x1A\xC0\xBC\x8A\xFBW\xC8&\xE4\x98kEY<\x8F\xAD8\x9C\x90` \x01a\x11\xDCV[`\0`\x01`\x01`\xA0\x1B\x03\x86\x16a(\xCDW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`P`$\x82\x01R\x7FDelegationManager._removeSharesA`D\x82\x01R\x7FndQueueWithdrawal: staker cannot`d\x82\x01Ro be zero address`\x80\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[\x82Qa)WW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`M`$\x82\x01R\x7FDelegationManager._removeSharesA`D\x82\x01R\x7FndQueueWithdrawal: strategies ca`d\x82\x01Rlnnot be empty`\x98\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[`\0[\x83Q\x81\x10\x15a-\x04W`\x01`\x01`\xA0\x1B\x03\x86\x16\x15a)\xB0Wa)\xB0\x86\x88\x86\x84\x81Q\x81\x10a)\x89Wa)\x89aS\x11V[` \x02` \x01\x01Q\x86\x85\x81Q\x81\x10a)\xA3Wa)\xA3aS\x11V[` \x02` \x01\x01Qa3vV[s\xBE\xAC\x0E\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEB\xEA\xC0`\x01`\x01`\xA0\x1B\x03\x16\x84\x82\x81Q\x81\x10a)\xE0Wa)\xE0aS\x11V[` \x02` \x01\x01Q`\x01`\x01`\xA0\x1B\x03\x16\x14\x15a*\xA9W\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\xBE\xFF\xBB\x89\x88\x85\x84\x81Q\x81\x10a*9Wa*9aS\x11V[` \x02` \x01\x01Q`@Q\x83c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01a*r\x92\x91\x90`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x82R` \x82\x01R`@\x01\x90V[`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a*\x8CW`\0\x80\xFD[PZ\xF1\x15\x80\x15a*\xA0W=`\0\x80>=`\0\xFD[PPPPa,\xFCV[\x84`\x01`\x01`\xA0\x1B\x03\x16\x87`\x01`\x01`\xA0\x1B\x03\x16\x14\x80a+{WP\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\x9BM\xA0=\x85\x83\x81Q\x81\x10a+\x05Wa+\x05aS\x11V[` \x02` \x01\x01Q`@Q\x82c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01a+8\x91\x90`\x01`\x01`\xA0\x1B\x03\x91\x90\x91\x16\x81R` \x01\x90V[` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a+UW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a+y\x91\x90aU=V[\x15[a,GW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x84`$\x82\x01\x81\x90R\x7FDelegationManager._removeSharesA`D\x83\x01R\x7FndQueueWithdrawal: withdrawer mu`d\x83\x01R\x7Fst be same address as staker if \x90\x82\x01R\x7FthirdPartyTransfersForbidden are`\xA4\x82\x01Rc\x08\x1C\xD9]`\xE2\x1B`\xC4\x82\x01R`\xE4\x01a\n\xBCV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\x8C\x80\xD4\xE5\x88\x86\x84\x81Q\x81\x10a,\x89Wa,\x89aS\x11V[` \x02` \x01\x01Q\x86\x85\x81Q\x81\x10a,\xA3Wa,\xA3aS\x11V[` \x02` \x01\x01Q`@Q\x84c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01a,\xC9\x93\x92\x91\x90aW\xB9V[`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a,\xE3W`\0\x80\xFD[PZ\xF1\x15\x80\x15a,\xF7W=`\0\x80>=`\0\xFD[PPPP[`\x01\x01a)ZV[P`\x01`\x01`\xA0\x1B\x03\x86\x16`\0\x90\x81R`\x9F` R`@\x81 \x80T\x91\x82\x91\x90a-,\x83aS=V[\x91\x90PUP`\0`@Q\x80`\xE0\x01`@R\x80\x89`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x01\x88`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x01\x87`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x01\x83\x81R` \x01Cc\xFF\xFF\xFF\xFF\x16\x81R` \x01\x86\x81R` \x01\x85\x81RP\x90P`\0a-\x94\x82a\x16AV[`\0\x81\x81R`\x9E` R`@\x90\x81\x90 \x80T`\xFF\x19\x16`\x01\x17\x90UQ\x90\x91P\x7F\x90\t\xAB\x15>\x80\x14\xFB\xFB\x02\xF2!\x7F\\\xDEz\xA7\xF9\xADsJ\xE8\\\xA3\xEE?L\xA2\xFD\xD4\x99\xF9\x90a-\xE2\x90\x83\x90\x85\x90aW\xDDV[`@Q\x80\x91\x03\x90\xA1\x98\x97PPPPPPPPV[b\x13\xC6\x80a.\n``\x83\x01`@\x84\x01aW\xF6V[c\xFF\xFF\xFF\xFF\x16\x11\x15a.\xBFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`l`$\x82\x01R\x7FDelegationManager._setOperatorDe`D\x82\x01R\x7Ftails: stakerOptOutWindowBlocks `d\x82\x01R\x7Fcannot be > MAX_STAKER_OPT_OUT_W`\x84\x82\x01RkINDOW_BLOCKS`\xA0\x1B`\xA4\x82\x01R`\xC4\x01a\n\xBCV[`\x01`\x01`\xA0\x1B\x03\x82\x16`\0\x90\x81R`\x99` R`@\x90\x81\x90 `\x01\x01T`\x01`\xA0\x1B\x90\x04c\xFF\xFF\xFF\xFF\x16\x90a.\xFB\x90``\x84\x01\x90\x84\x01aW\xF6V[c\xFF\xFF\xFF\xFF\x16\x10\x15a/\x91W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`S`$\x82\x01R\x7FDelegationManager._setOperatorDe`D\x82\x01R\x7Ftails: stakerOptOutWindowBlocks `d\x82\x01Rr\x18\xD8[\x9B\x9B\xDD\x08\x18\x99H\x19\x19X\xDC\x99X\\\xD9Y`j\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[`\x01`\x01`\xA0\x1B\x03\x82\x16`\0\x90\x81R`\x99` R`@\x90 \x81\x90a/\xB5\x82\x82aX3V[PP`@Q3\x90\x7F\xFE\xBE\\\xD2K,\xBC{\x06[\x9D\x0F\xDE\xB9\x04F\x1EJ\xFC\xFFW\xDDW\xAC\xDA\x1Ex2\x03\x1B\xA7\xAC\x90a\x1B7\x90\x84\x90aS\xF8V[`fT`\0\x90`\x01\x90\x81\x16\x14\x15a0\x12W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aSXV[`\x01`\x01`\xA0\x1B\x03\x80\x85\x16`\0\x90\x81R`\x99` R`@\x90 `\x01\x01T\x16\x80\x15\x80\x15\x90a0HWP3`\x01`\x01`\xA0\x1B\x03\x82\x16\x14\x15[\x80\x15a0]WP3`\x01`\x01`\xA0\x1B\x03\x86\x16\x14\x15[\x15a1\xCAWB\x84` \x01Q\x10\x15a0\xDCW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`7`$\x82\x01R\x7FDelegationManager._delegate: app`D\x82\x01R\x7Frover signature expired\0\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\n\xBCV[`\x01`\x01`\xA0\x1B\x03\x81\x16`\0\x90\x81R`\x9C` \x90\x81R`@\x80\x83 \x86\x84R\x90\x91R\x90 T`\xFF\x16\x15a1vW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`7`$\x82\x01R\x7FDelegationManager._delegate: app`D\x82\x01R\x7FroverSalt already spent\0\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\n\xBCV[`\x01`\x01`\xA0\x1B\x03\x81\x16`\0\x90\x81R`\x9C` \x90\x81R`@\x80\x83 \x86\x84R\x82R\x82 \x80T`\xFF\x19\x16`\x01\x17\x90U\x85\x01Qa1\xB7\x90\x88\x90\x88\x90\x85\x90\x88\x90a\t\xCEV[\x90Pa1\xC8\x82\x82\x87`\0\x01QaA\xA3V[P[`\x01`\x01`\xA0\x1B\x03\x86\x81\x16`\0\x81\x81R`\x9A` R`@\x80\x82 \x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x94\x8A\x16\x94\x85\x17\x90UQ\x7F\xC3\xEE\x9F._\xDA\x98\xE8\x06j\x1Ft[-\xF9(_Ao\xE9\x8C\xF2U\x9C\xD2\x14\x84\xB3\xD8t3\x04\x91\x90\xA3`\0\x80a2)\x88a\x1B\xFCV[\x91P\x91P`\0[\x82Q\x81\x10\x15a\x13bWa2w\x88\x8A\x85\x84\x81Q\x81\x10a2PWa2PaS\x11V[` \x02` \x01\x01Q\x85\x85\x81Q\x81\x10a2jWa2jaS\x11V[` \x02` \x01\x01Qa9>V[`\x01\x01a20V[`\x01`\x01`\xA0\x1B\x03\x81\x16a3\rW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`I`$\x82\x01R\x7FPausable._setPauserRegistry: new`D\x82\x01R\x7FPauserRegistry cannot be the zer`d\x82\x01Rho address`\xB8\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[`eT`@\x80Q`\x01`\x01`\xA0\x1B\x03\x92\x83\x16\x81R\x91\x83\x16` \x83\x01R\x7Fn\x9F\xCDS\x98\x96\xFC\xA6\x0E\x8B\x0F\x01\xDDX\x023\xE4\x8Ak\x0F}\xF0\x13\xB8\x9B\xA7\xF5e\x86\x9A\xCD\xB6\x91\x01`@Q\x80\x91\x03\x90\xA1`e\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UV[`\x01`\x01`\xA0\x1B\x03\x80\x85\x16`\0\x90\x81R`\x98` \x90\x81R`@\x80\x83 \x93\x86\x16\x83R\x92\x90R\x90\x81 \x80T\x83\x92\x90a3\xAD\x90\x84\x90aW\xA2V[\x92PP\x81\x90UP\x83`\x01`\x01`\xA0\x1B\x03\x16\x7Fi\t`\x007\xB7]{G3\xAE\xDD\x81TB\xB5\xEC\x01\x8A\x82wQ\xC82\xAA\xFFd\xEB\xA5\xD6\xD2\xDD\x84\x84\x84`@Qa\x0F0\x93\x92\x91\x90aW\xB9V[`3T`\x01`\x01`\xA0\x1B\x03\x163\x14a\x17iW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01\x81\x90R`$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R`d\x01a\n\xBCV[\x82\x81\x14a4\xD3W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`J`$\x82\x01R\x7FDelegationManager._setStrategyWi`D\x82\x01R\x7FthdrawalDelayBlocks: input lengt`d\x82\x01Ri\r\x04\r\xAD.m\xAC.\x8Cm`\xB3\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[\x82`\0[\x81\x81\x10\x15a6iW`\0\x86\x86\x83\x81\x81\x10a4\xF3Wa4\xF3aS\x11V[\x90P` \x02\x01` \x81\x01\x90a5\x08\x91\x90aI\xFFV[`\x01`\x01`\xA0\x1B\x03\x81\x16`\0\x90\x81R`\xA1` R`@\x81 T\x91\x92P\x86\x86\x85\x81\x81\x10a56Wa56aS\x11V[\x90P` \x02\x015\x90Pb\x03K\xC0\x81\x11\x15a5\xFAW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`s`$\x82\x01R\x7FDelegationManager._setStrategyWi`D\x82\x01R\x7FthdrawalDelayBlocks: _withdrawal`d\x82\x01R\x7FDelayBlocks cannot be > MAX_WITH`\x84\x82\x01RrDRAWAL_DELAY_BLOCKS`h\x1B`\xA4\x82\x01R`\xC4\x01a\n\xBCV[`\x01`\x01`\xA0\x1B\x03\x83\x16`\0\x81\x81R`\xA1` \x90\x81R`@\x91\x82\x90 \x84\x90U\x81Q\x92\x83R\x82\x01\x84\x90R\x81\x01\x82\x90R\x7F\x0E~\xFAs\x8E\x8B\x0C\xE67j\x0C\x1A\xF4qeU@\xD2\xE9\xA8\x16G\xD7\xB0\x9E\xD8#\x01\x84&Wm\x90``\x01`@Q\x80\x91\x03\x90\xA1PPP\x80a6b\x90aS=V[\x90Pa4\xD7V[PPPPPPV[`eT`\x01`\x01`\xA0\x1B\x03\x16\x15\x80\x15a6\x92WP`\x01`\x01`\xA0\x1B\x03\x82\x16\x15\x15[a7\x14W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`G`$\x82\x01R\x7FPausable._initializePauser: _ini`D\x82\x01R\x7FtializePauser() can only be call`d\x82\x01Rfed once`\xC8\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[`f\x81\x90U`@Q\x81\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01`@Q\x80\x91\x03\x90\xA2a7W\x82a2\x7FV[PPV[`@\x80Q\x80\x82\x01\x82R`\n\x81Ri\"\xB4\xB3\xB2\xB7&0\xBC\xB2\xB9`\xB1\x1B` \x91\x82\x01R\x81Q\x7F\x8C\xAD\x95h{\xA8,,\xE5\x0Et\xF7\xB7Td^Q\x17\xC3\xA5\xBE\xC8\x15\x1C\x07&\xD5\x85y\x80\xA8f\x81\x83\x01R\x7Fq\xB6%\xCF\xADD\xBA\xC6;\x13\xDB\xA0\x7F.\x1D`\x84\xEE\x04\xB6\xF8u!\x01\xEC\xE6\x12mXN\xE6\xEA\x81\x84\x01RF``\x82\x01R0`\x80\x80\x83\x01\x91\x90\x91R\x83Q\x80\x83\x03\x90\x91\x01\x81R`\xA0\x90\x91\x01\x90\x92R\x81Q\x91\x01 \x90V[`3\x80T`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\x01`\x01`\xA0\x1B\x03\x19\x83\x16\x81\x17\x90\x93U`@Q\x91\x16\x91\x90\x82\x90\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x90`\0\x90\xA3PPV[b\x03K\xC0\x81\x11\x15a8\xFDW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`q`$\x82\x01R\x7FDelegationManager._setMinWithdra`D\x82\x01R\x7FwalDelayBlocks: _minWithdrawalDe`d\x82\x01R\x7FlayBlocks cannot be > MAX_WITHDR`\x84\x82\x01RpAWAL_DELAY_BLOCKS`x\x1B`\xA4\x82\x01R`\xC4\x01a\n\xBCV[`\x9DT`@\x80Q\x91\x82R` \x82\x01\x83\x90R\x7F\xAF\xA0\x03\xCDv\xF8\x7F\xF9\xD6+5\xBE\xEA\x88\x99 \xF3<\x0CB\xB8\xD4[t\x95Ma\xD5\x0FKki\x91\x01`@Q\x80\x91\x03\x90\xA1`\x9DUV[`\x01`\x01`\xA0\x1B\x03\x80\x85\x16`\0\x90\x81R`\x98` \x90\x81R`@\x80\x83 \x93\x86\x16\x83R\x92\x90R\x90\x81 \x80T\x83\x92\x90a9u\x90\x84\x90aW\x8AV[\x92PP\x81\x90UP\x83`\x01`\x01`\xA0\x1B\x03\x16\x7F\x1E\xC0B\xC9e\xE2\xED\xD7\x10{Q\x18\x8E\xE0\xF3\x83\xE2.v\x17\x90A\xAB:\x9D\x18\xFF\x15\x14\x05\x16l\x84\x84\x84`@Qa\x0F0\x93\x92\x91\x90aW\xB9V[`\0a9\xC7a\x05\xF3\x87aX\x96V[`\0\x81\x81R`\x9E` R`@\x90 T\x90\x91P`\xFF\x16a:HW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`C`$\x82\x01R`\0\x80Q` aY\xC8\x839\x81Q\x91R`D\x82\x01R\x7FdWithdrawal: action is not in qu`d\x82\x01Rbeue`\xE8\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[`\x9DTC\x90a:]`\xA0\x89\x01`\x80\x8A\x01aW\xF6V[c\xFF\xFF\xFF\xFF\x16a:m\x91\x90aW\x8AV[\x11\x15a:\xF5W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`_`$\x82\x01R`\0\x80Q` aY\xC8\x839\x81Q\x91R`D\x82\x01R\x7FdWithdrawal: minWithdrawalDelayB`d\x82\x01R\x7Flocks period has not yet passed\0`\x84\x82\x01R`\xA4\x01a\n\xBCV[a;\x05``\x87\x01`@\x88\x01aI\xFFV[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a;\x92W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`P`$\x82\x01R`\0\x80Q` aY\xC8\x839\x81Q\x91R`D\x82\x01R\x7FdWithdrawal: only withdrawer can`d\x82\x01Ro\x101\xB7\xB6\xB862\xBA2\x900\xB1\xBA4\xB7\xB7`\x81\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[\x81\x15a<\x14Wa;\xA5`\xA0\x87\x01\x87aS\xAFV[\x85\x14\x90Pa<\x14W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`B`$\x82\x01R`\0\x80Q` aY\xC8\x839\x81Q\x91R`D\x82\x01R\x7FdWithdrawal: input length mismat`d\x82\x01Ra\x0Cm`\xF3\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[`\0\x81\x81R`\x9E` R`@\x90 \x80T`\xFF\x19\x16\x90U\x81\x15a=yW`\0[a<@`\xA0\x88\x01\x88aS\xAFV[\x90P\x81\x10\x15a=sWC`\xA1`\0a<[`\xA0\x8B\x01\x8BaS\xAFV[\x85\x81\x81\x10a<kWa<kaS\x11V[\x90P` \x02\x01` \x81\x01\x90a<\x80\x91\x90aI\xFFV[`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x81\x01\x91\x90\x91R`@\x01`\0 Ta<\xAA`\xA0\x8A\x01`\x80\x8B\x01aW\xF6V[c\xFF\xFF\xFF\xFF\x16a<\xBA\x91\x90aW\x8AV[\x11\x15a<\xD8W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aX\xA2V[a=ka<\xE8` \x89\x01\x89aI\xFFV[3a<\xF6`\xA0\x8B\x01\x8BaS\xAFV[\x85\x81\x81\x10a=\x06Wa=\x06aS\x11V[\x90P` \x02\x01` \x81\x01\x90a=\x1B\x91\x90aI\xFFV[a=(`\xC0\x8C\x01\x8CaS\xAFV[\x86\x81\x81\x10a=8Wa=8aS\x11V[\x90P` \x02\x015\x8A\x8A\x87\x81\x81\x10a=QWa=QaS\x11V[\x90P` \x02\x01` \x81\x01\x90a=f\x91\x90aI\xFFV[aC]V[`\x01\x01a<3V[PaAhV[3`\0\x90\x81R`\x9A` R`@\x81 T`\x01`\x01`\xA0\x1B\x03\x16\x90[a=\xA1`\xA0\x89\x01\x89aS\xAFV[\x90P\x81\x10\x15aAeWC`\xA1`\0a=\xBC`\xA0\x8C\x01\x8CaS\xAFV[\x85\x81\x81\x10a=\xCCWa=\xCCaS\x11V[\x90P` \x02\x01` \x81\x01\x90a=\xE1\x91\x90aI\xFFV[`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x81\x01\x91\x90\x91R`@\x01`\0 Ta>\x0B`\xA0\x8B\x01`\x80\x8C\x01aW\xF6V[c\xFF\xFF\xFF\xFF\x16a>\x1B\x91\x90aW\x8AV[\x11\x15a>9W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\n\xBC\x90aX\xA2V[s\xBE\xAC\x0E\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEB\xEA\xC0a>[`\xA0\x8A\x01\x8AaS\xAFV[\x83\x81\x81\x10a>kWa>kaS\x11V[\x90P` \x02\x01` \x81\x01\x90a>\x80\x91\x90aI\xFFV[`\x01`\x01`\xA0\x1B\x03\x16\x14\x15a?\xD0W`\0a>\x9E` \x8A\x01\x8AaI\xFFV[\x90P`\0`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16c\x0E\x81\x07<\x83a>\xDF`\xC0\x8E\x01\x8EaS\xAFV[\x87\x81\x81\x10a>\xEFWa>\xEFaS\x11V[`@Q`\x01`\x01`\xE0\x1B\x03\x19`\xE0\x87\x90\x1B\x16\x81R`\x01`\x01`\xA0\x1B\x03\x90\x94\x16`\x04\x85\x01R` \x02\x91\x90\x91\x015`$\x83\x01RP`D\x01` `@Q\x80\x83\x03\x81`\0\x87Z\xF1\x15\x80\x15a?CW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a?g\x91\x90aV\\V[`\x01`\x01`\xA0\x1B\x03\x80\x84\x16`\0\x90\x81R`\x9A` R`@\x90 T\x91\x92P\x16\x80\x15a?\xC8Wa?\xC8\x81\x84a?\x9D`\xA0\x8F\x01\x8FaS\xAFV[\x88\x81\x81\x10a?\xADWa?\xADaS\x11V[\x90P` \x02\x01` \x81\x01\x90a?\xC2\x91\x90aI\xFFV[\x85a9>V[PPPaA]V[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16c\xC4b>\xA13\x89\x89\x85\x81\x81\x10a@\x12Wa@\x12aS\x11V[\x90P` \x02\x01` \x81\x01\x90a@'\x91\x90aI\xFFV[a@4`\xA0\x8D\x01\x8DaS\xAFV[\x86\x81\x81\x10a@DWa@DaS\x11V[\x90P` \x02\x01` \x81\x01\x90a@Y\x91\x90aI\xFFV[a@f`\xC0\x8E\x01\x8EaS\xAFV[\x87\x81\x81\x10a@vWa@vaS\x11V[`@Q`\xE0\x88\x90\x1B`\x01`\x01`\xE0\x1B\x03\x19\x16\x81R`\x01`\x01`\xA0\x1B\x03\x96\x87\x16`\x04\x82\x01R\x94\x86\x16`$\x86\x01R\x92\x90\x94\x16`D\x84\x01R` \x90\x91\x02\x015`d\x82\x01R`\x84\x01\x90P`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a@\xD6W`\0\x80\xFD[PZ\xF1\x15\x80\x15a@\xEAW=`\0\x80>=`\0\xFD[PPPP`\x01`\x01`\xA0\x1B\x03\x82\x16\x15aA]WaA]\x823aA\x0F`\xA0\x8C\x01\x8CaS\xAFV[\x85\x81\x81\x10aA\x1FWaA\x1FaS\x11V[\x90P` \x02\x01` \x81\x01\x90aA4\x91\x90aI\xFFV[aAA`\xC0\x8D\x01\x8DaS\xAFV[\x86\x81\x81\x10aAQWaAQaS\x11V[\x90P` \x02\x015a9>V[`\x01\x01a=\x94V[PP[`@Q\x81\x81R\x7F\xC9p\x98\xC2\xF6X\x80\x0BM\xF2\x90\x01R\x7Fs$\xBC\xDF\xFC\xF6\xE8u\x1Ai\x9A\xB9 \xA1\xEC\xED[\x1D\x90` \x01`@Q\x80\x91\x03\x90\xA1PPPPPPV[`\x01`\x01`\xA0\x1B\x03\x83\x16;\x15aB\xBDW`@Qc\x0B\x13]?`\xE1\x1B\x80\x82R\x90`\x01`\x01`\xA0\x1B\x03\x85\x16\x90c\x16&\xBA~\x90aA\xE3\x90\x86\x90\x86\x90`\x04\x01aY*V[` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15aB\0W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90aB$\x91\x90aY\x87V[`\x01`\x01`\xE0\x1B\x03\x19\x16\x14a\x10\xA3W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`S`$\x82\x01R\x7FEIP1271SignatureUtils.checkSigna`D\x82\x01R\x7Fture_EIP1271: ERC1271 signature `d\x82\x01Rr\x1D\x99\\\x9AY\x9AX\xD8]\x1A[\xDB\x88\x19\x98Z[\x19Y`j\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[\x82`\x01`\x01`\xA0\x1B\x03\x16aB\xD1\x83\x83aD\x9DV[`\x01`\x01`\xA0\x1B\x03\x16\x14a\x10\xA3W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`G`$\x82\x01R\x7FEIP1271SignatureUtils.checkSigna`D\x82\x01R\x7Fture_EIP1271: signature not from`d\x82\x01Rf\x109\xB4\xB3\xB72\xB9`\xC9\x1B`\x84\x82\x01R`\xA4\x01a\n\xBCV[`\x01`\x01`\xA0\x1B\x03\x83\x16s\xBE\xAC\x0E\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEB\xEA\xC0\x14\x15aD\x08W`@Qb8{\x13`\xE8\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x90c8{\x13\0\x90aC\xD1\x90\x88\x90\x88\x90\x87\x90`\x04\x01aW\xB9V[`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15aC\xEBW`\0\x80\xFD[PZ\xF1\x15\x80\x15aC\xFFW=`\0\x80>=`\0\xFD[PPPPaD\x96V[`@Qc\xC6\x08\xC7\xF3`\xE0\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x85\x81\x16`\x04\x83\x01R\x84\x81\x16`$\x83\x01R`D\x82\x01\x84\x90R\x82\x81\x16`d\x83\x01R\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x90c\xC6\x08\xC7\xF3\x90`\x84\x01`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15aD\x82W`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x13bW=`\0\x80>=`\0\xFD[PPPPPV[`\0\x80`\0aD\xAC\x85\x85aD\xB9V[\x91P\x91Pa\t\xC6\x81aE)V[`\0\x80\x82Q`A\x14\x15aD\xF0W` \x83\x01Q`@\x84\x01Q``\x85\x01Q`\0\x1AaD\xE4\x87\x82\x85\x85aF\xE4V[\x94P\x94PPPPaE\"V[\x82Q`@\x14\x15aE\x1AW` \x83\x01Q`@\x84\x01QaE\x0F\x86\x83\x83aG\xD1V[\x93P\x93PPPaE\"V[P`\0\x90P`\x02[\x92P\x92\x90PV[`\0\x81`\x04\x81\x11\x15aE=WaE=aY\xB1V[\x14\x15aEFWPV[`\x01\x81`\x04\x81\x11\x15aEZWaEZaY\xB1V[\x14\x15aE\xA8W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x18`$\x82\x01R\x7FECDSA: invalid signature\0\0\0\0\0\0\0\0`D\x82\x01R`d\x01a\n\xBCV[`\x02\x81`\x04\x81\x11\x15aE\xBCWaE\xBCaY\xB1V[\x14\x15aF\nW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1F`$\x82\x01R\x7FECDSA: invalid signature length\0`D\x82\x01R`d\x01a\n\xBCV[`\x03\x81`\x04\x81\x11\x15aF\x1EWaF\x1EaY\xB1V[\x14\x15aFwW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\"`$\x82\x01R\x7FECDSA: invalid signature 's' val`D\x82\x01Raue`\xF0\x1B`d\x82\x01R`\x84\x01a\n\xBCV[`\x04\x81`\x04\x81\x11\x15aF\x8BWaF\x8BaY\xB1V[\x14\x15a\x0F\xEEW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\"`$\x82\x01R\x7FECDSA: invalid signature 'v' val`D\x82\x01Raue`\xF0\x1B`d\x82\x01R`\x84\x01a\n\xBCV[`\0\x80\x7F\x7F\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF]WnsW\xA4P\x1D\xDF\xE9/Fh\x1B \xA0\x83\x11\x15aG\x1BWP`\0\x90P`\x03aG\xC8V[\x84`\xFF\x16`\x1B\x14\x15\x80\x15aG3WP\x84`\xFF\x16`\x1C\x14\x15[\x15aGDWP`\0\x90P`\x04aG\xC8V[`@\x80Q`\0\x80\x82R` \x82\x01\x80\x84R\x89\x90R`\xFF\x88\x16\x92\x82\x01\x92\x90\x92R``\x81\x01\x86\x90R`\x80\x81\x01\x85\x90R`\x01\x90`\xA0\x01` `@Q` \x81\x03\x90\x80\x84\x03\x90\x85Z\xFA\x15\x80\x15aG\x98W=`\0\x80>=`\0\xFD[PP`@Q`\x1F\x19\x01Q\x91PP`\x01`\x01`\xA0\x1B\x03\x81\x16aG\xC1W`\0`\x01\x92P\x92PPaG\xC8V[\x91P`\0\x90P[\x94P\x94\x92PPPV[`\0\x80`\x01`\x01`\xFF\x1B\x03\x83\x16\x81aG\xEE`\xFF\x86\x90\x1C`\x1BaW\x8AV[\x90PaG\xFC\x87\x82\x88\x85aF\xE4V[\x93P\x93PPP\x93P\x93\x91PPV[`\0\x80\x83`\x1F\x84\x01\x12aH\x1CW`\0\x80\xFD[P\x815`\x01`\x01`@\x1B\x03\x81\x11\x15aH3W`\0\x80\xFD[` \x83\x01\x91P\x83` \x82`\x05\x1B\x85\x01\x01\x11\x15aE\"W`\0\x80\xFD[`\0\x80` \x83\x85\x03\x12\x15aHaW`\0\x80\xFD[\x825`\x01`\x01`@\x1B\x03\x81\x11\x15aHwW`\0\x80\xFD[aH\x83\x85\x82\x86\x01aH\nV[\x90\x96\x90\x95P\x93PPPPV[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x0F\xEEW`\0\x80\xFD[\x805aH\xAF\x81aH\x8FV[\x91\x90PV[`\0\x80`\0\x80`\0`\xA0\x86\x88\x03\x12\x15aH\xCCW`\0\x80\xFD[\x855aH\xD7\x81aH\x8FV[\x94P` \x86\x015aH\xE7\x81aH\x8FV[\x93P`@\x86\x015aH\xF7\x81aH\x8FV[\x94\x97\x93\x96P\x93\x94``\x81\x015\x94P`\x80\x015\x92\x91PPV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R`\0\x91\x90\x84\x82\x01\x90`@\x85\x01\x90\x84[\x81\x81\x10\x15aIGW\x83Q\x83R\x92\x84\x01\x92\x91\x84\x01\x91`\x01\x01aI+V[P\x90\x96\x95PPPPPPV[`\0``\x82\x84\x03\x12\x15aIeW`\0\x80\xFD[P\x91\x90PV[`\0\x80\x83`\x1F\x84\x01\x12aI}W`\0\x80\xFD[P\x815`\x01`\x01`@\x1B\x03\x81\x11\x15aI\x94W`\0\x80\xFD[` \x83\x01\x91P\x83` \x82\x85\x01\x01\x11\x15aE\"W`\0\x80\xFD[`\0\x80`\0`\x80\x84\x86\x03\x12\x15aI\xC1W`\0\x80\xFD[aI\xCB\x85\x85aISV[\x92P``\x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15aI\xE6W`\0\x80\xFD[aI\xF2\x86\x82\x87\x01aIkV[\x94\x97\x90\x96P\x93\x94PPPPV[`\0` \x82\x84\x03\x12\x15aJ\x11W`\0\x80\xFD[\x815aJ\x1C\x81aH\x8FV[\x93\x92PPPV[`\0\x80`\0``\x84\x86\x03\x12\x15aJ8W`\0\x80\xFD[\x835aJC\x81aH\x8FV[\x92P` \x84\x015aJS\x81aH\x8FV[\x92\x95\x92\x94PPP`@\x91\x90\x91\x015\x90V[`\0` \x82\x84\x03\x12\x15aJvW`\0\x80\xFD[P5\x91\x90PV[`\0\x80`\0\x80`@\x85\x87\x03\x12\x15aJ\x93W`\0\x80\xFD[\x845`\x01`\x01`@\x1B\x03\x80\x82\x11\x15aJ\xAAW`\0\x80\xFD[aJ\xB6\x88\x83\x89\x01aH\nV[\x90\x96P\x94P` \x87\x015\x91P\x80\x82\x11\x15aJ\xCFW`\0\x80\xFD[PaJ\xDC\x87\x82\x88\x01aH\nV[\x95\x98\x94\x97P\x95PPPPV[`\0\x80`\0\x80`\0\x80`\0\x80`\xC0\x89\x8B\x03\x12\x15aK\x04W`\0\x80\xFD[\x885aK\x0F\x81aH\x8FV[\x97P` \x89\x015aK\x1F\x81aH\x8FV[\x96P`@\x89\x015\x95P``\x89\x015\x94P`\x80\x89\x015`\x01`\x01`@\x1B\x03\x80\x82\x11\x15aKIW`\0\x80\xFD[aKU\x8C\x83\x8D\x01aH\nV[\x90\x96P\x94P`\xA0\x8B\x015\x91P\x80\x82\x11\x15aKnW`\0\x80\xFD[PaK{\x8B\x82\x8C\x01aH\nV[\x99\x9C\x98\x9BP\x96\x99P\x94\x97\x93\x96\x92\x95\x94PPPV[`\0\x80`\0\x80`\0\x80`\0\x80`\x80\x89\x8B\x03\x12\x15aK\xABW`\0\x80\xFD[\x885`\x01`\x01`@\x1B\x03\x80\x82\x11\x15aK\xC2W`\0\x80\xFD[aK\xCE\x8C\x83\x8D\x01aH\nV[\x90\x9AP\x98P` \x8B\x015\x91P\x80\x82\x11\x15aK\xE7W`\0\x80\xFD[aK\xF3\x8C\x83\x8D\x01aH\nV[\x90\x98P\x96P`@\x8B\x015\x91P\x80\x82\x11\x15aL\x0CW`\0\x80\xFD[aL\x18\x8C\x83\x8D\x01aH\nV[\x90\x96P\x94P``\x8B\x015\x91P\x80\x82\x11\x15aKnW`\0\x80\xFD[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`@Q`\xE0\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15aLiWaLiaL1V[`@R\x90V[`@\x80Q\x90\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15aLiWaLiaL1V[`@Q`\x1F\x82\x01`\x1F\x19\x16\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15aL\xB9WaL\xB9aL1V[`@R\x91\x90PV[c\xFF\xFF\xFF\xFF\x81\x16\x81\x14a\x0F\xEEW`\0\x80\xFD[\x805aH\xAF\x81aL\xC1V[`\0`\x01`\x01`@\x1B\x03\x82\x11\x15aL\xF7WaL\xF7aL1V[P`\x05\x1B` \x01\x90V[`\0\x82`\x1F\x83\x01\x12aM\x12W`\0\x80\xFD[\x815` aM'aM\"\x83aL\xDEV[aL\x91V[\x82\x81R`\x05\x92\x90\x92\x1B\x84\x01\x81\x01\x91\x81\x81\x01\x90\x86\x84\x11\x15aMFW`\0\x80\xFD[\x82\x86\x01[\x84\x81\x10\x15aMjW\x805aM]\x81aH\x8FV[\x83R\x91\x83\x01\x91\x83\x01aMJV[P\x96\x95PPPPPPV[`\0\x82`\x1F\x83\x01\x12aM\x86W`\0\x80\xFD[\x815` aM\x96aM\"\x83aL\xDEV[\x82\x81R`\x05\x92\x90\x92\x1B\x84\x01\x81\x01\x91\x81\x81\x01\x90\x86\x84\x11\x15aM\xB5W`\0\x80\xFD[\x82\x86\x01[\x84\x81\x10\x15aMjW\x805\x83R\x91\x83\x01\x91\x83\x01aM\xB9V[`\0`\xE0\x82\x84\x03\x12\x15aM\xE2W`\0\x80\xFD[aM\xEAaLGV[\x90PaM\xF5\x82aH\xA4V[\x81RaN\x03` \x83\x01aH\xA4V[` \x82\x01RaN\x14`@\x83\x01aH\xA4V[`@\x82\x01R``\x82\x015``\x82\x01RaN/`\x80\x83\x01aL\xD3V[`\x80\x82\x01R`\xA0\x82\x015`\x01`\x01`@\x1B\x03\x80\x82\x11\x15aNNW`\0\x80\xFD[aNZ\x85\x83\x86\x01aM\x01V[`\xA0\x84\x01R`\xC0\x84\x015\x91P\x80\x82\x11\x15aNsW`\0\x80\xFD[PaN\x80\x84\x82\x85\x01aMuV[`\xC0\x83\x01RP\x92\x91PPV[`\0` \x82\x84\x03\x12\x15aN\x9EW`\0\x80\xFD[\x815`\x01`\x01`@\x1B\x03\x81\x11\x15aN\xB4W`\0\x80\xFD[aN\xC0\x84\x82\x85\x01aM\xD0V[\x94\x93PPPPV[`\0` \x82\x84\x03\x12\x15aN\xDAW`\0\x80\xFD[\x815`\xFF\x81\x16\x81\x14aJ\x1CW`\0\x80\xFD[\x80\x15\x15\x81\x14a\x0F\xEEW`\0\x80\xFD[`\0\x80`\0\x80`\0`\x80\x86\x88\x03\x12\x15aO\x11W`\0\x80\xFD[\x855`\x01`\x01`@\x1B\x03\x80\x82\x11\x15aO(W`\0\x80\xFD[\x90\x87\x01\x90`\xE0\x82\x8A\x03\x12\x15aO<W`\0\x80\xFD[\x90\x95P` \x87\x015\x90\x80\x82\x11\x15aORW`\0\x80\xFD[PaO_\x88\x82\x89\x01aH\nV[\x90\x95P\x93PP`@\x86\x015\x91P``\x86\x015aOz\x81aN\xEBV[\x80\x91PP\x92\x95P\x92\x95\x90\x93PV[`\0\x80`@\x83\x85\x03\x12\x15aO\x9BW`\0\x80\xFD[\x825aO\xA6\x81aH\x8FV[\x91P` \x83\x015aO\xB6\x81aH\x8FV[\x80\x91PP\x92P\x92\x90PV[`\0`@\x82\x84\x03\x12\x15aO\xD3W`\0\x80\xFD[aO\xDBaLoV[\x90P\x815`\x01`\x01`@\x1B\x03\x80\x82\x11\x15aO\xF4W`\0\x80\xFD[\x81\x84\x01\x91P\x84`\x1F\x83\x01\x12aP\x08W`\0\x80\xFD[\x815` \x82\x82\x11\x15aP\x1CWaP\x1CaL1V[aP.`\x1F\x83\x01`\x1F\x19\x16\x82\x01aL\x91V[\x92P\x81\x83R\x86\x81\x83\x86\x01\x01\x11\x15aPDW`\0\x80\xFD[\x81\x81\x85\x01\x82\x85\x017`\0\x81\x83\x85\x01\x01R\x82\x85R\x80\x86\x015\x81\x86\x01RPPPP\x92\x91PPV[`\0\x80`\0\x80`\0`\xA0\x86\x88\x03\x12\x15aP\x81W`\0\x80\xFD[\x855aP\x8C\x81aH\x8FV[\x94P` \x86\x015aP\x9C\x81aH\x8FV[\x93P`@\x86\x015`\x01`\x01`@\x1B\x03\x80\x82\x11\x15aP\xB8W`\0\x80\xFD[aP\xC4\x89\x83\x8A\x01aO\xC1V[\x94P``\x88\x015\x91P\x80\x82\x11\x15aP\xDAW`\0\x80\xFD[PaP\xE7\x88\x82\x89\x01aO\xC1V[\x95\x98\x94\x97P\x92\x95`\x80\x015\x93\x92PPPV[`\0\x80`@\x83\x85\x03\x12\x15aQ\x0CW`\0\x80\xFD[\x825aQ\x17\x81aH\x8FV[\x91P` \x83\x015`\x01`\x01`@\x1B\x03\x81\x11\x15aQ2W`\0\x80\xFD[aQ>\x85\x82\x86\x01aM\x01V[\x91PP\x92P\x92\x90PV[`\0\x81Q\x80\x84R` \x80\x85\x01\x94P\x80\x84\x01`\0[\x83\x81\x10\x15aQxW\x81Q\x87R\x95\x82\x01\x95\x90\x82\x01\x90`\x01\x01aQ\\V[P\x94\x95\x94PPPPPV[` \x81R`\0aJ\x1C` \x83\x01\x84aQHV[`\0\x80` \x83\x85\x03\x12\x15aQ\xA9W`\0\x80\xFD[\x825`\x01`\x01`@\x1B\x03\x81\x11\x15aQ\xBFW`\0\x80\xFD[aH\x83\x85\x82\x86\x01aIkV[`\0\x80`@\x83\x85\x03\x12\x15aQ\xDEW`\0\x80\xFD[\x825aQ\xE9\x81aH\x8FV[\x94` \x93\x90\x93\x015\x93PPPV[`\0\x80`\0\x80`\x80\x85\x87\x03\x12\x15aR\rW`\0\x80\xFD[\x845aR\x18\x81aH\x8FV[\x93P` \x85\x015\x92P`@\x85\x015aR/\x81aH\x8FV[\x93\x96\x92\x95P\x92\x93``\x015\x92PPV[`\0\x81Q\x80\x84R` \x80\x85\x01\x94P\x80\x84\x01`\0[\x83\x81\x10\x15aQxW\x81Q`\x01`\x01`\xA0\x1B\x03\x16\x87R\x95\x82\x01\x95\x90\x82\x01\x90`\x01\x01aRSV[`@\x81R`\0aR\x8B`@\x83\x01\x85aR?V[\x82\x81\x03` \x84\x01Ra\x12 \x81\x85aQHV[`\0\x80`\0``\x84\x86\x03\x12\x15aR\xB2W`\0\x80\xFD[\x835aR\xBD\x81aH\x8FV[\x92P` \x84\x015`\x01`\x01`@\x1B\x03\x81\x11\x15aR\xD8W`\0\x80\xFD[aR\xE4\x86\x82\x87\x01aO\xC1V[\x92PP`@\x84\x015\x90P\x92P\x92P\x92V[`\0``\x82\x84\x03\x12\x15aS\x07W`\0\x80\xFD[aJ\x1C\x83\x83aISV[cNH{q`\xE0\x1B`\0R`2`\x04R`$`\0\xFD[cNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[`\0`\0\x19\x82\x14\x15aSQWaSQaS'V[P`\x01\x01\x90V[` \x80\x82R`\x19\x90\x82\x01R\x7FPausable: index is paused\0\0\0\0\0\0\0`@\x82\x01R``\x01\x90V[`\0\x825`^\x19\x836\x03\x01\x81\x12aS\xA5W`\0\x80\xFD[\x91\x90\x91\x01\x92\x91PPV[`\0\x80\x835`\x1E\x19\x846\x03\x01\x81\x12aS\xC6W`\0\x80\xFD[\x83\x01\x805\x91P`\x01`\x01`@\x1B\x03\x82\x11\x15aS\xE0W`\0\x80\xFD[` \x01\x91P`\x05\x81\x90\x1B6\x03\x82\x13\x15aE\"W`\0\x80\xFD[``\x81\x01\x825aT\x07\x81aH\x8FV[`\x01`\x01`\xA0\x1B\x03\x90\x81\x16\x83R` \x84\x015\x90aT#\x82aH\x8FV[\x16` \x83\x01R`@\x83\x015aT7\x81aL\xC1V[c\xFF\xFF\xFF\xFF\x81\x16`@\x84\x01RP\x92\x91PPV[` \x81R\x81` \x82\x01R\x81\x83`@\x83\x017`\0\x81\x83\x01`@\x90\x81\x01\x91\x90\x91R`\x1F\x90\x92\x01`\x1F\x19\x16\x01\x01\x91\x90PV[`\0` \x82\x84\x03\x12\x15aT\x8BW`\0\x80\xFD[\x81QaJ\x1C\x81aH\x8FV[` \x80\x82R`*\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Ri9\x90:\xB780\xBA\xB9\xB2\xB9`\xB1\x1B``\x82\x01R`\x80\x01\x90V[` \x80\x82R`7\x90\x82\x01R\x7FDelegationManager: onlyStrategyM`@\x82\x01R\x7FanagerOrEigenPodManager\0\0\0\0\0\0\0\0\0``\x82\x01R`\x80\x01\x90V[`\0` \x82\x84\x03\x12\x15aUOW`\0\x80\xFD[\x81QaJ\x1C\x81aN\xEBV[` \x80\x82R`(\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Rg9\x9080\xBA\xB9\xB2\xB9`\xC1\x1B``\x82\x01R`\x80\x01\x90V[`\0\x825`\xDE\x19\x836\x03\x01\x81\x12aS\xA5W`\0\x80\xFD[`\0` \x82\x84\x03\x12\x15aU\xCAW`\0\x80\xFD[\x815aJ\x1C\x81aN\xEBV[`\0`\x01\x80`\xA0\x1B\x03\x80\x83Q\x16\x84R\x80` \x84\x01Q\x16` \x85\x01R\x80`@\x84\x01Q\x16`@\x85\x01RP``\x82\x01Q``\x84\x01Rc\xFF\xFF\xFF\xFF`\x80\x83\x01Q\x16`\x80\x84\x01R`\xA0\x82\x01Q`\xE0`\xA0\x85\x01RaV0`\xE0\x85\x01\x82aR?V[\x90P`\xC0\x83\x01Q\x84\x82\x03`\xC0\x86\x01Ra\x12 \x82\x82aQHV[` \x81R`\0aJ\x1C` \x83\x01\x84aU\xD5V[`\0` \x82\x84\x03\x12\x15aVnW`\0\x80\xFD[PQ\x91\x90PV[`\0\x82`\x1F\x83\x01\x12aV\x86W`\0\x80\xFD[\x81Q` aV\x96aM\"\x83aL\xDEV[\x82\x81R`\x05\x92\x90\x92\x1B\x84\x01\x81\x01\x91\x81\x81\x01\x90\x86\x84\x11\x15aV\xB5W`\0\x80\xFD[\x82\x86\x01[\x84\x81\x10\x15aMjW\x80Q\x83R\x91\x83\x01\x91\x83\x01aV\xB9V[`\0\x80`@\x83\x85\x03\x12\x15aV\xE3W`\0\x80\xFD[\x82Q`\x01`\x01`@\x1B\x03\x80\x82\x11\x15aV\xFAW`\0\x80\xFD[\x81\x85\x01\x91P\x85`\x1F\x83\x01\x12aW\x0EW`\0\x80\xFD[\x81Q` aW\x1EaM\"\x83aL\xDEV[\x82\x81R`\x05\x92\x90\x92\x1B\x84\x01\x81\x01\x91\x81\x81\x01\x90\x89\x84\x11\x15aW=W`\0\x80\xFD[\x94\x82\x01\x94[\x83\x86\x10\x15aWdW\x85QaWU\x81aH\x8FV[\x82R\x94\x82\x01\x94\x90\x82\x01\x90aWBV[\x91\x88\x01Q\x91\x96P\x90\x93PPP\x80\x82\x11\x15aW}W`\0\x80\xFD[PaQ>\x85\x82\x86\x01aVuV[`\0\x82\x19\x82\x11\x15aW\x9DWaW\x9DaS'V[P\x01\x90V[`\0\x82\x82\x10\x15aW\xB4WaW\xB4aS'V[P\x03\x90V[`\x01`\x01`\xA0\x1B\x03\x93\x84\x16\x81R\x91\x90\x92\x16` \x82\x01R`@\x81\x01\x91\x90\x91R``\x01\x90V[\x82\x81R`@` \x82\x01R`\0aN\xC0`@\x83\x01\x84aU\xD5V[`\0` \x82\x84\x03\x12\x15aX\x08W`\0\x80\xFD[\x815aJ\x1C\x81aL\xC1V[\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UV[\x815aX>\x81aH\x8FV[aXH\x81\x83aX\x13V[P`\x01\x81\x01` \x83\x015aX[\x81aH\x8FV[aXe\x81\x83aX\x13V[P`@\x83\x015aXt\x81aL\xC1V[\x81Tc\xFF\xFF\xFF\xFF`\xA0\x1B\x19\x16`\xA0\x91\x90\x91\x1Bc\xFF\xFF\xFF\xFF`\xA0\x1B\x16\x17\x90UPPV[`\0a\x17Q6\x83aM\xD0V[` \x80\x82R`n\x90\x82\x01R`\0\x80Q` aY\xC8\x839\x81Q\x91R`@\x82\x01R\x7FdWithdrawal: withdrawalDelayBloc``\x82\x01R\x7Fks period has not yet passed for`\x80\x82\x01Rm this strategy`\x90\x1B`\xA0\x82\x01R`\xC0\x01\x90V[\x82\x81R`\0` `@\x81\x84\x01R\x83Q\x80`@\x85\x01R`\0[\x81\x81\x10\x15aY^W\x85\x81\x01\x83\x01Q\x85\x82\x01``\x01R\x82\x01aYBV[\x81\x81\x11\x15aYpW`\0``\x83\x87\x01\x01R[P`\x1F\x01`\x1F\x19\x16\x92\x90\x92\x01``\x01\x94\x93PPPPV[`\0` \x82\x84\x03\x12\x15aY\x99W`\0\x80\xFD[\x81Q`\x01`\x01`\xE0\x1B\x03\x19\x81\x16\x81\x14aJ\x1CW`\0\x80\xFD[cNH{q`\xE0\x1B`\0R`!`\x04R`$`\0\xFD\xFEDelegationManager._completeQueue\xA2dipfsX\"\x12 &\xB1\xFE\xD4\x84\x88\x18C\xA1\xD9\x81\x1EI?\xAB\xDFi?\x06\x8A-\xFA:\xF9(\x9C*\x7F\xBAt\x87>dsolcC\0\x08\x0C\x003",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Initialized(uint8)` and selector `0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498`.
     ```solidity
     event Initialized(uint8 version);
@@ -3141,6 +3146,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `MinWithdrawalDelayBlocksSet(uint256,uint256)` and selector `0xafa003cd76f87ff9d62b35beea889920f33c0c42b8d45b74954d61d50f4b6b69`.
     ```solidity
     event MinWithdrawalDelayBlocksSet(uint256 previousValue, uint256 newValue);
@@ -3250,6 +3256,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorDetailsModified(address,(address,address,uint32))` and selector `0xfebe5cd24b2cbc7b065b9d0fdeb904461e4afcff57dd57acda1e7832031ba7ac`.
     ```solidity
     event OperatorDetailsModified(address indexed operator, IDelegationManager.OperatorDetails newOperatorDetails);
@@ -3361,6 +3368,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorMetadataURIUpdated(address,string)` and selector `0x02a919ed0e2acad1dd90f17ef2fa4ae5462ee1339170034a8531cca4b6708090`.
     ```solidity
     event OperatorMetadataURIUpdated(address indexed operator, string metadataURI);
@@ -3470,6 +3478,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorRegistered(address,(address,address,uint32))` and selector `0x8e8485583a2310d41f7c82b9427d0bd49bad74bb9cff9d3402a29d8f9b28a0e2`.
     ```solidity
     event OperatorRegistered(address indexed operator, IDelegationManager.OperatorDetails operatorDetails);
@@ -3580,6 +3589,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorSharesDecreased(address,address,address,uint256)` and selector `0x6909600037b75d7b4733aedd815442b5ec018a827751c832aaff64eba5d6d2dd`.
     ```solidity
     event OperatorSharesDecreased(address indexed operator, address staker, address strategy, uint256 shares);
@@ -3706,6 +3716,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorSharesIncreased(address,address,address,uint256)` and selector `0x1ec042c965e2edd7107b51188ee0f383e22e76179041ab3a9d18ff151405166c`.
     ```solidity
     event OperatorSharesIncreased(address indexed operator, address staker, address strategy, uint256 shares);
@@ -3832,6 +3843,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OwnershipTransferred(address,address)` and selector `0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0`.
     ```solidity
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -3945,6 +3957,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Paused(address,uint256)` and selector `0xab40a374bc51de372200a8bc981af8c9ecdc08dfdaef0bb6e09f88f3c616ef3d`.
     ```solidity
     event Paused(address indexed account, uint256 newPausedStatus);
@@ -4054,6 +4067,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PauserRegistrySet(address,address)` and selector `0x6e9fcd539896fca60e8b0f01dd580233e48a6b0f7df013b89ba7f565869acdb6`.
     ```solidity
     event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
@@ -4163,6 +4177,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `StakerDelegated(address,address)` and selector `0xc3ee9f2e5fda98e8066a1f745b2df9285f416fe98cf2559cd21484b3d8743304`.
     ```solidity
     event StakerDelegated(address indexed staker, address indexed operator);
@@ -4276,6 +4291,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `StakerForceUndelegated(address,address)` and selector `0xf0eddf07e6ea14f388b47e1e94a0f464ecbd9eed4171130e0fc0e99fb4030a8a`.
     ```solidity
     event StakerForceUndelegated(address indexed staker, address indexed operator);
@@ -4389,6 +4405,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `StakerUndelegated(address,address)` and selector `0xfee30966a256b71e14bc0ebfc94315e28ef4a97a7131a9e2b7a310a73af44676`.
     ```solidity
     event StakerUndelegated(address indexed staker, address indexed operator);
@@ -4502,6 +4519,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `StrategyWithdrawalDelayBlocksSet(address,uint256,uint256)` and selector `0x0e7efa738e8b0ce6376a0c1af471655540d2e9a81647d7b09ed823018426576d`.
     ```solidity
     event StrategyWithdrawalDelayBlocksSet(address strategy, uint256 previousValue, uint256 newValue);
@@ -4619,6 +4637,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Unpaused(address,uint256)` and selector `0x3582d1828e26bf56bd801502bc021ac0bc8afb57c826e4986b45593c8fad389c`.
     ```solidity
     event Unpaused(address indexed account, uint256 newPausedStatus);
@@ -4728,6 +4747,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `WithdrawalCompleted(bytes32)` and selector `0xc97098c2f658800b4df29001527f7324bcdffcf6e8751a699ab920a1eced5b1d`.
     ```solidity
     event WithdrawalCompleted(bytes32 withdrawalRoot);
@@ -4828,6 +4848,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `WithdrawalQueued(bytes32,(address,address,address,uint256,uint32,address[],uint256[]))` and selector `0x9009ab153e8014fbfb02f2217f5cde7aa7f9ad734ae85ca3ee3f4ca2fdd499f9`.
     ```solidity
     event WithdrawalQueued(bytes32 withdrawalRoot, IDelegationManager.Withdrawal withdrawal);
@@ -5028,6 +5049,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `DELEGATION_APPROVAL_TYPEHASH()` and selector `0x04a4f979`.
     ```solidity
     function DELEGATION_APPROVAL_TYPEHASH() external view returns (bytes32);
@@ -5035,6 +5057,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DELEGATION_APPROVAL_TYPEHASHCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`DELEGATION_APPROVAL_TYPEHASH()`](DELEGATION_APPROVAL_TYPEHASHCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5139,6 +5162,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `DOMAIN_TYPEHASH()` and selector `0x20606b70`.
     ```solidity
     function DOMAIN_TYPEHASH() external view returns (bytes32);
@@ -5146,6 +5170,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DOMAIN_TYPEHASHCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`DOMAIN_TYPEHASH()`](DOMAIN_TYPEHASHCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5250,6 +5275,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `MAX_STAKER_OPT_OUT_WINDOW_BLOCKS()` and selector `0x4fc40b61`.
     ```solidity
     function MAX_STAKER_OPT_OUT_WINDOW_BLOCKS() external view returns (uint256);
@@ -5257,6 +5283,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MAX_STAKER_OPT_OUT_WINDOW_BLOCKSCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`MAX_STAKER_OPT_OUT_WINDOW_BLOCKS()`](MAX_STAKER_OPT_OUT_WINDOW_BLOCKSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5361,6 +5388,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `MAX_WITHDRAWAL_DELAY_BLOCKS()` and selector `0xca661c04`.
     ```solidity
     function MAX_WITHDRAWAL_DELAY_BLOCKS() external view returns (uint256);
@@ -5368,6 +5396,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MAX_WITHDRAWAL_DELAY_BLOCKSCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`MAX_WITHDRAWAL_DELAY_BLOCKS()`](MAX_WITHDRAWAL_DELAY_BLOCKSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5472,6 +5501,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `STAKER_DELEGATION_TYPEHASH()` and selector `0x43377382`.
     ```solidity
     function STAKER_DELEGATION_TYPEHASH() external view returns (bytes32);
@@ -5479,6 +5509,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct STAKER_DELEGATION_TYPEHASHCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`STAKER_DELEGATION_TYPEHASH()`](STAKER_DELEGATION_TYPEHASHCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5583,6 +5614,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `beaconChainETHStrategy()` and selector `0x9104c319`.
     ```solidity
     function beaconChainETHStrategy() external view returns (address);
@@ -5590,6 +5622,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainETHStrategyCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`beaconChainETHStrategy()`](beaconChainETHStrategyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5694,6 +5727,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `calculateCurrentStakerDelegationDigestHash(address,address,uint256)` and selector `0x1bbce091`.
     ```solidity
     function calculateCurrentStakerDelegationDigestHash(address staker, address operator, uint256 expiry) external view returns (bytes32);
@@ -5708,6 +5742,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`calculateCurrentStakerDelegationDigestHash(address,address,uint256)`](calculateCurrentStakerDelegationDigestHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5847,6 +5882,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `calculateDelegationApprovalDigestHash(address,address,address,bytes32,uint256)` and selector `0x0b9f487a`.
     ```solidity
     function calculateDelegationApprovalDigestHash(address staker, address operator, address _delegationApprover, bytes32 approverSalt, uint256 expiry) external view returns (bytes32);
@@ -5865,6 +5901,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`calculateDelegationApprovalDigestHash(address,address,address,bytes32,uint256)`](calculateDelegationApprovalDigestHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -6020,6 +6057,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `calculateStakerDelegationDigestHash(address,uint256,address,uint256)` and selector `0xc94b5111`.
     ```solidity
     function calculateStakerDelegationDigestHash(address staker, uint256 _stakerNonce, address operator, uint256 expiry) external view returns (bytes32);
@@ -6036,6 +6074,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub expiry: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`calculateStakerDelegationDigestHash(address,uint256,address,uint256)`](calculateStakerDelegationDigestHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -6179,6 +6218,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `calculateWithdrawalRoot((address,address,address,uint256,uint32,address[],uint256[]))` and selector `0x597b36da`.
     ```solidity
     function calculateWithdrawalRoot(IDelegationManager.Withdrawal memory withdrawal) external pure returns (bytes32);
@@ -6189,6 +6229,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub withdrawal: <IDelegationManager::Withdrawal as alloy::sol_types::SolType>::RustType,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`calculateWithdrawalRoot((address,address,address,uint256,uint32,address[],uint256[]))`](calculateWithdrawalRootCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -6300,6 +6341,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `completeQueuedWithdrawal((address,address,address,uint256,uint32,address[],uint256[]),address[],uint256,bool)` and selector `0x60d7faed`.
     ```solidity
     function completeQueuedWithdrawal(IDelegationManager.Withdrawal memory withdrawal, address[] memory tokens, uint256 middlewareTimesIndex, bool receiveAsTokens) external;
@@ -6455,6 +6497,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `completeQueuedWithdrawals((address,address,address,uint256,uint32,address[],uint256[])[],address[][],uint256[],bool[])` and selector `0x33404396`.
     ```solidity
     function completeQueuedWithdrawals(IDelegationManager.Withdrawal[] memory withdrawals, address[][] memory tokens, uint256[] memory middlewareTimesIndexes, bool[] memory receiveAsTokens) external;
@@ -6629,6 +6672,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `cumulativeWithdrawalsQueued(address)` and selector `0xa1788484`.
     ```solidity
     function cumulativeWithdrawalsQueued(address) external view returns (uint256);
@@ -6639,6 +6683,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`cumulativeWithdrawalsQueued(address)`](cumulativeWithdrawalsQueuedCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -6747,6 +6792,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `decreaseDelegatedShares(address,address,uint256)` and selector `0x132d4967`.
     ```solidity
     function decreaseDelegatedShares(address staker, address strategy, uint256 shares) external;
@@ -6888,6 +6934,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegateTo(address,(bytes,uint256),bytes32)` and selector `0xeea9064b`.
     ```solidity
     function delegateTo(address operator, ISignatureUtils.SignatureWithExpiry memory approverSignatureAndExpiry, bytes32 approverSalt) external;
@@ -7034,6 +7081,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegateToBySignature(address,address,(bytes,uint256),(bytes,uint256),bytes32)` and selector `0x7f548071`.
     ```solidity
     function delegateToBySignature(address staker, address operator, ISignatureUtils.SignatureWithExpiry memory stakerSignatureAndExpiry, ISignatureUtils.SignatureWithExpiry memory approverSignatureAndExpiry, bytes32 approverSalt) external;
@@ -7202,6 +7250,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegatedTo(address)` and selector `0x65da1264`.
     ```solidity
     function delegatedTo(address) external view returns (address);
@@ -7212,6 +7261,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`delegatedTo(address)`](delegatedToCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -7320,6 +7370,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegationApprover(address)` and selector `0x3cdeb5e0`.
     ```solidity
     function delegationApprover(address operator) external view returns (address);
@@ -7330,6 +7381,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`delegationApprover(address)`](delegationApproverCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -7438,6 +7490,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegationApproverSaltIsSpent(address,bytes32)` and selector `0xbb45fef2`.
     ```solidity
     function delegationApproverSaltIsSpent(address, bytes32) external view returns (bool);
@@ -7450,6 +7503,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`delegationApproverSaltIsSpent(address,bytes32)`](delegationApproverSaltIsSpentCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -7573,6 +7627,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `domainSeparator()` and selector `0xf698da25`.
     ```solidity
     function domainSeparator() external view returns (bytes32);
@@ -7580,6 +7635,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct domainSeparatorCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`domainSeparator()`](domainSeparatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -7684,6 +7740,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `eigenPodManager()` and selector `0x4665bcda`.
     ```solidity
     function eigenPodManager() external view returns (address);
@@ -7691,6 +7748,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodManagerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`eigenPodManager()`](eigenPodManagerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -7795,6 +7853,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getDelegatableShares(address)` and selector `0xcf80873e`.
     ```solidity
     function getDelegatableShares(address staker) external view returns (address[] memory, uint256[] memory);
@@ -7805,6 +7864,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getDelegatableShares(address)`](getDelegatableSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -7930,6 +7990,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getOperatorShares(address,address[])` and selector `0x90041347`.
     ```solidity
     function getOperatorShares(address operator, address[] memory strategies) external view returns (uint256[] memory);
@@ -7942,6 +8003,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getOperatorShares(address,address[])`](getOperatorSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -8072,6 +8134,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getWithdrawalDelay(address[])` and selector `0x0449ca39`.
     ```solidity
     function getWithdrawalDelay(address[] memory strategies) external view returns (uint256);
@@ -8082,6 +8145,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getWithdrawalDelay(address[])`](getWithdrawalDelayCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -8195,6 +8259,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `increaseDelegatedShares(address,address,uint256)` and selector `0x28a573ae`.
     ```solidity
     function increaseDelegatedShares(address staker, address strategy, uint256 shares) external;
@@ -8336,6 +8401,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `initialize(address,address,uint256,uint256,address[],uint256[])` and selector `0x22bf40e4`.
     ```solidity
     function initialize(address initialOwner, address _pauserRegistry, uint256 initialPausedStatus, uint256 _minWithdrawalDelayBlocks, address[] memory _strategies, uint256[] memory _withdrawalDelayBlocks) external;
@@ -8519,6 +8585,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `isDelegated(address)` and selector `0x3e28391d`.
     ```solidity
     function isDelegated(address staker) external view returns (bool);
@@ -8529,6 +8596,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`isDelegated(address)`](isDelegatedCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -8637,6 +8705,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `isOperator(address)` and selector `0x6d70f7ae`.
     ```solidity
     function isOperator(address operator) external view returns (bool);
@@ -8647,6 +8716,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`isOperator(address)`](isOperatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -8755,6 +8825,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `minWithdrawalDelayBlocks()` and selector `0xc448feb8`.
     ```solidity
     function minWithdrawalDelayBlocks() external view returns (uint256);
@@ -8762,6 +8833,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct minWithdrawalDelayBlocksCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`minWithdrawalDelayBlocks()`](minWithdrawalDelayBlocksCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -8866,6 +8938,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `modifyOperatorDetails((address,address,uint32))` and selector `0xf16172b0`.
     ```solidity
     function modifyOperatorDetails(IDelegationManager.OperatorDetails memory newOperatorDetails) external;
@@ -8985,6 +9058,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `operatorDetails(address)` and selector `0xc5e480db`.
     ```solidity
     function operatorDetails(address operator) external view returns (IDelegationManager.OperatorDetails memory);
@@ -8995,6 +9069,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`operatorDetails(address)`](operatorDetailsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9104,6 +9179,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `operatorShares(address,address)` and selector `0x778e55f3`.
     ```solidity
     function operatorShares(address, address) external view returns (uint256);
@@ -9116,6 +9192,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`operatorShares(address,address)`](operatorSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9239,6 +9316,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `owner()` and selector `0x8da5cb5b`.
     ```solidity
     function owner() external view returns (address);
@@ -9246,6 +9324,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`owner()`](ownerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9350,6 +9429,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pause(uint256)` and selector `0x136439dd`.
     ```solidity
     function pause(uint256 newPausedStatus) external;
@@ -9467,6 +9547,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauseAll()` and selector `0x595c6a67`.
     ```solidity
     function pauseAll() external;
@@ -9575,6 +9656,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused(uint8)` and selector `0x5ac86ab7`.
     ```solidity
     function paused(uint8 index) external view returns (bool);
@@ -9585,6 +9667,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub index: u8,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9693,6 +9776,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused()` and selector `0x5c975abb`.
     ```solidity
     function paused() external view returns (uint256);
@@ -9700,6 +9784,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Call {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused()`](paused_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9804,6 +9889,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauserRegistry()` and selector `0x886f1195`.
     ```solidity
     function pauserRegistry() external view returns (address);
@@ -9811,6 +9897,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`pauserRegistry()`](pauserRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -9915,6 +10002,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pendingWithdrawals(bytes32)` and selector `0xb7f06ebe`.
     ```solidity
     function pendingWithdrawals(bytes32) external view returns (bool);
@@ -9925,6 +10013,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`pendingWithdrawals(bytes32)`](pendingWithdrawalsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -10033,6 +10122,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `queueWithdrawals((address[],uint256[],address)[])` and selector `0x0dd8dd02`.
     ```solidity
     function queueWithdrawals(IDelegationManager.QueuedWithdrawalParams[] memory queuedWithdrawalParams) external returns (bytes32[] memory);
@@ -10045,6 +10135,7 @@ pub mod DelegationManager {
             <IDelegationManager::QueuedWithdrawalParams as alloy::sol_types::SolType>::RustType,
         >,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`queueWithdrawals((address[],uint256[],address)[])`](queueWithdrawalsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -10164,6 +10255,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `registerAsOperator((address,address,uint32),string)` and selector `0x0f589e59`.
     ```solidity
     function registerAsOperator(IDelegationManager.OperatorDetails memory registeringOperatorDetails, string memory metadataURI) external;
@@ -10297,6 +10389,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `renounceOwnership()` and selector `0x715018a6`.
     ```solidity
     function renounceOwnership() external;
@@ -10405,6 +10498,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setMinWithdrawalDelayBlocks(uint256)` and selector `0x635bbd10`.
     ```solidity
     function setMinWithdrawalDelayBlocks(uint256 newMinWithdrawalDelayBlocks) external;
@@ -10522,6 +10616,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setPauserRegistry(address)` and selector `0x10d67a2f`.
     ```solidity
     function setPauserRegistry(address newPauserRegistry) external;
@@ -10639,6 +10734,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setStrategyWithdrawalDelayBlocks(address[],uint256[])` and selector `0x1522bf02`.
     ```solidity
     function setStrategyWithdrawalDelayBlocks(address[] memory strategies, uint256[] memory withdrawalDelayBlocks) external;
@@ -10774,6 +10870,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `slasher()` and selector `0xb1344271`.
     ```solidity
     function slasher() external view returns (address);
@@ -10781,6 +10878,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct slasherCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`slasher()`](slasherCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -10885,6 +10983,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stakerNonce(address)` and selector `0x29c77d4f`.
     ```solidity
     function stakerNonce(address) external view returns (uint256);
@@ -10895,6 +10994,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`stakerNonce(address)`](stakerNonceCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11003,6 +11103,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stakerOptOutWindowBlocks(address)` and selector `0x16928365`.
     ```solidity
     function stakerOptOutWindowBlocks(address operator) external view returns (uint256);
@@ -11013,6 +11114,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`stakerOptOutWindowBlocks(address)`](stakerOptOutWindowBlocksCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11121,6 +11223,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `strategyManager()` and selector `0x39b70e38`.
     ```solidity
     function strategyManager() external view returns (address);
@@ -11128,6 +11231,7 @@ pub mod DelegationManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyManagerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`strategyManager()`](strategyManagerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11232,6 +11336,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `strategyWithdrawalDelayBlocks(address)` and selector `0xc488375a`.
     ```solidity
     function strategyWithdrawalDelayBlocks(address) external view returns (uint256);
@@ -11242,6 +11347,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`strategyWithdrawalDelayBlocks(address)`](strategyWithdrawalDelayBlocksCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11350,6 +11456,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transferOwnership(address)` and selector `0xf2fde38b`.
     ```solidity
     function transferOwnership(address newOwner) external;
@@ -11465,6 +11572,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `undelegate(address)` and selector `0xda8be864`.
     ```solidity
     function undelegate(address staker) external returns (bytes32[] memory withdrawalRoots);
@@ -11475,6 +11583,7 @@ pub mod DelegationManager {
         #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`undelegate(address)`](undelegateCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -11589,6 +11698,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `unpause(uint256)` and selector `0xfabc1cbc`.
     ```solidity
     function unpause(uint256 newPausedStatus) external;
@@ -11706,6 +11816,7 @@ pub mod DelegationManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `updateOperatorMetadataURI(string)` and selector `0x99be81c8`.
     ```solidity
     function updateOperatorMetadataURI(string memory metadataURI) external;
@@ -11824,6 +11935,7 @@ pub mod DelegationManager {
         }
     };
     ///Container for all the [`DelegationManager`](self) function calls.
+    #[derive()]
     pub enum DelegationManagerCalls {
         #[allow(missing_docs)]
         DELEGATION_APPROVAL_TYPEHASH(DELEGATION_APPROVAL_TYPEHASHCall),
@@ -13406,6 +13518,7 @@ pub mod DelegationManager {
         }
     }
     ///Container for all the [`DelegationManager`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum DelegationManagerEvents {
         #[allow(missing_docs)]
         Initialized(Initialized),

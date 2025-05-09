@@ -898,6 +898,7 @@ pub mod StrategyManager {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\x02\x06W`\x005`\xE0\x1C\x80c\x8D\xA5\xCB[\x11a\x01\x1AW\x80c\xC6eg\x02\x11a\0\xADW\x80c\xDF\\\xF7#\x11a\0|W\x80c\xDF\\\xF7#\x14a\x05\x15W\x80c\xE7\xA0P\xAA\x14a\x05<W\x80c\xF2\xFD\xE3\x8B\x14a\x05OW\x80c\xF6\x98\xDA%\x14a\x05bW\x80c\xFA\xBC\x1C\xBC\x14a\x05jW`\0\x80\xFD[\x80c\xC6eg\x02\x14a\x04\xC9W\x80c\xCB\xC2\xBDb\x14a\x04\xDCW\x80c\xCFuo\xDF\x14a\x04\xEFW\x80c\xDF[5G\x14a\x05\x02W`\0\x80\xFD[\x80c\xB14Bq\x11a\0\xE9W\x80c\xB14Bq\x14a\x04iW\x80c\xB5\xD8\xB5\xB8\x14a\x04\x90W\x80c\xC4b>\xA1\x14a\x04\xA3W\x80c\xC6\x08\xC7\xF3\x14a\x04\xB6W`\0\x80\xFD[\x80c\x8D\xA5\xCB[\x14a\x04\x01W\x80c\x94\xF6I\xDD\x14a\x04\x12W\x80c\x96\x7F\xC0\xD2\x14a\x043W\x80c\x9BM\xA0=\x14a\x04FW`\0\x80\xFD[\x80cZ\xC8j\xB7\x11a\x01\x9DW\x80cz~\r\x92\x11a\x01lW\x80cz~\r\x92\x14a\x03gW\x80c~\xCE\xBE\0\x14a\x03\x92W\x80c\x88o\x11\x95\x14a\x03\xB2W\x80c\x8B\x8A\xAC<\x14a\x03\xC5W\x80c\x8C\x80\xD4\xE5\x14a\x03\xEEW`\0\x80\xFD[\x80cZ\xC8j\xB7\x14a\x03\x01W\x80c\\\x97Z\xBB\x14a\x034W\x80cf<\x1D\xE4\x14a\x03<W\x80cqP\x18\xA6\x14a\x03_W`\0\x80\xFD[\x80cFe\xBC\xDA\x11a\x01\xD9W\x80cFe\xBC\xDA\x14a\x02\x80W\x80cH\x82^\x94\x14a\x02\xBFW\x80cNZBc\x14a\x02\xE6W\x80cY\\jg\x14a\x02\xF9W`\0\x80\xFD[\x80c\x10\xD6z/\x14a\x02\x0BW\x80c\x13d9\xDD\x14a\x02 W\x80c `kp\x14a\x023W\x80c2\xE8\x9A\xCE\x14a\x02mW[`\0\x80\xFD[a\x02\x1Ea\x02\x196`\x04a)\xE8V[a\x05}V[\0[a\x02\x1Ea\x02.6`\x04a*\x05V[a\x069V[a\x02Z\x7F\x8C\xAD\x95h{\xA8,,\xE5\x0Et\xF7\xB7Td^Q\x17\xC3\xA5\xBE\xC8\x15\x1C\x07&\xD5\x85y\x80\xA8f\x81V[`@Q\x90\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\x02Za\x02{6`\x04a*4V[a\x07xV[a\x02\xA7\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01a\x02dV[a\x02Z\x7FC7\xF8-\x14.A\xF2\xA8\xC1\x05G\xCD\x8C\x85\x9B\xDD\xB9\"b\xA6\x10X\xE7xB\xE2M\x9D\xEA\x92$\x81V[a\x02\x1Ea\x02\xF46`\x04a+=V[a\nfV[a\x02\x1Ea\n\x9EV[a\x03$a\x03\x0F6`\x04a+vV[`\x98T`\x01`\xFF\x90\x92\x16\x91\x90\x91\x1B\x90\x81\x16\x14\x90V[`@Q\x90\x15\x15\x81R` \x01a\x02dV[`\x98Ta\x02ZV[a\x03$a\x03J6`\x04a)\xE8V[`\xD1` R`\0\x90\x81R`@\x90 T`\xFF\x16\x81V[a\x02\x1Ea\x0BeV[a\x02Za\x03u6`\x04a+\x99V[`\xCD` \x90\x81R`\0\x92\x83R`@\x80\x84 \x90\x91R\x90\x82R\x90 T\x81V[a\x02Za\x03\xA06`\x04a)\xE8V[`\xCA` R`\0\x90\x81R`@\x90 T\x81V[`\x97Ta\x02\xA7\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[a\x02Za\x03\xD36`\x04a)\xE8V[`\x01`\x01`\xA0\x1B\x03\x16`\0\x90\x81R`\xCE` R`@\x90 T\x90V[a\x02\x1Ea\x03\xFC6`\x04a+\xC7V[a\x0ByV[`3T`\x01`\x01`\xA0\x1B\x03\x16a\x02\xA7V[a\x04%a\x04 6`\x04a)\xE8V[a\x0B\xD2V[`@Qa\x02d\x92\x91\x90a,\x08V[`\xCBTa\x02\xA7\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[a\x03$a\x04T6`\x04a)\xE8V[`\xD3` R`\0\x90\x81R`@\x90 T`\xFF\x16\x81V[a\x02\xA7\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x02\x1Ea\x04\x9E6`\x04a,\xD1V[a\rRV[a\x02\x1Ea\x04\xB16`\x04a-\x13V[a\x0E\xC6V[a\x02\x1Ea\x04\xC46`\x04a-dV[a\x0F\x1AV[a\x02\x1Ea\x04\xD76`\x04a)\xE8V[a\x0F\xD2V[a\x02\xA7a\x04\xEA6`\x04a-\xB7V[a\x0F\xE3V[a\x02\x1Ea\x04\xFD6`\x04a-\x13V[a\x10\x1BV[a\x02\x1Ea\x05\x106`\x04a-\xE3V[a\x11OV[a\x02\xA7\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x02Za\x05J6`\x04a+\xC7V[a\x13xV[a\x02\x1Ea\x05]6`\x04a)\xE8V[a\x14AV[a\x02Za\x14\xB7V[a\x02\x1Ea\x05x6`\x04a*\x05V[a\x14\xF5V[`\x97`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x05\xD0W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x05\xF4\x91\x90a.OV[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x06-W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x90a.lV[`@Q\x80\x91\x03\x90\xFD[a\x066\x81a\x16QV[PV[`\x97T`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x06\x81W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x06\xA5\x91\x90a.\xB6V[a\x06\xC1W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x90a.\xD3V[`\x98T\x81\x81\x16\x14a\x07:W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.pause: invalid attempt `D\x82\x01R\x7Fto unpause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x06$V[`\x98\x81\x90U`@Q\x81\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01[`@Q\x80\x91\x03\x90\xA2PV[`\x98T`\0\x90\x81\x90`\x01\x90\x81\x16\x14\x15a\x07\xCFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x19`$\x82\x01Rx\x14\x18]\\\xD8X\x9B\x19N\x88\x1A[\x99\x19^\x08\x1A\\\xC8\x1C\x18]\\\xD9Y`:\x1B`D\x82\x01R`d\x01a\x06$V[`\x02`eT\x14\x15a\x08\"W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1F`$\x82\x01R\x7FReentrancyGuard: reentrant call\0`D\x82\x01R`d\x01a\x06$V[`\x02`eU`\x01`\x01`\xA0\x1B\x03\x88\x16`\0\x90\x81R`\xD3` R`@\x90 T`\xFF\x16\x15a\x08\xC9W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`J`$\x82\x01R\x7FStrategyManager.depositIntoStrat`D\x82\x01R\x7FegyWithSignature: third transfer`d\x82\x01Ri\x1C\xC8\x19\x1A\\\xD8X\x9B\x19Y`\xB2\x1B`\x84\x82\x01R`\xA4\x01a\x06$V[B\x84\x10\x15a\tKW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`C`$\x82\x01R\x7FStrategyManager.depositIntoStrat`D\x82\x01R\x7FegyWithSignature: signature expi`d\x82\x01Rb\x1C\x99Y`\xEA\x1B`\x84\x82\x01R`\xA4\x01a\x06$V[`\x01`\x01`\xA0\x1B\x03\x85\x81\x16`\0\x81\x81R`\xCA` \x90\x81R`@\x80\x83 T\x81Q\x7FC7\xF8-\x14.A\xF2\xA8\xC1\x05G\xCD\x8C\x85\x9B\xDD\xB9\"b\xA6\x10X\xE7xB\xE2M\x9D\xEA\x92$\x93\x81\x01\x93\x90\x93R\x90\x82\x01\x93\x90\x93R\x8B\x84\x16``\x82\x01R\x92\x8A\x16`\x80\x84\x01R`\xA0\x83\x01\x89\x90R`\xC0\x83\x01\x82\x90R`\xE0\x83\x01\x87\x90R\x90\x91a\x01\0\x01`@\x80Q`\x1F\x19\x81\x84\x03\x01\x81R\x91\x81R\x81Q` \x92\x83\x01 `\x01`\x01`\xA0\x1B\x03\x8A\x16`\0\x90\x81R`\xCA\x90\x93R\x90\x82 `\x01\x85\x01\x90U\x91Pa\n\x03a\x14\xB7V[`@Qa\x19\x01`\xF0\x1B` \x82\x01R`\"\x81\x01\x91\x90\x91R`B\x81\x01\x83\x90R`b\x01`@Q` \x81\x83\x03\x03\x81R\x90`@R\x80Q\x90` \x01 \x90Pa\nF\x88\x82\x88a\x17HV[a\nR\x88\x8C\x8C\x8Ca\x19\x07V[`\x01`eU\x9B\x9APPPPPPPPPPPV[`\xCBT`\x01`\x01`\xA0\x1B\x03\x163\x14a\n\x90W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x90a/\x1BV[a\n\x9A\x82\x82a\x1A\xD6V[PPV[`\x97T`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\n\xE6W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0B\n\x91\x90a.\xB6V[a\x0B&W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x90a.\xD3V[`\0\x19`\x98\x81\x90U`@Q\x90\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01`@Q\x80\x91\x03\x90\xA2V[a\x0Bma\x1BDV[a\x0Bw`\0a\x1B\x9EV[V[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14a\x0B\xC1W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x90a/\x85V[a\x0B\xCC\x83\x83\x83a\x1B\xF0V[PPPPV[`\x01`\x01`\xA0\x1B\x03\x81\x16`\0\x90\x81R`\xCE` R`@\x81 T``\x91\x82\x91\x90\x81g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x0C\nWa\x0C\na*\x1EV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x0C3W\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P`\0[\x82\x81\x10\x15a\x0C\xC4W`\x01`\x01`\xA0\x1B\x03\x86\x16`\0\x90\x81R`\xCD` \x90\x81R`@\x80\x83 `\xCE\x90\x92R\x82 \x80T\x91\x92\x91\x84\x90\x81\x10a\x0CxWa\x0Cxa/\xE3V[`\0\x91\x82R` \x80\x83 \x90\x91\x01T`\x01`\x01`\xA0\x1B\x03\x16\x83R\x82\x01\x92\x90\x92R`@\x01\x90 T\x82Q\x83\x90\x83\x90\x81\x10a\x0C\xB1Wa\x0C\xB1a/\xE3V[` \x90\x81\x02\x91\x90\x91\x01\x01R`\x01\x01a\x0C9V[P`\xCE`\0\x86`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x01\x90\x81R` \x01`\0 \x81\x81\x80T\x80` \x02` \x01`@Q\x90\x81\x01`@R\x80\x92\x91\x90\x81\x81R` \x01\x82\x80T\x80\x15a\r@W` \x02\x82\x01\x91\x90`\0R` `\0 \x90[\x81T`\x01`\x01`\xA0\x1B\x03\x16\x81R`\x01\x90\x91\x01\x90` \x01\x80\x83\x11a\r\"W[PPPPP\x91P\x93P\x93PPP\x91P\x91V[`\xCBT`\x01`\x01`\xA0\x1B\x03\x163\x14a\r|W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x90a/\x1BV[\x80`\0[\x81\x81\x10\x15a\x0B\xCCW`\xD1`\0\x85\x85\x84\x81\x81\x10a\r\x9EWa\r\x9Ea/\xE3V[\x90P` \x02\x01` \x81\x01\x90a\r\xB3\x91\x90a)\xE8V[`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x81\x01\x91\x90\x91R`@\x01`\0 T`\xFF\x16\x15a\x0E\xBEW`\0`\xD1`\0\x86\x86\x85\x81\x81\x10a\r\xEDWa\r\xEDa/\xE3V[\x90P` \x02\x01` \x81\x01\x90a\x0E\x02\x91\x90a)\xE8V[`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x81\x01\x91\x90\x91R`@\x01`\0 \x80T`\xFF\x19\x16\x91\x15\x15\x91\x90\x91\x17\x90U\x7F@tA;KD>NX\x01\x9F(U\xA8vQ\x135\x8C|r\xE3\x95\t\xC6\xAFE\xFC\x0F[\xA00\x84\x84\x83\x81\x81\x10a\x0E]Wa\x0E]a/\xE3V[\x90P` \x02\x01` \x81\x01\x90a\x0Er\x91\x90a)\xE8V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01`@Q\x80\x91\x03\x90\xA1a\x0E\xBE\x84\x84\x83\x81\x81\x10a\x0E\xA2Wa\x0E\xA2a/\xE3V[\x90P` \x02\x01` \x81\x01\x90a\x0E\xB7\x91\x90a)\xE8V[`\0a\x1A\xD6V[`\x01\x01a\r\x80V[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14a\x0F\x0EW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x90a/\x85V[a\x0B\xCC\x84\x84\x84\x84a\x1DLV[3`\x01`\x01`\xA0\x1B\x03\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x14a\x0FbW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x90a/\x85V[`@Qcl\xE5v\x89`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x85\x81\x16`\x04\x83\x01R\x82\x81\x16`$\x83\x01R`D\x82\x01\x84\x90R\x84\x16\x90c\xD9\xCA\xED\x12\x90`d\x01`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a\x0F\xB4W`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x0F\xC8W=`\0\x80>=`\0\xFD[PPPPPPPPV[a\x0F\xDAa\x1BDV[a\x066\x81a\x1F\xD9V[`\xCE` R\x81`\0R`@`\0 \x81\x81T\x81\x10a\x0F\xFFW`\0\x80\xFD[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x91P\x82\x90PV[`\0Ta\x01\0\x90\x04`\xFF\x16\x15\x80\x80\x15a\x10;WP`\0T`\x01`\xFF\x90\x91\x16\x10[\x80a\x10UWP0;\x15\x80\x15a\x10UWP`\0T`\xFF\x16`\x01\x14[a\x10\xB8W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`.`$\x82\x01R\x7FInitializable: contract is alrea`D\x82\x01Rm\x19\x1EH\x1A[\x9A]\x1AX[\x1A^\x99Y`\x92\x1B`d\x82\x01R`\x84\x01a\x06$V[`\0\x80T`\xFF\x19\x16`\x01\x17\x90U\x80\x15a\x10\xDBW`\0\x80Ta\xFF\0\x19\x16a\x01\0\x17\x90U[a\x10\xE3a BV[`\xC9Ua\x10\xF0\x83\x83a \xD9V[a\x10\xF9\x85a\x1B\x9EV[a\x11\x02\x84a\x1F\xD9V[\x80\x15a\x11HW`\0\x80Ta\xFF\0\x19\x16\x90U`@Q`\x01\x81R\x7F\x7F&\xB8?\xF9n\x1F+jh/\x138R\xF6y\x8A\t\xC4e\xDA\x95\x92\x14`\xCE\xFB8G@$\x98\x90` \x01`@Q\x80\x91\x03\x90\xA1[PPPPPV[`\xCBT`\x01`\x01`\xA0\x1B\x03\x163\x14a\x11yW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x90a/\x1BV[\x82\x81\x14a\x12\x02W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`K`$\x82\x01R\x7FStrategyManager.addStrategiesToD`D\x82\x01R\x7FepositWhitelist: array lengths d`d\x82\x01Rj\r\xE4\r\xCD\xEE\x84\r\xAC.\x8Cm`\xAB\x1B`\x84\x82\x01R`\xA4\x01a\x06$V[\x82`\0[\x81\x81\x10\x15a\x13pW`\xD1`\0\x87\x87\x84\x81\x81\x10a\x12$Wa\x12$a/\xE3V[\x90P` \x02\x01` \x81\x01\x90a\x129\x91\x90a)\xE8V[`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x81\x01\x91\x90\x91R`@\x01`\0 T`\xFF\x16a\x13hW`\x01`\xD1`\0\x88\x88\x85\x81\x81\x10a\x12rWa\x12ra/\xE3V[\x90P` \x02\x01` \x81\x01\x90a\x12\x87\x91\x90a)\xE8V[`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x81\x01\x91\x90\x91R`@\x01`\0 \x80T`\xFF\x19\x16\x91\x15\x15\x91\x90\x91\x17\x90U\x7F\x0C5\xB1}\x91\xC9n\xB2u\x1C\xD4V\xE1%/B\xA3\x86\xE5$\xEF\x9F\xF2n\xCC\x99P\x85\x9F\xDC\x04\xFE\x86\x86\x83\x81\x81\x10a\x12\xE2Wa\x12\xE2a/\xE3V[\x90P` \x02\x01` \x81\x01\x90a\x12\xF7\x91\x90a)\xE8V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01`@Q\x80\x91\x03\x90\xA1a\x13h\x86\x86\x83\x81\x81\x10a\x13'Wa\x13'a/\xE3V[\x90P` \x02\x01` \x81\x01\x90a\x13<\x91\x90a)\xE8V[\x85\x85\x84\x81\x81\x10a\x13NWa\x13Na/\xE3V[\x90P` \x02\x01` \x81\x01\x90a\x13c\x91\x90a/\xF9V[a\x1A\xD6V[`\x01\x01a\x12\x06V[PPPPPPV[`\x98T`\0\x90\x81\x90`\x01\x90\x81\x16\x14\x15a\x13\xCFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x19`$\x82\x01Rx\x14\x18]\\\xD8X\x9B\x19N\x88\x1A[\x99\x19^\x08\x1A\\\xC8\x1C\x18]\\\xD9Y`:\x1B`D\x82\x01R`d\x01a\x06$V[`\x02`eT\x14\x15a\x14\"W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1F`$\x82\x01R\x7FReentrancyGuard: reentrant call\0`D\x82\x01R`d\x01a\x06$V[`\x02`eUa\x1433\x86\x86\x86a\x19\x07V[`\x01`eU\x95\x94PPPPPV[a\x14Ia\x1BDV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x14\xAEW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01a\x06$V[a\x066\x81a\x1B\x9EV[`\0\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0F\x14\x15a\x14\xE8WP`\xC9T\x90V[a\x14\xF0a BV[\x90P\x90V[`\x97`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x15HW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x15l\x91\x90a.OV[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x15\x9CW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x90a.lV[`\x98T\x19\x81\x19`\x98T\x19\x16\x14a\x16\x1AW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.unpause: invalid attemp`D\x82\x01R\x7Ft to pause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x06$V[`\x98\x81\x90U`@Q\x81\x81R3\x90\x7F5\x82\xD1\x82\x8E&\xBFV\xBD\x80\x15\x02\xBC\x02\x1A\xC0\xBC\x8A\xFBW\xC8&\xE4\x98kEY<\x8F\xAD8\x9C\x90` \x01a\x07mV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x16\xDFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`I`$\x82\x01R\x7FPausable._setPauserRegistry: new`D\x82\x01R\x7FPauserRegistry cannot be the zer`d\x82\x01Rho address`\xB8\x1B`\x84\x82\x01R`\xA4\x01a\x06$V[`\x97T`@\x80Q`\x01`\x01`\xA0\x1B\x03\x92\x83\x16\x81R\x91\x83\x16` \x83\x01R\x7Fn\x9F\xCDS\x98\x96\xFC\xA6\x0E\x8B\x0F\x01\xDDX\x023\xE4\x8Ak\x0F}\xF0\x13\xB8\x9B\xA7\xF5e\x86\x9A\xCD\xB6\x91\x01`@Q\x80\x91\x03\x90\xA1`\x97\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UV[`\x01`\x01`\xA0\x1B\x03\x83\x16;\x15a\x18gW`@Qc\x0B\x13]?`\xE1\x1B\x80\x82R\x90`\x01`\x01`\xA0\x1B\x03\x85\x16\x90c\x16&\xBA~\x90a\x17\x88\x90\x86\x90\x86\x90`\x04\x01a0nV[` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x17\xA5W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x17\xC9\x91\x90a0\x87V[`\x01`\x01`\xE0\x1B\x03\x19\x16\x14a\x18bW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`S`$\x82\x01R\x7FEIP1271SignatureUtils.checkSigna`D\x82\x01R\x7Fture_EIP1271: ERC1271 signature `d\x82\x01Rr\x1D\x99\\\x9AY\x9AX\xD8]\x1A[\xDB\x88\x19\x98Z[\x19Y`j\x1B`\x84\x82\x01R`\xA4\x01a\x06$V[PPPV[\x82`\x01`\x01`\xA0\x1B\x03\x16a\x18{\x83\x83a!\xBFV[`\x01`\x01`\xA0\x1B\x03\x16\x14a\x18bW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`G`$\x82\x01R\x7FEIP1271SignatureUtils.checkSigna`D\x82\x01R\x7Fture_EIP1271: signature not from`d\x82\x01Rf\x109\xB4\xB3\xB72\xB9`\xC9\x1B`\x84\x82\x01R`\xA4\x01a\x06$V[`\x01`\x01`\xA0\x1B\x03\x83\x16`\0\x90\x81R`\xD1` R`@\x81 T\x84\x90`\xFF\x16a\x19\xADW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`M`$\x82\x01R\x7FStrategyManager.onlyStrategiesWh`D\x82\x01R\x7FitelistedForDeposit: strategy no`d\x82\x01Rl\x1D\x08\x1D\xDA\x1A]\x19[\x1A\\\xDD\x19Y`\x9A\x1B`\x84\x82\x01R`\xA4\x01a\x06$V[a\x19\xC2`\x01`\x01`\xA0\x1B\x03\x85\x163\x87\x86a!\xE3V[`@Qc\x11\xF9\xFB\xC9`\xE2\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x85\x81\x16`\x04\x83\x01R`$\x82\x01\x85\x90R\x86\x16\x90cG\xE7\xEF$\x90`D\x01` `@Q\x80\x83\x03\x81`\0\x87Z\xF1\x15\x80\x15a\x1A\x11W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x1A5\x91\x90a0\xB1V[\x91Pa\x1AC\x86\x85\x87\x85a\x1DLV[`@Qc\x14R\xB9\xD7`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x87\x81\x16`\x04\x83\x01R\x86\x81\x16`$\x83\x01R`D\x82\x01\x84\x90R\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x16\x90c(\xA5s\xAE\x90`d\x01`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a\x1A\xB5W`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x1A\xC9W=`\0\x80>=`\0\xFD[PPPPP\x94\x93PPPPV[`@\x80Q`\x01`\x01`\xA0\x1B\x03\x84\x16\x81R\x82\x15\x15` \x82\x01R\x7Fw\xD90\xDFI7y4s\xA9P$\xD8z\x98\xFD,\xCB\x9E\x92\xD3\xC2F;=\xAC\xD6]>jW\x86\x91\x01`@Q\x80\x91\x03\x90\xA1`\x01`\x01`\xA0\x1B\x03\x91\x90\x91\x16`\0\x90\x81R`\xD3` R`@\x90 \x80T`\xFF\x19\x16\x91\x15\x15\x91\x90\x91\x17\x90UV[`3T`\x01`\x01`\xA0\x1B\x03\x163\x14a\x0BwW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01\x81\x90R`$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R`d\x01a\x06$V[`3\x80T`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\x01`\x01`\xA0\x1B\x03\x19\x83\x16\x81\x17\x90\x93U`@Q\x91\x16\x91\x90\x82\x90\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x90`\0\x90\xA3PPV[`\0\x81a\x1CeW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`>`$\x82\x01R\x7FStrategyManager._removeShares: s`D\x82\x01R\x7FhareAmount should not be zero!\0\0`d\x82\x01R`\x84\x01a\x06$V[`\x01`\x01`\xA0\x1B\x03\x80\x85\x16`\0\x90\x81R`\xCD` \x90\x81R`@\x80\x83 \x93\x87\x16\x83R\x92\x90R T\x80\x83\x11\x15a\x1C\xF7W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`3`$\x82\x01R\x7FStrategyManager._removeShares: s`D\x82\x01Rr\r\x0C.L\xA8-\xAD\xEE\xAD\xCE\x84\x0E\x8D\xED\xE4\r\r,\xED`k\x1B`d\x82\x01R`\x84\x01a\x06$V[`\x01`\x01`\xA0\x1B\x03\x80\x86\x16`\0\x90\x81R`\xCD` \x90\x81R`@\x80\x83 \x93\x88\x16\x83R\x92\x90R \x83\x82\x03\x90\x81\x90U\x90\x83\x14\x15a\x1D?Wa\x1D5\x85\x85a\"=V[`\x01\x91PPa\x1DEV[`\0\x91PP[\x93\x92PPPV[`\x01`\x01`\xA0\x1B\x03\x84\x16a\x1D\xC8W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`9`$\x82\x01R\x7FStrategyManager._addShares: stak`D\x82\x01R\x7Fer cannot be zero address\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x06$V[\x80a\x1E4W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`6`$\x82\x01R\x7FStrategyManager._addShares: shar`D\x82\x01Rues should not be zero!`P\x1B`d\x82\x01R`\x84\x01a\x06$V[`\x01`\x01`\xA0\x1B\x03\x80\x85\x16`\0\x90\x81R`\xCD` \x90\x81R`@\x80\x83 \x93\x86\x16\x83R\x92\x90R Ta\x1FEW`\x01`\x01`\xA0\x1B\x03\x84\x16`\0\x90\x81R`\xCE` \x90\x81R`@\x90\x91 T\x10a\x1F\x06W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`P`$\x82\x01R\x7FStrategyManager._addShares: depo`D\x82\x01R\x7Fsit would exceed MAX_STAKER_STRA`d\x82\x01Ro\n\x88\xA8\xEB+\xE9\x89*j\x8B\xE9\x88\xA9\xC8\xEA\x89`\x83\x1B`\x84\x82\x01R`\xA4\x01a\x06$V[`\x01`\x01`\xA0\x1B\x03\x84\x81\x16`\0\x90\x81R`\xCE` \x90\x81R`@\x82 \x80T`\x01\x81\x01\x82U\x90\x83R\x91 \x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x91\x84\x16\x91\x90\x91\x17\x90U[`\x01`\x01`\xA0\x1B\x03\x80\x85\x16`\0\x90\x81R`\xCD` \x90\x81R`@\x80\x83 \x93\x86\x16\x83R\x92\x90R\x90\x81 \x80T\x83\x92\x90a\x1F|\x90\x84\x90a0\xE0V[\x90\x91UPP`@\x80Q`\x01`\x01`\xA0\x1B\x03\x86\x81\x16\x82R\x85\x81\x16` \x83\x01R\x84\x16\x81\x83\x01R``\x81\x01\x83\x90R\x90Q\x7F|\xFF\xF9\x08\xA4\xB5\x83\xF3d0\xB2]u\x96LE\x8D\x8E\xDE\x8A\x99\xBDa\xBEu\x0E\x97\xEE\x1B/:\x96\x91\x81\x90\x03`\x80\x01\x90\xA1PPPPV[`\xCBT`@\x80Q`\x01`\x01`\xA0\x1B\x03\x92\x83\x16\x81R\x91\x83\x16` \x83\x01R\x7FBd'^Y9U\xFF\x9DaF\xA5\x1AE%\xF6\xDD\xAC\xE2\xE8\x1D\xB99\x1A\xBC\xC9\xD1\xCAH\x04})\x91\x01`@Q\x80\x91\x03\x90\xA1`\xCB\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UV[`@\x80Q\x80\x82\x01\x82R`\n\x81Ri\"\xB4\xB3\xB2\xB7&0\xBC\xB2\xB9`\xB1\x1B` \x91\x82\x01R\x81Q\x7F\x8C\xAD\x95h{\xA8,,\xE5\x0Et\xF7\xB7Td^Q\x17\xC3\xA5\xBE\xC8\x15\x1C\x07&\xD5\x85y\x80\xA8f\x81\x83\x01R\x7Fq\xB6%\xCF\xADD\xBA\xC6;\x13\xDB\xA0\x7F.\x1D`\x84\xEE\x04\xB6\xF8u!\x01\xEC\xE6\x12mXN\xE6\xEA\x81\x84\x01RF``\x82\x01R0`\x80\x80\x83\x01\x91\x90\x91R\x83Q\x80\x83\x03\x90\x91\x01\x81R`\xA0\x90\x91\x01\x90\x92R\x81Q\x91\x01 \x90V[`\x97T`\x01`\x01`\xA0\x1B\x03\x16\x15\x80\x15a \xFAWP`\x01`\x01`\xA0\x1B\x03\x82\x16\x15\x15[a!|W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`G`$\x82\x01R\x7FPausable._initializePauser: _ini`D\x82\x01R\x7FtializePauser() can only be call`d\x82\x01Rfed once`\xC8\x1B`\x84\x82\x01R`\xA4\x01a\x06$V[`\x98\x81\x90U`@Q\x81\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01`@Q\x80\x91\x03\x90\xA2a\n\x9A\x82a\x16QV[`\0\x80`\0a!\xCE\x85\x85a$/V[\x91P\x91Pa!\xDB\x81a$\x9FV[P\x93\x92PPPV[`@\x80Q`\x01`\x01`\xA0\x1B\x03\x85\x81\x16`$\x83\x01R\x84\x16`D\x82\x01R`d\x80\x82\x01\x84\x90R\x82Q\x80\x83\x03\x90\x91\x01\x81R`\x84\x90\x91\x01\x90\x91R` \x81\x01\x80Q`\x01`\x01`\xE0\x1B\x03\x16c#\xB8r\xDD`\xE0\x1B\x17\x90Ra\x0B\xCC\x90\x85\x90a&ZV[`\x01`\x01`\xA0\x1B\x03\x82\x16`\0\x90\x81R`\xCE` R`@\x81 T\x90[\x81\x81\x10\x15a#XW`\x01`\x01`\xA0\x1B\x03\x84\x81\x16`\0\x90\x81R`\xCE` R`@\x90 \x80T\x91\x85\x16\x91\x83\x90\x81\x10a\"\x8FWa\"\x8Fa/\xE3V[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x14\x15a#PW`\x01`\x01`\xA0\x1B\x03\x84\x16`\0\x90\x81R`\xCE` R`@\x90 \x80Ta\"\xD0\x90`\x01\x90a0\xF8V[\x81T\x81\x10a\"\xE0Wa\"\xE0a/\xE3V[`\0\x91\x82R` \x80\x83 \x90\x91\x01T`\x01`\x01`\xA0\x1B\x03\x87\x81\x16\x84R`\xCE\x90\x92R`@\x90\x92 \x80T\x91\x90\x92\x16\x91\x90\x83\x90\x81\x10a#\x1DWa#\x1Da/\xE3V[\x90`\0R` `\0 \x01`\0a\x01\0\n\x81T\x81`\x01`\x01`\xA0\x1B\x03\x02\x19\x16\x90\x83`\x01`\x01`\xA0\x1B\x03\x16\x02\x17\x90UPa#XV[`\x01\x01a\"XV[\x81\x81\x14\x15a#\xE0W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`I`$\x82\x01R\x7FStrategyManager._removeStrategyF`D\x82\x01R\x7FromStakerStrategyList: strategy `d\x82\x01Rh\x1B\x9B\xDD\x08\x19\x9B\xDD[\x99`\xBA\x1B`\x84\x82\x01R`\xA4\x01a\x06$V[`\x01`\x01`\xA0\x1B\x03\x84\x16`\0\x90\x81R`\xCE` R`@\x90 \x80T\x80a$\x07Wa$\x07a1\x0FV[`\0\x82\x81R` \x90 \x81\x01`\0\x19\x90\x81\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x90U\x01\x90UPPPPV[`\0\x80\x82Q`A\x14\x15a$fW` \x83\x01Q`@\x84\x01Q``\x85\x01Q`\0\x1Aa$Z\x87\x82\x85\x85a',V[\x94P\x94PPPPa$\x98V[\x82Q`@\x14\x15a$\x90W` \x83\x01Q`@\x84\x01Qa$\x85\x86\x83\x83a(\x19V[\x93P\x93PPPa$\x98V[P`\0\x90P`\x02[\x92P\x92\x90PV[`\0\x81`\x04\x81\x11\x15a$\xB3Wa$\xB3a1%V[\x14\x15a$\xBCWPV[`\x01\x81`\x04\x81\x11\x15a$\xD0Wa$\xD0a1%V[\x14\x15a%\x1EW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x18`$\x82\x01R\x7FECDSA: invalid signature\0\0\0\0\0\0\0\0`D\x82\x01R`d\x01a\x06$V[`\x02\x81`\x04\x81\x11\x15a%2Wa%2a1%V[\x14\x15a%\x80W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1F`$\x82\x01R\x7FECDSA: invalid signature length\0`D\x82\x01R`d\x01a\x06$V[`\x03\x81`\x04\x81\x11\x15a%\x94Wa%\x94a1%V[\x14\x15a%\xEDW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\"`$\x82\x01R\x7FECDSA: invalid signature 's' val`D\x82\x01Raue`\xF0\x1B`d\x82\x01R`\x84\x01a\x06$V[`\x04\x81`\x04\x81\x11\x15a&\x01Wa&\x01a1%V[\x14\x15a\x066W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\"`$\x82\x01R\x7FECDSA: invalid signature 'v' val`D\x82\x01Raue`\xF0\x1B`d\x82\x01R`\x84\x01a\x06$V[`\0a&\xAF\x82`@Q\x80`@\x01`@R\x80` \x81R` \x01\x7FSafeERC20: low-level call failed\x81RP\x85`\x01`\x01`\xA0\x1B\x03\x16a(R\x90\x92\x91\x90c\xFF\xFF\xFF\xFF\x16V[\x80Q\x90\x91P\x15a\x18bW\x80\x80` \x01\x90Q\x81\x01\x90a&\xCD\x91\x90a.\xB6V[a\x18bW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`*`$\x82\x01R\x7FSafeERC20: ERC20 operation did n`D\x82\x01Ri\x1B\xDD\x08\x1C\xDDX\xD8\xD9YY`\xB2\x1B`d\x82\x01R`\x84\x01a\x06$V[`\0\x80\x7F\x7F\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF]WnsW\xA4P\x1D\xDF\xE9/Fh\x1B \xA0\x83\x11\x15a'cWP`\0\x90P`\x03a(\x10V[\x84`\xFF\x16`\x1B\x14\x15\x80\x15a'{WP\x84`\xFF\x16`\x1C\x14\x15[\x15a'\x8CWP`\0\x90P`\x04a(\x10V[`@\x80Q`\0\x80\x82R` \x82\x01\x80\x84R\x89\x90R`\xFF\x88\x16\x92\x82\x01\x92\x90\x92R``\x81\x01\x86\x90R`\x80\x81\x01\x85\x90R`\x01\x90`\xA0\x01` `@Q` \x81\x03\x90\x80\x84\x03\x90\x85Z\xFA\x15\x80\x15a'\xE0W=`\0\x80>=`\0\xFD[PP`@Q`\x1F\x19\x01Q\x91PP`\x01`\x01`\xA0\x1B\x03\x81\x16a(\tW`\0`\x01\x92P\x92PPa(\x10V[\x91P`\0\x90P[\x94P\x94\x92PPPV[`\0\x80`\x01`\x01`\xFF\x1B\x03\x83\x16\x81a(6`\xFF\x86\x90\x1C`\x1Ba0\xE0V[\x90Pa(D\x87\x82\x88\x85a',V[\x93P\x93PPP\x93P\x93\x91PPV[``a(a\x84\x84`\0\x85a(iV[\x94\x93PPPPV[``\x82G\x10\x15a(\xCAW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FAddress: insufficient balance fo`D\x82\x01Re\x1C\x88\x18\xD8[\x1B`\xD2\x1B`d\x82\x01R`\x84\x01a\x06$V[`\x01`\x01`\xA0\x1B\x03\x85\x16;a)!W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1D`$\x82\x01R\x7FAddress: call to non-contract\0\0\0`D\x82\x01R`d\x01a\x06$V[`\0\x80\x86`\x01`\x01`\xA0\x1B\x03\x16\x85\x87`@Qa)=\x91\x90a1;V[`\0`@Q\x80\x83\x03\x81\x85\x87Z\xF1\x92PPP=\x80`\0\x81\x14a)zW`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=`\0` \x84\x01>a)\x7FV[``\x91P[P\x91P\x91Pa)\x8F\x82\x82\x86a)\x9AV[\x97\x96PPPPPPPV[``\x83\x15a)\xA9WP\x81a\x1DEV[\x82Q\x15a)\xB9W\x82Q\x80\x84` \x01\xFD[\x81`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06$\x91\x90a1WV[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x066W`\0\x80\xFD[`\0` \x82\x84\x03\x12\x15a)\xFAW`\0\x80\xFD[\x815a\x1DE\x81a)\xD3V[`\0` \x82\x84\x03\x12\x15a*\x17W`\0\x80\xFD[P5\x91\x90PV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`\0\x80`\0\x80`\0\x80`\xC0\x87\x89\x03\x12\x15a*MW`\0\x80\xFD[\x865a*X\x81a)\xD3V[\x95P` \x87\x015a*h\x81a)\xD3V[\x94P`@\x87\x015\x93P``\x87\x015a*\x7F\x81a)\xD3V[\x92P`\x80\x87\x015\x91P`\xA0\x87\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a*\xA3W`\0\x80\xFD[\x81\x89\x01\x91P\x89`\x1F\x83\x01\x12a*\xB7W`\0\x80\xFD[\x815\x81\x81\x11\x15a*\xC9Wa*\xC9a*\x1EV[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01\x90\x83\x82\x11\x81\x83\x10\x17\x15a*\xF1Wa*\xF1a*\x1EV[\x81`@R\x82\x81R\x8C` \x84\x87\x01\x01\x11\x15a+\nW`\0\x80\xFD[\x82` \x86\x01` \x83\x017`\0` \x84\x83\x01\x01R\x80\x95PPPPPP\x92\x95P\x92\x95P\x92\x95V[\x80\x15\x15\x81\x14a\x066W`\0\x80\xFD[`\0\x80`@\x83\x85\x03\x12\x15a+PW`\0\x80\xFD[\x825a+[\x81a)\xD3V[\x91P` \x83\x015a+k\x81a+/V[\x80\x91PP\x92P\x92\x90PV[`\0` \x82\x84\x03\x12\x15a+\x88W`\0\x80\xFD[\x815`\xFF\x81\x16\x81\x14a\x1DEW`\0\x80\xFD[`\0\x80`@\x83\x85\x03\x12\x15a+\xACW`\0\x80\xFD[\x825a+\xB7\x81a)\xD3V[\x91P` \x83\x015a+k\x81a)\xD3V[`\0\x80`\0``\x84\x86\x03\x12\x15a+\xDCW`\0\x80\xFD[\x835a+\xE7\x81a)\xD3V[\x92P` \x84\x015a+\xF7\x81a)\xD3V[\x92\x95\x92\x94PPP`@\x91\x90\x91\x015\x90V[`@\x80\x82R\x83Q\x90\x82\x01\x81\x90R`\0\x90` \x90``\x84\x01\x90\x82\x87\x01\x84[\x82\x81\x10\x15a,JW\x81Q`\x01`\x01`\xA0\x1B\x03\x16\x84R\x92\x84\x01\x92\x90\x84\x01\x90`\x01\x01a,%V[PPP\x83\x81\x03\x82\x85\x01R\x84Q\x80\x82R\x85\x83\x01\x91\x83\x01\x90`\0[\x81\x81\x10\x15a,\x7FW\x83Q\x83R\x92\x84\x01\x92\x91\x84\x01\x91`\x01\x01a,cV[P\x90\x97\x96PPPPPPPV[`\0\x80\x83`\x1F\x84\x01\x12a,\x9EW`\0\x80\xFD[P\x815g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a,\xB6W`\0\x80\xFD[` \x83\x01\x91P\x83` \x82`\x05\x1B\x85\x01\x01\x11\x15a$\x98W`\0\x80\xFD[`\0\x80` \x83\x85\x03\x12\x15a,\xE4W`\0\x80\xFD[\x825g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a,\xFBW`\0\x80\xFD[a-\x07\x85\x82\x86\x01a,\x8CV[\x90\x96\x90\x95P\x93PPPPV[`\0\x80`\0\x80`\x80\x85\x87\x03\x12\x15a-)W`\0\x80\xFD[\x845a-4\x81a)\xD3V[\x93P` \x85\x015a-D\x81a)\xD3V[\x92P`@\x85\x015a-T\x81a)\xD3V[\x93\x96\x92\x95P\x92\x93``\x015\x92PPV[`\0\x80`\0\x80`\x80\x85\x87\x03\x12\x15a-zW`\0\x80\xFD[\x845a-\x85\x81a)\xD3V[\x93P` \x85\x015a-\x95\x81a)\xD3V[\x92P`@\x85\x015\x91P``\x85\x015a-\xAC\x81a)\xD3V[\x93\x96\x92\x95P\x90\x93PPV[`\0\x80`@\x83\x85\x03\x12\x15a-\xCAW`\0\x80\xFD[\x825a-\xD5\x81a)\xD3V[\x94` \x93\x90\x93\x015\x93PPPV[`\0\x80`\0\x80`@\x85\x87\x03\x12\x15a-\xF9W`\0\x80\xFD[\x845g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a.\x11W`\0\x80\xFD[a.\x1D\x88\x83\x89\x01a,\x8CV[\x90\x96P\x94P` \x87\x015\x91P\x80\x82\x11\x15a.6W`\0\x80\xFD[Pa.C\x87\x82\x88\x01a,\x8CV[\x95\x98\x94\x97P\x95PPPPV[`\0` \x82\x84\x03\x12\x15a.aW`\0\x80\xFD[\x81Qa\x1DE\x81a)\xD3V[` \x80\x82R`*\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Ri9\x90:\xB780\xBA\xB9\xB2\xB9`\xB1\x1B``\x82\x01R`\x80\x01\x90V[`\0` \x82\x84\x03\x12\x15a.\xC8W`\0\x80\xFD[\x81Qa\x1DE\x81a+/V[` \x80\x82R`(\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Rg9\x9080\xBA\xB9\xB2\xB9`\xC1\x1B``\x82\x01R`\x80\x01\x90V[` \x80\x82R`D\x90\x82\x01R\x7FStrategyManager.onlyStrategyWhit`@\x82\x01R\x7Felister: not the strategyWhiteli``\x82\x01Rc9\xBA2\xB9`\xE1\x1B`\x80\x82\x01R`\xA0\x01\x90V[` \x80\x82R`@\x90\x82\x01\x81\x90R\x7FStrategyManager.onlyDelegationMa\x90\x82\x01R\x7Fnager: not the DelegationManager``\x82\x01R`\x80\x01\x90V[cNH{q`\xE0\x1B`\0R`2`\x04R`$`\0\xFD[`\0` \x82\x84\x03\x12\x15a0\x0BW`\0\x80\xFD[\x815a\x1DE\x81a+/V[`\0[\x83\x81\x10\x15a01W\x81\x81\x01Q\x83\x82\x01R` \x01a0\x19V[\x83\x81\x11\x15a\x0B\xCCWPP`\0\x91\x01RV[`\0\x81Q\x80\x84Ra0Z\x81` \x86\x01` \x86\x01a0\x16V[`\x1F\x01`\x1F\x19\x16\x92\x90\x92\x01` \x01\x92\x91PPV[\x82\x81R`@` \x82\x01R`\0a(a`@\x83\x01\x84a0BV[`\0` \x82\x84\x03\x12\x15a0\x99W`\0\x80\xFD[\x81Q`\x01`\x01`\xE0\x1B\x03\x19\x81\x16\x81\x14a\x1DEW`\0\x80\xFD[`\0` \x82\x84\x03\x12\x15a0\xC3W`\0\x80\xFD[PQ\x91\x90PV[cNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[`\0\x82\x19\x82\x11\x15a0\xF3Wa0\xF3a0\xCAV[P\x01\x90V[`\0\x82\x82\x10\x15a1\nWa1\na0\xCAV[P\x03\x90V[cNH{q`\xE0\x1B`\0R`1`\x04R`$`\0\xFD[cNH{q`\xE0\x1B`\0R`!`\x04R`$`\0\xFD[`\0\x82Qa1M\x81\x84` \x87\x01a0\x16V[\x91\x90\x91\x01\x92\x91PPV[` \x81R`\0a\x1DE` \x83\x01\x84a0BV\xFE\xA2dipfsX\"\x12 \x14l\x1A\xD6\xA1@\x1B\xC2\xB1\xCC\xFB\xD9\x18\xFF\xE0a\xFC\x17\xA6ns^C\x02\xFA\x11o\xE5\xEFJ\xFB\xD6dsolcC\0\x08\x0C\x003",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Deposit(address,address,address,uint256)` and selector `0x7cfff908a4b583f36430b25d75964c458d8ede8a99bd61be750e97ee1b2f3a96`.
     ```solidity
     event Deposit(address staker, address token, address strategy, uint256 shares);
@@ -1021,6 +1022,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Initialized(uint8)` and selector `0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498`.
     ```solidity
     event Initialized(uint8 version);
@@ -1119,6 +1121,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OwnershipTransferred(address,address)` and selector `0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0`.
     ```solidity
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -1232,6 +1235,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Paused(address,uint256)` and selector `0xab40a374bc51de372200a8bc981af8c9ecdc08dfdaef0bb6e09f88f3c616ef3d`.
     ```solidity
     event Paused(address indexed account, uint256 newPausedStatus);
@@ -1341,6 +1345,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `PauserRegistrySet(address,address)` and selector `0x6e9fcd539896fca60e8b0f01dd580233e48a6b0f7df013b89ba7f565869acdb6`.
     ```solidity
     event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
@@ -1450,6 +1455,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `StrategyAddedToDepositWhitelist(address)` and selector `0x0c35b17d91c96eb2751cd456e1252f42a386e524ef9ff26ecc9950859fdc04fe`.
     ```solidity
     event StrategyAddedToDepositWhitelist(address strategy);
@@ -1548,6 +1554,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `StrategyRemovedFromDepositWhitelist(address)` and selector `0x4074413b4b443e4e58019f2855a8765113358c7c72e39509c6af45fc0f5ba030`.
     ```solidity
     event StrategyRemovedFromDepositWhitelist(address strategy);
@@ -1648,6 +1655,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `StrategyWhitelisterChanged(address,address)` and selector `0x4264275e593955ff9d6146a51a4525f6ddace2e81db9391abcc9d1ca48047d29`.
     ```solidity
     event StrategyWhitelisterChanged(address previousAddress, address newAddress);
@@ -1757,6 +1765,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Unpaused(address,uint256)` and selector `0x3582d1828e26bf56bd801502bc021ac0bc8afb57c826e4986b45593c8fad389c`.
     ```solidity
     event Unpaused(address indexed account, uint256 newPausedStatus);
@@ -1866,6 +1875,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `UpdatedThirdPartyTransfersForbidden(address,bool)` and selector `0x77d930df4937793473a95024d87a98fd2ccb9e92d3c2463b3dacd65d3e6a5786`.
     ```solidity
     event UpdatedThirdPartyTransfersForbidden(address strategy, bool value);
@@ -2064,6 +2074,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `DEPOSIT_TYPEHASH()` and selector `0x48825e94`.
     ```solidity
     function DEPOSIT_TYPEHASH() external view returns (bytes32);
@@ -2071,6 +2082,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DEPOSIT_TYPEHASHCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`DEPOSIT_TYPEHASH()`](DEPOSIT_TYPEHASHCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2175,6 +2187,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `DOMAIN_TYPEHASH()` and selector `0x20606b70`.
     ```solidity
     function DOMAIN_TYPEHASH() external view returns (bytes32);
@@ -2182,6 +2195,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DOMAIN_TYPEHASHCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`DOMAIN_TYPEHASH()`](DOMAIN_TYPEHASHCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2286,6 +2300,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `addShares(address,address,address,uint256)` and selector `0xc4623ea1`.
     ```solidity
     function addShares(address staker, address token, address strategy, uint256 shares) external;
@@ -2436,6 +2451,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `addStrategiesToDepositWhitelist(address[],bool[])` and selector `0xdf5b3547`.
     ```solidity
     function addStrategiesToDepositWhitelist(address[] memory strategiesToWhitelist, bool[] memory thirdPartyTransfersForbiddenValues) external;
@@ -2576,6 +2592,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegation()` and selector `0xdf5cf723`.
     ```solidity
     function delegation() external view returns (address);
@@ -2583,6 +2600,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`delegation()`](delegationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2687,6 +2705,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `depositIntoStrategy(address,address,uint256)` and selector `0xe7a050aa`.
     ```solidity
     function depositIntoStrategy(address strategy, address token, uint256 amount) external returns (uint256 shares);
@@ -2701,6 +2720,7 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`depositIntoStrategy(address,address,uint256)`](depositIntoStrategyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2831,6 +2851,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `depositIntoStrategyWithSignature(address,address,uint256,address,uint256,bytes)` and selector `0x32e89ace`.
     ```solidity
     function depositIntoStrategyWithSignature(address strategy, address token, uint256 amount, address staker, uint256 expiry, bytes memory signature) external returns (uint256 shares);
@@ -2851,6 +2872,7 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         pub signature: alloy::sol_types::private::Bytes,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`depositIntoStrategyWithSignature(address,address,uint256,address,uint256,bytes)`](depositIntoStrategyWithSignatureCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3010,6 +3032,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `domainSeparator()` and selector `0xf698da25`.
     ```solidity
     function domainSeparator() external view returns (bytes32);
@@ -3017,6 +3040,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct domainSeparatorCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`domainSeparator()`](domainSeparatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3121,6 +3145,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `eigenPodManager()` and selector `0x4665bcda`.
     ```solidity
     function eigenPodManager() external view returns (address);
@@ -3128,6 +3153,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodManagerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`eigenPodManager()`](eigenPodManagerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3232,6 +3258,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getDeposits(address)` and selector `0x94f649dd`.
     ```solidity
     function getDeposits(address staker) external view returns (address[] memory, uint256[] memory);
@@ -3242,6 +3269,7 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getDeposits(address)`](getDepositsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3367,6 +3395,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `initialize(address,address,address,uint256)` and selector `0xcf756fdf`.
     ```solidity
     function initialize(address initialOwner, address initialStrategyWhitelister, address _pauserRegistry, uint256 initialPausedStatus) external;
@@ -3522,6 +3551,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `nonces(address)` and selector `0x7ecebe00`.
     ```solidity
     function nonces(address) external view returns (uint256);
@@ -3532,6 +3562,7 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`nonces(address)`](noncesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3640,6 +3671,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `owner()` and selector `0x8da5cb5b`.
     ```solidity
     function owner() external view returns (address);
@@ -3647,6 +3679,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`owner()`](ownerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3751,6 +3784,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pause(uint256)` and selector `0x136439dd`.
     ```solidity
     function pause(uint256 newPausedStatus) external;
@@ -3868,6 +3902,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauseAll()` and selector `0x595c6a67`.
     ```solidity
     function pauseAll() external;
@@ -3976,6 +4011,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused(uint8)` and selector `0x5ac86ab7`.
     ```solidity
     function paused(uint8 index) external view returns (bool);
@@ -3986,6 +4022,7 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         pub index: u8,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused(uint8)`](paused_0Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4094,6 +4131,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `paused()` and selector `0x5c975abb`.
     ```solidity
     function paused() external view returns (uint256);
@@ -4101,6 +4139,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Call {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`paused()`](paused_1Call) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4205,6 +4244,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `pauserRegistry()` and selector `0x886f1195`.
     ```solidity
     function pauserRegistry() external view returns (address);
@@ -4212,6 +4252,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`pauserRegistry()`](pauserRegistryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4316,6 +4357,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `removeShares(address,address,uint256)` and selector `0x8c80d4e5`.
     ```solidity
     function removeShares(address staker, address strategy, uint256 shares) external;
@@ -4457,6 +4499,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `removeStrategiesFromDepositWhitelist(address[])` and selector `0xb5d8b5b8`.
     ```solidity
     function removeStrategiesFromDepositWhitelist(address[] memory strategiesToRemoveFromWhitelist) external;
@@ -4578,6 +4621,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `renounceOwnership()` and selector `0x715018a6`.
     ```solidity
     function renounceOwnership() external;
@@ -4686,6 +4730,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setPauserRegistry(address)` and selector `0x10d67a2f`.
     ```solidity
     function setPauserRegistry(address newPauserRegistry) external;
@@ -4803,6 +4848,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setStrategyWhitelister(address)` and selector `0xc6656702`.
     ```solidity
     function setStrategyWhitelister(address newStrategyWhitelister) external;
@@ -4920,6 +4966,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `setThirdPartyTransfersForbidden(address,bool)` and selector `0x4e5a4263`.
     ```solidity
     function setThirdPartyTransfersForbidden(address strategy, bool value) external;
@@ -5049,6 +5096,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `slasher()` and selector `0xb1344271`.
     ```solidity
     function slasher() external view returns (address);
@@ -5056,6 +5104,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct slasherCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`slasher()`](slasherCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5160,6 +5209,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stakerStrategyList(address,uint256)` and selector `0xcbc2bd62`.
     ```solidity
     function stakerStrategyList(address, uint256) external view returns (address);
@@ -5172,6 +5222,7 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`stakerStrategyList(address,uint256)`](stakerStrategyListCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5295,6 +5346,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stakerStrategyListLength(address)` and selector `0x8b8aac3c`.
     ```solidity
     function stakerStrategyListLength(address staker) external view returns (uint256);
@@ -5305,6 +5357,7 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`stakerStrategyListLength(address)`](stakerStrategyListLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5413,6 +5466,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stakerStrategyShares(address,address)` and selector `0x7a7e0d92`.
     ```solidity
     function stakerStrategyShares(address, address) external view returns (uint256);
@@ -5425,6 +5479,7 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`stakerStrategyShares(address,address)`](stakerStrategySharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5548,6 +5603,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `strategyIsWhitelistedForDeposit(address)` and selector `0x663c1de4`.
     ```solidity
     function strategyIsWhitelistedForDeposit(address) external view returns (bool);
@@ -5558,6 +5614,7 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`strategyIsWhitelistedForDeposit(address)`](strategyIsWhitelistedForDepositCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5666,6 +5723,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `strategyWhitelister()` and selector `0x967fc0d2`.
     ```solidity
     function strategyWhitelister() external view returns (address);
@@ -5673,6 +5731,7 @@ pub mod StrategyManager {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyWhitelisterCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`strategyWhitelister()`](strategyWhitelisterCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5777,6 +5836,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `thirdPartyTransfersForbidden(address)` and selector `0x9b4da03d`.
     ```solidity
     function thirdPartyTransfersForbidden(address) external view returns (bool);
@@ -5787,6 +5847,7 @@ pub mod StrategyManager {
         #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`thirdPartyTransfersForbidden(address)`](thirdPartyTransfersForbiddenCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -5895,6 +5956,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transferOwnership(address)` and selector `0xf2fde38b`.
     ```solidity
     function transferOwnership(address newOwner) external;
@@ -6010,6 +6072,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `unpause(uint256)` and selector `0xfabc1cbc`.
     ```solidity
     function unpause(uint256 newPausedStatus) external;
@@ -6127,6 +6190,7 @@ pub mod StrategyManager {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `withdrawSharesAsTokens(address,address,uint256,address)` and selector `0xc608c7f3`.
     ```solidity
     function withdrawSharesAsTokens(address recipient, address strategy, uint256 shares, address token) external;
@@ -6279,6 +6343,7 @@ pub mod StrategyManager {
         }
     };
     ///Container for all the [`StrategyManager`](self) function calls.
+    #[derive()]
     pub enum StrategyManagerCalls {
         #[allow(missing_docs)]
         DEPOSIT_TYPEHASH(DEPOSIT_TYPEHASHCall),
@@ -7252,6 +7317,7 @@ pub mod StrategyManager {
         }
     }
     ///Container for all the [`StrategyManager`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum StrategyManagerEvents {
         #[allow(missing_docs)]
         Deposit(Deposit),

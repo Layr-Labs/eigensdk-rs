@@ -233,6 +233,7 @@ pub mod IERC20 {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Approval(address,address,uint256)` and selector `0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925`.
     ```solidity
     event Approval(address indexed owner, address indexed spender, uint256 value);
@@ -353,6 +354,7 @@ pub mod IERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `Transfer(address,address,uint256)` and selector `0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef`.
     ```solidity
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -473,6 +475,7 @@ pub mod IERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `allowance(address,address)` and selector `0xdd62ed3e`.
     ```solidity
     function allowance(address owner, address spender) external view returns (uint256);
@@ -485,6 +488,7 @@ pub mod IERC20 {
         #[allow(missing_docs)]
         pub spender: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`allowance(address,address)`](allowanceCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -608,6 +612,7 @@ pub mod IERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `approve(address,uint256)` and selector `0x095ea7b3`.
     ```solidity
     function approve(address spender, uint256 amount) external returns (bool);
@@ -620,6 +625,7 @@ pub mod IERC20 {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`approve(address,uint256)`](approveCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -743,6 +749,7 @@ pub mod IERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `balanceOf(address)` and selector `0x70a08231`.
     ```solidity
     function balanceOf(address account) external view returns (uint256);
@@ -753,6 +760,7 @@ pub mod IERC20 {
         #[allow(missing_docs)]
         pub account: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`balanceOf(address)`](balanceOfCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -861,6 +869,7 @@ pub mod IERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `totalSupply()` and selector `0x18160ddd`.
     ```solidity
     function totalSupply() external view returns (uint256);
@@ -868,6 +877,7 @@ pub mod IERC20 {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalSupplyCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`totalSupply()`](totalSupplyCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -972,6 +982,7 @@ pub mod IERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transfer(address,uint256)` and selector `0xa9059cbb`.
     ```solidity
     function transfer(address to, uint256 amount) external returns (bool);
@@ -984,6 +995,7 @@ pub mod IERC20 {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`transfer(address,uint256)`](transferCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1107,6 +1119,7 @@ pub mod IERC20 {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `transferFrom(address,address,uint256)` and selector `0x23b872dd`.
     ```solidity
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
@@ -1121,6 +1134,7 @@ pub mod IERC20 {
         #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`transferFrom(address,address,uint256)`](transferFromCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1252,6 +1266,7 @@ pub mod IERC20 {
         }
     };
     ///Container for all the [`IERC20`](self) function calls.
+    #[derive()]
     pub enum IERC20Calls {
         #[allow(missing_docs)]
         allowance(allowanceCall),
@@ -1436,6 +1451,7 @@ pub mod IERC20 {
         }
     }
     ///Container for all the [`IERC20`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IERC20Events {
         #[allow(missing_docs)]
         Approval(Approval),

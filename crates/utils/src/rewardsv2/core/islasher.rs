@@ -608,6 +608,7 @@ pub mod ISlasher {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**```solidity
     struct MiddlewareTimes { uint32 stalestUpdateBlock; uint32 latestServeUntilBlock; }
     ```*/
@@ -810,6 +811,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `FrozenStatusReset(address)` and selector `0xd4cef0af27800d466fcacd85779857378b85cb61569005ff1464fa6e5ced69d8`.
     ```solidity
     event FrozenStatusReset(address indexed previouslySlashedAddress);
@@ -915,6 +917,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `MiddlewareTimesAdded(address,uint256,uint32,uint32)` and selector `0x1b62ba64c72d01e41a2b8c46e6aeeff728ef3a4438cf1cac3d92ee12189d5649`.
     ```solidity
     event MiddlewareTimesAdded(address operator, uint256 index, uint32 stalestUpdateBlock, uint32 latestServeUntilBlock);
@@ -1038,6 +1041,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OperatorFrozen(address,address)` and selector `0x444a84f512816ae7be8ed8a66aa88e362eb54d0988e83acc9d81746622b3ba51`.
     ```solidity
     event OperatorFrozen(address indexed slashedOperator, address indexed slashingContract);
@@ -1151,6 +1155,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `OptedIntoSlashing(address,address)` and selector `0xefa9fb38e813d53c15edf501e03852843a3fed691960523391d71a092b3627d8`.
     ```solidity
     event OptedIntoSlashing(address indexed operator, address indexed contractAddress);
@@ -1264,6 +1269,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Event with signature `SlashingAbilityRevoked(address,address,uint32)` and selector `0x9aa1b1391f35c672ed1f3b7ece632f4513e618366bef7a2f67b7c6bc1f2d2b14`.
     ```solidity
     event SlashingAbilityRevoked(address indexed operator, address indexed contractAddress, uint32 contractCanSlashOperatorUntilBlock);
@@ -1384,6 +1390,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `canSlash(address,address)` and selector `0xd98128c0`.
     ```solidity
     function canSlash(address toBeSlashed, address slashingContract) external view returns (bool);
@@ -1396,6 +1403,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub slashingContract: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`canSlash(address,address)`](canSlashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1519,6 +1527,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `canWithdraw(address,uint32,uint256)` and selector `0x8105e043`.
     ```solidity
     function canWithdraw(address operator, uint32 withdrawalStartBlock, uint256 middlewareTimesIndex) external returns (bool);
@@ -1533,6 +1542,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub middlewareTimesIndex: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`canWithdraw(address,uint32,uint256)`](canWithdrawCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1667,6 +1677,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `contractCanSlashOperatorUntilBlock(address,address)` and selector `0x6f0c2f74`.
     ```solidity
     function contractCanSlashOperatorUntilBlock(address operator, address serviceContract) external view returns (uint32);
@@ -1679,6 +1690,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub serviceContract: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`contractCanSlashOperatorUntilBlock(address,address)`](contractCanSlashOperatorUntilBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1802,6 +1814,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `delegation()` and selector `0xdf5cf723`.
     ```solidity
     function delegation() external view returns (address);
@@ -1809,6 +1822,7 @@ pub mod ISlasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`delegation()`](delegationCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -1913,6 +1927,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `freezeOperator(address)` and selector `0x38c8ee64`.
     ```solidity
     function freezeOperator(address toBeFrozen) external;
@@ -2030,6 +2045,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getCorrectValueForInsertAfter(address,uint32)` and selector `0x723e59c7`.
     ```solidity
     function getCorrectValueForInsertAfter(address operator, uint32 updateBlock) external view returns (uint256);
@@ -2042,6 +2058,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub updateBlock: u32,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getCorrectValueForInsertAfter(address,uint32)`](getCorrectValueForInsertAfterCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2162,6 +2179,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getMiddlewareTimesIndexServeUntilBlock(address,uint32)` and selector `0x7259a45c`.
     ```solidity
     function getMiddlewareTimesIndexServeUntilBlock(address operator, uint32 index) external view returns (uint32);
@@ -2174,6 +2192,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub index: u32,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getMiddlewareTimesIndexServeUntilBlock(address,uint32)`](getMiddlewareTimesIndexServeUntilBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2299,6 +2318,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `getMiddlewareTimesIndexStalestUpdateBlock(address,uint32)` and selector `0x1874e5ae`.
     ```solidity
     function getMiddlewareTimesIndexStalestUpdateBlock(address operator, uint32 index) external view returns (uint32);
@@ -2311,6 +2331,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub index: u32,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`getMiddlewareTimesIndexStalestUpdateBlock(address,uint32)`](getMiddlewareTimesIndexStalestUpdateBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2440,6 +2461,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `isFrozen(address)` and selector `0xe5839836`.
     ```solidity
     function isFrozen(address staker) external view returns (bool);
@@ -2450,6 +2472,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`isFrozen(address)`](isFrozenCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2558,6 +2581,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `latestUpdateBlock(address,address)` and selector `0xda16e29b`.
     ```solidity
     function latestUpdateBlock(address operator, address serviceContract) external view returns (uint32);
@@ -2570,6 +2594,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub serviceContract: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`latestUpdateBlock(address,address)`](latestUpdateBlockCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2693,6 +2718,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `middlewareTimesLength(address)` and selector `0xa49db732`.
     ```solidity
     function middlewareTimesLength(address operator) external view returns (uint256);
@@ -2703,6 +2729,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`middlewareTimesLength(address)`](middlewareTimesLengthCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2811,6 +2838,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `operatorToMiddlewareTimes(address,uint256)` and selector `0x282670fc`.
     ```solidity
     function operatorToMiddlewareTimes(address operator, uint256 arrayIndex) external view returns (MiddlewareTimes memory);
@@ -2823,6 +2851,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub arrayIndex: alloy::sol_types::private::primitives::aliases::U256,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`operatorToMiddlewareTimes(address,uint256)`](operatorToMiddlewareTimesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -2947,6 +2976,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `operatorWhitelistedContractsLinkedListEntry(address,address)` and selector `0x855fcc4a`.
     ```solidity
     function operatorWhitelistedContractsLinkedListEntry(address operator, address node) external view returns (bool, uint256, uint256);
@@ -2959,6 +2989,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub node: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`operatorWhitelistedContractsLinkedListEntry(address,address)`](operatorWhitelistedContractsLinkedListEntryCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3111,6 +3142,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `operatorWhitelistedContractsLinkedListSize(address)` and selector `0xe921d4fa`.
     ```solidity
     function operatorWhitelistedContractsLinkedListSize(address operator) external view returns (uint256);
@@ -3121,6 +3153,7 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`operatorWhitelistedContractsLinkedListSize(address)`](operatorWhitelistedContractsLinkedListSizeCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -3237,6 +3270,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `optIntoSlashing(address)` and selector `0xf73b7519`.
     ```solidity
     function optIntoSlashing(address contractAddress) external;
@@ -3354,6 +3388,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `recordFirstStakeUpdate(address,uint32)` and selector `0x175d3205`.
     ```solidity
     function recordFirstStakeUpdate(address operator, uint32 serveUntilBlock) external;
@@ -3483,6 +3518,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `recordLastStakeUpdateAndRevokeSlashingAbility(address,uint32)` and selector `0x0ffabbce`.
     ```solidity
     function recordLastStakeUpdateAndRevokeSlashingAbility(address operator, uint32 serveUntilBlock) external;
@@ -3621,6 +3657,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `recordStakeUpdate(address,uint32,uint32,uint256)` and selector `0xc747075b`.
     ```solidity
     function recordStakeUpdate(address operator, uint32 updateBlock, uint32 serveUntilBlock, uint256 insertAfter) external;
@@ -3776,6 +3813,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `resetFrozenStatus(address[])` and selector `0x7cf72bba`.
     ```solidity
     function resetFrozenStatus(address[] memory frozenAddresses) external;
@@ -3896,6 +3934,7 @@ pub mod ISlasher {
             }
         }
     };
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `strategyManager()` and selector `0x39b70e38`.
     ```solidity
     function strategyManager() external view returns (address);
@@ -3903,6 +3942,7 @@ pub mod ISlasher {
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyManagerCall {}
+    #[derive(Default, Debug, PartialEq, Eq, Hash)]
     ///Container type for the return parameters of the [`strategyManager()`](strategyManagerCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -4008,6 +4048,7 @@ pub mod ISlasher {
         }
     };
     ///Container for all the [`ISlasher`](self) function calls.
+    #[derive()]
     pub enum ISlasherCalls {
         #[allow(missing_docs)]
         canSlash(canSlashCall),
@@ -4651,6 +4692,7 @@ pub mod ISlasher {
         }
     }
     ///Container for all the [`ISlasher`](self) events.
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum ISlasherEvents {
         #[allow(missing_docs)]
         FrozenStatusReset(FrozenStatusReset),
