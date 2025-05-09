@@ -2,7 +2,7 @@ name: Bindings
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
     branches: [ '**' ]
 
@@ -13,7 +13,7 @@ jobs:
   check:
     name: Check bindings are up to date
     runs-on: ubuntu-22.04
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Show Forge version
         run: forge --version
-      
+
       - name: Generate new bindings
         run: make bindings_host
 
