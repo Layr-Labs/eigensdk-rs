@@ -105,9 +105,8 @@ pub fn verifier_from_compute_function<Input, Output>(
 where
     Output: SolValue + Clone + PartialEq,
 {
-    let is_response_correct = move |task: Task<Input>, task_response: TaskResponse<Output>| {
+    move |task: Task<Input>, task_response: TaskResponse<Output>| {
         let computed_response = compute_response(task_response.task_index, task.input)?;
         Ok(computed_response == task_response.response)
-    };
-    is_response_correct
+    }
 }

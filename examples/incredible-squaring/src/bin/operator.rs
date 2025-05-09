@@ -1,18 +1,11 @@
 #![allow(missing_docs)]
 
-use alloy::{
-    network::Ethereum,
-    primitives::{address, U256},
-};
-use eigen_common::SdkProvider;
+use alloy::primitives::{address, U256};
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
 use eigen_operator::{compute_with_failures, config::OperatorConfig, Operator};
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
-use incredible_squaring::{
-    bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
-    square, ISTaskManager,
-};
+use incredible_squaring::{square, ISTaskManager};
 
 // This example shows how to initialize an operator and start to listen for new task events.
 // For this example, Operator should be registered.
