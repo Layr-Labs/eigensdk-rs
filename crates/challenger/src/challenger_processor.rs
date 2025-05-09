@@ -8,7 +8,7 @@ use eigen_task_processor::task_response_metadata_sol::TaskResponseMetadataSol;
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
-use tracing::error;
+use tracing::{error, info};
 
 #[derive(Debug)]
 pub struct IndexingChallengerProcessor<TM, F>
@@ -58,24 +58,32 @@ where
         task_response_metadata: TaskResponseMetadataSol,
         non_signing_operator_pub_keys: Vec<G1Point>,
     ) -> Result<(), ChallengerError> {
-        if let Some(task) = self.tasks.get(&task_index).filter(|&t| {
-            // TODO: handle the error
-            !((self.is_response_correct)(t.clone(), task_response.clone()).unwrap_or(false))
-        }) {
-            let tm = self.task_manager.clone();
-            let task = task.clone();
+        let Some(task) = self.tasks.get(&task_index) else {
+            info!("Task {task_index} not found");
+            return Ok(());
+        };
 
-            tokio::spawn(async move {
-                tm.raise_challenge(
-                    task,
-                    task_response,
-                    task_response_metadata,
-                    non_signing_operator_pub_keys,
-                )
-                .await
-                .inspect_err(|e| error!("Challenge failed for task {}: {}", task_index, e))
-            });
+        let is_correct = (self.is_response_correct)(task.clone(), task_response.clone())?;
+
+        // If the response is correct, we don't need to raise a challenge
+        if is_correct {
+            info!("Task {task_index} is correct");
+            return Ok(());
         }
+
+        // If the response is incorrect, we need to raise a challenge
+        let tm = self.task_manager.clone();
+        let task = task.clone();
+        tokio::spawn(async move {
+            tm.raise_challenge(
+                task,
+                task_response,
+                task_response_metadata,
+                non_signing_operator_pub_keys,
+            )
+            .await
+            .inspect_err(|e| error!("Challenge failed for task {task_index}: {e}"))
+        });
 
         Ok(())
     }
