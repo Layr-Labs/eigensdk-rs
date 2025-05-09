@@ -14,7 +14,7 @@ use alloy::primitives::Bytes;
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
 use alloy::rpc::types::{Filter, Log};
-use alloy::sol_types::{SolEvent, SolValue};
+use alloy::sol_types::SolValue;
 pub use config::AggregatorConfig;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
@@ -218,7 +218,7 @@ where
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
-        let filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
+        let filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
 
         while let Some(log) = provider

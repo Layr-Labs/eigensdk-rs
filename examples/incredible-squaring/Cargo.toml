@@ -18,7 +18,7 @@ eigen-types.workspace = true
 eigen-common.workspace = true
 eigen-task-processor.workspace = true
 eigen-aggregator.workspace = true
-eigen-operator.workspace = true
+eigen-operator = { workspace = true, features = ["operator-testing"] }
 eigen-task-spammer.workspace = true
 eigen-challenger.workspace = true
 eigen-utils.workspace = true
@@ -28,6 +28,9 @@ serde.workspace = true
 tracing.workspace = true
 serde_json.workspace = true
 ark-ec.workspace = true
+
+[lib]
+doctest = false
 
 [[bin]]
 name = "incredible-squaring-aggregator"

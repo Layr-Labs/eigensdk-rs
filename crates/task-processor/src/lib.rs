@@ -1,10 +1,6 @@
 //! Task manager
 
 use alloy::primitives::B256;
-use alloy::{
-    contract::private::{Provider, Transport},
-    network::Network,
-};
 use ark_ec::AffineRepr;
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
 use eigen_services_blsaggregation::{
@@ -20,7 +16,7 @@ use std::sync::Arc;
 use std::time::Duration;
 use std::{collections::HashMap, fmt::Debug};
 use task::Task;
-use task_manager::TaskManagerContract;
+use task_manager::TaskManager;
 use task_processor::TaskProcessor;
 use task_response::TaskResponse;
 use tokio::sync::Mutex;
@@ -43,12 +39,9 @@ type TaskResponsesMap<O> = HashMap<u32, HashMap<TaskResponseDigest, TaskResponse
 
 /// Indexing task processor
 #[derive(Debug, Clone)]
-pub struct IndexingTaskProcessor<TM, T, P, N>
+pub struct IndexingTaskProcessor<TM>
 where
-    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
-    T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N>,
-    N: Network,
+    TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
     /// Hashmap to store the created tasks
     tasks: Arc<Mutex<HashMap<u32, Task<TM::Input>>>>,
@@ -62,12 +55,9 @@ where
     task_window_duration: Duration,
 }
 
-impl<TM, T, P, N> IndexingTaskProcessor<TM, T, P, N>
+impl<TM> IndexingTaskProcessor<TM>
 where
-    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
-    T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N>,
-    N: Network,
+    TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
     /// Create a new task processor
     ///
@@ -89,18 +79,15 @@ where
     }
 }
 
-impl<TM, T, P, N> TaskProcessor for IndexingTaskProcessor<TM, T, P, N>
+impl<TM> TaskProcessor for IndexingTaskProcessor<TM>
 where
-    TM: TaskManagerContract<T, P, N> + Debug + Send + Sync + 'static + Clone,
-    T: Transport + Clone + Send + Sync + 'static,
-    P: Provider<T, N>,
-    N: Network,
+    TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
-    type NewTaskEvent = TM::NewTaskEvent;
-
     type Output = TM::Output;
 
     type Input = TM::Input;
+
+    const NEW_TASK_EVENT_SELECTOR: B256 = TM::NEW_TASK_EVENT_SELECTOR;
 
     async fn process_new_task(
         &mut self,

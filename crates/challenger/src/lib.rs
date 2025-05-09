@@ -5,7 +5,7 @@ use alloy::{
     primitives::Bytes,
     providers::Provider,
     rpc::types::{Filter, Log},
-    sol_types::{SolEvent, SolValue},
+    sol_types::SolValue,
 };
 use challenger::ChallengerTaskProcessor;
 use eigen_common::{get_provider, get_ws_provider};
@@ -96,14 +96,14 @@ where
         let ws_provider = get_ws_provider(&self.ws_url).await?;
 
         // Subscribe to NewTaskEvent
-        let task_filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
+        let task_filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
         let mut task_stream = ws_provider
             .subscribe_logs(&task_filter)
             .await?
             .into_stream();
 
         // Subscribe to TaskResponseEvent
-        let responded_filter = Filter::new().event_signature(TP::TaskResponseEvent::SIGNATURE_HASH);
+        let responded_filter = Filter::new().event_signature(TP::TASK_RESPONDED_EVENT_SELECTOR);
         let mut responded_stream = ws_provider
             .subscribe_logs(&responded_filter)
             .await?

@@ -1,4 +1,3 @@
-use alloy::sol_types::SolEvent;
 use alloy::{primitives::B256, sol_types::SolValue};
 use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
@@ -12,14 +11,14 @@ use crate::task_response::TaskResponse;
 
 /// Abstracts task-specific behaviour
 pub trait TaskProcessor {
-    /// Event type expected by the task processor
-    type NewTaskEvent: SolEvent;
-
     /// Input type expected by the task processor
     type Input: SolValue + Send + Sync + 'static + Clone;
 
     /// Response type expected by the task processor
     type Output: SolValue + Send + Sync + 'static + Clone + DeserializeOwned;
+
+    /// Selector for the event signaling a new task
+    const NEW_TASK_EVENT_SELECTOR: B256;
 
     /// Creates the [`TaskMetadata`]
     ///
