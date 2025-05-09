@@ -637,6 +637,7 @@ dependencies = [
  "alloy-primitives",
  "alloy-signer",
  "async-trait",
+ "eth-keystore",
  "k256",
  "rand 0.8.5",
  "thiserror 2.0.12",
@@ -4653,6 +4654,19 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.100",
+]
+
+[[package]]
+name = "incredible-redis"
+version = "0.1.0"
+dependencies = [
+ "alloy",
+ "eigensdk",
+ "eyre",
+ "serde",
+ "tokio",
+ "toml",
+ "tracing",
 ]
 
 [[package]]
