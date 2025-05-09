@@ -1,7 +1,7 @@
-diff --git a/crates/utils/src/slashing/core/allocationmanager.rs b/crates/utils/src/slashing/core/allocationmanager.rs
-index a0a2d66..17a9ead 100644
---- a/crates/utils/src/slashing/core/allocationmanager.rs
-+++ b/crates/utils/src/slashing/core/allocationmanager.rs
+diff --git i/crates/utils/src/slashing/core/allocationmanager.rs w/crates/utils/src/slashing/core/allocationmanager.rs
+index a0a2d660..17a9ead3 100644
+--- i/crates/utils/src/slashing/core/allocationmanager.rs
++++ w/crates/utils/src/slashing/core/allocationmanager.rs
 @@ -19,6 +19,7 @@ library IAllocationManagerTypes {
      clippy::empty_structs_with_brackets
  )]
