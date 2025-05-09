@@ -7,9 +7,10 @@ use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_test_logger;
+use eigen_testing_utils::anvil_constants::get_registry_coordinator_address;
 use eigen_testing_utils::m2_holesky_constants::{
     AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
-    REGISTRY_COORDINATOR, REWARDS_COORDINATOR, SLASHER_ADDRESS, STRATEGY_MANAGER_ADDRESS,
+    REGISTRY_COORDINATOR, REWARDS_COORDINATOR, STRATEGY_MANAGER_ADDRESS,
 };
 use eigen_types::operator::Operator;
 use eyre::Result;
@@ -62,18 +63,25 @@ async fn main() -> Result<()> {
     // A new ElChainReader instance
     let el_chain_reader = ELChainReader::new(
         get_test_logger().clone(),
-        SLASHER_ADDRESS,
+        None,
         DELEGATION_MANAGER_ADDRESS,
         REWARDS_COORDINATOR,
         AVS_DIRECTORY_ADDRESS,
-        "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
+        None,
+        holesky_provider.to_string(),
     );
+
+    let registry_coordinator = get_registry_coordinator_address(holesky_provider.to_string()).await;
+
     // A new ElChainWriter instance
     let el_writer = ELChainWriter::new(
         STRATEGY_MANAGER_ADDRESS,
         REWARDS_COORDINATOR,
+        None,
+        None,
+        registry_coordinator,
         el_chain_reader,
-        "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
+        holesky_provider.to_string(),
         "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string(),
     );
 
@@ -84,10 +92,11 @@ async fn main() -> Result<()> {
 
     let operator_details = Operator {
         address: wallet.address(),
-        earnings_receiver_address: wallet.address(),
         delegation_approver_address: wallet.address(),
-        staker_opt_out_window_blocks: 3,
-        metadata_url: Some("eigensdk-rs".to_string()),
+        metadata_url: "eigensdk-rs".to_string(),
+        allocation_delay: Some(1u32),
+        _deprecated_earnings_receiver_address: None,
+        staker_opt_out_window_blocks: None,
     };
     // Register the address as operator in delegation manager
     let _s = el_writer.register_as_operator(operator_details).await;

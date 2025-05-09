@@ -2,14 +2,13 @@ use crate::client::BackendClient;
 use alloy::consensus::TxEnvelope;
 use alloy::primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
 use alloy::providers::{Provider, ProviderBuilder, RootProvider};
-use alloy::pubsub::{PubSubFrontend, Subscription};
+use alloy::pubsub::Subscription;
 use alloy::rlp::Encodable;
-use alloy::rpc::json_rpc::{RpcParam, RpcReturn};
+use alloy::rpc::json_rpc::{RpcRecv, RpcSend};
 use alloy::rpc::types::eth::{
     Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
     TransactionReceipt, TransactionRequest,
 };
-use alloy::transports::http::{Client, Http};
 use alloy::transports::ws::WsConnect;
 use alloy::transports::{TransportError, TransportResult};
 use eigen_logging::get_test_logger;
@@ -24,8 +23,8 @@ const PENDING_TAG: &str = "pending";
 /// This struct represents an instrumented client that can be used to interact with an Ethereum node.
 /// It provides a set of methods to interact with the node and measures the duration of the calls.
 pub struct InstrumentedClient {
-    http_client: Option<RootProvider<Http<Client>>>,
-    ws_client: Option<RootProvider<PubSubFrontend>>,
+    http_client: Option<RootProvider>,
+    ws_client: Option<RootProvider>,
     rpc_collector: RpcCallsCollector,
     net_version: u64,
 }
@@ -110,7 +109,9 @@ impl InstrumentedClient {
     /// Returns an error if the URL is invalid or if there is an error getting the version.
     pub async fn new(url: &str) -> Result<Self, InstrumentedClientError> {
         let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
-        let http_client = ProviderBuilder::new().on_http(url);
+        let http_client = ProviderBuilder::new()
+            .disable_recommended_fillers()
+            .on_http(url);
         let net_version = http_client
             .get_net_version()
             .await
@@ -142,7 +143,11 @@ impl InstrumentedClient {
         let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
         let ws_connect = WsConnect::new(url);
 
-        let ws_client = ProviderBuilder::new().on_ws(ws_connect).await.unwrap();
+        let ws_client = ProviderBuilder::new()
+            .disable_recommended_fillers()
+            .on_ws(ws_connect)
+            .await
+            .unwrap();
         let net_version = ws_client
             .get_net_version()
             .await
@@ -170,9 +175,7 @@ impl InstrumentedClient {
     /// # Errors
     ///
     /// Returns an error if there is an error getting the version.
-    pub async fn new_from_client(
-        client: RootProvider<Http<Client>>,
-    ) -> Result<Self, InstrumentedClientError> {
+    pub async fn new_from_client(client: RootProvider) -> Result<Self, InstrumentedClientError> {
         let net_version = client
             .get_net_version()
             .await
@@ -600,7 +603,7 @@ impl InstrumentedClient {
     /// # Errors
     ///
     /// * If ws_client is `None`.
-    pub async fn subscribe_filter_logs<R: RpcReturn>(
+    pub async fn subscribe_filter_logs<R: RpcRecv>(
         &self,
         filter: Filter,
     ) -> TransportResult<Subscription<R>> {
@@ -632,7 +635,7 @@ impl InstrumentedClient {
     /// # Errors
     ///
     /// * If ws_client is `None`.
-    pub async fn subscribe_new_head<R: RpcReturn>(&self) -> TransportResult<Subscription<R>> {
+    pub async fn subscribe_new_head<R: RpcRecv>(&self) -> TransportResult<Subscription<R>> {
         let id: U256 = self
             .instrument_function("eth_subscribe", ("newHeads",))
             .await
@@ -800,8 +803,8 @@ impl InstrumentedClient {
         params: P,
     ) -> TransportResult<R>
     where
-        P: RpcParam + 'async_trait,
-        R: RpcReturn + 'async_trait,
+        P: RpcSend + 'async_trait,
+        R: RpcRecv + 'async_trait,
     {
         let start = Instant::now();
         let method_string = String::from(rpc_method_name);
@@ -832,12 +835,10 @@ mod tests {
     use alloy::network::TxSignerSync;
     use alloy::primitives::address;
     use alloy::primitives::{bytes, TxKind::Call, U256};
-    use alloy::rpc::types::eth::{
-        pubsub::SubscriptionResult, BlockId, BlockNumberOrTag, BlockTransactionsKind,
-    };
+    use alloy::rpc::types::eth::{pubsub::SubscriptionResult, BlockId, BlockNumberOrTag};
+    use alloy::signers::local::PrivateKeySigner;
     use eigen_common::get_provider;
-    use eigen_signer::signer::Config;
-    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_testing_utils::anvil::{set_account_balance, start_anvil_container};
     use eigen_testing_utils::transaction::wait_transaction;
     use tokio;
 
@@ -940,17 +941,14 @@ mod tests {
 
         // get the hash from the last block
         let hash = provider
-            .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
+            .get_block(BlockId::latest())
             .await
             .unwrap()
             .unwrap()
             .header
             .hash;
 
-        let expected_block = provider
-            .get_block_by_hash(hash, BlockTransactionsKind::Full)
-            .await
-            .unwrap();
+        let expected_block = provider.get_block_by_hash(hash).full().await.unwrap();
         let block = instrumented_client.block_by_hash(hash).await.unwrap();
 
         assert_eq!(expected_block, block);
@@ -965,7 +963,8 @@ mod tests {
         let block_number = 1;
 
         let expected_block = provider
-            .get_block_by_number(block_number.into(), BlockTransactionsKind::Full)
+            .get_block_by_number(block_number.into())
+            .full()
             .await
             .unwrap();
         let block = instrumented_client
@@ -984,7 +983,7 @@ mod tests {
         let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
 
         let block = provider
-            .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
+            .get_block(BlockId::latest())
             .await
             .unwrap()
             .unwrap();
@@ -1006,32 +1005,28 @@ mod tests {
     /// * `transaction_in_block`
     #[tokio::test]
     async fn test_transaction_methods() {
-        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
+        let (container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
+
+        // Set balance on a random address to use as sender
+        let private_key_hex =
+            "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf".to_string();
+        let address = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
+        set_account_balance(&container, address).await;
 
         // build the transaction
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
-        let from = address!("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-        // retrieve the nonce to then plug it in the transaction
-        let nonce = instrumented_client
-            .nonce_at(from, BlockNumberOrTag::Latest)
-            .await
-            .unwrap();
-
         let mut tx = TxLegacy {
             to: Call(to),
             value: U256::from(0),
             gas_limit: 2_000_000,
-            nonce,
+            nonce: 0,
             gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
         };
 
-        let private_key_hex =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
-        let config = Config::PrivateKey(private_key_hex);
-        let signer = Config::signer_from_config(config).unwrap();
+        let signer = private_key_hex.parse::<PrivateKeySigner>().unwrap();
         let signature = signer.sign_transaction_sync(&mut tx).unwrap();
         let signed_tx = tx.into_signed(signature);
         let tx: TxEnvelope = TxEnvelope::from(signed_tx);
@@ -1085,7 +1080,11 @@ mod tests {
         let tx_request: TransactionRequest = tx.clone().into();
         let tx_request = tx_request.from(*from);
 
-        let expected_estimated_gas = provider.clone().estimate_gas(&tx_request).await.unwrap();
+        let expected_estimated_gas = provider
+            .clone()
+            .estimate_gas(tx_request.clone())
+            .await
+            .unwrap();
         let estimated_gas = instrumented_client.estimate_gas(tx_request).await.unwrap();
         assert_eq!(expected_estimated_gas, estimated_gas);
     }
@@ -1121,7 +1120,7 @@ mod tests {
         let tx_request = tx_request.from(*from);
 
         // test call_contract
-        let expected_bytes = anvil.call(&tx_request).await.unwrap();
+        let expected_bytes = anvil.call(tx_request.clone()).await.unwrap();
         let bytes = instrumented_client
             .call_contract(tx_request.clone(), BlockNumberOrTag::Latest)
             .await
@@ -1230,14 +1229,14 @@ mod tests {
 
         let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
         let hash = provider
-            .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
+            .get_block(BlockId::latest())
             .await
             .unwrap()
             .unwrap()
             .header
             .hash;
         let expected_header = provider
-            .get_block_by_hash(hash, BlockTransactionsKind::Hashes)
+            .get_block_by_hash(hash)
             .await
             .unwrap()
             .unwrap()
@@ -1261,7 +1260,7 @@ mod tests {
             .unwrap();
 
         let expected_header = provider
-            .get_block_by_number(block_number, BlockTransactionsKind::Hashes)
+            .get_block_by_number(block_number)
             .await
             .unwrap()
             .unwrap()
@@ -1363,7 +1362,7 @@ mod tests {
         let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
 
         let expected_transaction_count: u64 = provider
-            .get_block_by_number(BlockNumberOrTag::Pending, BlockTransactionsKind::Hashes)
+            .get_block_by_number(BlockNumberOrTag::Pending)
             .await
             .unwrap()
             .unwrap()

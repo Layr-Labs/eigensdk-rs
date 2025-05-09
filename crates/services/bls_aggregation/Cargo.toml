@@ -8,6 +8,12 @@ rust-version.workspace = true
 repository.workspace = true
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 alloy.workspace = true
 ark-bn254.workspace = true
@@ -24,13 +30,24 @@ thiserror.workspace = true
 tokio = { workspace = true, features = ["full"] }
 serde_json.workspace = true
 serde.workspace = true
+simple-mermaid = { version = "0.2.0", optional = true }
 
 [dev-dependencies]
-eigen-logging.workspace = true
-eigen-testing-utils.workspace = true
-eigen-utils.workspace = true
-eigen-services-operatorsinfo.workspace = true
+# We don't use workspace due to:
+# https://github.com/rust-lang/cargo/issues/4242#issuecomment-2578428685
+eigen-testing-utils = { path = "../../../tests/testing-utils" }
+eigen-logging = { path = "../../logging" }
+eigen-utils = { path = "../../utils" }
+eigen-client-elcontracts = { path = "../../chainio/clients/elcontracts" }
+eigen-services-operatorsinfo = { path = "../../services/operatorsinfo" }
+
 serial_test = "3.1"
 sha2 = "0.10.8"
 testcontainers.workspace = true
 tokio-util = "0.7.11"
+
+# somehow required for doc-tests
+simple-mermaid = "0.2.0"
+
+[features]
+docs = ["simple-mermaid"]

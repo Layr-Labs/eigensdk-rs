@@ -5,8 +5,9 @@ use async_trait::async_trait;
 use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryReader};
 use eigen_crypto_bls::{BlsG1Point, PublicKey};
 use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
-use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
-use eigen_utils::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
+use eigen_types::operator::{OperatorInfo, OperatorPubKeys};
+use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 use std::collections::HashMap;
 
 use crate::AvsRegistryService;
@@ -22,7 +23,12 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
     ///
     /// # Arguments
     ///
+    /// * `avs_registry` - The AVS Registry reader
     /// * `operators_info_service` - The operator info service
+    ///
+    /// # Returns
+    ///
+    /// A new instance of the [`AvsRegistryServiceChainCaller`]
     pub fn new(avs_registry: R, operators_info_service: S) -> Self {
         Self {
             avs_registry,
@@ -37,7 +43,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
 {
     async fn get_operators_avs_state_at_block(
         &self,
-        block_num: u32,
+        block_num: u64,
         quorum_nums: &[u8],
     ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError> {
         let mut operators_avs_state: HashMap<FixedBytes<32>, OperatorAvsState> = HashMap::new();
@@ -46,22 +52,22 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
             .avs_registry
             .get_operators_stake_in_quorums_at_block(block_num, Bytes::from(Vec::from(quorum_nums)))
             .await?;
-
         if operators_stakes_in_quorums.len() != quorum_nums.len() {
             // the list of quorum nums and the list of operators stakes in quorums should have the same length
             return Err(AvsRegistryError::InvalidQuorumNums);
         }
-
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
             for operator in &operators_stakes_in_quorums[quorum_id] {
                 let info = self.get_operator_info(*operator.operatorId).await?;
+                let socket = self.get_operator_socket(*operator.operatorId).await?;
                 let stake_per_quorum = HashMap::new();
                 let avs_state = operators_avs_state
                     .entry(FixedBytes(*operator.operatorId))
                     .or_insert_with(|| OperatorAvsState {
-                        operator_id: *operator.operatorId,
+                        operator_id: operator.operatorId,
                         operator_info: OperatorInfo {
                             pub_keys: Some(info),
+                            socket: Some(socket),
                         },
                         stake_per_quorum,
                         block_num: block_num.into(),
@@ -78,7 +84,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
     async fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: &[u8],
-        block_num: u32,
+        block_num: u64,
     ) -> Result<HashMap<u8, QuorumAvsState>, AvsRegistryError> {
         let operators_avs_state = self
             .get_operators_avs_state_at_block(block_num, quorum_nums)
@@ -122,7 +128,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
 
     async fn get_check_signatures_indices(
         &self,
-        reference_block_number: u32,
+        reference_block_number: u64,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<CheckSignaturesIndices, AvsRegistryError> {
@@ -155,9 +161,26 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
         operator_id: [u8; 32],
     ) -> Result<OperatorPubKeys, AvsRegistryError> {
         let operator_addr = self.avs_registry.get_operator_from_id(operator_id).await?;
-
         self.operators_info_service
             .get_operator_info(operator_addr)
+            .await
+            .unwrap_or(None)
+            .ok_or(AvsRegistryError::GetOperatorInfo)
+    }
+
+    /// Returns the operator socket for the given operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id
+    ///
+    /// # Returns
+    ///
+    /// The operator socket
+    async fn get_operator_socket(&self, operator_id: [u8; 32]) -> Result<String, AvsRegistryError> {
+        let operator_addr = self.avs_registry.get_operator_from_id(operator_id).await?;
+        self.operators_info_service
+            .get_operator_socket(operator_addr)
             .await
             .unwrap_or(None)
             .ok_or(AvsRegistryError::GetOperatorInfo)
@@ -176,9 +199,8 @@ mod tests {
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
     use eigen_testing_utils::test_data::TestData;
-    use eigen_types::operator::{
-        OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum,
-    };
+    use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
+    use eigen_types::operator::{OperatorInfo, OperatorPubKeys, QuorumNum};
     use eigen_types::test::TestOperator;
     use serde::Deserialize;
 
@@ -192,7 +214,7 @@ mod tests {
     #[derive(Deserialize, Debug)]
     struct InputOperatorAvsState {
         quorum_numbers: Vec<QuorumNum>,
-        block_num: u32,
+        block_num: u64,
         private_key_decimal: String,
         operator_id: String,
         operator_address: String,
@@ -230,7 +252,10 @@ mod tests {
     ) -> AvsRegistryServiceChainCaller<FakeAvsRegistryReader, FakeOperatorInfoService> {
         let operator_address = Address::from_str(operator_address).unwrap();
         let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
-        let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
+        let operator_info_service = FakeOperatorInfoService::new(
+            test_operator.bls_keypair.clone(),
+            Some(String::from("test_socket")),
+        );
         AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service)
     }
 
@@ -290,9 +315,10 @@ mod tests {
             .unwrap();
 
         let expected_operator_avs_state = OperatorAvsState {
-            operator_id: test_operator.operator_id.into(),
+            operator_id: test_operator.operator_id,
             operator_info: OperatorInfo {
                 pub_keys: Some(OperatorPubKeys::from(test_operator.bls_keypair)),
+                socket: Some(String::from("test_socket")),
             },
             stake_per_quorum: test_operator.stake_per_quorum,
             block_num: test_data.input.block_num.into(),
@@ -305,7 +331,7 @@ mod tests {
     async fn test_get_quorum_avs_state() {
         let test_operator = build_test_operator(PRIVATE_KEY_DECIMAL, OPERATOR_ID);
         let quorum_num = 1;
-        let block_num = 1u32;
+        let block_num = 1u64;
         let service =
             build_avs_registry_service_chaincaller(test_operator.clone(), OPERATOR_ADDRESS);
         let quorum_state_per_number = service

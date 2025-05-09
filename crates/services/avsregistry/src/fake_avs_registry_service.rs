@@ -6,11 +6,12 @@ use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
 use async_trait::async_trait;
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::{BlsG1Point, OperatorId, PublicKey};
+use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
 use eigen_types::{
-    operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum},
+    operator::{OperatorInfo, OperatorPubKeys, QuorumNum},
     test::TestOperator,
 };
-use eigen_utils::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 
 use crate::AvsRegistryService;
 
@@ -37,9 +38,10 @@ impl FakeAvsRegistryService {
         // populate the inner hashmap
         for op in test_operators {
             let state = OperatorAvsState {
-                operator_id: op.operator_id.into(),
+                operator_id: op.operator_id,
                 operator_info: OperatorInfo {
                     pub_keys: Some(OperatorPubKeys::from(op.bls_keypair)),
+                    socket: None,
                 },
                 block_num: block_number.into(),
                 stake_per_quorum: op.stake_per_quorum,
@@ -57,12 +59,12 @@ impl FakeAvsRegistryService {
 impl AvsRegistryService for FakeAvsRegistryService {
     async fn get_operators_avs_state_at_block(
         &self,
-        block_number: u32,
+        block_number: u64,
         quorum_nums: &[u8],
     ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError> {
         let mut operators_state = self
             .operators
-            .get(&(block_number as u64))
+            .get(&block_number)
             .ok_or(AvsRegistryError::GetOperatorState)
             .cloned()?;
 
@@ -85,11 +87,11 @@ impl AvsRegistryService for FakeAvsRegistryService {
     async fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: &[u8],
-        block_num: u32,
+        block_num: u64,
     ) -> Result<HashMap<u8, QuorumAvsState>, AvsRegistryError> {
         let operator_avs_state = self
             .operators
-            .get(&(block_num as u64))
+            .get(&block_num)
             .ok_or(AvsRegistryError::GetOperatorState)?;
         let mut quorum_avs_state: HashMap<QuorumNum, QuorumAvsState> = HashMap::new();
         for quorum_num in quorum_nums {
@@ -126,7 +128,7 @@ impl AvsRegistryService for FakeAvsRegistryService {
 
     async fn get_check_signatures_indices(
         &self,
-        _reference_block_number: u32,
+        _reference_block_number: u64,
         _quorum_numbers: Vec<u8>,
         _non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<CheckSignaturesIndices, AvsRegistryError> {

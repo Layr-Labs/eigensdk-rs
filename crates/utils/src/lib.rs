@@ -1,8 +1,27 @@
-/// forge bind --alloy --skip-build --bindings-path ../utils/src/core --overwrite --root ./lib/eigenlayer-middleware/lib/eigenlayer-contracts  --module  --select DelegationManager --select RewardsCoordinator --select StrategyManager --select IEigenPod --select EigenPod --select EigenPodManager --select Strategy --select AVSDirectory --select AllocationManager --select PermissionController --select ERC20 --select Slasher
-pub mod core;
+//! This module exports generated bindings.
+pub mod common;
+pub mod rewardsv2;
+pub mod slashing;
 
-/// forge bind --alloy --skip-build --bindings-path ../utils/src/middleware --overwrite --root ./lib/eigenlayer-middleware  --module  --select RegistryCoordinator --select IndexRegistry --select OperatorStateRetriever --select StakeRegistry --select BLSApkRegistry --select IBLSSignatureChecker --select ServiceManagerBase --select IERC20
-pub mod middleware;
+use crate::slashing::core::allocationmanager::AllocationManager::OperatorSet;
+use crate::slashing::core::irewardscoordinator::IRewardsCoordinator::OperatorSet as RewardsOperatorSet;
+use crate::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams as RegistryCoordiinatorStrategyParams;
+use crate::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
+/// Converts [`OperatorSet`] to [`RewardsOperatorSet`]
+pub fn convert_allocation_operator_set_to_rewards_operator_set(
+    operator_set: OperatorSet,
+) -> RewardsOperatorSet {
+    RewardsOperatorSet {
+        avs: operator_set.avs,
+        id: operator_set.id,
+    }
+}
 
-/// forge bind --alloy --skip-build --bindings-path ../utils/src/sdk --overwrite -C src/contracts --module  --select MockAvsServiceManager --select ContractsRegistry
-pub mod sdk;
+pub fn convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params(
+    params: StrategyParams,
+) -> RegistryCoordiinatorStrategyParams {
+    RegistryCoordiinatorStrategyParams {
+        strategy: params.strategy,
+        multiplier: params.multiplier,
+    }
+}

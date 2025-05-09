@@ -2,21 +2,23 @@ use alloy::providers::{
     fillers::{
         BlobGasFiller, ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller, WalletFiller,
     },
-    network::{Ethereum, EthereumWallet},
+    network::EthereumWallet,
     Identity, ProviderBuilder, RootProvider, WsConnect,
 };
-use alloy::pubsub::PubSubFrontend;
 use alloy::signers::local::PrivateKeySigner;
-use alloy::transports::http::{Client, Http};
 use alloy::transports::{RpcError, TransportErrorKind};
 use std::str::FromStr;
 use url::Url;
 
-#[allow(clippy::type_complexity)]
-pub fn get_signer(
-    key: &str,
-    rpc_url: &str,
-) -> alloy::providers::fillers::FillProvider<
+pub type SdkProvider = FillProvider<
+    JoinFill<
+        Identity,
+        JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
+    >,
+    RootProvider,
+>;
+
+pub type SdkSigner = FillProvider<
     JoinFill<
         JoinFill<
             Identity,
@@ -24,43 +26,28 @@ pub fn get_signer(
         >,
         WalletFiller<EthereumWallet>,
     >,
-    RootProvider<Http<Client>>,
-    Http<Client>,
-    Ethereum,
-> {
+    RootProvider,
+>;
+
+pub fn get_signer(key: &str, rpc_url: &str) -> SdkSigner {
     let signer = PrivateKeySigner::from_str(key).expect("wrong key ");
     let wallet = EthereumWallet::from(signer);
     let url = Url::parse(rpc_url).expect("Wrong rpc url");
-    ProviderBuilder::new()
-        .with_recommended_fillers()
-        .wallet(wallet.clone())
-        .on_http(url)
+    ProviderBuilder::new().wallet(wallet.clone()).on_http(url)
 }
 
-#[allow(clippy::type_complexity)]
-pub fn get_provider(
-    rpc_url: &str,
-) -> FillProvider<
-    JoinFill<
-        Identity,
-        JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
-    >,
-    RootProvider<Http<Client>>,
-    Http<Client>,
-    Ethereum,
-> {
+pub fn get_provider(rpc_url: &str) -> SdkProvider {
     let url = Url::parse(rpc_url).expect("Wrong rpc url");
-    ProviderBuilder::new()
-        .with_recommended_fillers()
-        .on_http(url)
+    ProviderBuilder::new().on_http(url)
 }
 
 #[allow(clippy::type_complexity)]
-pub async fn get_ws_provider(
-    rpc_url: &str,
-) -> Result<RootProvider<PubSubFrontend>, RpcError<TransportErrorKind>> {
+pub async fn get_ws_provider(rpc_url: &str) -> Result<RootProvider, RpcError<TransportErrorKind>> {
     let ws = WsConnect::new(rpc_url);
-    ProviderBuilder::new().on_ws(ws).await
+    ProviderBuilder::new()
+        .disable_recommended_fillers()
+        .on_ws(ws)
+        .await
 }
 
 /// Emitted when a new pubkey is registered

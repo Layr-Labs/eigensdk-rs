@@ -283,7 +283,6 @@ mod test {
     #[tokio::test]
     async fn test_egn_addrs_with_service_manager_flag() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
         let test_data = TestData::new(Input {
             service_manager_address: get_service_manager_address(http_endpoint.clone()).await,
             rpc_url: http_endpoint.clone(),
@@ -291,16 +290,16 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(&format!(
             r#"{{
                 "avs": {{
-                    "bls-apk-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9",
-                    "index-registry": "0x1613beb3b2c4f22ee086b2b38c1476a3ce7f78e8",
-                    "registry-coordinator": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
-                    "service-manager": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
-                    "stake-registry": "0x851356ae760d987e095750cceb3bc6014560891c"
+                    "bls-apk-registry": "0x1429859428c0abc9c2c47c8ee9fbaf82cfa0f20f",
+                    "index-registry": "0x162a433068f51e18b7d13932f27e66a3f99e6890",
+                    "registry-coordinator": "0xfd471836031dc5108809d173a067e8486b9047a3",
+                    "service-manager": "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3",
+                    "stake-registry": "0x7bc06c482dead17c0e297afbc32f6e63d3846650"
                 }},
                 "eigenlayer": {{
-                    "delegation-manager": "0xdc64a140aa3e981100a9beca4e685f962f0cf6c9",
-                    "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-                    "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+                    "delegation-manager": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
+                    "allocation-manager": "0x8a791620dd6260079bf849dc5567adc3f2fdc318",
+                    "strategy-manager": "0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"
                 }},
                 "network": {{
                     "chain-id": "31337",
@@ -323,23 +322,23 @@ mod test {
     #[tokio::test]
     async fn test_egn_addrs_with_registry_coordinator_flag() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
         let registry_coordinator_address =
             get_registry_coordinator_address(http_endpoint.clone()).await;
 
+        // When no service manager is provided, the service manager address is set to 0
         let expected_addresses: ContractAddresses = serde_json::from_str(&format!(
             r#"{{
                 "avs": {{
-                    "bls-apk-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9",
-                    "index-registry": "0x1613beb3b2c4f22ee086b2b38c1476a3ce7f78e8",
-                    "registry-coordinator": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
-                    "service-manager": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
-                    "stake-registry": "0x851356ae760d987e095750cceb3bc6014560891c"
+                    "bls-apk-registry": "0x1429859428c0abc9c2c47c8ee9fbaf82cfa0f20f",
+                    "index-registry": "0x162a433068f51e18b7d13932f27e66a3f99e6890",
+                    "registry-coordinator": "0xfd471836031dc5108809d173a067e8486b9047a3",
+                    "service-manager": "0x0000000000000000000000000000000000000000",
+                    "stake-registry": "0x7bc06c482dead17c0e297afbc32f6e63d3846650"
                 }},
                 "eigenlayer": {{
-                    "delegation-manager": "0xdc64a140aa3e981100a9beca4e685f962f0cf6c9",
-                    "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-                    "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+                    "delegation-manager": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
+                    "allocation-manager": "0x8a791620dd6260079bf849dc5567adc3f2fdc318",
+                    "strategy-manager": "0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"
                 }},
                 "network": {{
                     "chain-id": "31337",
@@ -348,7 +347,6 @@ mod test {
             }}"#,
         ))
         .unwrap();
-
         let addresses = ContractAddresses::get_addresses(
             None,
             Some(registry_coordinator_address),

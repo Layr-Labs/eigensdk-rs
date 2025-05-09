@@ -1,6 +1,3 @@
-#[derive(Debug)]
-pub struct Client {}
-
 use alloy::eips::BlockNumberOrTag;
 use alloy::primitives::BlockNumber;
 use alloy::rpc::types::eth::Block;

@@ -1,4 +1,4 @@
-use alloy::consensus::{transaction::RlpEcdsaTx, SignableTransaction, TxLegacy};
+use alloy::consensus::{transaction::RlpEcdsaDecodableTx, SignableTransaction, TxLegacy};
 use alloy::network::TxSigner;
 use alloy::primitives::{Address, Bytes, TxKind, U256};
 use alloy::rpc::client::{ClientBuilder, ReqwestClient, RpcCall};
@@ -9,7 +9,7 @@ use url::Url;
 
 /// A signer that sends an RPC request to sign a transaction remotely
 /// Implements `eth_signTransaction` method of Consensys Web3 Signer
-/// Reference: https://docs.web3signer.consensys.io/reference/api/json-rpc#eth_signtransaction
+/// Reference: <https://docs.web3signer.consensys.io/reference/api/json-rpc#eth_signtransaction>
 #[derive(Debug)]
 pub struct Web3Signer {
     /// Client used to send an RPC request
@@ -62,7 +62,7 @@ impl TxSigner<Signature> for Web3Signer {
             data: Bytes::copy_from_slice(tx.input()).to_string(),
         };
 
-        let request: RpcCall<_, Vec<SignTransactionParams>, Bytes> =
+        let request: RpcCall<Vec<SignTransactionParams>, Bytes> =
             self.client.request("eth_signTransaction", vec![params]);
         let rlp_encoded_signed_tx = request.await.map_err(alloy::signers::Error::other)?;
 

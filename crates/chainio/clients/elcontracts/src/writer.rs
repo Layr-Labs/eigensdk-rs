@@ -1,37 +1,73 @@
+use std::str::FromStr;
+
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
-use alloy::primitives::{Address, FixedBytes, TxHash, U256};
-use eigen_common::get_signer;
-pub use eigen_types::operator::Operator;
-use eigen_utils::core::irewardscoordinator::IRewardsCoordinator::{self, RewardsMerkleClaim};
-use eigen_utils::core::{
-    delegationmanager::{
-        DelegationManager::{self},
-        IDelegationManager::OperatorDetails,
-    },
-    erc20::ERC20,
-    strategymanager::StrategyManager,
+use alloy::dyn_abi::DynSolValue;
+use alloy::primitives::{Address, Bytes, FixedBytes, PrimitiveSignature, TxHash, U256};
+use alloy::signers::local::PrivateKeySigner;
+use alloy::signers::Signer;
+use alloy::sol;
+use eigen_common::{get_provider, get_signer};
+use eigen_crypto_bls::{
+    alloy_g1_point_slashing_to_g1_affine, alloy_g1_point_to_g1_affine, convert_to_g1_point,
+    convert_to_g2_point, BlsKeyPair,
 };
+use eigen_types::operator::operator_id_from_g1_pub_key;
+pub use eigen_types::operator::Operator;
 
+use eigen_utils::convert_allocation_operator_set_to_rewards_operator_set;
+use eigen_utils::rewardsv2::core::delegationmanager::DelegationManager as RewardsV2DelegationManager;
+use eigen_utils::rewardsv2::core::delegationmanager::IDelegationManager::OperatorDetails;
+use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
+
+use eigen_utils::slashing::middleware::registrycoordinator::BN254::{G1Point, G2Point};
+use eigen_utils::slashing::middleware::slashingregistrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
+use eigen_utils::slashing::middleware::slashingregistrycoordinator::SlashingRegistryCoordinator;
+use eigen_utils::{
+    slashing::core::{
+        allocationmanager::{AllocationManager, IAllocationManagerTypes},
+        delegationmanager::DelegationManager,
+        irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
+        permissioncontroller::PermissionController,
+        strategymanager::StrategyManager,
+    },
+    slashing::middleware::{ierc20::IERC20, registrycoordinator::RegistryCoordinator},
+};
 use tracing::info;
 
 /// Gas limit for registerAsOperator in [`DelegationManager`]
 pub const GAS_LIMIT_REGISTER_AS_OPERATOR_DELEGATION_MANAGER: u128 = 300000;
 
+sol! {
+    #[allow(missing_docs)]
+    #[derive(Debug)]
+    /// Bar
+    enum RegistrationType {
+        NORMAL,
+        CHURN,
+    }
+}
 /// Chain Writer to interact with EigenLayer contracts onchain
 #[derive(Debug, Clone)]
 pub struct ELChainWriter {
     strategy_manager: Address,
     rewards_coordinator: Address,
+    permission_controller: Option<Address>,
+    allocation_manager: Option<Address>,
+    registry_coordinator: Address,
     el_chain_reader: ELChainReader,
     provider: String,
     signer: String,
 }
 
 impl ELChainWriter {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         strategy_manager: Address,
         rewards_coordinator: Address,
+        permission_controller: Option<Address>,
+        allocation_manager: Option<Address>,
+        registry_coordinator: Address,
         el_chain_reader: ELChainReader,
         provider: String,
         signer: String,
@@ -39,9 +75,67 @@ impl ELChainWriter {
         Self {
             strategy_manager,
             rewards_coordinator,
+            permission_controller,
+            allocation_manager,
+            registry_coordinator,
             el_chain_reader,
             provider,
             signer,
+        }
+    }
+
+    /// Sets signer for ELChainWriter
+    ///
+    /// # Arguments
+    ///
+    /// * `signer`: signer string
+    ///
+    pub fn set_signer(&mut self, signer: String) {
+        self.signer = signer;
+    }
+
+    pub async fn register_as_operator_preslashing(
+        &self,
+        operator: Operator,
+    ) -> Result<TxHash, ElContractsError> {
+        info!("registering operator {:?} to EigenLayer", operator.address);
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        if let Some(staker_opt_out_blocks) = operator.staker_opt_out_window_blocks {
+            let contract_delegation_manager =
+                RewardsV2DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
+            let operator_details = OperatorDetails {
+                __deprecated_earningsReceiver: operator
+                    ._deprecated_earnings_receiver_address
+                    .unwrap_or(Address::ZERO),
+                delegationApprover: operator.delegation_approver_address,
+                stakerOptOutWindowBlocks: staker_opt_out_blocks,
+            };
+            let binding = {
+                let contract_call = contract_delegation_manager
+                    .registerAsOperator(operator_details, operator.metadata_url);
+                contract_call.gas(300000)
+            };
+            let binding_tx = binding
+                .send()
+                .await
+                .map_err(ElContractsError::AlloyContractError)?;
+
+            let receipt = binding_tx
+                .get_receipt()
+                .await
+                .map_err(ElContractsError::AlloyPendingTransactionError)?;
+
+            let tx_status = receipt.status();
+            let hash = receipt.transaction_hash;
+            if tx_status {
+                info!(tx_hash = %receipt.transaction_hash, "tx successfully included");
+            } else {
+                info!(tx_hash = %receipt.transaction_hash, "failed to register operator");
+            };
+            Ok(hash)
+        } else {
+            Err(ElContractsError::StakerOptOutWindowBlocksNotSet)
         }
     }
 
@@ -53,7 +147,7 @@ impl ELChainWriter {
     ///
     /// # Returns
     ///
-    /// * `FixedBytes<32>` - The transaction hash if successful, otherwise an error
+    /// * `TxHash` - The transaction hash if successful, otherwise an error
     ///
     /// # Errors
     ///
@@ -61,42 +155,44 @@ impl ELChainWriter {
     pub async fn register_as_operator(
         &self,
         operator: Operator,
-    ) -> Result<FixedBytes<32>, ElContractsError> {
+    ) -> Result<TxHash, ElContractsError> {
         info!("registering operator {:?} to EigenLayer", operator.address);
-        let op_details = OperatorDetails {
-            __deprecated_earningsReceiver: operator.earnings_receiver_address,
-            delegationApprover: operator.delegation_approver_address,
-            stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
-        };
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_delegation_manager =
             DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
-        let binding = {
-            let contract_call = contract_delegation_manager
-                .registerAsOperator(op_details, operator.metadata_url.unwrap_or_default());
-            contract_call.gas(300000)
-        };
+        if let Some(allocation_delay) = operator.allocation_delay {
+            let binding = {
+                let contract_call = contract_delegation_manager.registerAsOperator(
+                    operator.address,
+                    allocation_delay,
+                    operator.metadata_url,
+                );
+                contract_call.gas(300000)
+            };
 
-        let binding_tx = binding
-            .send()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
+            let binding_tx = binding
+                .send()
+                .await
+                .map_err(ElContractsError::AlloyContractError)?;
 
-        let receipt = binding_tx
-            .get_receipt()
-            .await
-            .map_err(ElContractsError::AlloyPendingTransactionError)?;
+            let receipt = binding_tx
+                .get_receipt()
+                .await
+                .map_err(ElContractsError::AlloyPendingTransactionError)?;
 
-        let tx_status = receipt.status();
-        let hash = receipt.transaction_hash;
-        if tx_status {
-            info!(tx_hash = %receipt.transaction_hash, "tx successfully included");
+            let tx_status = receipt.status();
+            let hash = receipt.transaction_hash;
+            if tx_status {
+                info!(tx_hash = %receipt.transaction_hash, "tx successfully included");
+            } else {
+                info!(tx_hash = %receipt.transaction_hash, "failed to register operator");
+            };
+            Ok(hash)
         } else {
-            info!(tx_hash = %receipt.transaction_hash, "failed to register operator");
-        };
-        Ok(hash)
+            Err(ElContractsError::AllocationDelayNotSet)
+        }
     }
 
     /// Update operator details on EigenLayer
@@ -120,18 +216,14 @@ impl ELChainWriter {
             "updating operator detils of operator {:?} to EigenLayer",
             operator.address
         );
-        let operator_details = OperatorDetails {
-            __deprecated_earningsReceiver: operator.earnings_receiver_address,
-            delegationApprover: operator.delegation_approver_address,
-            stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
-        };
+
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_delegation_manager =
             DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
-        let contract_call_modify_operator_details =
-            contract_delegation_manager.modifyOperatorDetails(operator_details);
+        let contract_call_modify_operator_details = contract_delegation_manager
+            .modifyOperatorDetails(operator.address, operator.delegation_approver_address);
 
         let modify_operator_tx = contract_call_modify_operator_details
             .send()
@@ -141,7 +233,7 @@ impl ELChainWriter {
         info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.address, "updated operator details tx");
 
         let contract_call_update_metadata_uri = contract_delegation_manager
-            .updateOperatorMetadataURI(operator.metadata_url.unwrap_or_default());
+            .updateOperatorMetadataURI(operator.address, operator.metadata_url);
 
         let metadata_tx = contract_call_update_metadata_uri.send().await?;
 
@@ -168,23 +260,21 @@ impl ELChainWriter {
         amount: U256,
     ) -> Result<TxHash, ElContractsError> {
         info!("depositing {amount:?} tokens into strategy {strategy_addr:?}");
-        let tokens = self
+        let (_strategy, token_address) = self
             .el_chain_reader
-            .get_strategy_and_underlying_erc20_token(strategy_addr)
+            .get_strategy_and_underlying_token(strategy_addr)
             .await?;
-        let (_, underlying_token_contract, underlying_token) = tokens;
         let provider = get_signer(&self.signer.clone(), &self.provider);
+        let token_contract = IERC20::new(token_address, &provider);
 
-        let contract_underlying_token = ERC20::new(underlying_token_contract, &provider);
-
-        let contract_call = contract_underlying_token.approve(self.strategy_manager, amount);
+        let contract_call = token_contract.approve(self.strategy_manager, amount);
 
         let _approve = contract_call.send().await?;
 
         let contract_strategy_manager = StrategyManager::new(self.strategy_manager, &provider);
 
         let deposit_contract_call =
-            contract_strategy_manager.depositIntoStrategy(strategy_addr, underlying_token, amount);
+            contract_strategy_manager.depositIntoStrategy(strategy_addr, token_address, amount);
 
         let tx = deposit_contract_call.send().await?;
 
@@ -214,19 +304,23 @@ impl ELChainWriter {
         let contract_rewards_coordinator =
             IRewardsCoordinator::new(self.rewards_coordinator, &provider);
 
-        let set_claimer_for_call = contract_rewards_coordinator.setClaimerFor(claimer);
+        let set_claimer_for_call = contract_rewards_coordinator.setClaimerFor_0(claimer);
 
         let tx = set_claimer_for_call.send().await?;
         Ok(*tx.tx_hash())
     }
 
-    /// Process a claim for rewards to a given address.
-    /// This function interacts with the RewardsCoordinator contract to execute the claim operation for a given address.
+    /// Process a claim for rewards for a given earner address. Checks the claim against a given root
+    /// (determined by the root_index on the claim). Earnings are cumulative so earners can claim to
+    /// the latest distribution root and the contract will compute the difference between their earning
+    /// and claimed amounts. The difference is transferred to the earner address.
+    /// If a claimer has not been set (see [`Self::set_claimer_for`]), only the earner can claim. Otherwise, only
+    /// the claimer can claim.
     ///
     /// # Arguments
     ///
-    /// * `earnerAddress` - The address of the earner for whom to process the claim.
     /// * `claim` - The RewardsMerkleClaim object containing the claim.
+    /// * `earner_address` - The address of the earner for whom to process the claim.
     ///
     /// # Returns
     ///
@@ -234,11 +328,11 @@ impl ELChainWriter {
     ///
     /// # Errors
     ///
-    /// * `ElContractsError` - if the call to the contract fails.
+    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
     pub async fn process_claim(
         &self,
-        earner_address: Address,
         claim: RewardsMerkleClaim,
+        earner_address: Address,
     ) -> Result<FixedBytes<32>, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
 
@@ -251,21 +345,52 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// Set Operator Avs Split
-    /// Sets the split for a specific operator for a specific avs
-    /// Only callable by the operator
-    /// Split has to be between 0 and 10000 bips (inclusive)
-    /// The split will be activated after the activation delay
+    /// Process multiple claim for rewards for a given earner address. Checks the claim against a given root
+    /// (determined by the root_index on the claim). Earnings are cumulative so earners can claim to
+    /// the latest distribution root and the contract will compute the difference between their earning
+    /// and claimed amounts. The difference is transferred to the earner address.
+    /// If a claimer has not been set (see [`Self::set_claimer_for`]), only the earner can claim. Otherwise, only
+    /// the claimer can claim.
     ///
     /// # Arguments
     ///
-    /// * `operator` - The operator who is setting the split
-    /// * `avs` - The avs for which the split is being set by the operator.
-    /// * `split` - The split for the operator for the specific avs in bips.
+    /// * `claims` - A [`Vec`] of RewardsMerkleClaim objects containing the claims.
+    /// * `earnerAddress` - The address of the earner for whom to process the claims.
     ///
     /// # Returns
     ///
     /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the claim is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
+    pub async fn process_claims(
+        &self,
+        claims: Vec<RewardsMerkleClaim>,
+        earner_address: Address,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let process_claim_call = contract_rewards_coordinator.processClaims(claims, earner_address);
+
+        let tx = process_claim_call.send().await?;
+        Ok(*tx.tx_hash())
+    }
+
+    /// Sets the split of a specific `operator` for a specific `avs`
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `avs` - The AVS address
+    /// * `split` - The new split of the operator for the AVS
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the transaction is sent, otherwise an error.
     ///
     /// # Errors
     ///
@@ -276,32 +401,64 @@ impl ELChainWriter {
         avs: Address,
         split: u16,
     ) -> Result<FixedBytes<32>, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
+        let signer = get_signer(&self.signer, &self.provider);
 
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, signer);
 
-        let set_operator_avs_split_call =
-            contract_rewards_coordinator.setOperatorAVSSplit(operator, avs, split);
+        let tx = rewards_coordinator
+            .setOperatorAVSSplit(operator, avs, split)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-        let tx = set_operator_avs_split_call.send().await?;
         Ok(*tx.tx_hash())
     }
 
-    /// Set Operator PI Split
-    /// Sets the split for a specific operator for Programmatic Incentives.
-    /// Only callable by the operator
-    /// Split has to be between 0 and 10000 bips (inclusive)
-    /// The split will be activated after the activation delay
+    /// Sets the split for a specific `operator` for a specific `operatorSet`
     ///
     /// # Arguments
     ///
-    /// * `operator` - The operator on behalf of which the split is being set.
-    /// * `split` - The split for the operator for Programmatic Incentives in bips.
+    /// * `operator` - The operator address
+    /// * `OperatorSet` - The operator set which consists of avs address and id.
+    /// * `split` - The split for the operator for the specific operatorSet in bips.
     ///
     /// # Returns
     ///
-    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the claim is sent, otherwise an error.
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the transaction is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_operator_set_split(
+        &self,
+        operator: Address,
+        operator_set: OperatorSet,
+        split: u16,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let signer = get_signer(&self.signer, &self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, signer);
+        let operator_set_rewards =
+            convert_allocation_operator_set_to_rewards_operator_set(operator_set);
+        let tx = rewards_coordinator
+            .setOperatorSetSplit(operator, operator_set_rewards, split)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// sets the split of a specific `operator` for Programmatic Incentives
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `split` - The new split of the operator for PI
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the transaction is sent, otherwise an error.
     ///
     /// # Errors
     ///
@@ -311,204 +468,904 @@ impl ELChainWriter {
         operator: Address,
         split: u16,
     ) -> Result<FixedBytes<32>, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
+        let signer = get_signer(&self.signer, &self.provider);
 
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, signer);
 
-        let set_operator_pi_split_call =
-            contract_rewards_coordinator.setOperatorPISplit(operator, split);
+        let tx = rewards_coordinator
+            .setOperatorPISplit(operator, split)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-        let tx = set_operator_pi_split_call.send().await?;
         Ok(*tx.tx_hash())
     }
+
+    /// Removes permission of an appointee on a target contract, given an account address.
+    ///
+    /// # Arguments
+    ///
+    /// * `account_address` - account address from which to remove permission
+    /// * `appointee_address` - Address to remove
+    /// * `target` - contract address that the appointee has permission to
+    /// * `selector` - The selector of the function to remove permissions for
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn remove_permission(
+        &self,
+        account_address: Address,
+        appointee_address: Address,
+        target: Address,
+        selector: FixedBytes<4>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        let tx = permission_controller_contract
+            .removeAppointee(account_address, appointee_address, target, selector)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Set an appointee for a given account. Only the admin of the account can set an appointee.
+    /// The appointee will be able to call the target contract function with the given selector.
+    /// # Arguments
+    /// * `account_address` - account address set appointee for
+    /// * `appointee_address` - appointee address to set
+    /// * `target` - target contract address
+    /// * `selector` - function selector
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_permission(
+        &self,
+        account_address: Address,
+        appointee_address: Address,
+        target: Address,
+        selector: FixedBytes<4>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        let tx = permission_controller_contract
+            .setAppointee(account_address, appointee_address, target, selector)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Remove pending admin. Only the admin of the account can remove a pending admin
+    ///
+    /// # Arguments
+    ///
+    /// * `account_address` - account address
+    /// * `admin_address` - admin address to remove
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    pub async fn remove_pending_admin(
+        &self,
+        account_address: Address,
+        admin_address: Address,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        let tx = permission_controller_contract
+            .removePendingAdmin(account_address, admin_address)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Set a pending admin. Multiple admins can be set for an account.
+    /// The caller must be an admin. If the account does not have an admin, the caller must be the account.
+    ///
+    /// # Arguments
+    ///
+    /// * `account_address` - account address
+    /// * `admin_address` - admin address to set
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    pub async fn add_pending_admin(
+        &self,
+        account_address: Address,
+        admin_address: Address,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        let tx = permission_controller_contract
+            .addPendingAdmin(account_address, admin_address)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Accept a pending admin. The sender of the transaction must be the pending admin.
+    ///
+    /// # Arguments
+    ///
+    /// * `account` - account to accept admin for
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn accept_admin(&self, account: Address) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        let tx = permission_controller_contract
+            .acceptAdmin(account)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Remove an admin. The sender of the transaction must be an admin.
+    ///
+    /// # Arguments
+    ///
+    /// * `account` - account to remove admin from
+    /// * `admin` - admin to remove
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails. Fails if the admin being removed is the only admin.
+    pub async fn remove_admin(
+        &self,
+        account: Address,
+        admin: Address,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        let tx = permission_controller_contract
+            .removeAdmin(account, admin)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Register an operator for one or more operator sets for an AVS. If the operator
+    /// has any stake allocated to these operator sets, it immediately becomes slashable.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - operator address to register
+    /// * `avs_address` - AVS address
+    /// * `operator_set_ids` - operator set ids to register on
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn register_for_operator_sets(
+        &self,
+        operator_address: Address,
+        avs_address: Address,
+        operator_set_ids: Vec<u32>,
+        bls_key_pair: BlsKeyPair,
+        socket: &str,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider.clone(),
+        );
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator, provider);
+
+        let g1_hashed_msg_to_sign = contract_registry_coordinator
+            .pubkeyRegistrationMessageHash(operator_address)
+            .call()
+            .await?
+            ._0;
+
+        let sig = bls_key_pair
+            .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
+            .g1_point();
+        let alloy_g1_point_signed_msg =
+            convert_to_g1_point(sig.g1()).map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+        let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())
+            .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+        let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())
+            .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+
+        let g2_point_x: Vec<DynSolValue> = vec![
+            DynSolValue::Uint(g2_pub_key_bn254.X[0], 256),
+            DynSolValue::Uint(g2_pub_key_bn254.X[1], 256),
+        ];
+        let g2_point_y: Vec<DynSolValue> = vec![
+            DynSolValue::Uint(g2_pub_key_bn254.Y[0], 256),
+            DynSolValue::Uint(g2_pub_key_bn254.Y[1], 256),
+        ];
+        let encoded_params_with_socket = DynSolValue::Tuple(vec![
+            DynSolValue::Uint(U256::from(0), 256),
+            DynSolValue::String(socket.to_string()),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.X, 256),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.Y, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.X, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.Y, 256),
+            DynSolValue::FixedArray(g2_point_x),
+            DynSolValue::FixedArray(g2_point_y),
+        ])
+        .abi_encode_params();
+
+        let params = IAllocationManagerTypes::RegisterParams {
+            avs: avs_address,
+            operatorSetIds: operator_set_ids,
+            data: encoded_params_with_socket.into(),
+        };
+        let tx = contract_allocation_manager
+            .registerForOperatorSets(operator_address, params)
+            .send()
+            .await?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Register with churn an operator for one or more operator sets for an AVS
+    /// while replacing existing operators in full quorums. If the operator
+    /// has any stake allocated to these operator sets, it immediately becomes slashable.
+    ///
+    /// This method performs similar steps to [`Self::register_for_operator_sets`], except that
+    /// for each quorum where the new Operator total exceeds the `maxOperatorCount`,
+    /// the `operatorKickParams` are used to deregister a current Operator to make room for the new one.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - operator address to register
+    /// * `bls_key_pair` - bls key pair of the operator
+    /// * `avs_address` - AVS address
+    /// * `operator_set_ids` - operator set ids to register on
+    /// * `socket` - socket used for calling the contract with `registerOperator` function
+    /// * `quorum_numbers` - quorum numbers to register the new operator
+    /// * `operators_to_kick` - operators to kick if quorum is full
+    /// * `churn_signer_private_key` - private key of the churn signer
+    /// * `churn_sig_salt` - churn signature salt
+    /// * `churn_sig_expiry` - churn signature expiry
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    #[allow(clippy::too_many_arguments)]
+    pub async fn register_for_operator_sets_with_churn(
+        &self,
+        operator: Address,
+        bls_key_pair: BlsKeyPair,
+        avs_address: Address,
+        operator_set_ids: Vec<u32>,
+        socket: String,
+        quorum_numbers: Bytes,
+        operators_to_kick: Vec<Address>,
+        churn_signer_private_key: String,
+        churn_sig_salt: FixedBytes<32>,
+        churn_sig_expiry: U256,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            &provider,
+        );
+
+        let (alloy_g1_point_signed_msg, g1_pub_key_bn254, g2_pub_key_bn254) =
+            prepare_bls_keys_for_registration(
+                &self.provider,
+                self.registry_coordinator,
+                operator,
+                &bls_key_pair,
+            )
+            .await?;
+
+        let operators_to_kick_params =
+            build_operator_kick_params(&operators_to_kick, &quorum_numbers);
+
+        let churn_signature = sign_churn_digest(
+            &self.provider,
+            self.registry_coordinator,
+            &bls_key_pair,
+            operator,
+            &operators_to_kick_params,
+            churn_signer_private_key,
+            churn_sig_salt,
+            churn_sig_expiry,
+        )
+        .await?;
+
+        let encoded_data = encode_registration_data(
+            socket,
+            alloy_g1_point_signed_msg,
+            g1_pub_key_bn254,
+            g2_pub_key_bn254,
+            operators_to_kick_params,
+            churn_signature,
+            churn_sig_salt,
+            churn_sig_expiry,
+        );
+
+        let register_params = IAllocationManagerTypes::RegisterParams {
+            avs: avs_address,
+            operatorSetIds: operator_set_ids,
+            data: encoded_data.into(),
+        };
+
+        let tx = allocation_manager
+            .registerForOperatorSets(operator, register_params)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Deregister an operator from one or more of the AVS's operator sets. If the operator
+    /// has any slashable stake allocated to the AVS, it remains slashable until the deallocation delay has passed.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - operator address to deregister
+    /// * `avs_address` - AVS address
+    /// * `operator_set_ids` - operator set ids to deregister from
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn deregister_from_operator_sets(
+        &self,
+        operator_address: Address,
+        avs_address: Address,
+        operator_set_ids: Vec<u32>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        let params = IAllocationManagerTypes::DeregisterParams {
+            operator: operator_address,
+            avs: avs_address,
+            operatorSetIds: operator_set_ids,
+        };
+        let tx = contract_allocation_manager
+            .deregisterFromOperatorSets(params)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Set the allocation delay for an operator. It is the number of blocks between an operator
+    /// allocating magnitude to an operator set, and the magnitude becoming slashable
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - operator address to set allocation delay for
+    /// * `delay` - delay in blocks
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_allocation_delay(
+        &self,
+        operator_address: Address,
+        delay: u32,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        let tx = contract_allocation_manager
+            .setAllocationDelay(operator_address, delay)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Modifiy the proportions of slashable stake allocated to an operator set from a list of strategies.
+    /// # Arguments
+    /// * `operator_address` - operator address to modify allocations for
+    /// * `allocations` - list of magnitude adjustments for one or more operator sets
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn modify_allocations(
+        &self,
+        operator_address: Address,
+        allocations: Vec<IAllocationManagerTypes::AllocateParams>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        let tx = contract_allocation_manager
+            .modifyAllocations(operator_address, allocations)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Removes from the deallocationQueue all clearable deallocations up to max `num_to_clear` number of deallocations.
+    ///
+    /// `len(strategies)` must be equal to `len(num_to_clear)`
+    ///
+    /// # Arguments
+    /// * `operator` - operator address to clear deallocations for
+    /// * `strategies` - list of strategies to clear deallocations for
+    /// * `num_to_clear` - list of number of pending deallocations to clear for each strategy
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn clear_deallocation_queue(
+        &self,
+        operator: Address,
+        strategies: Vec<Address>,
+        num_to_clear: Vec<u16>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let allocation_manager_contract = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        allocation_manager_contract
+            .clearDeallocationQueue(operator, strategies, num_to_clear)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)
+            .map(|tx| *tx.tx_hash())
+    }
+}
+
+/// Generates the G1 and G2 points for the operator registration message hash
+/// Prepares the BLS keys for registration by signing a hashed message and converting the public keys
+/// to the required BN254 curve format.
+///
+/// # Arguments
+///
+/// * `rpc_url` - rpc url used to create the provider.
+/// * `registry_coordinator_address` - registry coordinator address
+/// * `operator` - operator address
+/// * `bls_key_pair` - bls key pair of the operator
+///
+/// # Returns
+///
+/// * `(G1Point, G1Point, G2Point)` - alloy g1 point signed msg, g1 pub key bn254, g2 pub key bn254
+///
+/// # Errors
+/// * `ElContractsError` - if the call to the contract fails.
+async fn prepare_bls_keys_for_registration(
+    rpc_url: &str,
+    registry_coordinator_address: Address,
+    operator: Address,
+    bls_key_pair: &BlsKeyPair,
+) -> Result<(G1Point, G1Point, G2Point), ElContractsError> {
+    let provider = get_provider(rpc_url);
+    let contract_registry_coordinator =
+        SlashingRegistryCoordinator::new(registry_coordinator_address, &provider);
+
+    let g1_hashed_msg_to_sign = contract_registry_coordinator
+        .pubkeyRegistrationMessageHash(operator)
+        .call()
+        .await?
+        ._0;
+
+    let sig = bls_key_pair
+        .sign_hashed_to_curve_message(alloy_g1_point_slashing_to_g1_affine(g1_hashed_msg_to_sign))
+        .g1_point();
+
+    let alloy_g1_point_signed_msg =
+        convert_to_g1_point(sig.g1()).map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+    let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())
+        .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+    let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())
+        .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+
+    Ok((
+        alloy_g1_point_signed_msg,
+        g1_pub_key_bn254,
+        g2_pub_key_bn254,
+    ))
+}
+
+/// Builds the operator kick params for [`register_for_operator_sets_with_churn`]
+/// The operator kick params are used to specify the operators to kick if the quorum is full.
+///
+/// # Arguments
+///
+/// * `operators_to_kick` - operators to kick
+/// * `quorum_numbers` - quorum numbers
+///
+/// # Returns
+///
+/// * `Vec<OperatorKickParam>` - operator kick params
+fn build_operator_kick_params(
+    operators_to_kick: &[Address],
+    quorum_numbers: &Bytes,
+) -> Vec<OperatorKickParam> {
+    operators_to_kick
+        .iter()
+        .zip(quorum_numbers.iter())
+        .map(|(address, &quorum_number)| OperatorKickParam {
+            operator: *address,
+            quorumNumber: quorum_number,
+        })
+        .collect()
+}
+
+/// Signs the churn digest hash for [`register_for_operator_sets_with_churn`].
+///
+/// # Arguments
+///
+/// * `rpc_url` - rpc url used to create the provider.
+/// * `registry_coordinator_address` - registry coordinator address
+/// * `bls_key_pair` - bls key pair of the operator
+/// * `operator` - operator address
+/// * `operators_to_kick_params` - operators to kick params
+/// * `churn_signer_private_key` - private key of the churn signer
+/// * `churn_sig_salt` - churn signature salt
+/// * `churn_sig_expiry` - churn signature expiry
+///
+/// # Returns
+/// * `PrimitiveSignature` - signed churn digest hash
+///
+/// # Errors
+/// * `ElContractsError` - if the call to the contract fails.
+#[allow(clippy::too_many_arguments)]
+async fn sign_churn_digest(
+    rpc_url: &str,
+    registry_coordinator_address: Address,
+    bls_key_pair: &BlsKeyPair,
+    operator: Address,
+    operators_to_kick_params: &[OperatorKickParam],
+    churn_signer_private_key: String,
+    churn_sig_salt: FixedBytes<32>,
+    churn_sig_expiry: U256,
+) -> Result<PrimitiveSignature, ElContractsError> {
+    let provider = get_provider(rpc_url);
+    let contract_registry_coordinator =
+        SlashingRegistryCoordinator::new(registry_coordinator_address, &provider);
+
+    let churn_wallet = PrivateKeySigner::from_str(&churn_signer_private_key)
+        .map_err(|_| ElContractsError::InvalidSignature)?;
+
+    let operator_id = operator_id_from_g1_pub_key(bls_key_pair.public_key())
+        .map_err(|_| ElContractsError::InvalidSignature)?;
+
+    let churn_digest_hash = contract_registry_coordinator
+        .calculateOperatorChurnApprovalDigestHash(
+            operator,
+            operator_id,
+            operators_to_kick_params.to_vec(),
+            churn_sig_salt,
+            churn_sig_expiry,
+        )
+        .call()
+        .await?
+        ._0;
+
+    let signature = churn_wallet
+        .sign_hash(&churn_digest_hash)
+        .await
+        .map_err(|_| ElContractsError::InvalidSignature)?;
+
+    Ok(signature)
+}
+
+/// Encodes the registration data for [`register_for_operator_sets_with_churn`]
+///
+/// # Arguments
+/// * `socket` - socket
+/// * `alloy_g1_point_signed_msg` - alloy g1 point signed msg
+/// * `g1_pub_key_bn254` - g1 pub key bn254
+/// * `g2_pub_key_bn254` - g2 pub key bn254
+/// * `operators_to_kick_params` - operators to kick params
+/// * `churn_signature` - churn signature
+/// * `churn_sig_salt` - churn signature salt
+/// * `churn_sig_expiry` - churn signature expiry
+///
+/// # Returns
+///
+/// * `Vec<u8>` - encoded registration data
+#[allow(clippy::too_many_arguments)]
+fn encode_registration_data(
+    socket: String,
+    alloy_g1_point_signed_msg: G1Point,
+    g1_pub_key_bn254: G1Point,
+    g2_pub_key_bn254: G2Point,
+    operators_to_kick_params: Vec<OperatorKickParam>,
+    churn_signature: PrimitiveSignature,
+    churn_sig_salt: FixedBytes<32>,
+    churn_sig_expiry: U256,
+) -> Vec<u8> {
+    let g2_point_x = vec![
+        DynSolValue::Uint(g2_pub_key_bn254.X[0], 256),
+        DynSolValue::Uint(g2_pub_key_bn254.X[1], 256),
+    ];
+    let g2_point_y = vec![
+        DynSolValue::Uint(g2_pub_key_bn254.Y[0], 256),
+        DynSolValue::Uint(g2_pub_key_bn254.Y[1], 256),
+    ];
+
+    let pubkey_registration_params = DynSolValue::Tuple(vec![
+        DynSolValue::Tuple(vec![
+            DynSolValue::Uint(alloy_g1_point_signed_msg.X, 256),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.Y, 256),
+        ]),
+        DynSolValue::Tuple(vec![
+            DynSolValue::Uint(g1_pub_key_bn254.X, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.Y, 256),
+        ]),
+        DynSolValue::Tuple(vec![
+            DynSolValue::FixedArray(g2_point_x),
+            DynSolValue::FixedArray(g2_point_y),
+        ]),
+    ]);
+
+    let operator_kick_params = DynSolValue::Array(
+        operators_to_kick_params
+            .into_iter()
+            .map(|param| {
+                DynSolValue::Tuple(vec![
+                    DynSolValue::Uint(U256::from(param.quorumNumber), 8),
+                    DynSolValue::Address(param.operator),
+                ])
+            })
+            .collect(),
+    );
+
+    let signature_with_salt = DynSolValue::Tuple(vec![
+        DynSolValue::Bytes(churn_signature.as_bytes().into()),
+        DynSolValue::FixedBytes(churn_sig_salt, 32),
+        DynSolValue::Uint(churn_sig_expiry, 256),
+    ]);
+
+    DynSolValue::Tuple(vec![
+        DynSolValue::Uint(U256::from(1), 8), // RegistrationType.CHURN = 1
+        DynSolValue::String(socket),
+        pubkey_registration_params,
+        operator_kick_params,
+        signature_with_salt,
+    ])
+    .abi_encode_params()
 }
 
 #[cfg(test)]
 mod tests {
-    use super::ELChainWriter;
-    use crate::reader::ELChainReader;
-    use alloy::primitives::{address, keccak256, Address, FixedBytes, U256, U8};
-    use alloy::signers::local::PrivateKeySigner;
-    use alloy::{providers::Provider, sol_types::SolValue};
-    use anvil_constants::CONTRACTS_REGISTRY;
+    use alloy::{
+        primitives::{address, ruint::aliases::U256, Address, Bytes, FixedBytes},
+        providers::{Provider, WalletProvider},
+    };
     use eigen_common::{get_provider, get_signer};
-    use eigen_logging::get_test_logger;
+    use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::{
-        anvil::{set_account_balance, start_anvil_container},
+        anvil::{
+            mine_anvil_blocks, set_account_balance, start_anvil_container, start_m2_anvil_container,
+        },
         anvil_constants::{
-            self, get_delegation_manager_address, get_erc20_mock_strategy,
-            get_rewards_coordinator_address, get_service_manager_address,
-            get_strategy_manager_address, ANVIL_FIRST_ADDRESS, ANVIL_FIRST_PRIVATE_KEY,
+            get_erc20_mock_strategy, get_registry_coordinator_address, get_service_manager_address,
+            FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY_2, SECOND_ADDRESS,
+            SECOND_PRIVATE_KEY,
+        },
+        chain_clients::{
+            build_el_chain_reader, create_operator_set, create_total_delegated_stake_operator_set,
+            new_claim, new_test_writer, new_test_writer_preslashing, OPERATOR_ADDRESS,
+            OPERATOR_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        core::{
-            delegationmanager::DelegationManager,
-            irewardscoordinator::IRewardsCoordinator::{
-                self, getDistributionRootsLengthReturn, EarnerTreeMerkleLeaf, RewardsMerkleClaim,
-                TokenTreeMerkleLeaf,
+        convert_allocation_operator_set_to_rewards_operator_set,
+        slashing::{
+            core::allocationmanager::{AllocationManager::OperatorSet, IAllocationManagerTypes},
+            middleware::slashingregistrycoordinator::{
+                ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
+                SlashingRegistryCoordinator,
             },
         },
-        sdk::{
-            contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
-            mockavsservicemanager::MockAvsServiceManager,
-            mockerc20::MockERC20,
-        },
     };
-    use serial_test::serial;
     use std::str::FromStr;
 
-    /// Address of an unregistered account in EigenLayer. Used for testing the operator registration.
-    pub const UNREGISTERED_ACCOUNT_ADDRESS: &str = "0x480EbE61a1881D1732ec47A8f6778fCC4Ee820dF";
-    /// Private key of an unregistered account in EigenLayer. Used for testing the operator registration.
-    pub const UNREGISTERED_ACCOUNT_PRIVATE_KEY: &str =
-        "98540e7b77adc6201562c7591cb3b9c203b8e270bbd3b8a49f96c54042c44c3b";
-
-    /// Returns a new instance of ELChainWriter and the address of the delegation manager contract
-    ///
-    /// # Returns
-    ///
-    /// A tuple containing an instance of ELChainWriter and the address of the delegation manager contract
-    async fn setup_el_chain_reader(http_endpoint: String) -> (ELChainReader, Address) {
-        let delegation_manager_address =
-            get_delegation_manager_address(http_endpoint.clone()).await;
-        let delegation_manager_contract = DelegationManager::new(
-            delegation_manager_address,
-            get_provider(http_endpoint.as_str()),
-        );
-        let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
-        let DelegationManager::slasherReturn {
-            _0: slasher_address,
-        } = slasher_address_return;
-
-        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
-        let service_manager_contract = MockAvsServiceManager::new(
-            service_manager_address,
-            get_provider(http_endpoint.as_str()),
-        );
-        let avs_directory_address_return = service_manager_contract
-            .avsDirectory()
-            .call()
-            .await
-            .unwrap();
-
-        let MockAvsServiceManager::avsDirectoryReturn {
-            _0: avs_directory_address,
-        } = avs_directory_address_return;
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.clone()).await;
-
-        (
-            ELChainReader::new(
-                get_test_logger().clone(),
-                slasher_address,
-                delegation_manager_address,
-                rewards_coordinator_address,
-                avs_directory_address,
-                http_endpoint,
-            ),
-            delegation_manager_address,
-        )
-    }
-
-    /// Creates an instance of ELChainWriter.
-    ///
-    /// # Arguments
-    ///
-    /// * `http_endpoint` - The HTTP endpoint used to send transactions.
-    /// * `private_key` - The private key used to sign transactions.
-    ///
-    /// # Returns
-    ///
-    /// A new instance of ELChainWriter.
-    async fn new_test_writer_with_private_key(
-        http_endpoint: String,
-        private_key: String,
-    ) -> ELChainWriter {
-        let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
-        let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
-        let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
-
-        ELChainWriter::new(
-            strategy_manager,
-            rewards_coordinator,
-            el_chain_reader,
-            http_endpoint.clone(),
-            private_key,
-        )
-    }
-
-    async fn new_test_writer(http_endpoint: String) -> ELChainWriter {
-        let private_key =
-            "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string();
-        new_test_writer_with_private_key(http_endpoint, private_key).await
-    }
-
     #[tokio::test]
-    #[serial]
     async fn test_register_operator() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let provider = get_provider(&http_endpoint);
+        let (container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
-        let (el_chain_reader, _delegation_manager_address) =
-            setup_el_chain_reader(http_endpoint).await;
-
-        let operator_pvt_key = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
-        let operator: PrivateKeySigner = (operator_pvt_key)
-            .parse()
-            .expect("failed to generate wallet");
-
-        let contract_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, provider);
-        // Use these value in tests when needed
-        let operator_index = "1".parse().unwrap();
-        let get_test_values_return = contract_registry
-            .get_test_values("test_register_operator".to_string(), operator_index)
-            .call()
-            .await
+        // Use arbitrary non-default wallet because first 100 default addresses are already registered
+        let new_operator_sk = "0x7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
+        let new_operator_address = get_signer(new_operator_sk, &http_endpoint)
+            .signer_addresses()
+            .next()
             .unwrap();
-        let get_test_valuesReturn {
-            _0: _timestamp,
-            _1: _blocknumber,
-            _2: _index,
-        } = get_test_values_return;
 
-        // operator who registered at index 1
-        let operator_address = operator.address();
-        assert!(el_chain_reader
-            .is_operator_registered(operator_address)
-            .await
-            .unwrap());
-    }
+        set_account_balance(&container, &new_operator_address.to_string()).await;
 
-    #[tokio::test]
-    #[serial]
-    async fn test_register_and_update_operator() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let provider = get_provider(&http_endpoint);
-
-        // Use a different account since all funded accounts are already registered as operators
-        let private_key = UNREGISTERED_ACCOUNT_PRIVATE_KEY.to_string();
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let el_chain_writer =
-            new_test_writer_with_private_key(http_endpoint.clone(), private_key).await;
-
-        // Fund the unregistered account
-        set_account_balance(&_container, UNREGISTERED_ACCOUNT_ADDRESS).await;
-
-        // define an operator
-        let wallet = PrivateKeySigner::from_str(
-            "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8",
-        )
-        .expect("no key");
+            new_test_writer(http_endpoint.to_string(), new_operator_sk.to_string()).await;
 
         let operator = Operator {
-            address: wallet.address(),
-            earnings_receiver_address: wallet.address(),
-            delegation_approver_address: wallet.address(),
-            staker_opt_out_window_blocks: 3,
-            metadata_url: Some("eigensdk-rs".to_string()),
+            address: new_operator_address,
+            delegation_approver_address: new_operator_address,
+            metadata_url: "metadata_uri".to_string(),
+            allocation_delay: Some(1),
+            _deprecated_earnings_receiver_address: None,
+            staker_opt_out_window_blocks: None,
+        };
+
+        let tx_hash = el_chain_writer
+            .register_as_operator(operator)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let is_registered = el_chain_reader
+            .is_operator_registered(FIRST_ADDRESS)
+            .await
+            .unwrap();
+        assert!(is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_register_operator_preslashing() {
+        let (container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        // Use arbitrary non-default wallet because first 100 default addresses are already registered
+        let new_operator_sk = "0x7ff6d852bfd83bb0e21a575a765bc2f197efeb97f04cf9454d4078d5eca9a726";
+        let new_operator_address = get_signer(new_operator_sk, &http_endpoint)
+            .signer_addresses()
+            .next()
+            .unwrap();
+
+        set_account_balance(&container, &new_operator_address.to_string()).await;
+
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer_preslashing(http_endpoint.to_string(), new_operator_sk.to_string())
+                .await;
+
+        let operator = Operator {
+            address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
+            delegation_approver_address: FIRST_ADDRESS,
+            metadata_url: "metadata_uri".to_string(),
+            allocation_delay: None,
+            _deprecated_earnings_receiver_address: None,
+            staker_opt_out_window_blocks: Some(0u32),
+        };
+        let tx_hash = el_chain_writer
+            .register_as_operator_preslashing(operator)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let is_registered = el_chain_reader
+            .is_operator_registered(FIRST_ADDRESS)
+            .await
+            .unwrap();
+        assert!(is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_register_and_update_operator() {
+        let (container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let address_str = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
+        let private_key = "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf";
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), private_key.to_string()).await;
+
+        set_account_balance(&container, address_str).await;
+        let address = Address::from_str(address_str).unwrap();
+
+        let operator = Operator {
+            address,
+            delegation_approver_address: Address::ZERO,
+            metadata_url: "eigensdk-rs".to_string(),
+            allocation_delay: Some(1),
+            _deprecated_earnings_receiver_address: None,
+            staker_opt_out_window_blocks: None,
         };
 
         // First test: register as an operator
@@ -520,17 +1377,13 @@ mod tests {
         let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
 
-        let wallet_modified = PrivateKeySigner::from_str(
-            "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6",
-        )
-        .expect("no key");
-
         let operator_modified = Operator {
-            address: wallet_modified.address(),
-            earnings_receiver_address: wallet_modified.address(),
-            delegation_approver_address: wallet_modified.address(),
-            staker_opt_out_window_blocks: 3,
-            metadata_url: Some("eigensdk-rs".to_string()),
+            address,
+            delegation_approver_address: Address::ZERO,
+            metadata_url: "new-metadata".to_string(),
+            allocation_delay: Some(1),
+            staker_opt_out_window_blocks: None,
+            _deprecated_earnings_receiver_address: None,
         };
 
         // Second test: update operator details
@@ -538,16 +1391,15 @@ mod tests {
             .update_operator_details(operator_modified)
             .await
             .unwrap();
-
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_deposit_erc20_into_strategy() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let amount = U256::from_str("100").unwrap();
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
@@ -561,10 +1413,10 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_set_claimer_for() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let claimer = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
@@ -574,286 +1426,640 @@ mod tests {
         assert!(receipt.status());
     }
 
-    /// The claim can be submitted from [`ANVIL_FIRST_PRIVATE_KEY`]
-    /// This is taken from the slashing PR, it is slightly changed since
-    /// some chain reader functions are not available in this branch yet.
-    pub async fn new_claim(
-        http_endpoint: &str,
-        cumulative_earnings: U256,
-    ) -> (FixedBytes<32>, RewardsMerkleClaim) {
-        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.to_string()).await;
+    #[tokio::test]
+    async fn test_process_claim() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
-        let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.to_string()).await;
-        let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-        let (_, token_address, _) = el_chain_reader
-            .get_strategy_and_underlying_erc20_token(mock_strategy)
+        let (_root, claim) = new_claim(&http_endpoint, U256::from(42)).await;
+
+        let tx_hash = el_chain_writer
+            .process_claim(claim, FIRST_ADDRESS)
             .await
             .unwrap();
 
-        // Initialize the rewards coordinator bindings
-        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &signer);
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+    }
 
-        // Mint tokens for the rewards coordinator
-        let token = MockERC20::new(token_address, &signer);
-        let receipt = token
-            .mint(rewards_coordinator_address, cumulative_earnings)
+    #[tokio::test]
+    async fn test_process_claims() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+
+        let (_root, claim0) = new_claim(&http_endpoint, U256::from(42)).await;
+        let (_root, claim1) = new_claim(&http_endpoint, U256::from(4256)).await;
+
+        let tx_hash = el_chain_writer
+            .process_claims(vec![claim0, claim1], FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+    }
+
+    #[tokio::test]
+    async fn test_add_and_remove_pending_admin() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let pending_admin = address!("009440d62dc85c73dbf889b7ad1f4da8b231d2ef");
+        let tx_hash = el_chain_writer
+            .add_pending_admin(FIRST_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let is_pending_admin = el_chain_reader
+            .is_pending_admin(FIRST_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        assert!(is_pending_admin);
+
+        let tx_hash = el_chain_writer
+            .remove_pending_admin(FIRST_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let is_admin = el_chain_reader
+            .is_pending_admin(FIRST_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        assert!(!is_admin);
+    }
+
+    #[tokio::test]
+    async fn test_accept_admin() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let account_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+
+        let pending_admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
+        let pending_admin_key =
+            "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
+
+        let tx_hash = account_writer
+            .add_pending_admin(FIRST_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let admin_writer =
+            new_test_writer(http_endpoint.to_string(), pending_admin_key.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let tx_hash = admin_writer.accept_admin(FIRST_ADDRESS).await.unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let is_admin = el_chain_reader
+            .is_admin(FIRST_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        assert!(is_admin);
+    }
+
+    #[tokio::test]
+    async fn test_remove_admin() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let pending_admin_1 = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
+        let pending_admin_1_key =
+            "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
+
+        let pending_admin_2 = address!("23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f");
+        let pending_admin_2_key =
+            "0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97";
+
+        // Adding two admins and removing one. Cannot remove the last admin, so one must remain
+        let tx_hash = el_chain_writer
+            .add_pending_admin(FIRST_ADDRESS, pending_admin_1)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let tx_hash = el_chain_writer
+            .add_pending_admin(FIRST_ADDRESS, pending_admin_2)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let admin_1_writer =
+            new_test_writer(http_endpoint.to_string(), pending_admin_1_key.to_string()).await;
+        admin_1_writer.accept_admin(FIRST_ADDRESS).await.unwrap();
+        let admin_2_writer =
+            new_test_writer(http_endpoint.to_string(), pending_admin_2_key.to_string()).await;
+        admin_2_writer.accept_admin(FIRST_ADDRESS).await.unwrap();
+
+        let tx_hash = admin_1_writer
+            .remove_admin(FIRST_ADDRESS, pending_admin_2)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let is_admin = el_chain_reader
+            .is_admin(FIRST_ADDRESS, pending_admin_2)
+            .await
+            .unwrap();
+        assert!(!is_admin);
+    }
+
+    #[tokio::test]
+    async fn test_set_and_remove_permission() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let account_address = FIRST_ADDRESS;
+        let appointee_address = address!("009440d62dc85c73dbf889b7ad1f4da8b231d2ef");
+        let target = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
+        let selector = [0, 1, 2, 3].into();
+
+        // add an admin
+        let account_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        // set permission
+        let tx_hash = account_writer
+            .set_permission(account_address, appointee_address, target, selector)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        // check if appointee can call the set target
+        let can_call = el_chain_reader
+            .can_call(account_address, appointee_address, target, selector)
+            .await
+            .unwrap();
+        assert!(can_call);
+
+        // test remove permission
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+
+        let tx_hash = el_chain_writer
+            .remove_permission(account_address, appointee_address, target, selector)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+    }
+
+    #[tokio::test]
+    async fn test_register_for_operator_sets() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        let operator_addr = OPERATOR_ADDRESS;
+        let operator_private_key = OPERATOR_PRIVATE_KEY;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
+
+        let tx_hash = el_chain_writer
+            .register_for_operator_sets(
+                operator_addr,
+                avs_address,
+                vec![operator_set_id],
+                bls_key,
+                "socket",
+            )
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let operator_set = OperatorSet {
+            avs: avs_address,
+            id: operator_set_id,
+        };
+        let is_registered = el_chain_reader
+            .is_operator_registered_with_operator_set(operator_addr, operator_set.clone())
+            .await
+            .unwrap();
+        assert!(is_registered);
+
+        let tx_hash = el_chain_writer
+            .deregister_from_operator_sets(operator_addr, avs_address, vec![operator_set_id])
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let is_registered = el_chain_reader
+            .is_operator_registered_with_operator_set(operator_addr, operator_set.clone())
+            .await
+            .unwrap();
+        assert!(!is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_set_allocation_delay() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let delay = 10;
+
+        let tx_hash = el_chain_writer
+            .set_allocation_delay(FIRST_ADDRESS, delay)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+        let current_block = get_provider(&http_endpoint)
+            .get_block_number()
+            .await
+            .unwrap();
+        mine_anvil_blocks(&_container, (current_block as u32) + 2).await;
+        let allocation_delay = el_chain_reader
+            .get_allocation_delay(FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(allocation_delay, delay);
+    }
+
+    #[tokio::test]
+    async fn test_modify_allocations() {
+        let (container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_address = FIRST_ADDRESS;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        let new_allocation = 100;
+        let allocate_params = IAllocationManagerTypes::AllocateParams {
+            strategies: vec![strategy_addr],
+            operatorSet:
+                eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id,
+                },
+            newMagnitudes: vec![new_allocation],
+        };
+        let tx_hash = el_chain_writer
+            .modify_allocations(operator_address, vec![allocate_params])
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let allocation_info = el_chain_reader
+            .get_allocation_info(operator_address, strategy_addr)
+            .await
+            .unwrap();
+
+        // Allocation should be pending
+        assert_eq!(allocation_info[0].pending_diff, U256::from(new_allocation));
+
+        let allocation_delay = el_chain_reader
+            .get_allocation_delay(FIRST_ADDRESS)
+            .await
+            .unwrap();
+        mine_anvil_blocks(&container, allocation_delay).await;
+
+        let allocation_info = el_chain_reader
+            .get_allocation_info(operator_address, strategy_addr)
+            .await
+            .unwrap();
+
+        // After the allocation delay blocks, the allocation should be set
+        assert_eq!(
+            allocation_info[0].current_magnitude,
+            U256::from(new_allocation)
+        );
+    }
+
+    #[tokio::test]
+    async fn test_set_operator_avs_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+        let new_split = 5;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+
+        let split = el_chain_reader
+            .get_operator_avs_split(FIRST_ADDRESS, avs_address)
+            .await
+            .unwrap();
+
+        assert_eq!(split, 1); // not initialized case
+
+        let tx_hash = el_chain_writer
+            .set_operator_avs_split(FIRST_ADDRESS, avs_address, new_split)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let split = el_chain_reader
+            .get_operator_avs_split(FIRST_ADDRESS, avs_address)
+            .await
+            .unwrap();
+        assert_eq!(split, 5); // initialized && activated
+    }
+
+    #[tokio::test]
+    async fn test_set_operator_set_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        let operator_addr = OPERATOR_ADDRESS;
+        let operator_private_key = OPERATOR_PRIVATE_KEY;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+        let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
+
+        let tx_hash = el_chain_writer
+            .register_for_operator_sets(
+                operator_addr,
+                avs_address,
+                vec![operator_set_id],
+                bls_key,
+                "socket",
+            )
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+        let operator_set = OperatorSet {
+            avs: avs_address,
+            id: 0,
+        };
+
+        let new_split = 5;
+        let tx_hash = el_chain_writer
+            .set_operator_set_split(OPERATOR_ADDRESS, operator_set.clone(), new_split)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+        let rewards_operator_set =
+            convert_allocation_operator_set_to_rewards_operator_set(operator_set.clone());
+        let split = el_chain_reader
+            .get_operator_set_split(OPERATOR_ADDRESS, rewards_operator_set.clone())
+            .await
+            .unwrap();
+
+        assert_eq!(split, new_split); // initialized && activated
+    }
+
+    #[tokio::test]
+    async fn test_set_operator_pi_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+        let new_split = 5;
+
+        let split = el_chain_reader
+            .get_operator_pi_split(FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(split, 1); // not initialized case
+
+        let tx_hash = el_chain_writer
+            .set_operator_pi_split(FIRST_ADDRESS, new_split)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let split = el_chain_reader
+            .get_operator_pi_split(FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(split, new_split);
+    }
+
+    #[tokio::test]
+    async fn test_clear_deallocation_queue() {
+        let (_contianer, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        let operator_address = FIRST_ADDRESS;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+
+        let new_allocation = 100;
+        let allocate_params = IAllocationManagerTypes::AllocateParams {
+            strategies: vec![strategy_addr],
+            operatorSet: OperatorSet {
+                avs: avs_address,
+                id: operator_set_id,
+            },
+            newMagnitudes: vec![new_allocation],
+        };
+        let tx_hash_alloc = el_chain_writer
+            .modify_allocations(operator_address, vec![allocate_params.clone()])
+            .await
+            .unwrap();
+        let receipt_alloc = wait_transaction(&http_endpoint, tx_hash_alloc)
+            .await
+            .unwrap();
+        assert!(receipt_alloc.status());
+
+        let allocation_info_before = el_chain_reader
+            .get_allocation_info(operator_address, strategy_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(
+            allocation_info_before[0].pending_diff,
+            U256::from(new_allocation)
+        );
+
+        let tx_hash_clear = el_chain_writer
+            .clear_deallocation_queue(
+                operator_address,
+                vec![strategy_addr],
+                vec![new_allocation as u16],
+            )
+            .await
+            .unwrap();
+        let receipt_clear = wait_transaction(&http_endpoint, tx_hash_clear)
+            .await
+            .unwrap();
+        assert!(receipt_clear.status(),);
+
+        let allocation_info_after = el_chain_reader
+            .get_allocation_info(operator_address, strategy_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(allocation_info_after[0].pending_diff, U256::ZERO);
+        assert_eq!(
+            allocation_info_after[0].current_magnitude,
+            U256::from(new_allocation)
+        );
+    }
+
+    #[tokio::test]
+    async fn test_register_for_operator_sets_with_churn() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let default_signer = get_signer(FIRST_PRIVATE_KEY, &http_endpoint);
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+
+        // Create operator set
+        create_total_delegated_stake_operator_set(
+            &http_endpoint,
+            get_erc20_mock_strategy(http_endpoint.clone()).await,
+            avs_address,
+        )
+        .await;
+
+        // Register FIRST_ADDRESS to operator set
+        let el_chain_writer =
+            new_test_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+        let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
+        let tx_hash = el_chain_writer
+            .register_for_operator_sets_with_churn(
+                FIRST_ADDRESS,
+                bls_key,
+                avs_address,
+                vec![operator_set_id],
+                "socket".to_string(),
+                Bytes::from([0]),
+                vec![FIRST_ADDRESS],
+                FIRST_PRIVATE_KEY.to_string(),
+                FixedBytes::from([0x03; 32]),
+                U256::MAX,
+            )
+            .await
+            .unwrap();
+
+        assert!(wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status());
+
+        // Verify FIRST_ADDRESS registration
+        assert!(el_chain_reader
+            .is_operator_registered_with_operator_set(
+                FIRST_ADDRESS,
+                OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id
+                }
+            )
+            .await
+            .unwrap());
+
+        // Set maxOperatorCount to 1 so only one operator can be registered to the operator set
+        let slashing_registry_coordinator = SlashingRegistryCoordinator::new(
+            get_registry_coordinator_address(http_endpoint.clone()).await,
+            default_signer.clone(),
+        );
+        let operator_set_params = OperatorSetParamSlashing {
+            maxOperatorCount: 1,
+            kickBIPsOfOperatorStake: 10,
+            kickBIPsOfTotalStake: 10000,
+        };
+        assert!(slashing_registry_coordinator
+            .setOperatorSetParams(0, operator_set_params)
             .send()
             .await
             .unwrap()
             .get_receipt()
             .await
-            .unwrap();
-        assert!(receipt.status());
+            .unwrap()
+            .status());
 
-        // Generate token tree leaf
-        // For the tree structure, see https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/docs/core/RewardsCoordinator.md#rewards-merkle-tree-structure
-        let earner_address = ANVIL_FIRST_ADDRESS;
-        let token_leaves = vec![TokenTreeMerkleLeaf {
-            token: token_address,
-            cumulativeEarnings: cumulative_earnings,
-        }];
-        // Hash token tree leaf to get root
-        let encoded_token_leaf = [
-            // uint8 internal constant TOKEN_LEAF_SALT = 1;
-            U8::from(1).to_be_bytes_vec(),
-            token_leaves[0].token.abi_encode_packed(),
-            token_leaves[0].cumulativeEarnings.abi_encode_packed(),
-        ]
-        .concat();
-        let earner_token_root = keccak256(encoded_token_leaf);
-
-        // Generate earner tree leaf
-        let earner_leaf = EarnerTreeMerkleLeaf {
-            earner: earner_address,
-            earnerTokenRoot: earner_token_root,
-        };
-        // Hash earner tree leaf to get root
-        let encoded_earner_leaf = [
-            // uint8 internal constant EARNER_LEAF_SALT = 0;
-            U8::from(0).to_be_bytes_vec(),
-            earner_leaf.earner.abi_encode_packed(),
-            earner_leaf.earnerTokenRoot.abi_encode_packed(),
-        ]
-        .concat();
-        let earner_tree_root = keccak256(encoded_earner_leaf);
-
-        // Fetch the next root index from contract
-        let distribution_roots_length_return = rewards_coordinator
-            .getDistributionRootsLength()
-            .call()
-            .await
-            .unwrap();
-        let getDistributionRootsLengthReturn {
-            _0: next_root_index,
-        } = distribution_roots_length_return;
-        // Construct the claim
-        let claim = RewardsMerkleClaim {
-            rootIndex: next_root_index.try_into().unwrap(),
-            earnerIndex: 0,
-            // Empty proof because leaf == root
-            earnerTreeProof: vec![].into(),
-            earnerLeaf: earner_leaf,
-            tokenIndices: vec![0],
-            tokenTreeProofs: vec![
-                // Empty proof because leaf == root
-                vec![].into(),
-            ],
-            tokenLeaves: token_leaves,
-        };
-
-        let root = earner_tree_root;
-
-        let activation_delay = 0;
-        // Set the activation delay to zero so that the claim can be processed
-        // right after setting the root
-        let set_activation_delay = rewards_coordinator
-            .setActivationDelay(activation_delay)
-            .send()
+        // Register SECOND_ADDRESS to operator set with churn. FIRST_ADDRESS will be kicked
+        let el_chain_writer_2 =
+            new_test_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string()).await;
+        let tx_hash = el_chain_writer_2
+            .register_for_operator_sets_with_churn(
+                SECOND_ADDRESS,
+                BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap(),
+                avs_address,
+                vec![operator_set_id],
+                "socket".to_string(),
+                Bytes::from([0]),
+                vec![FIRST_ADDRESS],
+                FIRST_PRIVATE_KEY.to_string(),
+                FixedBytes::from([0x05; 32]),
+                U256::MAX,
+            )
             .await
             .unwrap();
 
-        let receipt = set_activation_delay.get_receipt().await.unwrap();
-        assert!(receipt.status());
-
-        // Set the rewards updater so that we can submit the root
-        let rewards_updater = ANVIL_FIRST_ADDRESS;
-        let set_rewards_updater_tx = rewards_coordinator
-            .setRewardsUpdater(rewards_updater)
-            .send()
+        assert!(wait_transaction(&http_endpoint, tx_hash)
             .await
-            .unwrap();
-        let receipt = set_rewards_updater_tx.get_receipt().await.unwrap();
-        assert!(receipt.status());
+            .unwrap()
+            .status());
 
-        // Fetch the current timestamp to increase it
-        let curr_rewards_calculation_end_timestamp_return = rewards_coordinator
-            .currRewardsCalculationEndTimestamp()
-            .call()
+        // Verify FIRST_ADDRESS is not registered
+        assert!(!el_chain_reader
+            .is_operator_registered_with_operator_set(
+                FIRST_ADDRESS,
+                OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id
+                }
+            )
             .await
-            .unwrap();
-        let IRewardsCoordinator::currRewardsCalculationEndTimestampReturn {
-            _0: curr_rewards_calculation_end_timestamp,
-        } = curr_rewards_calculation_end_timestamp_return;
+            .unwrap());
 
-        // Submit the root
-        let submit_tx = rewards_coordinator
-            .submitRoot(root, curr_rewards_calculation_end_timestamp + 1)
-            .send()
+        // Verify SECOND_ADDRESS is registered
+        assert!(el_chain_reader
+            .is_operator_registered_with_operator_set(
+                SECOND_ADDRESS,
+                OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id
+                }
+            )
             .await
-            .unwrap();
-        let submit_status = submit_tx.get_receipt().await.unwrap().status();
-        assert!(submit_status);
-
-        (root, claim)
-    }
-
-    #[tokio::test]
-    async fn test_process_claim() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
-        let el_chain_writer =
-            new_test_writer_with_private_key(http_endpoint.to_string(), private_key).await;
-        let earnings = U256::from(42);
-        let (_root, claim) = new_claim(&http_endpoint, earnings).await;
-        let earner = ANVIL_FIRST_ADDRESS;
-        let tx_hash = el_chain_writer.process_claim(earner, claim).await.unwrap();
-
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-    }
-
-    #[tokio::test]
-    #[serial]
-    async fn test_set_operator_avs_split() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
-        let operator = address!("90f79bf6eb2c4f870365e785982e1f101e93b906"); // derived from  test private key in new_test_writer
-        let avs = get_service_manager_address(http_endpoint.clone()).await;
-        let split = 1000;
-        let tx_hash = el_chain_writer
-            .set_operator_avs_split(operator, avs, split)
-            .await
-            .unwrap();
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-    }
-
-    #[tokio::test]
-    #[serial]
-    async fn test_set_operator_pi_split() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
-        let operator = address!("90f79bf6eb2c4f870365e785982e1f101e93b906"); // derived from  test private key in new_test_writer
-        let split = 1000;
-        let tx_hash = el_chain_writer
-            .set_operator_pi_split(operator, split)
-            .await
-            .unwrap();
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-    }
-    #[tokio::test]
-    async fn test_set_operator_avs_split_modified() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer_with_private_key(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
-        let new_split = 5;
-        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
-
-        let split = el_chain_writer
-            .el_chain_reader
-            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
-            .await
-            .unwrap();
-
-        assert_eq!(split, 1000);
-
-        // Set the activation delay to zero so that the split change can be
-        // processed right after setting it
-        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, &http_endpoint);
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.to_string()).await;
-
-        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &signer);
-        let activation_delay = 0;
-        let set_activation_delay = rewards_coordinator
-            .setActivationDelay(activation_delay)
-            .send()
-            .await
-            .unwrap();
-        let receipt = set_activation_delay.get_receipt().await.unwrap();
-        assert!(receipt.status());
-
-        let tx_hash = el_chain_writer
-            .set_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address, new_split)
-            .await
-            .unwrap();
-
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-
-        let split = el_chain_writer
-            .el_chain_reader
-            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
-            .await
-            .unwrap();
-
-        assert_eq!(split, new_split);
-    }
-
-    #[tokio::test]
-    async fn test_set_operator_pi_split_modified() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer_with_private_key(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
-        let new_split = 5;
-
-        let split = el_chain_writer
-            .el_chain_reader
-            .get_operator_pi_split(ANVIL_FIRST_ADDRESS)
-            .await
-            .unwrap();
-
-        assert_eq!(split, 1000);
-
-        // Set the activation delay to zero so that the split change can be
-        // processed right after setting it
-        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, &http_endpoint);
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.to_string()).await;
-
-        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &signer);
-        let activation_delay = 0;
-        let set_activation_delay = rewards_coordinator
-            .setActivationDelay(activation_delay)
-            .send()
-            .await
-            .unwrap();
-        let receipt = set_activation_delay.get_receipt().await.unwrap();
-        assert!(receipt.status());
-
-        let tx_hash = el_chain_writer
-            .set_operator_pi_split(ANVIL_FIRST_ADDRESS, new_split)
-            .await
-            .unwrap();
-
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-
-        let split = el_chain_writer
-            .el_chain_reader
-            .get_operator_pi_split(ANVIL_FIRST_ADDRESS)
-            .await
-            .unwrap();
-
-        assert_eq!(split, new_split);
+            .unwrap());
     }
 }

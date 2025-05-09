@@ -7,6 +7,12 @@ repository.workspace = true
 description = "SDK for eigenlayer"
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 eigen-client-avsregistry = { workspace = true, optional = true }
 eigen-client-elcontracts = { workspace = true, optional = true }
@@ -51,6 +57,10 @@ full = [
     "signer",
     "testing-utils",
     "nodeapi",
+    "metrics-collectors-economic",
+    "metrics-collectors-rpc-calls",
+    "types",
+    "utils",
 ]
 
 # Client-related features

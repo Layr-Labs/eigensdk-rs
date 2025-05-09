@@ -1,0 +1,30 @@
+[package]
+name = "eigen-testing-utils"
+description = "Testing utils for eigen."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license-file.workspace = true
+repository.workspace = true
+
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[lints]
+workspace = true
+
+[dependencies]
+alloy.workspace = true
+eigen-client-avsregistry.workspace = true
+eigen-logging.workspace = true
+eigen-client-elcontracts.workspace = true
+eigen-common.workspace = true
+eigen-utils.workspace = true
+eigen-crypto-bls.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+testcontainers.workspace = true
+url.workspace = true

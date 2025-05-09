@@ -1,15 +1,13 @@
 use crate::{error::AvsRegistryError, reader::AvsRegistryReader};
 use alloy::primitives::{aliases::U96, Address, Bytes, FixedBytes};
 use async_trait::async_trait;
-use eigen_crypto_bls::BlsKeyPair;
 use eigen_types::test::TestOperator;
-use eigen_utils::middleware::operatorstateretriever::OperatorStateRetriever;
+use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever;
 
 /// This struct is used to test AvsRegistryServiceChainCaller methods.
 #[derive(Debug)]
 pub struct FakeAvsRegistryReader {
     operator_address: Address,
-    operator_pubkeys: BlsKeyPair,
     operator_id: FixedBytes<32>,
 }
 
@@ -28,7 +26,6 @@ impl FakeAvsRegistryReader {
         Self {
             operator_address,
             operator_id: operator.operator_id,
-            operator_pubkeys: operator.bls_keypair,
         }
     }
 }
@@ -37,7 +34,7 @@ impl FakeAvsRegistryReader {
 impl AvsRegistryReader for FakeAvsRegistryReader {
     async fn get_operators_stake_in_quorums_at_block(
         &self,
-        _block_number: u32,
+        _block_number: u64,
         _quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError> {
         Ok(vec![vec![OperatorStateRetriever::Operator {
@@ -49,7 +46,7 @@ impl AvsRegistryReader for FakeAvsRegistryReader {
 
     async fn get_check_signatures_indices(
         &self,
-        _reference_block_number: u32,
+        _reference_block_number: u64,
         _quorum_numbers: Vec<u8>,
         _non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError> {

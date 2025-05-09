@@ -16,17 +16,1044 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ### Security 🔒
 
 ### Added 🎉
-* Added version explicitly in crates in [#322](https://github.com/Layr-Labs/eigensdk-rs/pull/322). 
 
 ### Breaking Changes 🛠
 
 ### Deprecated ⚠️
 
-### Removed 🗑
+### Removed
 
 ### Documentation 📚
 
 ### Other Changes
+
+## [1.0.0] - 2025-05-09
+
+### Added 🎉
+
+* Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
+* Bump middleware to [v1.3.0](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.0) in PR [443](https://github.com/Layr-Labs/eigensdk-rs/pull/443).
+* Bump middleware to [v1.3.1](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.1) in PR [488](https://github.com/Layr-Labs/eigensdk-rs/pull/488).
+* Added an additional implementation for `OperatorInfoService` for retrieving operator BLS pubkeys and sockets directly from middleware in [#414](https://github.com/Layr-Labs/eigensdk-rs/pull/414). The new `OperatorInfoOnChain` is more stable and efficient since it doesn't subscribe or fetch events, but it requires functionality from the recent v1.3.0 middleware release.
+
+  Old Implementation which indexes middleware events:
+
+    ```rust
+      use eigen_services_operatorsinfo::{operatorsinfo_inmemory::OperatorInfoServiceInMemory};
+      let operators_info = OperatorInfoServiceInMemory::new(
+          get_test_logger(),
+          avs_registry_reader.clone(),
+          ws_endpoint,
+      )
+      .await
+      .unwrap()
+      .0;
+
+      let cancellation_token = CancellationToken::new();
+      let operators_info_clone = operators_info.clone();
+      let token_clone = cancellation_token.clone();
+      task::spawn(async move { operators_info_clone.start_service(&token_clone, start_block, end_block).await });
+      // Sleep to wait for the operator info service to start
+      sleep(Duration::from_secs(1)).await;
+
+      let avs_registry_service =
+          AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
+    ```
+
+  New alternate implementation which directly queries from middleware using view call:
+
+    ```rust
+      use eigen_services_operatorsinfo::{operatorsinfo_inmemory::OperatorInfoOnChain};
+      let operators_info_on_chain = OperatorInfoOnChain::new(
+          &http_endpoint,
+          bls_apk_registry_address,
+          socket_registry_address,
+      );
+
+      let avs_registry_service = AvsRegistryServiceChainCaller::new(
+          avs_registry_reader.clone(),
+          operators_info_on_chain,
+      );
+
+      let pub_keys = operator_info_on_chain
+          .get_operator_info(OPERATOR_ADDRESS)
+          .await
+          .unwrap();
+      
+      let socket = operator_info_on_chain
+          .get_operator_socket(OPERATOR_ADDRESS)
+          .await
+          .unwrap();
+    ```
+
+* Added a method `get_operator_socket` to retrieve the socket from the `AvsRegistryServiceChainCaller` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464).
+
+  ```rust
+    let socket = self.get_operator_socket(*operator.operatorId).await.unwrap();
+  ```
+
+### Breaking Changes 🛠
+
+* Changing NodeApi to allow concurrent modifications of the internal state of the node in PR [401](https://github.com/Layr-Labs/eigensdk-rs/pull/401).
+
+  Before: `NodeApi` had the function `create_server` to start the Node API. Now, there are two functions `NodeApi::new` and `NodeApi::start_server` to create the server and then start it.
+
+  Also, users can now call functions to modify the information served dynamically by interacting with the `NodeApi` methods. As an end-to-end example:
+
+  ``` rust
+    let mut node_info = NodeInfo::new("test_node", "v1.0.0");
+    node_info.register_service(
+        "test_service",
+        "Test Service",
+        "Test service description",
+        ServiceStatus::Up,
+    );
+
+    // Set up a server running on a test address (e.g., 127.0.0.1:8081)
+    let ip_port_addr = "127.0.0.1:8081";
+
+    let mut node_api = NodeApi::new(node_info);
+    let server = node_api.start_server(ip_port_addr).unwrap();
+
+    // and then you can dinamically modify the state of the node:
+    node_api
+        .update_service_status("test_service", ServiceStatus::Down)
+        .unwrap();
+  ```
+
+* Added field `socket` to `OperatorInfo` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464)
+
+  ```rust
+    // BEFORE
+    let info = self.get_operator_info(*operator.operatorId).await?;
+    let stake_per_quorum = HashMap::new();
+    let avs_state = operators_avs_state
+        .entry(FixedBytes(*operator.operatorId))
+        .or_insert_with(|| OperatorAvsState {
+            operator_id: operator.operatorId,
+            operator_info: OperatorInfo {
+                pub_keys: Some(info),
+            },
+            stake_per_quorum,
+            block_num: block_num.into(),
+        });
+    avs_state
+        .stake_per_quorum
+        .insert(*quorum_num, U256::from(operator.stake));
+
+    // AFTER
+    // Now we use the new method to retrieve the socket in `get_operators_avs_state_at_block`
+    // And use the value in the new field `socket` in `OperatorInfo`
+    let socket = self.get_operator_socket(*operator.operatorId).await?;
+    let info = self.get_operator_info(*operator.operatorId).await?;
+    let stake_per_quorum = HashMap::new();
+    let avs_state = operators_avs_state
+        .entry(FixedBytes(*operator.operatorId))
+        .or_insert_with(|| OperatorAvsState {
+            operator_id: operator.operatorId,
+            operator_info: OperatorInfo {
+                pub_keys: Some(info),
+                socket: Some(socket),
+            },
+            stake_per_quorum,
+            block_num: block_num.into(),
+        });
+    avs_state
+        .stake_per_quorum
+        .insert(*quorum_num, U256::from(operator.stake));
+  ```
+
+### Documentation 📚
+
+* Added documentation for service crates:
+  * docs: avs registry service by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/409>
+  * docs: operator info service by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/406>
+  * docs: BLS Aggregator Service by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/387>
+
+* Improved documentation compiling on docs.rs
+  * chore: apply cargo doc metadata to crates by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/441>
+  * docs: fix doc warnings by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/438>
+  * docs: inline `eigensdk` documentation by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/439>
+
+### Other Changes
+
+* Moved test utils from chainio folder to testing/testutils folder by @maximopalopoli in [#407](https://github.com/Layr-Labs/eigensdk-rs/pull/407)
+* Added rewards utilities integration test by @maximopalopoli in [#404](https://github.com/Layr-Labs/eigensdk-rs/pull/404)
+* test: check quorum creation after service initialization is working by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/400>
+* chore: use common testing utils in bls_agg_test in PR [#420](https://github.com/Layr-Labs/eigensdk-rs/pull/420).
+* chore: remove unused dependency in `eigen-cli` by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/421>
+* test: wait for transaction before doing call by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/422>
+* chore: merge changes from main branch by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/446>
+
+* Fixed release workflow. We now use release-plz for releases.
+  * ci: add workflow_dispatch for release-plz by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/448>
+  * fix: ignore integration tests crate when publishing by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/449>
+  * fix: use path-only dependency for testing utils by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/450>
+
+## [0.5.0] - 2025-03-18
+
+### Security 🔒
+
+### Added 🎉
+
+* Added all features of the `eigensdk` crate to its `"full"` feature [#370](https://github.com/Layr-Labs/eigensdk-rs/pull/370)
+  * This includes: `"types"`, `"utils"`, `"metrics-collectors-economic"`, and `"metrics-collectors-rpc-calls"` features.
+* Bump alloy to 0.12 in [#381](https://github.com/Layr-Labs/eigensdk-rs/pull/381).
+
+* Added `register_for_operator_sets_with_churn` method to `elcontracts/writer` in [#382](https://github.com/Layr-Labs/eigensdk-rs/pull/382).
+  
+  ```rust
+    let el_chain_writer_2 =
+        new_test_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string()).await;
+
+    let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
+    let churn_private_key = FIRST_PRIVATE_KEY.to_string();
+    let churn_sig_salt = FixedBytes::from([0x05; 32]);
+    let churn_sig_expiry = U256::MAX;
+    
+    let tx_hash = el_chain_writer_2
+        .register_for_operator_sets_with_churn(
+            SECOND_ADDRESS,         // Operator address to register
+            bls_key_pair,           // Operator's BLS key pair
+            avs_address,            // AVS address
+            vec![operator_set_id],  // Operator set ID
+            "socket".to_string(),   // Socket address
+            Bytes::from([0]),       // Quorum numbers
+            vec![FIRST_ADDRESS],    // Operators to kick if quorum is full
+            churn_private_key,      // Churn approver's private key
+            churn_sig_salt,         // Churn signature salt
+            churn_sig_expiry,       // Churn signature expiry
+        )
+        .await
+        .unwrap();
+  ```
+
+  * Bump middleware to [v1.3.0-rc.0](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.0-rc.0) [#395](https://github.com/Layr-Labs/eigensdk-rs/pull/395).
+
+  * Bump middleware to [v1.4.0-testnet-holesky](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.4.0-testnet-holesky) [#396](https://github.com/Layr-Labs/eigensdk-rs/pull/396).
+
+### Breaking Changes 🛠
+
+* Updated slashing bindings to [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing) [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
+
+* Renamed `set_account_identifier` to `set_avs` [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
+  * The underlying call was renamed in [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing).
+
+* Changed the signature of `build_avs_registry_chain_writer` in [#384](https://github.com/Layr-Labs/eigensdk-rs/pull/384).
+  * The `operator_state_retriever_addr` parameter was replaced by `service_manager_addr`.
+  * This change was made because later middleware versions do not include `ServiceManager`.
+  
+  ```rust
+  // Before
+  pub async fn build_avs_registry_chain_writer(
+      logger: SharedLogger,
+      provider: String,
+      signer: String,
+      registry_coordinator_addr: Address,
+      _operator_state_retriever_addr: Address,
+  ) -> Result<Self, AvsRegistryError> {}
+
+  // After
+  pub async fn build_avs_registry_chain_writer(
+      logger: SharedLogger,
+      provider: String,
+      signer: String,
+      registry_coordinator_addr: Address,
+      service_manager_addr: Address,
+  ) -> Result<Self, AvsRegistryError> {}
+  ```
+
+* Bumped slashing bindings to [v1.3.0-rc.0](https://github.com/Layr-Labs/eigenlayer-contracts/releases/tag/v1.3.0) in [#388](https://github.com/Layr-Labs/eigensdk-rs/pull/388)
+
+  * Added method `is_operator_slashable`.
+
+  ```rust
+    let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+    let operator_set = OperatorSet {
+        id: 1,
+        avs: Address::ZERO,
+    };
+
+    let is_slashable = chain_reader
+        .is_operator_slashable(OPERATOR_ADDRESS, operator_set)
+        .await
+        .unwrap();
+    assert!(!is_slashable);
+  ```
+
+  * Added method `get_allocated_stake`.
+
+  ```rust
+    let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+    let operator_set = OperatorSet {
+        id: 1,
+        avs: Address::ZERO,
+    };
+    let operators = vec![OPERATOR_ADDRESS];
+    let strategies = vec![get_erc20_mock_strategy(http_endpoint.to_string()).await];
+    let slashable_stake = chain_reader
+        .get_allocated_stake(operator_set, operators, strategies)
+        .await
+        .unwrap();
+  ```
+
+  * Added method `get_encumbered_magnitude`.
+
+  ```rust
+    let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+    let magnitude = chain_reader
+        .get_encumbered_magnitude(
+            OPERATOR_ADDRESS,
+            get_erc20_mock_strategy(http_endpoint.to_string()).await,
+        )
+        .await
+        .unwrap();
+  ```
+
+* Updated error types in `BlsAggregationServiceError` for channel failures in the BLS Aggregator Service ([#392](https://github.com/Layr-Labs/eigensdk-rs/pull/392)).
+  * Before: A generic `ChannelError` was used for both sender and receiver channel failures.
+  * After: Distinct errors are now provided:
+    * `SenderError` is returned when the sender channel fails to send a message to the service.
+    * `ReceiverError` is returned when the receiver channel fails to receive a message from the service.
+
+### Deprecated ⚠️
+
+### Removed
+
+* Removed unused empty structs from the library in [#371](https://github.com/Layr-Labs/eigensdk-rs/pull/371)
+  * `eigen_client_eth::client::Client`
+  * `eigen_services_operatorsinfo::OperatorPubKeysService`
+* Removed the `AvsRegistryChainReader::is_operator_set_quorum` method [#365](https://github.com/Layr-Labs/eigensdk-rs/pull/365)
+  * This function was removed in [the v1.1.1 eigenlayer-middleware release](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.1.1-testnet-slashing).
+
+### Documentation 📚
+
+* Reflect 2 bindings(rewardsv2 and slashing) in readme in [#383](https://github.com/Layr-Labs/eigensdk-rs/pull/383).
+
+### Other Changes
+
+## [0.4.0] - 2025-02-20
+
+### Security 🔒
+
+### Added 🎉
+
+* Implemented `create_avs_rewards_submission` [#345](https://github.com/Layr-Labs/eigensdk-rs/pull/345)
+
+  ```rust
+    let rewards_submissions = vec![RewardsSubmission {
+        strategiesAndMultipliers: strategies_and_multipliers,
+        token,
+        amount: U256::from(1_000),
+        startTimestamp: last_valid_interval_start,
+        duration: rewards_duration,
+    }];
+
+    let tx_hash = avs_writer
+        .create_avs_rewards_submission(rewards_submissions)
+        .await
+        .unwrap();
+  ```
+
+* Added functions `new()` and `validate()` to `Operator` struct in [#280](https://github.com/Layr-Labs/eigensdk-rs/pull/280).
+
+```rust
+    let operator = Operator::new( 
+      "f39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "http://www.example.com/eigensdk-rs.json",
+      3
+    );
+  operator.validate();
+```
+
+* Added `OperatorMetadata` struct in [#280](https://github.com/Layr-Labs/eigensdk-rs/pull/280).
+
+```rust
+    let operator_metadata = OperatorMetadata {
+        name: "Ethereum Utopia".to_string(),
+        description: "Rust operator is good operator".to_string(),
+        logo: "https://goerli-operator-metadata.s3.amazonaws.com/eigenlayer.png".to_string(),
+        website: Some("https://test.com".to_string()),
+        twitter: Some("https://twitter.com/test".to_string()),
+    };
+    operator_metadata.validate();
+```
+
+* Added new method `update_avs_metadata_uri` in `avsregistry/writer` in [#344](https://github.com/Layr-Labs/eigensdk-rs/pull/344).
+
+  ```rust
+    let tx_hash = avs_writer
+        .update_avs_metadata_uri(new_metadata)
+        .await
+        .unwrap();
+  ```
+
+* Added new method `register_operator_with_churn` in `avsregistry/writer` in [#354](https://github.com/Layr-Labs/eigensdk-rs/pull/354).
+
+  ```rust
+    let bls_key_pair = BlsKeyPair::new(BLS_KEY).unwrap();
+    let operator_sig_salt = FixedBytes::from([0x02; 32]); 
+    let operator_sig_expiry = U256::MAX;
+    let quorum_nums = Bytes::from([0]);
+    let socket = "socket".to_string();
+    let churn_sig_salt = FixedBytes::from([0x05; 32]);
+    let churn_sig_expiry = U256::MAX;
+
+
+    let tx_hash = avs_writer_2
+        .register_operator_with_churn(
+            bls_key_pair,                 // Operator's BLS key pair
+            operator_sig_salt,            // Operator signature salt
+            operator_sig_expiry,          // Operator signature expiry
+            quorum_nums,                  // Quorum numbers for registration
+            socket,                       // Socket address
+            vec![REGISTERED_OPERATOR],    // Operators to kick if quorum is full
+            CHURN_PRIVATE_KEY,            // Churn approver's private key
+            churn_sig_salt,               // Churn signature salt
+            churn_sig_expiry,             // Churn signature expiry
+        )
+        .await
+        .unwrap();
+  ```
+
+* Added new method `set_churn_approver` in `avsregistry/writer` in [#333](https://github.com/Layr-Labs/eigensdk-rs/pull/333).
+
+  ```rust
+  let tx_hash = avs_writer
+      .set_churn_approver(new_churn_approver_address)
+      .await
+      .unwrap();
+  ```
+
+* Added new method `set_signer` in `ELChainWriter` and `AvsRegistryChainWriter` in [#364](https://github.com/Layr-Labs/eigensdk-rs/pull/364).
+
+  ```rust
+  avs_registry_chain_writer.set_signer(PRIVATE_KEY_STRING);
+  el_chain_writer.set_signer(PRIVATE_KEY_STRING);
+  ```
+
+* Added additional method `register_as_operator_preslashing` in `ELChainWriter` in [#366](https://github.com/Layr-Labs/eigensdk-rs/pull/366).This method is to be used for pre-slashing.
+
+  ```rust
+   let operator = Operator {
+            address: ADDRESS, 
+            delegation_approver_address: ADDRESS,
+            metadata_url: "metadata_uri".to_string(),
+            allocation_delay: None,
+            _deprecated_earnings_receiver_address: None,
+            staker_opt_out_window_blocks: Some(0u32),
+        };
+    el_chain_writer
+        .register_as_operator_preslashing(operator)
+        .await
+        .unwrap();
+  ```
+
+### Breaking Changes 🛠
+
+* `TaskMetadata.task_created_block` field changed to `u64` [#362](https://github.com/Layr-Labs/eigensdk-rs/pull/362)
+
+* Separated the interface and service in the `bls_agg` module in [#363](https://github.com/Layr-Labs/eigensdk-rs/pull/363).
+  * To start the BLS aggregation service, use `BlsAggregationService::start`. It returns a tuple of `ServiceHandle` and `AggregateReceiver`.
+  * To interact with the BLS aggregation service, use the returned structs.
+    * Aggregation responses are now handled by the `AggregateReceiver` struct. Use `AggregateReceiver::receive_aggregated_response` instead of reading from the `aggregated_response_receiver` field of `BlsAggregationService`.
+    * Task initialization and new signature processing are handled by `ServiceHandle`. It is cloneable, and can be sent to other threads or tasks. Use `ServiceHandle::initialize_task` instead of `BlsAggregationService::initialize_new_task`, and `ServiceHandle::process_signature` instead of `BlsAggregationService::process_new_signature`.
+  * Removed `initialize_new_task` and `process_new_signature` from `BlsAggregationService`, along with the field `aggregated_response_receiver`, since their functionality is now exposed by `ServiceHandle` and `AggregateReceiver`.
+
+  ```rust
+  // Before
+  let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+  let metadata = TaskMetadata::new(
+        task_index,
+        block_number,
+        quorum_numbers,
+        quorum_threshold_percentages,
+        time_to_expiry,
+    );
+    
+  bls_agg_service.initialize_new_task(metadata).await.unwrap();
+
+  bls_agg_service
+      .process_new_signature(TaskSignature::new(
+          task_index,
+          task_response_digest,
+          bls_signature,
+          test_operator_1.operator_id,
+      ))
+      .await
+      .unwrap();
+
+  let aggregated_response = bls_agg_service
+          .aggregated_response_receiver
+          .lock()
+          .await
+          .recv()
+          .await
+          .unwrap();
+
+  // After
+  let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+  let (handle, mut aggregator_response) = bls_agg_service.start();
+
+  let metadata = TaskMetadata::new(
+      task_index,
+      block_number,
+      quorum_numbers,
+      quorum_threshold_percentages,
+      time_to_expiry,
+  );
+  handle.initialize_task(metadata).await.unwrap();
+
+  handle
+      .process_signature(TaskSignature::new(
+          task_index,
+          task_response_digest,
+          bls_signature,
+          test_operator_1.operator_id,
+      ))
+      .await
+      .unwrap();
+
+  let aggregated_response = aggregator_response
+      .receive_aggregated_response()
+      .await
+      .unwrap();
+  ```
+
+* Made some internal `BlsAggregatorService` methods private in [#390](https://github.com/Layr-Labs/eigensdk-rs/pull/390).
+  * `check_if_stake_thresholds_met`
+  * `verify_signature`
+
+### Deprecated ⚠️
+
+### Removed 🗑
+
+* Removed `eigen-testing-utils` dependency from `eigen-cli` crate in [#353](https://github.com/Layr-Labs/eigensdk-rs/pull/353).
+* Modifications to `eigen-testing-utils` in [#357](https://github.com/Layr-Labs/eigensdk-rs/pull/357).
+  * Removed `mine_anvil_blocks_operator_set` from `eigen-testing-utils`. Users should use `mine_anvil_blocks` that does the same thing.
+  * Removed the third parameter of `set_account_balance`. Now the port used is the default used on `start_anvil_container` and `start_m2_anvil_container`.
+
+### Documentation 📚
+
+### Other Changes
+
+* fix: missing block while waiting for operator state history in [#290](https://github.com/Layr-Labs/eigensdk-rs/pull/290).
+
+## [0.3.0] - 2025-02-11
+
+### Added
+
+* Added new method `set_slashable_stake_lookahead` in `avsregistry/writer` in [#278](https://github.com/Layr-Labs/eigensdk-rs/pull/278).
+
+  ```rust
+    let quorum_number = 0_u8;
+    let lookahead = 10_u32;
+    let tx_hash = avs_writer
+        .set_slashable_stake_lookahead(quorum_number, lookahead)
+        .await
+        .unwrap();
+  ```
+
+* Added new method `set_rewards_initiator` in `avsregistry/writer` in [#273](https://github.com/Layr-Labs/eigensdk-rs/pull/273).
+
+  ```rust
+    let tx_hash = avs_writer
+      .set_rewards_initiator(new_rewards_init_address)
+      .await
+      .unwrap();
+  ```
+
+* Added new method `clear_deallocation_queue` in `elcontracts/writer` in [#270](https://github.com/Layr-Labs/eigensdk-rs/pull/270)
+
+  ```rust
+  let tx_hash_clear = el_chain_writer
+      .clear_deallocation_queue(
+          operator_address,
+          vec![strategy_addr],
+          vec![num_to_clear],
+      )
+      .await
+      .unwrap();
+  ```
+
+* Added new method `get_restakeable_strategies` in `avsregistry/reader` in [#349](https://github.com/Layr-Labs/eigensdk-rs/pull/349).
+
+  ```rust
+    let strategies = avs_reader.get_restakeable_strategies().await.unwrap();
+  ```
+
+* Added update_socket function for avs registry writer in [#268](https://github.com/Layr-Labs/eigensdk-rs/pull/268)
+  An example of use is the following:
+
+  ```rust
+  // Given an avs writer and a new socket address:
+
+  let tx_hash = avs_writer
+    .update_socket(new_socket_addr.into())
+    .await
+    .unwrap();
+
+  let tx_status = wait_transaction(&http_endpoint, tx_hash)
+    .await
+    .unwrap()
+    .status(); 
+  // tx_status should be true
+  ```
+
+* Added `get_operator_restaked_strategies` in `avsregistry/reader` in [#348](https://github.com/Layr-Labs/eigensdk-rs/pull/348).
+
+  ```rust
+    let strategies = avs_reader
+      .get_operator_restaked_strategies(FIRST_ADDRESS)
+      .await
+      .unwrap();
+  ```
+
+* Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
+
+* Added Rewards2.1 support in [#323](https://github.com/Layr-Labs/eigensdk-rs/pull/323).
+
+  * Set an operator's split on an operator set.
+
+  ```rust
+      let operator_set = OperatorSet {
+            avs: avs_address,
+            id: 0,
+        };
+
+        let new_split = 5;
+        let tx_hash = el_chain_writer
+            .set_operator_set_split(OPERATOR_ADDRESS, operator_set.clone(), new_split)
+            .await
+            .unwrap();
+  ```
+
+  * Get an operator's split on an operator set.
+
+  ```rust
+     let operator_set = OperatorSet {
+            avs: avs_address,
+            id: 0,
+        };
+       let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_set_split(OPERATOR_ADDRESS, operator_set)
+            .await
+            .unwrap(); 
+  ```
+
+* Added new method `set_operator_set_param` in `avsregistry/writer` in [#327](https://github.com/Layr-Labs/eigensdk-rs/pull/327).
+
+  ```rust
+    let operator_set_params = OperatorSetParam {
+        maxOperatorCount: 10,
+        kickBIPsOfOperatorStake: 50,
+        kickBIPsOfTotalStake: 50,
+    };
+
+    let tx_hash = avs_writer
+        .set_operator_set_param(0, operator_set_params.clone())
+        .await
+        .unwrap();
+  ```
+
+* Added new method `create_operator_directed_avs_rewards_submission` in `avsregistry/writer` in [#352](https://github.com/Layr-Labs/eigensdk-rs/pull/352).
+
+  ```rust
+    let operator_rewards = OperatorReward {
+        operator: SECOND_ADDRESS,
+        amount: U256::from(100),
+    };
+
+    let strategies = StrategyAndMultiplier {
+        strategy: strategy_address,
+        multiplier: U96::from(1),
+    };
+
+    let operator_rewards_submission = OperatorDirectedRewardsSubmission {
+        token: token_address,
+        description: "test".to_string(),
+        duration,
+        startTimestamp,
+        operatorRewards: vec![operator_rewards.clone()],
+        strategiesAndMultipliers: vec![strategies],
+    };
+
+    let tx_hash = avs_writer
+        .create_operator_directed_avs_rewards_submission(vec![operator_rewards_submission])
+        .await
+        .unwrap();
+  ````
+
+* Added new method `create_total_delegated_stake_quorum` in `avsregistry/writer` in [#342](https://github.com/Layr-Labs/eigensdk-rs/pull/342).
+
+  ```rust
+    let operator_set_params = OperatorSetParam {
+        maxOperatorCount: 10,
+        kickBIPsOfOperatorStake: 50,
+        kickBIPsOfTotalStake: 50,
+    };
+    let minimum_stake = U96::from(10);
+    let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+    let strategy_params = StrategyParams {
+        strategy,
+        multiplier: U96::from(1),
+    };
+    let strategy_params = vec![strategy_params];
+
+    avs_writer
+        .create_total_delegated_stake_quorum(
+            operator_set_params,
+            minimum_stake,
+            strategy_params,
+        )
+        .await
+        .unwrap();
+  ```
+
+* Added new method `create_slashable_stake_quorum` in `avsregistry/writer` in [#340](https://github.com/Layr-Labs/eigensdk-rs/pull/340).
+
+  ```rust
+      let operator_set_param = OperatorSetParam {
+          maxOperatorCount: 10,
+          kickBIPsOfOperatorStake: 50,
+          kickBIPsOfTotalStake: 50,
+      };
+      let minimum_stake = U96::from(100);
+      let strategy_param = StrategyParams {
+          strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
+          multiplier: U96::from(1),
+      };
+      let look_ahead_period = 10;
+
+      let tx_hash = avs_writer
+          .create_slashable_stake_quorum(
+              operator_set_param,
+              minimum_stake,
+              vec![strategy_param],
+              look_ahead_period,
+          )
+          .await
+          .unwrap();
+  ```
+
+* Added new method `set_ejector` in `avsregistry/writer` in [#330](https://github.com/Layr-Labs/eigensdk-rs/pull/330).
+  
+  ```rust
+    let new_ejector_address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
+    let tx_hash = avs_writer.set_ejector(new_ejector_address).await.unwrap();
+  ````
+
+* Added new method `set_ejection_cooldown` in `avsregistry/writer` in [#337](https://github.com/Layr-Labs/eigensdk-rs/pull/337).
+
+  ```rust
+      let new_cooldown = U256::from(120);
+      let tx_hash = avs_writer
+          .set_ejection_cooldown(new_cooldown)
+          .await
+          .unwrap();
+  ```
+
+* Added new method `eject_operator` in `avsregistry/writer` in [#328](https://github.com/Layr-Labs/eigensdk-rs/pull/328).
+
+  ```rust
+    let register_operator_address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+    let quorum_nums = Bytes::from([0]);
+
+    let tx_hash = avs_writer
+        .eject_operator(register_operator_address, quorum_nums)
+        .await
+        .unwrap();
+  ```
+
+* Added new method `is_operator_set_quorum` in `avsregistry/writer` in [#296](https://github.com/Layr-Labs/eigensdk-rs/pull/296).
+
+  ```rust
+    let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
+  ```
+
+* Added version explicitly in crates in [#322](https://github.com/Layr-Labs/eigensdk-rs/pull/322).
+* Added new method `set_account_identifier` in `avsregistry/writer` in [#329](https://github.com/Layr-Labs/eigensdk-rs/pull/329).
+
+  ```rust
+    let tx_hash = avs_writer
+        .set_account_identifier(new_identifier_address)
+        .await
+        .unwrap();
+  ```
+
+* Added missing StakeRegistry writer functions in [#343](https://github.com/Layr-Labs/eigensdk-rs/pull/343).
+
+  * `set_minimum_stake_for_quorum`
+
+    ```rust
+    let tx_hash = avs_writer
+      .set_minimum_stake_for_quorum(quorum_number, minimum_stake)
+      .await
+      .unwrap();
+    ```
+
+  * add_strategies
+
+  ```rust
+  let tx_hash = avs_writer
+    .add_strategies(quorum_number, vec_of_strategy_params)
+    .await
+    .unwrap();
+  ```
+
+  * remove_strategies
+
+  ```rust
+  let tx_hash = avs_writer
+    .remove_strategies(quorum_number, indices_to_remove)
+    .await
+    .unwrap();
+  ```
+
+  * modify_strategy_params
+
+  ```rust
+  let tx_hash = avs_writer
+      .modify_strategy_params(
+          quorum_numbers,
+          vec_of_strategy_indices,
+          vec_of_new_multipliers,
+      )
+      .await
+      .unwrap();
+  ```
+
+* Added missing stake registry view methods in `avsregistry/reader` in [#347](https://github.com/Layr-Labs/eigensdk-rs/pull/347).
+
+  * `weight_of_operator_for_quorum`
+
+  ```rust
+     let weight = avs_reader
+            .weight_of_operator_for_quorum(quorum_number, operator_address)
+            .await
+            .unwrap();
+  ```
+
+  * `strategy_params_length`
+
+  ```rust
+     let len = avs_reader
+            .strategy_params_length(quorum_number)
+            .await
+            .unwrap();
+  ```
+
+  * `strategy_params_by_index`
+
+  ```rust
+     let params = avs_reader
+            .strategy_params_by_index(quorum_number, index)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_history_length`
+
+  ```rust
+     let len = avs_reader
+            .get_stake_history_length(operator_id, quorum_number)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_history`
+
+  ```rust
+     let stake_update_vec = avs_reader
+            .get_stake_history(operator_id, quorum_number)
+            .await
+            .unwrap();
+  ```
+
+  * `get_latest_stake_update`
+
+  ```rust
+     let latest_stake_update = avs_reader
+            .get_latest_stake_update(operator_id, quorum_number)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_update_at_index`
+
+  ```rust
+     let stake_update = avs_reader
+            .get_stake_update_at_index(quorum_number, operator_id, index)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_update_at_block_number`
+
+  ```rust
+    let stake_update_at_index = avs_reader
+            .get_stake_update_at_block_number(operator_id, quorum_number, (block_number) as u32)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_update_index_at_block_number`
+
+  ```rust
+      let stake_update_at_index_at_block_number = avs_reader
+            .get_stake_update_index_at_block_number(operator_id, quorum_number, block_number as u32)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_at_block_number_and_index`
+
+  ```rust
+     let stake_at_index_at_block_number = avs_reader
+            .get_stake_at_block_number_and_index(
+                quorum_number,
+                block_number as u32,
+                operator_id,
+                index,
+            )
+            .await
+            .unwrap();
+  ```
+
+  * `get_total_stake_history_length`
+
+  ```rust
+     let total_stake_history_length = avs_reader
+            .get_total_stake_history_length(quorum_number)
+            .await
+            .unwrap();
+  ```
+
+  * `get_current_total_stake`
+
+  ```rust
+     let current_total_stake = avs_reader
+            .get_current_total_stake(quorum_number)
+            .await
+            .unwrap();
+
+  ```
+
+  * `get_total_stake_update_at_index`
+
+  ```rust
+     let total_stake_update_at_index = avs_reader
+            .get_total_stake_update_at_index(quorum_number, index)
+            .await
+            .unwrap();
+  ```
+
+  * `get_total_stake_at_block_number_from_index`
+
+  ```rust
+     let total_stake_at_block_number_from_index = avs_reader
+            .get_total_stake_at_block_number_from_index(
+                quorum_number,
+                block_number as u32,
+                index,
+            )
+            .await
+            .unwrap();
+  ```
+
+  * `get_total_stake_indices_at_block_number`
+
+  ```rust
+      let total_stake_indices_at_block_number = avs_reader
+            .get_total_stake_indices_at_block_number(block_number as u32, quorum_nums)
+            .await
+            .unwrap();
+  ```
+
+### Changed
+
+### Breaking changes
+
+* refactor: update interface on `bls aggregation` in [#254](https://github.com/Layr-Labs/eigensdk-rs/pull/254)
+  * Introduces a new struct `TaskMetadata` with a constructor `TaskMetadata::new` to initialize a new task and a method `with_window_duration` to set the window duration.
+  * Refactors `initialize_new_task` and `single_task_aggregator` to accept a `TaskMetadata` struct instead of multiple parameters.
+
+    ```rust
+    // BEFORE
+    bls_agg_service
+          .initialize_new_task(
+              task_index,
+              block_number as u32,
+              quorum_numbers,
+              quorum_threshold_percentages,
+              time_to_expiry,
+          )
+          .await
+          .unwrap();
+    
+    // AFTER
+    let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+      )
+    bls_agg_service.initialize_new_task(metadata).await.unwrap();
+    ```
+
+  * Removes `initialize_new_task_with_window` since `window_duration` can now be set in `TaskMetadata`.
+
+    ```rust
+    // BEFORE
+    bls_agg_service
+          .initialize_new_task_with_window(
+              task_index,
+              block_number as u32,
+              quorum_numbers,
+              quorum_threshold_percentages,
+              time_to_expiry,
+              window_duration,
+          )
+          .await
+          .unwrap();
+
+    // AFTER
+    let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        ).with_window_duration(window_duration);
+    bls_agg_service.initialize_new_task(metadata).await.unwrap();
+* refactor: encapsulate parameters into `TaskSignature` in [#260](https://github.com/Layr-Labs/eigensdk-rs/pull/260)
+
+  * Introduced `TaskSignature` struct to encapsulate parameters related to task signatures:
+  * Updated `process_new_signature` to accept a `TaskSignature` struct instead of multiple parameters.
+
+    ```rust
+    // BEFORE
+    bls_agg_service.process_new_signature(task_index, task_response_digest, bls_signature, operator_id).await.unwrap();
+
+    // AFTER
+    let task_signature = TaskSignature::new(
+          task_index,
+          task_response_digest,
+          bls_signature,
+          operator_id,
+    );
+    bls_agg_service.process_new_signature(task_signature).await.unwrap();
+    ```
+
+* Slashing UAM changes in [#248](https://github.com/Layr-Labs/eigensdk-rs/pull/248).
+
+### Removed
 
 ## [0.2.0] - 2025-02-06
 
@@ -130,7 +1157,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * fix: simplify Cargo.toml by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/282>
 * ci: split tests and coverage by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/286>
 
-## [0.1.3] - 2025-01-17
+## [0.1.3] - 2024-01-17
 
 ### Added 🎉
 
