@@ -17,6 +17,12 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Added a method `get_operator_socket` to retrieve the socket from the `AvsRegistryServiceChainCaller` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464).
+
+  ```rust
+    let socket = self.get_operator_socket(*operator.operatorId).await.unwrap();
+  ```
+
 * Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
 
 ### Breaking Changes 🛠
@@ -98,6 +104,48 @@ Alternate implementation which directly queries from middleware using view call 
         .get_operator_socket(OPERATOR_ADDRESS)
         .await
         .unwrap();
+  ```
+
+* Added field `socket` to `OperatorInfo` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464)
+
+  ```rust
+    // BEFORE
+    let info = self.get_operator_info(*operator.operatorId).await?;
+    let stake_per_quorum = HashMap::new();
+    let avs_state = operators_avs_state
+        .entry(FixedBytes(*operator.operatorId))
+        .or_insert_with(|| OperatorAvsState {
+            operator_id: operator.operatorId,
+            operator_info: OperatorInfo {
+                pub_keys: Some(info),
+            },
+            stake_per_quorum,
+            block_num: block_num.into(),
+        });
+    avs_state
+        .stake_per_quorum
+        .insert(*quorum_num, U256::from(operator.stake));
+
+    // AFTER
+    // Now we use the new method to retrieve the socket in `get_operators_avs_state_at_block`
+    // And use the value in the new field `socket` in `OperatorInfo`
+    let socket = self.get_operator_socket(*operator.operatorId).await?;
+    let info = self.get_operator_info(*operator.operatorId).await?;
+    let stake_per_quorum = HashMap::new();
+    let avs_state = operators_avs_state
+        .entry(FixedBytes(*operator.operatorId))
+        .or_insert_with(|| OperatorAvsState {
+            operator_id: operator.operatorId,
+            operator_info: OperatorInfo {
+                pub_keys: Some(info),
+                socket: Some(socket),
+            },
+            stake_per_quorum,
+            block_num: block_num.into(),
+        });
+    avs_state
+        .stake_per_quorum
+        .insert(*quorum_num, U256::from(operator.stake));
   ```
 
 ### Deprecated ⚠️
