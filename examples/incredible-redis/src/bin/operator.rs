@@ -97,20 +97,18 @@ async fn main() {
             async move {
                 let mut map = redis_state.lock().await;
                 map.insert(input.key.clone(), input.value.clone());
-
-                let hash_bytes = {
-                    let map = redis_state.lock().await;
-                    let mut keccak = Keccak256::new();
-                    for (k, v) in map.iter() {
-                        keccak.update(k.as_bytes());
-                        keccak.update(v.as_bytes());
-                    }
-                    keccak.finalize()
-                };
-
-                Ok(Bytes::from(hash_bytes.to_vec()))
+                Ok(hash_state(&map))
             }
         })
         .await
         .unwrap();
+}
+
+fn hash_state(state: &BTreeMap<String, String>) -> Bytes {
+    let mut keccak = Keccak256::new();
+    for (k, v) in state.iter() {
+        keccak.update(k.as_bytes());
+        keccak.update(v.as_bytes());
+    }
+    Bytes::from(keccak.finalize().to_vec())
 }
