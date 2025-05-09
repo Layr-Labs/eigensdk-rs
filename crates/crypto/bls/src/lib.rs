@@ -148,13 +148,27 @@ impl<'de> Deserialize<'de> for BlsG2Point {
 }
 
 /// Bls key pair with public key on G1
-#[derive(Debug, Clone /*Serialize, Deserialize*/)]
+#[derive(Debug, Clone /*, Deserialize*/)]
 pub struct BlsKeyPair {
     /// Private Key
     //#[serde(deserialize_with = "path")]
     priv_key: Fr,
     /// Public Key on G1
     pub_key: BlsG1Point,
+}
+
+impl Serialize for BlsKeyPair {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut buffer = Vec::new();
+        let priv_ket = self.priv_key.to_string();
+        //self.g2().serialize_uncompressed(&mut buffer).unwrap();
+        let m = self.pub_key.serialize(serializer)?;
+
+        serializer.serialize_bytes(&buffer)
+    }
 }
 
 impl BlsKeyPair {
@@ -743,6 +757,17 @@ mod tests {
 
     #[test]
     fn test_bls_key_pair() {
-        BlsKeyPair
+        let test_data = TestData::new(Input {
+            message_bytes: "Hello, world!Hello, world!123456".to_string(),
+            bls_priv_key:
+                "12248929636257230549931416853095037629726205319386239410403476017439825112537"
+                    .to_string(),
+        });
+
+        let message_bytes: &[u8; 32] = test_data.input.message_bytes.as_bytes().try_into().unwrap();
+        let bls_priv_key = test_data.input.bls_priv_key;
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key).unwrap();
+
+        println!("BLS Public Key: {:?}", bls_key_pair);
     }
 }
