@@ -11,7 +11,7 @@ use eigen_operator::{compute_with_failures, config::OperatorConfig, Operator};
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
 use incredible_squaring::{
     bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
-    square,
+    square, ISTaskManager,
 };
 
 // This example shows how to initialize an operator and start to listen for new task events.
@@ -45,8 +45,5 @@ async fn main() {
 
     // Subscribe to the new task events and start listening. When a new task is created,
     // the operator will process it and send the signed task response to the aggregator.
-    operator
-        .start::<IncredibleSquaringTaskManagerInstance<(), SdkProvider, Ethereum>>(logic)
-        .await
-        .unwrap();
+    operator.start::<ISTaskManager>(logic).await.unwrap();
 }
