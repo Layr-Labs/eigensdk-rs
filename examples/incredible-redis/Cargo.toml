@@ -1,5 +1,5 @@
 [package]
-name    = "incredible-dot-product"
+name    = "incredible-redis"
 version = "0.1.0"
 edition = "2021"
 
@@ -16,8 +16,8 @@ alloy = { version = "0.13", features = [
     "json-rpc",
     "signer-keystore",
 ] }
-eigensdk = { path = "../../crates/eigensdk", features = ["full"] }
-eigen-operator = { workspace = true, features = ["operator-testing"] }
+# Pinned to https://github.com/Layr-Labs/eigensdk-rs/pull/486 - commit: 5648654
+eigensdk = { git = "https://github.com/Layr-Labs/eigensdk-rs", rev = "5648654", features = [ "full" ] }
 eyre = "0.6"
 serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
