@@ -1,0 +1,25 @@
+[package]
+name    = "incredible-dot-product"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+doctest = false
+
+[dependencies]
+alloy = { version = "0.13", features = [
+    "sol-types",
+    "contract",
+    "full",
+    "signer-aws",
+    "rlp",
+    "json-rpc",
+    "signer-keystore",
+] }
+eigensdk = { path = "../../crates/eigensdk", features = ["full"] }
+eigen-operator = { workspace = true, features = ["operator-testing"] }
+eyre = "0.6"
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
+toml = "0.8"
+tracing = "0.1"
