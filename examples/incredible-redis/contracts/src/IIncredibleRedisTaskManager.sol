@@ -18,7 +18,7 @@ interface IIncredibleRedisTaskManager {
 
     // Redis Task
     struct Task {
-        RedisCommandInput input;
+        SetInput input;
         uint32 taskCreatedBlock;
         // task submitter decides on the criteria for a task to be completed
         // note that this does not mean the task was "correctly" answered this is for the challenge logic to verify
@@ -30,16 +30,9 @@ interface IIncredibleRedisTaskManager {
     }
 
     // Redis command input
-    struct RedisCommandInput {
-        RedisCommand command;
+    struct SetInput {
         string key;
-        bytes value;
-    }
-
-    // Available redis commands
-    enum RedisCommand {
-        GET,
-        SET
+        string value;
     }
 
     // Task response is hashed and signed by operators.
@@ -62,7 +55,7 @@ interface IIncredibleRedisTaskManager {
     // FUNCTIONS
     // NOTE: this function creates new task.
     function createNewTask(
-        IIncredibleRedisTaskManager.RedisInput calldata input,
+        IIncredibleRedisTaskManager.SetInput calldata input,
         uint32 quorumThresholdPercentage,
         bytes calldata quorumNumbers
     ) external;

@@ -10,3 +10,9 @@
 [submodule "crates/operator_sets_contracts/lib/eigenlayer-middleware"]
 	path = crates/operator_sets_contracts/lib/eigenlayer-middleware
 	url = https://github.com/layr-labs/eigenlayer-middleware
+[submodule "examples/incredible-redis/contracts/lib/eigenlayer-middleware"]
+	path = examples/incredible-redis/contracts/lib/eigenlayer-middleware
+	url = https://github.com/Layr-Labs/eigenlayer-middleware
+[submodule "examples/incredible-redis/contracts/lib/forge-std"]
+	path = examples/incredible-redis/contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

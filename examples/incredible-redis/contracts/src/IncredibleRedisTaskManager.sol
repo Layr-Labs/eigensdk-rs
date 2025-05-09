@@ -51,9 +51,7 @@ contract IncredibleRedisTaskManager is
 
     mapping(uint32 => bool) public taskSuccesfullyChallenged;
 
-    // State of the Redis database
-    // keccak(key) → value
-    mapping(bytes32 => bytes) public redisState;
+    mapping(string => string) public redisState;
 
     address public aggregator;
     address public generator;
@@ -101,7 +99,7 @@ contract IncredibleRedisTaskManager is
     /* FUNCTIONS */
     // NOTE: this function creates new task, assigns it a taskId
     function createNewTask(
-        IIncredibleRedisTaskManager.RedisCommandInput calldata input,
+        IIncredibleRedisTaskManager.SetInput calldata input,
         uint32 quorumThresholdPercentage,
         bytes calldata quorumNumbers
     ) external onlyTaskGenerator {
@@ -163,9 +161,8 @@ contract IncredibleRedisTaskManager is
             );
         }
 
-        if (task.input.command == RedisCommand.SET) {
-            redisState[_keyHash(task.input.key)] = task.input.value;
-        }
+
+        redisState[task.input.key] = task.input.value;
 
         TaskResponseMetadata memory taskResponseMetadata =
             TaskResponseMetadata(uint32(block.number), hashOfNonSigners);
@@ -187,125 +184,119 @@ contract IncredibleRedisTaskManager is
         TaskResponseMetadata calldata taskResponseMetadata,
         BN254.G1Point[] memory pubkeysOfNonSigningOperators
     ) external {
-        uint32 referenceTaskIndex = taskResponse.referenceTaskIndex;
-        IIncredibleRedisTaskManager.RedisInput memory pointsToMultiply = task.pointsToMultiply;
-        // some logical checks
-        require(
-            allTaskResponses[referenceTaskIndex] != bytes32(0), "Task hasn't been responded to yet"
-        );
-        require(
-            allTaskResponses[referenceTaskIndex]
-                == keccak256(abi.encode(taskResponse, taskResponseMetadata)),
-            "Task response does not match the one recorded in the contract"
-        );
-        require(
-            taskSuccesfullyChallenged[referenceTaskIndex] == false,
-            "The response to this task has already been challenged successfully."
-        );
+        // uint32 referenceTaskIndex = taskResponse.referenceTaskIndex;
+        // IIncredibleRedisTaskManager.RedisInput memory pointsToMultiply = task.pointsToMultiply;
+        // // some logical checks
+        // require(
+        //     allTaskResponses[referenceTaskIndex] != bytes32(0), "Task hasn't been responded to yet"
+        // );
+        // require(
+        //     allTaskResponses[referenceTaskIndex]
+        //         == keccak256(abi.encode(taskResponse, taskResponseMetadata)),
+        //     "Task response does not match the one recorded in the contract"
+        // );
+        // require(
+        //     taskSuccesfullyChallenged[referenceTaskIndex] == false,
+        //     "The response to this task has already been challenged successfully."
+        // );
 
-        require(
-            uint32(block.number)
-                <= taskResponseMetadata.taskRespondedBlock + TASK_CHALLENGE_WINDOW_BLOCK,
-            "The challenge period for this task has already expired."
-        );
+        // require(
+        //     uint32(block.number)
+        //         <= taskResponseMetadata.taskRespondedBlock + TASK_CHALLENGE_WINDOW_BLOCK,
+        //     "The challenge period for this task has already expired."
+        // );
 
-        // // logic for checking whether challenge is valid or not
-        uint256 totalSum = 0;
-        for (uint256 index = 0; index < pointsToMultiply.X.length; index++) {
-            totalSum = totalSum + (pointsToMultiply.X[index] * pointsToMultiply.Y[index]);
-        }
+        // // // logic for checking whether challenge is valid or not
+        // uint256 totalSum = 0;
+        // for (uint256 index = 0; index < pointsToMultiply.X.length; index++) {
+        //     totalSum = totalSum + (pointsToMultiply.X[index] * pointsToMultiply.Y[index]);
+        // }
 
-        bool isResponseCorrect = (totalSum == taskResponse.result);
-        // // if response was correct, no slashing happens so we return
-        if (isResponseCorrect == true) {
-            emit TaskChallengedUnsuccessfully(referenceTaskIndex, msg.sender);
-            return;
-        }
+        // bool isResponseCorrect = (totalSum == taskResponse.result);
+        // // // if response was correct, no slashing happens so we return
+        // if (isResponseCorrect == true) {
+        //     emit TaskChallengedUnsuccessfully(referenceTaskIndex, msg.sender);
+        //     return;
+        // }
 
-        // get the list of hash of pubkeys of operators who weren't part of the task response submitted by the aggregator
-        bytes32[] memory hashesOfPubkeysOfNonSigningOperators =
-            new bytes32[](pubkeysOfNonSigningOperators.length);
-        for (uint256 i = 0; i < pubkeysOfNonSigningOperators.length; i++) {
-            hashesOfPubkeysOfNonSigningOperators[i] = pubkeysOfNonSigningOperators[i].hashG1Point();
-        }
+        // // get the list of hash of pubkeys of operators who weren't part of the task response submitted by the aggregator
+        // bytes32[] memory hashesOfPubkeysOfNonSigningOperators =
+        //     new bytes32[](pubkeysOfNonSigningOperators.length);
+        // for (uint256 i = 0; i < pubkeysOfNonSigningOperators.length; i++) {
+        //     hashesOfPubkeysOfNonSigningOperators[i] = pubkeysOfNonSigningOperators[i].hashG1Point();
+        // }
 
-        // verify whether the pubkeys of "claimed" non-signers supplied by challenger are actually non-signers as recorded before
-        // when the aggregator responded to the task
-        // currently inlined, as the MiddlewareUtils.computeSignatoryRecordHash function was removed from BLSSignatureChecker
-        // in this PR: https://github.com/Layr-Labs/eigenlayer-contracts/commit/c836178bf57adaedff37262dff1def18310f3dce#diff-8ab29af002b60fc80e3d6564e37419017c804ae4e788f4c5ff468ce2249b4386L155-L158
-        // TODO(samlaf): contracts team will add this function back in the BLSSignatureChecker, which we should use to prevent potential bugs from code duplication
-        bytes32 signatoryRecordHash =
-            keccak256(abi.encodePacked(task.taskCreatedBlock, hashesOfPubkeysOfNonSigningOperators));
-        require(
-            signatoryRecordHash == taskResponseMetadata.hashOfNonSigners,
-            "The pubkeys of non-signing operators supplied by the challenger are not correct."
-        );
+        // // verify whether the pubkeys of "claimed" non-signers supplied by challenger are actually non-signers as recorded before
+        // // when the aggregator responded to the task
+        // // currently inlined, as the MiddlewareUtils.computeSignatoryRecordHash function was removed from BLSSignatureChecker
+        // // in this PR: https://github.com/Layr-Labs/eigenlayer-contracts/commit/c836178bf57adaedff37262dff1def18310f3dce#diff-8ab29af002b60fc80e3d6564e37419017c804ae4e788f4c5ff468ce2249b4386L155-L158
+        // // TODO(samlaf): contracts team will add this function back in the BLSSignatureChecker, which we should use to prevent potential bugs from code duplication
+        // bytes32 signatoryRecordHash =
+        //     keccak256(abi.encodePacked(task.taskCreatedBlock, hashesOfPubkeysOfNonSigningOperators));
+        // require(
+        //     signatoryRecordHash == taskResponseMetadata.hashOfNonSigners,
+        //     "The pubkeys of non-signing operators supplied by the challenger are not correct."
+        // );
 
-        // get the address of operators who didn't sign
-        address[] memory addressOfNonSigningOperators =
-            new address[](pubkeysOfNonSigningOperators.length);
-        for (uint256 i = 0; i < pubkeysOfNonSigningOperators.length; i++) {
-            addressOfNonSigningOperators[i] = BLSApkRegistry(address(blsApkRegistry))
-                .pubkeyHashToOperator(hashesOfPubkeysOfNonSigningOperators[i]);
-        }
+        // // get the address of operators who didn't sign
+        // address[] memory addressOfNonSigningOperators =
+        //     new address[](pubkeysOfNonSigningOperators.length);
+        // for (uint256 i = 0; i < pubkeysOfNonSigningOperators.length; i++) {
+        //     addressOfNonSigningOperators[i] = BLSApkRegistry(address(blsApkRegistry))
+        //         .pubkeyHashToOperator(hashesOfPubkeysOfNonSigningOperators[i]);
+        // }
 
-        // get the list of all operators who were active when the task was initialized
-        Operator[][] memory allOperatorInfo = getOperatorState(
-            ISlashingRegistryCoordinator(address(registryCoordinator)),
-            task.quorumNumbers,
-            task.taskCreatedBlock
-        );
-        // first for loop iterate over quorums
-        for (uint256 i = 0; i < allOperatorInfo.length; i++) {
-            // second for loop iterate over operators active in the quorum when the task was initialized
-            for (uint256 j = 0; j < allOperatorInfo[i].length; j++) {
-                // get the operator address
-                bytes32 operatorID = allOperatorInfo[i][j].operatorId;
-                address operatorAddress = blsApkRegistry.getOperatorFromPubkeyHash(operatorID);
-                // check whether the operator was a signer for the task
-                bool wasSigningOperator = true;
-                for (uint256 k = 0; k < addressOfNonSigningOperators.length; k++) {
-                    if (operatorAddress == addressOfNonSigningOperators[k]) {
-                        // if the operator was a non-signer, then we set the flag to false
-                        wasSigningOperator = false;
-                        break;
-                    }
-                }
-                if (wasSigningOperator == true) {
-                    OperatorSet memory operatorset =
-                        OperatorSet({avs: serviceManager, id: uint8(task.quorumNumbers[i])});
-                    IStrategy[] memory istrategy = IAllocationManager(allocationManager)
-                        .getStrategiesInOperatorSet(operatorset);
-                    uint256[] memory wadsToSlash = new uint256[](istrategy.length);
-                    for (uint256 z = 0; z < wadsToSlash.length; z++) {
-                        wadsToSlash[z] = WADS_TO_SLASH;
-                    }
-                    IAllocationManagerTypes.SlashingParams memory slashingparams =
-                    IAllocationManagerTypes.SlashingParams({
-                        operator: operatorAddress,
-                        operatorSetId: uint8(task.quorumNumbers[i]),
-                        strategies: istrategy,
-                        wadsToSlash: wadsToSlash,
-                        description: "slash_the_operator"
-                    });
-                    InstantSlasher(instantSlasher).fulfillSlashingRequest(slashingparams);
-                }
-            }
-        }
+        // // get the list of all operators who were active when the task was initialized
+        // Operator[][] memory allOperatorInfo = getOperatorState(
+        //     ISlashingRegistryCoordinator(address(registryCoordinator)),
+        //     task.quorumNumbers,
+        //     task.taskCreatedBlock
+        // );
+        // // first for loop iterate over quorums
+        // for (uint256 i = 0; i < allOperatorInfo.length; i++) {
+        //     // second for loop iterate over operators active in the quorum when the task was initialized
+        //     for (uint256 j = 0; j < allOperatorInfo[i].length; j++) {
+        //         // get the operator address
+        //         bytes32 operatorID = allOperatorInfo[i][j].operatorId;
+        //         address operatorAddress = blsApkRegistry.getOperatorFromPubkeyHash(operatorID);
+        //         // check whether the operator was a signer for the task
+        //         bool wasSigningOperator = true;
+        //         for (uint256 k = 0; k < addressOfNonSigningOperators.length; k++) {
+        //             if (operatorAddress == addressOfNonSigningOperators[k]) {
+        //                 // if the operator was a non-signer, then we set the flag to false
+        //                 wasSigningOperator = false;
+        //                 break;
+        //             }
+        //         }
+        //         if (wasSigningOperator == true) {
+        //             OperatorSet memory operatorset =
+        //                 OperatorSet({avs: serviceManager, id: uint8(task.quorumNumbers[i])});
+        //             IStrategy[] memory istrategy = IAllocationManager(allocationManager)
+        //                 .getStrategiesInOperatorSet(operatorset);
+        //             uint256[] memory wadsToSlash = new uint256[](istrategy.length);
+        //             for (uint256 z = 0; z < wadsToSlash.length; z++) {
+        //                 wadsToSlash[z] = WADS_TO_SLASH;
+        //             }
+        //             IAllocationManagerTypes.SlashingParams memory slashingparams =
+        //             IAllocationManagerTypes.SlashingParams({
+        //                 operator: operatorAddress,
+        //                 operatorSetId: uint8(task.quorumNumbers[i]),
+        //                 strategies: istrategy,
+        //                 wadsToSlash: wadsToSlash,
+        //                 description: "slash_the_operator"
+        //             });
+        //             InstantSlasher(instantSlasher).fulfillSlashingRequest(slashingparams);
+        //         }
+        //     }
+        // }
 
-        // the task response has been challenged successfully
-        taskSuccesfullyChallenged[referenceTaskIndex] = true;
+        // // the task response has been challenged successfully
+        // taskSuccesfullyChallenged[referenceTaskIndex] = true;
 
-        emit TaskChallengedSuccessfully(referenceTaskIndex, msg.sender);
+        // emit TaskChallengedSuccessfully(referenceTaskIndex, msg.sender);
     }
 
     function getTaskResponseWindowBlock() external view returns (uint32) {
         return TASK_RESPONSE_WINDOW_BLOCK;
-    }
-
-    function _keyHash(
-        string memory key
-    ) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(key));
     }
 }
