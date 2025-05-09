@@ -1,18 +1,14 @@
 #![allow(missing_docs)]
 
-use std::{collections::BTreeMap, str::FromStr, sync::Arc};
-
-use alloy::primitives::{Address, Bytes, Keccak256, U256};
+use alloy::primitives::{Address, U256};
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
     testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
 };
-use incredible_redis::{
-    bindings::incredibleredistaskmanager::IIncredibleRedisTaskManager::SetInput,
-    task_manager::ISTaskManager, utils::setup_operator,
-};
+use incredible_redis::{task_manager::set, task_manager::ISTaskManager, utils::setup_operator};
+use std::{collections::BTreeMap, str::FromStr, sync::Arc};
 use tokio::sync::Mutex;
 use tracing::info;
 
@@ -92,23 +88,7 @@ async fn main() {
     let redis_state = Arc::new(Mutex::new(BTreeMap::<String, String>::new()));
 
     operator
-        .start_async::<ISTaskManager>(move |_task_index, input: SetInput| {
-            let redis_state = redis_state.clone();
-            async move {
-                let mut map = redis_state.lock().await;
-                map.insert(input.key.clone(), input.value.clone());
-                Ok(hash_state(&map))
-            }
-        })
+        .start_async::<ISTaskManager>(set(redis_state))
         .await
         .unwrap();
-}
-
-fn hash_state(state: &BTreeMap<String, String>) -> Bytes {
-    let mut keccak = Keccak256::new();
-    for (k, v) in state.iter() {
-        keccak.update(k.as_bytes());
-        keccak.update(v.as_bytes());
-    }
-    Bytes::from(keccak.finalize().to_vec())
 }
