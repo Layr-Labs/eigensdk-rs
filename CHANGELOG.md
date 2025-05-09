@@ -27,7 +27,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Other Changes
 
-## [1.0.0] - 2025-05-08
+## [1.0.0] - 2025-05-09
 
 ### Added 🎉
 
