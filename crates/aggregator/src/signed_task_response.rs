@@ -7,7 +7,7 @@ use eigen_utils::slashing::middleware::registrycoordinator::BN254::G1Point;
 
 use crate::AggregatorError;
 
-/// The tuple for SignedTaskResponseTuple: (TaskResponse<Output>, G1Point, OperatorId)
+/// The tuple for SignedTaskResponse: (TaskResponse<Output>, G1Point, OperatorId)
 pub type SignedTaskResponseTuple<Output> = (
     (<u32 as SolValue>::SolType, <Output as SolValue>::SolType),
     <G1Point as SolValue>::SolType,
