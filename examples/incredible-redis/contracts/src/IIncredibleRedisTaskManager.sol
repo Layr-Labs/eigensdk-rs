@@ -3,6 +3,7 @@ pragma solidity ^0.8.9;
 
 import "@eigenlayer-middleware/src/libraries/BN254.sol";
 import {IStrategy} from "@eigenlayer/contracts/interfaces/IStrategy.sol";
+import { IBLSSignatureCheckerTypes } from "@eigenlayer-middleware/src/interfaces/IBLSSignatureChecker.sol";
 
 interface IIncredibleRedisTaskManager {
     // EVENTS
@@ -64,7 +65,7 @@ interface IIncredibleRedisTaskManager {
     function respondToTask(
         Task calldata task,
         TaskResponse calldata taskResponse,
-        NonSignerStakesAndSignature memory nonSignerStakesAndSignature
+        IBLSSignatureCheckerTypes.NonSignerStakesAndSignature memory nonSignerStakesAndSignature
     ) external;
 
     /// @notice Returns the current 'taskNumber' for the middleware
