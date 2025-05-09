@@ -7,7 +7,7 @@ use eigen_utils::slashing::middleware::registrycoordinator::BN254::G1Point;
 
 use crate::AggregatorError;
 
-/// The tuple for TaskResponse: (u32, Output)
+/// The tuple for SignedTaskResponseTuple: (TaskResponse<Output>, G1Point, OperatorId)
 pub type SignedTaskResponseTuple<Output> = (
     (<u32 as SolValue>::SolType, <Output as SolValue>::SolType),
     <G1Point as SolValue>::SolType,
@@ -64,7 +64,7 @@ where
     pub fn encode(&self) -> Result<Vec<u8>, AggregatorError> {
         let g1_point = convert_to_g1_point(self.signature.g1_point().g1())?;
 
-        Ok(<((u32, T), G1Point, OperatorId)>::abi_encode(&(
+        Ok(<SignedTaskResponseTuple<T>>::abi_encode(&(
             (
                 self.task_response.task_index,
                 self.task_response.response.clone(),
