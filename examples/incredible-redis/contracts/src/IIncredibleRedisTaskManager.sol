@@ -3,7 +3,6 @@ pragma solidity ^0.8.9;
 
 import "@eigenlayer-middleware/src/libraries/BN254.sol";
 import {IStrategy} from "@eigenlayer/contracts/interfaces/IStrategy.sol";
-import { IBLSSignatureCheckerTypes } from "@eigenlayer-middleware/src/interfaces/IBLSSignatureChecker.sol";
 
 interface IIncredibleRedisTaskManager {
     // EVENTS
@@ -59,13 +58,6 @@ interface IIncredibleRedisTaskManager {
         IIncredibleRedisTaskManager.SetInput calldata input,
         uint32 quorumThresholdPercentage,
         bytes calldata quorumNumbers
-    ) external;
-
-    // NOTE: this function responds to existing tasks.
-    function respondToTask(
-        Task calldata task,
-        TaskResponse calldata taskResponse,
-        IBLSSignatureCheckerTypes.NonSignerStakesAndSignature memory nonSignerStakesAndSignature
     ) external;
 
     /// @notice Returns the current 'taskNumber' for the middleware
