@@ -15,18 +15,17 @@ import {OperatorStateRetriever} from "@eigenlayer-middleware/src/OperatorStateRe
 import {InstantSlasher} from "@eigenlayer-middleware/src/slashers/InstantSlasher.sol";
 import "@eigenlayer-middleware/src/libraries/BN254.sol";
 // import {IStrategy} from "@eigenlayer/contracts/interfaces/IStrategy.sol";
-import "./IIncredibleRedisTaskManager.sol";
+import "./IAwesomeVaultTaskManager.sol";
 import {IAllocationManagerTypes} from "@eigenlayer/contracts/interfaces/IAllocationManager.sol";
 import {OperatorSet} from "@eigenlayer/contracts/libraries/OperatorSetLib.sol";
-import {console} from "forge-std/console.sol";
 
-contract IncredibleRedisTaskManager is
+contract AwesomeVaultTaskManager is
     Initializable,
     OwnableUpgradeable,
     Pausable,
     BLSSignatureChecker,
     OperatorStateRetriever,
-    IIncredibleRedisTaskManager
+    IAwesomeVaultTaskManager
 {
     using BN254 for BN254.G1Point;
 
@@ -51,8 +50,6 @@ contract IncredibleRedisTaskManager is
     mapping(uint32 => bytes32) public allTaskResponses;
 
     mapping(uint32 => bool) public taskSuccesfullyChallenged;
-
-    mapping(string => string) public redisState;
 
     address public aggregator;
     address public generator;
@@ -100,17 +97,16 @@ contract IncredibleRedisTaskManager is
     /* FUNCTIONS */
     // NOTE: this function creates new task, assigns it a taskId
     function createNewTask(
-        IIncredibleRedisTaskManager.SetInput calldata input,
+        IAwesomeVaultTaskManager.TaskInput calldata input,
         uint32 quorumThresholdPercentage,
         bytes calldata quorumNumbers
     ) external onlyTaskGenerator {
         // create a new task struct
-        Task memory newTask = Task({
-            input: input,
-            taskCreatedBlock: uint32(block.number),
-            quorumNumbers: quorumNumbers,
-            quorumThresholdPercentage: quorumThresholdPercentage
-        });
+        Task memory newTask;
+        newTask.input = input;
+        newTask.taskCreatedBlock = uint32(block.number);
+        newTask.quorumThresholdPercentage = quorumThresholdPercentage;
+        newTask.quorumNumbers = quorumNumbers;
 
         // store hash of task onchain, emit event, and increase taskNum
         allTaskHashes[latestTaskNum] = keccak256(abi.encode(newTask));
@@ -162,9 +158,6 @@ contract IncredibleRedisTaskManager is
             );
         }
 
-
-        redisState[task.input.key] = task.input.value;
-
         TaskResponseMetadata memory taskResponseMetadata =
             TaskResponseMetadata(uint32(block.number), hashOfNonSigners);
         // updating the storage with task responsea
@@ -186,6 +179,7 @@ contract IncredibleRedisTaskManager is
         BN254.G1Point[] memory pubkeysOfNonSigningOperators
     ) external {
         uint32 referenceTaskIndex = taskResponse.referenceTaskIndex;
+
         // some logical checks
         require(
             allTaskResponses[referenceTaskIndex] != bytes32(0), "Task hasn't been responded to yet"
@@ -206,9 +200,10 @@ contract IncredibleRedisTaskManager is
             "The challenge period for this task has already expired."
         );
 
+        // logic for checking whether challenge is valid or not
+        // TODO: submit proof that shows the response is incorrect
         bool isResponseCorrect = false;
-        
-        // // if response was correct, no slashing happens so we return
+        // if response was correct, no slashing happens so we return
         if (isResponseCorrect == true) {
             emit TaskChallengedUnsuccessfully(referenceTaskIndex, msg.sender);
             return;

@@ -18,11 +18,11 @@ import {SlashingRegistryCoordinator} from
     "@eigenlayer-middleware/src/SlashingRegistryCoordinator.sol";
 import {IPermissionController} from "@eigenlayer/contracts/interfaces/IPermissionController.sol";
 import {
-    IncredibleRedisServiceManager,
+    AwesomeVaultServiceManager,
     IServiceManager,
-    IIncredibleRedisTaskManager
-} from "../../src/IncredibleRedisServiceManager.sol";
-import {IncredibleRedisTaskManager} from "../../src/IncredibleRedisTaskManager.sol";
+    IAwesomeVaultTaskManager
+} from "../../src/AwesomeVaultServiceManager.sol";
+import {AwesomeVaultTaskManager} from "../../src/AwesomeVaultTaskManager.sol";
 import {IDelegationManager} from "@eigenlayer/contracts/interfaces/IDelegationManager.sol";
 // import {Quorum} from "@eigenlayer-middleware/src/interfaces/IECDSAStakeRegistryEventsAndErrors.sol";
 import {UpgradeableProxyLib} from "./UpgradeableProxyLib.sol";
@@ -92,7 +92,7 @@ library AwesomeVaultDeploymentLib {
         address proxyAdmin,
         CoreDeploymentLib.DeploymentData memory core,
         address strategy,
-        AwesomeVaultSetupConfig memory avsConfig,
+        AwesomeVaultSetupConfig memory idpConfig,
         address admin
     ) internal returns (DeploymentData memory) {
         /// read EL deployment address
@@ -134,13 +134,13 @@ library AwesomeVaultDeploymentLib {
             new InstantSlasher(
                 IAllocationManager(core.allocationManager),
                 ISlashingRegistryCoordinator(result.slashingRegistryCoordinator),
-                result.incredibleRedisTaskManager
+                result.awesomeVaultTaskManager
             )
         );
         console2.log("pauser_registry");
         console2.log(coredata.pauserRegistry);
         console2.log("service_manager");
-        console2.log(result.incredibleRedisServiceManager);
+        console2.log(result.awesomeVaultServiceManager);
         console2.log("stake_registry");
         console2.log(result.stakeRegistry);
         console2.log("bls_apk_registry");
@@ -154,7 +154,7 @@ library AwesomeVaultDeploymentLib {
         console2.log("operator_state_retriever");
         console2.log(result.operatorStateRetriever);
         console2.log("task_manager");
-        console2.log(result.incredibleRedisTaskManager);
+        console2.log(result.awesomeVaultTaskManager);
 
         address slashingRegistryCoordinatorImpl = address(
             new SlashingRegistryCoordinator(
@@ -212,7 +212,7 @@ library AwesomeVaultDeploymentLib {
         look_ahead_period[0] = 0;
         bytes memory upgradeCall = abi.encodeCall(
             SlashingRegistryCoordinator.initialize,
-            (admin, admin, admin, 0, result.incredibleRedisServiceManager)
+            (admin, admin, admin, 0, result.awesomeVaultServiceManager)
         );
 
         UpgradeableProxyLib.upgrade(result.stakeRegistry, stakeRegistryImpl);
@@ -223,44 +223,44 @@ library AwesomeVaultDeploymentLib {
         );
         console2.log("allocation_manager");
         console2.log(core.allocationManager);
-        IncredibleRedisServiceManager incredibleRedisServiceManagerImpl = new IncredibleRedisServiceManager(
+        AwesomeVaultServiceManager awesomeVaultServiceManagerImpl = new AwesomeVaultServiceManager(
             (IAVSDirectory(avsdirectory)),
             ISlashingRegistryCoordinator(result.slashingRegistryCoordinator),
             IStakeRegistry(result.stakeRegistry),
             core.rewardsCoordinator,
             IAllocationManager(core.allocationManager),
             IPermissionController(core.permissionController),
-            IIncredibleRedisTaskManager(result.incredibleRedisTaskManager)
+            IAwesomeVaultTaskManager(result.awesomeVaultTaskManager)
         );
         console2.log("allocation_manager");
         console2.log(core.allocationManager);
-        IncredibleRedisTaskManager incredibleRedisTaskManagerImpl = new IncredibleRedisTaskManager(
+        AwesomeVaultTaskManager awesomeVaultTaskManagerImpl = new AwesomeVaultTaskManager(
             ISlashingRegistryCoordinator(result.slashingRegistryCoordinator),
             IPauserRegistry(address(pausercontract)),
             30
         );
         bytes memory servicemanagerupgradecall =
-            abi.encodeCall(IncredibleRedisServiceManager.initialize, (admin, admin));
+            abi.encodeCall(AwesomeVaultServiceManager.initialize, (admin, admin));
         UpgradeableProxyLib.upgradeAndCall(
-            result.incredibleRedisServiceManager,
-            address(incredibleRedisServiceManagerImpl),
+            result.awesomeVaultServiceManager,
+            address(awesomeVaultServiceManagerImpl),
             servicemanagerupgradecall
         );
 
         bytes memory taskmanagerupgradecall = abi.encodeCall(
-            IncredibleRedisTaskManager.initialize,
+            AwesomeVaultTaskManager.initialize,
             (
                 admin,
                 idpConfig.aggregator_addr,
                 idpConfig.task_generator_addr,
                 core.allocationManager,
                 result.slasher,
-                result.incredibleRedisServiceManager
+                result.awesomeVaultServiceManager
             )
         );
         UpgradeableProxyLib.upgradeAndCall(
-            result.incredibleRedisTaskManager,
-            address(incredibleRedisTaskManagerImpl),
+            result.awesomeVaultTaskManager,
+            address(awesomeVaultTaskManagerImpl),
             (taskmanagerupgradecall)
         );
 
@@ -279,17 +279,17 @@ library AwesomeVaultDeploymentLib {
     function readDeploymentJson(
         uint256 chainId
     ) internal returns (DeploymentData memory) {
-        return readDeploymentJson("script/deployments/incredible-dot-product/", chainId);
+        return readDeploymentJson("script/deployments/awesome-vault/", chainId);
     }
 
-    function readIncredibleRedisConfigJson(
+    function readAwesomeVaultConfigJson(
         string memory directoryPath
-    ) internal returns (IncredibleRedisSetupConfig memory) {
+    ) internal returns (AwesomeVaultSetupConfig memory) {
         string memory fileName = string.concat(directoryPath, ".json");
         require(vm.exists(fileName), "Deployment file does not exist");
         string memory json = vm.readFile(fileName);
 
-        IncredibleRedisSetupConfig memory data;
+        AwesomeVaultSetupConfig memory data;
         data.numQuorums = json.readUint(".num_quorums");
         data.operatorParams = json.readUintArray(".operator_params");
         data.aggregator_addr = json.readAddress(".aggregator_addr");
@@ -315,9 +315,8 @@ library AwesomeVaultDeploymentLib {
         string memory json = vm.readFile(fileName);
 
         DeploymentData memory data;
-        data.incredibleRedisServiceManager =
-            json.readAddress(".addresses.incredibleRedisServiceManager");
-        data.incredibleRedisTaskManager = json.readAddress(".addresses.incredibleRedisTaskManager");
+        data.awesomeVaultServiceManager = json.readAddress(".addresses.awesomeVaultServiceManager");
+        data.awesomeVaultTaskManager = json.readAddress(".addresses.awesomeVaultTaskManager");
         data.slashingRegistryCoordinator = json.readAddress(".addresses.registryCoordinator");
         data.operatorStateRetriever = json.readAddress(".addresses.operatorStateRetriever");
         data.stakeRegistry = json.readAddress(".addresses.stakeRegistry");
@@ -332,7 +331,7 @@ library AwesomeVaultDeploymentLib {
     function writeDeploymentJson(
         DeploymentData memory data
     ) internal {
-        writeDeploymentJson("script/deployments/incredible-dot-product/", block.chainid, data);
+        writeDeploymentJson("script/deployments/awesome-vault/", block.chainid, data);
     }
 
     function writeDeploymentJson(
@@ -341,7 +340,7 @@ library AwesomeVaultDeploymentLib {
         DeploymentData memory data
     ) internal {
         address proxyAdmin =
-            address(UpgradeableProxyLib.getProxyAdmin(data.incredibleRedisServiceManager));
+            address(UpgradeableProxyLib.getProxyAdmin(data.awesomeVaultServiceManager));
 
         string memory deploymentData = _generateDeploymentJson(data, proxyAdmin);
 
@@ -376,12 +375,12 @@ library AwesomeVaultDeploymentLib {
         return string.concat(
             '{"proxyAdmin":"',
             proxyAdmin.toHexString(),
-            '","incredibleRedisServiceManager":"',
-            data.incredibleRedisServiceManager.toHexString(),
-            '","incredibleRedisServiceManagerImpl":"',
-            data.incredibleRedisServiceManager.getImplementation().toHexString(),
-            '","incredibleRedisTaskManager":"',
-            data.incredibleRedisTaskManager.toHexString(),
+            '","awesomeVaultServiceManager":"',
+            data.awesomeVaultServiceManager.toHexString(),
+            '","awesomeVaultServiceManagerImpl":"',
+            data.awesomeVaultServiceManager.getImplementation().toHexString(),
+            '","awesomeVaultTaskManager":"',
+            data.awesomeVaultTaskManager.toHexString(),
             '","registryCoordinator":"',
             data.slashingRegistryCoordinator.toHexString(),
             '","blsapkRegistry":"',

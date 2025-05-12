@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "@eigenlayer-middleware/src/libraries/BN254.sol";
 import {IStrategy} from "@eigenlayer/contracts/interfaces/IStrategy.sol";
 
-interface IIncredibleRedisTaskManager {
+interface IAwesomeVaultTaskManager {
     // EVENTS
     event NewTaskCreated(uint32 indexed taskIndex, Task task);
 
@@ -16,23 +16,18 @@ interface IIncredibleRedisTaskManager {
 
     event TaskChallengedUnsuccessfully(uint32 indexed taskIndex, address indexed challenger);
 
-    // Redis Task
+    // STRUCTS
     struct Task {
-        SetInput input;
+        TaskInput input;
         uint32 taskCreatedBlock;
         // task submitter decides on the criteria for a task to be completed
-        // note that this does not mean the task was "correctly" answered this is for the challenge logic to verify
+        // note that this does not mean the task was "correctly" answered (i.e. the product was calculated correctly)
+        //      this is for the challenge logic to verify
         // task is completed (and contract will accept its TaskResponse) when each quorumNumbers specified here
         // are signed by at least quorumThresholdPercentage of the operators
         // note that we set the quorumThresholdPercentage to be the same for all quorumNumbers, but this could be changed
         bytes quorumNumbers;
         uint32 quorumThresholdPercentage;
-    }
-
-    // Redis command input
-    struct SetInput {
-        string key;
-        string value;
     }
 
     // Task response is hashed and signed by operators.
@@ -52,10 +47,15 @@ interface IIncredibleRedisTaskManager {
         bytes32 hashOfNonSigners;
     }
 
+    struct TaskInput {
+        string key;
+        string value;
+    }
+
     // FUNCTIONS
     // NOTE: this function creates new task.
     function createNewTask(
-        IIncredibleRedisTaskManager.SetInput calldata input,
+        TaskInput calldata input,
         uint32 quorumThresholdPercentage,
         bytes calldata quorumNumbers
     ) external;

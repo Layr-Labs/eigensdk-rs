@@ -16,3 +16,9 @@
 [submodule "examples/incredible-redis/contracts/lib/forge-std"]
 	path = examples/incredible-redis/contracts/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "examples/awesome-vault-service/contracts/eigenlayer-middleware"]
+	path = examples/awesome-vault-service/contracts/eigenlayer-middleware
+	url = https://github.com/Layr-Labs/eigenlayer-middleware
+[submodule "examples/awesome-vault-service/contracts/forge-std"]
+	path = examples/awesome-vault-service/contracts/forge-std
+	url = https://github.com/foundry-rs/forge-std
