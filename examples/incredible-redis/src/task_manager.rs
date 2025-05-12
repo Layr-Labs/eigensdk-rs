@@ -3,7 +3,7 @@
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use alloy::primitives::Bytes;
+use alloy::primitives::FixedBytes;
 use alloy::primitives::Keccak256;
 use alloy::primitives::B256;
 use alloy::sol_types::SolEvent;
@@ -26,7 +26,7 @@ pub struct ISTaskManager;
 impl TaskManagerDefs for ISTaskManager {
     // TODO SDK: Should we remove the `Debug` bound in TM::Input?
     type Input = SetInput;
-    type Output = Bytes;
+    type Output = FixedBytes<32>;
     const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
     const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
 }
@@ -44,7 +44,7 @@ impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleRedisTaskMa
 /// * `Result<Bytes, TaskManagerError>` - The hash of the new key and value
 pub async fn set(
     redis_state: Arc<Mutex<BTreeMap<String, String>>>,
-) -> impl AsyncFn(u32, SetInput) -> Result<Bytes, TaskManagerError> {
+) -> impl AsyncFn(u32, SetInput) -> Result<FixedBytes<32>, TaskManagerError> {
     move |_task_index, input: SetInput| {
         let redis_state = redis_state.clone();
         async move {
@@ -67,22 +67,22 @@ pub async fn set(
 /// # Returns
 ///
 /// The hash of the new key and value
-pub fn hash_state(_task_index: u32, input: SetInput) -> Result<Bytes, TaskManagerError> {
+pub fn hash_state(_task_index: u32, input: SetInput) -> Result<FixedBytes<32>, TaskManagerError> {
     let mut keccak = Keccak256::new();
     keccak.update(input.key.as_bytes());
     keccak.update(input.value.as_bytes());
-    Ok(Bytes::from(keccak.finalize().to_vec()))
+    Ok(keccak.finalize())
 }
 
 pub async fn wrong_set(
     redis_state: Arc<Mutex<BTreeMap<String, String>>>,
-) -> impl AsyncFn(u32, SetInput) -> Result<Bytes, TaskManagerError> {
-    move |_task_index, _input: SetInput| {
+) -> impl AsyncFn(u32, SetInput) -> Result<FixedBytes<32>, TaskManagerError> {
+    move |_task_index, input: SetInput| {
         let redis_state = redis_state.clone();
         async move {
             let wrong_input = SetInput {
-                key: "WRONG_KEY".to_string(),
-                value: "WRONG_VALUE".to_string(),
+                key: format!("WRONG_{}", input.key),
+                value: format!("WRONG_{}", input.value),
             };
             info!(
                 "Setting key: {} with value: {}",
@@ -106,6 +106,6 @@ pub async fn wrong_set(
 /// # Returns
 ///
 /// The wrong hash of the new key and value
-pub fn wrong_hash(_task_index: u32, _input: SetInput) -> Result<Bytes, TaskManagerError> {
-    Ok(Bytes::from(vec![0; 32]))
+pub fn wrong_hash(_task_index: u32, _input: SetInput) -> Result<FixedBytes<32>, TaskManagerError> {
+    Ok(FixedBytes::default())
 }

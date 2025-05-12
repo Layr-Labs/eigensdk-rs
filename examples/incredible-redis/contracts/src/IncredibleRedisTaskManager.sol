@@ -186,7 +186,6 @@ contract IncredibleRedisTaskManager is
         BN254.G1Point[] memory pubkeysOfNonSigningOperators
     ) external {
         uint32 referenceTaskIndex = taskResponse.referenceTaskIndex;
-        IIncredibleRedisTaskManager.SetInput memory keyValue = task.input;
         // some logical checks
         require(
             allTaskResponses[referenceTaskIndex] != bytes32(0), "Task hasn't been responded to yet"
@@ -207,12 +206,8 @@ contract IncredibleRedisTaskManager is
             "The challenge period for this task has already expired."
         );
 
-        bytes32 hashInput = keccak256(abi.encode(keyValue));
-
-        console.logBytes32(hashInput);
-        console.logBytes32(taskResponse.result);
-
-        bool isResponseCorrect = (hashInput == taskResponse.result);
+        bool isResponseCorrect = false;
+        
         // // if response was correct, no slashing happens so we return
         if (isResponseCorrect == true) {
             emit TaskChallengedUnsuccessfully(referenceTaskIndex, msg.sender);

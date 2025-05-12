@@ -91,10 +91,11 @@ async fn main() {
 
     let redis_state = Arc::new(Mutex::new(BTreeMap::<String, String>::new()));
 
+    // TESTING PURPOSES ONLY
     let compute = compute_with_failures_async(
         set(redis_state.clone()).await,
         wrong_set(redis_state).await,
-        0,
+        70,
     );
 
     operator
