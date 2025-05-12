@@ -3,7 +3,7 @@ pragma solidity ^0.8.12;
 
 import {Script} from "forge-std/Script.sol";
 import {console2} from "forge-std/console2.sol";
-import {IncredibleRedisDeploymentLib} from "../script/utils/IncredibleRedisDeploymentLib.sol";
+import {AwesomeVaultDeploymentLib} from "../script/utils/AwesomeVaultDeploymentLib.sol";
 import {SlashingRegistryCoordinator} from
     "@eigenlayer-middleware/src/SlashingRegistryCoordinator.sol";
 import {ISlashingRegistryCoordinatorTypes} from
@@ -12,15 +12,15 @@ import {IStakeRegistryTypes} from "@eigenlayer-middleware/src/interfaces/IStakeR
 import {IStrategy} from "@eigenlayer/contracts/interfaces/IStrategyManager.sol";
 
 contract CreateQuorum is Script {
-    using IncredibleRedisDeploymentLib for *;
+    using AwesomeVaultDeploymentLib for *;
 
     address internal deployer;
-    IncredibleRedisDeploymentLib.DeploymentData deploymentData;
+    AwesomeVaultDeploymentLib.DeploymentData deploymentData;
 
     function setUp() public virtual {
         deployer = vm.rememberKey(vm.envUint("PRIVATE_KEY"));
         vm.label(deployer, "Deployer");
-        deploymentData = IncredibleRedisDeploymentLib.readDeploymentJson(block.chainid);
+        deploymentData = AwesomeVaultDeploymentLib.readDeploymentJson(block.chainid);
     }
 
     function run() external {

@@ -23,12 +23,9 @@ import {IndexRegistry} from "@eigenlayer-middleware/src/IndexRegistry.sol";
 import {StakeRegistry} from "@eigenlayer-middleware/src/StakeRegistry.sol";
 import "@eigenlayer-middleware/src/OperatorStateRetriever.sol";
 
-import {
-    IncredibleRedisServiceManager,
-    IServiceManager
-} from "../src/IncredibleRedisServiceManager.sol";
-import {IncredibleRedisTaskManager} from "../src/IncredibleRedisTaskManager.sol";
-import {IIncredibleRedisTaskManager} from "../src/IIncredibleRedisTaskManager.sol";
+import {AwesomeVaultServiceManager, IServiceManager} from "../src/AwesomeVaultServiceManager.sol";
+import {AwesomeVaultTaskManager} from "../src/AwesomeVaultTaskManager.sol";
+import {IAwesomeVaultTaskManager} from "../src/IAwesomeVaultTaskManager.sol";
 import "../src/MockERC20.sol";
 
 import "forge-std/Test.sol";
@@ -38,7 +35,7 @@ import "forge-std/console.sol";
 import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.sol";
 
 import {ContractsRegistry} from "../src/ContractsRegistry.sol";
-import {IncredibleRedisDeploymentLib} from "../script/utils/IncredibleRedisDeploymentLib.sol";
+import {AwesomeVaultDeploymentLib} from "../script/utils/AwesomeVaultDeploymentLib.sol";
 import {UpgradeableProxyLib} from "./utils/UpgradeableProxyLib.sol";
 
 import {FundOperator} from "./utils/FundOperator.sol";
@@ -101,10 +98,8 @@ contract AwesomeVaultDeployer is Script {
     function run() external {
         // Eigenlayer contracts
         vm.startBroadcast(deployer);
-        AwesomeVaultDeploymentLib.AwesomeVaultSetupConfig memory avsConfig =
-        AwesomeVaultDeploymentLib.readAwesomeVaultConfigJson(
-            "config/avs/awesome_vault_config"
-        );
+        AwesomeVaultDeploymentLib.AwesomeVaultSetupConfig memory idpConfig =
+            AwesomeVaultDeploymentLib.readAwesomeVaultConfigJson("config/avs/awesome_vault_config");
         configData = CoreDeploymentLib.readDeploymentJson("script/deployments/core/", block.chainid);
 
         erc20Mock = new MockERC20();
@@ -114,23 +109,23 @@ contract AwesomeVaultDeployer is Script {
         console.log(idpConfig.operator_2_addr);
         (bool s,) = idpConfig.operator_2_addr.call{value: 0.1 ether}("");
         require(s);
-        incredibleRedisStrategy =
+        awesomeVaultStrategy =
             IStrategy(StrategyFactory(configData.strategyFactory).deployNewStrategy(erc20Mock));
         rewardscoordinator = configData.rewardsCoordinator;
 
         proxyAdmin = UpgradeableProxyLib.deployProxyAdmin();
-        require(address(incredibleRedisStrategy) != address(0));
-        incredibleRedisDeployment = IncredibleRedisDeploymentLib.deployContracts(
-            proxyAdmin, configData, address(incredibleRedisStrategy), idpConfig, msg.sender
+        require(address(awesomeVaultStrategy) != address(0));
+        awesomeVaultDeployment = AwesomeVaultDeploymentLib.deployContracts(
+            proxyAdmin, configData, address(awesomeVaultStrategy), idpConfig, msg.sender
         );
-        console.log("instantSlasher", incredibleRedisDeployment.slasher);
+        console.log("instantSlasher", awesomeVaultDeployment.slasher);
 
         FundOperator.fund_operator(
-            address(erc20Mock), incredibleRedisDeployment.incredibleRedisServiceManager, 1e18
+            address(erc20Mock), awesomeVaultDeployment.awesomeVaultServiceManager, 1e18
         );
-        incredibleRedisDeployment.token = address(erc20Mock);
+        awesomeVaultDeployment.token = address(erc20Mock);
 
-        IncredibleRedisDeploymentLib.writeDeploymentJson(incredibleRedisDeployment);
+        AwesomeVaultDeploymentLib.writeDeploymentJson(awesomeVaultDeployment);
 
         vm.stopBroadcast();
     }

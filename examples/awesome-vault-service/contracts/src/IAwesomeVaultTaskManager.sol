@@ -63,7 +63,9 @@ interface IAwesomeVaultTaskManager {
     /// @notice Returns the current 'taskNumber' for the middleware
     function taskNumber() external view returns (uint32);
 
-    // // NOTE: this function raises challenge to existing tasks.
+    // NOTE: this function raises challenge to existing tasks.
+    // DISCLAIMER: this function doesn't run any verifications and just invalidates the submitted response.
+    // DO NOT USE THIS IN PRODUCTION!
     function raiseAndResolveChallenge(
         Task calldata task,
         TaskResponse calldata taskResponse,

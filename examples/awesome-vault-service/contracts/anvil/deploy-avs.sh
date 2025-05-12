@@ -16,4 +16,4 @@ root_dir=$(realpath "$parent_path/../..")
 
 # Deploy Contracts
 cd "$root_dir/contracts"
-forge script script/IncredibleRedisDeployer.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --slow
+forge script script/AwesomeVaultDeployer.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --slow
