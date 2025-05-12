@@ -19,7 +19,7 @@ use crate::bindings::incredibleredistaskmanager::IncredibleRedisTaskManager::New
 use crate::bindings::incredibleredistaskmanager::IncredibleRedisTaskManager::TaskResponded;
 
 // Implement the [`TaskManagerDefs`] trait for a unit struct.
-// You need to specify the input and output types of the task. In this case, U256.
+// You need to specify the input and output types of the task.
 // You also need to specify the selectors for the new task event and the task responded event.
 pub struct ISTaskManager;
 
@@ -42,7 +42,7 @@ impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleRedisTaskMa
 /// # Returns
 ///
 /// * `Result<Bytes, TaskManagerError>` - The hash of the new key and value
-pub fn set(
+pub async fn set(
     redis_state: Arc<Mutex<BTreeMap<String, String>>>,
 ) -> impl AsyncFn(u32, SetInput) -> Result<Bytes, TaskManagerError> {
     move |_task_index, input: SetInput| {
@@ -72,4 +72,40 @@ pub fn hash_state(_task_index: u32, input: SetInput) -> Result<Bytes, TaskManage
     keccak.update(input.key.as_bytes());
     keccak.update(input.value.as_bytes());
     Ok(Bytes::from(keccak.finalize().to_vec()))
+}
+
+pub async fn wrong_set(
+    redis_state: Arc<Mutex<BTreeMap<String, String>>>,
+) -> impl AsyncFn(u32, SetInput) -> Result<Bytes, TaskManagerError> {
+    move |_task_index, _input: SetInput| {
+        let redis_state = redis_state.clone();
+        async move {
+            let wrong_input = SetInput {
+                key: "WRONG_KEY".to_string(),
+                value: "WRONG_VALUE".to_string(),
+            };
+            info!(
+                "Setting key: {} with value: {}",
+                wrong_input.key, wrong_input.value
+            );
+            let mut map = redis_state.lock().await;
+            map.insert(wrong_input.key.clone(), wrong_input.value.clone());
+            dbg!(&map);
+            wrong_hash(_task_index, wrong_input)
+        }
+    }
+}
+
+/// Wrong hash function
+///
+/// # Arguments
+///
+/// * `_task_index` - The index of the task
+/// * `input` - The input of the task
+///
+/// # Returns
+///
+/// The wrong hash of the new key and value
+pub fn wrong_hash(_task_index: u32, _input: SetInput) -> Result<Bytes, TaskManagerError> {
+    Ok(Bytes::from(vec![0; 32]))
 }

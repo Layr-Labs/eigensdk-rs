@@ -4661,6 +4661,7 @@ name = "incredible-redis"
 version = "0.1.0"
 dependencies = [
  "alloy",
+ "eigen-operator",
  "eigensdk",
  "eyre",
  "rand 0.8.5",

@@ -19,6 +19,7 @@ alloy = { version = "0.13", features = [
 # Pinned to https://github.com/Layr-Labs/eigensdk-rs/pull/486 - commit: 5648654
 # eigensdk = { git = "https://github.com/Layr-Labs/eigensdk-rs", rev = "5648654", features = [ "full" ] }
 eigensdk = { path = "../../crates/eigensdk", features = [ "full" ] }
+eigen-operator = { path = "../../crates/operator", features = ["operator-testing"] }
 eyre = "0.6"
 rand = "0.8"
 serde = { version = "1.0", features = ["derive"] }

@@ -1,13 +1,17 @@
 #![allow(missing_docs)]
 
 use alloy::primitives::{Address, U256};
+use eigen_operator::compute_with_failures_async;
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
     testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
 };
-use incredible_redis::{task_manager::set, task_manager::ISTaskManager, utils::setup_operator};
+use incredible_redis::{
+    task_manager::{set, wrong_set, ISTaskManager},
+    utils::setup_operator,
+};
 use std::{collections::BTreeMap, str::FromStr, sync::Arc};
 use tokio::sync::Mutex;
 use tracing::info;
@@ -87,8 +91,15 @@ async fn main() {
 
     let redis_state = Arc::new(Mutex::new(BTreeMap::<String, String>::new()));
 
+    let compute = compute_with_failures_async(
+        set(redis_state.clone()).await,
+        wrong_set(redis_state).await,
+        0,
+    )
+    .await;
+
     operator
-        .start_async::<ISTaskManager>(set(redis_state))
+        .start_async::<ISTaskManager>(compute)
         .await
         .unwrap();
 }

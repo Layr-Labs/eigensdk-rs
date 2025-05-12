@@ -334,3 +334,43 @@ where
         }
     }
 }
+
+/// Helper to wrap both correct and incorrect logic in a single closure.
+/// USE THIS FOR TESTING PURPOSES ONLY
+///
+/// # Arguments
+///
+/// * `correct_logic` - The correct logic to respond to the task.
+/// * `incorrect_logic` - The incorrect logic to respond to the task.
+/// * `failure_rate` - The failure rate.
+///
+/// # Returns
+///
+/// * `impl Fn(Event) -> Result<TaskResponse<O>, TaskManagerError>` - The wrapped logic.
+///
+/// # Panics
+///
+/// Panics if `failure_rate` is greater than 100.
+#[cfg(feature = "operator-testing")]
+pub async fn compute_with_failures_async<Input, Output, C, F>(
+    correct_logic: C,
+    incorrect_logic: F,
+    failure_rate: u8,
+) -> impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>
+where
+    C: AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+    F: AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+    Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
+{
+    async move |task_index, input: Input| {
+        let mut rng = rand::thread_rng();
+        let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
+        if should_fail {
+            info!("Operator compute the task with a wrong response");
+            incorrect_logic(task_index, input).await
+        } else {
+            info!("Operator compute the task successfully");
+            correct_logic(task_index, input).await
+        }
+    }
+}
