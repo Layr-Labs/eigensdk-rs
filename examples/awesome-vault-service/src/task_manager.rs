@@ -52,26 +52,9 @@ pub async fn save_value(
             let mut map = redis_state.lock().await;
             map.insert(input.key.clone(), input.value.clone());
             dbg!(&map);
-            hash_state(_task_index, input)
+            hash_entry(_task_index, input)
         }
     }
-}
-
-/// Hash the new key and value
-///
-/// # Arguments
-///
-/// * `task_index` - The index of the task
-/// * `input` - The input of the task
-///
-/// # Returns
-///
-/// The hash of the new key and value
-pub fn hash_state(_task_index: u32, input: TaskInput) -> Result<FixedBytes<32>, TaskManagerError> {
-    let mut keccak = Keccak256::new();
-    keccak.update(input.key.as_bytes());
-    keccak.update(input.value.as_bytes());
-    Ok(keccak.finalize())
 }
 
 pub async fn save_wrong_value(
@@ -91,21 +74,24 @@ pub async fn save_wrong_value(
             let mut map = redis_state.lock().await;
             map.insert(wrong_input.key.clone(), wrong_input.value.clone());
             dbg!(&map);
-            wrong_hash(_task_index, wrong_input)
+            hash_entry(_task_index, wrong_input)
         }
     }
 }
 
-/// Wrong hash function
+/// Hash the new key and value
 ///
 /// # Arguments
 ///
-/// * `_task_index` - The index of the task
+/// * `task_index` - The index of the task
 /// * `input` - The input of the task
 ///
 /// # Returns
 ///
-/// The wrong hash of the new key and value
-pub fn wrong_hash(_task_index: u32, _input: TaskInput) -> Result<FixedBytes<32>, TaskManagerError> {
-    Ok(FixedBytes::default())
+/// The hash of the new key and value
+pub fn hash_entry(_task_index: u32, input: TaskInput) -> Result<FixedBytes<32>, TaskManagerError> {
+    let mut keccak = Keccak256::new();
+    keccak.update(input.key.as_bytes());
+    keccak.update(input.value.as_bytes());
+    Ok(keccak.finalize())
 }

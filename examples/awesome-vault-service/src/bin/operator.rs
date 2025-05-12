@@ -96,7 +96,7 @@ async fn main() {
     let compute = compute_with_failures_async(
         save_value(redis_state.clone()).await,
         save_wrong_value(redis_state).await,
-        70,
+        50,
     );
 
     operator

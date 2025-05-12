@@ -3,7 +3,7 @@
 use alloy::primitives::Address;
 use awesome_vault_service::{
     bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
-    task_manager::hash_state,
+    task_manager::hash_entry,
 };
 use eigensdk::{
     challenger::{
@@ -15,9 +15,8 @@ use eigensdk::{
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
-use tokio::sync::Mutex;
 
-use std::{collections::BTreeMap, str::FromStr, sync::Arc};
+use std::str::FromStr;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -29,9 +28,7 @@ async fn main() -> Result<()> {
 
     let contract = AwesomeVaultTaskManagerInstance::new(task_manager_address, wallet);
 
-    let redis_state = Arc::new(Mutex::new(BTreeMap::<String, String>::new()));
-
-    let is_response_correct = verifier_from_compute_function(hash_state);
+    let is_response_correct = verifier_from_compute_function(hash_entry);
     let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
     let mut challenger = Challenger::new(http_rpc_url, ws_rpc_url, task_processor);
     challenger
