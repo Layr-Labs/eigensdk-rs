@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
     let contract = IncredibleRedisTaskManagerInstance::new(task_manager_address, wallet);
 
     let task_processor =
-        IndexingTaskProcessor::new(contract, Duration::from_secs(10), Duration::from_secs(2));
+        IndexingTaskProcessor::new(contract, Duration::from_secs(10), Duration::from_secs(5));
 
     let config = AggregatorConfig {
         server_address: aggregator_ip_port,

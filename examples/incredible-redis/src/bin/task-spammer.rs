@@ -35,7 +35,7 @@ async fn main() -> Result<()> {
             }
         }))
         .with_quorum(50, vec![0])
-        .with_interval(Duration::from_secs(10))
+        .with_interval(Duration::from_secs(20))
         .build()
         .map_err(|e| eyre::eyre!("TaskSpammer build error: {}", e))?
         .run()

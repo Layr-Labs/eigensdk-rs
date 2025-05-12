@@ -255,6 +255,8 @@ where
                 .receive_aggregated_response()
                 .await?;
 
+            dbg!("RECIBI RESPUESTA");
+
             task_processor
                 .process_aggregated_response(service_response)
                 .await?;

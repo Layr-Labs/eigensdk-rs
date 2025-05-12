@@ -714,6 +714,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         aggregated_response_sender
             .send(Ok(current_aggregated_response.clone().unwrap()))
+            .inspect_err(|err| {
+                println!("Error sending aggregated response: {}", err);
+            })
             .map_err(|_| BlsAggregationServiceError::SenderError)?;
         Ok(())
     }
