@@ -31,7 +31,7 @@ members = [
     "examples/info-operator-service/",
     "tests/testing-utils/",
     "tests/integration/",
-    "examples/incredible-redis",
+    "examples/awesome-vault-service",
     "examples/incredible-squaring",
 ]
 resolver = "2"
