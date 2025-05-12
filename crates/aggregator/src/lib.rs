@@ -253,13 +253,9 @@ where
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
-            dbg!("Esperando respuesta del servicio");
             let service_response = aggregated_response_receiver
                 .receive_aggregated_response()
-                .await
-                .unwrap();
-
-            dbg!("Recibida respuesta del servicio");
+                .await?;
 
             task_processor
                 .process_aggregated_response(service_response)

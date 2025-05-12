@@ -192,9 +192,6 @@ where
             (task, task_response)
         };
 
-        dbg!(&task);
-        dbg!(&task_response);
-
         self.task_manager
             .respond_to_task(task, task_response, non_signer_stakes_and_signature)
             .await

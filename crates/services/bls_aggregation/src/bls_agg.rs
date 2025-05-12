@@ -219,15 +219,10 @@ impl AggregateReceiver {
     pub async fn receive_aggregated_response(
         &mut self,
     ) -> Result<BlsAggregationServiceResponse, BlsAggregationServiceError> {
-        dbg!(&self.aggregate_receiver);
-        let a = self
-            .aggregate_receiver
+        self.aggregate_receiver
             .recv()
             .await
-            .ok_or(BlsAggregationServiceError::ReceiverError)?;
-
-        dbg!(&self.aggregate_receiver);
-        a
+            .ok_or(BlsAggregationServiceError::ReceiverError)?
     }
 }
 
@@ -717,18 +712,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             "eigen-services-blsaggregation.bls_agg.handle_window_finished",
         );
 
-        dbg!(&aggregated_response_sender);
-
-        dbg!("Por enviar la respuesta");
         aggregated_response_sender
             .send(Ok(current_aggregated_response.clone().unwrap()))
             .inspect_err(|err| {
                 println!("Error sending aggregated response: {}", err);
             })
             .map_err(|_| BlsAggregationServiceError::SenderError)?;
-        dbg!("Enviada la respuesta");
 
-        dbg!(&aggregated_response_sender);
         Ok(())
     }
 

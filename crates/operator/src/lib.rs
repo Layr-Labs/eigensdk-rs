@@ -191,7 +191,6 @@ impl Operator {
             info!("{} picked up a new task", self.operator_name);
 
             let output = compute_logic(task_index, task.input).await?;
-            dbg!(&output);
             let task_response = TaskResponse {
                 task_index,
                 response: output,
