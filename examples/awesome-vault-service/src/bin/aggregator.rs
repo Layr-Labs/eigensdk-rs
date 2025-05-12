@@ -1,6 +1,7 @@
 //! Incredible Dot Product Aggregator
 
 use alloy::primitives::Address;
+use awesome_vault_service::bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance;
 use eigensdk::{
     aggregator::{Aggregator, AggregatorConfig},
     common::get_signer,
@@ -8,7 +9,7 @@ use eigensdk::{
     task_processor::IndexingTaskProcessor,
 };
 use eyre::Result;
-use incredible_redis::bindings::incredibleredistaskmanager::IncredibleRedisTaskManager::IncredibleRedisTaskManagerInstance;
+
 use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
@@ -27,7 +28,7 @@ async fn main() -> Result<()> {
     let operator_state_retriever_address =
         Address::from_str("0x4c5859f0f772848b2d91f1d83e2fe57935348029")?;
 
-    let contract = IncredibleRedisTaskManagerInstance::new(task_manager_address, wallet);
+    let contract = AwesomeVaultTaskManagerInstance::new(task_manager_address, wallet);
 
     let task_processor =
         IndexingTaskProcessor::new(contract, Duration::from_secs(10), Duration::from_secs(2));

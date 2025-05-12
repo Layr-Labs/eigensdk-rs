@@ -13,10 +13,10 @@ use eigensdk::task_processor::task_manager::TaskManagerError;
 use tokio::sync::Mutex;
 use tracing::info;
 
-use crate::bindings::incredibleredistaskmanager::IIncredibleRedisTaskManager::SetInput;
-use crate::bindings::incredibleredistaskmanager::IncredibleRedisTaskManager::IncredibleRedisTaskManagerInstance;
-use crate::bindings::incredibleredistaskmanager::IncredibleRedisTaskManager::NewTaskCreated;
-use crate::bindings::incredibleredistaskmanager::IncredibleRedisTaskManager::TaskResponded;
+use crate::bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance;
+use crate::bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::NewTaskCreated;
+use crate::bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::TaskResponded;
+use crate::bindings::awesomevaulttaskmanager::IAwesomeVaultTaskManager::TaskInput;
 
 // Implement the [`TaskManagerDefs`] trait for a unit struct.
 // You need to specify the input and output types of the task.
@@ -25,13 +25,13 @@ pub struct ISTaskManager;
 
 impl TaskManagerDefs for ISTaskManager {
     // TODO SDK: Should we remove the `Debug` bound in TM::Input?
-    type Input = SetInput;
+    type Input = TaskInput;
     type Output = FixedBytes<32>;
     const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
     const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
 }
 
-impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleRedisTaskManagerInstance);
+impl_task_manager_from_defs_and_contract!(ISTaskManager => AwesomeVaultTaskManagerInstance);
 
 /// Set the key and value in the Redis state
 ///
@@ -42,10 +42,10 @@ impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleRedisTaskMa
 /// # Returns
 ///
 /// * `Result<Bytes, TaskManagerError>` - The hash of the new key and value
-pub async fn set(
+pub async fn save_value(
     redis_state: Arc<Mutex<BTreeMap<String, String>>>,
-) -> impl AsyncFn(u32, SetInput) -> Result<FixedBytes<32>, TaskManagerError> {
-    move |_task_index, input: SetInput| {
+) -> impl AsyncFn(u32, TaskInput) -> Result<FixedBytes<32>, TaskManagerError> {
+    move |_task_index, input: TaskInput| {
         let redis_state = redis_state.clone();
         async move {
             info!("Setting key: {} with value: {}", input.key, input.value);
@@ -67,20 +67,20 @@ pub async fn set(
 /// # Returns
 ///
 /// The hash of the new key and value
-pub fn hash_state(_task_index: u32, input: SetInput) -> Result<FixedBytes<32>, TaskManagerError> {
+pub fn hash_state(_task_index: u32, input: TaskInput) -> Result<FixedBytes<32>, TaskManagerError> {
     let mut keccak = Keccak256::new();
     keccak.update(input.key.as_bytes());
     keccak.update(input.value.as_bytes());
     Ok(keccak.finalize())
 }
 
-pub async fn wrong_set(
+pub async fn save_wrong_value(
     redis_state: Arc<Mutex<BTreeMap<String, String>>>,
-) -> impl AsyncFn(u32, SetInput) -> Result<FixedBytes<32>, TaskManagerError> {
-    move |_task_index, input: SetInput| {
+) -> impl AsyncFn(u32, TaskInput) -> Result<FixedBytes<32>, TaskManagerError> {
+    move |_task_index, input: TaskInput| {
         let redis_state = redis_state.clone();
         async move {
-            let wrong_input = SetInput {
+            let wrong_input = TaskInput {
                 key: format!("WRONG_{}", input.key),
                 value: format!("WRONG_{}", input.value),
             };
@@ -106,6 +106,6 @@ pub async fn wrong_set(
 /// # Returns
 ///
 /// The wrong hash of the new key and value
-pub fn wrong_hash(_task_index: u32, _input: SetInput) -> Result<FixedBytes<32>, TaskManagerError> {
+pub fn wrong_hash(_task_index: u32, _input: TaskInput) -> Result<FixedBytes<32>, TaskManagerError> {
     Ok(FixedBytes::default())
 }

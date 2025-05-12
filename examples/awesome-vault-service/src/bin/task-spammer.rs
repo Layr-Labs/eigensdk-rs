@@ -1,16 +1,15 @@
 //! Incredible Dot Product Task Spammer
 
 use alloy::primitives::Address;
+use awesome_vault_service::bindings::awesomevaulttaskmanager::{
+    AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance, IAwesomeVaultTaskManager::TaskInput,
+};
 use eigensdk::{
     common::get_signer,
     logging::{init_logger, log_level::LogLevel},
     task_spammer::TaskSpammerBuilder,
 };
 use eyre::Result;
-use incredible_redis::bindings::incredibleredistaskmanager::{
-    IIncredibleRedisTaskManager::SetInput,
-    IncredibleRedisTaskManager::IncredibleRedisTaskManagerInstance,
-};
 use rand::Rng;
 
 use std::{str::FromStr, time::Duration};
@@ -23,13 +22,13 @@ async fn main() -> Result<()> {
     let wallet = get_signer(key, &http_rpc_url);
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
 
-    let contract = IncredibleRedisTaskManagerInstance::new(task_manager_address, wallet);
+    let contract = AwesomeVaultTaskManagerInstance::new(task_manager_address, wallet);
 
     TaskSpammerBuilder::new(contract)
         .with_iter((1..).map(|_| {
             let random_key = format!("key_{}", rand::thread_rng().gen_range(0..1000000));
             let random_value = format!("value_{}", rand::thread_rng().gen_range(0..1000000));
-            SetInput {
+            TaskInput {
                 key: random_key.clone(),
                 value: random_value.clone(),
             }

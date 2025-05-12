@@ -1,6 +1,10 @@
 //! Incredible Dot Product Challenger
 
 use alloy::primitives::Address;
+use awesome_vault_service::{
+    bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
+    task_manager::hash_state,
+};
 use eigensdk::{
     challenger::{
         challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
@@ -11,10 +15,6 @@ use eigensdk::{
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
-use incredible_redis::{
-    bindings::incredibleredistaskmanager::IncredibleRedisTaskManager::IncredibleRedisTaskManagerInstance,
-    task_manager::hash_state,
-};
 
 use std::str::FromStr;
 
@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     let wallet = get_signer(FIRST_PRIVATE_KEY, &http_rpc_url);
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
 
-    let contract = IncredibleRedisTaskManagerInstance::new(task_manager_address, wallet);
+    let contract = AwesomeVaultTaskManagerInstance::new(task_manager_address, wallet);
 
     let is_response_correct = verifier_from_compute_function(hash_state);
     let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
