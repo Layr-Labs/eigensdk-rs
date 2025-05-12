@@ -1,7 +1,6 @@
 use alloy::{primitives::B256, sol_types::SolValue};
-use eigen_services_blsaggregation::{
-    bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
-};
+use eigen_services_blsaggregation::bls_agg::TaskMetadata;
+use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use serde::de::DeserializeOwned;
 use std::future::Future;
 
@@ -61,6 +60,8 @@ pub trait TaskProcessor {
     /// The aggregated response digest
     fn process_aggregated_response(
         &self,
-        response: BlsAggregationServiceResponse,
+        task_index: u32,
+        task_response_digest: B256,
+        non_signer_stakes_and_signature: NonSignerStakesAndSignature,
     ) -> impl Future<Output = Result<(), TaskProcessorError>> + Send;
 }
