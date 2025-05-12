@@ -1,19 +1,20 @@
 //! Incredible Dot Product Challenger
 
-use alloy::primitives::{Address, Bytes};
+use alloy::primitives::Address;
 use eigensdk::{
-    challenger::{challenger_processor::IndexingChallengerProcessor, Challenger},
+    challenger::{
+        challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
+        Challenger,
+    },
     common::get_signer,
     logging::{init_logger, log_level::LogLevel},
-    task_processor::{task::Task, task_manager::TaskManagerError, task_response::TaskResponse},
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
-use incredible_redis::bindings::incredibleredistaskmanager::{
-    IIncredibleRedisTaskManager::SetInput,
-    IncredibleRedisTaskManager::IncredibleRedisTaskManagerInstance,
+use incredible_redis::{
+    bindings::incredibleredistaskmanager::IncredibleRedisTaskManager::IncredibleRedisTaskManagerInstance,
+    task_manager::hash_state,
 };
-use incredible_redis::task_manager::set;
 use std::str::FromStr;
 
 #[tokio::main]
@@ -26,7 +27,7 @@ async fn main() -> Result<()> {
 
     let contract = IncredibleRedisTaskManagerInstance::new(task_manager_address, wallet);
 
-    // let is_response_correct = verifier_from_compute_function(square);
+    let is_response_correct = verifier_from_compute_function(hash_state);
     let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
     let mut challenger = Challenger::new(http_rpc_url, ws_rpc_url, task_processor);
     challenger
@@ -35,21 +36,4 @@ async fn main() -> Result<()> {
         .map_err(|e| eyre::eyre!("Challenger start error: {}", e))?;
 
     Ok(())
-}
-
-/// Checks if the operator response is correct
-///
-/// # Arguments
-///
-/// * `task` - The task
-/// * `task_response` - The task response
-///
-/// # Returns
-///
-/// * `Result<bool, TaskManagerError>` - The result of the operation
-fn is_response_correct(
-    _task: Task<SetInput>,
-    _task_response: TaskResponse<Bytes>,
-) -> Result<bool, TaskManagerError> {
-    Ok(true)
 }
