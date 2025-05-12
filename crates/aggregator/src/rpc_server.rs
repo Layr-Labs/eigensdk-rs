@@ -108,6 +108,7 @@ where
             signature,
             operator_id,
         } = signed_task_response;
+
         let task_index = task_response.task_index;
 
         let task_response_digest = task_processor.process_task_response(task_response).await?;

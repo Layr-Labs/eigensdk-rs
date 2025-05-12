@@ -160,7 +160,11 @@ macro_rules! default_contract_impl {
             )
                 .into();
 
+            dbg!("Arme la tarea");
+
             let contract_response = (task_response.task_index, task_response.response).into();
+
+            dbg!("Arme la respuesta");
 
             let apk_g2 = (
                 non_signer_stakes_and_signature.apkG2.X,
@@ -198,6 +202,8 @@ macro_rules! default_contract_impl {
             )
                 .into();
 
+            dbg!("Arme la firma");
+
             self.respondToTask(
                 contract_task,
                 contract_response,
@@ -209,6 +215,8 @@ macro_rules! default_contract_impl {
             .get_receipt()
             .await
             .map_err($crate::task_manager::box_error)?;
+
+            dbg!("Respondida la tarea");
 
             Ok(())
         }

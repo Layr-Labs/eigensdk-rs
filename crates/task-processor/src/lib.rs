@@ -192,10 +192,16 @@ where
             (task, task_response)
         };
 
+        dbg!(&task);
+        dbg!(&task_response);
+
         self.task_manager
             .respond_to_task(task, task_response, non_signer_stakes_and_signature)
             .await
             .map_err(TaskProcessorError::TaskManagerError)
             .inspect(|_| info!("Aggregated response sent to contract"))
+            .inspect_err(|err| {
+                println!("Error sending aggregated response: {:?}", err);
+            })
     }
 }

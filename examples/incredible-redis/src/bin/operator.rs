@@ -95,11 +95,10 @@ async fn main() {
         set(redis_state.clone()).await,
         wrong_set(redis_state).await,
         0,
-    )
-    .await;
+    );
 
     operator
-        .start_async::<ISTaskManager>(compute)
+        .start_async::<ISTaskManager>(compute.await)
         .await
         .unwrap();
 }

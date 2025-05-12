@@ -144,6 +144,9 @@ where
         // Wait for the tasks to complete and handle potential errors
         let (server_result, process_result, aggregate_result) =
             tokio::try_join!(server_handle, process_handle, aggregate_handle)
+                .inspect_err(|err| {
+                    println!("Error joining tasks: {:?}", err);
+                })
                 .map_err(|_| AggregatorError::JoinError)?;
 
         server_result?;
@@ -221,16 +224,15 @@ where
         let filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
 
-        while let Some(log) = provider
-            .subscribe_logs(&filter)
-            .await?
-            .into_stream()
-            .next()
-            .await
-        {
+        let subscription = provider
+            .subscribe_logs(&Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR))
+            .await?;
+        let mut stream = subscription.into_stream();
+
+        while let Some(log) = stream.next().await {
             let (task_index, task) = Self::decode_event(&log)?;
-            let task_metadata = task_processor.process_new_task(task_index, task).await?;
-            service_handle.initialize_task(task_metadata).await?;
+            let meta = task_processor.process_new_task(task_index, task).await?;
+            service_handle.initialize_task(meta).await?;
         }
 
         Ok(())
@@ -251,15 +253,18 @@ where
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
+            dbg!("Esperando respuesta del servicio");
             let service_response = aggregated_response_receiver
                 .receive_aggregated_response()
-                .await?;
+                .await
+                .unwrap();
 
-            dbg!("RECIBI RESPUESTA");
+            dbg!("Recibida respuesta del servicio");
 
             task_processor
                 .process_aggregated_response(service_response)
-                .await?;
+                .await
+                .unwrap();
         }
     }
 
