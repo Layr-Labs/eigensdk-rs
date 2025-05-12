@@ -197,8 +197,5 @@ where
             .await
             .map_err(TaskProcessorError::TaskManagerError)
             .inspect(|_| info!("Aggregated response sent to contract"))
-            .inspect_err(|err| {
-                println!("Error sending aggregated response: {:?}", err);
-            })
     }
 }

@@ -224,15 +224,16 @@ where
         let filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
 
-        let subscription = provider
-            .subscribe_logs(&Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR))
-            .await?;
-        let mut stream = subscription.into_stream();
-
-        while let Some(log) = stream.next().await {
+        while let Some(log) = provider
+            .subscribe_logs(&filter)
+            .await?
+            .into_stream()
+            .next()
+            .await
+        {
             let (task_index, task) = Self::decode_event(&log)?;
-            let meta = task_processor.process_new_task(task_index, task).await?;
-            service_handle.initialize_task(meta).await?;
+            let task_metadata = task_processor.process_new_task(task_index, task).await?;
+            service_handle.initialize_task(task_metadata).await?;
         }
 
         Ok(())
@@ -259,8 +260,7 @@ where
 
             task_processor
                 .process_aggregated_response(service_response)
-                .await
-                .unwrap();
+                .await?;
         }
     }
 

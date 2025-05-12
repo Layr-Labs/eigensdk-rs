@@ -15,8 +15,9 @@ use eigensdk::{
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
+use tokio::sync::Mutex;
 
-use std::str::FromStr;
+use std::{collections::BTreeMap, str::FromStr, sync::Arc};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -27,6 +28,8 @@ async fn main() -> Result<()> {
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
 
     let contract = AwesomeVaultTaskManagerInstance::new(task_manager_address, wallet);
+
+    let redis_state = Arc::new(Mutex::new(BTreeMap::<String, String>::new()));
 
     let is_response_correct = verifier_from_compute_function(hash_state);
     let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
