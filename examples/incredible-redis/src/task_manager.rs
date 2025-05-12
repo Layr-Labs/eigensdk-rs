@@ -33,6 +33,15 @@ impl TaskManagerDefs for ISTaskManager {
 
 impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleRedisTaskManagerInstance);
 
+/// Set the key and value in the Redis state
+///
+/// # Arguments
+///
+/// * `redis_state` - The Redis state
+///
+/// # Returns
+///
+/// * `Result<Bytes, TaskManagerError>` - The hash of the new key and value
 pub fn set(
     redis_state: Arc<Mutex<BTreeMap<String, String>>>,
 ) -> impl AsyncFn(u32, SetInput) -> Result<Bytes, TaskManagerError> {
@@ -43,16 +52,24 @@ pub fn set(
             let mut map = redis_state.lock().await;
             map.insert(input.key.clone(), input.value.clone());
             dbg!(&map);
-            Ok(hash_state(&map))
+            hash_state(_task_index, input)
         }
     }
 }
 
-fn hash_state(state: &BTreeMap<String, String>) -> Bytes {
+/// Hash the new key and value
+///
+/// # Arguments
+///
+/// * `task_index` - The index of the task
+/// * `input` - The input of the task
+///
+/// # Returns
+///
+/// The hash of the new key and value
+pub fn hash_state(_task_index: u32, input: SetInput) -> Result<Bytes, TaskManagerError> {
     let mut keccak = Keccak256::new();
-    for (k, v) in state.iter() {
-        keccak.update(k.as_bytes());
-        keccak.update(v.as_bytes());
-    }
-    Bytes::from(keccak.finalize().to_vec())
+    keccak.update(input.key.as_bytes());
+    keccak.update(input.value.as_bytes());
+    Ok(Bytes::from(keccak.finalize().to_vec()))
 }
