@@ -151,9 +151,6 @@ where
         // Wait for the tasks to complete and handle potential errors
         let (server_result, process_result, aggregate_result) =
             tokio::try_join!(server_handle, process_handle, aggregate_handle)
-                .inspect_err(|err| {
-                    println!("Error joining tasks: {:?}", err);
-                })
                 .map_err(|_| AggregatorError::JoinError)?;
 
         server_result?;
