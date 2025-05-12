@@ -1,4 +1,3 @@
-use eigen_crypto_bls::error::BlsError;
 use thiserror::Error;
 
 use crate::task_manager::TaskManagerError;
@@ -13,10 +12,6 @@ pub enum TaskProcessorError {
     /// Task response not found
     #[error("Task response not found")]
     TaskResponseNotFound,
-
-    /// Error de conversión de puntos G1/G2
-    #[error("Error de conversión de puntos G1/G2")]
-    PointConversionError(#[from] BlsError),
 
     /// Task manager error
     #[error("Task manager error")]

@@ -4,6 +4,7 @@ use eigen_crypto_bls::error::BlsError;
 use eigen_services_blsaggregation::bls_aggregation_service_error::BlsAggregationServiceError;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceError;
 use eigen_task_processor::error::TaskProcessorError;
+use eigen_task_processor::new_task_events::DecodeNewTaskError;
 use tarpc::ServerError;
 use thiserror::Error;
 
@@ -19,8 +20,8 @@ pub enum AggregatorError {
     JoinError,
 
     /// Decoding of the new task event failed
-    #[error("Log decode failed")]
-    LogDecodeFailed(#[from] alloy::sol_types::Error),
+    #[error("Decoding of new task failed")]
+    LogDecodeFailed(#[from] DecodeNewTaskError),
 
     /// Build avs registry chain reader
     #[error("Failed to build avs registry chain reader ")]
@@ -65,4 +66,8 @@ pub enum AggregatorError {
     /// BLS Key error
     #[error("BLS Key error")]
     BlsKeyError(#[from] BlsError),
+
+    /// Alloy error
+    #[error("Alloy error")]
+    AlloyError(#[from] alloy::sol_types::Error),
 }
