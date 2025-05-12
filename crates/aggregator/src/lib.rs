@@ -19,6 +19,7 @@ use ark_ec::AffineRepr;
 pub use config::AggregatorConfig;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
+use eigen_crypto_bls::error::BlsError;
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
 use eigen_logging::get_logger;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
@@ -340,7 +341,7 @@ where
 /// * `Result<NonSignerStakesAndSignature, AggregatorError>` - The non-signing operator pub keys
 fn get_non_signing_operator_pubkeys(
     response: BlsAggregationServiceResponse,
-) -> Result<NonSignerStakesAndSignature, AggregatorError> {
+) -> Result<NonSignerStakesAndSignature, BlsError> {
     let mut non_signer_pub_keys = Vec::<G1Point>::new();
     for pub_key in response.non_signers_pub_keys_g1.iter() {
         if pub_key.g1().x().is_some() {
