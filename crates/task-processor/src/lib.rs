@@ -17,6 +17,8 @@ use tracing::info;
 
 /// Task processor error
 pub mod error;
+/// New task events decoding
+pub mod new_task_events;
 /// Task
 pub mod task;
 /// Task manager trait
