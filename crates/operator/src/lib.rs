@@ -2,9 +2,9 @@
 
 use alloy::{
     dyn_abi::SolType,
-    primitives::{keccak256, Bytes},
+    primitives::keccak256,
     providers::{Provider, ProviderBuilder, WsConnect},
-    rpc::types::{Filter, Log},
+    rpc::types::Filter,
     sol_types::SolValue,
 };
 use client::ClientAggregator;
@@ -12,8 +12,11 @@ use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
-use eigen_task_processor::task_manager::{TaskManagerDefs, TaskManagerError};
-use eigen_task_processor::{task::Task, task_response::TaskResponse};
+use eigen_task_processor::task_response::TaskResponse;
+use eigen_task_processor::{
+    new_task_events::decode_new_task,
+    task_manager::{TaskManagerDefs, TaskManagerError},
+};
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
@@ -142,7 +145,7 @@ impl Operator {
         let mut stream = sub.into_stream();
 
         while let Some(log) = stream.next().await {
-            let (task_index, task) = decode_new_task_event::<TM::Input>(&log)?;
+            let (task_index, task) = decode_new_task::<TM::Input>(&log)?;
 
             info!("{} picked up a new task", self.operator_name);
 
@@ -187,64 +190,6 @@ impl Operator {
         info!("Operator signed task response");
         Ok(signed_task_response)
     }
-}
-
-/// Decode the log of the NewTaskCreated event to get the task index and the task
-///
-/// # Arguments
-///
-/// * `log` - The log of the NewTaskCreated event
-///
-/// # Returns
-///
-/// * `Result<(u32, Task<Input>), AggregatorError>` - The task index and the task
-fn decode_new_task_event<Input>(log: &Log) -> Result<(u32, Task<Input>), OperatorError>
-where
-    Input: SolValue + From<<<Input as SolValue>::SolType as SolType>::RustType>,
-{
-    // event NewTaskCreated(uint32 indexed taskIndex, Task task);
-    // Since taskIndex is indexed type, it is present in the topics array
-    // The first element of the topic is the event hash signature, the second is the taskIndex
-    let bytes: [u8; 32] = log
-        .topics()
-        .get(1)
-        .ok_or(OperatorError::SubscribeLogsError)?
-        .0;
-
-    // u32 values are stored in the last 4 bytes of a 32 bytes array (left-padded).
-    let task_index_bytes: [u8; 4] = bytes[28..32]
-        .try_into()
-        .map_err(|_| OperatorError::SubscribeLogsError)?;
-    let task_index = u32::from_be_bytes(task_index_bytes);
-
-    // Skip the first 32 bytes of the ABI-encoded data (the dynamic offset pointer)
-    // so we can decode the actual tuple payload that follows.
-    let data = log
-        .inner
-        .data
-        .data
-        .0
-        .get(32..)
-        .ok_or(OperatorError::SubscribeLogsError)?;
-
-    let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
-        <(
-            <Input as SolValue>::SolType,
-            <u32 as SolValue>::SolType,
-            <Bytes as SolValue>::SolType,
-            <u32 as SolValue>::SolType,
-        )>::abi_decode_params(data, false)
-        .map_err(|_| OperatorError::SubscribeLogsError)?;
-
-    Ok((
-        task_index,
-        Task::<Input> {
-            input: input.into(),
-            task_created_block,
-            quorum_numbers,
-            quorum_threshold_percentage,
-        },
-    ))
 }
 
 /// Helper to wrap both correct and incorrect logic in a single closure.
