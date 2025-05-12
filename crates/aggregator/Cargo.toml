@@ -12,6 +12,7 @@ workspace = true
 
 [dependencies]
 alloy.workspace = true
+ark-ec.workspace = true
 eigen-types.workspace = true
 serde.workspace = true
 eigen-crypto-bls.workspace = true
