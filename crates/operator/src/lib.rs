@@ -142,7 +142,7 @@ impl Operator {
         let mut stream = sub.into_stream();
 
         while let Some(log) = stream.next().await {
-            let (task_index, task) = decode_event::<TM>(&log)?;
+            let (task_index, task) = decode_new_task_event::<TM::Input>(&log)?;
 
             info!("{} picked up a new task", self.operator_name);
 
@@ -189,7 +189,6 @@ impl Operator {
     }
 }
 
-// TODO: this was taken from the aggregator crate. We should extract this to a common crate.
 /// Decode the log of the NewTaskCreated event to get the task index and the task
 ///
 /// # Arguments
@@ -198,11 +197,10 @@ impl Operator {
 ///
 /// # Returns
 ///
-/// * `Result<(u32, Task<TP::Input>), AggregatorError>` - The task index and the task
-fn decode_event<TM>(log: &Log) -> Result<(u32, Task<TM::Input>), OperatorError>
+/// * `Result<(u32, Task<Input>), AggregatorError>` - The task index and the task
+fn decode_new_task_event<Input>(log: &Log) -> Result<(u32, Task<Input>), OperatorError>
 where
-    TM: TaskManagerDefs,
-    TM::Input: From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
+    Input: SolValue + From<<<Input as SolValue>::SolType as SolType>::RustType>,
 {
     // event NewTaskCreated(uint32 indexed taskIndex, Task task);
     // Since taskIndex is indexed type, it is present in the topics array
@@ -231,7 +229,7 @@ where
 
     let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
         <(
-            <TM::Input as SolValue>::SolType,
+            <Input as SolValue>::SolType,
             <u32 as SolValue>::SolType,
             <Bytes as SolValue>::SolType,
             <u32 as SolValue>::SolType,
@@ -240,7 +238,7 @@ where
 
     Ok((
         task_index,
-        Task::<TM::Input> {
+        Task::<Input> {
             input: input.into(),
             task_created_block,
             quorum_numbers,
