@@ -216,6 +216,8 @@ where
     Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
     Input: Clone,
 {
+    assert!(failure_rate <= 100);
+
     async move |task_index, input: Input| {
         let result = correct_logic(task_index, input.clone()).await;
 
