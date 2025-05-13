@@ -5,7 +5,7 @@ use alloy::primitives::{Address, U256};
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
-    operator::{compute_with_failures, config::OperatorConfig, Operator},
+    operator::{config::OperatorConfig, failing_response_calculator, Operator},
     testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
 };
 use eyre::Result;
@@ -82,11 +82,11 @@ async fn main() -> Result<()> {
         .await
         .map_err(|e| eyre::eyre!("Operator new error: {}", e))?;
 
-    let logic = compute_with_failures(dot_product, invalid_dot_product, 40);
+    let logic = failing_response_calculator(dot_product, invalid_dot_product, 40);
 
     // TODO: Review bounds in SDK. I have to derive Serialize and Deserialize for TaskResponse in the bindings
     operator
-        .start::<ISTaskManager>(logic)
+        .start::<ISTaskManager>(logic.await)
         .await
         .map_err(|e| eyre::eyre!("Operator start error: {}", e))?;
 

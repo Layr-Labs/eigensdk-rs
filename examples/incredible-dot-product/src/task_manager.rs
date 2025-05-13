@@ -31,7 +31,10 @@ impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleDotProductT
 /// # Returns
 ///
 /// * `Result<TaskResponse<U256>, OperatorError>` - The task response
-pub fn dot_product(_task_index: u32, input: DotProductInput) -> Result<U256, TaskManagerError> {
+pub async fn dot_product(
+    _task_index: u32,
+    input: DotProductInput,
+) -> Result<U256, TaskManagerError> {
     Ok(input
         .X
         .iter()
@@ -50,7 +53,7 @@ pub fn dot_product(_task_index: u32, input: DotProductInput) -> Result<U256, Tas
 /// # Returns
 ///
 /// * `Result<TaskResponse<U256>, OperatorError>` - The wrong task response
-pub fn invalid_dot_product(
+pub async fn invalid_dot_product(
     _task_index: u32,
     _input: DotProductInput,
 ) -> Result<U256, TaskManagerError> {
