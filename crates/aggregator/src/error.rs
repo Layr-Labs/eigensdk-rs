@@ -1,8 +1,9 @@
 use alloy::transports::{RpcError, TransportErrorKind};
 use eigen_client_avsregistry::error::AvsRegistryError;
+use eigen_crypto_bls::error::BlsError;
 use eigen_services_blsaggregation::bls_aggregation_service_error::BlsAggregationServiceError;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceError;
-use eigen_task_processor::error::TaskProcessorError;
+use eigen_task_processor::{error::TaskProcessorError, new_task_events::DecodeNewTaskError};
 use thiserror::Error;
 
 /// Error returned by chainio
@@ -17,8 +18,8 @@ pub enum AggregatorError {
     JoinError,
 
     /// Decoding of the new task event failed
-    #[error("Log decode failed")]
-    LogDecodeFailed(#[from] alloy::sol_types::Error),
+    #[error("Decoding of new task failed")]
+    LogDecodeFailed(#[from] DecodeNewTaskError),
 
     /// Build avs registry chain reader
     #[error("Failed to build avs registry chain reader ")]
@@ -55,4 +56,8 @@ pub enum AggregatorError {
     /// Task processor error
     #[error("Task processor error")]
     IndexingTaskProcessorError(#[from] TaskProcessorError),
+
+    /// Point conversion error
+    #[error("Point conversion error")]
+    PointConversionError(#[from] BlsError),
 }

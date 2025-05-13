@@ -1,22 +1,14 @@
 use std::str::FromStr;
 
 use alloy::network::EthereumWallet;
-use alloy::primitives::{Address, U256};
+use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::http::reqwest::Url;
-use eigen_challenger::{
-    challenger_processor::IndexingChallengerProcessor, error::ChallengerError, Challenger,
-};
-use eigen_task_processor::{task::Task, task_response::TaskResponse};
+use eigen_challenger::challenger_processor::verifier_from_compute_function;
+use eigen_challenger::{challenger_processor::IndexingChallengerProcessor, Challenger};
 use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
-
-fn is_response_correct(
-    task: Task<U256>,
-    task_response: TaskResponse<U256>,
-) -> Result<bool, ChallengerError> {
-    Ok(task.input * task.input == task_response.response)
-}
+use incredible_squaring::square;
 
 #[tokio::main]
 async fn main() {
@@ -30,6 +22,7 @@ async fn main() {
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
 
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+    let is_response_correct = verifier_from_compute_function(square);
     let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
 
     let mut challenger = Challenger::new(http_rpc_url, ws_rpc_url, task_processor);
