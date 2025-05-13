@@ -5,8 +5,10 @@ use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::http::reqwest::Url;
+use eigen_challenger::challenger_processor::verifier_from_compute_function;
 use eigen_challenger::{challenger_processor::IndexingChallengerProcessor, Challenger};
 use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
+use incredible_squaring::square;
 
 #[tokio::main]
 async fn main() {
@@ -21,7 +23,9 @@ async fn main() {
 
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
-    let task_processor = IndexingChallengerProcessor::new(contract, |_, _| Ok(true));
+    let logic = verifier_from_compute_function(square);
+
+    let task_processor = IndexingChallengerProcessor::new(contract, logic);
 
     let mut challenger = Challenger::new(http_rpc_url, ws_rpc_url, task_processor);
     challenger.start_challenger().await.unwrap();

@@ -7,30 +7,30 @@ use eigen_task_processor::task_manager::{TaskManager, TaskManagerError};
 use eigen_task_processor::task_response_metadata_sol::TaskResponseMetadataSol;
 use eigen_task_processor::{task::Task, task_response::TaskResponse};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
+use futures_util::future::BoxFuture;
 use std::collections::HashMap;
+use std::future::Future;
 use tracing::{error, info};
 
 #[derive(Debug)]
-pub struct IndexingChallengerProcessor<TM, F>
+pub struct IndexingChallengerProcessor<TM, F, Fut>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>
-        + Send
-        + Sync,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send + Sync,
+    Fut: Future<Output = Result<bool, TaskManagerError>>,
 {
     task_manager: TM,
     tasks: HashMap<u32, Task<TM::Input>>,
     is_response_correct: F,
 }
 
-impl<TM, F> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, F>
+impl<TM, F, Fut> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, F, Fut>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>
-        + Send
-        + Sync,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send + Sync,
+    Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
 {
     type Input = TM::Input;
 
@@ -63,7 +63,7 @@ where
             return Ok(());
         };
 
-        let is_correct = (self.is_response_correct)(task.clone(), task_response.clone())?;
+        let is_correct = (self.is_response_correct)(task.clone(), task_response.clone()).await?;
 
         // If the response is correct, we don't need to raise a challenge
         if is_correct {
@@ -90,14 +90,13 @@ where
     }
 }
 
-impl<TM, F> IndexingChallengerProcessor<TM, F>
+impl<TM, F, Fut> IndexingChallengerProcessor<TM, F, Fut>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>
-        + Send
-        + Sync,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send + Sync,
+    Fut: Future<Output = Result<bool, TaskManagerError>>,
 {
     pub fn new(task_manager: TM, is_response_correct: F) -> Self {
         Self {
@@ -108,14 +107,23 @@ where
     }
 }
 
-pub fn verifier_from_compute_function<Input, Output>(
-    compute_response: impl Fn(u32, Input) -> Result<Output, TaskManagerError>,
-) -> impl Fn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>
+type VerifyFuture = BoxFuture<'static, Result<bool, TaskManagerError>>;
+
+pub fn verifier_from_compute_function<Input, Output, CrFn, CrFut>(
+    compute_response: CrFn,
+) -> impl Fn(Task<Input>, TaskResponse<Output>) -> VerifyFuture + Clone + Send + Sync
 where
-    Output: SolValue + Clone + PartialEq,
+    CrFn: Fn(u32, Input) -> CrFut + Clone + Send + Sync + 'static,
+    CrFut: Future<Output = Result<Output, TaskManagerError>> + Send + 'static,
+    Output: SolValue + Clone + PartialEq + Send + 'static,
+    Input: Send + 'static,
 {
-    move |task: Task<Input>, task_response: TaskResponse<Output>| {
-        let computed_response = compute_response(task_response.task_index, task.input)?;
-        Ok(computed_response == task_response.response)
+    move |task, task_response| {
+        let fut = compute_response(task_response.task_index, task.input);
+
+        Box::pin(async move {
+            let computed = fut.await?;
+            Ok(computed == task_response.response)
+        })
     }
 }
