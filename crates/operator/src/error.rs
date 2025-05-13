@@ -45,6 +45,7 @@ pub enum OperatorError {
     /// Failed when computing a task response
     #[error("Failed when computing a task response")]
     ComputingTaskResponseError(#[from] TaskManagerError),
+
     /// Decoding of the new task event failed
     #[error("Decoding of new task failed")]
     LogDecodeFailed(#[from] DecodeNewTaskError),
