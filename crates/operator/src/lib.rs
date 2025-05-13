@@ -201,20 +201,18 @@ impl Operator {
 ///
 /// # Returns
 ///
-/// * `impl Fn(Event) -> Result<TaskResponse<O>, TaskManagerError>` - The wrapped logic.
+/// * `impl AsyncFn(Event) -> Result<TaskResponse<O>, TaskManagerError>` - The wrapped logic.
 ///
 /// # Panics
 ///
 /// Panics if `failure_rate` is greater than 100.
 #[cfg(feature = "operator-testing")]
-pub async fn compute_with_failures<Input, Output, C, F>(
-    correct_logic: C,
-    incorrect_logic: F,
+pub async fn failing_response_calculator<Input, Output>(
+    correct_logic: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+    incorrect_logic: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
     failure_rate: u8,
 ) -> impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>
 where
-    C: AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
-    F: AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
     Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
 {
     async move |task_index, input: Input| {

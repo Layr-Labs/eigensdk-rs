@@ -3,7 +3,7 @@
 use alloy::primitives::address;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
-use eigen_operator::{compute_with_failures, config::OperatorConfig, Operator};
+use eigen_operator::{config::OperatorConfig, failing_response_calculator, Operator};
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
 use incredible_squaring::{square, wrong_square, ISTaskManager};
 
@@ -34,7 +34,7 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
 
-    let logic = compute_with_failures(square, wrong_square, 60);
+    let logic = failing_response_calculator(square, wrong_square, 60);
 
     // Subscribe to the new task events and start listening. When a new task is created,
     // the operator will process it and send the signed task response to the aggregator.
