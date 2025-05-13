@@ -5,7 +5,7 @@ use awesome_vault_service::{
     task_manager::{save_value, save_wrong_value, ISTaskManager},
     utils::setup_operator,
 };
-use eigen_operator::compute_with_failures;
+use eigen_operator::failing_response_calculator;
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
@@ -93,7 +93,7 @@ async fn main() {
     let redis_state = Arc::new(Mutex::new(BTreeMap::<String, String>::new()));
 
     // TESTING PURPOSES ONLY
-    let compute = compute_with_failures(
+    let compute = failing_response_calculator(
         save_value(redis_state.clone()).await,
         save_wrong_value(redis_state).await,
         50,
