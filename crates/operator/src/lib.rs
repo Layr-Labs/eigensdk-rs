@@ -214,16 +214,22 @@ pub async fn failing_response_calculator<Input, Output>(
 ) -> impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>
 where
     Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
+    Input: Clone,
 {
+    assert!(failure_rate <= 100);
+
     async move |task_index, input: Input| {
+        let result = correct_logic(task_index, input.clone()).await;
+
         let mut rng = rand::thread_rng();
         let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
+
         if should_fail {
             info!("Operator compute the task with a wrong response");
             incorrect_logic(task_index, input).await
         } else {
             info!("Operator compute the task successfully");
-            correct_logic(task_index, input).await
+            result
         }
     }
 }
