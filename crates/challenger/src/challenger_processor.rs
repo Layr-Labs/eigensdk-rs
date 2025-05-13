@@ -101,11 +101,10 @@ where
     }
 }
 
-pub fn verifier_from_compute_function<Input, Output, F>(
-    compute_response: F,
+pub fn verifier_from_compute_function<Input, Output>(
+    compute_response: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
 ) -> impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>
 where
-    F: AsyncFn(u32, Input) -> Result<Output, TaskManagerError> + Clone,
     Output: SolValue + Clone + PartialEq,
 {
     async move |task: Task<Input>, task_response: TaskResponse<Output>| {
