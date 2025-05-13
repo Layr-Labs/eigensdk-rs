@@ -106,22 +106,20 @@ where
     }
 }
 
-pub fn verifier_from_compute_function<Input, Output, OpFn, OpFut>(
-    op_fn: OpFn,
-) -> impl Fn(Task<Input>, TaskResponse<Output>) -> BoxFuture<'static, Result<bool, TaskManagerError>>
-       + Clone
-       + Send
-       + Sync
+type VerifyFuture = BoxFuture<'static, Result<bool, TaskManagerError>>;
+
+pub fn verifier_from_compute_function<Input, Output, CrFn, CrFut>(
+    compute_response: CrFn,
+) -> impl Fn(Task<Input>, TaskResponse<Output>) -> VerifyFuture + Clone + Send + Sync
 where
-    OpFn: Fn(u32, Input) -> OpFut + Clone + Send + Sync + 'static,
-    OpFut: Future<Output = Result<Output, TaskManagerError>> + Send + 'static,
+    CrFn: Fn(u32, Input) -> CrFut + Clone + Send + Sync + 'static,
+    CrFut: Future<Output = Result<Output, TaskManagerError>> + Send + 'static,
     Output: SolValue + Clone + PartialEq + Send + 'static,
     Input: Send + 'static,
 {
     move |task, task_response| {
-        let fut = op_fn(task_response.task_index, task.input);
+        let fut = compute_response(task_response.task_index, task.input);
 
-        // Devolvemos otro Future boxed
         Box::pin(async move {
             let computed = fut.await?;
             Ok(computed == task_response.response)
