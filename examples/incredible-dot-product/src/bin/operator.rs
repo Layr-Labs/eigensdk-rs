@@ -5,13 +5,13 @@ use alloy::primitives::{Address, U256};
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
-    operator::{compute_with_failures, config::OperatorConfig, error::OperatorError, Operator},
-    task_processor::task_response::TaskResponse,
+    operator::{compute_with_failures, config::OperatorConfig, Operator},
     testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
 };
 use eyre::Result;
 use incredible_dot_product::{
-    utils::setup_operator, IncredibleDotProductTaskManager::NewTaskCreated,
+    task_manager::{dot_product, invalid_dot_product, ISTaskManager},
+    utils::setup_operator,
 };
 use tracing::info;
 
@@ -78,55 +78,17 @@ async fn main() -> Result<()> {
         operator_state_retriever_address,
         aggregator_ip_port,
     };
-    let operator = Operator::new(logger, operator_config).await?;
+    let operator = Operator::new(logger, operator_config)
+        .await
+        .map_err(|e| eyre::eyre!("Operator new error: {}", e))?;
 
     let logic = compute_with_failures(dot_product, invalid_dot_product, 40);
 
     // TODO: Review bounds in SDK. I have to derive Serialize and Deserialize for TaskResponse in the bindings
-    operator.start(logic).await?;
+    operator
+        .start::<ISTaskManager>(logic)
+        .await
+        .map_err(|e| eyre::eyre!("Operator start error: {}", e))?;
 
     Ok(())
-}
-
-/// Computes the dot product of a pair of points
-///
-/// # Arguments
-///
-/// * `event` - The event containing the task
-///
-/// # Returns
-///
-/// * `Result<TaskResponse<U256>, OperatorError>` - The task response
-fn dot_product(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
-    let input = event.task.pointsToMultiply;
-
-    let result = input
-        .X
-        .iter()
-        .zip(input.Y.iter())
-        .fold(U256::ZERO, |acc, (a, b)| acc + (*a) * (*b));
-
-    Ok(TaskResponse {
-        task_index: event.taskIndex,
-        response: result,
-    })
-}
-
-/// Computes an invalid dot product of a pair of points
-/// This function is used to test the slashing mechanism when the operator returns a wrong response
-///
-/// # Arguments
-///
-/// * `event` - The event containing the task
-///
-/// # Returns
-///
-/// * `Result<TaskResponse<U256>, OperatorError>` - The wrong task response
-fn invalid_dot_product(event: NewTaskCreated) -> Result<TaskResponse<U256>, OperatorError> {
-    let result = U256::MAX;
-
-    Ok(TaskResponse {
-        task_index: event.taskIndex,
-        response: result,
-    })
 }

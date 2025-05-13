@@ -1,18 +1,18 @@
 //! Incredible Dot Product Challenger
 
-use alloy::primitives::{Address, U256};
+use alloy::primitives::Address;
 use eigensdk::{
     challenger::{
-        challenger_processor::IndexingChallengerProcessor, error::ChallengerError, Challenger,
+        challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
+        Challenger,
     },
     common::get_signer,
     logging::{init_logger, log_level::LogLevel},
-    task_processor::{task::Task, task_response::TaskResponse},
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
 use incredible_dot_product::{
-    IIncredibleDotProductTaskManager::DotProductInput,
+    task_manager::dot_product,
     IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
 use std::str::FromStr;
@@ -27,7 +27,9 @@ async fn main() -> Result<()> {
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
 
-    let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
+    let verifier = verifier_from_compute_function(dot_product);
+
+    let task_processor = IndexingChallengerProcessor::new(contract, verifier);
     let mut challenger = Challenger::new(http_rpc_url, ws_rpc_url, task_processor);
     challenger
         .start_challenger()
@@ -35,29 +37,4 @@ async fn main() -> Result<()> {
         .map_err(|e| eyre::eyre!("Challenger start error: {}", e))?;
 
     Ok(())
-}
-
-/// Checks if the operator response is correct
-///
-/// # Arguments
-///
-/// * `task` - The task
-/// * `task_response` - The task response
-///
-/// # Returns
-///
-/// * `Result<bool, ChallengerError>` - The result of the operation
-fn is_response_correct(
-    task: Task<DotProductInput>,
-    task_response: TaskResponse<U256>,
-) -> Result<bool, ChallengerError> {
-    let input = task.input;
-
-    let result = input
-        .X
-        .iter()
-        .zip(input.Y.iter())
-        .fold(U256::ZERO, |acc, (a, b)| acc + (*a) * (*b));
-
-    Ok(result == task_response.response)
 }
