@@ -1,4 +1,5 @@
-use eigen_aggregator::rpc_server::ProcessSignedTaskResponseClient;
+use alloy::{dyn_abi::SolType, sol_types::SolValue};
+use eigen_aggregator::{rpc_server::ProcessSignedTaskResponseClient, SignedTaskResponse};
 use tarpc::tokio_serde::formats::Json;
 use tokio::time::{sleep, Duration};
 use tracing::{error, info};
@@ -43,17 +44,25 @@ impl ClientAggregator {
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation
-    pub async fn send_signed_task_response(
+    pub async fn send_signed_task_response<Response>(
         &self,
-        signed_task_response: Vec<u8>,
-    ) -> Result<(), OperatorError> {
+        signed_task_response: SignedTaskResponse<Response>,
+    ) -> Result<(), OperatorError>
+    where
+        Response: SolValue + Clone,
+        Response: From<<<Response as SolValue>::SolType as SolType>::RustType>,
+    {
         let mut delay = Duration::from_secs(1);
+
+        let signed_task_response_encoded = signed_task_response
+            .encode()
+            .map_err(|_| OperatorError::FailedToEncodeSignedTaskResponse)?;
 
         for _ in 0..5 {
             let ctx = tarpc::context::current();
             let response = self
                 .client
-                .process_signed_task_response(ctx, signed_task_response.clone())
+                .process_signed_task_response(ctx, signed_task_response_encoded.clone())
                 .await?;
 
             if response.is_ok() {
