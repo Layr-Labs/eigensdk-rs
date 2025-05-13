@@ -1,7 +1,7 @@
 use eigen_client_avsregistry::error::AvsRegistryError;
 // use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
-use eigen_task_processor::task_manager::TaskManagerError;
+use eigen_task_processor::{new_task_events::DecodeNewTaskError, task_manager::TaskManagerError};
 use rust_bls_bn254::errors::KeystoreError;
 use tarpc::client::RpcError;
 use thiserror::Error;
@@ -45,4 +45,8 @@ pub enum OperatorError {
     /// Failed when computing a task response
     #[error("Failed when computing a task response")]
     ComputingTaskResponseError(#[from] TaskManagerError),
+
+    /// Decoding of the new task event failed
+    #[error("Decoding of new task failed")]
+    LogDecodeFailed(#[from] DecodeNewTaskError),
 }

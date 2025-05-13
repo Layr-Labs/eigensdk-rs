@@ -12,8 +12,10 @@ use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
+use eigen_task_processor::new_task_events::decode_new_task;
+use eigen_task_processor::task::Task;
 use eigen_task_processor::task_manager::{TaskManagerDefs, TaskManagerError};
-use eigen_task_processor::{task::Task, task_response::TaskResponse};
+use eigen_task_processor::task_response::TaskResponse;
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
@@ -142,7 +144,7 @@ impl Operator {
         let mut stream = sub.into_stream();
 
         while let Some(log) = stream.next().await {
-            let (task_index, task) = decode_event::<TM>(&log)?;
+            let (task_index, task) = decode_new_task::<TM::Input>(&log)?;
 
             info!("{} picked up a new task", self.operator_name);
 
@@ -195,6 +197,7 @@ impl Operator {
                 task_index,
                 response: output,
             };
+
             let signed_task_response =
                 Self::sign_task_response(&self.key_pair, &self.operator_id, task_response)?;
             self.client_aggregator
