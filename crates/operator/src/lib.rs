@@ -2,9 +2,9 @@
 
 use alloy::{
     dyn_abi::SolType,
-    primitives::{keccak256, Bytes},
+    primitives::keccak256,
     providers::{Provider, ProviderBuilder, WsConnect},
-    rpc::types::{Filter, Log},
+    rpc::types::Filter,
     sol_types::SolValue,
 };
 use client::ClientAggregator;
@@ -13,7 +13,6 @@ use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
 use eigen_task_processor::new_task_events::decode_new_task;
-use eigen_task_processor::task::Task;
 use eigen_task_processor::task_manager::{TaskManagerDefs, TaskManagerError};
 use eigen_task_processor::task_response::TaskResponse;
 use eigen_types::operator::OperatorId;

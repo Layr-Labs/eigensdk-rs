@@ -1,11 +1,11 @@
 #![allow(missing_docs)]
 
-use alloy::primitives::{address, U256};
+use alloy::primitives::address;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
 use eigen_operator::{compute_with_failures, config::OperatorConfig, Operator};
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
-use incredible_squaring::{square, ISTaskManager};
+use incredible_squaring::{square, wrong_square, ISTaskManager};
 
 // This example shows how to initialize an operator and start to listen for new task events.
 // For this example, Operator should be registered.
@@ -34,9 +34,9 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
 
-    let logic = compute_with_failures(square, |_, _| Ok(U256::from(42)), 60);
+    let logic = compute_with_failures(square, wrong_square, 60);
 
     // Subscribe to the new task events and start listening. When a new task is created,
     // the operator will process it and send the signed task response to the aggregator.
-    operator.start::<ISTaskManager>(logic).await.unwrap();
+    operator.start::<ISTaskManager>(logic.await).await.unwrap();
 }
