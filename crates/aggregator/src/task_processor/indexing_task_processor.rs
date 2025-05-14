@@ -11,7 +11,7 @@ use std::sync::Arc;
 use std::time::Duration;
 use std::{collections::HashMap, fmt::Debug};
 use tokio::sync::Mutex;
-use tracing::{info, warn};
+use tracing::info;
 
 use super::{TaskProcessor, TaskProcessorError};
 
@@ -95,7 +95,7 @@ where
         response: TaskResponse<TM::Output>,
     ) -> Result<B256, TaskProcessorError> {
         if !self.tasks.lock().await.contains_key(&response.task_index) {
-            warn!("Task not found for task index: {}", response.task_index);
+            info!("Task not found for task index: {}", response.task_index);
             return Err(TaskProcessorError::TaskNotFound);
         }
 
