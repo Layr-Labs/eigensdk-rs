@@ -5,10 +5,14 @@ use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::http::reqwest::Url;
-use eigen_challenger::challenger_processor::verifier_from_compute_function;
-use eigen_challenger::{challenger_processor::IndexingChallengerProcessor, Challenger};
-use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
-use incredible_squaring::square;
+use eigen_challenger::{
+    challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
+    Challenger,
+};
+use incredible_squaring::{
+    bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
+    square,
+};
 
 #[tokio::main]
 async fn main() {

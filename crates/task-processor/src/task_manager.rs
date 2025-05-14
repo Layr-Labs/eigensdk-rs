@@ -5,8 +5,6 @@ use crate::{
 };
 use alloy::primitives::B256;
 use alloy::sol_types::SolValue;
-use serde::de::DeserializeOwned;
-
 pub use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 pub use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 pub use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
@@ -26,7 +24,7 @@ pub trait TaskManagerDefs {
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
     /// Type for outputs of each task
-    type Output: Clone + SolValue + Send + Sync + 'static + Debug + DeserializeOwned;
+    type Output: Clone + SolValue + Send + Sync + 'static + Debug;
 
     /// New task event
     const NEW_TASK_EVENT_SELECTOR: B256;
