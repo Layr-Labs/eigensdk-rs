@@ -99,6 +99,8 @@ async fn main() {
         50,
     );
 
+    // let compute = save_value(redis_state);
+
     operator
         .start::<ISTaskManager>(compute.await)
         .await
