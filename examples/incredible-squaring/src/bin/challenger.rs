@@ -7,6 +7,7 @@ use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::http::reqwest::Url;
 use eigen_challenger::{
     challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
+    config::ChallengerConfig,
     Challenger,
 };
 use incredible_squaring::{
@@ -31,6 +32,10 @@ async fn main() {
 
     let task_processor = IndexingChallengerProcessor::new(contract, logic);
 
-    let mut challenger = Challenger::new(http_rpc_url, ws_rpc_url, task_processor);
+    let config = ChallengerConfig {
+        http_rpc_url,
+        ws_rpc_url,
+    };
+    let mut challenger = Challenger::new(config, task_processor);
     challenger.start_challenger().await.unwrap();
 }
