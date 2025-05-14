@@ -100,8 +100,9 @@ pub fn compute_vault_root(
             })
             .collect();
     }
-
-    Ok(FixedBytes::from_slice(&leaves[0]))
+    let root = FixedBytes::from_slice(&leaves[0]);
+    info!("Vault root: {:?}", root);
+    Ok(root)
 }
 
 /// Hash two nodes
