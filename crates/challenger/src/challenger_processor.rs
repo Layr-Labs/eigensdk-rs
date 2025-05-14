@@ -109,8 +109,7 @@ where
     Output: SolValue + Clone + PartialEq,
 {
     async move |task: Task<Input>, task_response: TaskResponse<Output>| {
-        let fut = compute_response(task_response.task_index, task.input);
-        let computed = fut.await?;
-        Ok(computed == task_response.response)
+        let computed_response = compute_response(task_response.task_index, task.input).await?;
+        Ok(computed_response == task_response.response)
     }
 }
