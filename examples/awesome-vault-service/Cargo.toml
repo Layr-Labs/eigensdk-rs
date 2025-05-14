@@ -1,5 +1,5 @@
 [package]
-name = "incredible-dot-product"
+name = "awesome-vault-service"
 version = "0.1.0"
 edition = "2021"
 
@@ -19,6 +19,7 @@ alloy = { version = "0.13", features = [
 eigensdk = { workspace = true, features = ["full"] }
 eigen-operator = { workspace = true, features = ["operator-testing"] }
 eyre = "0.6"
+rand = "0.8"
 serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
 toml = "0.8"
