@@ -1,10 +1,10 @@
+use crate::task_processor::TaskProcessorError;
 use alloy::transports::{RpcError, TransportErrorKind};
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::error::BlsError;
 use eigen_services_blsaggregation::bls_aggregation_service_error::BlsAggregationServiceError;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceError;
-use eigen_task_processor::error::TaskProcessorError;
-use eigen_task_processor::new_task_events::DecodeNewTaskError;
+use eigen_task_manager::new_task_events::DecodeNewTaskError;
 use tarpc::ServerError;
 use thiserror::Error;
 

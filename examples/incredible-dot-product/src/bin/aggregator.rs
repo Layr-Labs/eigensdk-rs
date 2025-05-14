@@ -4,10 +4,9 @@ use std::{str::FromStr, time::Duration};
 
 use alloy::primitives::Address;
 use eigensdk::{
-    aggregator::{Aggregator, AggregatorConfig},
+    aggregator::{task_processor::IndexingTaskProcessor, Aggregator, AggregatorConfig},
     common::get_signer,
     logging::{init_logger, log_level::LogLevel},
-    task_processor::IndexingTaskProcessor,
 };
 use eyre::Result;
 use incredible_dot_product::IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance;

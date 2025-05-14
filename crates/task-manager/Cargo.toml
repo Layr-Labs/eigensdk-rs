@@ -1,11 +1,11 @@
 [package]
-name = "eigen-task-processor"
+name = "eigen-task-manager"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
 license-file.workspace = true
-description = "eigen layer task processor"
+description = "eigen layer task-manager"
 
 [lints]
 workspace = true

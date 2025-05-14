@@ -1,9 +1,8 @@
 use std::fmt::Debug;
 
-use crate::{AggregatorError, SignedTaskResponse};
+use crate::{task_processor::TaskProcessor, AggregatorError, SignedTaskResponse};
 use alloy::{dyn_abi::SolType, sol_types::SolValue};
 use eigen_services_blsaggregation::bls_agg::{ServiceHandle, TaskSignature};
-use eigen_task_processor::task_processor::TaskProcessor;
 use tarpc::{context::Context, ServerError};
 use tracing::info;
 

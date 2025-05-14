@@ -1,7 +1,7 @@
 use eigen_client_avsregistry::error::AvsRegistryError;
 // use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
-use eigen_task_processor::{new_task_events::DecodeNewTaskError, task_manager::TaskManagerError};
+use eigen_task_manager::{new_task_events::DecodeNewTaskError, TaskManagerError};
 use rust_bls_bn254::errors::KeystoreError;
 use tarpc::client::RpcError;
 use thiserror::Error;
