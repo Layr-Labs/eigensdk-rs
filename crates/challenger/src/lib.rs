@@ -7,6 +7,7 @@ use alloy::{
     sol_types::SolValue,
 };
 use challenger::ChallengerTaskProcessor;
+use config::ChallengerConfig;
 use eigen_common::{get_provider, get_ws_provider};
 use eigen_task_manager::event_decoder::{
     decode_new_task, decode_params, decode_task_response_event, RespondToTaskCalldata,
@@ -18,6 +19,7 @@ use tracing::info;
 
 pub mod challenger;
 pub mod challenger_processor;
+pub mod config;
 pub mod error;
 
 /// Main Challenger struct
@@ -40,17 +42,16 @@ where
     ///
     /// # Arguments
     ///
-    /// * `rpc_url` - The rpc url
-    /// * `ws_url` - The websocket url
+    /// * `config` - The challenger config
     /// * `task_processor` - The task processor
     ///
     /// # Returns
     ///
     /// * `Self` - The challenger
-    pub fn new(rpc_url: String, ws_url: String, task_processor: TP) -> Self {
+    pub fn new(config: ChallengerConfig, task_processor: TP) -> Self {
         Self {
-            rpc_url,
-            ws_url,
+            rpc_url: config.http_rpc_url,
+            ws_url: config.ws_rpc_url,
             task_processor,
         }
     }

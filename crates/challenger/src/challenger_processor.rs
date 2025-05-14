@@ -47,13 +47,13 @@ where
     }
 
     async fn handle_task_response(
-        &self,
+        &mut self,
         task_index: u32,
         task_response: TaskResponse<TM::Output>,
         task_response_metadata: TaskResponseMetadataSol,
         non_signing_operator_pub_keys: Vec<G1Point>,
     ) -> Result<(), ChallengerError> {
-        let Some(task) = self.tasks.get(&task_index) else {
+        let Some(task) = self.tasks.remove(&task_index) else {
             info!("Task {task_index} not found");
             return Ok(());
         };
