@@ -8,6 +8,8 @@ pub mod error;
 pub mod rpc_server;
 /// Signed Task Response
 pub mod signed_task_response;
+/// Task Processor
+pub mod task_processor;
 
 use alloy::dyn_abi::SolType;
 use alloy::providers::Provider;
@@ -29,8 +31,7 @@ pub use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
 };
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-use eigen_task_processor::new_task_events::decode_new_task;
-use eigen_task_processor::task_processor::TaskProcessor;
+use eigen_task_manager::new_task_events::decode_new_task;
 use eigen_utils::slashing::middleware::{
     iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
     iblssignaturechecker::BN254::{G1Point, G2Point},
@@ -43,6 +44,7 @@ use std::fmt::Debug;
 use std::net::SocketAddr;
 use tarpc::server::{self, Channel};
 use tarpc::tokio_serde::formats::Json;
+use task_processor::TaskProcessor;
 use tracing::info;
 
 /// Aggregator

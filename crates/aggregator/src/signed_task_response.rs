@@ -1,7 +1,7 @@
 use alloy::dyn_abi::{abi::TokenSeq, SolType};
 use alloy::sol_types::SolValue;
 use eigen_crypto_bls::{alloy_g1_point_to_g1_affine, convert_to_g1_point, Signature};
-use eigen_task_processor::task_response::TaskResponse;
+use eigen_task_manager::task_response::TaskResponse;
 use eigen_types::operator::OperatorId;
 use eigen_utils::slashing::middleware::registrycoordinator::BN254::G1Point;
 

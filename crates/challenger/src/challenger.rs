@@ -1,7 +1,7 @@
 use std::future::Future;
 
 use alloy::{primitives::B256, sol_types::SolValue};
-use eigen_task_processor::{
+use eigen_task_manager::{
     task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
 };
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
@@ -35,7 +35,7 @@ pub trait ChallengerTaskProcessor {
         &mut self,
         task_index: u32,
         task: Task<Self::Input>,
-    ) -> impl Future<Output = Result<(), ChallengerError>> + Send;
+    ) -> impl Future<Output = Result<(), ChallengerError>>;
 
     /// Handle the response of a task when a task response event is received
     ///
@@ -55,5 +55,5 @@ pub trait ChallengerTaskProcessor {
         task_response: TaskResponse<Self::Output>,
         task_response_metadata: TaskResponseMetadataSol,
         non_signing_operator_pub_keys: Vec<G1Point>,
-    ) -> impl Future<Output = Result<(), ChallengerError>> + Send;
+    ) -> impl Future<Output = Result<(), ChallengerError>>;
 }

@@ -2,33 +2,18 @@
 
 use alloy::primitives::B256;
 use eigen_services_blsaggregation::bls_agg::TaskMetadata;
+use eigen_task_manager::task::Task;
+use eigen_task_manager::task_response::TaskResponse;
+use eigen_task_manager::TaskManager;
 use eigen_types::avs::TaskResponseDigest;
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
-use error::TaskProcessorError;
 use std::sync::Arc;
 use std::time::Duration;
 use std::{collections::HashMap, fmt::Debug};
-use task::Task;
-use task_manager::TaskManager;
-use task_processor::TaskProcessor;
-use task_response::TaskResponse;
 use tokio::sync::Mutex;
 use tracing::{info, warn};
 
-/// Task processor error
-pub mod error;
-/// New task events decoding
-pub mod new_task_events;
-/// Task
-pub mod task;
-/// Task manager trait
-pub mod task_manager;
-/// Task processor trait
-pub mod task_processor;
-/// Task response
-pub mod task_response;
-/// Task response metadata
-pub mod task_response_metadata_sol;
+use super::{TaskProcessor, TaskProcessorError};
 
 type TaskResponsesMap<O> = HashMap<u32, HashMap<TaskResponseDigest, TaskResponse<O>>>;
 

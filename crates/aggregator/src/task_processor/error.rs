@@ -1,6 +1,5 @@
+use eigen_task_manager::TaskManagerError;
 use thiserror::Error;
-
-use crate::task_manager::TaskManagerError;
 
 /// Task processor error
 #[derive(Debug, Error)]
