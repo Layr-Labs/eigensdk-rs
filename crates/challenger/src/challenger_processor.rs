@@ -70,7 +70,6 @@ where
         // If the response is incorrect, we need to raise a challenge
         let tm = self.task_manager.clone();
         let task = task.clone();
-        info!("Raising challenge for task {task_index}");
         tokio::spawn(async move {
             tm.raise_challenge(
                 task,
