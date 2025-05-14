@@ -50,7 +50,7 @@ pub trait ChallengerTaskProcessor {
     ///
     /// * `Result<(), ChallengerError>` - The result of the operation
     fn handle_task_response(
-        &self,
+        &mut self,
         task_index: u32,
         task_response: TaskResponse<Self::Output>,
         task_response_metadata: TaskResponseMetadataSol,
