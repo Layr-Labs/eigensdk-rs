@@ -1,7 +1,7 @@
 //! Task manager
 
-/// New task events decoding
-pub mod new_task_events;
+/// Event decoder
+pub mod event_decoder;
 /// Task
 pub mod task;
 /// Task response

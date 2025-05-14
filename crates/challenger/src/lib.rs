@@ -1,20 +1,17 @@
 #![allow(missing_docs)]
 use alloy::{
     consensus::Transaction,
-    dyn_abi::{abi::TokenSeq, SolType},
-    primitives::Bytes,
+    dyn_abi::SolType,
     providers::Provider,
     rpc::types::{Filter, Log},
     sol_types::SolValue,
 };
 use challenger::ChallengerTaskProcessor;
 use eigen_common::{get_provider, get_ws_provider};
-use eigen_task_manager::{
-    task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
+use eigen_task_manager::event_decoder::{
+    decode_new_task, decode_params, decode_task_response_event, RespondToTaskCalldata,
 };
-use eigen_utils::slashing::middleware::iblssignaturechecker::{
-    IBLSSignatureCheckerTypes::NonSignerStakesAndSignature, BN254::G1Point,
-};
+use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use error::ChallengerError;
 use futures_util::StreamExt;
 use tracing::info;
@@ -22,32 +19,6 @@ use tracing::info;
 pub mod challenger;
 pub mod challenger_processor;
 pub mod error;
-
-/// The tuple for NewTaskCreated: (u32, Input)
-pub type NewTaskEventTuple<Input> = (
-    <Input as SolValue>::SolType,
-    <u32 as SolValue>::SolType,
-    <Bytes as SolValue>::SolType,
-    <u32 as SolValue>::SolType,
-);
-
-/// The tuple for TaskResponded: ((u32, Output), Metadata)
-pub type TaskResponseEventTuple<Output> = (
-    (<u32 as SolValue>::SolType, <Output as SolValue>::SolType),
-    <TaskResponseMetadataSol as SolValue>::SolType,
-);
-
-/// The tuple for RespondToTaskCalldata: (Input, (TaskIndex, Output), NonSignerStakesAndSignature)
-pub type RespondToTaskCalldata<Input, Output> = (
-    (
-        <Input as SolValue>::SolType,
-        <u32 as SolValue>::SolType,
-        <Bytes as SolValue>::SolType,
-        <u32 as SolValue>::SolType,
-    ),
-    (<u32 as SolValue>::SolType, <Output as SolValue>::SolType),
-    <NonSignerStakesAndSignature as SolValue>::SolType,
-);
 
 /// Main Challenger struct
 #[derive(Debug)]
@@ -112,12 +83,15 @@ where
         loop {
             tokio::select! {
                 Some(log) = task_stream.next() => {
-                    let (task_index, task) = self.decode_task_creation_event(log)?;
+                    let (task_index, task) = decode_new_task(&log)?;
                     self.task_processor.handle_task_creation(task_index, task).await?;
                 },
                 Some(log) = responded_stream.next() => {
-                    let (task_index, task_response, task_response_metadata, non_signing_operator_pub_keys) =
-                        self.decode_task_response_event(log).await?;
+                    let (task_index, task_response, task_response_metadata) =
+                        decode_task_response_event(&log).await?;
+
+                    let non_signing_operator_pub_keys = self.get_non_signing_operator_pub_keys(log).await?;
+
                     self.task_processor
                         .handle_task_response(
                             task_index,
@@ -136,84 +110,6 @@ where
         }
 
         Ok(())
-    }
-
-    fn decode_task_creation_event(
-        &self,
-        log: Log,
-    ) -> Result<(u32, Task<TP::Input>), ChallengerError> {
-        // event NewTaskCreated(uint32 indexed taskIndex, Task task);
-        // Since taskIndex is indexed type, it is present in the topics array
-        // The first element of the topic is the event hash signature, the second is the taskIndex
-        let bytes = log
-            .topics()
-            .get(1)
-            .ok_or(ChallengerError::TaskIndexMissingInTopics)?
-            .0;
-
-        // u32 values are stored in the last 4 bytes of a 32 bytes array (left-padded).
-        let task_index_bytes: [u8; 4] = bytes[28..32]
-            .try_into()
-            .map_err(|_| ChallengerError::InvalidTaskIndexConversion)?;
-        let task_index = u32::from_be_bytes(task_index_bytes);
-
-        // Skip the first 32 bytes of the ABI-encoded data (the dynamic offset pointer)
-        let data = log
-            .inner
-            .data
-            .data
-            .0
-            .get(32..)
-            .ok_or(ChallengerError::EmptyDecodedData)?;
-
-        // Decode the tuple of the form: Task<TM::Input>
-        let decoded_task = decode_params::<NewTaskEventTuple<TP::Input>>(data, false)?;
-
-        let task = Task::<TP::Input> {
-            input: decoded_task.0.into(),
-            task_created_block: decoded_task.1,
-            quorum_numbers: decoded_task.2,
-            quorum_threshold_percentage: decoded_task.3,
-        };
-
-        Ok((task_index, task))
-    }
-
-    async fn decode_task_response_event(
-        &self,
-        log: Log,
-    ) -> Result<
-        (
-            u32,
-            TaskResponse<TP::Output>,
-            TaskResponseMetadataSol,
-            Vec<G1Point>,
-        ),
-        ChallengerError,
-    > {
-        let data = log.inner.data.data.0.clone();
-
-        // Decode the tuple of the form: (TaskResponse<TM::Output>, TaskResponseMetadata)
-        let decoded_task_response =
-            decode_params::<TaskResponseEventTuple<TP::Output>>(&data, false)?;
-
-        let task_index = decoded_task_response.0 .0;
-        let task_response = decoded_task_response.0 .1;
-        let task_response_metadata = decoded_task_response.1;
-
-        let task_response = TaskResponse::<TP::Output> {
-            task_index,
-            response: task_response.into(),
-        };
-
-        let non_signing_operator_pub_keys = self.get_non_signing_operator_pub_keys(log).await?;
-
-        Ok((
-            task_index,
-            task_response,
-            task_response_metadata,
-            non_signing_operator_pub_keys,
-        ))
     }
 
     async fn get_non_signing_operator_pub_keys(
@@ -252,28 +148,15 @@ where
     }
 }
 
-/// Decode generic type
-///
-/// # Arguments
-///
-/// * `data` - The data to decode
-/// * `validate` - Whether to validate the data
-///
-/// # Returns
-///
-/// * `Result<T::RustType, ChallengerError>` - The decoded data
-pub fn decode_params<T>(data: &[u8], validate: bool) -> Result<T::RustType, ChallengerError>
-where
-    T: SolType,
-    for<'de> <T as SolType>::Token<'de>: TokenSeq<'de>,
-{
-    Ok(T::abi_decode_params(data, validate)?)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy::{hex::decode, primitives::U256, sol};
+    use alloy::{
+        hex::decode,
+        primitives::{Bytes, U256},
+        sol,
+    };
+    use eigen_task_manager::event_decoder::{NewTaskEventTuple, TaskResponseEventTuple};
 
     // The data of the log was taken from the IS example, it creates a new task with input 1, quorum 0 and threshold 40% in block 226
     #[tokio::test]

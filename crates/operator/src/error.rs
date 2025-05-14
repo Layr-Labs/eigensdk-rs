@@ -1,7 +1,7 @@
 use eigen_client_avsregistry::error::AvsRegistryError;
 // use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
-use eigen_task_manager::{new_task_events::DecodeNewTaskError, TaskManagerError};
+use eigen_task_manager::{event_decoder::AbiDecodeError, TaskManagerError};
 use rust_bls_bn254::errors::KeystoreError;
 use tarpc::client::RpcError;
 use thiserror::Error;
@@ -48,5 +48,5 @@ pub enum OperatorError {
 
     /// Decoding of the new task event failed
     #[error("Decoding of new task failed")]
-    LogDecodeFailed(#[from] DecodeNewTaskError),
+    LogDecodeFailed(#[from] AbiDecodeError),
 }

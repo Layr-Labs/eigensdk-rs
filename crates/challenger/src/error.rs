@@ -1,5 +1,6 @@
 use alloy::contract::Error as AlloyError;
 use alloy::sol_types::Error as AlloySolTypeError;
+use eigen_task_manager::event_decoder::AbiDecodeError;
 use eigen_task_manager::TaskManagerError;
 use thiserror::Error;
 
@@ -57,4 +58,8 @@ pub enum ChallengerError {
     /// Invalid calldata
     #[error("Invalid calldata")]
     InvalidCalldata,
+
+    /// Decoding of event failed
+    #[error("Decoding of event failed")]
+    LogDecodeFailed(#[from] AbiDecodeError),
 }
