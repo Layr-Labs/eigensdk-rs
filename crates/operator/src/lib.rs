@@ -12,11 +12,9 @@ use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
+use eigen_task_processor::new_task_events::decode_new_task;
+use eigen_task_processor::task_manager::{TaskManagerDefs, TaskManagerError};
 use eigen_task_processor::task_response::TaskResponse;
-use eigen_task_processor::{
-    new_task_events::decode_new_task,
-    task_manager::{TaskManagerDefs, TaskManagerError},
-};
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
@@ -122,7 +120,7 @@ impl Operator {
     /// * `Result<(), OperatorError>` - The result of the operation.
     pub async fn start<TM>(
         &self,
-        compute_logic: impl Fn(u32, TM::Input) -> Result<TM::Output, TaskManagerError>,
+        compute_logic: impl AsyncFn(u32, TM::Input) -> Result<TM::Output, TaskManagerError>,
     ) -> Result<(), OperatorError>
     where
         TM: TaskManagerDefs,
@@ -149,7 +147,7 @@ impl Operator {
 
             info!("{} picked up a new task", self.operator_name);
 
-            let output = compute_logic(task_index, task.input)?;
+            let output = compute_logic(task_index, task.input).await?;
             let task_response = TaskResponse {
                 task_index,
                 response: output,
@@ -205,33 +203,35 @@ impl Operator {
 ///
 /// # Returns
 ///
-/// * `impl Fn(Event) -> Result<TaskResponse<O>, TaskManagerError>` - The wrapped logic.
+/// * `impl AsyncFn(Event) -> Result<TaskResponse<O>, TaskManagerError>` - The wrapped logic.
 ///
 /// # Panics
 ///
 /// Panics if `failure_rate` is greater than 100.
 #[cfg(feature = "operator-testing")]
-pub fn compute_with_failures<Input, Output, C, F>(
-    correct_logic: C,
-    incorrect_logic: F,
+pub async fn failing_response_calculator<Input, Output>(
+    correct_logic: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+    incorrect_logic: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
     failure_rate: u8,
-) -> impl Fn(u32, Input) -> Result<Output, TaskManagerError>
+) -> impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>
 where
-    C: Fn(u32, Input) -> Result<Output, TaskManagerError>,
-    F: Fn(u32, Input) -> Result<Output, TaskManagerError>,
     Output: SolValue + Clone,
+    Input: Clone,
 {
     assert!(failure_rate <= 100);
 
-    move |task_index, input: Input| {
+    async move |task_index, input: Input| {
+        let result = correct_logic(task_index, input.clone()).await;
+
         let mut rng = rand::thread_rng();
         let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
+
         if should_fail {
             info!("Operator compute the task with a wrong response");
-            incorrect_logic(task_index, input)
+            incorrect_logic(task_index, input).await
         } else {
             info!("Operator compute the task successfully");
-            correct_logic(task_index, input)
+            result
         }
     }
 }
