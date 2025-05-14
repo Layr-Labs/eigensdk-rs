@@ -1,18 +1,11 @@
-use alloy::dyn_abi::{abi::TokenSeq, SolType};
+use alloy::dyn_abi::SolType;
 use alloy::sol_types::SolValue;
 use eigen_crypto_bls::{alloy_g1_point_to_g1_affine, convert_to_g1_point, Signature};
+use eigen_task_manager::event_decoder::{decode_params, SignedTaskResponseTuple};
 use eigen_task_manager::task_response::TaskResponse;
 use eigen_types::operator::OperatorId;
-use eigen_utils::slashing::middleware::registrycoordinator::BN254::G1Point;
 
 use crate::AggregatorError;
-
-/// The tuple for SignedTaskResponse: (TaskResponse<Output>, G1Point, OperatorId)
-pub type SignedTaskResponseTuple<Output> = (
-    (<u32 as SolValue>::SolType, <Output as SolValue>::SolType),
-    <G1Point as SolValue>::SolType,
-    <OperatorId as SolValue>::SolType,
-);
 
 /// Signed Task Response
 #[derive(Debug, Clone)]
@@ -100,23 +93,4 @@ where
             operator_id,
         })
     }
-}
-
-// TODO: Move this to a common utils file
-/// Decode generic type
-///
-/// # Arguments
-///
-/// * `data` - The data to decode
-/// * `validate` - Whether to validate the data
-///
-/// # Returns
-///
-/// * `Result<T::RustType, AggregatorError>` - The decoded data
-pub fn decode_params<T>(data: &[u8], validate: bool) -> Result<T::RustType, AggregatorError>
-where
-    T: SolType,
-    for<'de> <T as SolType>::Token<'de>: TokenSeq<'de>,
-{
-    Ok(T::abi_decode_params(data, validate)?)
 }

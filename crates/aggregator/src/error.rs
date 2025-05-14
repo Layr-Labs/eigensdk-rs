@@ -4,7 +4,7 @@ use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::error::BlsError;
 use eigen_services_blsaggregation::bls_aggregation_service_error::BlsAggregationServiceError;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceError;
-use eigen_task_manager::new_task_events::DecodeNewTaskError;
+use eigen_task_manager::event_decoder::AbiDecodeError;
 use tarpc::ServerError;
 use thiserror::Error;
 
@@ -19,9 +19,9 @@ pub enum AggregatorError {
     #[error("Task panicked or got cancelled")]
     JoinError,
 
-    /// Decoding of the new task event failed
-    #[error("Decoding of new task failed")]
-    LogDecodeFailed(#[from] DecodeNewTaskError),
+    /// Decoding of event failed
+    #[error("Decoding of event failed")]
+    LogDecodeFailed(#[from] AbiDecodeError),
 
     /// Build avs registry chain reader
     #[error("Failed to build avs registry chain reader ")]
