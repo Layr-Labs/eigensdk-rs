@@ -1,8 +1,7 @@
 use alloy::sol_types::SolValue;
-use serde::{Deserialize, Serialize};
 
 /// Task response struct with generic response
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct TaskResponse<Output>
 where
     Output: Clone + SolValue,
