@@ -30,7 +30,10 @@ async fn main() -> Result<()> {
 
     let verifier = verifier_from_compute_function(dot_product);
     let task_processor = IndexingChallengerProcessor::new(contract, verifier);
-    let config = ChallengerConfig::new(http_rpc_url, ws_rpc_url);
+    let config = ChallengerConfig {
+        http_rpc_url,
+        ws_rpc_url,
+    };
     let mut challenger = Challenger::new(config, task_processor);
     challenger
         .start_challenger()

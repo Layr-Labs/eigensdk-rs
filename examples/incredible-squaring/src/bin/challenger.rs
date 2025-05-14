@@ -32,7 +32,10 @@ async fn main() {
 
     let task_processor = IndexingChallengerProcessor::new(contract, logic);
 
-    let config = ChallengerConfig::new(http_rpc_url, ws_rpc_url);
+    let config = ChallengerConfig {
+        http_rpc_url,
+        ws_rpc_url,
+    };
     let mut challenger = Challenger::new(config, task_processor);
     challenger.start_challenger().await.unwrap();
 }

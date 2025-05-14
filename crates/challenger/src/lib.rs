@@ -71,8 +71,7 @@ where
     ///
     /// # Arguments
     ///
-    /// * `rpc_url` - The rpc url
-    /// * `ws_url` - The websocket url
+    /// * `config` - The challenger config
     /// * `task_processor` - The task processor
     ///
     /// # Returns
@@ -80,8 +79,8 @@ where
     /// * `Self` - The challenger
     pub fn new(config: ChallengerConfig, task_processor: TP) -> Self {
         Self {
-            rpc_url: config.rpc_url,
-            ws_url: config.ws_url,
+            rpc_url: config.http_rpc_url,
+            ws_url: config.ws_rpc_url,
             task_processor,
         }
     }
