@@ -13,7 +13,7 @@ use task_manager::TaskManager;
 use task_processor::TaskProcessor;
 use task_response::TaskResponse;
 use tokio::sync::Mutex;
-use tracing::info;
+use tracing::{info, warn};
 
 /// Task processor error
 pub mod error;
@@ -110,6 +110,11 @@ where
         response: TaskResponse<TM::Output>,
     ) -> Result<B256, TaskProcessorError> {
         let digest = alloy::primitives::keccak256(response.encode());
+
+        if !self.tasks.lock().await.contains_key(&response.task_index) {
+            warn!("Task not found for task index: {}", response.task_index);
+            return Ok(digest);
+        }
 
         self.task_responses
             .lock()
