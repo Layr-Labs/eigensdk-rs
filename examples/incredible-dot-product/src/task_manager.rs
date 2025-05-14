@@ -4,8 +4,9 @@ use crate::IncredibleDotProductTaskManager::{
 };
 use alloy::primitives::{B256, U256};
 use alloy::sol_types::SolEvent;
-use eigensdk::task_processor::impl_task_manager_from_defs_and_contract;
-use eigensdk::task_processor::task_manager::{TaskManagerDefs, TaskManagerError};
+use eigensdk::task_manager::{
+    impl_task_manager_from_defs_and_contract, TaskManagerDefs, TaskManagerError,
+};
 
 // Implement the [`TaskManagerDefs`] trait for a unit struct.
 // You need to specify the input and output types of the task. In this case, U256.

@@ -2743,7 +2743,7 @@ dependencies = [
  "eigen-services-avsregistry",
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-types",
  "eigen-utils",
  "futures-util",
@@ -2769,7 +2769,7 @@ dependencies = [
  "eigen-services-avsregistry",
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-types",
  "eigen-utils",
  "futures-util",
@@ -3006,7 +3006,7 @@ dependencies = [
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-types",
  "eigen-utils",
  "futures-util",
@@ -3115,7 +3115,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigen-task-processor"
+name = "eigen-task-manager"
 version = "0.5.0"
 dependencies = [
  "alloy",
@@ -3135,7 +3135,7 @@ name = "eigen-task-spammer"
 version = "0.5.0"
 dependencies = [
  "alloy",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-types",
  "thiserror 1.0.69",
  "tokio",
@@ -3212,7 +3212,7 @@ dependencies = [
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
  "eigen-signer",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-task-spammer",
  "eigen-testing-utils",
  "eigen-types",
@@ -4681,7 +4681,7 @@ dependencies = [
  "eigen-crypto-bls",
  "eigen-logging",
  "eigen-operator",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-task-spammer",
  "eigen-testing-utils",
  "eigen-types",

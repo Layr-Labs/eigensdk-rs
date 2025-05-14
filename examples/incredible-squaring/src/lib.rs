@@ -6,9 +6,9 @@ use alloy::sol_types::SolEvent;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::TaskResponded;
-use eigen_task_processor::impl_task_manager_from_defs_and_contract;
-use eigen_task_processor::task_manager::TaskManagerDefs;
-use eigen_task_processor::task_manager::TaskManagerError;
+use eigen_task_manager::impl_task_manager_from_defs_and_contract;
+use eigen_task_manager::TaskManagerDefs;
+use eigen_task_manager::TaskManagerError;
 
 // Allow warnings in auto-generated code
 #[allow(warnings)]

@@ -119,5 +119,5 @@ pub use eigen_task_spammer as task_spammer;
 /* ------------------------------------ Task Processor Re-exports -------------------------------- */
 
 #[doc(inline)]
-#[cfg(feature = "task-processor")]
-pub use eigen_task_processor as task_processor;
+#[cfg(feature = "task-manager")]
+pub use eigen_task_manager as task_manager;

@@ -1,7 +1,7 @@
 use std::future::Future;
 
 use alloy::{primitives::B256, sol_types::SolValue};
-use eigen_task_processor::{
+use eigen_task_manager::{
     task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
 };
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;

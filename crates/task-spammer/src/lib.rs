@@ -1,7 +1,7 @@
 //! This is a simple task generator that can be used to create tasks for the operators.
 //! For testing purposes.
 
-use eigen_task_processor::task_manager::TaskManager;
+use eigen_task_manager::TaskManager;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use error::TaskSpammerError;
 use std::time::Duration;
