@@ -109,12 +109,12 @@ where
         &mut self,
         response: TaskResponse<TM::Output>,
     ) -> Result<B256, TaskProcessorError> {
-        let digest = alloy::primitives::keccak256(response.encode());
-
         if !self.tasks.lock().await.contains_key(&response.task_index) {
             warn!("Task not found for task index: {}", response.task_index);
-            return Ok(digest);
+            return Err(TaskProcessorError::TaskNotFound);
         }
+
+        let digest = alloy::primitives::keccak256(response.encode());
 
         self.task_responses
             .lock()
@@ -159,6 +159,11 @@ where
             .respond_to_task(task, task_response, non_signer_stakes_and_signature)
             .await
             .map_err(TaskProcessorError::TaskManagerError)
-            .inspect(|_| info!("Aggregated response sent to contract"))
+            .inspect(|_| info!("Aggregated response sent to contract"))?;
+
+        self.tasks.lock().await.remove(&task_index);
+        self.task_responses.lock().await.remove(&task_index);
+
+        Ok(())
     }
 }
