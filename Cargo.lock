@@ -1317,6 +1317,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
+name = "awesome-vault-service"
+version = "0.1.0"
+dependencies = [
+ "alloy",
+ "eigen-operator",
+ "eigensdk",
+ "eyre",
+ "rand 0.8.5",
+ "serde",
+ "tokio",
+ "toml",
+ "tracing",
+]
+
+[[package]]
 name = "aws-config"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
