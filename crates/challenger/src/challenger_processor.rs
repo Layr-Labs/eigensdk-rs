@@ -13,9 +13,7 @@ use tracing::{error, info};
 pub struct IndexingChallengerProcessor<TM, F>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>
-        + Send
-        + Sync,
+    F: AsyncFn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>,
 {
     task_manager: TM,
     tasks: HashMap<u32, Task<TM::Input>>,
@@ -27,9 +25,7 @@ where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>
-        + Send
-        + Sync,
+    F: AsyncFn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>,
 {
     type Input = TM::Input;
 
@@ -62,7 +58,7 @@ where
             return Ok(());
         };
 
-        let is_correct = (self.is_response_correct)(task.clone(), task_response.clone())?;
+        let is_correct = (self.is_response_correct)(task.clone(), task_response.clone()).await?;
 
         // If the response is correct, we don't need to raise a challenge
         if is_correct {
@@ -93,9 +89,7 @@ where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>
-        + Send
-        + Sync,
+    F: AsyncFn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>,
 {
     pub fn new(task_manager: TM, is_response_correct: F) -> Self {
         Self {
@@ -107,13 +101,13 @@ where
 }
 
 pub fn verifier_from_compute_function<Input, Output>(
-    compute_response: impl Fn(u32, Input) -> Result<Output, TaskManagerError>,
-) -> impl Fn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>
+    compute_response: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+) -> impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>
 where
     Output: SolValue + Clone + PartialEq,
 {
-    move |task: Task<Input>, task_response: TaskResponse<Output>| {
-        let computed_response = compute_response(task_response.task_index, task.input)?;
+    async move |task: Task<Input>, task_response: TaskResponse<Output>| {
+        let computed_response = compute_response(task_response.task_index, task.input).await?;
         Ok(computed_response == task_response.response)
     }
 }
