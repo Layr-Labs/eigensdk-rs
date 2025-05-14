@@ -8,6 +8,7 @@ use awesome_vault_service::{
 use eigensdk::{
     challenger::{
         challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
+        config::ChallengerConfig,
         Challenger,
     },
     common::get_signer,
@@ -33,7 +34,11 @@ async fn main() -> Result<()> {
 
     let is_response_correct = verifier_from_compute_function(compute);
     let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
-    let mut challenger = Challenger::new(http_rpc_url, ws_rpc_url, task_processor);
+    let config = ChallengerConfig {
+        http_rpc_url,
+        ws_rpc_url,
+    };
+    let mut challenger = Challenger::new(config, task_processor);
     challenger
         .start_challenger()
         .await
