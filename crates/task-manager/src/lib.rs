@@ -1,15 +1,23 @@
-use std::{fmt::Debug, future::Future};
+//! Task manager
 
-use crate::{
-    task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
-};
+/// New task events decoding
+pub mod new_task_events;
+/// Task
+pub mod task;
+/// Task response
+pub mod task_response;
+/// Task response metadata
+pub mod task_response_metadata_sol;
+
 use alloy::primitives::B256;
 use alloy::sol_types::SolValue;
-use serde::de::DeserializeOwned;
-
 pub use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 pub use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 pub use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
+use std::{fmt::Debug, future::Future};
+use task::Task;
+use task_response::TaskResponse;
+use task_response_metadata_sol::TaskResponseMetadataSol;
 
 /// Error returned by the task processor
 pub type TaskManagerError = Box<dyn core::error::Error + Send>;
@@ -26,7 +34,7 @@ pub trait TaskManagerDefs {
     type Input: Clone + SolValue + Send + Sync + 'static + Debug;
 
     /// Type for outputs of each task
-    type Output: Clone + SolValue + Send + Sync + 'static + Debug + DeserializeOwned;
+    type Output: Clone + SolValue + Send + Sync + 'static + Debug;
 
     /// New task event
     const NEW_TASK_EVENT_SELECTOR: B256;
@@ -99,21 +107,21 @@ pub trait TaskManager: TaskManagerDefs {
 /// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
 macro_rules! impl_task_manager_from_defs_and_contract {
     ($defs:ty => $contract:ident) => {
-        impl<T, P, N> $crate::task_manager::TaskManagerDefs for $contract<T, P, N>
+        impl<T, P, N> $crate::TaskManagerDefs for $contract<T, P, N>
         where
             T: ::alloy::contract::private::Transport + Clone + Send + Sync,
             P: ::alloy::contract::private::Provider<T, N>,
             N: ::alloy::network::Network,
         {
-            type Input = <$defs as $crate::task_manager::TaskManagerDefs>::Input;
-            type Output = <$defs as $crate::task_manager::TaskManagerDefs>::Output;
+            type Input = <$defs as TaskManagerDefs>::Input;
+            type Output = <$defs as $crate::TaskManagerDefs>::Output;
             const NEW_TASK_EVENT_SELECTOR: ::alloy::primitives::B256 =
-                <$defs as $crate::task_manager::TaskManagerDefs>::NEW_TASK_EVENT_SELECTOR;
+                <$defs as $crate::TaskManagerDefs>::NEW_TASK_EVENT_SELECTOR;
             const TASK_RESPONDED_EVENT_SELECTOR: ::alloy::primitives::B256 =
-                <$defs as $crate::task_manager::TaskManagerDefs>::TASK_RESPONDED_EVENT_SELECTOR;
+                <$defs as $crate::TaskManagerDefs>::TASK_RESPONDED_EVENT_SELECTOR;
         }
 
-        impl<T, P, N> $crate::task_manager::TaskManager for $contract<T, P, N>
+        impl<T, P, N> $crate::TaskManager for $contract<T, P, N>
         where
             T: ::alloy::contract::private::Transport + Clone + Send + Sync,
             P: ::alloy::contract::private::Provider<T, N>,
@@ -132,16 +140,16 @@ macro_rules! default_contract_impl {
         async fn create_new_task(
             &self,
             input: Self::Input,
-            quorum_threshold: $crate::task_manager::QuorumThresholdPercentage,
-            quorums: Vec<$crate::task_manager::QuorumNum>,
-        ) -> Result<(), $crate::task_manager::TaskManagerError> {
+            quorum_threshold: $crate::QuorumThresholdPercentage,
+            quorums: Vec<$crate::QuorumNum>,
+        ) -> Result<(), $crate::TaskManagerError> {
             self.createNewTask(input, quorum_threshold.into(), quorums.into())
                 .send()
                 .await
-                .map_err($crate::task_manager::box_error)?
+                .map_err($crate::box_error)?
                 .get_receipt()
                 .await
-                .map_err($crate::task_manager::box_error)?;
+                .map_err($crate::box_error)?;
 
             Ok(())
         }
@@ -150,8 +158,8 @@ macro_rules! default_contract_impl {
             &self,
             task: $crate::task::Task<Self::Input>,
             task_response: $crate::task_response::TaskResponse<Self::Output>,
-            non_signer_stakes_and_signature: $crate::task_manager::NonSignerStakesAndSignature,
-        ) -> Result<(), $crate::task_manager::TaskManagerError> {
+            non_signer_stakes_and_signature: $crate::NonSignerStakesAndSignature,
+        ) -> Result<(), $crate::TaskManagerError> {
             let contract_task = (
                 task.input,
                 task.task_created_block,
@@ -205,10 +213,10 @@ macro_rules! default_contract_impl {
             )
             .send()
             .await
-            .map_err($crate::task_manager::box_error)?
+            .map_err($crate::box_error)?
             .get_receipt()
             .await
-            .map_err($crate::task_manager::box_error)?;
+            .map_err($crate::box_error)?;
 
             Ok(())
         }
@@ -218,8 +226,8 @@ macro_rules! default_contract_impl {
             task: $crate::task::Task<Self::Input>,
             task_response: $crate::task_response::TaskResponse<Self::Output>,
             task_response_metadata: $crate::task_response_metadata_sol::TaskResponseMetadataSol,
-            pubkeys_of_non_signing_operators: Vec<$crate::task_manager::G1Point>,
-        ) -> Result<(), $crate::task_manager::TaskManagerError> {
+            pubkeys_of_non_signing_operators: Vec<$crate::G1Point>,
+        ) -> Result<(), $crate::TaskManagerError> {
             let contract_task = (
                 task.input,
                 task.task_created_block,
@@ -249,10 +257,10 @@ macro_rules! default_contract_impl {
             )
             .send()
             .await
-            .map_err($crate::task_manager::box_error)?
+            .map_err($crate::box_error)?
             .get_receipt()
             .await
-            .map_err($crate::task_manager::box_error)?;
+            .map_err($crate::box_error)?;
 
             Ok(())
         }

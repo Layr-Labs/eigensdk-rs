@@ -1,12 +1,17 @@
+/// Task processor error
+pub mod error;
+/// Standar implementation of the task processor
+pub mod indexing_task_processor;
+
+pub use error::TaskProcessorError;
+pub use indexing_task_processor::IndexingTaskProcessor;
+
 use alloy::{primitives::B256, sol_types::SolValue};
 use eigen_services_blsaggregation::bls_agg::TaskMetadata;
+use eigen_task_manager::task::Task;
+use eigen_task_manager::task_response::TaskResponse;
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
-use serde::de::DeserializeOwned;
 use std::future::Future;
-
-use crate::error::TaskProcessorError;
-use crate::task::Task;
-use crate::task_response::TaskResponse;
 
 /// Abstracts task-specific behaviour
 pub trait TaskProcessor {
@@ -14,7 +19,7 @@ pub trait TaskProcessor {
     type Input: SolValue + Send + Sync + 'static + Clone;
 
     /// Response type expected by the task processor
-    type Output: SolValue + Send + Sync + 'static + Clone + DeserializeOwned;
+    type Output: SolValue + Send + Sync + 'static + Clone;
 
     /// Selector for the event signaling a new task
     const NEW_TASK_EVENT_SELECTOR: B256;

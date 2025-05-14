@@ -2,10 +2,9 @@ use crate::{challenger::ChallengerTaskProcessor, error::ChallengerError};
 use alloy::dyn_abi::SolType;
 use alloy::primitives::B256;
 use alloy::sol_types::SolValue;
-
-use eigen_task_processor::task_manager::{TaskManager, TaskManagerError};
-use eigen_task_processor::task_response_metadata_sol::TaskResponseMetadataSol;
-use eigen_task_processor::{task::Task, task_response::TaskResponse};
+use eigen_task_manager::task_response_metadata_sol::TaskResponseMetadataSol;
+use eigen_task_manager::{task::Task, task_response::TaskResponse};
+use eigen_task_manager::{TaskManager, TaskManagerError};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
 use tracing::{error, info};

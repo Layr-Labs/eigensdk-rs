@@ -2758,7 +2758,7 @@ dependencies = [
  "eigen-services-avsregistry",
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-types",
  "eigen-utils",
  "futures-util",
@@ -2784,7 +2784,7 @@ dependencies = [
  "eigen-services-avsregistry",
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-types",
  "eigen-utils",
  "futures-util",
@@ -3021,7 +3021,7 @@ dependencies = [
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-types",
  "eigen-utils",
  "futures-util",
@@ -3030,8 +3030,6 @@ dependencies = [
  "rand_core 0.6.4",
  "reqwest 0.12.15",
  "rust-bls-bn254",
- "serde",
- "serde_json",
  "tarpc",
  "thiserror 1.0.69",
  "tokio",
@@ -3132,7 +3130,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigen-task-processor"
+name = "eigen-task-manager"
 version = "0.5.0"
 dependencies = [
  "alloy",
@@ -3141,7 +3139,6 @@ dependencies = [
  "eigen-services-blsaggregation",
  "eigen-types",
  "eigen-utils",
- "serde",
  "thiserror 1.0.69",
  "tokio",
  "tokio-util",
@@ -3153,7 +3150,7 @@ name = "eigen-task-spammer"
 version = "0.5.0"
 dependencies = [
  "alloy",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-types",
  "thiserror 1.0.69",
  "tokio",
@@ -3230,7 +3227,7 @@ dependencies = [
  "eigen-services-blsaggregation",
  "eigen-services-operatorsinfo",
  "eigen-signer",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-task-spammer",
  "eigen-testing-utils",
  "eigen-types",
@@ -4699,7 +4696,7 @@ dependencies = [
  "eigen-crypto-bls",
  "eigen-logging",
  "eigen-operator",
- "eigen-task-processor",
+ "eigen-task-manager",
  "eigen-task-spammer",
  "eigen-testing-utils",
  "eigen-types",
