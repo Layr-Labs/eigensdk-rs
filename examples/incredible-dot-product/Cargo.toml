@@ -1,5 +1,5 @@
 [package]
-name    = "incredible-dot-product"
+name = "incredible-dot-product"
 version = "0.1.0"
 edition = "2021"
 
@@ -16,7 +16,7 @@ alloy = { version = "0.13", features = [
     "json-rpc",
     "signer-keystore",
 ] }
-eigensdk = { path = "../../crates/eigensdk", features = ["full"] }
+eigensdk = { workspace = true, features = ["full"] }
 eigen-operator = { workspace = true, features = ["operator-testing"] }
 eyre = "0.6"
 serde = { version = "1.0", features = ["derive"] }
