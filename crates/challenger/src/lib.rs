@@ -8,6 +8,7 @@ use alloy::{
     sol_types::SolValue,
 };
 use challenger::ChallengerTaskProcessor;
+use config::ChallengerConfig;
 use eigen_common::{get_provider, get_ws_provider};
 use eigen_task_manager::{
     task::Task, task_response::TaskResponse, task_response_metadata_sol::TaskResponseMetadataSol,
@@ -21,6 +22,7 @@ use tracing::info;
 
 pub mod challenger;
 pub mod challenger_processor;
+pub mod config;
 pub mod error;
 
 /// The tuple for NewTaskCreated: (u32, Input)
@@ -76,10 +78,10 @@ where
     /// # Returns
     ///
     /// * `Self` - The challenger
-    pub fn new(rpc_url: String, ws_url: String, task_processor: TP) -> Self {
+    pub fn new(config: ChallengerConfig, task_processor: TP) -> Self {
         Self {
-            rpc_url,
-            ws_url,
+            rpc_url: config.rpc_url,
+            ws_url: config.ws_url,
             task_processor,
         }
     }
