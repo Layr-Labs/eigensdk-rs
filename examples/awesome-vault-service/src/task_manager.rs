@@ -7,9 +7,9 @@ use alloy::primitives::FixedBytes;
 use alloy::primitives::Keccak256;
 use alloy::primitives::B256;
 use alloy::sol_types::SolEvent;
-use eigensdk::task_processor::impl_task_manager_from_defs_and_contract;
-use eigensdk::task_processor::task_manager::TaskManagerDefs;
-use eigensdk::task_processor::task_manager::TaskManagerError;
+use eigensdk::task_manager::impl_task_manager_from_defs_and_contract;
+use eigensdk::task_manager::TaskManagerDefs;
+use eigensdk::task_manager::TaskManagerError;
 use tokio::sync::Mutex;
 use tracing::info;
 

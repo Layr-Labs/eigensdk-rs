@@ -3,10 +3,9 @@
 use alloy::primitives::Address;
 use awesome_vault_service::bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance;
 use eigensdk::{
-    aggregator::{Aggregator, AggregatorConfig},
+    aggregator::{task_processor::IndexingTaskProcessor, Aggregator, AggregatorConfig},
     common::get_signer,
     logging::{init_logger, log_level::LogLevel},
-    task_processor::IndexingTaskProcessor,
 };
 use eyre::Result;
 
