@@ -1,6 +1,7 @@
 //! Task generator errors
 
 use alloy::contract::Error as AlloyError;
+use eigen_task_manager::TaskManagerError;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -24,4 +25,7 @@ pub enum TaskSpammerError {
     /// Pending transaction error
     #[error("Pending transaction error: {0}")]
     PendingTransactionError(#[from] alloy::providers::PendingTransactionError),
+    /// Task manager error
+    #[error("Task manager error: {0}")]
+    TaskManagerError(#[from] TaskManagerError),
 }

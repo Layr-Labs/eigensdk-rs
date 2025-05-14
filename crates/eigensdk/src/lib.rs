@@ -115,3 +115,9 @@ pub use eigen_operator as operator;
 #[doc(inline)]
 #[cfg(feature = "task-spammer")]
 pub use eigen_task_spammer as task_spammer;
+
+/* ------------------------------------ Task Processor Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "task-manager")]
+pub use eigen_task_manager as task_manager;

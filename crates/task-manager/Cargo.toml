@@ -1,0 +1,24 @@
+[package]
+name = "eigen-task-manager"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license-file.workspace = true
+description = "eigen layer task-manager"
+
+[lints]
+workspace = true
+
+[dependencies]
+ark-ec.workspace = true
+alloy.workspace = true
+eigen-crypto-bls.workspace = true
+eigen-services-blsaggregation.workspace = true
+eigen-types.workspace = true
+eigen-utils.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tokio.workspace = true
+
+tokio-util = "0.7.11"

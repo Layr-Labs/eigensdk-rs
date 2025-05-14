@@ -1,24 +1,30 @@
 //! Operator common functions.
 
 use alloy::{
-    primitives::{keccak256, Address},
+    dyn_abi::SolType,
+    primitives::keccak256,
     providers::{Provider, ProviderBuilder, WsConnect},
     rpc::types::Filter,
-    sol_types::{SolEvent, SolType, SolValue},
+    sol_types::SolValue,
 };
 use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
+use eigen_task_manager::new_task_events::decode_new_task;
+use eigen_task_manager::task_response::TaskResponse;
+use eigen_task_manager::{TaskManagerDefs, TaskManagerError};
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
+use rand::Rng;
 use tracing::info;
 
 /// Tarpc Client
 pub mod client;
+/// Operator config
+pub mod config;
 /// Error
 pub mod error;
 
@@ -52,18 +58,20 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<Self, OperatorError>` - The operator.
-    #[allow(clippy::too_many_arguments)]
     pub async fn new(
-        key_pair: &BlsKeyPair,
-        operator_address: Address,
-        operator_name: &str,
         logger: SharedLogger,
-        ws_rpc_url: &str,
-        http_rpc_url: &str,
-        registry_coordinator_address: Address,
-        operator_state_retriever_address: Address,
-        aggregator_ip_port: String,
+        config: config::OperatorConfig,
     ) -> Result<Self, OperatorError> {
+        let config::OperatorConfig {
+            bls_key_pair,
+            operator_address,
+            operator_name,
+            ws_rpc_url,
+            http_rpc_url,
+            registry_coordinator_address,
+            operator_state_retriever_address,
+            aggregator_ip_port,
+        } = config;
         let avs_registry_reader = AvsRegistryChainReader::new(
             logger,
             registry_coordinator_address,
@@ -94,7 +102,7 @@ impl Operator {
             operator_name: operator_name.to_string(),
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
-            key_pair: key_pair.clone(),
+            key_pair: bls_key_pair.clone(),
         })
     }
 
@@ -110,11 +118,16 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation.
-    pub async fn start<Event, F, Response>(&self, compute_logic: F) -> Result<(), OperatorError>
+    pub async fn start<TM>(
+        &self,
+        compute_logic: impl AsyncFn(u32, TM::Input) -> Result<TM::Output, TaskManagerError>,
+    ) -> Result<(), OperatorError>
     where
-        Event: SolEvent,
-        F: Fn(Event) -> Result<Response, OperatorError>,
-        Response: SolType + SolValue + Serialize + for<'de> Deserialize<'de>,
+        TM: TaskManagerDefs,
+        TM::Input:
+            From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
+        TM::Output: SolValue + Clone,
+        TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     {
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
@@ -122,7 +135,7 @@ impl Operator {
             .await
             .map_err(|_| OperatorError::TransportError)?;
 
-        let filter = Filter::new().event_signature(Event::SIGNATURE_HASH);
+        let filter = Filter::new().event_signature(TM::NEW_TASK_EVENT_SELECTOR);
         let sub = provider
             .subscribe_logs(&filter)
             .await
@@ -130,17 +143,18 @@ impl Operator {
         let mut stream = sub.into_stream();
 
         while let Some(log) = stream.next().await {
-            let data: Event = log
-                .log_decode()
-                .map_err(|_| OperatorError::SubscribeLogsError)?
-                .inner
-                .data;
+            let (task_index, task) = decode_new_task::<TM::Input>(&log)?;
 
             info!("{} picked up a new task", self.operator_name);
 
-            let task_response = compute_logic(data)?;
+            let output = compute_logic(task_index, task.input).await?;
+            let task_response = TaskResponse {
+                task_index,
+                response: output,
+            };
             let signed_task_response =
                 Self::sign_task_response(&self.key_pair, &self.operator_id, task_response)?;
+
             self.client_aggregator
                 .send_signed_task_response(signed_task_response)
                 .await?;
@@ -163,16 +177,61 @@ impl Operator {
     fn sign_task_response<Response>(
         key_pair: &BlsKeyPair,
         operator_id: &OperatorId,
-        task_response: Response,
+        task_response: TaskResponse<Response>,
     ) -> Result<SignedTaskResponse<Response>, OperatorError>
     where
-        Response: SolType + SolValue + Serialize + for<'de> Deserialize<'de>,
+        Response: SolValue + Clone,
+        Response: From<<<Response as SolValue>::SolType as SolType>::RustType>,
     {
-        let encoded = task_response.abi_encode();
+        let encoded = task_response.encode();
         let hash_msg = keccak256(encoded);
         let signed_msg = key_pair.sign_message(&hash_msg);
         let signed_task_response = SignedTaskResponse::new(task_response, signed_msg, *operator_id);
         info!("Operator signed task response");
         Ok(signed_task_response)
+    }
+}
+
+/// Helper to wrap both correct and incorrect logic in a single closure.
+/// USE THIS FOR TESTING PURPOSES ONLY
+///
+/// # Arguments
+///
+/// * `correct_logic` - The correct logic to respond to the task.
+/// * `incorrect_logic` - The incorrect logic to respond to the task.
+/// * `failure_rate` - The failure rate.
+///
+/// # Returns
+///
+/// * `impl AsyncFn(Event) -> Result<TaskResponse<O>, TaskManagerError>` - The wrapped logic.
+///
+/// # Panics
+///
+/// Panics if `failure_rate` is greater than 100.
+#[cfg(feature = "operator-testing")]
+pub async fn failing_response_calculator<Input, Output>(
+    correct_logic: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+    incorrect_logic: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+    failure_rate: u8,
+) -> impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>
+where
+    Output: SolValue + Clone,
+    Input: Clone,
+{
+    assert!(failure_rate <= 100);
+
+    async move |task_index, input: Input| {
+        let result = correct_logic(task_index, input.clone()).await;
+
+        let mut rng = rand::thread_rng();
+        let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
+
+        if should_fail {
+            info!("Operator compute the task with a wrong response");
+            incorrect_logic(task_index, input).await
+        } else {
+            info!("Operator compute the task successfully");
+            result
+        }
     }
 }

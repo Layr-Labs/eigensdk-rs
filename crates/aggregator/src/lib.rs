@@ -8,51 +8,61 @@ pub mod error;
 pub mod rpc_server;
 /// Signed Task Response
 pub mod signed_task_response;
-/// Traits
-pub mod traits;
+/// Task Processor
+pub mod task_processor;
 
+use alloy::dyn_abi::SolType;
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
 use alloy::rpc::types::Filter;
-use alloy::sol_types::SolEvent;
+use alloy::sol_types::SolValue;
+use ark_ec::AffineRepr;
+pub use config::AggregatorConfig;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
+use eigen_crypto_bls::error::BlsError;
+use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
 use eigen_logging::get_logger;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle,
 };
-use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-use futures_util::{future, StreamExt};
-use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
-use std::{net::SocketAddr, sync::Arc};
-use tarpc::server::{self, Channel};
-use tarpc::tokio_serde::formats::Json;
-use tokio::sync::Mutex;
-use tracing::info;
-
-pub use config::AggregatorConfig;
 pub use eigen_services_blsaggregation::{
     bls_agg::TaskMetadata, bls_aggregation_service_response::BlsAggregationServiceResponse,
 };
-pub use error::AggregatorError;
-pub use signed_task_response::SignedTaskResponse;
-pub use traits::{
-    task_processor::{TaskProcessor, TaskProcessorError},
-    task_response::TaskResponse,
+use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+use eigen_task_manager::new_task_events::decode_new_task;
+use eigen_utils::slashing::middleware::{
+    iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
+    iblssignaturechecker::BN254::{G1Point, G2Point},
 };
+pub use error::AggregatorError;
+use futures_util::{future, StreamExt};
+use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
+pub use signed_task_response::SignedTaskResponse;
+use std::fmt::Debug;
+use std::net::SocketAddr;
+use tarpc::server::{self, Channel};
+use tarpc::tokio_serde::formats::Json;
+use task_processor::TaskProcessor;
+use tracing::info;
 
 /// Aggregator
 #[derive(Debug)]
 pub struct Aggregator<TP> {
     port_address: String,
-    task_processor: Arc<Mutex<TP>>,
+    task_processor: TP,
     service_handle: ServiceHandle,
     aggregated_response_receiver: AggregateReceiver,
     ws_rpc_url: String,
 }
 
-impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
+impl<TP> Aggregator<TP>
+where
+    TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP::Input: From<<<TP::Input as SolValue>::SolType as SolType>::RustType>,
+    TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
+{
     /// Creates a new aggregator
     ///
     /// # Arguments
@@ -99,7 +109,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
             BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
         Ok(Self {
             port_address: config.server_address,
-            task_processor: Arc::new(Mutex::new(task_processor)),
+            task_processor,
             service_handle,
             aggregated_response_receiver,
             ws_rpc_url: config.ws_rpc_url,
@@ -119,24 +129,23 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     pub async fn start(self) -> Result<(), AggregatorError> {
         info!("Starting aggregator");
 
-        let task_processor = self.task_processor.clone();
         let service_handle = self.service_handle.clone();
         let port_address = self.port_address.clone();
 
         // Spawn three tasks: one for the server that receives signature, one for processing tasks, and another to process aggregated signatures
         let server_handle = tokio::spawn(Self::start_server(
             port_address,
-            task_processor.clone(),
+            self.task_processor.clone(),
             service_handle.clone(),
         ));
 
         let process_handle = tokio::spawn(Self::process_tasks(
             self.ws_rpc_url,
-            task_processor.clone(),
+            self.task_processor.clone(),
             service_handle,
         ));
         let aggregate_handle = tokio::spawn(Self::process_aggregated_signatures(
-            task_processor,
+            self.task_processor,
             self.aggregated_response_receiver,
         ));
 
@@ -165,14 +174,13 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn start_server(
         port_address: String,
-        task_processor: Arc<Mutex<TP>>,
+        task_processor: TP,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let addr: SocketAddr = port_address.parse().map_err(|e| {
             AggregatorError::IOError(std::io::Error::new(std::io::ErrorKind::InvalidInput, e))
         })?;
 
-        let task_processor_clone = task_processor.clone();
         let service_handle_clone = service_handle.clone();
 
         let mut listener = tarpc::serde_transport::tcp::listen(&addr, Json::default).await?;
@@ -183,8 +191,8 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
             .filter_map(|r| future::ready(r.ok()))
             .map(server::BaseChannel::with_defaults)
             .for_each_concurrent(None, |channel| {
-                let task_processor = task_processor_clone.clone();
                 let service_handle = service_handle_clone.clone();
+                let task_processor = task_processor.clone();
                 async move {
                     let server =
                         ProcessSignedTaskResponseServer::new(task_processor, service_handle);
@@ -214,29 +222,23 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_tasks(
         ws_rpc_url: String,
-        task_processor: Arc<Mutex<TP>>,
+        mut task_processor: TP,
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
-        let filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
+        let filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
 
-        while let Some(event) = provider
+        while let Some(log) = provider
             .subscribe_logs(&filter)
             .await?
             .into_stream()
             .next()
             .await
-            .and_then(|log| log.log_decode().ok())
-            .map(|v| v.inner.data)
         {
-            let metadata = task_processor
-                .lock()
-                .await
-                .process_new_task(event)
-                .await
-                .map_err(AggregatorError::TaskProcessorError)?;
-            service_handle.initialize_task(metadata).await?;
+            let (task_index, task) = decode_new_task::<TP::Input>(&log)?;
+            let task_metadata = task_processor.process_new_task(task_index, task).await?;
+            service_handle.initialize_task(task_metadata).await?;
         }
 
         Ok(())
@@ -253,7 +255,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
     async fn process_aggregated_signatures(
-        task_processor: Arc<Mutex<TP>>,
+        task_processor: TP,
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
@@ -261,12 +263,68 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
                 .receive_aggregated_response()
                 .await?;
 
+            let non_signing_operator_pubkeys =
+                get_non_signing_operator_pubkeys(service_response.clone())?;
+
             task_processor
-                .lock()
-                .await
-                .process_aggregated_response(service_response)
-                .await
-                .map_err(AggregatorError::TaskProcessorError)?;
+                .process_aggregated_response(
+                    service_response.task_index,
+                    service_response.task_response_digest,
+                    non_signing_operator_pubkeys,
+                )
+                .await?;
         }
     }
+}
+
+/// Build the [`NonSignerStakesAndSignature`] struct from the [`BlsAggregationServiceResponse`]
+///
+/// # Arguments
+///
+/// * `response` - The response of the BLS aggregation service
+///
+/// # Returns
+///
+/// * `Result<NonSignerStakesAndSignature, AggregatorError>` - The non-signing operator pub keys
+fn get_non_signing_operator_pubkeys(
+    response: BlsAggregationServiceResponse,
+) -> Result<NonSignerStakesAndSignature, BlsError> {
+    let mut non_signer_pub_keys = Vec::<G1Point>::new();
+    for pub_key in response.non_signers_pub_keys_g1.iter() {
+        if pub_key.g1().x().is_some() {
+            let g1 = convert_to_g1_point(pub_key.g1())?;
+            non_signer_pub_keys.push(G1Point { X: g1.X, Y: g1.Y })
+        } else {
+            info!(
+                "Zero non_signers for the task index :{:?}",
+                response.task_index
+            );
+        }
+    }
+
+    let mut quorum_apks = Vec::<G1Point>::new();
+    for pub_key in response.quorum_apks_g1.iter() {
+        let g1 = convert_to_g1_point(pub_key.g1())?;
+        quorum_apks.push(G1Point { X: g1.X, Y: g1.Y })
+    }
+
+    let apk_g2 = convert_to_g2_point(response.signers_apk_g2.g2())?;
+    let sigma = convert_to_g1_point(response.signers_agg_sig_g1.g1_point().g1())?;
+
+    Ok(NonSignerStakesAndSignature {
+        nonSignerPubkeys: non_signer_pub_keys,
+        nonSignerQuorumBitmapIndices: response.non_signer_quorum_bitmap_indices,
+        quorumApks: quorum_apks,
+        apkG2: G2Point {
+            X: apk_g2.X,
+            Y: apk_g2.Y,
+        },
+        sigma: G1Point {
+            X: sigma.X,
+            Y: sigma.Y,
+        },
+        quorumApkIndices: response.quorum_apk_indices,
+        totalStakeIndices: response.total_stake_indices,
+        nonSignerStakeIndices: response.non_signer_stake_indices,
+    })
 }

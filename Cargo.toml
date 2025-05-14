@@ -19,21 +19,21 @@ members = [
     "crates/services/bls_aggregation/",
     "crates/services/operatorsinfo/",
     "crates/signer/",
+    "crates/task-manager",
     "crates/task-spammer",
     "crates/types/",
     "crates/utils/",
     "crates/nodeapi/",
     "crates/eigensdk/",
-    "examples/aggregator/",
     "examples/anvil-utils",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
-    "examples/challenger/",
+    "examples/incredible-dot-product/",
     "examples/info-operator-service/",
-    "examples/operator/",
-    "examples/task-spammer/",
     "tests/testing-utils/",
     "tests/integration/",
+    "examples/awesome-vault-service",
+    "examples/incredible-squaring",
 ]
 resolver = "2"
 
@@ -97,6 +97,7 @@ eigen-services-avsregistry = { version = "0.5.0", path = "crates/services/avsreg
 eigen-services-blsaggregation = { version = "0.5.0", path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { version = "0.5.0", path = "crates/services/operatorsinfo" }
 eigen-signer = { version = "0.5.0", path = "crates/signer/" }
+eigen-task-manager = { version = "0.5.0", path = "crates/task-manager/" }
 eigen-task-spammer = { version = "0.5.0", path = "crates/task-spammer/" }
 eigen-testing-utils = { version = "0.5.0", path = "tests/testing-utils" }
 eigen-types = { version = "0.5.0", path = "crates/types/" }

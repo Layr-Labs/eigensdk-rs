@@ -1,7 +1,11 @@
+use crate::task_processor::TaskProcessorError;
 use alloy::transports::{RpcError, TransportErrorKind};
 use eigen_client_avsregistry::error::AvsRegistryError;
+use eigen_crypto_bls::error::BlsError;
 use eigen_services_blsaggregation::bls_aggregation_service_error::BlsAggregationServiceError;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceError;
+use eigen_task_manager::new_task_events::DecodeNewTaskError;
+use tarpc::ServerError;
 use thiserror::Error;
 
 /// Error returned by chainio
@@ -16,8 +20,8 @@ pub enum AggregatorError {
     JoinError,
 
     /// Decoding of the new task event failed
-    #[error("Log decode failed")]
-    LogDecodeFailed(#[from] alloy::sol_types::Error),
+    #[error("Decoding of new task failed")]
+    LogDecodeFailed(#[from] DecodeNewTaskError),
 
     /// Build avs registry chain reader
     #[error("Failed to build avs registry chain reader ")]
@@ -38,4 +42,32 @@ pub enum AggregatorError {
     /// Error returned by the [`TaskProcessor`](crate::traits::TaskProcessor)
     #[error("Task Processing failed")]
     TaskProcessorError(#[from] Box<dyn std::error::Error + Send>),
+
+    /// Task index missing in topics
+    #[error("Task index missing in topics")]
+    TaskIndexMissingInTopics,
+
+    /// Invalid task data
+    #[error("Invalid task data")]
+    InvalidTaskData,
+
+    /// Invalid task index conversion
+    #[error("Invalid task index conversion")]
+    InvalidTaskIndexConversion,
+
+    /// Task processor error
+    #[error("Task processor error")]
+    IndexingTaskProcessorError(#[from] TaskProcessorError),
+
+    /// Tarpc error
+    #[error("Tarpc error")]
+    TarpcError(#[from] ServerError),
+
+    /// BLS Key error
+    #[error("BLS Key error")]
+    BlsKeyError(#[from] BlsError),
+
+    /// Alloy error
+    #[error("Alloy error")]
+    AlloyError(#[from] alloy::sol_types::Error),
 }

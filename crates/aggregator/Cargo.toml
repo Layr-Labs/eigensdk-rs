@@ -12,6 +12,7 @@ workspace = true
 
 [dependencies]
 alloy.workspace = true
+ark-ec.workspace = true
 eigen-types.workspace = true
 serde.workspace = true
 eigen-crypto-bls.workspace = true
@@ -21,6 +22,7 @@ eigen-logging.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-services-avsregistry.workspace = true
 eigen-services-blsaggregation.workspace = true
+eigen-task-manager.workspace = true
 eigen-utils.workspace = true
 tracing.workspace = true
 tokio.workspace = true

@@ -1,6 +1,7 @@
 use eigen_client_avsregistry::error::AvsRegistryError;
 // use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
+use eigen_task_manager::{new_task_events::DecodeNewTaskError, TaskManagerError};
 use rust_bls_bn254::errors::KeystoreError;
 use tarpc::client::RpcError;
 use thiserror::Error;
@@ -32,10 +33,20 @@ pub enum OperatorError {
     /// Failed to send signed task response
     #[error("Failed to send signed task response")]
     SendSignedTaskResponseError(#[from] RpcError),
-    /// Failed to serialize signed task response
-    #[error("Failed to serialize signed task response")]
-    SerializationError(#[from] serde_json::Error),
     /// Max retry attempts exceeded
     #[error("Max retry attempts exceeded")]
     MaxRetryExceeded,
+    /// Invalid failure rate
+    #[error("Invalid failure rate. Must be between 0 and 100.")]
+    InvalidFailureRate,
+    /// Failed to encode signed task response
+    #[error("Failed to encode signed task response")]
+    FailedToEncodeSignedTaskResponse,
+    /// Failed when computing a task response
+    #[error("Failed when computing a task response")]
+    ComputingTaskResponseError(#[from] TaskManagerError),
+
+    /// Decoding of the new task event failed
+    #[error("Decoding of new task failed")]
+    LogDecodeFailed(#[from] DecodeNewTaskError),
 }

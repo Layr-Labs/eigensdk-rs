@@ -1,0 +1,26 @@
+[package]
+name = "awesome-vault-service"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+doctest = false
+
+[dependencies]
+alloy = { version = "0.13", features = [
+    "sol-types",
+    "contract",
+    "full",
+    "signer-aws",
+    "rlp",
+    "json-rpc",
+    "signer-keystore",
+] }
+eigensdk = { workspace = true, features = ["full"] }
+eigen-operator = { workspace = true, features = ["operator-testing"] }
+eyre = "0.6"
+rand = "0.8"
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
+toml = "0.8"
+tracing = "0.1"
