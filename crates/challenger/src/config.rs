@@ -9,20 +9,6 @@ pub struct ChallengerConfig {
     pub ws_url: String,
 }
 
-impl Default for ChallengerConfig {
-    /// Default challenger config with localhost rpc and ws urls values
-    ///
-    /// # Returns
-    ///
-    /// * `Self` - The default challenger config
-    fn default() -> Self {
-        Self {
-            rpc_url: "http://localhost:8545".to_string(),
-            ws_url: "ws://localhost:8545".to_string(),
-        }
-    }
-}
-
 impl ChallengerConfig {
     /// Create a new challenger config
     ///
