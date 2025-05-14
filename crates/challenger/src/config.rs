@@ -4,9 +4,9 @@ use serde::{Deserialize, Serialize};
 /// Configuration for the [`Challenger`]
 pub struct ChallengerConfig {
     /// The rpc url
-    rpc_url: String,
+    pub rpc_url: String,
     /// The websocket url
-    ws_url: String,
+    pub ws_url: String,
 }
 
 impl Default for ChallengerConfig {
