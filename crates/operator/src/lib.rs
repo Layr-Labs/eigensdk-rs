@@ -21,7 +21,6 @@ use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
 use rand::Rng;
-use serde::{Deserialize, Serialize};
 use tracing::info;
 
 /// Tarpc Client
@@ -129,7 +128,8 @@ impl Operator {
         TM: TaskManagerDefs,
         TM::Input:
             From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
-        TM::Output: Serialize + for<'de> Deserialize<'de> + Clone,
+        TM::Output: SolValue + Clone,
+        TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     {
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
@@ -156,6 +156,7 @@ impl Operator {
             };
             let signed_task_response =
                 Self::sign_task_response(&self.key_pair, &self.operator_id, task_response)?;
+
             self.client_aggregator
                 .send_signed_task_response(signed_task_response)
                 .await?;
@@ -179,9 +180,10 @@ impl Operator {
         key_pair: &BlsKeyPair,
         operator_id: &OperatorId,
         task_response: TaskResponse<Response>,
-    ) -> Result<SignedTaskResponse<TaskResponse<Response>>, OperatorError>
+    ) -> Result<SignedTaskResponse<Response>, OperatorError>
     where
-        Response: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
+        Response: SolValue + Clone,
+        Response: From<<<Response as SolValue>::SolType as SolType>::RustType>,
     {
         let encoded = task_response.encode();
         let hash_msg = keccak256(encoded);
@@ -217,7 +219,7 @@ pub fn compute_with_failures<Input, Output, C, F>(
 where
     C: Fn(u32, Input) -> Result<Output, TaskManagerError>,
     F: Fn(u32, Input) -> Result<Output, TaskManagerError>,
-    Output: SolValue + Serialize + for<'de> Deserialize<'de> + Clone,
+    Output: SolValue + Clone,
 {
     assert!(failure_rate <= 100);
 

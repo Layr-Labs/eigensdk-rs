@@ -58,8 +58,8 @@ pub struct Aggregator<TP> {
 impl<TP> Aggregator<TP>
 where
     TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
-    <TP as TaskProcessor>::Input:
-        From<<<<TP as TaskProcessor>::Input as SolValue>::SolType as SolType>::RustType>,
+    TP::Input: From<<<TP::Input as SolValue>::SolType as SolType>::RustType>,
+    TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
     /// Creates a new aggregator
     ///
