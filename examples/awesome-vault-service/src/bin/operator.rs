@@ -2,9 +2,7 @@
 
 use alloy::primitives::{Address, B256, U256};
 use awesome_vault_service::{
-    bindings::awesomevaulttaskmanager::IAwesomeVaultTaskManager::TaskInput,
-    response_calculator::{VaultServiceFnType, VaultServiceResponseCalculator},
-    task_manager::ISTaskManager,
+    response_calculator::VaultServiceResponseCalculator, task_manager::ISTaskManager,
     utils::setup_operator,
 };
 use eigensdk::{
@@ -98,11 +96,7 @@ async fn main() {
         vault: Arc::new(Mutex::new(BTreeMap::new())),
     };
 
-    let logic = failing_response_calculator::<VaultServiceFnType, TaskInput, B256>(
-        vault_service_response_calculator,
-        B256::default,
-        50,
-    );
+    let logic = failing_response_calculator(vault_service_response_calculator, B256::default, 50);
 
     // let compute = save_value(redis_state);
 

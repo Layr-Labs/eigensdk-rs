@@ -22,9 +22,6 @@ impl TaskManagerDefs for ISTaskManager {
 
 impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleDotProductTaskManagerInstance);
 
-// Dot product function type
-pub type DotProductFnType = fn(u32, DotProductInput) -> Result<U256, TaskManagerError>;
-
 /// Computes the dot product of a pair of points
 ///
 /// # Arguments

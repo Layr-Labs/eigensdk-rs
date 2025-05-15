@@ -1,4 +1,4 @@
-use eigen_task_manager::response_calculator::{FunctionResponseCalculator, ResponseCalculator};
+use eigen_task_manager::response_calculator::{async_response_calculator, ResponseCalculator};
 use rand::Rng;
 use tracing::info;
 
@@ -18,7 +18,7 @@ use tracing::info;
 /// # Panics
 ///
 /// Panics if `failure_rate_percentage` is greater than 100.
-pub fn failing_response_calculator<F, Input, Output>(
+pub fn failing_response_calculator<Input, Output>(
     response_calculator: impl ResponseCalculator<Input, Output>,
     invalid_values_builder: impl Fn() -> Output,
     failure_rate_percentage: u32,
@@ -31,7 +31,7 @@ where
         "Failure rate percentage must be less than or equal to 100"
     );
 
-    FunctionResponseCalculator::<F>::new_async(async move |task_index, input: Input| {
+    async_response_calculator(async move |task_index, input: Input| {
         let result = response_calculator
             .compute_response(task_index, input.clone())
             .await;

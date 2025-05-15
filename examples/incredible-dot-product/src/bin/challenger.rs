@@ -1,6 +1,7 @@
 //! Incredible Dot Product Challenger
 
 use alloy::primitives::Address;
+use eigen_task_manager::response_calculator::sync_response_calculator;
 use eigensdk::{
     challenger::{
         challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
@@ -9,12 +10,11 @@ use eigensdk::{
     },
     common::get_signer,
     logging::{init_logger, log_level::LogLevel},
-    task_manager::response_calculator::FunctionResponseCalculator,
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
 use incredible_dot_product::{
-    task_manager::{dot_product, DotProductFnType},
+    task_manager::dot_product,
     IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
 use std::str::FromStr;
@@ -29,7 +29,7 @@ async fn main() -> Result<()> {
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
 
-    let response_calculator = FunctionResponseCalculator::<DotProductFnType>::new(dot_product);
+    let response_calculator = sync_response_calculator(dot_product);
 
     let verifier = verifier_from_compute_function(response_calculator);
 

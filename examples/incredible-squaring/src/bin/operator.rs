@@ -4,7 +4,7 @@ use alloy::primitives::{address, U256};
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
 use eigen_operator::{config::OperatorConfig, Operator};
-use eigen_task_manager::{response_calculator::FunctionResponseCalculator, TaskManagerError};
+use eigen_task_manager::response_calculator::sync_response_calculator;
 use eigen_testing_utils::{
     anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY},
     task_processor::failing_response_calculator,
@@ -38,15 +38,8 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
 
-    // Square function type
-    type SquareFnType = fn(u32, U256) -> Result<U256, TaskManagerError>;
-    let response_calculator = FunctionResponseCalculator::<SquareFnType>::new(square);
-
-    let logic = failing_response_calculator::<SquareFnType, U256, U256>(
-        response_calculator,
-        || U256::from(42),
-        60,
-    );
+    let response_calculator = sync_response_calculator(square);
+    let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
 
     // Subscribe to the new task events and start listening. When a new task is created,
     // the operator will process it and send the signed task response to the aggregator.

@@ -5,8 +5,6 @@ use std::{collections::BTreeMap, sync::Arc};
 use tokio::sync::Mutex;
 use tracing::info;
 
-pub type VaultServiceFnType = fn(u32, TaskInput) -> Result<B256, TaskManagerError>;
-
 pub struct VaultServiceResponseCalculator {
     pub vault: Arc<Mutex<BTreeMap<String, String>>>,
 }
