@@ -1321,7 +1321,7 @@ name = "awesome-vault-service"
 version = "0.1.0"
 dependencies = [
  "alloy",
- "eigen-operator",
+ "eigen-task-manager",
  "eigensdk",
  "eyre",
  "rand 0.8.5",
@@ -4675,7 +4675,7 @@ name = "incredible-dot-product"
 version = "0.1.0"
 dependencies = [
  "alloy",
- "eigen-operator",
+ "eigen-task-manager",
  "eigensdk",
  "eyre",
  "serde",

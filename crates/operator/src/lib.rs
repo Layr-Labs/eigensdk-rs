@@ -111,7 +111,7 @@ impl Operator {
     /// # Arguments
     ///
     /// * `self` - The operator.
-    /// * `compute_logic` - The logic to compute the task response.
+    /// * `response_calculator` - The response calculator that computes the response of a task
     ///
     /// # Returns
     ///

@@ -101,6 +101,16 @@ where
     }
 }
 
+/// Create a verifier from a [`ResponseCalculator`] that computes the response of a task
+/// and compares it with the response of the task
+///
+/// # Arguments
+///
+/// * `response_calculator` - The response calculator
+///
+/// # Returns
+///
+/// * `impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>` - The verifier
 pub fn verifier_from_compute_function<Input, Output>(
     response_calculator: impl ResponseCalculator<Input, Output>,
 ) -> impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>
