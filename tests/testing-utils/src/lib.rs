@@ -16,6 +16,9 @@ pub mod m2_holesky_constants;
 #[allow(clippy::unwrap_used)]
 pub mod anvil_constants;
 
+/// Task processor utilities for testing.
+pub mod task_processor;
+
 /// Test data read from JSON files, used for compliance testing.
 pub mod test_data;
 

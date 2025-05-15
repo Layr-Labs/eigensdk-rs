@@ -3169,10 +3169,13 @@ dependencies = [
  "eigen-common",
  "eigen-crypto-bls",
  "eigen-logging",
+ "eigen-task-manager",
  "eigen-utils",
+ "rand 0.8.5",
  "serde",
  "serde_json",
  "testcontainers",
+ "tracing",
  "url",
 ]
 
