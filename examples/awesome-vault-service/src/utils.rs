@@ -1,3 +1,5 @@
+use std::fs;
+use std::path::Path;
 use std::str::FromStr;
 
 use alloy::signers::k256::ecdsa::SigningKey;
@@ -19,6 +21,17 @@ use eigensdk::{
     types::operator::Operator,
 };
 use eyre::Result;
+use serde::de::DeserializeOwned;
+
+pub fn load_config<P, T>(path: P) -> Result<T>
+where
+    P: AsRef<Path>,
+    T: DeserializeOwned,
+{
+    let s =
+        fs::read_to_string(&path).map_err(|e| eyre::eyre!("Could not read config file: {}", e))?;
+    toml::from_str(&s).map_err(|e| eyre::eyre!("Could not parse config file: {}", e))
+}
 
 /// Sets up the operator
 /// TODO: Move this to the SDK with the OperatorRegistryConfig struct
