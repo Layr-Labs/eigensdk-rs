@@ -27,9 +27,9 @@ pub struct OperatorRegistrationConfig {
     /// Permission controller address
     pub permission_controller_address: Address,
     /// Rewards coordinator address
-    pub rewards_coordinator: Address,
+    pub rewards_coordinator_address: Address,
     /// Allocation manager address
-    pub allocation_manager: Address,
+    pub allocation_manager_address: Address,
     /// Registry coordinator address
     pub registry_coordinator_address: Address,
     /// Delegation manager address
@@ -41,7 +41,7 @@ pub struct OperatorRegistrationConfig {
     /// ERC20 strategy address
     pub erc20_strategy_address: Address,
     /// AVS address
-    pub avs: Address,
+    pub avs_address: Address,
     /// Strategies addresses
-    pub strategies: Vec<Address>,
+    pub strategies_addresses: Vec<Address>,
 }
