@@ -12,12 +12,12 @@ use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
+use eigen_task_manager::TaskManagerDefs;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
-use eigen_task_manager::{TaskManagerDefs, TaskManagerError};
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
-use rand::Rng;
+use operator_calculator::ResponseCalculator;
 use tracing::info;
 
 /// Tarpc Client
@@ -121,7 +121,7 @@ impl Operator {
     /// * `Result<(), OperatorError>` - The result of the operation.
     pub async fn start<TM>(
         &self,
-        compute_logic: impl AsyncFn(u32, TM::Input) -> Result<TM::Output, TaskManagerError>,
+        response_calculator: impl ResponseCalculator<TM::Input, TM::Output>,
     ) -> Result<(), OperatorError>
     where
         TM: TaskManagerDefs,
@@ -148,7 +148,9 @@ impl Operator {
 
             info!("{} picked up a new task", self.operator_name);
 
-            let output = compute_logic(task_index, task.input).await?;
+            let output = response_calculator
+                .compute_response(task_index, task.input)
+                .await?;
             let task_response = TaskResponse {
                 task_index,
                 response: output,
@@ -190,49 +192,5 @@ impl Operator {
         let signed_task_response = SignedTaskResponse::new(task_response, signed_msg, *operator_id);
         info!("Operator signed task response");
         Ok(signed_task_response)
-    }
-}
-
-/// Helper to wrap both correct and incorrect logic in a single closure.
-/// USE THIS FOR TESTING PURPOSES ONLY
-///
-/// # Arguments
-///
-/// * `correct_logic` - The correct logic to respond to the task.
-/// * `incorrect_logic` - The incorrect logic to respond to the task.
-/// * `failure_rate` - The failure rate.
-///
-/// # Returns
-///
-/// * `impl AsyncFn(Event) -> Result<TaskResponse<O>, TaskManagerError>` - The wrapped logic.
-///
-/// # Panics
-///
-/// Panics if `failure_rate` is greater than 100.
-#[cfg(feature = "operator-testing")]
-pub async fn failing_response_calculator<Input, Output>(
-    correct_logic: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
-    incorrect_logic: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
-    failure_rate: u8,
-) -> impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>
-where
-    Output: SolValue + Clone,
-    Input: Clone,
-{
-    assert!(failure_rate <= 100);
-
-    async move |task_index, input: Input| {
-        let result = correct_logic(task_index, input.clone()).await;
-
-        let mut rng = rand::thread_rng();
-        let should_fail = rng.gen_bool(failure_rate as f64 / 100.0);
-
-        if should_fail {
-            info!("Operator compute the task with a wrong response");
-            incorrect_logic(task_index, input).await
-        } else {
-            info!("Operator compute the task successfully");
-            result
-        }
     }
 }
