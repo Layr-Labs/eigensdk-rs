@@ -1,7 +1,8 @@
-use eigen_task_manager::TaskManagerError;
 use rand::Rng;
 use std::{future::Future, marker::PhantomData};
 use tracing::info;
+
+use crate::TaskManagerError;
 
 /// Trait used to compute the response of a task.
 pub trait ResponseCalculator<Input, Output> {
@@ -86,7 +87,6 @@ where
 /// # Panics
 ///
 /// Panics if `failure_rate_percentage` is greater than 100.
-#[cfg(feature = "operator-testing")]
 pub fn failing_response_calculator<Input, Output>(
     response_calculator: impl ResponseCalculator<Input, Output>,
     incorrect_logic: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
