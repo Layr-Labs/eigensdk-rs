@@ -3,7 +3,7 @@
 use alloy::primitives::Address;
 use awesome_vault_service::{
     bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
-    task_manager::save_value,
+    task_manager::save_value, utils::load_config,
 };
 use eigensdk::{
     challenger::{
@@ -22,9 +22,9 @@ use tokio::sync::Mutex;
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
-    let http_rpc_url = "http://localhost:8545".to_string();
-    let ws_rpc_url = "ws://localhost:8545".to_string();
-    let wallet = get_signer(FIRST_PRIVATE_KEY, &http_rpc_url);
+
+    let config: ChallengerConfig = load_config("awesome-config.toml")?;
+    let wallet = get_signer(FIRST_PRIVATE_KEY, &config.http_rpc_url);
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
 
     let contract = AwesomeVaultTaskManagerInstance::new(task_manager_address, wallet);
@@ -34,10 +34,7 @@ async fn main() -> Result<()> {
 
     let is_response_correct = verifier_from_compute_function(compute);
     let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
-    let config = ChallengerConfig {
-        http_rpc_url,
-        ws_rpc_url,
-    };
+
     let mut challenger = Challenger::new(config, task_processor);
     challenger
         .start_challenger()
