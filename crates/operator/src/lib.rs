@@ -12,12 +12,11 @@ use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
-use eigen_task_manager::TaskManagerDefs;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
+use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
-use operator_calculator::ResponseCalculator;
 use tracing::info;
 
 /// Tarpc Client
@@ -26,8 +25,6 @@ pub mod client;
 pub mod config;
 /// Error
 pub mod error;
-/// Operator calculator
-pub mod operator_calculator;
 
 /// Operator struct to handle the operator logic of processing new tasks
 /// and sending signed task responses to the aggregator.

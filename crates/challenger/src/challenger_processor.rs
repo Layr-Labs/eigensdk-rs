@@ -2,6 +2,7 @@ use crate::{challenger::ChallengerTaskProcessor, error::ChallengerError};
 use alloy::dyn_abi::SolType;
 use alloy::primitives::B256;
 use alloy::sol_types::SolValue;
+use eigen_task_manager::response_calculator::ResponseCalculator;
 use eigen_task_manager::task_response_metadata_sol::TaskResponseMetadataSol;
 use eigen_task_manager::{task::Task, task_response::TaskResponse};
 use eigen_task_manager::{TaskManager, TaskManagerError};
@@ -101,13 +102,15 @@ where
 }
 
 pub fn verifier_from_compute_function<Input, Output>(
-    compute_response: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+    response_calculator: impl ResponseCalculator<Input, Output>,
 ) -> impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>
 where
     Output: SolValue + Clone + PartialEq,
 {
     async move |task: Task<Input>, task_response: TaskResponse<Output>| {
-        let computed_response = compute_response(task_response.task_index, task.input).await?;
+        let computed_response = response_calculator
+            .compute_response(task_response.task_index, task.input)
+            .await?;
         Ok(computed_response == task_response.response)
     }
 }
