@@ -1,15 +1,15 @@
 #![allow(missing_docs)]
 
-use alloy::primitives::{Address, U256};
+use alloy::primitives::{Address, FixedBytes, U256};
 use awesome_vault_service::{
-    task_manager::{save_value, save_wrong_value, ISTaskManager},
+    response_calculator::VaultServiceResponseCalculator, task_manager::ISTaskManager,
     utils::setup_operator,
 };
-use eigen_operator::failing_response_calculator;
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
+    task_manager::response_calculator::failing_response_calculator,
     testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
 };
 
@@ -90,19 +90,17 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, operator_config).await.unwrap();
 
-    let redis_state = Arc::new(Mutex::new(BTreeMap::<String, String>::new()));
+    let vault_service_response_calculator = VaultServiceResponseCalculator {
+        vault: Arc::new(Mutex::new(BTreeMap::new())),
+    };
 
-    // TESTING PURPOSES ONLY
-    let compute = failing_response_calculator(
-        save_value(redis_state.clone()).await,
-        save_wrong_value(redis_state).await,
+    let logic = failing_response_calculator(
+        vault_service_response_calculator,
+        async move |_, _| Ok(FixedBytes::<32>::default()),
         50,
     );
 
     // let compute = save_value(redis_state);
 
-    operator
-        .start::<ISTaskManager>(compute.await)
-        .await
-        .unwrap();
+    operator.start::<ISTaskManager>(logic).await.unwrap();
 }

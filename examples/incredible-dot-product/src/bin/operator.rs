@@ -1,14 +1,11 @@
 //! Incredible Dot Product Operator
-use std::str::FromStr;
 
 use alloy::primitives::{Address, U256};
-use eigen_operator::operator_calculator::{
-    failing_response_calculator, FunctionResponseCalculator,
-};
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
+    task_manager::response_calculator::{failing_response_calculator, FunctionResponseCalculator},
     testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
 };
 use eyre::Result;
@@ -16,6 +13,7 @@ use incredible_dot_product::{
     task_manager::{dot_product, invalid_dot_product, ISTaskManager},
     utils::setup_operator,
 };
+use std::str::FromStr;
 use tracing::info;
 
 #[tokio::main]

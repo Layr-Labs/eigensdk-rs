@@ -3,10 +3,9 @@
 use alloy::primitives::{address, U256};
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
-use eigen_operator::{
-    config::OperatorConfig,
-    operator_calculator::{failing_response_calculator, FunctionResponseCalculator},
-    Operator,
+use eigen_operator::{config::OperatorConfig, Operator};
+use eigen_task_manager::response_calculator::{
+    failing_response_calculator, FunctionResponseCalculator,
 };
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
 use incredible_squaring::{square, ISTaskManager};
