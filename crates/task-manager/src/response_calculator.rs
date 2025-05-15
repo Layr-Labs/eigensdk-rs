@@ -40,6 +40,9 @@ where
 
 /// Create a new [`FunctionResponseCalculator`] from an async function.
 ///
+/// NOTE: This function is outside of the `FunctionResponseCalculator` struct to avoid
+/// specifying the type of `F` when creating a new `FunctionResponseCalculator`.
+///
 /// # Arguments
 ///
 /// * `compute_fn` - The async function to compute the response.
@@ -58,6 +61,9 @@ where
 
 /// Create a new [`FunctionResponseCalculator`] from a sync function.
 /// This function will be converted to an async function.
+///
+/// NOTE: This function is outside of the `FunctionResponseCalculator` struct to avoid
+/// specifying the type of `F` when creating a new `FunctionResponseCalculator`.
 ///
 /// # Arguments
 ///
