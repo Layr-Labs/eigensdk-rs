@@ -1,4 +1,4 @@
-use alloy::primitives::{Address, U256};
+use alloy::primitives::Address;
 use serde::{Deserialize, Serialize};
 
 /// Operator registration config
@@ -10,8 +10,6 @@ pub struct OperatorRegistrationConfig {
     pub ecdsa_keystore_path: String,
     /// Password for the ECDSA keystore file
     pub ecdsa_keystore_password: String,
-    /// HTTP RPC URL
-    pub http_rpc_url: String,
     /// Metadata URI
     pub metadata_uri: String,
     /// Socket address
@@ -23,7 +21,7 @@ pub struct OperatorRegistrationConfig {
     /// New magnitude to allocate
     pub new_magnitude: Vec<u64>,
     /// Deposit tokens amount
-    pub deposit_tokens: U256,
+    pub deposit_tokens: String,
     /// Permission controller address
     pub permission_controller_address: Address,
     /// Rewards coordinator address
