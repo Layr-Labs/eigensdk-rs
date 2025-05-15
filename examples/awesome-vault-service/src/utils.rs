@@ -24,6 +24,15 @@ use eigensdk::{
 use eyre::Result;
 use serde::de::DeserializeOwned;
 
+/// Loads a config from a file
+///
+/// # Arguments
+///
+/// * `path` - The path to the config file
+///
+/// # Returns
+///
+/// * `eyre::Result<T>` - The config struct
 pub fn load_config<P, T>(path: P) -> Result<T>
 where
     P: AsRef<Path>,
@@ -39,26 +48,9 @@ where
 ///
 /// # Arguments
 ///
+/// * `config` - The config for the operator
 /// * `bls_key_pair` - The BLS key pair for the operator
-/// * `operator_pvt_key` - The private key for the operator
-/// * `ecdsa_keystore_path` - The path to the ECDSA keystore
-/// * `ecdsa_keystore_password` - The password for the ECDSA keystore
-/// * `rpc_url` - The RPC URL
-/// * `metadata_uri` - The metadata URI for the operator
-/// * `socket` - The socket for the operator
-/// * `allocation_delay` - The allocation delay for the operator
-/// * `operator_set_id` - The ID of the operator set
-/// * `deposit_tokens` - The amount of tokens to deposit into the strategy
-/// * `new_magnitude` - The new magnitude for the allocation
-/// * `permission_controller_address` - The address of the permission controller
-/// * `rewards_coordinator_address` - The address of the rewards coordinator
-/// * `allocation_manager` - The address of the allocation manager
-/// * `registry_coordinator_address` - The address of the registry coordinator
-/// * `delegation_manager_address` - The address of the delegation manager
-/// * `avs_directory_address` - The address of the AVS directory
-/// * `strategy_manager_address` - The address of the strategy manager
-/// * `erc20_strategy_address` - The address of the ERC20 strategy
-/// * `avs` - The address of the AVS
+/// * `http_rpc_url` - The HTTP RPC URL
 ///
 /// # Returns
 ///
