@@ -26,6 +26,8 @@ pub mod client;
 pub mod config;
 /// Error
 pub mod error;
+/// Operator calculator
+pub mod operator_calculator;
 
 /// Operator struct to handle the operator logic of processing new tasks
 /// and sending signed task responses to the aggregator.
