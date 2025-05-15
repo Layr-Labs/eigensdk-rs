@@ -2,6 +2,7 @@ use super::log_level::LogLevel;
 use super::logger::Logger;
 use std::{fmt::Debug, sync::Arc};
 use tracing::{debug, error, info, trace, warn};
+use tracing_subscriber::EnvFilter;
 
 // SLoggerOptions are options when creating a new SLogger.
 // A zero Options consists entirely of default values.
@@ -35,13 +36,19 @@ impl TracingLogger {
             LogLevel::Debug => tracing::Level::DEBUG,
             LogLevel::Trace => tracing::Level::TRACE,
         };
-        tracing::subscriber::set_global_default(
-            tracing_subscriber::fmt::Subscriber::builder()
-                .with_max_level(tracing_level)
-                .with_ansi(no_color)
-                .finish(),
-        )
-        .expect("setting default subscriber failed");
+
+        // Disable tarpc logging
+        let mut filter = EnvFilter::new("tarpc=off");
+        // Set the default level for all other loggers
+        filter = filter.add_directive(tracing_level.into());
+
+        let subscriber = tracing_subscriber::fmt()
+            .with_ansi(no_color)
+            .with_env_filter(filter)
+            .finish();
+
+        tracing::subscriber::set_global_default(subscriber)
+            .expect("setting default subscriber failed");
 
         Arc::new(TracingLogger {
             add_source,
