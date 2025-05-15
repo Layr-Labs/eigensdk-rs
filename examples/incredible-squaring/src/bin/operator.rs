@@ -29,6 +29,7 @@ async fn main() {
         registry_coordinator_address,
         operator_state_retriever_address,
         aggregator_ip_port: server_address,
+        registration: None,
     };
 
     // Initialize the operator
