@@ -40,10 +40,10 @@ where
         let should_fail = rng.gen_bool(failure_rate_percentage as f64 / 100.0);
 
         if should_fail {
-            info!("Operator compute the task with a wrong response");
+            info!("Operator computed the task with a wrong response");
             Ok(invalid_values_builder())
         } else {
-            info!("Operator compute the task successfully");
+            info!("Operator computed the task successfully");
             result
         }
     })
