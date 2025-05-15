@@ -22,7 +22,7 @@ pub trait ResponseCalculator<Input, Output> {
     ) -> impl Future<Output = Result<Output, TaskManagerError>>;
 }
 
-/// Implementation of the `ResponseCalculator` trait that uses a function to compute the response.
+/// Implementation of the [`ResponseCalculator`] trait that uses a function to compute the response.
 #[derive(Debug)]
 pub struct FunctionResponseCalculator<Input, Output, F>
 where
