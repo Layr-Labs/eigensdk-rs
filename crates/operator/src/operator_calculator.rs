@@ -86,6 +86,7 @@ where
 /// # Panics
 ///
 /// Panics if `failure_rate_percentage` is greater than 100.
+#[cfg(feature = "operator-testing")]
 pub fn failing_response_calculator<Input, Output>(
     response_calculator: impl ResponseCalculator<Input, Output>,
     incorrect_logic: impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
