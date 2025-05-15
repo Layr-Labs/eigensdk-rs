@@ -38,39 +38,39 @@ where
     }
 }
 
-impl<F> FunctionResponseCalculator<F> {
-    /// Create a new [`FunctionResponseCalculator`] from a sync function.
-    /// This function will be converted to an async function.
-    ///
-    /// # Arguments
-    ///
-    /// * `compute_fn` - The sync function to compute the response.
-    ///
-    /// # Returns
-    ///
-    /// * [`FunctionResponseCalculator`] - The new [`FunctionResponseCalculator`].
-    pub fn new<CF, Input, Output>(
-        compute_fn: CF,
-    ) -> FunctionResponseCalculator<impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>>
-    where
-        CF: Fn(u32, Input) -> Result<Output, TaskManagerError>,
-    {
-        FunctionResponseCalculator(async move |a, b| compute_fn(a, b))
-    }
+/// Create a new [`FunctionResponseCalculator`] from an async function.
+///
+/// # Arguments
+///
+/// * `compute_fn` - The async function to compute the response.
+///
+/// # Returns
+///
+/// * [`FunctionResponseCalculator`] - The new [`FunctionResponseCalculator`].
+pub fn async_response_calculator<CF, Input, Output>(
+    compute_fn: CF,
+) -> FunctionResponseCalculator<CF>
+where
+    CF: AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+{
+    FunctionResponseCalculator(compute_fn)
+}
 
-    /// Create a new [`FunctionResponseCalculator`] from an async function.
-    ///
-    /// # Arguments
-    ///
-    /// * `compute_fn` - The async function to compute the response.
-    ///
-    /// # Returns
-    ///
-    /// * [`FunctionResponseCalculator`] - The new [`FunctionResponseCalculator`].
-    pub fn new_async<CF, Input, Output>(compute_fn: CF) -> FunctionResponseCalculator<CF>
-    where
-        CF: AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
-    {
-        FunctionResponseCalculator(compute_fn)
-    }
+/// Create a new [`FunctionResponseCalculator`] from a sync function.
+/// This function will be converted to an async function.
+///
+/// # Arguments
+///
+/// * `compute_fn` - The sync function to compute the response.
+///
+/// # Returns
+///
+/// * [`FunctionResponseCalculator`] - The new [`FunctionResponseCalculator`].
+pub fn sync_response_calculator<CF, Input, Output>(
+    compute_fn: CF,
+) -> FunctionResponseCalculator<impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>>
+where
+    CF: Fn(u32, Input) -> Result<Output, TaskManagerError>,
+{
+    FunctionResponseCalculator(async move |a, b| compute_fn(a, b))
 }
