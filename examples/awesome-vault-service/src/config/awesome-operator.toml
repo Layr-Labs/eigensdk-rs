@@ -1,0 +1,32 @@
+operator_address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+operator_name = "vault"
+http_rpc_url = "http://localhost:8545"
+ws_rpc_url = "ws://localhost:8545"
+registry_coordinator_address = "0x7bc06c482dead17c0e297afbc32f6e63d3846650"
+operator_state_retriever_address = "0x4c5859f0f772848b2d91f1d83e2fe57935348029"
+aggregator_ip_port = "127.0.0.1:8080"
+
+[bls_key_pair]
+priv_key = [180, 188, 154, 116, 162, 142, 129, 164, 182, 129, 161, 49, 48, 78, 44, 188, 149, 119, 255, 202, 152, 52, 71, 45, 177, 213, 130, 160, 39, 175, 210, 30]
+pub_key = [110, 188, 139, 130, 178, 207, 121, 114, 213, 93, 101, 180, 20, 48, 131, 244, 34, 51, 213, 179, 231, 109, 99, 102, 197, 159, 98, 146, 21, 9, 238, 22]
+
+[registration]
+operator_pvt_key = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+ecdsa_keystore_path = ""
+ecdsa_keystore_password = ""
+metadata_uri = "metadata"
+socket = "socket"
+allocation_delay = 0
+operator_set_id = 0
+new_magnitude = [1000000000000000000]
+deposit_tokens = "5000000000000000000000"
+permission_controller_address = "0x59b670e9fa9d0a427751af201d676719a970857b"
+rewards_coordinator_address = "0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0"
+allocation_manager_address = "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6"
+registry_coordinator_address = "0x7bc06c482dead17c0e297afbc32f6e63d3846650"
+delegation_manager_address = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+avs_directory_address = "0x610178da211fef7d417bc0e6fed39f05609ad788"
+strategy_manager_address = "0x0165878a594ca255338adfa4d48449f69242eb8f"
+erc20_strategy_address = "0x2b961e3959b79326a8e7f64ef0d2d825707669b5"
+avs_address = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154"
+strategies_addresses = ["0x2b961e3959b79326a8e7f64ef0d2d825707669b5"]
