@@ -1,16 +1,20 @@
 #![allow(missing_docs)]
 
-use alloy::primitives::{Address, FixedBytes, U256};
+use alloy::primitives::{Address, B256, U256};
 use awesome_vault_service::{
-    response_calculator::VaultServiceResponseCalculator, task_manager::ISTaskManager,
+    bindings::awesomevaulttaskmanager::IAwesomeVaultTaskManager::TaskInput,
+    response_calculator::{VaultServiceFnType, VaultServiceResponseCalculator},
+    task_manager::ISTaskManager,
     utils::setup_operator,
 };
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
-    task_manager::response_calculator::failing_response_calculator,
-    testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
+    testing_utils::{
+        anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
+        task_processor::failing_response_calculator,
+    },
 };
 
 use std::{collections::BTreeMap, str::FromStr, sync::Arc};
@@ -94,9 +98,9 @@ async fn main() {
         vault: Arc::new(Mutex::new(BTreeMap::new())),
     };
 
-    let logic = failing_response_calculator(
+    let logic = failing_response_calculator::<VaultServiceFnType, TaskInput, B256>(
         vault_service_response_calculator,
-        |_, _| async { Ok(FixedBytes::<32>::default()) },
+        B256::default,
         50,
     );
 

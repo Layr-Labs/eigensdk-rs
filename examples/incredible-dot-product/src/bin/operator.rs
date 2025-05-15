@@ -5,13 +5,17 @@ use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
-    task_manager::response_calculator::{failing_response_calculator, FunctionResponseCalculator},
-    testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
+    task_manager::response_calculator::FunctionResponseCalculator,
+    testing_utils::{
+        anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
+        task_processor::failing_response_calculator,
+    },
 };
 use eyre::Result;
 use incredible_dot_product::{
-    task_manager::{dot_product, ISTaskManager},
+    task_manager::{dot_product, DotProductFnType, ISTaskManager},
     utils::setup_operator,
+    IIncredibleDotProductTaskManager::DotProductInput,
 };
 use std::str::FromStr;
 use tracing::info;
@@ -83,10 +87,13 @@ async fn main() -> Result<()> {
         .await
         .map_err(|e| eyre::eyre!("Operator new error: {}", e))?;
 
-    let response_calculator = FunctionResponseCalculator::new(dot_product);
+    let response_calculator = FunctionResponseCalculator::<DotProductFnType>::new(dot_product);
 
-    let logic =
-        failing_response_calculator(response_calculator, |_, _| async { Ok(U256::MAX) }, 40);
+    let logic = failing_response_calculator::<DotProductFnType, DotProductInput, U256>(
+        response_calculator,
+        || U256::MAX,
+        40,
+    );
 
     // TODO: Review bounds in SDK. I have to derive Serialize and Deserialize for TaskResponse in the bindings
     operator

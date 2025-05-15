@@ -1,16 +1,16 @@
 use std::str::FromStr;
 
-use alloy::network::EthereumWallet;
 use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::http::reqwest::Url;
+use alloy::{network::EthereumWallet, primitives::U256};
 use eigen_challenger::{
     challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
     config::ChallengerConfig,
     Challenger,
 };
-use eigen_task_manager::response_calculator::FunctionResponseCalculator;
+use eigen_task_manager::{response_calculator::FunctionResponseCalculator, TaskManagerError};
 use incredible_squaring::{
     bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
     square,
@@ -29,7 +29,9 @@ async fn main() {
 
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
-    let response_calculator = FunctionResponseCalculator::new(square);
+    // Square function type
+    type SquareFnType = fn(u32, U256) -> Result<U256, TaskManagerError>;
+    let response_calculator = FunctionResponseCalculator::<SquareFnType>::new(square);
 
     let logic = verifier_from_compute_function(response_calculator);
 

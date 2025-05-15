@@ -1,7 +1,4 @@
-use eigen_task_manager::{
-    response_calculator::{FunctionResponseCalculator, ResponseCalculator},
-    TaskManagerError,
-};
+use eigen_task_manager::response_calculator::{FunctionResponseCalculator, ResponseCalculator};
 use rand::Rng;
 use tracing::info;
 

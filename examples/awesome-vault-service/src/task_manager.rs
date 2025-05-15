@@ -1,6 +1,5 @@
 //! Example AVS which squares a number
 
-use alloy::primitives::FixedBytes;
 use alloy::primitives::B256;
 use alloy::sol_types::SolEvent;
 use eigensdk::task_manager::impl_task_manager_from_defs_and_contract;
@@ -19,7 +18,7 @@ pub struct ISTaskManager;
 impl TaskManagerDefs for ISTaskManager {
     // TODO SDK: Should we remove the `Debug` bound in TM::Input?
     type Input = TaskInput;
-    type Output = FixedBytes<32>;
+    type Output = B256;
     const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
     const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
 }

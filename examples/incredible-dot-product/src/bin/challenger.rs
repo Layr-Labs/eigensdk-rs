@@ -14,7 +14,7 @@ use eigensdk::{
 };
 use eyre::Result;
 use incredible_dot_product::{
-    task_manager::dot_product,
+    task_manager::{dot_product, DotProductFnType},
     IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
 use std::str::FromStr;
@@ -29,7 +29,7 @@ async fn main() -> Result<()> {
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
 
-    let response_calculator = FunctionResponseCalculator::new(dot_product);
+    let response_calculator = FunctionResponseCalculator::<DotProductFnType>::new(dot_product);
 
     let verifier = verifier_from_compute_function(response_calculator);
 

@@ -1,20 +1,22 @@
 use crate::bindings::awesomevaulttaskmanager::IAwesomeVaultTaskManager::TaskInput;
-use alloy::primitives::{FixedBytes, Keccak256};
+use alloy::primitives::{Keccak256, B256};
 use eigensdk::task_manager::{response_calculator::ResponseCalculator, TaskManagerError};
 use std::{collections::BTreeMap, sync::Arc};
 use tokio::sync::Mutex;
 use tracing::info;
 
+pub type VaultServiceFnType = fn(u32, TaskInput) -> Result<B256, TaskManagerError>;
+
 pub struct VaultServiceResponseCalculator {
     pub vault: Arc<Mutex<BTreeMap<String, String>>>,
 }
 
-impl ResponseCalculator<TaskInput, FixedBytes<32>> for VaultServiceResponseCalculator {
+impl ResponseCalculator<TaskInput, B256> for VaultServiceResponseCalculator {
     async fn compute_response(
         &self,
         _task_index: u32,
         input: TaskInput,
-    ) -> Result<FixedBytes<32>, TaskManagerError> {
+    ) -> Result<B256, TaskManagerError> {
         let mut vault = self.vault.lock().await;
         info!("Setting key: {} with value: {}", input.key, input.value);
         vault.insert(input.key, input.value);
@@ -30,16 +32,13 @@ impl ResponseCalculator<TaskInput, FixedBytes<32>> for VaultServiceResponseCalcu
 ///
 /// # Returns
 ///
-/// * `Result<FixedBytes<32>, TaskManagerError>` - The vault root
-pub fn compute_vault_root(
-    map: &BTreeMap<String, String>,
-) -> Result<FixedBytes<32>, TaskManagerError> {
+/// * `Result<B256, TaskManagerError>` - The vault root
+pub fn compute_vault_root(map: &BTreeMap<String, String>) -> Result<B256, TaskManagerError> {
     if map.is_empty() {
-        return Ok(FixedBytes::from_slice(&[0u8; 32]));
+        return Ok(Default::default());
     }
 
     let mut leaves: Vec<[u8; 32]> = map.iter().map(|(k, v)| hash_leaf(k, v)).collect();
-
     while leaves.len() > 1 {
         leaves = leaves
             .chunks(2)
@@ -50,7 +49,7 @@ pub fn compute_vault_root(
             })
             .collect();
     }
-    let root = FixedBytes::from_slice(&leaves[0]);
+    let root = B256::from_slice(&leaves[0]);
     info!("Vault root: {:?}", root);
     Ok(root)
 }
