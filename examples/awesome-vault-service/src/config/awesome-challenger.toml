@@ -1,0 +1,2 @@
+http_rpc_url = "http://localhost:8545"
+ws_rpc_url = "ws://localhost:8545"

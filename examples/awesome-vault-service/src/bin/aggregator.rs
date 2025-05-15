@@ -11,13 +11,13 @@ use eigensdk::{
     logging::{init_logger, log_level::LogLevel},
 };
 use eyre::Result;
-
 use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
-    let config: AggregatorConfig = load_config("awesome-config.toml")?;
+    let config: AggregatorConfig = load_config("./src/config/awesome-aggregator.toml")?;
+    dbg!(&config);
     let wallet = get_signer(
         "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6",
         &config.http_rpc_url,

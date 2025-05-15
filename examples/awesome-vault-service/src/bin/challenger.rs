@@ -22,8 +22,7 @@ use tokio::sync::Mutex;
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
-
-    let config: ChallengerConfig = load_config("awesome-config.toml")?;
+    let config: ChallengerConfig = load_config("./src/config/awesome-challenger.toml")?;
     let wallet = get_signer(FIRST_PRIVATE_KEY, &config.http_rpc_url);
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
 
