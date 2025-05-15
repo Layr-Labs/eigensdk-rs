@@ -96,7 +96,7 @@ async fn main() {
 
     let logic = failing_response_calculator(
         vault_service_response_calculator,
-        async move |_, _| Ok(FixedBytes::<32>::default()),
+        |_, _| async { Ok(FixedBytes::<32>::default()) },
         50,
     );
 

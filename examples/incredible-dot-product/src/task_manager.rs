@@ -42,21 +42,3 @@ pub async fn dot_product(
         .zip(input.Y.iter())
         .fold(U256::ZERO, |acc, (a, b)| acc + (*a) * (*b)))
 }
-
-/// Computes an invalid dot product of a pair of points
-/// This function is used to test the slashing mechanism when the operator returns a wrong response
-///
-/// # Arguments
-///
-/// * `task_index` - The index of the task
-/// * `input` - The input of the task
-///
-/// # Returns
-///
-/// * `Result<TaskResponse<U256>, OperatorError>` - The wrong task response
-pub async fn invalid_dot_product(
-    _task_index: u32,
-    _input: DotProductInput,
-) -> Result<U256, TaskManagerError> {
-    Ok(U256::MAX)
-}

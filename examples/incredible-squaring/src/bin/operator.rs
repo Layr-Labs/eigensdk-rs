@@ -39,11 +39,8 @@ async fn main() {
 
     let response_calculator = FunctionResponseCalculator::new(square);
 
-    let logic = failing_response_calculator(
-        response_calculator,
-        async move |_, _| Ok(U256::from(42)),
-        60,
-    );
+    let logic =
+        failing_response_calculator(response_calculator, |_, _| async { Ok(U256::from(42)) }, 60);
 
     // Subscribe to the new task events and start listening. When a new task is created,
     // the operator will process it and send the signed task response to the aggregator.

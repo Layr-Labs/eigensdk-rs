@@ -10,7 +10,7 @@ use eigensdk::{
 };
 use eyre::Result;
 use incredible_dot_product::{
-    task_manager::{dot_product, invalid_dot_product, ISTaskManager},
+    task_manager::{dot_product, ISTaskManager},
     utils::setup_operator,
 };
 use std::str::FromStr;
@@ -85,7 +85,8 @@ async fn main() -> Result<()> {
 
     let response_calculator = FunctionResponseCalculator::new(dot_product);
 
-    let logic = failing_response_calculator(response_calculator, invalid_dot_product, 40);
+    let logic =
+        failing_response_calculator(response_calculator, |_, _| async { Ok(U256::MAX) }, 40);
 
     // TODO: Review bounds in SDK. I have to derive Serialize and Deserialize for TaskResponse in the bindings
     operator
