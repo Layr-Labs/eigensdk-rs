@@ -13,6 +13,7 @@ use eigen_task_manager::TaskManagerError;
 // Allow warnings in auto-generated code
 #[allow(warnings)]
 pub mod bindings;
+pub mod utils;
 
 pub async fn square(
     _task_index: u32,
