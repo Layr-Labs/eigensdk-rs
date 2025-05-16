@@ -1,11 +1,14 @@
 #![allow(missing_docs)]
 
 use alloy::primitives::U256;
+use eigensdk::crypto_bls::BlsKeyPair;
 use eigensdk::logging::get_logger;
 use eigensdk::operator::{config::OperatorConfig, Operator};
 use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
 use eigensdk::testing_utils::task_processor::failing_response_calculator;
+use incredible_squaring::utils::setup_operator;
 use incredible_squaring::{square, utils::load_config, ISTaskManager};
+use tracing::info;
 
 // This example shows how to initialize an operator and start to listen for new task events.
 // For this example, Operator should be registered.
@@ -13,6 +16,17 @@ use incredible_squaring::{square, utils::load_config, ISTaskManager};
 async fn main() {
     let logger = get_logger();
     let config: OperatorConfig = load_config("./src/config/squaring-operator.toml").unwrap();
+
+    if let Some(registration) = config.registration.clone() {
+        setup_operator(
+            registration,
+            BlsKeyPair::new(config.bls_private_key.clone()).unwrap(),
+            config.http_rpc_url.clone(),
+        )
+        .await
+        .unwrap();
+        info!("Operator setup complete");
+    }
 
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
