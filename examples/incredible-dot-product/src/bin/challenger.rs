@@ -1,7 +1,7 @@
 //! Incredible Dot Product Challenger
 
 use alloy::primitives::Address;
-use eigen_task_manager::response_calculator::sync_response_calculator;
+use eigen_task_manager::response_calculator::response_calculator_from_fn;
 use eigensdk::{
     challenger::{
         challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
@@ -29,7 +29,7 @@ async fn main() -> Result<()> {
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
 
-    let response_calculator = sync_response_calculator(dot_product);
+    let response_calculator = response_calculator_from_fn(dot_product);
 
     let verifier = verifier_from_compute_function(response_calculator);
 

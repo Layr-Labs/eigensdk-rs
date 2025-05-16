@@ -50,7 +50,7 @@ where
 /// # Returns
 ///
 /// * [`FunctionResponseCalculator`] - The new [`FunctionResponseCalculator`].
-pub fn async_response_calculator<CF, Input, Output>(
+pub fn response_calculator_from_async_fn<CF, Input, Output>(
     compute_fn: CF,
 ) -> FunctionResponseCalculator<CF>
 where
@@ -72,7 +72,7 @@ where
 /// # Returns
 ///
 /// * [`FunctionResponseCalculator`] - The new [`FunctionResponseCalculator`].
-pub fn sync_response_calculator<CF, Input, Output>(
+pub fn response_calculator_from_fn<CF, Input, Output>(
     compute_fn: CF,
 ) -> FunctionResponseCalculator<impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>>
 where

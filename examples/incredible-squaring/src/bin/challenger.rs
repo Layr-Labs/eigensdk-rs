@@ -10,7 +10,7 @@ use eigen_challenger::{
     config::ChallengerConfig,
     Challenger,
 };
-use eigen_task_manager::response_calculator::sync_response_calculator;
+use eigen_task_manager::response_calculator::response_calculator_from_fn;
 use incredible_squaring::{
     bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
     square,
@@ -29,7 +29,7 @@ async fn main() {
 
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
-    let response_calculator = sync_response_calculator(square);
+    let response_calculator = response_calculator_from_fn(square);
 
     let logic = verifier_from_compute_function(response_calculator);
 

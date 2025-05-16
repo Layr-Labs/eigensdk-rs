@@ -1,4 +1,6 @@
-use eigen_task_manager::response_calculator::{async_response_calculator, ResponseCalculator};
+use eigen_task_manager::response_calculator::{
+    response_calculator_from_async_fn, ResponseCalculator,
+};
 use rand::Rng;
 use tracing::info;
 
@@ -31,7 +33,7 @@ where
         "Failure rate percentage must be less than or equal to 100"
     );
 
-    async_response_calculator(async move |task_index, input: Input| {
+    response_calculator_from_async_fn(async move |task_index, input: Input| {
         let result = response_calculator
             .compute_response(task_index, input.clone())
             .await;

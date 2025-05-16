@@ -1,7 +1,7 @@
 //! Incredible Dot Product Operator
 
 use alloy::primitives::{Address, U256};
-use eigen_task_manager::response_calculator::sync_response_calculator;
+use eigen_task_manager::response_calculator::response_calculator_from_fn;
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
@@ -87,7 +87,7 @@ async fn main() -> Result<()> {
         .await
         .map_err(|e| eyre::eyre!("Operator new error: {}", e))?;
 
-    let response_calculator = sync_response_calculator(dot_product);
+    let response_calculator = response_calculator_from_fn(dot_product);
 
     let logic = failing_response_calculator(response_calculator, || U256::MAX, 40);
 

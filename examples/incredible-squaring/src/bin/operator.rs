@@ -4,7 +4,7 @@ use alloy::primitives::{address, U256};
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
 use eigen_operator::{config::OperatorConfig, Operator};
-use eigen_task_manager::response_calculator::sync_response_calculator;
+use eigen_task_manager::response_calculator::response_calculator_from_fn;
 use eigen_testing_utils::{
     anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY},
     task_processor::failing_response_calculator,
@@ -39,7 +39,7 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
 
-    let response_calculator = sync_response_calculator(square);
+    let response_calculator = response_calculator_from_fn(square);
     let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
 
     // Subscribe to the new task events and start listening. When a new task is created,
