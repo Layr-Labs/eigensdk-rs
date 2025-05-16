@@ -69,7 +69,7 @@ async fn main() -> Result<()> {
     info!("Operator setup complete");
 
     let operator_config = OperatorConfig {
-        bls_key_pair,
+        bls_private_key: OPERATOR_BLS_KEY.to_string(),
         operator_address,
         operator_name: operator_name.to_string(),
         ws_rpc_url: ws_rpc_url.to_string(),
