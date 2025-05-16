@@ -100,6 +100,8 @@ impl Operator {
                 return Err(OperatorError::RegistrationError);
             };
 
+            info!("Registering operator {}", operator_name);
+
             register_operator(
                 registration_config,
                 logger.clone(),
@@ -109,6 +111,7 @@ impl Operator {
             .await?;
             info!("Operator {} registered successfully", operator_name);
         }
+
         let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
 
         let operator_id = avs_registry_reader
