@@ -27,6 +27,8 @@ pub mod config;
 pub mod error;
 /// Operator registration config
 pub mod register_config;
+/// Operator registration utils
+pub mod registration;
 
 /// Operator struct to handle the operator logic of processing new tasks
 /// and sending signed task responses to the aggregator.
