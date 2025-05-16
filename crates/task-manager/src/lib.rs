@@ -2,6 +2,8 @@
 
 /// Event decoder
 pub mod event_decoder;
+/// Response calculator
+pub mod response_calculator;
 /// Task
 pub mod task;
 /// Task response

@@ -9,6 +9,7 @@ use eigensdk::{
     },
     common::get_signer,
     logging::{init_logger, log_level::LogLevel},
+    task_manager::response_calculator::response_calculator_from_fn,
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
@@ -28,7 +29,10 @@ async fn main() -> Result<()> {
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
 
-    let verifier = verifier_from_compute_function(dot_product);
+    let response_calculator = response_calculator_from_fn(dot_product);
+
+    let verifier = verifier_from_compute_function(response_calculator);
+
     let task_processor = IndexingChallengerProcessor::new(contract, verifier);
     let config = ChallengerConfig {
         http_rpc_url,

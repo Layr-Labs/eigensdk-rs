@@ -17,7 +17,6 @@ alloy = { version = "0.13", features = [
     "signer-keystore",
 ] }
 eigensdk = { workspace = true, features = ["full"] }
-eigen-operator = { workspace = true, features = ["operator-testing"] }
 eyre = "0.6"
 rand = "0.8"
 serde = { version = "1.0", features = ["derive"] }
