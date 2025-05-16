@@ -14,6 +14,8 @@ eigensdk = { workspace = true, features = ["full"] }
 eyre.workspace = true
 tokio = { workspace = true, features = ["test-util", "full", "sync"] }
 tracing.workspace = true
+serde.workspace = true
+toml = "0.8"
 
 [lib]
 doctest = false
