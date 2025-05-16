@@ -3030,6 +3030,7 @@ dependencies = [
  "rand_core 0.6.4",
  "reqwest 0.12.15",
  "rust-bls-bn254",
+ "serde",
  "tarpc",
  "thiserror 1.0.69",
  "tokio",
