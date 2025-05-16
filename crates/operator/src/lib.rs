@@ -92,13 +92,13 @@ impl Operator {
             .await?
         {
             // Check if a registration config was provided
-            let registration_config = config.registration.ok_or_else(|| {
+            let Some(registration_config) = config.registration else {
                 error!(
                     "Operator {} not registered and no registration config was provided",
                     operator_name
                 );
-                OperatorError::RegistrationError
-            })?;
+                return Err(OperatorError::RegistrationError);
+            };
 
             register_operator(
                 registration_config,
@@ -110,16 +110,6 @@ impl Operator {
             info!("Operator {} registered successfully", operator_name);
         }
         let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
-
-        let is_registered = avs_registry_reader
-            .is_operator_registered(operator_address)
-            .await
-            .map_err(|_| OperatorError::RegistrationError)?;
-        info!("{} registered: {}", operator_name, is_registered);
-
-        if !is_registered {
-            return Err(OperatorError::RegistrationError);
-        }
 
         let operator_id = avs_registry_reader
             .get_operator_id(operator_address)
