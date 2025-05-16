@@ -134,7 +134,7 @@ open target/llvm-cov/html/index.html
 
 ## Supported Rust Version
 
-Rolling `MSRV` policy of 6 months. The current `MSRV` is 1.79
+Rolling `MSRV` policy of 6 months. The current `MSRV` is 1.82
 
 ## Release process
 

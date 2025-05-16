@@ -17,6 +17,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Bump MSRV and Rust to 1.82 in PR [515](https://github.com/Layr-Labs/eigensdk-rs/pull/515).
+
 * Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
 
 ### Breaking Changes 🛠
