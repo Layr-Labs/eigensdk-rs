@@ -18,7 +18,7 @@ The Operator functions through the following flow:
    - Applies a [computation function](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/crates/operator/src/lib.rs#L145-L149) to the input data. This computation function is provided when starting the operator.
 
 3. **Response Signing**:
-   - [Signs](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/crates/operator/src/lib.rs#L176-L191) the computed result using the operator's BLS key pair
+   - [Signs](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/crates/operator/src/lib.rs#L176-L191) the computed result using the operator's BLS Key Pair.
    - Creates a `SignedTaskResponse` containing the result, signature, and operator ID
 
 4. **Response Submission**:
@@ -50,14 +50,28 @@ Key components needed:
       ```
 
 2. **Processing Logic**: Implement the computation function that processes task inputs and produces outputs
-   - This function will be called when the operator recieve a `NEW_TASK_EVENT_SELECTOR` event.
+   - This function will be called when the operator receives a `NEW_TASK_EVENT_SELECTOR` event.
    - You can specify the input and output types of the task.
 
     ```rust
         // Your custom logic to process the input and generate a response. 
-        async fn logic(task_index: u32, input: U256) -> Result<U256, TaskManagerError> {
-            Ok(your_computation_function(input))
+        // Example: square the input.
+        pub async fn square(
+            task_index: u32,
+            number_to_be_squared: U256
+        ) -> Result<U256, TaskManagerError> {
+            Ok(number_to_be_squared * number_to_be_squared)
         }
+    ```
+
+   - Wrap your logic with `failing_response_calculator` to inject failures and a given failure rate. This will help you test what happens when the operator responds incorrectly to a task and see how slashing works. **Use this for testing purposes only.**
+    
+    ```rust
+        let logic = failing_response_calculator(
+            square,
+            |_, _| async { Ok(U256::from(42)) },
+            60,
+        );
     ```
 
 3. **Create the operator configuration**: Configure the operator with the following parameters:
