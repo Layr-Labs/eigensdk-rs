@@ -4693,9 +4693,7 @@ dependencies = [
  "alloy",
  "eigensdk",
  "eyre",
- "serde",
  "tokio",
- "toml",
  "tracing",
 ]
 

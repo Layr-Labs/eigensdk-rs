@@ -9,21 +9,11 @@ homepage.workspace = true
 license-file.workspace = true
 
 [dependencies]
-alloy = { workspace = true, features = [
-    "sol-types",
-    "contract",
-    "full",
-    "signer-aws",
-    "rlp",
-    "json-rpc",
-    "signer-keystore",
-] }
+alloy = { workspace = true, features = ["signer-keystore"] }
 eigensdk = { workspace = true, features = ["full"] }
 eyre.workspace = true
-serde.workspace = true 
 tokio = { workspace = true, features = ["test-util", "full", "sync"] }
 tracing.workspace = true
-toml = "0.8"
 
 [lib]
 doctest = false
