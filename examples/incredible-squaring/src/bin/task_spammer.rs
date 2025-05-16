@@ -5,7 +5,7 @@ use alloy::{
     signers::local::PrivateKeySigner,
     transports::http::reqwest::Url,
 };
-use eigen_task_spammer::TaskSpammerBuilder;
+use eigensdk::task_spammer::TaskSpammerBuilder;
 use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use std::{str::FromStr, time::Duration};
 

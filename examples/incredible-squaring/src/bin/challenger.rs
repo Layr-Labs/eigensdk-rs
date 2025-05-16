@@ -5,12 +5,12 @@ use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::http::reqwest::Url;
-use eigen_challenger::{
+use eigensdk::challenger::{
     challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
     config::ChallengerConfig,
     Challenger,
 };
-use eigen_task_manager::response_calculator::response_calculator_from_fn;
+use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
 use incredible_squaring::{
     bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
     square, utils::load_config,

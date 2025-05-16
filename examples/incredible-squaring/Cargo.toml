@@ -9,28 +9,21 @@ homepage.workspace = true
 license-file.workspace = true
 
 [dependencies]
-alloy.workspace = true
-eigen-client-avsregistry.workspace = true
-eigen-crypto-bls.workspace = true
-eigen-logging.workspace = true
-eigen-testing-utils.workspace = true
-eigen-types.workspace = true
-eigen-common.workspace = true
-eigen-aggregator.workspace = true
-eigen-operator.workspace = true
-eigen-task-manager.workspace = true
-eigen-task-spammer.workspace = true
-eigen-challenger.workspace = true
-eigen-utils.workspace = true
-
-tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
-serde.workspace = true
-tracing.workspace = true
-serde_json.workspace = true
-ark-ec.workspace = true
-
-eyre = "0.6"
+alloy = { version = "0.13", features = [
+    "sol-types",
+    "contract",
+    "full",
+    "signer-aws",
+    "rlp",
+    "json-rpc",
+    "signer-keystore",
+] }
+eigensdk = { workspace = true, features = ["full"] }
+eyre.workspace = true
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
 toml = "0.8"
+tracing.workspace = true
 
 [lib]
 doctest = false

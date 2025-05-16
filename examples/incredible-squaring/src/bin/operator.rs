@@ -1,10 +1,10 @@
 #![allow(missing_docs)]
 
 use alloy::primitives::U256;
-use eigen_logging::get_logger;
-use eigen_operator::{config::OperatorConfig, Operator};
-use eigen_task_manager::response_calculator::response_calculator_from_fn;
-use eigen_testing_utils::task_processor::failing_response_calculator;
+use eigensdk::logging::get_logger;
+use eigensdk::operator::{config::OperatorConfig, Operator};
+use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
+use eigensdk::testing_utils::task_processor::failing_response_calculator;
 use incredible_squaring::{square, utils::load_config, ISTaskManager};
 
 // This example shows how to initialize an operator and start to listen for new task events.
