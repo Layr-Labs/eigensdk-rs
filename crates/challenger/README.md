@@ -49,7 +49,7 @@ The Challenger operates through a well-defined event-driven workflow:
 
 
 2. **Task Verification Logic**: Define a function that computes the expected result for a task, which will be used to verify operator responses
-   - This would be the logic to compute the correct response for a task.
+   - This would be the logic to compute a new task.
 
     ```rust
         pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
@@ -72,7 +72,15 @@ The Challenger operates through a well-defined event-driven workflow:
         let logic = verifier_from_compute_function(response_calculator);
     ```
 
-5. **Challenger Configuration**: Configure the challenger with the following parameters:
+5. **Challenger Task Processor**: Create a `ChallengerTaskProcessor` trait implementation from the task manager and the verifier.
+   - This will be in charge of processing the task and the response.
+   - We provide a standard `IndexingChallengerProcessor` implementation that can be used as a starting point.
+
+    ```rust
+        let task_processor = IndexingChallengerProcessor::new(contract, logic);
+    ```
+
+6. **Challenger Configuration**: Configure the challenger with the following parameters:
    - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
    - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
 
@@ -83,7 +91,7 @@ The Challenger operates through a well-defined event-driven workflow:
         };
     ```
 
-6. **Challenger Initialization**: Initialize the challenger with the configuration and start it with the processing logic
+7. **Challenger Initialization**: Initialize the challenger with the configuration and start it with the processing logic
 
     ```rust
         let mut challenger = Challenger::new(config, task_processor);
