@@ -16,7 +16,6 @@ eigen-logging.workspace = true
 eigen-testing-utils.workspace = true
 eigen-types.workspace = true
 eigen-common.workspace = true
-eigen-task-manager = { workspace = true, features = ["operator-testing"] }
 eigen-aggregator.workspace = true
 eigen-operator.workspace = true
 eigen-task-spammer.workspace = true
