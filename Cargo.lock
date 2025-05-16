@@ -3138,7 +3138,6 @@ dependencies = [
  "eigen-services-blsaggregation",
  "eigen-types",
  "eigen-utils",
- "rand 0.8.5",
  "thiserror 1.0.69",
  "tokio",
  "tokio-util",

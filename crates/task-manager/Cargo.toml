@@ -17,10 +17,8 @@ eigen-crypto-bls.workspace = true
 eigen-services-blsaggregation.workspace = true
 eigen-types.workspace = true
 eigen-utils.workspace = true
-rand.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 tokio.workspace = true
 
 tokio-util = "0.7.11"
-
