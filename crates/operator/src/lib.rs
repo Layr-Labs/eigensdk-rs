@@ -17,7 +17,8 @@ use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDef
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
-use tracing::info;
+use registration::register_operator;
+use tracing::{error, info};
 
 /// Tarpc Client
 pub mod client;
@@ -76,13 +77,38 @@ impl Operator {
             registration: _,
         } = config;
         let avs_registry_reader = AvsRegistryChainReader::new(
-            logger,
+            logger.clone(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_rpc_url.to_string(),
         )
         .await?;
 
+        let key_pair = BlsKeyPair::new(bls_private_key)?;
+
+        // Check if the operator is registered with EigenLayer
+        if !avs_registry_reader
+            .is_operator_registered(operator_address)
+            .await?
+        {
+            // Check if a registration config was provided
+            let registration_config = config.registration.ok_or_else(|| {
+                error!(
+                    "Operator {} not registered and no registration config was provided",
+                    operator_name
+                );
+                OperatorError::RegistrationError
+            })?;
+
+            register_operator(
+                registration_config,
+                logger.clone(),
+                http_rpc_url.clone(),
+                key_pair.clone(),
+            )
+            .await?;
+            info!("Operator {} registered successfully", operator_name);
+        }
         let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
 
         let is_registered = avs_registry_reader
@@ -99,8 +125,6 @@ impl Operator {
             .get_operator_id(operator_address)
             .await
             .map_err(|_| OperatorError::OperatorIdError)?;
-
-        let key_pair = BlsKeyPair::new(bls_private_key)?;
 
         Ok(Self {
             operator_id,
