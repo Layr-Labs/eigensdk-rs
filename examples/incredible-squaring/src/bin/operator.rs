@@ -1,10 +1,13 @@
 #![allow(missing_docs)]
 
 use alloy::primitives::{address, U256};
-use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
-use eigen_operator::{config::OperatorConfig, failing_response_calculator, Operator};
-use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
+use eigen_operator::{config::OperatorConfig, Operator};
+use eigen_task_manager::response_calculator::response_calculator_from_fn;
+use eigen_testing_utils::{
+    anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY},
+    task_processor::failing_response_calculator,
+};
 use incredible_squaring::{square, ISTaskManager};
 
 // This example shows how to initialize an operator and start to listen for new task events.
@@ -18,10 +21,8 @@ async fn main() {
     let ws_rpc_url = "ws://localhost:8545".to_string();
     let logger = get_logger();
 
-    let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
-
     let config = OperatorConfig {
-        bls_key_pair,
+        bls_private_key: OPERATOR_BLS_KEY.to_string(),
         operator_address: FIRST_ADDRESS,
         operator_name: "OPERATOR NAME".to_string(),
         ws_rpc_url,
@@ -35,9 +36,10 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
 
-    let logic = failing_response_calculator(square, |_, _| async { Ok(U256::from(42)) }, 60);
+    let response_calculator = response_calculator_from_fn(square);
+    let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
 
     // Subscribe to the new task events and start listening. When a new task is created,
     // the operator will process it and send the signed task response to the aggregator.
-    operator.start::<ISTaskManager>(logic.await).await.unwrap();
+    operator.start::<ISTaskManager>(logic).await.unwrap();
 }

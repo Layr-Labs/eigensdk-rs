@@ -1,18 +1,22 @@
 //! Incredible Dot Product Operator
-use std::str::FromStr;
 
 use alloy::primitives::{Address, U256};
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
-    operator::{config::OperatorConfig, failing_response_calculator, Operator},
-    testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
+    operator::{config::OperatorConfig, Operator},
+    task_manager::response_calculator::response_calculator_from_fn,
+    testing_utils::{
+        anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
+        task_processor::failing_response_calculator,
+    },
 };
 use eyre::Result;
 use incredible_dot_product::{
-    task_manager::{dot_product, invalid_dot_product, ISTaskManager},
+    task_manager::{dot_product, ISTaskManager},
     utils::setup_operator,
 };
+use std::str::FromStr;
 use tracing::info;
 
 #[tokio::main]
@@ -69,7 +73,7 @@ async fn main() -> Result<()> {
     info!("Operator setup complete");
 
     let operator_config = OperatorConfig {
-        bls_key_pair,
+        bls_private_key: OPERATOR_BLS_KEY.to_string(),
         operator_address,
         operator_name: operator_name.to_string(),
         ws_rpc_url: ws_rpc_url.to_string(),
@@ -83,11 +87,13 @@ async fn main() -> Result<()> {
         .await
         .map_err(|e| eyre::eyre!("Operator new error: {}", e))?;
 
-    let logic = failing_response_calculator(dot_product, invalid_dot_product, 40);
+    let response_calculator = response_calculator_from_fn(dot_product);
+
+    let logic = failing_response_calculator(response_calculator, || U256::MAX, 40);
 
     // TODO: Review bounds in SDK. I have to derive Serialize and Deserialize for TaskResponse in the bindings
     operator
-        .start::<ISTaskManager>(logic.await)
+        .start::<ISTaskManager>(logic)
         .await
         .map_err(|e| eyre::eyre!("Operator start error: {}", e))?;
 

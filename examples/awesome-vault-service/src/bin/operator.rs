@@ -1,16 +1,18 @@
 #![allow(missing_docs)]
 
-use alloy::primitives::{Address, U256};
+use alloy::primitives::{Address, B256, U256};
 use awesome_vault_service::{
-    task_manager::{save_value, save_wrong_value, ISTaskManager},
+    response_calculator::VaultServiceResponseCalculator, task_manager::ISTaskManager,
     utils::setup_operator,
 };
-use eigen_operator::failing_response_calculator;
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
-    testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
+    testing_utils::{
+        anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
+        task_processor::failing_response_calculator,
+    },
 };
 
 use std::{collections::BTreeMap, str::FromStr, sync::Arc};
@@ -22,7 +24,7 @@ use tracing::info;
 #[tokio::main]
 async fn main() {
     init_logger(LogLevel::Info);
-    let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
+    let bls_private_key = OPERATOR_BLS_KEY.to_string();
     let operator_address = FIRST_ADDRESS;
     let operator_private_key = FIRST_PRIVATE_KEY;
     let operator_name = "dot-product-god";
@@ -50,7 +52,7 @@ async fn main() {
         Address::from_str("0x4c5859f0f772848b2d91f1d83e2fe57935348029").unwrap();
 
     setup_operator(
-        bls_key_pair.clone(),
+        BlsKeyPair::new(bls_private_key.clone()).unwrap(),
         Some(operator_private_key.to_string()),
         "ecdsa_keystore_path".to_string(),
         "ecdsa_keystore_password".to_string(),
@@ -77,7 +79,7 @@ async fn main() {
     info!("Operator setup complete");
 
     let operator_config = OperatorConfig {
-        bls_key_pair,
+        bls_private_key,
         operator_address,
         operator_name: operator_name.to_string(),
         ws_rpc_url: ws_rpc_url.to_string(),
@@ -91,19 +93,13 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, operator_config).await.unwrap();
 
-    let redis_state = Arc::new(Mutex::new(BTreeMap::<String, String>::new()));
+    let vault_service_response_calculator = VaultServiceResponseCalculator {
+        vault: Arc::new(Mutex::new(BTreeMap::new())),
+    };
 
-    // TESTING PURPOSES ONLY
-    let compute = failing_response_calculator(
-        save_value(redis_state.clone()).await,
-        save_wrong_value(redis_state).await,
-        50,
-    );
+    let logic = failing_response_calculator(vault_service_response_calculator, B256::default, 50);
 
     // let compute = save_value(redis_state);
 
-    operator
-        .start::<ISTaskManager>(compute.await)
-        .await
-        .unwrap();
+    operator.start::<ISTaskManager>(logic).await.unwrap();
 }
