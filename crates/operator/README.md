@@ -33,25 +33,24 @@ Key components needed:
    - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
    - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
 
-      ```rust
-          // Implement the [`TaskManagerDefs`] trait for a unit struct.
-          // You need to specify the input and output types of the task.
-          // You also need to specify the selectors for the new task event and the task responded event.
-          pub struct ISTaskManager;
+    ```rust
+        // Implement the [`TaskManagerDefs`] trait for a unit struct.
+        // You need to specify the input and output types of the task.
+        // You also need to specify the selectors for the new task event and the task responded event.
+        pub struct ISTaskManager;
 
-          impl TaskManagerDefs for ISTaskManager {
-              type Input = U256;
-              type Output = U256;
-              const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
-              const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
-          }
+        impl TaskManagerDefs for ISTaskManager {
+            type Input = U256;
+            type Output = U256;
+            const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+            const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+        }
 
-          impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
-      ```
+        impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
+    ```
 
 2. **Processing Logic**: Implement the computation function that processes task inputs and produces outputs
    - This function will be called when the operator receives a `NEW_TASK_EVENT_SELECTOR` event.
-   - You can specify the input and output types of the task.
 
     ```rust
         // Your custom logic to process the input and generate a response. 
@@ -64,18 +63,23 @@ Key components needed:
         }
     ```
 
+3. **Response Calculator**: To abstract your computation into the operator, we provide a `ResponseCalculator` trait with a standar struct that implements the trait and helpers for turning your functions into implementations:
+   - `response_calculator_from_fn`: Create a response calculator from your computation function.
+   - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
+   - This struct is useful if you want to save state in the operator.
+
+    ```rust
+        let response_calculator = response_calculator_from_fn(square);
+    ```
+
    - Wrap your logic with `failing_response_calculator` to inject failures and a given failure rate. This will help you test what happens when the operator responds incorrectly to a task and see how slashing works. **Use this for testing purposes only.**
     
     ```rust
-        let logic = failing_response_calculator(
-            square,
-            |_, _| async { Ok(U256::from(42)) },
-            60,
-        );
+        let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
     ```
 
-3. **Create the operator configuration**: Configure the operator with the following parameters:
-   - `bls_key_pair`: The BLS key pair for signing responses
+4. **Create the operator configuration**: Configure the operator with the following parameters:
+   - `bls_private_key`: The BLS private key for
    - `operator_address`: The address of the operator
    - `operator_name`: The name of the operator
    - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
@@ -83,21 +87,23 @@ Key components needed:
    - `registry_coordinator_address`: The address of the registry coordinator
    - `operator_state_retriever_address`: The address of the operator state retriever
    - `aggregator_ip_port`: The IP and port of the aggregator
+   - `registration`: The registration of the operator. If you don't want to register the operator, you can set this to `None`.
 
     ```rust
         let config = OperatorConfig {
-            bls_key_pair,
-            operator_address: OPERATOR_ADDRESS,
-            operator_name: "OPERATOR_NAME".to_string(),
+            bls_private_key,
+            operator_address,
+            operator_name,
             ws_rpc_url,
             http_rpc_url,
             registry_coordinator_address,
             operator_state_retriever_address,
             aggregator_ip_port: server_address,
+            registration,
         };
     ```
 
-4. **Run the operator**: Initialize the operator with the configuration and start it with the processing logic
+5. **Run the operator**: Initialize the operator with the configuration and start it with the processing logic
 
     ```rust
         let operator = Operator::new(logger, config).await.unwrap();
