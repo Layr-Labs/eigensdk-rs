@@ -81,6 +81,7 @@ async fn main() -> Result<()> {
         registry_coordinator_address,
         operator_state_retriever_address,
         aggregator_ip_port,
+        registration: None,
     };
     let operator = Operator::new(logger, operator_config)
         .await
