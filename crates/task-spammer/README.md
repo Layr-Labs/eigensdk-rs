@@ -2,7 +2,7 @@
 
 ## What is a Task Spammer
 
-A Task Spammer is a testing utility designed to generate and submit tasks at configurable intervals. It serves as a simulation tool that allows developers to test how operators, aggregators, and challengers respond to a continuous stream of events.
+A Task Spammer is a testing utility designed to generate tasks at configurable intervals. It serves as a simulation tool that allows developers to test how operators, aggregators, and challengers respond to a continuous stream of new tasks.
 
 ## How the Logic Works
 
