@@ -9,20 +9,20 @@ Operators are off-chain nodes that perform, sign, and submit verifiable computat
 The Operator functions through the following flow:
 
 1. **Task Subscription**: 
-   - The operator subscribes to specific event signatures emitted by task processors
+   - The operator [subscribes](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/crates/operator/src/lib.rs#L137-L141) to specific event signatures emitted by task processors
    - Uses WebSocket connection to listen to blockchain events
    - Filters only for the specific task type it's designed to handle
 
 2. **Task Processing**:
    - When a new task is detected, it extracts the task index and input data
-   - Applies a computation function to the input data. This computation function is provided when starting the operator.
+   - Applies a [computation function](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/crates/operator/src/lib.rs#L145-L149) to the input data. This computation function is provided when starting the operator.
 
 3. **Response Signing**:
-   - Signs the computed result using the operator's BLS key pair
+   - [Signs](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/crates/operator/src/lib.rs#L176-L191) the computed result using the operator's BLS key pair
    - Creates a `SignedTaskResponse` containing the result, signature, and operator ID
 
 4. **Response Submission**:
-   - Sends the signed response to an Aggregator service
+   - [Sends](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/crates/operator/src/client.rs#L47-L81) the signed response to an Aggregator service
 
 ## How to Set Up an Operator
 
