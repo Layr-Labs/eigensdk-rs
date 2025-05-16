@@ -6,8 +6,5 @@
 pub mod bindings;
 /// Task manager for the Incredible Dot Product Operator
 pub mod task_manager;
-/// Utils for operator registry
-pub mod utils;
 
 pub use bindings::incredibledotproducttaskmanager::*;
-pub use utils::*;

@@ -19,14 +19,9 @@ use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoo
 use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
 use std::str::FromStr;
 
-/// Registers an operator with EigenLayer. Use this function for testing purposes.
-///
-/// 1. Creates a total delegated stake quorum
-/// 2. Registers the operator with EigenLayer
-/// 3. Deposits ERC20 into the strategy
-/// 4. Sets the allocation delay
-/// 5. Modifies the allocation magnitude for the operator in specific strategies
-/// 6. Registers the operator for operator sets
+/// Creates a total delegated stake quorum and registers the operator
+/// This function has the same functionality as the `register_test_operator` function
+/// but it also creates a total delegated stake quorum for the operator
 ///
 /// # Arguments
 ///
@@ -38,7 +33,58 @@ use std::str::FromStr;
 /// # Returns
 ///
 /// * `Result<(), OperatorError>` - The result of the operation
-pub async fn register_operator(
+pub async fn create_quorum_and_register_operator(
+    config: OperatorRegistrationConfig,
+    logger: SharedLogger,
+    http_rpc_url: String,
+    bls_key_pair: BlsKeyPair,
+) -> Result<(), OperatorError> {
+    let signer: LocalSigner<SigningKey> =
+        if let Some(operator_key) = config.operator_pvt_key.clone() {
+            PrivateKeySigner::from_str(&operator_key).unwrap()
+        } else {
+            LocalSigner::decrypt_keystore(
+                config.ecdsa_keystore_path.clone(),
+                config.ecdsa_keystore_password.clone(),
+            )
+            .unwrap()
+        };
+
+    let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
+        logger.clone(),
+        http_rpc_url.to_string(),
+        hex::encode(signer.to_field_bytes()).to_string(),
+        config.registry_coordinator_address,
+        config.avs_address,
+    )
+    .await?;
+
+    create_total_delegated_stake_quorum(config.erc20_strategy_address, avs_registry_writer).await?;
+
+    register_test_operator(config, logger, http_rpc_url, bls_key_pair).await?;
+
+    Ok(())
+}
+
+/// Registers an operator with EigenLayer. Use this function for testing purposes.
+///
+/// 1. Registers the operator with EigenLayer
+/// 2. Deposits ERC20 into the strategy
+/// 3. Sets the allocation delay
+/// 4. Modifies the allocation magnitude for the operator in specific strategies
+/// 5. Registers the operator for operator sets
+///
+/// # Arguments
+///
+/// * `config` - The operator registration config
+/// * `logger` - The logger
+/// * `http_rpc_url` - The HTTP RPC URL
+/// * `bls_key_pair` - The BLS key pair
+///
+/// # Returns
+///
+/// * `Result<(), OperatorError>` - The result of the operation
+pub async fn register_test_operator(
     config: OperatorRegistrationConfig,
     logger: SharedLogger,
     http_rpc_url: String,
@@ -70,16 +116,6 @@ pub async fn register_operator(
         http_rpc_url.clone(),
         hex::encode(signer.to_field_bytes()).to_string(),
     );
-    let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-        logger,
-        http_rpc_url.to_string(),
-        hex::encode(signer.to_field_bytes()).to_string(),
-        config.registry_coordinator_address,
-        config.avs_address,
-    )
-    .await?;
-
-    create_total_delegated_stake_quorum(config.erc20_strategy_address, avs_registry_writer).await?;
 
     register_operator_with_el(
         config.metadata_uri,
@@ -89,6 +125,7 @@ pub async fn register_operator(
         el_chain_writer.clone(),
     )
     .await?;
+
     deposit_into_strategy(
         config.erc20_strategy_address,
         U256::from_str(&config.deposit_tokens).map_err(|_| OperatorError::InvalidDepositTokens)?,
@@ -124,6 +161,7 @@ pub async fn register_operator(
     )
     .await?;
 
+    logger.info("Operator registered successfully", "eigen-testing-utils");
     Ok(())
 }
 
@@ -139,7 +177,7 @@ pub async fn register_operator(
 ///
 /// # Returns
 ///
-/// * `eyre::Result<()>` - The result of the operation
+/// * `Result<()>` - The result of the operation
 async fn register_operator_with_el(
     metadata_uri: String,
     allocation_delay: u32,
@@ -178,7 +216,7 @@ async fn register_operator_with_el(
 ///
 /// # Returns
 ///
-/// * `eyre::Result<FixedBytes<32>>` - The result of the operation
+/// * `Result<FixedBytes<32>>` - The result of the operation
 async fn set_allocation_delay(
     allocation_delay: u32,
     signer: LocalSigner<SigningKey>,
@@ -199,7 +237,7 @@ async fn set_allocation_delay(
 ///
 /// # Returns
 ///
-/// * `eyre::Result<FixedBytes<32>>` - The result of the operation
+/// * `Result<FixedBytes<32>>` - The result of the operation
 async fn create_total_delegated_stake_quorum(
     strategy_address: Address,
     avs_registry_writer: AvsRegistryChainWriter,
@@ -234,7 +272,7 @@ async fn create_total_delegated_stake_quorum(
 ///
 /// # Returns
 ///
-/// * `eyre::Result<FixedBytes<32>>` - The result of the operation
+/// * `Result<FixedBytes<32>, OperatorError>` - The result of the operation
 async fn register_for_operator_sets(
     operator_set_id: u32,
     bls_key_pair: BlsKeyPair,
@@ -291,7 +329,7 @@ async fn deposit_into_strategy(
 ///
 /// # Returns
 ///
-/// * `eyre::Result<FixedBytes<32>>` - The result of the operation
+/// * `Result<FixedBytes<32>, OperatorError>` - The result of the operation
 pub async fn modify_allocation_for_operator(
     operator_set_id: u32,
     avs: Address,
