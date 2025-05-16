@@ -1321,7 +1321,6 @@ name = "awesome-vault-service"
 version = "0.1.0"
 dependencies = [
  "alloy",
- "eigen-operator",
  "eigensdk",
  "eyre",
  "rand 0.8.5",
@@ -3030,6 +3029,7 @@ dependencies = [
  "rand_core 0.6.4",
  "reqwest 0.12.15",
  "rust-bls-bn254",
+ "serde",
  "tarpc",
  "thiserror 1.0.69",
  "tokio",
@@ -3168,10 +3168,13 @@ dependencies = [
  "eigen-common",
  "eigen-crypto-bls",
  "eigen-logging",
+ "eigen-task-manager",
  "eigen-utils",
+ "rand 0.8.5",
  "serde",
  "serde_json",
  "testcontainers",
+ "tracing",
  "url",
 ]
 
@@ -4674,7 +4677,6 @@ name = "incredible-dot-product"
 version = "0.1.0"
 dependencies = [
  "alloy",
- "eigen-operator",
  "eigensdk",
  "eyre",
  "serde",

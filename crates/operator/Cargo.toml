@@ -23,6 +23,7 @@ eigen-task-manager.workspace = true
 eigen-types.workspace = true
 rust-bls-bn254.workspace = true
 reqwest.workspace = true
+serde.workspace = true
 tokio.workspace = true
 tracing.workspace = true
 rand.workspace = true
@@ -36,7 +37,3 @@ hex = { version = "0.4.3", features = ["alloc"] }
 
 # RPC Server
 tarpc = { version = "0.36", features = ["full"] }
-
-[features]
-default = []
-operator-testing = []
