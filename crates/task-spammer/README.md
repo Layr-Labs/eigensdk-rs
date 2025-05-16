@@ -46,6 +46,7 @@ The Task Spammer uses a builder pattern and follows this workflow:
 
     ```rust
         // Create your task input
+        // Example: Create a task input of type U256
         let task_inputs = (0..).map(U256::from);
     ```
 
@@ -63,7 +64,7 @@ The Task Spammer uses a builder pattern and follows this workflow:
    - The interval is the time between task creations in seconds
 
     ```rust
-        // Set the interval between task creations (in seconds)
+        // Set the interval between task creations
         let interval = Duration::from_secs(10);
     ``` 
 
