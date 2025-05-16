@@ -1,7 +1,6 @@
 #![allow(missing_docs)]
 
 use alloy::primitives::{address, U256};
-use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_logger;
 use eigen_operator::{config::OperatorConfig, Operator};
 use eigen_task_manager::response_calculator::response_calculator_from_fn;
@@ -22,10 +21,8 @@ async fn main() {
     let ws_rpc_url = "ws://localhost:8545".to_string();
     let logger = get_logger();
 
-    let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
-
     let config = OperatorConfig {
-        bls_key_pair,
+        bls_private_key: OPERATOR_BLS_KEY.to_string(),
         operator_address: FIRST_ADDRESS,
         operator_name: "OPERATOR NAME".to_string(),
         ws_rpc_url,

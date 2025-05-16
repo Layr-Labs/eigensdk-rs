@@ -63,7 +63,7 @@ impl Operator {
         config: config::OperatorConfig,
     ) -> Result<Self, OperatorError> {
         let config::OperatorConfig {
-            bls_key_pair,
+            bls_private_key,
             operator_address,
             operator_name,
             ws_rpc_url,
@@ -98,12 +98,14 @@ impl Operator {
             .await
             .map_err(|_| OperatorError::OperatorIdError)?;
 
+        let key_pair = BlsKeyPair::new(bls_private_key)?;
+
         Ok(Self {
             operator_id,
             operator_name: operator_name.to_string(),
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
-            key_pair: bls_key_pair.clone(),
+            key_pair,
         })
     }
 
