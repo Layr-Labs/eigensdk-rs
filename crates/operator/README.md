@@ -31,7 +31,7 @@ Key components needed:
 1. **Task Manager Definition**: Create a struct implementing the `TaskManagerDefs` trait that defines:
    - `Input` and `Output` types for your tasks
    - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
-   - To build a `TaskManager`, you can do it with `impl_task_manager_from_defs_and_contract` macro.
+   - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
 
       ```rust
           // Implement the [`TaskManagerDefs`] trait for a unit struct.
@@ -50,7 +50,7 @@ Key components needed:
       ```
 
 2. **Processing Logic**: Implement the computation function that processes task inputs and produces outputs
-   - This function will be called the operator recieve an `NEW_TASK_EVENT_SELECTOR` event.
+   - This function will be called when the operator recieve a `NEW_TASK_EVENT_SELECTOR` event.
    - You can specify the input and output types of the task.
 
     ```rust
