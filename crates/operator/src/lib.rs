@@ -100,15 +100,7 @@ impl Operator {
                 return Err(OperatorError::RegistrationError);
             };
 
-            info!("Registering operator {}", operator_name);
-
-            register_operator(
-                registration_config,
-                logger.clone(),
-                http_rpc_url.clone(),
-                key_pair.clone(),
-            )
-            .await?;
+            register_operator(registration_config, logger, http_rpc_url, key_pair.clone()).await?;
             info!("Operator {} registered successfully", operator_name);
         }
 
