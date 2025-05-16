@@ -10,6 +10,8 @@ use eigensdk::challenger::{
     config::ChallengerConfig,
     Challenger,
 };
+use eigensdk::logging::init_logger;
+use eigensdk::logging::log_level::LogLevel;
 use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
 use incredible_squaring::{
     bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
@@ -18,10 +20,11 @@ use incredible_squaring::{
 
 #[tokio::main]
 async fn main() {
+    init_logger(LogLevel::Info);
     let config: ChallengerConfig = load_config("./src/config/squaring-challenger.toml").unwrap();
     let signer = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
     let task_manager_address =
-        Address::from_str("0x742d35cc6634c0532925a3b844f51254ab06f58e").unwrap();
+        Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3").unwrap();
     let url = Url::parse(&config.http_rpc_url).unwrap();
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
