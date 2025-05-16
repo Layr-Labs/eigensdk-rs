@@ -10,6 +10,7 @@ use incredible_dot_product::{
     task_manager::{dot_product, invalid_dot_product, ISTaskManager},
     utils::setup_operator,
 };
+use std::str::FromStr;
 use tracing::info;
 
 #[tokio::main]
@@ -33,11 +34,13 @@ async fn main() -> Result<()> {
         .await
         .map_err(|e| eyre::eyre!("Operator new error: {}", e))?;
 
-    let logic = failing_response_calculator(dot_product, invalid_dot_product, 40);
+    let response_calculator = response_calculator_from_fn(dot_product);
+
+    let logic = failing_response_calculator(response_calculator, || U256::MAX, 40);
 
     // TODO: Review bounds in SDK. I have to derive Serialize and Deserialize for TaskResponse in the bindings
     operator
-        .start::<ISTaskManager>(logic.await)
+        .start::<ISTaskManager>(logic)
         .await
         .map_err(|e| eyre::eyre!("Operator start error: {}", e))?;
 

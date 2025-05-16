@@ -15,9 +15,10 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
 
-    let logic = failing_response_calculator(square, |_, _| async { Ok(U256::from(42)) }, 60);
+    let response_calculator = response_calculator_from_fn(square);
+    let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
 
     // Subscribe to the new task events and start listening. When a new task is created,
     // the operator will process it and send the signed task response to the aggregator.
-    operator.start::<ISTaskManager>(logic.await).await.unwrap();
+    operator.start::<ISTaskManager>(logic).await.unwrap();
 }

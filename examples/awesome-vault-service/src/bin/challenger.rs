@@ -1,9 +1,9 @@
-//! Incredible Dot Product Challenger
+//! Awesome Vault Service Challenger
 
 use alloy::primitives::Address;
 use awesome_vault_service::{
     bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
-    task_manager::save_value, utils::load_config,
+    response_calculator::VaultServiceResponseCalculator,
 };
 use eigensdk::{
     challenger::{
@@ -28,10 +28,11 @@ async fn main() -> Result<()> {
 
     let contract = AwesomeVaultTaskManagerInstance::new(task_manager_address, wallet);
 
-    let redis_state = Arc::new(Mutex::new(BTreeMap::new()));
-    let compute = save_value(redis_state.clone()).await;
+    let vault_service_response_calculator = VaultServiceResponseCalculator {
+        vault: Arc::new(Mutex::new(BTreeMap::new())),
+    };
 
-    let is_response_correct = verifier_from_compute_function(compute);
+    let is_response_correct = verifier_from_compute_function(vault_service_response_calculator);
     let task_processor = IndexingChallengerProcessor::new(contract, is_response_correct);
 
     let mut challenger = Challenger::new(config, task_processor);

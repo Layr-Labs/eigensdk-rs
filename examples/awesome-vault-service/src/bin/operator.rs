@@ -4,7 +4,6 @@ use awesome_vault_service::{
     task_manager::{save_value, save_wrong_value, ISTaskManager},
     utils::{load_config, setup_operator},
 };
-use eigen_operator::failing_response_calculator;
 use eigensdk::{
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
@@ -36,14 +35,11 @@ async fn main() {
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
 
-    let redis_state = Arc::new(Mutex::new(BTreeMap::<String, String>::new()));
+    let vault_service_response_calculator = VaultServiceResponseCalculator {
+        vault: Arc::new(Mutex::new(BTreeMap::new())),
+    };
 
-    // TESTING PURPOSES ONLY
-    let compute = failing_response_calculator(
-        save_value(redis_state.clone()).await,
-        save_wrong_value(redis_state).await,
-        50,
-    );
+    let logic = failing_response_calculator(vault_service_response_calculator, B256::default, 50);
 
     operator
         .start::<ISTaskManager>(compute.await)

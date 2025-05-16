@@ -15,10 +15,7 @@ use eigen_task_manager::TaskManagerError;
 pub mod bindings;
 pub mod utils;
 
-pub async fn square(
-    _task_index: u32,
-    number_to_be_squared: U256,
-) -> Result<U256, TaskManagerError> {
+pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
     Ok(number_to_be_squared * number_to_be_squared)
 }
 
