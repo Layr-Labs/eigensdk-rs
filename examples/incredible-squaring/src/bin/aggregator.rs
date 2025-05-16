@@ -7,6 +7,7 @@ use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::http::reqwest::Url;
 use eigen_aggregator::task_processor::IndexingTaskProcessor;
 use eigen_aggregator::{Aggregator, AggregatorConfig};
+use eigen_logging::get_logger;
 use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use std::str::FromStr;
 use std::time::Duration;
@@ -24,6 +25,7 @@ async fn main() {
     let url = Url::parse(&http_rpc_url).unwrap();
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let logger = get_logger();
 
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
     let task_processor =
@@ -37,6 +39,8 @@ async fn main() {
         operator_state_retriever,
     };
 
-    let aggregator = Aggregator::new(config, task_processor).await.unwrap();
+    let aggregator = Aggregator::new(config, task_processor, logger)
+        .await
+        .unwrap();
     aggregator.start().await.unwrap();
 }

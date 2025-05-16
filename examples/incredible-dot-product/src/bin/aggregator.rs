@@ -6,7 +6,7 @@ use alloy::primitives::Address;
 use eigensdk::{
     aggregator::{task_processor::IndexingTaskProcessor, Aggregator, AggregatorConfig},
     common::get_signer,
-    logging::{init_logger, log_level::LogLevel},
+    logging::{get_logger, init_logger, log_level::LogLevel},
 };
 use eyre::Result;
 use incredible_dot_product::IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance;
@@ -26,6 +26,7 @@ async fn main() -> Result<()> {
         Address::from_str("0x7bc06c482dead17c0e297afbc32f6e63d3846650")?;
     let operator_state_retriever_address =
         Address::from_str("0x4c5859f0f772848b2d91f1d83e2fe57935348029")?;
+    let logger = get_logger();
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
 
@@ -40,7 +41,7 @@ async fn main() -> Result<()> {
         operator_state_retriever: operator_state_retriever_address,
     };
 
-    let aggregator = Aggregator::new(config, task_processor)
+    let aggregator = Aggregator::new(config, task_processor, logger)
         .await
         .map_err(|e| eyre::eyre!("Aggregator new error: {}", e))?;
     aggregator
