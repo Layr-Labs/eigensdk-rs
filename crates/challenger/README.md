@@ -31,86 +31,68 @@ The Challenger operates through a well-defined event-driven workflow:
    - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
    - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
 
-      ```rust
-          // Implement the [`TaskManagerDefs`] trait for a unit struct.
-          // You need to specify the input and output types of the task.
-          // You also need to specify the selectors for the new task event and the task responded event.
-          pub struct ISTaskManager;
+    ```rust
+        // Implement the [`TaskManagerDefs`] trait for a unit struct.
+        // You need to specify the input and output types of the task.
+        // You also need to specify the selectors for the new task event and the task responded event.
+        pub struct ISTaskManager;
 
-          impl TaskManagerDefs for ISTaskManager {
-              type Input = U256;
-              type Output = U256;
-              const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
-              const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
-          }
+        impl TaskManagerDefs for ISTaskManager {
+            type Input = U256;
+            type Output = U256;
+            const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+            const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+        }
 
-          impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
-      ```
+        impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
+    ```
 
 
 2. **Task Verification Logic**: Define a function that computes the expected result for a task, which will be used to verify operator responses
-   - This would be the logic to compute the correct response for a task. Since `Challeger` has the input and output types, the function should be of the form `fn(index: u32, input: Input) -> Output`
-   - 
+   - This would be the logic to compute the correct response for a task.
 
     ```rust
         pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
             Ok(number_to_be_squared * number_to_be_squared)
         }
+    ```
 
+3. **Response Calculator**: Create a response calculator from your verification function. We provide a `ResponseCalculator` trait with a standar `FunctionResponseCalculator` struct. This implements the trait and helpers for turning your functions into implementations:
+   - `response_calculator_from_fn`: Create a response calculator from your sync function.
+   - `response_calculator_from_async_fn`: Create a response calculator from your async function.
+
+    ```rust
         let response_calculator = response_calculator_from_fn(square);
     ```
 
-3. **Response Calculator**: Create a response calculator from your verification function using the provided utility functions
+4. **Verifier**: Create a verifier from the response calculator.
+   - This will be in charge computing the response of a task and comparing it with the operator's response.
 
-4. **RPC Configuration**: Set up both HTTP and WebSocket connections to an Ethereum node to monitor events and submit challenges
+    ```rust
+        let logic = verifier_from_compute_function(response_calculator);
+    ```
 
+5. **Challenger Configuration**: Configure the challenger with the following parameters:
+   - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
+   - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
 
-Here's how to build a Challenger based on the examples:
+    ```rust
+        let config = ChallengerConfig {
+            http_rpc_url,
+            ws_rpc_url,
+        };
+    ```
 
-```rust
-use alloy::primitives::Address;
-use eigensdk::{
-    challenger::{
-        challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
-        config::ChallengerConfig,
-        Challenger,
-    },
-    task_manager::response_calculator::response_calculator_from_fn,
-};
-use your_avs_module::{YourTaskManagerInstance, compute_correct_response};
-use std::str::FromStr;
+6. **Challenger Initialization**: Initialize the challenger with the configuration and start it with the processing logic
 
-#[tokio::main]
-async fn main() -> Result<()> {
-    // 1. Set up connection parameters
-    let http_rpc_url = "http://localhost:8545".to_string();
-    let ws_rpc_url = "ws://localhost:8545".to_string();
-    let private_key = "YOUR_PRIVATE_KEY";
-    let task_manager_address = Address::from_str("YOUR_TASK_MANAGER_ADDRESS")?;
-    
-    // 2. Initialize the task manager contract instance
-    let wallet = get_signer(private_key, &http_rpc_url);
-    let contract = YourTaskManagerInstance::new(task_manager_address, wallet);
-    
-    // 3. Create the response calculator and verifier
-    // This is the logic that computes what the correct response SHOULD be
-    let response_calculator = response_calculator_from_fn(compute_correct_response);
-    let verifier = verifier_from_compute_function(response_calculator);
-    
-    // 4. Initialize the challenger processor with the verifier
-    let task_processor = IndexingChallengerProcessor::new(contract, verifier);
-    
-    // 5. Configure and start the challenger
-    let config = ChallengerConfig {
-        http_rpc_url,
-        ws_rpc_url,
-    };
-    let mut challenger = Challenger::new(config, task_processor);
-    
-    // 6. Start the challenger service
-    challenger.start_challenger().await?;
+    ```rust
+        let mut challenger = Challenger::new(config, task_processor);
+        challenger.start_challenger().await?;
+    ```
 
-    Ok(())
-}
-```
+## Examples
 
+Here are some examples of operators that are already implemented:
+
+- [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/challenger.rs)
+- [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/challenger.rs)
