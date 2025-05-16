@@ -1,11 +1,11 @@
 //! Incredible Dot Product Operator
 
 use alloy::primitives::{Address, U256};
-use eigen_task_manager::response_calculator::response_calculator_from_fn;
 use eigensdk::{
     crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
+    task_manager::response_calculator::response_calculator_from_fn,
     testing_utils::{
         anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
         task_processor::failing_response_calculator,

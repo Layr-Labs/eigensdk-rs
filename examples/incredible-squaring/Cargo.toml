@@ -18,6 +18,7 @@ eigen-types.workspace = true
 eigen-common.workspace = true
 eigen-aggregator.workspace = true
 eigen-operator.workspace = true
+eigen-task-manager.workspace = true
 eigen-task-spammer.workspace = true
 eigen-challenger.workspace = true
 eigen-utils.workspace = true

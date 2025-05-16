@@ -4698,6 +4698,7 @@ dependencies = [
  "eigen-crypto-bls",
  "eigen-logging",
  "eigen-operator",
+ "eigen-task-manager",
  "eigen-task-spammer",
  "eigen-testing-utils",
  "eigen-types",

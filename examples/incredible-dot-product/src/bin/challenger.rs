@@ -1,7 +1,6 @@
 //! Incredible Dot Product Challenger
 
 use alloy::primitives::Address;
-use eigen_task_manager::response_calculator::response_calculator_from_fn;
 use eigensdk::{
     challenger::{
         challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
@@ -10,6 +9,7 @@ use eigensdk::{
     },
     common::get_signer,
     logging::{init_logger, log_level::LogLevel},
+    task_manager::response_calculator::response_calculator_from_fn,
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
