@@ -61,7 +61,7 @@ pub async fn create_quorum_and_register_operator(
 
     create_total_delegated_stake_quorum(config.erc20_strategy_address, avs_registry_writer).await?;
 
-    register_test_operator(config, logger, http_rpc_url, bls_key_pair).await?;
+    register_operator(config, logger, http_rpc_url, bls_key_pair).await?;
 
     Ok(())
 }
@@ -84,7 +84,7 @@ pub async fn create_quorum_and_register_operator(
 /// # Returns
 ///
 /// * `Result<(), OperatorError>` - The result of the operation
-pub async fn register_test_operator(
+pub async fn register_operator(
     config: OperatorRegistrationConfig,
     logger: SharedLogger,
     http_rpc_url: String,
@@ -330,7 +330,7 @@ async fn deposit_into_strategy(
 /// # Returns
 ///
 /// * `Result<FixedBytes<32>, OperatorError>` - The result of the operation
-pub async fn modify_allocation_for_operator(
+async fn modify_allocation_for_operator(
     operator_set_id: u32,
     avs: Address,
     strategies: Vec<Address>,

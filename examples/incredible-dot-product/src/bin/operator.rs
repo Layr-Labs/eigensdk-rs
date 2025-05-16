@@ -9,7 +9,10 @@ use eigensdk::{
     testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
 };
 use eyre::Result;
-use incredible_dot_product::task_manager::{dot_product, invalid_dot_product, ISTaskManager};
+use incredible_dot_product::{
+    task_manager::{dot_product, invalid_dot_product, ISTaskManager},
+    utils::setup_operator,
+};
 use tracing::info;
 
 #[tokio::main]
