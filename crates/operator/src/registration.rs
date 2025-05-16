@@ -1,84 +1,98 @@
 use std::str::FromStr;
 
 use alloy::signers::k256::ecdsa::SigningKey;
+use alloy::signers::k256::elliptic_curve::consts::U2;
 use alloy::signers::local::{LocalSigner, PrivateKeySigner};
 use alloy::{
     hex,
     primitives::{aliases::U96, Address, FixedBytes, U256},
 };
+use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
+use eigen_client_elcontracts::reader::ELChainReader;
+use eigen_client_elcontracts::writer::ELChainWriter;
+use eigen_logging::logger::SharedLogger;
 
-use crate::config::OperatorConfig;
 use crate::error::OperatorError;
+use crate::register_config::OperatorRegistrationConfig;
 
-pub async fn register_operator(config: OperatorConfig) -> Result<bool, OperatorError> {
+pub async fn register_operator(
+    config: OperatorRegistrationConfig,
+    logger: SharedLogger,
+    http_rpc_url: String,
+) -> Result<bool, OperatorError> {
     let signer: LocalSigner<SigningKey> = if let Some(operator_key) = config.operator_pvt_key {
-        PrivateKeySigner::from_str(&operator_key)?
+        PrivateKeySigner::from_str(&operator_key).map_err(|_| OperatorError::BlsKeystoreError)?
     } else {
         LocalSigner::decrypt_keystore(config.ecdsa_keystore_path, config.ecdsa_keystore_password)?
     };
 
     let el_chain_reader = ELChainReader::new(
-        get_logger(),
-        Some(allocation_manager),
-        delegation_manager_address,
-        rewards_coordinator_address,
-        avs_directory_address,
-        Some(permission_controller_address),
-        rpc_url.clone(),
+        logger,
+        Some(config.allocation_manager_address),
+        config.delegation_manager_address,
+        config.rewards_coordinator_address,
+        config.avs_directory_address,
+        Some(config.permission_controller_address),
+        http_rpc_url.clone(),
     );
     let el_chain_writer = ELChainWriter::new(
-        strategy_manager_address,
-        rewards_coordinator_address,
-        Some(permission_controller_address),
-        Some(allocation_manager),
-        registry_coordinator_address,
+        config.strategy_manager_address,
+        config.rewards_coordinator_address,
+        Some(config.permission_controller_address),
+        Some(config.allocation_manager_address),
+        config.registry_coordinator_address,
         el_chain_reader.clone(),
-        rpc_url.clone(),
+        http_rpc_url.clone(),
         hex::encode(signer.to_field_bytes()).to_string(),
     );
     let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-        get_logger(),
-        rpc_url.to_string(),
+        logger,
+        http_rpc_url.to_string(),
         hex::encode(signer.to_field_bytes()).to_string(),
-        registry_coordinator_address,
-        avs,
+        config.registry_coordinator_address,
+        config.avs_address,
     )
     .await?;
 
-    create_total_delegated_stake_quorum(erc20_strategy_address, avs_registry_writer).await?;
+    create_total_delegated_stake_quorum(config.erc20_strategy_address, avs_registry_writer).await?;
 
     register_operator_with_el(
-        metadata_uri,
-        allocation_delay,
+        config.metadata_uri,
+        config.allocation_delay,
         signer.clone(),
         el_chain_reader,
         el_chain_writer.clone(),
     )
     .await?;
     deposit_into_strategy(
-        erc20_strategy_address,
-        deposit_tokens,
+        config.erc20_strategy_address,
+        U256::from_str(&config.deposit_tokens).map_err(|_| OperatorError::InvalidDepositTokens)?,
         el_chain_writer.clone(),
     )
     .await?;
 
-    set_allocation_delay(allocation_delay, signer.clone(), el_chain_writer.clone()).await?;
+    set_allocation_delay(
+        config.allocation_delay,
+        signer.clone(),
+        el_chain_writer.clone(),
+    )
+    .await?;
 
     modify_allocation_for_operator(
-        operator_set_id,
-        avs,
-        vec![erc20_strategy_address],
-        new_magnitude,
+        config.operator_set_id,
+        config.avs_address,
+        vec![config.erc20_strategy_address],
+        config.new_magnitude,
         el_chain_writer.clone(),
         signer.address(),
     )
     .await?;
 
     register_for_operator_sets(
-        operator_set_id,
-        bls_key_pair,
-        avs,
-        socket,
+        config.operator_set_id,
+        config.bls_key_pair,
+        config.avs_address,
+        config.socket,
         signer,
         el_chain_writer,
     )

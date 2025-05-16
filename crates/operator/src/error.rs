@@ -49,4 +49,7 @@ pub enum OperatorError {
     /// Decoding of the new task event failed
     #[error("Decoding of new task failed")]
     LogDecodeFailed(#[from] AbiDecodeError),
+    /// Invalid deposit tokens
+    #[error("Invalid deposit tokens")]
+    InvalidDepositTokens,
 }
