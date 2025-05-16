@@ -3,7 +3,7 @@
 use alloy::primitives::Address;
 use awesome_vault_service::{
     bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
-    response_calculator::VaultServiceResponseCalculator,
+    response_calculator::VaultServiceResponseCalculator, utils::load_config,
 };
 use eigensdk::{
     challenger::{

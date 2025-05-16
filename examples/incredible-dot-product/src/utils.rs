@@ -8,10 +8,11 @@ use alloy::{
     hex,
     primitives::{aliases::U96, Address, FixedBytes, U256},
 };
-use eigen_operator::register_config::OperatorRegistrationConfig;
+
 use eigensdk::client_avsregistry::writer::AvsRegistryChainWriter;
 use eigensdk::client_elcontracts::error::ElContractsError;
 use eigensdk::crypto_bls::BlsKeyPair;
+use eigensdk::operator::register_config::OperatorRegistrationConfig;
 use eigensdk::utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 use eigensdk::utils::slashing::core::allocationmanager::IAllocationManagerTypes::AllocateParams;
 use eigensdk::utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;

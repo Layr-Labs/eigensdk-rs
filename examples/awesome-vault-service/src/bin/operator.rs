@@ -1,12 +1,16 @@
 #![allow(missing_docs)]
 
+use alloy::primitives::B256;
 use awesome_vault_service::{
-    task_manager::{save_value, save_wrong_value, ISTaskManager},
+    response_calculator::VaultServiceResponseCalculator,
+    task_manager::ISTaskManager,
     utils::{load_config, setup_operator},
 };
 use eigensdk::{
+    crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
+    testing_utils::task_processor::failing_response_calculator,
 };
 
 use std::{collections::BTreeMap, sync::Arc};
@@ -24,7 +28,7 @@ async fn main() {
     if let Some(registration) = config.registration.clone() {
         setup_operator(
             registration,
-            config.bls_key_pair.clone(),
+            BlsKeyPair::new(config.bls_private_key.clone()).unwrap(),
             config.http_rpc_url.clone(),
         )
         .await
@@ -41,8 +45,5 @@ async fn main() {
 
     let logic = failing_response_calculator(vault_service_response_calculator, B256::default, 50);
 
-    operator
-        .start::<ISTaskManager>(compute.await)
-        .await
-        .unwrap();
+    operator.start::<ISTaskManager>(logic).await.unwrap();
 }

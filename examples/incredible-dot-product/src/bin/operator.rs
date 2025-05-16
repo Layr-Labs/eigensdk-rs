@@ -1,16 +1,19 @@
 //! Incredible Dot Product Operator
 
+use alloy::primitives::U256;
 use eigensdk::{
+    crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
-    operator::{config::OperatorConfig, failing_response_calculator, Operator},
+    operator::{config::OperatorConfig, Operator},
+    task_manager::response_calculator::response_calculator_from_fn,
+    testing_utils::task_processor::failing_response_calculator,
 };
 use eyre::Result;
 use incredible_dot_product::{
     load_config,
-    task_manager::{dot_product, invalid_dot_product, ISTaskManager},
+    task_manager::{dot_product, ISTaskManager},
     utils::setup_operator,
 };
-use std::str::FromStr;
 use tracing::info;
 
 #[tokio::main]
@@ -22,7 +25,7 @@ async fn main() -> Result<()> {
     if let Some(registration) = config.registration.clone() {
         setup_operator(
             registration,
-            config.bls_key_pair.clone(),
+            BlsKeyPair::new(config.bls_private_key.clone()).unwrap(),
             config.http_rpc_url.clone(),
         )
         .await
