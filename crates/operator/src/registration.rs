@@ -1,10 +1,6 @@
 use alloy::signers::k256::ecdsa::SigningKey;
 use alloy::signers::local::{LocalSigner, PrivateKeySigner};
-use alloy::{
-    hex,
-    primitives::{aliases::U96, Address, FixedBytes, U256},
-};
-use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
+use alloy::{hex, primitives::U256};
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
 use eigen_crypto_bls::BlsKeyPair;
@@ -12,58 +8,10 @@ use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 use eigen_utils::slashing::core::allocationmanager::IAllocationManagerTypes::AllocateParams;
-use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
-use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
 use std::str::FromStr;
 
 use crate::error::OperatorError;
 use crate::register_config::OperatorRegistrationConfig;
-
-/// Creates a total delegated stake quorum and registers the operator
-/// This function has the same functionality as the `register_test_operator` function
-/// but it also creates a total delegated stake quorum for the operator
-///
-/// # Arguments
-///
-/// * `config` - The operator registration config
-/// * `logger` - The logger
-/// * `http_rpc_url` - The HTTP RPC URL
-/// * `bls_key_pair` - The BLS key pair
-///
-/// # Returns
-///
-/// * `Result<(), OperatorError>` - The result of the operation
-pub async fn create_quorum_and_register_operator(
-    config: OperatorRegistrationConfig,
-    logger: SharedLogger,
-    http_rpc_url: String,
-    bls_key_pair: BlsKeyPair,
-) -> Result<(), OperatorError> {
-    let signer: LocalSigner<SigningKey> =
-        if let Some(operator_key) = config.operator_pvt_key.clone() {
-            PrivateKeySigner::from_str(&operator_key)?
-        } else {
-            LocalSigner::decrypt_keystore(
-                config.ecdsa_keystore_path.clone(),
-                config.ecdsa_keystore_password.clone(),
-            )?
-        };
-
-    let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-        logger.clone(),
-        http_rpc_url.to_string(),
-        hex::encode(signer.to_field_bytes()).to_string(),
-        config.registry_coordinator_address,
-        config.avs_address,
-    )
-    .await?;
-
-    create_total_delegated_stake_quorum(config.erc20_strategy_address, avs_registry_writer).await?;
-
-    register_operator(config, logger, http_rpc_url, bls_key_pair).await?;
-
-    Ok(())
-}
 
 /// Registers an operator with EigenLayer. Use this function for testing purposes.
 ///
@@ -124,15 +72,9 @@ pub async fn register_operator(
         _deprecated_earnings_receiver_address: None,
     };
 
-    let is_already_registered = el_chain_reader
-        .is_operator_registered(signer.address())
+    el_chain_writer
+        .register_as_operator(operator_details)
         .await?;
-
-    if !is_already_registered {
-        el_chain_writer
-            .register_as_operator(operator_details)
-            .await?;
-    }
 
     el_chain_writer
         .deposit_erc20_into_strategy(
@@ -168,37 +110,5 @@ pub async fn register_operator(
         )
         .await?;
 
-    logger.info("Operator registered successfully", "eigen-testing-utils");
     Ok(())
-}
-
-/// Creates Total Delegated Stake Quorum
-///
-/// # Arguments
-///
-/// * `strategy_address` - The address of the strategy
-/// * `avs_registry_writer` - The AVS registry writer
-///
-/// # Returns
-///
-/// * `Result<FixedBytes<32>>` - The result of the operation
-async fn create_total_delegated_stake_quorum(
-    strategy_address: Address,
-    avs_registry_writer: AvsRegistryChainWriter,
-) -> Result<FixedBytes<32>, OperatorError> {
-    let operator_set_param = OperatorSetParam {
-        maxOperatorCount: 3,
-        kickBIPsOfOperatorStake: 100,
-        kickBIPsOfTotalStake: 1000,
-    };
-    let minimum_stake = U96::from(0);
-    let strategy_params = vec![StrategyParams {
-        strategy: strategy_address,
-        multiplier: U96::from(1),
-    }];
-
-    let s = avs_registry_writer
-        .create_total_delegated_stake_quorum(operator_set_param, minimum_stake, strategy_params)
-        .await?;
-    Ok(s)
 }
