@@ -1,14 +1,12 @@
 #![allow(missing_docs)]
 
-use alloy::primitives::{Address, B256, U256};
+use alloy::primitives::{Address, B256};
 use awesome_vault_service::{
     response_calculator::VaultServiceResponseCalculator, task_manager::ISTaskManager,
-    utils::setup_operator,
 };
 use eigensdk::{
-    crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
-    operator::{config::OperatorConfig, Operator},
+    operator::{config::OperatorConfig, register_config::OperatorRegistrationConfig, Operator},
     testing_utils::{
         anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
         task_processor::failing_response_calculator,
@@ -17,7 +15,6 @@ use eigensdk::{
 
 use std::{collections::BTreeMap, str::FromStr, sync::Arc};
 use tokio::sync::Mutex;
-use tracing::info;
 
 // This example shows how to initialize an operator and start to listen for new task events.
 // For this example, Operator should be registered.
@@ -51,32 +48,27 @@ async fn main() {
     let operator_state_retriever_address =
         Address::from_str("0x4c5859f0f772848b2d91f1d83e2fe57935348029").unwrap();
 
-    setup_operator(
-        BlsKeyPair::new(bls_private_key.clone()).unwrap(),
-        Some(operator_private_key.to_string()),
-        "ecdsa_keystore_path".to_string(),
-        "ecdsa_keystore_password".to_string(),
-        http_rpc_url.clone(),
-        "metadata_uri".to_string(),
-        "socket".to_string(),
-        0,
-        0,
-        U256::from_str("5000000000000000000000").unwrap(),
-        vec![1000000000000000000],
+    let operator_registration_config = OperatorRegistrationConfig {
+        operator_pvt_key: Some(operator_private_key.to_string()),
+        ecdsa_keystore_path: "ecdsa_keystore_path".to_string(),
+        ecdsa_keystore_password: "ecdsa_keystore_password".to_string(),
+        metadata_uri: "metadata_uri".to_string(),
+        socket: "socket".to_string(),
+        allocation_delay: 0,
+        operator_set_id: 0,
+        deposit_tokens: "5000000000000000000000".to_string(),
+        new_magnitude: vec![1000000000000000000],
         permission_controller_address,
         rewards_coordinator_address,
-        allocation_manager,
+        allocation_manager_address: allocation_manager,
         registry_coordinator_address,
         delegation_manager_address,
         avs_directory_address,
         strategy_manager_address,
-        strategy_address,
-        avs,
-    )
-    .await
-    .unwrap();
-
-    info!("Operator setup complete");
+        erc20_strategy_address: strategy_address,
+        avs_address: avs,
+        strategies_addresses: vec![strategy_address],
+    };
 
     let operator_config = OperatorConfig {
         bls_private_key,
@@ -87,7 +79,7 @@ async fn main() {
         registry_coordinator_address,
         operator_state_retriever_address,
         aggregator_ip_port,
-        registration: None,
+        registration: Some(operator_registration_config),
     };
 
     // Initialize the operator

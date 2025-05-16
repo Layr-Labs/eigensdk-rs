@@ -2,9 +2,8 @@
 
 use alloy::primitives::{Address, U256};
 use eigensdk::{
-    crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
-    operator::{config::OperatorConfig, Operator},
+    operator::{config::OperatorConfig, register_config::OperatorRegistrationConfig, Operator},
     task_manager::response_calculator::response_calculator_from_fn,
     testing_utils::{
         anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY},
@@ -12,17 +11,12 @@ use eigensdk::{
     },
 };
 use eyre::Result;
-use incredible_dot_product::{
-    task_manager::{dot_product, ISTaskManager},
-    utils::setup_operator,
-};
+use incredible_dot_product::task_manager::{dot_product, ISTaskManager};
 use std::str::FromStr;
-use tracing::info;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
-    let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string())?;
     let operator_address = FIRST_ADDRESS;
     let operator_private_key = FIRST_PRIVATE_KEY;
     let operator_name = "dot-product-god";
@@ -46,31 +40,27 @@ async fn main() -> Result<()> {
     let operator_state_retriever_address =
         Address::from_str("0x4c5859f0f772848b2d91f1d83e2fe57935348029")?;
 
-    setup_operator(
-        bls_key_pair.clone(),
-        Some(operator_private_key.to_string()),
-        "ecdsa_keystore_path".to_string(),
-        "ecdsa_keystore_password".to_string(),
-        http_rpc_url.clone(),
-        "metadata_uri".to_string(),
-        "socket".to_string(),
-        0,
-        0,
-        U256::from_str("5000000000000000000000")?,
-        vec![1000000000000000000],
+    let operator_registration_config = OperatorRegistrationConfig {
+        operator_pvt_key: Some(operator_private_key.to_string()),
+        ecdsa_keystore_path: "ecdsa_keystore_path".to_string(),
+        ecdsa_keystore_password: "ecdsa_keystore_password".to_string(),
+        metadata_uri: "metadata_uri".to_string(),
+        socket: "socket".to_string(),
+        allocation_delay: 0,
+        operator_set_id: 0,
+        deposit_tokens: "5000000000000000000000".to_string(),
+        new_magnitude: vec![1000000000000000000],
         permission_controller_address,
         rewards_coordinator_address,
-        allocation_manager,
+        allocation_manager_address: allocation_manager,
         registry_coordinator_address,
         delegation_manager_address,
         avs_directory_address,
         strategy_manager_address,
-        strategy_address,
-        avs,
-    )
-    .await?;
-
-    info!("Operator setup complete");
+        erc20_strategy_address: strategy_address,
+        avs_address: avs,
+        strategies_addresses: vec![strategy_address],
+    };
 
     let operator_config = OperatorConfig {
         bls_private_key: OPERATOR_BLS_KEY.to_string(),
@@ -81,11 +71,9 @@ async fn main() -> Result<()> {
         registry_coordinator_address,
         operator_state_retriever_address,
         aggregator_ip_port,
-        registration: None,
+        registration: Some(operator_registration_config),
     };
-    let operator = Operator::new(logger, operator_config)
-        .await
-        .map_err(|e| eyre::eyre!("Operator new error: {}", e))?;
+    let operator = Operator::new(logger, operator_config).await.unwrap();
 
     let response_calculator = response_calculator_from_fn(dot_product);
 
