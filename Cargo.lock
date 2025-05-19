@@ -3022,6 +3022,7 @@ dependencies = [
  "eigen-crypto-bn254",
  "eigen-logging",
  "eigen-task-manager",
+ "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
  "futures-util",

@@ -2,7 +2,12 @@
 //!
 //! ## What is an Operator
 //!
-//! Operators are off-chain nodes that perform, sign, and submit verifiable computations for Autonomous Verifiable Services (AVSs) using Ethereum restaking for security. They first register on EigenLayer’s core contracts, then opt-in to provide a range of services to AVSs. Operators listen for new task events, execute the supplied computation logic, cryptographically sign the results with `BLS/ECDSA` keys, and finally send the proofs to an aggregator for final consolidation.
+//! Operators are off-chain nodes that perform, sign, and submit verifiable computations for
+//! Autonomous Verifiable Services (AVSs) using Ethereum restaking for security. They first register on
+//! EigenLayer’s core contracts, then opt-in to provide a range of services to AVSs.
+//! Operators listen for new task events, execute the supplied computation logic,
+//! cryptographically sign the results with `BLS/ECDSA` keys, and finally send the proofs
+//! to an aggregator for final consolidation.
 //!
 //! ## How the Logic Works
 //!
@@ -56,7 +61,9 @@
 //!         }
 //!     ```
 //!
-//! 3. **Response Calculator**: To abstract your computation into the operator, we provide a `ResponseCalculator` trait with a standar `FunctionResponseCalculator` struct. This struct implements the trait and helpers for turning your functions into implementations:
+//! 3. **Response Calculator**: To abstract your computation into the operator, we provide a `ResponseCalculator`
+//!    trait with a standar `FunctionResponseCalculator` struct. This struct implements the trait and helpers
+//!    for turning your functions into implementations:
 //!    - `response_calculator_from_fn`: Create a response calculator from your computation function.
 //!    - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
 //!
@@ -66,13 +73,16 @@
 //!
 //!    - In case you need to save state in the operator, you can use your own struct implementing the `ResponseCalculator` trait.
 //!
-//! 4. **Failing Response Calculator**: If you want to test what happens when the operator responds incorrectly to a task and see how slashing works, you can wrap your logic with `failing_response_calculator` to inject failures and a given failure rate. **Use this for testing purposes only.**
+//! 4. **Failing Response Calculator**: If you want to test what happens when the operator responds incorrectly
+//!    to a task and see how slashing works, you can wrap your logic with `failing_response_calculator` (from
+//!    `eigen-testing-utils`), to inject failures and a given failure rate. **Use this for testing purposes only.**
 //!     
 //!     ```ignore
 //!         let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
 //!     ```
 //!
-//! 5. **Create the operator configuration**: Create a [`OperatorConfig`](crate::config::OperatorConfig) struct. This structs implements `Serialize` and `Deserialize` so you can load from a file.
+//! 5. **Create the operator configuration**: Create a [`OperatorConfig`](crate::config::OperatorConfig) struct.
+//!    This structs implements `Serialize` and `Deserialize` so you can load from a file.
 //!    - Attributes:
 //!      - `bls_private_key`: The BLS private key for
 //!      - `operator_address`: The address of the operator
@@ -98,7 +108,6 @@
 //! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/operator.rs)
 //! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/operator.rs)
 //! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/operator.rs)
-//!
 
 use alloy::{
     dyn_abi::SolType,
@@ -114,6 +123,7 @@ use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
+use eigen_testing_utils::task_processor::failing_response_calculator;
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
