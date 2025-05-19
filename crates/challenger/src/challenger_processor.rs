@@ -67,6 +67,7 @@ where
             return Ok(());
         }
 
+        info!("Task {task_index} is incorrect");
         // If the response is incorrect, we need to raise a challenge
         let tm = self.task_manager.clone();
         let task = task.clone();
