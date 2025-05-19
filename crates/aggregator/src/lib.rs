@@ -2,9 +2,8 @@
 //!
 //! ## What is an Aggregator
 //!
-//! The Aggregator is a service component that coordinates BLS signature aggregation across multiple operators for a given task. It acts as the main bridge between operators and on-chain smart contracts. The Aggregator is tightly integrated with the BLS Aggregation Service, to which it:
-//! - Forwards signed task responses from operators.
-//! - Receives the aggregated response once a quorum is reached.
+//! The Aggregator is a service component that coordinates BLS signature aggregation from multiple operators for each task.
+//! It acts as the bridge between the off-chain operator network and the on-chain smart contracts.
 //!
 //! ## How the Logic Works
 //!
@@ -12,13 +11,12 @@
 //!
 //! 1. **RPC Server Process**:
 //!    - Runs a TARPC-based server that listens for incoming operator responses
-//!    - When an operator submits a signed task response, it validates and stores it
-//!    - Forwards the signature to the BLS aggregation service for accumulation
+//!    - When an operator submits a signed task response, the Aggregator validates it and forwards the signature to the BLS aggregation service.
 //!
 //! 2. **Task Monitoring Process**:
 //!    - Subscribes to blockchain events for new tasks
 //!    - When a new task is detected, it creates a task metadata record
-//!    - Sends the task metadata to the BLS Aggregation Service to start collecting signatures for the task
+//!    - Sends the task metadata to the BLS Aggregation Service to begin signature collection
 //!
 //! 3. **Aggregation Process**:
 //!    - Listens for aggregated results from the BLS aggregation service
@@ -49,11 +47,11 @@
 //!   - This struct should come from your bindings.
 //!
 //!     ```ignore
-//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, wallet);
+//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 //!     ```
 //!
 //! 3. **Task Processor**: Create a `TaskProcessor` implementation:
-//!   - This will be in charge of processing the new tasks, the signed task responses and the aggregated response.
+//!   - This is a trait that contains user-defined logic to handle new tasks, signed responses, and the final aggregated result.
 //!   - We provide a standard `IndexingTaskProcessor` implementation that can be used as is for most cases. You need to provide the task manager, the task timeout and the task window duration.
 //!     - The task timeout is the time after which a task considered completed if the quorum threshold is not reached.
 //!     - The task window duration is the time after which a task is considered completed and continues accepting signatures.
@@ -64,10 +62,7 @@
 //!         let task_processor = IndexingTaskProcessor::new(contract, task_timeout, task_window_duration);
 //!     ```
 //!
-//! 4. **Aggregator**: Create an `Aggregator` instance:
-//!   - This will be in charge of starting the RPC server, the task monitoring process and the aggregation process.
-//!
-//! 5. **Create the aggregator configuration**: Create a [`AggregatorConfig`](crate::config::AggregatorConfig) struct. This structs implements `Serialize` and `Deserialize` so you can load from a file.
+//! 4. **Create the aggregator configuration**: Create a [`AggregatorConfig`] struct. This struct implements `Serialize` and `Deserialize` so you can load from a file.
 //! - Attributes:
 //!   - `server_address`: The address of the aggregator
 //!   - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
@@ -75,16 +70,13 @@
 //!   - `registry_coordinator_address`: The address of the registry coordinator
 //!   - `operator_state_retriever_address`: The address of the operator state retriever
 //!
-//! 6. **Create the aggregator**: Create an `Aggregator` instance with the config and the task processor:
+//! 5. **Create the aggregator**: Create an [`Aggregator`] instance with the config and the task processor:
 //!
 //!     ```ignore
 //!         let aggregator = Aggregator::new(config, task_processor)
-//!             .await
-//!             .map_err(|e| eyre::eyre!("Aggregator new error: {}", e))?;
-//!         aggregator
-//!             .start()
-//!             .await
-//!             .map_err(|e| eyre::eyre!("Aggregator start error: {}", e))?;
+//!             .await?;
+//!
+//!         aggregator.start().await?;
 //!     ```
 //!
 //! ## Examples

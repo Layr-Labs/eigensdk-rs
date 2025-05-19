@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Eq, Clone)]
 #[serde(default)]
-/// Configuration for the [`Aggregator`]
+/// Configuration for the Aggregator
 pub struct AggregatorConfig {
     /// IP address and port the aggregation server will use
     pub server_address: String,

@@ -39,7 +39,7 @@ pub enum AggregatorError {
     #[error("Operator Info Service error")]
     OperatorInfoServiceError(#[from] OperatorInfoServiceError),
 
-    /// Error returned by the [`TaskProcessor`](crate::traits::TaskProcessor)
+    /// Error returned by the `TaskProcessor`
     #[error("Task Processing failed")]
     TaskProcessorError(#[from] Box<dyn std::error::Error + Send>),
 
