@@ -40,45 +40,59 @@
 //!               const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
 //!           }
 //!
-//!           impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
+//!           impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleSquaringTaskManagerInstance);
 //!       ```
 //!
 //! 2. **Task Manager Contract**: Create an instance of your `TaskManager` contract:
-//!   - This struct should come from your bindings.
+//!     - This struct should come from your bindings
 //!
-//!     ```ignore
-//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
-//!     ```
+//!       ```ignore
+//!           let contract = IncredibleSquaringTaskManagerInstance(task_manager_address, provider);
+//!       ```
+//! 3. **Build the Task Spammer**:
+//!    - Use the [`TaskSpammerBuilder`] to configure the task spammer
 //!
-//! 3. **Input Generator**: Define an iterator that creates appropriate input values for your specific AVS
+//!       ```ignore
+//!           let mut builder = TaskSpammerBuilder::new(contract);
+//!       ```
+//!
+//! 4. **Input Generator**: Define an iterator that creates appropriate input values for your specific AVS
 //!    - The iterator can be infinite or finite depending on your needs
 //!    - The input values will be passed to the `create_new_task` function on the TaskManager contract
 //!
+//!       ```ignore
+//!           builder = builder.with_iter((0..).map(U256::from));
+//!       ```
 //!
-//! 4. **Quorum Configuration**:
+//! 5. **Quorum Configuration**:
 //!    - Set the quorum threshold percentage
 //!    - Specify to which quorums the task will be sent
 //!
-//! 5. **Interval Settings**: Define how frequently tasks should be created
+//!       ```ignore
+//!           builder = builder.with_quorum(50, vec![0]);
+//!       ```
+//!
+//! 6. **Interval Settings**: Define how frequently tasks should be created
 //!    - The interval is the time between task creations
 //!
-//! 6. **Build and Run the Task Spammer**:
-//!    - Use the [`TaskSpammerBuilder`] to configure the task spammer
+//!       ```ignore
+//!           builder = builder.with_interval(Duration::from_secs(10));
+//!       ```
+//! 7. **Build and Run the Task Spammer**:
 //!    - Build the task spammer using the [`build()`](TaskSpammerBuilder::build) method
 //!    - Call the [`run()`](TaskSpammer::run) method to start the task spammer
 //!
-//!     ```ignore
-//!         // Build and run the task spammer
-//!         TaskSpammerBuilder::new(contract)
-//!             .with_iter((0..).map(U256::from)) // (3)
-//!             .with_quorum(50, vec![0]) // (4)
-//!             .with_interval(Duration::from_secs(10)) // (5)
-//!             .build()
-//!             .unwrap()
-//!             .run()
-//!             .await
-//!             .unwrap();
-//!     ```
+//!       ```ignore
+//!           TaskSpammerBuilder::new(contract)
+//!               .with_iter((0..).map(U256::from)) // (3)
+//!               .with_quorum(50, vec![0]) // (4)
+//!               .with_interval(Duration::from_secs(10)) // (5)
+//!               .build()
+//!               .unwrap()
+//!               .run()
+//!               .await
+//!               .unwrap();
+//!       ```
 //!
 //! ## Examples
 //!
