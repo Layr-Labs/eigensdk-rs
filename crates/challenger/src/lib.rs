@@ -60,10 +60,10 @@
 //!     ```
 //!
 //! 3. **Response Calculator**: To abstract your computation into the operator, we provide a
-//! `ResponseCalculator` trait with a standar `FunctionResponseCalculator` struct.
-//! This struct implements the trait and helpers for turning your functions into implementations:
-//!    - `response_calculator_from_fn`: Create a response calculator from your computation function.
-//!    - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
+//!    `ResponseCalculator` trait with a standar `FunctionResponseCalculator` struct.
+//!    This struct implements the trait and helpers for turning your functions into implementations:
+//!      - `response_calculator_from_fn`: Create a response calculator from your computation function.
+//!      - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
 //!
 //!     ```ignore
 //!         let response_calculator = response_calculator_from_fn(square);
@@ -91,16 +91,10 @@
 //!         let task_processor = IndexingChallengerProcessor::new(contract, logic);
 //!     ```
 //!
-//! 7. **Challenger Configuration**: Configure the [`ChallengerConfig`] with the following parameters:
-//!    - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
-//!    - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
-//!
-//!     ```ignore
-//!         let config = ChallengerConfig {
-//!             http_rpc_url,
-//!             ws_rpc_url,
-//!         };
-//!     ```
+//! 7. **Challenger Configuration**: Create a [`ChallengerConfig`] struct. This struct implements `Serialize` and `Deserialize` so you can load from a file.
+//!    - Attributes:
+//!      - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
+//!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
 //!
 //! 8. **Challenger Initialization**: Initialize the [`Challenger`] with the configuration and start it with the processing logic
 //!
