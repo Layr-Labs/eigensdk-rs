@@ -105,7 +105,7 @@
 //!
 //! ## Examples
 //!
-//! Here are some examples of operators that are already implemented:
+//! Here are some examples of challenger implementations:
 //!
 //! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/challenger.rs)
 //! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/challenger.rs)
