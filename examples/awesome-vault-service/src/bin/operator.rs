@@ -2,12 +2,10 @@
 
 use alloy::primitives::B256;
 use awesome_vault_service::{
-    response_calculator::VaultServiceResponseCalculator,
-    task_manager::ISTaskManager,
-    utils::{load_config, setup_operator},
+    response_calculator::VaultServiceResponseCalculator, task_manager::ISTaskManager,
+    utils::load_config,
 };
 use eigensdk::{
-    crypto_bls::BlsKeyPair,
     logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
     testing_utils::task_processor::failing_response_calculator,
@@ -15,7 +13,6 @@ use eigensdk::{
 
 use std::{collections::BTreeMap, sync::Arc};
 use tokio::sync::Mutex;
-use tracing::info;
 
 // This example shows how to initialize an operator and start to listen for new task events.
 // For this example, Operator should be registered.
@@ -24,17 +21,6 @@ async fn main() {
     init_logger(LogLevel::Info);
     let logger = get_logger();
     let config: OperatorConfig = load_config("./src/config/awesome-operator.toml").unwrap();
-
-    if let Some(registration) = config.registration.clone() {
-        setup_operator(
-            registration,
-            BlsKeyPair::new(config.bls_private_key.clone()).unwrap(),
-            config.http_rpc_url.clone(),
-        )
-        .await
-        .unwrap();
-        info!("Operator setup complete");
-    }
 
     // Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();

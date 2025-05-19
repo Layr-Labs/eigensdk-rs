@@ -3017,6 +3017,7 @@ dependencies = [
  "alloy",
  "eigen-aggregator",
  "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",

@@ -1,7 +1,5 @@
 //! Incredible Dot Product Aggregator
 
-use std::{str::FromStr, time::Duration};
-
 use alloy::primitives::Address;
 use eigensdk::{
     aggregator::{task_processor::IndexingTaskProcessor, Aggregator, AggregatorConfig},
@@ -10,8 +8,9 @@ use eigensdk::{
 };
 use eyre::Result;
 use incredible_dot_product::{
-    load_config, IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
+    utils::load_config, IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
+use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
 async fn main() -> Result<()> {

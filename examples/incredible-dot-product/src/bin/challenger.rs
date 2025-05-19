@@ -14,7 +14,7 @@ use eigensdk::{
 };
 use eyre::Result;
 use incredible_dot_product::{
-    load_config, task_manager::dot_product,
+    task_manager::dot_product, utils::load_config,
     IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
 use std::str::FromStr;
