@@ -1,4 +1,99 @@
-//! Aggregator crate
+//! # Aggregator
+//!
+//! ## What is an Aggregator
+//!
+//! The Aggregator is a service component that coordinates BLS signature aggregation across multiple operators for a given task. It acts as the main bridge between operators and on-chain smart contracts. The Aggregator is tightly integrated with the BLS Aggregation Service, to which it:
+//! - Forwards signed task responses from operators.
+//! - Receives the aggregated response once a quorum is reached.
+//!
+//! ## How the Logic Works
+//!
+//! The Aggregator operates through three main asynchronous processes:
+//!
+//! 1. **RPC Server Process**:
+//!    - Runs a TARPC-based server that listens for incoming operator responses
+//!    - When an operator submits a signed task response, it validates and stores it
+//!    - Forwards the signature to the BLS aggregation service for accumulation
+//!
+//! 2. **Task Monitoring Process**:
+//!    - Subscribes to blockchain events for new tasks
+//!    - When a new task is detected, it creates a task metadata record
+//!    - Sends the task metadata to the BLS Aggregation Service to start collecting signatures for the task
+//!
+//! 3. **Aggregation Process**:
+//!    - Listens for aggregated results from the BLS aggregation service
+//!    - When enough signatures are collected (meeting the quorum threshold), processes the result
+//!    - Submits the aggregated signature along with information about non-signing operators to the blockchain
+//!
+//! This flow ensures tasks are initialized, signatures collected, and the final response confirmed and forwarded to the AVS logic.
+//!
+//! ## How to Set Up an Aggregator
+//!
+//! 1. **Task Manager Definition**: Create a struct implementing the `TaskManagerDefs` trait:
+//!   - `Input` and `Output` types for your tasks. This should come from your bindings.
+//!   - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
+//!   - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
+//!
+//!     ```ignore
+//!         impl TaskManagerDefs for ISTaskManager {
+//!             type Input = U256;
+//!             type Output = U256;
+//!             const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+//!             const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+//!         }
+//!
+//!         impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
+//!     ```
+//!
+//! 2. **Task Manager Instance**: Create an instance of your `TaskManager` contract:
+//!   - This struct should come from your bindings.
+//!
+//!     ```ignore
+//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, wallet);
+//!     ```
+//!
+//! 3. **Task Processor**: Create a `TaskProcessor` implementation:
+//!   - This will be in charge of processing the new tasks, the signed task responses and the aggregated response.
+//!   - We provide a standard `IndexingTaskProcessor` implementation that can be used as is for most cases. You need to provide the task manager, the task timeout and the task window duration.
+//!     - The task timeout is the time after which a task considered completed if the quorum threshold is not reached.
+//!     - The task window duration is the time after which a task is considered completed and continues accepting signatures.
+//!
+//!     ```ignore
+//!         let task_timeout = Duration::from_secs(60);
+//!         let task_window_duration = Duration::from_secs(15);
+//!         let task_processor = IndexingTaskProcessor::new(contract, task_timeout, task_window_duration);
+//!     ```
+//!
+//! 4. **Aggregator**: Create an `Aggregator` instance:
+//!   - This will be in charge of starting the RPC server, the task monitoring process and the aggregation process.
+//!
+//! 5. **Create the aggregator configuration**: Create a [`AggregatorConfig`](crate::config::AggregatorConfig) struct. This structs implements `Serialize` and `Deserialize` so you can load from a file.
+//! - Attributes:
+//!   - `server_address`: The address of the aggregator
+//!   - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
+//!   - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
+//!   - `registry_coordinator_address`: The address of the registry coordinator
+//!   - `operator_state_retriever_address`: The address of the operator state retriever
+//!
+//! 6. **Create the aggregator**: Create an `Aggregator` instance with the config and the task processor:
+//!
+//!     ```ignore
+//!         let aggregator = Aggregator::new(config, task_processor)
+//!             .await
+//!             .map_err(|e| eyre::eyre!("Aggregator new error: {}", e))?;
+//!         aggregator
+//!             .start()
+//!             .await
+//!             .map_err(|e| eyre::eyre!("Aggregator start error: {}", e))?;
+//!     ```
+//!
+//! ## Examples
+//!
+//! Here are some examples of operators that are already implemented:
+//!
+//! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/aggregator.rs)
+//! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/aggregator.rs)
+//! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/aggregator.rs)
 
 /// Aggregator Config
 pub mod config;
