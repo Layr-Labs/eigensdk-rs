@@ -31,7 +31,7 @@
 //!    - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
 //!    - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
 //!
-//!     ```rust
+//!     ```ignore
 //!         // Implement the [`TaskManagerDefs`] trait for a unit struct.
 //!         // You need to specify the input and output types of the task.
 //!         // You also need to specify the selectors for the new task event and the task responded event.
@@ -51,7 +51,7 @@
 //! 2. **Task Verification Logic**: Define a function that computes the expected result for a task, which will be used to verify operator responses
 //!    - This would be the logic to compute a new task.
 //!
-//!     ```rust
+//!     ```ignore
 //!         pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
 //!             Ok(number_to_be_squared * number_to_be_squared)
 //!         }
@@ -61,14 +61,14 @@
 //!    - `response_calculator_from_fn`: Create a response calculator from your computation function.
 //!    - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
 //!
-//!     ```rust
+//!     ```ignore
 //!         let response_calculator = response_calculator_from_fn(square);
 //!     ```
 //!
 //! 4. **Verifier**: Create a verifier from the response calculator.
 //!    - This will be in charge of computing the response of a task and comparing it with the operator's response.
 //!
-//!     ```rust
+//!     ```ignore
 //!         let logic = verifier_from_compute_function(response_calculator);
 //!     ```
 //!
@@ -76,7 +76,7 @@
 //!    - This will be in charge of processing the task and the response.
 //!    - We provide a standard [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor) implementation that can be used as a starting point.
 //!
-//!     ```rust
+//!     ```ignore
 //!         let task_processor = IndexingChallengerProcessor::new(contract, logic);
 //!     ```
 //!
@@ -84,7 +84,7 @@
 //!    - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
 //!    - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
 //!
-//!     ```rust
+//!     ```ignore
 //!         let config = ChallengerConfig {
 //!             http_rpc_url,
 //!             ws_rpc_url,
@@ -93,7 +93,7 @@
 //!
 //! 7. **Challenger Initialization**: Initialize the [`Challenger`] with the configuration and start it with the processing logic
 //!
-//!     ```rust
+//!     ```ignore
 //!         let mut challenger = Challenger::new(config, task_processor);
 //!         challenger.start_challenger().await?;
 //!     ```
