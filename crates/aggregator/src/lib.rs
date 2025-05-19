@@ -28,48 +28,48 @@
 //! ## How to Set Up an Aggregator
 //!
 //! 1. **Task Manager Definition**: Create a struct implementing the `TaskManagerDefs` trait:
-//!   - `Input` and `Output` types for your tasks. This should come from your bindings.
-//!   - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
-//!   - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
+//!     - `Input` and `Output` types for your tasks. This should come from your bindings.
+//!     - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
+//!     - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
 //!
-//!     ```ignore
-//!         impl TaskManagerDefs for ISTaskManager {
-//!             type Input = U256;
-//!             type Output = U256;
-//!             const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
-//!             const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
-//!         }
+//!       ```ignore
+//!           impl TaskManagerDefs for ISTaskManager {
+//!               type Input = U256;
+//!               type Output = U256;
+//!               const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+//!               const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+//!           }
 //!
-//!         impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
-//!     ```
+//!           impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
+//!       ```
 //!
 //! 2. **Task Manager Instance**: Create an instance of your `TaskManager` contract:
-//!   - This struct should come from your bindings.
+//!     - This struct should come from your bindings.
 //!
-//!     ```ignore
-//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
-//!     ```
+//!       ```ignore
+//!           let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+//!       ```
 //!
 //! 3. **Task Processor**: Create a `TaskProcessor` implementation:
-//!   - This is a trait that contains user-defined logic to handle new tasks, signed responses, and the final aggregated result.
-//!   - We provide a standard `IndexingTaskProcessor` implementation that can be used as is for most cases. You need to provide
-//!     the task manager, the task timeout and the task window duration.
-//!     - The task timeout is the time after which a task considered completed if the quorum threshold is not reached.
-//!     - The task window duration is the time after which a task is considered completed and continues accepting signatures.
+//!     - This is a trait that contains user-defined logic to handle new tasks, signed responses, and the final aggregated result.
+//!     - We provide a standard `IndexingTaskProcessor` implementation that can be used as is for most cases. You need to provide
+//!       the task manager, the task timeout and the task window duration.
+//!       - The task timeout is the time after which a task considered completed if the quorum threshold is not reached.
+//!       - The task window duration is the time after which a task is considered completed and continues accepting signatures.
 //!
-//!     ```ignore
-//!         let task_timeout = Duration::from_secs(60);
-//!         let task_window_duration = Duration::from_secs(15);
-//!         let task_processor = IndexingTaskProcessor::new(contract, task_timeout, task_window_duration);
-//!     ```
+//!       ```ignore
+//!           let task_timeout = Duration::from_secs(60);
+//!           let task_window_duration = Duration::from_secs(15);
+//!           let task_processor = IndexingTaskProcessor::new(contract, task_timeout, task_window_duration);
+//!       ```
 //!
 //! 4. **Create the aggregator configuration**: Create a [`AggregatorConfig`] struct. This struct implements `Serialize` and `Deserialize` so you can load from a file.
-//! - Attributes:
-//!   - `server_address`: The address of the aggregator
-//!   - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
-//!   - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
-//!   - `registry_coordinator_address`: The address of the registry coordinator
-//!   - `operator_state_retriever_address`: The address of the operator state retriever
+//!     - Attributes:
+//!       - `server_address`: The address of the aggregator
+//!       - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
+//!       - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
+//!       - `registry_coordinator_address`: The address of the registry coordinator
+//!       - `operator_state_retriever_address`: The address of the operator state retriever
 //!
 //! 5. **Create the aggregator**: Create an [`Aggregator`] instance with the config and the task processor:
 //!
