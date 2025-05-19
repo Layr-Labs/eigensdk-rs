@@ -56,7 +56,6 @@ where
 /// # Returns
 ///
 /// * `eyre::Result<()>` - The result of the operation
-#[allow(clippy::too_many_arguments)]
 pub async fn setup_operator(
     config: OperatorRegistrationConfig,
     bls_key_pair: BlsKeyPair,
