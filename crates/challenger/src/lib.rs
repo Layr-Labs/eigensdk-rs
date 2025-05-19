@@ -72,7 +72,14 @@
 //!         let logic = verifier_from_compute_function(response_calculator);
 //!     ```
 //!
-//! 5. **Challenger Task Processor**: Create a [`ChallengerTaskProcessor`] trait implementation.
+//! 5. **Task Manager Instance**: Create an instance of your `TaskManager` contract:
+//!   - This struct should come from your bindings.
+//!
+//!     ```ignore
+//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+//!     ```
+//!
+//! 6. **Challenger Task Processor**: Create a [`ChallengerTaskProcessor`] trait implementation.
 //!    - This will be in charge of processing the task and the response.
 //!    - We provide a standard [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor) implementation that can be used as a starting point.
 //!
@@ -80,7 +87,7 @@
 //!         let task_processor = IndexingChallengerProcessor::new(contract, logic);
 //!     ```
 //!
-//! 6. **Challenger Configuration**: Configure the [`ChallengerConfig`] with the following parameters:
+//! 7. **Challenger Configuration**: Configure the [`ChallengerConfig`] with the following parameters:
 //!    - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
 //!    - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
 //!
@@ -91,7 +98,7 @@
 //!         };
 //!     ```
 //!
-//! 7. **Challenger Initialization**: Initialize the [`Challenger`] with the configuration and start it with the processing logic
+//! 8. **Challenger Initialization**: Initialize the [`Challenger`] with the configuration and start it with the processing logic
 //!
 //!     ```ignore
 //!         let mut challenger = Challenger::new(config, task_processor);
