@@ -2,7 +2,9 @@
 //!
 //! ## What is a Task Spammer
 //!
-//! A Task Spammer is a testing utility designed to generate tasks at configurable intervals. It serves as a simulation tool that allows developers to test how operators, aggregators, and challengers respond to a continuous stream of new tasks.
+//! A Task Spammer is a testing utility designed to generate tasks at configurable intervals.
+//! It serves as a simulation tool that allows developers to test how operators, aggregators
+//! and challengers respond to a continuous stream of new tasks.
 //!
 //! ## How the Logic Works
 //!
@@ -15,7 +17,8 @@
 //! 2. **Task Submission**:
 //!    - Connects to a TaskManager contract
 //!    - Calls `create_new_task` with the generated input
-//!    - Specifies quorum requirements for each task and a quorum threshold percentage, which is the percentage of operators that must respond to consider the task complete
+//!    - Specifies quorum requirements for each task and a quorum threshold percentage,
+//!      which is the percentage of operators that must respond to consider the task complete
 //!
 //! ## How to Set Up a Task Spammer
 //!
@@ -40,33 +43,27 @@
 //!           impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
 //!       ```
 //!
-//! 2. **Input Generator**: Define an iterator that creates appropriate input values for your specific AVS
+//! 2. **Task Manager Contract**: Create an instance of your `TaskManager` contract:
+//!    - This contract should come from the bindings
+//!
+//!     ```ignore
+//!         let contract = TaskManager::new(task_manager_address, provider);
+//!     ```
+//!
+//! 3. **Input Generator**: Define an iterator that creates appropriate input values for your specific AVS
 //!    - The iterator can be infinite or finite depending on your needs
 //!    - The input values will be passed to the `create_new_task` function on the TaskManager contract
 //!
-//!     ```ignore
-//!         // Create your task input
-//!         // Example: Create a task input of type U256
-//!         let task_inputs = (0..).map(U256::from);
-//!     ```
 //!
-//! 3. **Quorum Configuration**:
+//! 4. **Quorum Configuration**:
 //!    - Set the quorum threshold percentage
 //!    - Specify to which quorums the task will be sent
 //!
-//!     ```ignore
-//!         let quorum_threshold = 50; // 50 means 50% of operators must respond
-//!         let quorum_numbers = vec![0];
-//!     ```
 //!
-//! 4. **Interval Settings**: Define how frequently tasks should be created
+//! 5. **Interval Settings**: Define how frequently tasks should be created
 //!    - The interval is the time between task creations
 //!
-//!     ```ignore
-//!         let interval = Duration::from_secs(10);
-//!     ```
-//!
-//! 5. **Build and Run the Task Spammer**:
+//! 6. **Build and Run the Task Spammer**:
 //!    - Use the [`TaskSpammerBuilder`] to configure the task spammer
 //!    - Build the task spammer using the [`build()`](TaskSpammerBuilder::build) method
 //!    - Call the [`run()`](TaskSpammer::run) method to start the task spammer
@@ -74,9 +71,9 @@
 //!     ```ignore
 //!         // Build and run the task spammer
 //!         TaskSpammerBuilder::new(contract)
-//!             .with_iter(task_inputs)
-//!             .with_quorum(quorum_threshold, quorum_numbers)
-//!             .with_interval(interval)
+//!             .with_iter((0..).map(U256::from)) // (3)
+//!             .with_quorum(50, vec![0]) // (4)
+//!             .with_interval(Duration::from_secs(10)) // (5)
 //!             .build()
 //!             .unwrap()
 //!             .run()
