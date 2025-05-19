@@ -10,7 +10,10 @@ deploy-eigenlayer:
 deploy-uam-permissions:
 	./contracts/anvil/uam-permissions.sh
 
-deploy-el-and-avs-contracts: deploy-eigenlayer deploy-avs deploy-uam-permissions
+create-quorum:
+	./contracts/anvil/create-quorum.sh
+
+deploy-el-and-avs-contracts: deploy-eigenlayer deploy-avs deploy-uam-permissions create-quorum
 
 __TESTING__: ##
 
