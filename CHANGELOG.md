@@ -17,6 +17,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Bump MSRV and Rust to 1.82 in PR [515](https://github.com/Layr-Labs/eigensdk-rs/pull/515).
+
 * Added a method `get_operator_socket` to retrieve the socket from the `AvsRegistryServiceChainCaller` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464).
 
   ```rust
