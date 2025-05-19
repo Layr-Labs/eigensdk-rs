@@ -77,7 +77,7 @@
 //!     ```
 //!
 //! 5. **Task Manager Contract**: Create an instance of your `TaskManager` contract:
-//!   - This struct should come from your bindings.
+//!     - This struct should come from your bindings.
 //!
 //!     ```ignore
 //!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
