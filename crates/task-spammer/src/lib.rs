@@ -44,10 +44,10 @@
 //!       ```
 //!
 //! 2. **Task Manager Contract**: Create an instance of your `TaskManager` contract:
-//!    - This contract should come from the bindings
+//!   - This struct should come from your bindings.
 //!
 //!     ```ignore
-//!         let contract = TaskManager::new(task_manager_address, provider);
+//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 //!     ```
 //!
 //! 3. **Input Generator**: Define an iterator that creates appropriate input values for your specific AVS
@@ -58,7 +58,6 @@
 //! 4. **Quorum Configuration**:
 //!    - Set the quorum threshold percentage
 //!    - Specify to which quorums the task will be sent
-//!
 //!
 //! 5. **Interval Settings**: Define how frequently tasks should be created
 //!    - The interval is the time between task creations
