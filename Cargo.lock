@@ -4704,9 +4704,11 @@ dependencies = [
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
+ "eyre",
  "serde",
  "serde_json",
  "tokio",
+ "toml",
  "tracing",
 ]
 
