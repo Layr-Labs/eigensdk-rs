@@ -52,7 +52,8 @@
 //!
 //! 3. **Task Processor**: Create a `TaskProcessor` implementation:
 //!   - This is a trait that contains user-defined logic to handle new tasks, signed responses, and the final aggregated result.
-//!   - We provide a standard `IndexingTaskProcessor` implementation that can be used as is for most cases. You need to provide the task manager, the task timeout and the task window duration.
+//!   - We provide a standard `IndexingTaskProcessor` implementation that can be used as is for most cases. You need to provide
+//!     the task manager, the task timeout and the task window duration.
 //!     - The task timeout is the time after which a task considered completed if the quorum threshold is not reached.
 //!     - The task window duration is the time after which a task is considered completed and continues accepting signatures.
 //!
