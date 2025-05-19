@@ -2,7 +2,9 @@
 //!
 //! ## What is a Challenger
 //!
-//! A Challenger is a validator component that monitors the network for the creation of new tasks and task responses submitted by operators, verifies their correctness, and raises challenges when incorrect responses are detected. If the challenge is successful, the operator will be slashed.
+//! A Challenger is a validator component that monitors the network for the creation of new tasks
+//! and task responses submitted by operators, verifies their correctness, and raises challenges
+//! when incorrect responses are detected. If the challenge is successful, the operator will be slashed.
 //!
 //! ## How the Logic Works
 //!
@@ -57,7 +59,9 @@
 //!         }
 //!     ```
 //!
-//! 3. **Response Calculator**: To abstract your computation into the operator, we provide a `ResponseCalculator` trait with a standar `FunctionResponseCalculator` struct. This struct implements the trait and helpers for turning your functions into implementations:
+//! 3. **Response Calculator**: To abstract your computation into the operator, we provide a
+//! `ResponseCalculator` trait with a standar `FunctionResponseCalculator` struct.
+//! This struct implements the trait and helpers for turning your functions into implementations:
 //!    - `response_calculator_from_fn`: Create a response calculator from your computation function.
 //!    - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
 //!
