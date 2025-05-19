@@ -17,7 +17,8 @@ use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDef
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
-use tracing::info;
+use registration::register_operator;
+use tracing::{error, info};
 
 /// Tarpc Client
 pub mod client;
@@ -27,6 +28,8 @@ pub mod config;
 pub mod error;
 /// Operator registration config
 pub mod register_config;
+/// Operator registration utils
+pub mod registration;
 
 /// Operator struct to handle the operator logic of processing new tasks
 /// and sending signed task responses to the aggregator.
@@ -74,31 +77,39 @@ impl Operator {
             registration: _,
         } = config;
         let avs_registry_reader = AvsRegistryChainReader::new(
-            logger,
+            logger.clone(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_rpc_url.to_string(),
         )
         .await?;
 
-        let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
+        let key_pair = BlsKeyPair::new(bls_private_key)?;
 
-        let is_registered = avs_registry_reader
+        // Check if the operator is registered with EigenLayer
+        if !avs_registry_reader
             .is_operator_registered(operator_address)
-            .await
-            .map_err(|_| OperatorError::RegistrationError)?;
-        info!("{} registered: {}", operator_name, is_registered);
+            .await?
+        {
+            // Check if a registration config was provided
+            let Some(registration_config) = config.registration else {
+                error!(
+                    "Operator {} not registered and no registration config was provided",
+                    operator_name
+                );
+                return Err(OperatorError::RegistrationError);
+            };
 
-        if !is_registered {
-            return Err(OperatorError::RegistrationError);
+            register_operator(registration_config, logger, http_rpc_url, key_pair.clone()).await?;
+            info!("Operator {} registered successfully", operator_name);
         }
+
+        let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
 
         let operator_id = avs_registry_reader
             .get_operator_id(operator_address)
             .await
             .map_err(|_| OperatorError::OperatorIdError)?;
-
-        let key_pair = BlsKeyPair::new(bls_private_key)?;
 
         Ok(Self {
             operator_id,

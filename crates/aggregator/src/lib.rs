@@ -23,6 +23,7 @@ use eigen_common::get_ws_provider;
 use eigen_crypto_bls::error::BlsError;
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
 use eigen_logging::get_logger;
+use eigen_logging::logger::SharedLogger;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle,
@@ -68,6 +69,8 @@ where
     /// # Arguments
     ///
     /// * `config` - The configuration for the aggregator
+    /// * `task_processor` - The task processor
+    /// * `logger` - The logger
     ///
     /// # Returns
     ///
@@ -75,9 +78,10 @@ where
     pub async fn new(
         config: AggregatorConfig,
         task_processor: TP,
+        logger: SharedLogger,
     ) -> Result<Self, AggregatorError> {
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
-            get_logger(),
+            logger.clone(),
             config.registry_coordinator,
             config.operator_state_retriever,
             config.http_rpc_url,
@@ -85,7 +89,7 @@ where
         .await?;
 
         let operators_info_service = OperatorInfoServiceInMemory::new(
-            get_logger(),
+            logger,
             avs_registry_chain_reader.clone(),
             config.ws_rpc_url.clone(),
         )

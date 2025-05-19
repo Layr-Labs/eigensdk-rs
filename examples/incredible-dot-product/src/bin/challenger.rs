@@ -14,7 +14,7 @@ use eigensdk::{
 };
 use eyre::Result;
 use incredible_dot_product::{
-    task_manager::dot_product,
+    task_manager::dot_product, utils::load_config,
     IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
 use std::str::FromStr;
@@ -22,9 +22,8 @@ use std::str::FromStr;
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
-    let http_rpc_url = "http://localhost:8545".to_string();
-    let ws_rpc_url = "ws://localhost:8545".to_string();
-    let wallet = get_signer(FIRST_PRIVATE_KEY, &http_rpc_url);
+    let config: ChallengerConfig = load_config("./src/config/dot-challenger.toml")?;
+    let wallet = get_signer(FIRST_PRIVATE_KEY, &config.http_rpc_url);
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
 
     let contract = IncredibleDotProductTaskManagerInstance::new(task_manager_address, wallet);
@@ -34,10 +33,7 @@ async fn main() -> Result<()> {
     let verifier = verifier_from_compute_function(response_calculator);
 
     let task_processor = IndexingChallengerProcessor::new(contract, verifier);
-    let config = ChallengerConfig {
-        http_rpc_url,
-        ws_rpc_url,
-    };
+
     let mut challenger = Challenger::new(config, task_processor);
     challenger
         .start_challenger()
