@@ -96,7 +96,7 @@
 //!
 //! ## Examples
 //!
-//! Here's how to build a Task Spammer based on the examples:
+//! Here are some examples of task spammers that are already implemented:
 //!
 //! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/task_spammer.rs)
 //! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/task-spammer.rs)
