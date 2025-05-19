@@ -23,3 +23,19 @@ serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
 toml = "0.8"
 tracing = "0.1"
+
+[[bin]]
+name = "awesome-vault-aggregator"
+path = "src/bin/aggregator.rs"
+
+[[bin]]
+name = "awesome-vault-operator"
+path = "src/bin/operator.rs"
+
+[[bin]]
+name = "awesome-vault-task-spammer"
+path = "src/bin/task_spammer.rs"
+
+[[bin]]
+name = "awesome-vault-challenger"
+path = "src/bin/challenger.rs"
