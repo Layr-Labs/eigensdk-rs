@@ -82,7 +82,7 @@
 //!
 //! ## Examples
 //!
-//! Here are some examples of operators that are already implemented:
+//! Here are some examples of aggregator implementations:
 //!
 //! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/aggregator.rs)
 //! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/aggregator.rs)
