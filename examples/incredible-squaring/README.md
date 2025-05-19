@@ -66,10 +66,11 @@ Start the operator:
 cargo run --bin operator
 ```
 
-The Operator will check if the operator is registered in EigenLayer. If not, it will try to register the operator. To register the operator, create the `OperatorRegistrationConfig` struct and pass it to the `OperatorConfig` struct. 
+The Operator will first check whether it is already registered on EigenLayer. If not, it will attempt to register automatically. To enable registration, create an [OperatorRegistrationConfig] and include it in the [OperatorConfig] struct.
 
-The operator will produce invalid results often because the function passed to it has a failure probability. These failures result in slashing once they're challenged.
-To see this in action, start the challenger with:
+The operator will produce invalid results often because it use `failing_response_calculator` method, which has a failure rate of 40% and returns `U256::MAX` as the response.
+
+These failures result in slashing once they're challenged. To see this in action, start the challenger with:
 
 ```bash
 cargo run --bin challenger
