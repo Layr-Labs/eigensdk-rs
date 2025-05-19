@@ -8,7 +8,7 @@ use awesome_vault_service::{
 use eigensdk::{
     aggregator::{task_processor::IndexingTaskProcessor, Aggregator, AggregatorConfig},
     common::get_signer,
-    logging::{init_logger, log_level::LogLevel},
+    logging::{get_logger, init_logger, log_level::LogLevel},
 };
 use eyre::Result;
 use std::{str::FromStr, time::Duration};
@@ -16,6 +16,7 @@ use std::{str::FromStr, time::Duration};
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
+    let logger = get_logger();
     let config: AggregatorConfig = load_config("./src/config/awesome-aggregator.toml")?;
     let wallet = get_signer(
         "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6",
@@ -28,7 +29,7 @@ async fn main() -> Result<()> {
     let task_processor =
         IndexingTaskProcessor::new(contract, Duration::from_secs(10), Duration::from_secs(2));
 
-    let aggregator = Aggregator::new(config, task_processor)
+    let aggregator = Aggregator::new(config, task_processor, logger)
         .await
         .map_err(|e| eyre::eyre!("Aggregator new error: {}", e))?;
     aggregator
