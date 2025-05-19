@@ -9,7 +9,7 @@
 //! The Challenger operates through a well-defined workflow:
 //!
 //! 1. **Event Subscription**:
-//!    - Subscribes to blockchain events for new tasks and task responses using WebSocket connections
+//!    - Subscribes to blockchain events for new tasks and task responses
 //!    - Monitors for `NewTaskEvent` to track new tasks created in the system
 //!    - Watches for `TaskResponseEvent` when operators submit responses to tasks
 //!
@@ -72,7 +72,7 @@
 //!         let logic = verifier_from_compute_function(response_calculator);
 //!     ```
 //!
-//! 5. **Task Manager Instance**: Create an instance of your `TaskManager` contract:
+//! 5. **Task Manager Contract**: Create an instance of your `TaskManager` contract:
 //!   - This struct should come from your bindings.
 //!
 //!     ```ignore
