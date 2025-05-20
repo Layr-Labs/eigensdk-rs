@@ -6,7 +6,7 @@ This example shows how to create a more complex AVS based on the SDK structure. 
 
 ### Types
 
-The task type of the solidity contract is the following:
+The task type of the Solidity contract is the following:
 
 ``` solidity
     struct TaskInput {
