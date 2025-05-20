@@ -63,13 +63,8 @@
 //!           let task_processor = IndexingTaskProcessor::new(contract, task_timeout, task_window_duration);
 //!       ```
 //!
-//! 4. **Create the aggregator configuration**: Create a [`AggregatorConfig`] struct. This struct implements `Serialize` and `Deserialize` so you can load from a file.
-//!     - Attributes:
-//!       - `server_address`: The address of the aggregator
-//!       - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
-//!       - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
-//!       - `registry_coordinator_address`: The address of the registry coordinator
-//!       - `operator_state_retriever_address`: The address of the operator state retriever
+//! 4. **Create the aggregator configuration**: Create a [`AggregatorConfig`] struct.
+//!     - This struct implements `Serialize` and `Deserialize` so you can load from a file.
 //!
 //! 5. **Create the aggregator**: Create an [`Aggregator`] instance with the config and the task processor:
 //!
