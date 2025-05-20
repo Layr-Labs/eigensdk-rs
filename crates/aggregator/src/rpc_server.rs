@@ -7,7 +7,7 @@ use tarpc::{context::Context, ServerError};
 use tracing::info;
 
 #[tarpc::service]
-/// This is the service definition. It defines one RPC, `process_signed_task_response`.
+/// This is the service definition. It defines one RPC, [`process_signed_task_response`](ProcessSignedTaskResponse::process_signed_task_response).
 /// This is the RPC that the aggregator will use to process the signed task response.
 pub trait ProcessSignedTaskResponse {
     /// Processes the signed task response
