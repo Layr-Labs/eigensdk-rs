@@ -10,7 +10,7 @@ use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
 use tracing::{error, info};
 
-/// Standar implementation of the [`ChallengerTaskProcessor`] trait
+/// Standard implementation of the [`ChallengerTaskProcessor`] trait
 /// It has a `HashMap` of the task index and the new tasks received.
 /// It also has a verifier that is used to verify the output of the task against the operator's response.
 #[derive(Debug)]
