@@ -9,32 +9,87 @@
 //! A Task Manager abstracts the on-chain `TaskManager` binding, letting the SDK to
 //! create tasks, submit responses and raise challenges through a [`TaskManager`] trait.
 //!
-//! To use it:
-//! 1. Implement [`TaskManagerDefs`] to define:
-//!    - `Input`: the task’s input type
-//!    - `Output`: the response’s output type
-//!    - `NEW_TASK_EVENT_SELECTOR` and `TASK_RESPONDED_EVENT_SELECTOR`: the selectors of the events you want to subscribe to.
+//! Implementing the [`TaskManager`] trait requires that your on-chain contract expose
+//! these exact Solidity types and functions. Our SDK will wire up all the rest; you only
+//! need to supply your generic `Input`/`Output` and the selectors for the new task event
+//! and the task responded event via [`TaskManagerDefs`]. You can refer to this
+//! [contract](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/examples/incredible-squaring/contracts/src/IIncredibleSquaringTaskManager.sol)
+//! as an example.
 //!
-//!     ```ignore
-//!         pub struct ISTaskManager;
+//! **Required Solidity Structs**
 //!
-//!         // Implement the [`TaskManagerDefs`] trait for your Task Manager.
-//!         // You need to specify the input and output types of the task. In this case, U256.
-//!         // You also need to specify the selectors for the new task event and the task responded event.
-//!         impl TaskManagerDefs for ISTaskManager {
-//!             type Input = U256;
-//!             type Output = U256;
-//!             const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
-//!             const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
-//!         }
-//!     ```
+//! ```solidity
+//! struct Task {
+//!     Input input; // user-defined input type
+//!     uint32 taskCreatedBlock;
+//!     bytes  quorumNumbers;
+//!     uint32 quorumThresholdPercentage;
+//! }
 //!
-//! 2. When you have your Task Manager implemented, you can implement the [`TaskManager`] trait
-//!    with the [`impl_task_manager_from_defs_and_contract!`] macro.
+//! struct TaskResponse {
+//!     uint32 referenceTaskIndex;
+//!     Output response; // user-defined output type
+//! }
 //!
-//!     ```ignore
-//!         impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleSquaringTaskManagerInstance);
-//!     ```
+//! struct TaskResponseMetadata {
+//!     uint32 taskRespondedBlock;
+//!     bytes32 hashOfNonSigners;
+//! }
+//! ```
+//!
+//! **Required Solidity Functions**
+//!
+//! ```solidity
+//! function createNewTask(
+//!     Input    calldata input,
+//!     uint32   quorumThresholdPercentage,
+//!     bytes    calldata quorumNumbers
+//! ) external;
+//!
+//! function respondToTask(
+//!     Task calldata task,
+//!     TaskResponse calldata taskResponse,
+//!     NonSignerStakesAndSignature memory nonSignerStakesAndSignature
+//! ) external;
+//!
+//! function raiseAndResolveChallenge(
+//!     Task calldata task,
+//!     TaskResponse calldata taskResponse,
+//!     TaskResponseMetadata calldata taskResponseMetadata,
+//!     BN254.G1Point[] calldata pubkeysOfNonSigningOperators
+//! ) external;
+//! ```
+//!
+//! **Required Solidity Events**
+//!
+//! ```solidity
+//! event NewTaskCreated(uint32 indexed taskIndex, Task task);
+//! event TaskResponded(TaskResponse taskResponse, TaskResponseMetadata taskResponseMetadata);
+//! ```
+//!
+//! Once those are in place, you only:
+//!
+//! 1. Implement [`TaskManagerDefs`] to choose your `Input`/`Output` and event selectors.
+//!
+//!    ```ignore
+//!       pub struct ISTaskManager;
+//!
+//!       // Implement the [`TaskManagerDefs`] trait for your Task Manager.
+//!       // You need to specify the input and output types of the task. In this case, U256.
+//!       // You also need to specify the selectors for the new task event and the task responded event.
+//!       impl TaskManagerDefs for ISTaskManager {
+//!           type Input = U256;
+//!           type Output = U256;
+//!           const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+//!           const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+//!       }
+//!    ```
+//!
+//! 2. Invoke [`impl_task_manager_from_defs_and_contract!`](crate::impl_task_manager_from_defs_and_contract) to get a full `TaskManager` implementation.
+//!
+//!    ```ignore
+//!       impl_task_manager_from_defs_and_contract!(ISTaskManager => ISTaskManagerInstance);
+//!    ```
 //!
 //! ### Task
 //!
