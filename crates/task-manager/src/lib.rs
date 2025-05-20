@@ -58,11 +58,11 @@
 //!
 //! Contains the logic to decode the events of new task created and task responded.
 
-/// Event decoder logic
+/// Event decoder
 pub mod event_decoder;
 /// Response calculator
 pub mod response_calculator;
-///Task
+/// Task
 pub mod task;
 /// Task response
 pub mod task_response;
