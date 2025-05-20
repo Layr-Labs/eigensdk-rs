@@ -6,7 +6,7 @@
 //!
 //! ### Task Manager
 //!
-//! A Task Manager abstracts the on-chain `TaskManagerContract`, letting the SDK to
+//! A Task Manager abstracts the on-chain `TaskManager` binding, letting the SDK to
 //! create tasks, submit responses and raise challenges through a [`TaskManager`] trait.
 //!
 //! To use it:
