@@ -123,7 +123,6 @@ use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
-use eigen_testing_utils::task_processor::failing_response_calculator;
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
