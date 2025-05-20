@@ -43,7 +43,7 @@ The method inserts the key-value pair into the vaults array representing the Mer
 
 For response validation, there should be an additional check to verify that the operator has uploaded the key-value pair, but for that, proof telling the operator has set the value should be added to the challenge cycle.
 
-To create the sequence that passes input values to the task spammer, we use the sequence generator in the task spammer main (in `examples/awesome-vault-service/src/bin/task-spammer.rs`), which creates a sequence that on each iteration advances on 1 and receives as input a fixed key-pair defined from the iteration number.
+To feed inputs into the task spammer, we define an iterator in `examples/awesome-vault-service/src/bin/task-spammer.rs` that starts at 1 and, on each iteration, yields a `TaskInput` with a random key and value.
 
 ## How to run
 
