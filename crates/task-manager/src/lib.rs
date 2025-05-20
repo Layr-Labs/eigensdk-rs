@@ -1,6 +1,6 @@
 //! # Task Manager Crate
 //!
-//! This crate provides utilities for interacting with a user-defined `TaskManagerContract` binding.
+//! This crate provides utilities for interacting with a user-defined `TaskManager` binding.
 //!
 //! ## Overview
 //!
