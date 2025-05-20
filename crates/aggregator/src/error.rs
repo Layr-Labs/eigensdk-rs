@@ -8,7 +8,7 @@ use eigen_task_manager::event_decoder::AbiDecodeError;
 use tarpc::ServerError;
 use thiserror::Error;
 
-/// Error returned by chainio
+/// Error returned by the [`Aggregator`](crate::Aggregator)
 #[derive(Debug, Error)]
 pub enum AggregatorError {
     /// Bls Aggregation Service Error
