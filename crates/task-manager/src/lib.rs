@@ -1,10 +1,68 @@
-//! Task manager
+//! # Task Manager Crate
+//!
+//! This crate provides utilities for interacting with a user-defined `TaskManagerContract` binding.
+//!
+//! ## Overview
+//!
+//! ### Task Manager
+//!
+//! A Task Manager abstracts the on-chain `TaskManagerContract`, letting the SDK to
+//! create tasks, submit responses and raise challenges through a [`TaskManager`] trait.
+//!
+//! To use it:
+//! 1. Implement [`TaskManagerDefs`] to define:
+//!    - `Input`: the task’s input type
+//!    - `Output`: the response’s output type
+//!    - `NEW_TASK_EVENT_SELECTOR` and `TASK_RESPONDED_EVENT_SELECTOR`: the selectors of the events you want to subscribe to.
+//!
+//!     ```ignore
+//!         pub struct ISTaskManager;
+//!
+//!         // Implement the [`TaskManagerDefs`] trait for your Task Manager.
+//!         // You need to specify the input and output types of the task. In this case, U256.
+//!         // You also need to specify the selectors for the new task event and the task responded event.
+//!         impl TaskManagerDefs for ISTaskManager {
+//!             type Input = U256;
+//!             type Output = U256;
+//!             const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+//!             const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+//!         }
+//!     ```
+//!
+//! 2. When you have your Task Manager implemented, you can implement the [`TaskManager`] trait
+//!    with the [`impl_task_manager_from_defs_and_contract!`] macro.
+//!
+//!     ```ignore
+//!         impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleSquaringTaskManagerInstance);
+//!     ```
+//!
+//! ### Task
+//!
+//! The [`Task`] struct is a wrapper of the Task struct from the user's TaskManagerContract binding with a generic input type.
+//!
+//! ### Task Response
+//!
+//! The [`TaskResponse`] struct is a wrapper of the TaskResponse struct from the user's TaskManagerContract binding with a generic output type.
+//!
+//! ### Task Response Metadata
+//!
+//! The [`TaskResponseMetadataSol`] struct is a wrapper of the TaskResponseMetadata struct from the user's TaskManagerContract binding.
+//!
+//! ### Response Calculator
+//!
+//! The [`ResponseCalculator`](crate::response_calculator::ResponseCalculator) trait
+//! defines the logic to compute the response for a given task. We offer a standard implementation
+//! of this trait, [`FunctionResponseCalculator`](crate::response_calculator::FunctionResponseCalculator), that uses a function to compute the response.
+//!
+//! ### Event Decoder
+//!
+//! Contains the logic to decode the events of new task created and task responded.
 
-/// Event decoder
+/// Event decoder logic
 pub mod event_decoder;
 /// Response calculator
 pub mod response_calculator;
-/// Task
+///Task
 pub mod task;
 /// Task response
 pub mod task_response;
@@ -106,7 +164,7 @@ pub trait TaskManager: TaskManagerDefs {
 
 #[macro_export]
 /// Implements the [`TaskManager`] trait for the given contract.
-/// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
+/// This requires the contract to have `createNewTask`, `respondToTask` and `raiseAndResolveChallenge` functions.
 macro_rules! impl_task_manager_from_defs_and_contract {
     ($defs:ty => $contract:ident) => {
         impl<T, P, N> $crate::TaskManagerDefs for $contract<T, P, N>
@@ -136,7 +194,7 @@ macro_rules! impl_task_manager_from_defs_and_contract {
 
 #[macro_export]
 /// This macro generates a default implementation of the [`TaskManager`] trait's methods.
-/// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
+/// This requires the contract to have `createNewTask`, `respondToTask` and `raiseAndResolveChallenge` functions.
 macro_rules! default_contract_impl {
     () => {
         async fn create_new_task(
