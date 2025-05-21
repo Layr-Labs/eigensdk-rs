@@ -1,4 +1,117 @@
-//! Task manager
+//! # Task Manager Crate
+//!
+//! This crate provides utilities for interacting with a user-defined `TaskManager` binding.
+//!
+//! ## Overview
+//!
+//! ### Task Manager
+//!
+//! A Task Manager abstracts the on-chain `TaskManager` binding, letting the SDK to
+//! create tasks, submit responses and raise challenges through a [`TaskManager`] trait.
+//!
+//! Implementing the [`TaskManager`] trait requires that your on-chain contract expose
+//! these exact Solidity types and functions. Our SDK will wire up all the rest; you only
+//! need to supply your generic `Input`/`Output` and the selectors for the new task event
+//! and the task responded event via [`TaskManagerDefs`]. You can refer to this
+//! [contract](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/examples/incredible-squaring/contracts/src/IIncredibleSquaringTaskManager.sol)
+//! as an example.
+//!
+//! **Required Solidity Structs**
+//!
+//! ```solidity
+//! struct Task {
+//!     Input input; // user-defined input type
+//!     uint32 taskCreatedBlock;
+//!     bytes  quorumNumbers;
+//!     uint32 quorumThresholdPercentage;
+//! }
+//!
+//! struct TaskResponse {
+//!     uint32 referenceTaskIndex;
+//!     Output response; // user-defined output type
+//! }
+//!
+//! struct TaskResponseMetadata {
+//!     uint32 taskRespondedBlock;
+//!     bytes32 hashOfNonSigners;
+//! }
+//! ```
+//!
+//! **Required Solidity Functions**
+//!
+//! ```solidity
+//! function createNewTask(
+//!     Input    calldata input,
+//!     uint32   quorumThresholdPercentage,
+//!     bytes    calldata quorumNumbers
+//! ) external;
+//!
+//! function respondToTask(
+//!     Task calldata task,
+//!     TaskResponse calldata taskResponse,
+//!     NonSignerStakesAndSignature memory nonSignerStakesAndSignature
+//! ) external;
+//!
+//! function raiseAndResolveChallenge(
+//!     Task calldata task,
+//!     TaskResponse calldata taskResponse,
+//!     TaskResponseMetadata calldata taskResponseMetadata,
+//!     BN254.G1Point[] calldata pubkeysOfNonSigningOperators
+//! ) external;
+//! ```
+//!
+//! **Required Solidity Events**
+//!
+//! ```solidity
+//! event NewTaskCreated(uint32 indexed taskIndex, Task task);
+//! event TaskResponded(TaskResponse taskResponse, TaskResponseMetadata taskResponseMetadata);
+//! ```
+//!
+//! Once those are in place, you only:
+//!
+//! 1. Implement [`TaskManagerDefs`] to choose your `Input`/`Output` and event selectors.
+//!
+//!    ```ignore
+//!       pub struct ISTaskManager;
+//!
+//!       // Implement the [`TaskManagerDefs`] trait for your Task Manager.
+//!       // You need to specify the input and output types of the task. In this case, U256.
+//!       // You also need to specify the selectors for the new task event and the task responded event.
+//!       impl TaskManagerDefs for ISTaskManager {
+//!           type Input = U256;
+//!           type Output = U256;
+//!           const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+//!           const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+//!       }
+//!    ```
+//!
+//! 2. Invoke [`impl_task_manager_from_defs_and_contract!`](crate::impl_task_manager_from_defs_and_contract) to get a full `TaskManager` implementation.
+//!
+//!    ```ignore
+//!       impl_task_manager_from_defs_and_contract!(ISTaskManager => ISTaskManagerInstance);
+//!    ```
+//!
+//! ### Task
+//!
+//! The [`Task`] struct is a wrapper of the Task struct from the user's TaskManagerContract binding with a generic input type.
+//!
+//! ### Task Response
+//!
+//! The [`TaskResponse`] struct is a wrapper of the TaskResponse struct from the user's TaskManagerContract binding with a generic output type.
+//!
+//! ### Task Response Metadata
+//!
+//! The [`TaskResponseMetadataSol`] struct is a wrapper of the TaskResponseMetadata struct from the user's TaskManagerContract binding.
+//!
+//! ### Response Calculator
+//!
+//! The [`ResponseCalculator`](crate::response_calculator::ResponseCalculator) trait
+//! defines the logic to compute the response for a given task. We offer a standard implementation
+//! of this trait, [`FunctionResponseCalculator`](crate::response_calculator::FunctionResponseCalculator), that uses a function to compute the response.
+//!
+//! ### Event Decoder
+//!
+//! Contains the logic to decode the events of new task created and task responded.
 
 /// Event decoder
 pub mod event_decoder;
@@ -106,7 +219,7 @@ pub trait TaskManager: TaskManagerDefs {
 
 #[macro_export]
 /// Implements the [`TaskManager`] trait for the given contract.
-/// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
+/// This requires the contract to have `createNewTask`, `respondToTask` and `raiseAndResolveChallenge` functions.
 macro_rules! impl_task_manager_from_defs_and_contract {
     ($defs:ty => $contract:ident) => {
         impl<T, P, N> $crate::TaskManagerDefs for $contract<T, P, N>
@@ -136,7 +249,7 @@ macro_rules! impl_task_manager_from_defs_and_contract {
 
 #[macro_export]
 /// This macro generates a default implementation of the [`TaskManager`] trait's methods.
-/// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
+/// This requires the contract to have `createNewTask`, `respondToTask` and `raiseAndResolveChallenge` functions.
 macro_rules! default_contract_impl {
     () => {
         async fn create_new_task(
