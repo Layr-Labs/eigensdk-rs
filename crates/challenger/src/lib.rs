@@ -110,6 +110,26 @@
 //! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/challenger.rs)
 //! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/challenger.rs)
 //! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/challenger.rs)
+//!
+//! ## How to implement a custom Challenger Task Processor
+//!
+//! To implement a custom Challenger Task Processor, you need to implement the [`ChallengerTaskProcessor`] trait.
+//!
+//! - [`handle_task_creation`](ChallengerTaskProcessor::handle_task_creation) - Invoked when a new task event is emitted
+//!   by the contract. This method should store the task to be used later during response validation.
+//! - [`handle_task_response`](ChallengerTaskProcessor::handle_task_response) - Invoked when a task response event is emitted
+//!   by the contract. This method should verify the response and raise a challenge if the response is incorrect.
+//!
+//! The main responsibility of [`handle_task_creation`] is to store the task (e.g., in a map, in a database, etc.),
+//! so that when a response arrives, you can retrieve the corresponding input.
+//!
+//! The main responsibility of [`handle_task_response`] is to:
+//!
+//! 1. Retrieve the original task using the index.
+//! 2. Compare the input of the task with the operator’s response. You will receive the operator's response from the event.
+//! 3. Raise a challenge through the `TaskManager` if the responses differ.
+//!
+//! Refer to the [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor) implementation for an example of how to implement a custom Challenger Processor.
 
 use alloy::{
     consensus::Transaction,
