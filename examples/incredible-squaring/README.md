@@ -14,7 +14,7 @@ The task type of the solidity contract is the following:
         uint32 taskCreatedBlock;
         bytes quorumNumbers;
         uint32 quorumThresholdPercentage;
- }
+    }
 ```
 
 The input is an `uint256` representing the number to be squared.
@@ -25,7 +25,7 @@ The task response type is:
     struct TaskResponse {
         uint32 referenceTaskIndex;
         uint256 numberSquared;
- }
+    }
 ```
 
 The `numberSquared` field represents the result of the squaring operation with the received number to square.
