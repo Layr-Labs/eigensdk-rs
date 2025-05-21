@@ -126,7 +126,7 @@
 //! The main responsibility of [`handle_task_response`] is to:
 //!
 //! 1. Retrieve the original task using the index.
-//! 2. Compare the input of the task with the operator’s response. You will receive the operator's response from the event.
+//! 2. Use the task input to compute the expected output, then verify it matches the operator's response.
 //! 3. Raise a challenge through the `TaskManager` if the responses differ.
 //!
 //! Refer to the [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor)
