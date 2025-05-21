@@ -10,6 +10,9 @@ use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
 use tracing::{error, info};
 
+/// Standard implementation of the [`ChallengerTaskProcessor`] trait
+/// It has a `HashMap` of the task index and the new tasks received.
+/// It also has a verifier that is used to verify the output of the task against the operator's response.
 #[derive(Debug)]
 pub struct IndexingChallengerProcessor<TM, F>
 where
@@ -93,6 +96,16 @@ where
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     F: AsyncFn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>,
 {
+    /// Create a new [`IndexingChallengerProcessor`]
+    ///
+    /// # Arguments
+    ///
+    /// * `task_manager` - The task manager
+    /// * `is_response_correct` - The verifier
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The new [`IndexingChallengerProcessor`]
     pub fn new(task_manager: TM, is_response_correct: F) -> Self {
         Self {
             task_manager,

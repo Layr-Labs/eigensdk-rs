@@ -1,4 +1,116 @@
-#![allow(missing_docs)]
+//! # Challenger
+//!
+//! ## What is a Challenger
+//!
+//! A Challenger is a validator component that monitors the network for the creation of new tasks
+//! and task responses submitted by operators, verifies their correctness, and raises challenges
+//! when incorrect responses are detected. If the challenge is successful, the operator will be slashed.
+//!
+//! ## How the Logic Works
+//!
+//! The Challenger operates through a well-defined workflow:
+//!
+//! 1. **Event Subscription**:
+//!    - Subscribes to blockchain events for new tasks and task responses
+//!    - Monitors for `NewTaskEvent` to track new tasks created in the system
+//!    - Watches for `TaskResponseEvent` when operators submit responses to tasks
+//!
+//! 2. **Verification Process**:
+//!    - When a new task is detected, user defined logic is used to process the new task
+//!    - When a task response is received, user defined logic is used to process the task response and verify it
+//!    - Uses a user-defined verification function to determine if the response is correct
+//!    - The verification logic can be customized based on the specific AVS requirements
+//!
+//! 3. **Challenge Mechanism**:
+//!    - If a response is verified as correct, the challenger logs the result and takes no action
+//!    - If a response is determined to be incorrect, the challenger raises a challenge
+//!    - Includes identifying the non-signing operators who might have abstained from the incorrect response
+//!
+//! ## How to Set Up a Challenger
+//!
+//! 1. **Task Manager Definition**: Create a struct implementing the `TaskManagerDefs` trait that defines:
+//!    - `Input` and `Output` types for your tasks
+//!    - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
+//!    - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
+//!
+//!     ```ignore
+//!         // Implement the [`TaskManagerDefs`] trait for a unit struct.
+//!         // You need to specify the input and output types of the task.
+//!         // You also need to specify the selectors for the new task event and the task responded event.
+//!         pub struct ISTaskManager;
+//!
+//!         impl TaskManagerDefs for ISTaskManager {
+//!             type Input = U256;
+//!             type Output = U256;
+//!             const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+//!             const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+//!         }
+//!
+//!         impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
+//!     ```
+//!
+//!
+//! 2. **Task Verification Logic**: Define a function that computes the expected result for a task, which will be used to verify operator responses
+//!    - This would be the logic to compute a new task.
+//!
+//!     ```ignore
+//!         pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
+//!             Ok(number_to_be_squared * number_to_be_squared)
+//!         }
+//!     ```
+//!
+//! 3. **Response Calculator**: To abstract your computation into the operator, we provide a
+//!    `ResponseCalculator` trait with a standard `FunctionResponseCalculator` struct.
+//!    This struct implements the trait and helpers for turning your functions into implementations:
+//!      - `response_calculator_from_fn`: Create a response calculator from your computation function.
+//!      - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
+//!
+//!     ```ignore
+//!         let response_calculator = response_calculator_from_fn(square);
+//!     ```
+//!
+//! 4. **Verifier**: Create a verifier from the response calculator.
+//!    - This will be in charge of computing the response of a task and comparing it with the operator's response.
+//!
+//!     ```ignore
+//!         let logic = verifier_from_compute_function(response_calculator);
+//!     ```
+//!
+//! 5. **Task Manager Contract**: Create an instance of your `TaskManager` contract:
+//!     - This struct should come from your bindings.
+//!
+//!     ```ignore
+//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+//!     ```
+//!
+//! 6. **Challenger Task Processor**: Create a [`ChallengerTaskProcessor`] trait implementation.
+//!    - This will be in charge of processing the task and the response.
+//!    - We provide a standard [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor) implementation that can be used as a starting point.
+//!
+//!     ```ignore
+//!         let task_processor = IndexingChallengerProcessor::new(contract, logic);
+//!     ```
+//!
+//! 7. **Challenger Configuration**: Create a [`ChallengerConfig`] struct. This struct implements `Serialize` and `Deserialize` so you can load from a file.
+//!    - Attributes:
+//!      - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
+//!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
+//!
+//! 8. **Challenger Initialization**: Initialize the [`Challenger`] with the configuration and start it with the processing logic
+//!
+//!     ```ignore
+//!         let mut challenger = Challenger::new(config, task_processor);
+//!         challenger.start_challenger().await?;
+//!     ```
+//!
+//! ## Examples
+//!
+//! Here are some examples of challenger implementations:
+//!
+//! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/challenger.rs)
+//! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/challenger.rs)
+//! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/challenger.rs)
+
 use alloy::{
     consensus::Transaction,
     dyn_abi::SolType,
@@ -17,9 +129,13 @@ use error::ChallengerError;
 use futures_util::StreamExt;
 use tracing::info;
 
+/// Challenger Task Processor trait
 pub mod challenger;
+/// Challenger Task Processor implementation
 pub mod challenger_processor;
+/// Challenger config
 pub mod config;
+/// Challenger error
 pub mod error;
 
 /// Main Challenger struct
