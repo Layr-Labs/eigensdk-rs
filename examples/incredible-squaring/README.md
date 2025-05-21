@@ -42,6 +42,12 @@ To create the sequence that passes input values to the task spammer, we use the 
 
 This simple session illustrates the basic flow of the AVS:
 
+Initialize the Middleware and Forge submodules:
+
+```bash
+git submodule update --init --recursive
+```
+
 Start anvil in a separate terminal:
 
 ```bash
