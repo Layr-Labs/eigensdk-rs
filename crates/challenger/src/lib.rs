@@ -129,7 +129,8 @@
 //! 2. Compare the input of the task with the operator’s response. You will receive the operator's response from the event.
 //! 3. Raise a challenge through the `TaskManager` if the responses differ.
 //!
-//! Refer to the [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor) implementation for an example of how to implement a custom Challenger Processor.
+//! Refer to the [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor)
+//! implementation for an example of how to implement a custom Challenger Processor.
 
 use alloy::{
     consensus::Transaction,
