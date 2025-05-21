@@ -49,6 +49,12 @@ To feed inputs into the task spammer, we define an iterator in `examples/awesome
 
 This simple session illustrates the basic flow of the AVS:
 
+Initialize the Middleware and Forge submodules:
+
+```bash
+git submodule update --init --recursive
+```
+
 Start anvil in a separate terminal:
 
 ```bash
