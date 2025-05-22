@@ -20,7 +20,8 @@ use incredible_dot_product::{
 use std::str::FromStr;
 
 /// This example shows how to initialize a challenger and start processing tasks.
-/// Follow the [`Challenger`] documentation to set up a challenger.
+/// Follow the [`Challenger`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/challenger/src/lib.rs#L1-L112)
+/// documentation to set up a challenger.
 ///
 /// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_dot_product::task_manager::ISTaskManager))
 /// 2. Create the [`ChallengerConfig`]

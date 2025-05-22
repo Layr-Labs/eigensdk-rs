@@ -13,7 +13,8 @@ use incredible_dot_product::{
 use std::{str::FromStr, time::Duration};
 
 /// This example shows how to initialize an aggregator
-/// Follow the [`Aggregator`] documentation to set up an aggregator.
+/// Follow the [`Aggregator`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/aggregator/src/lib.rs#L1-L84)
+/// documentation to set up an aggregator.
 /// The process can be split into 5 steps:
 ///
 /// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_dot_product::task_manager::ISTaskManager))

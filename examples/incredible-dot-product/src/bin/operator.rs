@@ -15,7 +15,8 @@ use incredible_dot_product::{
 
 /// This example shows how to initialize an operator and start processing tasks.
 /// For this example, Operator should be registered.
-/// Follow the [`Operator`] documentation to set up an operator.
+/// Follow the [`Operator`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L110)
+/// documentation to set up an operator.
 ///
 /// 1. Define your types for the task manager (Done in [`ISTaskManager`])
 /// 2. Create the [`OperatorConfig`]

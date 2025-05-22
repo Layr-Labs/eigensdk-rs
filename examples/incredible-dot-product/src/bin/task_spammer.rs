@@ -14,7 +14,7 @@ use incredible_dot_product::{
 use std::{str::FromStr, time::Duration};
 
 /// This example shows how to initialize a task spammer and start generating tasks
-/// Follow the [`TaskSpammer`](eigensdk::task_spammer::TaskSpammerBuilder) documentation to set up a task spammer.
+/// Follow the [`TaskSpammer`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L110) documentation to set up a task spammer.
 ///
 /// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_dot_product::task_manager::ISTaskManager))
 /// 2. Create the task manager instance from your bindings
