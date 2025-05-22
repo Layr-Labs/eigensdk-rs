@@ -1,4 +1,15 @@
-//! Example AVS which squares a number
+//! AVS Example - Incredible Squaring
+//!
+//! This example is a basic proposal of AVS, where the input and output type are `U256` values,
+//! representing the number to be squared and the number squared. In this sense, the task for
+//! the operators to complete is squaring the received number, and returning the result of the
+//! operation as the response value submitted to the Task Manager on-chain contract.
+//!
+//! To learn how to implement each module, refer to the corresponding binary files.
+//! Each file contains step-by-step instructions for setting up the module.
+//!
+//! For more details about the example logic and how to run it, see the
+//! [README](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/examples/incredible-squaring/README.md).
 
 use alloy::primitives::B256;
 use alloy::primitives::U256;
