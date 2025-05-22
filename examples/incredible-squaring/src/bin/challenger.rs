@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 use alloy::network::EthereumWallet;
 use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
@@ -17,6 +15,7 @@ use incredible_squaring::{
     bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
     square, utils::load_config,
 };
+use std::str::FromStr;
 
 /// This example shows how to initialize a challenger and start processing tasks.
 /// Follow the [`Challenger`] documentation to set up a challenger.

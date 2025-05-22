@@ -1,5 +1,3 @@
-#![allow(missing_docs)]
-
 use alloy::network::EthereumWallet;
 use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
@@ -22,7 +20,7 @@ use std::time::Duration;
 /// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_squaring::ISTaskManager))
 /// 2. Create the [`AggregatorConfig`]
 /// 3. Instantiate the task manager instance from your bindings
-/// 4. Create the task processor
+/// 4. Create the task processor using the [`IndexingTaskProcessor`]
 /// 5. Create and start the aggregator
 #[tokio::main]
 async fn main() {
