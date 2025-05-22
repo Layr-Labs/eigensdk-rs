@@ -108,6 +108,18 @@
 //! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/operator.rs)
 //! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/operator.rs)
 //! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/operator.rs)
+//!
+//! ## How to implement a custom Response Calculator
+//!
+//! To implement a custom Response Calculator, you need to implement the [`ResponseCalculator`] trait.
+//!
+//! The struct needs to implement the [`compute_response`](ResponseCalculator::compute_response) method. This method will be called
+//! when the operator receives a [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR)
+//! event. This should contain the logic to compute the response for a given task.
+//!
+//! Refer to the [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
+//! implementation for an example of how to implement a custom Response Calculator.
+//!
 
 use alloy::{
     dyn_abi::SolType,
