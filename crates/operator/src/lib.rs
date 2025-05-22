@@ -31,10 +31,12 @@
 //!
 //! ## How to Set Up an Operator
 //!
-//! 1. **Task Manager Definition**: Create a struct implementing the `TaskManagerDefs` trait:
-//!    - `Input` and `Output` types for your tasks. This should come from your bindings.
-//!    - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
-//!    - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
+//! 1. **Task Manager Definition**: Create a struct implementing the [`TaskManagerDefs`] trait:
+//!    - [`Input`](eigen_task_manager::TaskManagerDefs::Input) and [`Output`](eigen_task_manager::TaskManagerDefs::Output)
+//!      types for your tasks. This should come from your bindings.
+//!    - [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR) - the event signature for new task events
+//!    - Use the [`impl_task_manager_from_defs_and_contract`](eigen_task_manager::impl_task_manager_from_defs_and_contract)
+//!      macro to build your `TaskManager`.
 //!
 //!     ```ignore
 //!         impl TaskManagerDefs for ISTaskManager {
@@ -48,7 +50,8 @@
 //!     ```
 //!
 //! 2. **Processing Logic**: Implement the computation function that processes task inputs and produces outputs
-//!    - This function will be called when the operator receives a `NEW_TASK_EVENT_SELECTOR` event.
+//!    - This function will be called when the operator receives a [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR)
+//!      event.
 //!
 //!     ```ignore
 //!         // Your custom logic to process the input and generate a response.
@@ -61,11 +64,13 @@
 //!         }
 //!     ```
 //!
-//! 3. **Response Calculator**: To abstract your computation into the operator, we provide a `ResponseCalculator`
-//!    trait with a standar `FunctionResponseCalculator` struct. This struct implements the trait and helpers
-//!    for turning your functions into implementations:
-//!    - `response_calculator_from_fn`: Create a response calculator from your computation function.
-//!    - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
+//! 3. **Response Calculator**: To abstract your computation into the operator, we provide a [`ResponseCalculator`]
+//!    trait with a standar [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
+//!    struct. This struct implements the trait and helpers for turning your functions into implementations:
+//!    - [`response_calculator_from_fn`](eigen_task_manager::response_calculator::response_calculator_from_fn):
+//!      Create a response calculator from your computation function.
+//!    - [`response_calculator_from_async_fn`](eigen_task_manager::response_calculator::response_calculator_from_async_fn):
+//!      Create a response calculator from your async computation function.
 //!
 //!     ```ignore
 //!         let response_calculator = response_calculator_from_fn(square);
