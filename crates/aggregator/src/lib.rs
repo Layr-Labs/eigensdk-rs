@@ -43,14 +43,17 @@
 //!           impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
 //!       ```
 //!
-//! 2. **Task Manager Instance**: Create an instance of your `TaskManager` contract:
+//! 2. **Create the aggregator configuration**: Create a [`AggregatorConfig`] struct.
+//!     - This struct implements `Serialize` and `Deserialize` so you can load from a file.
+//!
+//! 3. **Task Manager Instance**: Create an instance of your `TaskManager` contract:
 //!     - This struct should come from your bindings.
 //!
 //!       ```ignore
 //!           let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 //!       ```
 //!
-//! 3. **Task Processor**: Create a `TaskProcessor` implementation:
+//! 4. **Task Processor**: Create a `TaskProcessor` implementation:
 //!     - This is a trait that contains user-defined logic to handle new tasks, signed responses, and the final aggregated result.
 //!     - We provide a standard `IndexingTaskProcessor` implementation that can be used as is for most cases. You need to provide
 //!       the task manager, the task timeout and the task window duration.
@@ -62,9 +65,6 @@
 //!           let task_window_duration = Duration::from_secs(15);
 //!           let task_processor = IndexingTaskProcessor::new(contract, task_timeout, task_window_duration);
 //!       ```
-//!
-//! 4. **Create the aggregator configuration**: Create a [`AggregatorConfig`] struct.
-//!     - This struct implements `Serialize` and `Deserialize` so you can load from a file.
 //!
 //! 5. **Create the aggregator**: Create an [`Aggregator`] instance with the config and the task processor:
 //!
