@@ -95,17 +95,16 @@
 //!
 //! The trait defines three methods, each corresponding to a stage in the task lifecycle:
 //!
-//! - [`process_new_task`](TaskProcessor::process_new_task): Called when a new task event is emitted by the contract.
-//!   This function should save the task for later use and return a [`TaskMetadata`], which is required by
-//!   the BLS aggregation service to initiate signature collection.
+//! - [`process_new_task`](TaskProcessor::process_new_task): Called when the contract emits a new task event.
+//!   This function should save the task for later use and return a [`TaskMetadata`], which the BLS aggregation
+//!   service requires to initiate signature collection.
 //!
-//! - [`process_task_response`](TaskProcessor::process_task_response): Called when a task response event is emitted by the contract.
-//!   It must generate a digest of the response and store it for later aggregation.
-//!   Returns the task response digest.
+//! - [`process_task_response`](TaskProcessor::process_task_response): Called when the contract emits a task response event.
+//!   It must generate a digest of the response and store it for later aggregation. Returns the task response digest.
 //!
-//! - [`process_aggregated_response`](TaskProcessor::process_aggregated_response): Called when an aggregated response
-//!   is emitted by the BLS aggregation service. It should retrieve the task and corresponding response using the task index
-//!   and digest, and submit the final aggregated result to the contract.
+//! - [`process_aggregated_response`](TaskProcessor::process_aggregated_response): Called when the BLS aggregation service
+//!   emits an aggregated response. It should retrieve the task and corresponding response using the task index and digest,
+//!   and submit the final aggregated result to the contract.
 //!
 //! Refer to the [`IndexingTaskProcessor`](crate::task_processor::indexing_task_processor::IndexingTaskProcessor)
 //! implementation for an example of how to implement a custom Task Processor.
