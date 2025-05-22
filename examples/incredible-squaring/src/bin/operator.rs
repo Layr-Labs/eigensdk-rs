@@ -6,7 +6,7 @@ use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
 use eigensdk::testing_utils::task_processor::failing_response_calculator;
 use incredible_squaring::{square, utils::load_config, ISTaskManager};
 
-/// This example shows how to initialize an operator and start to listen for new task events.
+/// This example shows how to initialize an operator and start processing tasks.
 /// For this example, Operator should be registered.
 /// Follow the [`Operator`] documentation to set up an operator.
 ///

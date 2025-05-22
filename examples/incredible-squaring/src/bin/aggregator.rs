@@ -15,12 +15,13 @@ use incredible_squaring::utils::load_config;
 use std::str::FromStr;
 use std::time::Duration;
 
+/// This example shows how to initialize an aggregator
 /// Follow the [`Aggregator`] documentation to set up an aggregator.
 /// The process can be split into 5 steps:
 ///
 /// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_squaring::ISTaskManager))
 /// 2. Create the [`AggregatorConfig`]
-/// 3. Create the task manager instance from your bindings
+/// 3. Initialize the task manager instance from your bindings
 /// 4. Create the task processor
 /// 5. Create and start the aggregator
 #[tokio::main]

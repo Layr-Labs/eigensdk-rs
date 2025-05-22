@@ -49,8 +49,12 @@
 //!         impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
 //!     ```
 //!
+//! 2. **Challenger Configuration**: Create a [`ChallengerConfig`] struct. This struct implements `Serialize` and `Deserialize` so you can load from a file.
+//!    - Attributes:
+//!      - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
+//!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
 //!
-//! 2. **Task Verification Logic**: Define a function that computes the expected result for a task, which will be used to verify operator responses
+//! 3. **Task Verification Logic**: Define a function that computes the expected result for a task, which will be used to verify operator responses
 //!    - This would be the logic to compute a new task.
 //!
 //!     ```ignore
@@ -59,7 +63,14 @@
 //!         }
 //!     ```
 //!
-//! 3. **Response Calculator**: To abstract your computation into the operator, we provide a
+//! 4. **Task Manager Contract**: Create an instance of your `TaskManager` contract:
+//!     - This struct should come from your bindings.
+//!
+//!     ```ignore
+//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+//!     ```
+//!
+//! 5. **Response Calculator**: To abstract your computation into the operator, we provide a
 //!    `ResponseCalculator` trait with a standard `FunctionResponseCalculator` struct.
 //!    This struct implements the trait and helpers for turning your functions into implementations:
 //!      - `response_calculator_from_fn`: Create a response calculator from your computation function.
@@ -69,21 +80,14 @@
 //!         let response_calculator = response_calculator_from_fn(square);
 //!     ```
 //!
-//! 4. **Verifier**: Create a verifier from the response calculator.
+//! 6. **Verifier**: Create a verifier from the response calculator.
 //!    - This will be in charge of computing the response of a task and comparing it with the operator's response.
 //!
 //!     ```ignore
 //!         let logic = verifier_from_compute_function(response_calculator);
 //!     ```
 //!
-//! 5. **Task Manager Contract**: Create an instance of your `TaskManager` contract:
-//!     - This struct should come from your bindings.
-//!
-//!     ```ignore
-//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
-//!     ```
-//!
-//! 6. **Challenger Task Processor**: Create a [`ChallengerTaskProcessor`] trait implementation.
+//! 7. **Challenger Task Processor**: Create a [`ChallengerTaskProcessor`] trait implementation.
 //!    - This will be in charge of processing the task and the response.
 //!    - We provide a standard [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor) implementation that can be used as a starting point.
 //!
@@ -91,10 +95,6 @@
 //!         let task_processor = IndexingChallengerProcessor::new(contract, logic);
 //!     ```
 //!
-//! 7. **Challenger Configuration**: Create a [`ChallengerConfig`] struct. This struct implements `Serialize` and `Deserialize` so you can load from a file.
-//!    - Attributes:
-//!      - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
-//!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
 //!
 //! 8. **Challenger Initialization**: Initialize the [`Challenger`] with the configuration and start it with the processing logic
 //!
