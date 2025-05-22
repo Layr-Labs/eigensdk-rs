@@ -138,7 +138,15 @@ pub mod config;
 /// Challenger error
 pub mod error;
 
-/// Main Challenger struct
+/// The challenger is the entity responsible of validating the aggregated responses
+/// from the operators. This service will listen to [`NEW_TASK_EVENT_SELECTOR`](challenger::ChallengerTaskProcessor::NEW_TASK_EVENT_SELECTOR)
+/// and [`TASK_RESPONDED_EVENT_SELECTOR`](challenger::ChallengerTaskProcessor::TASK_RESPONDED_EVENT_SELECTOR)
+/// When the incorrect responses are detected, the challenger will raise an on-chain challenge.
+///
+/// Most of these things are delegated to the [`ChallengerTaskProcessor`] trait, that process challenges and
+/// communicates with the on-chain task manager contract when raising a challenge.
+///
+/// To more in-depth details about the challenger, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/challenger/src/lib.rs#L1-L112).
 #[derive(Debug)]
 pub struct Challenger<TP: ChallengerTaskProcessor> {
     /// The rpc url

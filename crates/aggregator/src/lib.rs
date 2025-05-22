@@ -131,7 +131,17 @@ use tarpc::tokio_serde::formats::Json;
 use task_processor::TaskProcessor;
 use tracing::info;
 
-/// Aggregator
+/// The aggregator is responsible for aggregating [`SignedTaskResponse`] from operators and posting them on chain. This includes:
+///
+/// * Listening to [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR)
+///   events.
+/// * Receiving [`SignedTaskResponse`] from the operators.
+/// * Sending the aggregated responses received from the BLS aggregation service to the `TaskManager` contract
+///
+/// Most of these things are delegated to the [`TaskProcessor`] trait, that processes
+/// tasks and communicates with the on-chain `TaskManager` contract.
+///
+/// To more in-depth details about the aggregator, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/aggregator/src/lib.rs#L1-L84).
 #[derive(Debug)]
 pub struct Aggregator<TP> {
     port_address: String,

@@ -140,8 +140,11 @@ pub mod register_config;
 /// Operator registration utils
 pub mod registration;
 
-/// Operator struct to handle the operator logic of processing new tasks
-/// and sending signed task responses to the aggregator.
+/// The operator listen for [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR)
+/// events and compute the task response and sign it with the operator's BLS key pair.
+/// Then, it sends the signed task response to the aggregator via RPC.
+///
+/// To more in-depth details about the operator, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L110).
 #[derive(Debug)]
 pub struct Operator {
     operator_id: OperatorId,

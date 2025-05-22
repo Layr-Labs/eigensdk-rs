@@ -112,7 +112,11 @@ use tokio::time::sleep;
 /// Task spammer errors
 pub mod error;
 
-/// Task spammer builder
+/// A Task Spammer is a testing utility designed to generate tasks at configurable intervals.
+/// It serves as a simulation tool that allows developers to test how operators, aggregators
+/// and challengers respond to a continuous stream of new tasks.
+///
+/// To more in-depth details about the task spammer, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L110).
 #[derive(Debug)]
 pub struct TaskSpammerBuilder<I, TM> {
     iter: Option<I>,
