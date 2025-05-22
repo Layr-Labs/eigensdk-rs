@@ -21,7 +21,7 @@ use std::time::Duration;
 ///
 /// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_squaring::ISTaskManager))
 /// 2. Create the [`AggregatorConfig`]
-/// 3. Initialize the task manager instance from your bindings
+/// 3. Instantiate the task manager instance from your bindings
 /// 4. Create the task processor
 /// 5. Create and start the aggregator
 #[tokio::main]

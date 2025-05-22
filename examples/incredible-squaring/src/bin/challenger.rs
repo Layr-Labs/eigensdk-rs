@@ -24,10 +24,10 @@ use incredible_squaring::{
 /// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_squaring::ISTaskManager))
 /// 2. Create the [`ChallengerConfig`]
 /// 3. Define the task verification logic (Done in [`square`])
-/// 4. Initialize the task manager instance from your bindings
+/// 4. Instantiate the task manager instance from your bindings
 /// 5. Build the [`ResponseCalculator`](eigensdk::task_manager::response_calculator::ResponseCalculator)
 /// 6. Create the verifier with [`verifier_from_compute_function`]
-/// 7. Create the [`IndexingChallengerProcessor`]
+/// 7. Initialize the [`IndexingChallengerProcessor`]
 /// 8. Create and start the challenger
 #[tokio::main]
 async fn main() {
