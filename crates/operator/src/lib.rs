@@ -31,10 +31,12 @@
 //!
 //! ## How to Set Up an Operator
 //!
-//! 1. **Task Manager Definition**: Create a struct implementing the `TaskManagerDefs` trait:
-//!    - `Input` and `Output` types for your tasks. This should come from your bindings.
-//!    - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
-//!    - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
+//! 1. **Task Manager Definition**: Create a struct implementing the [`TaskManagerDefs`] trait:
+//!    - [`Input`](eigen_task_manager::TaskManagerDefs::Input) and [`Output`](eigen_task_manager::TaskManagerDefs::Output)
+//!      types for your tasks. This should come from your bindings.
+//!    - [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR) - the event signature for new task events
+//!    - Use the [`impl_task_manager_from_defs_and_contract`](eigen_task_manager::impl_task_manager_from_defs_and_contract)
+//!      macro to build your `TaskManager`.
 //!
 //!     ```ignore
 //!         impl TaskManagerDefs for ISTaskManager {
@@ -108,6 +110,22 @@
 //! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/operator.rs)
 //! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/operator.rs)
 //! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/operator.rs)
+//!
+//! ## How to implement a custom Response Calculator
+//!
+//! To implement a custom Response Calculator, you need to implement the [`ResponseCalculator`] trait.
+//!
+//! The struct needs to implement the [`compute_response`](ResponseCalculator::compute_response) method. This method will be called
+//! when the operator receives a [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR)
+//! event. This should contain the logic to compute the response for a given task.
+//!
+//! We recommend implementing your own Response Calculator if you need to save state between operator responses.
+//! If you don't need to save a state, you can use the standard [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
+//! implementation.
+//!
+//! Refer to the [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
+//! implementation for an example of how to implement a custom Response Calculator.
+//!
 
 use alloy::{
     dyn_abi::SolType,
