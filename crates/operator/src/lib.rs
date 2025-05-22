@@ -65,7 +65,7 @@
 //!     ```
 //!
 //! 3. **Response Calculator**: To abstract your computation into the operator, we provide a [`ResponseCalculator`]
-//!    trait with a standar [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
+//!    trait with a standard [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
 //!    struct. This struct implements the trait and helpers for turning your functions into implementations:
 //!    - [`response_calculator_from_fn`](eigen_task_manager::response_calculator::response_calculator_from_fn):
 //!      Create a response calculator from your computation function.
