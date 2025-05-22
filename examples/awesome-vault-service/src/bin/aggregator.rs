@@ -13,22 +13,37 @@ use eigensdk::{
 use eyre::Result;
 use std::{str::FromStr, time::Duration};
 
+/// This example shows how to initialize an aggregator
+/// Follow the [`Aggregator`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/aggregator/src/lib.rs#L1-L84)
+/// documentation to set up an aggregator.
+/// The process can be split into 5 steps:
+///
+/// 1. Define your types for the task manager (Done in [`ISTaskManager`](awesome_vault_service::task_manager::ISTaskManager))
+/// 2. Create the [`AggregatorConfig`]
+/// 3. Instantiate the task manager instance from your bindings
+/// 4. Create the task processor using the [`IndexingTaskProcessor`]
+/// 5. Create and start the aggregator
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
     let logger = get_logger();
+
+    // 2. Create the `AggregatorConfig`
     let config: AggregatorConfig = load_config("./src/config/awesome-aggregator.toml")?;
+
+    // 3. Instantiate the task manager instance from your bindings
     let wallet = get_signer(
         "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6",
         &config.http_rpc_url,
     );
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;
-
     let contract = AwesomeVaultTaskManagerInstance::new(task_manager_address, wallet);
 
+    // 4. Create the task processor
     let task_processor =
         IndexingTaskProcessor::new(contract, Duration::from_secs(10), Duration::from_secs(2));
 
+    // 5. Create and start the aggregator
     let aggregator = Aggregator::new(config, task_processor, logger)
         .await
         .map_err(|e| eyre::eyre!("Aggregator new error: {}", e))?;
