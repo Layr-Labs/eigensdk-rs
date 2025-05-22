@@ -68,9 +68,9 @@
 //!    trait with a standard [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
 //!    struct. This struct implements the trait and helpers for turning your functions into implementations:
 //!    - [`response_calculator_from_fn`](eigen_task_manager::response_calculator::response_calculator_from_fn):
-//!      Create a response calculator from your computation function.
+//!      Creates a response calculator from your computation function.
 //!    - [`response_calculator_from_async_fn`](eigen_task_manager::response_calculator::response_calculator_from_async_fn):
-//!      Create a response calculator from your async computation function.
+//!      Creates a response calculator from your async computation function.
 //!
 //!     ```ignore
 //!         let response_calculator = response_calculator_from_fn(square);
