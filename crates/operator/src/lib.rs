@@ -122,6 +122,10 @@
 //! when the operator receives a [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR)
 //! event. This should contain the logic to compute the response for a given task.
 //!
+//! We recommend implementing your own Response Calculator if you need to save state between operator responses.
+//! If you don't need to save a state, you can use the standard [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
+//! implementation.
+//!
 //! Refer to the [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
 //! implementation for an example of how to implement a custom Response Calculator.
 //!
