@@ -1,3 +1,6 @@
+//! This example shows how to initialize an aggregator
+//! Follow the [`Aggregator`] documentation to set up an aggregator.
+
 use alloy::network::EthereumWallet;
 use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
@@ -13,18 +16,11 @@ use incredible_squaring::utils::load_config;
 use std::str::FromStr;
 use std::time::Duration;
 
-/// This example shows how to initialize an aggregator
-/// Follow the [`Aggregator`] documentation to set up an aggregator.
-/// The process can be split into 5 steps:
-///
-/// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_squaring::ISTaskManager))
-/// 2. Create the [`AggregatorConfig`]
-/// 3. Instantiate the task manager instance from your bindings
-/// 4. Create the task processor using the [`IndexingTaskProcessor`]
-/// 5. Create and start the aggregator
 #[tokio::main]
 async fn main() {
     init_logger(LogLevel::Info);
+
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the aggregator configuration from the toml file
     let config: AggregatorConfig = load_config("./src/config/squaring-aggregator.toml").unwrap();

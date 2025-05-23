@@ -22,8 +22,12 @@ async fn main() {
     init_logger(LogLevel::Info);
     let logger = get_logger();
 
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
+
     // 2. Create the `OperatorConfig`
     let config: OperatorConfig = load_config("./src/config/squaring-operator.toml").unwrap();
+
+    // 3. Create the logic to compute the task (we do this in `square`: lib.rs)
 
     // 4. Build the `ResponseCalculator` with the computation function
     let response_calculator = response_calculator_from_fn(square);

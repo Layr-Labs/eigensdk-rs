@@ -1,3 +1,6 @@
+//! This example shows how to initialize a task spammer and start generating tasks
+//! Follow the [`TaskSpammer`](eigensdk::task_spammer::TaskSpammerBuilder) documentation to set up a task spammer.
+
 use alloy::{
     network::EthereumWallet,
     primitives::{Address, U256},
@@ -9,19 +12,11 @@ use eigensdk::task_spammer::TaskSpammerBuilder;
 use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use std::{str::FromStr, time::Duration};
 
-/// This example shows how to initialize a task spammer and start generating tasks
-/// Follow the [`TaskSpammer`](eigensdk::task_spammer::TaskSpammerBuilder) documentation to set up a task spammer.
-///
-/// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_squaring::ISTaskManager))
-/// 2. Create the task manager instance from your bindings
-/// 3. Build the [`TaskSpammerBuilder`]
-/// 4. Define an iterator that creates appropriate input values for your specific AVS
-/// 5. Set the quorum and the quorum threshold percentage
-/// 6. Set the interval to wait between spamming tasks
-/// 7. Build and run the task spammer
 #[tokio::main]
 async fn main() {
     let http_rpc_url = "http://localhost:8545".to_string();
+
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the task manager instance
     let signer = "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
