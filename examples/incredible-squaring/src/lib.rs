@@ -15,15 +15,27 @@ use eigensdk::task_manager::TaskManagerError;
 pub mod bindings;
 pub mod utils;
 
+/// Compute the square of a number
+///
+/// # Arguments
+///
+/// * `_task_index` - The index of the task
+/// * `number_to_be_squared` - The number to be squared
+///
+/// # Returns
+///
+/// * `Result<U256, TaskManagerError>` - The square of the number
 pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
     Ok(number_to_be_squared * number_to_be_squared)
 }
 
-// Implement the [`TaskManagerDefs`] trait for a unit struct.
-// You need to specify the input and output types of the task. In this case, U256.
-// You also need to specify the selectors for the new task event and the task responded event.
+/// Task Manager Definition. This struct will be used to build the `TaskManager`
+/// with the [`impl_task_manager_from_defs_and_contract`] macro.
 pub struct ISTaskManager;
 
+/// Implement the [`TaskManagerDefs`] trait for a unit struct.
+/// You need to specify the input and output types of the task. In this case, U256.
+/// You also need to define the selectors for the new task event and the task responded event.
 impl TaskManagerDefs for ISTaskManager {
     type Input = U256;
     type Output = U256;

@@ -49,9 +49,21 @@
 //!         impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
 //!     ```
 //!
-//! 2. **Processing Logic**: Implement the computation function that processes task inputs and produces outputs
-//!    - This function will be called when the operator receives a [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR)
-//!      event.
+//! 2. **Create the operator configuration**: Create a [`OperatorConfig`](crate::config::OperatorConfig) struct.
+//!    This structs implements `Serialize` and `Deserialize` so you can load from a file.
+//!    - Attributes:
+//!      - `bls_private_key`: The BLS private key for
+//!      - `operator_address`: The address of the operator
+//!      - `operator_name`: The name of the operator
+//!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
+//!      - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
+//!      - `registry_coordinator_address`: The address of the registry coordinator
+//!      - `operator_state_retriever_address`: The address of the operator state retriever
+//!      - `aggregator_ip_port`: The IP and port of the aggregator
+//!      - `registration`: The registration of the operator. If you don't want to register the operator, you can set this to `None`.
+//!
+//! 3. **Processing Logic**: Implement the computation function that processes task inputs and produces outputs
+//!    - This function will be called when the operator receives a `NEW_TASK_EVENT_SELECTOR` event.
 //!
 //!     ```ignore
 //!         // Your custom logic to process the input and generate a response.
@@ -64,13 +76,11 @@
 //!         }
 //!     ```
 //!
-//! 3. **Response Calculator**: To abstract your computation into the operator, we provide a [`ResponseCalculator`]
-//!    trait with a standard [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
-//!    struct. This struct implements the trait and helpers for turning your functions into implementations:
-//!    - [`response_calculator_from_fn`](eigen_task_manager::response_calculator::response_calculator_from_fn):
-//!      Creates a response calculator from your computation function.
-//!    - [`response_calculator_from_async_fn`](eigen_task_manager::response_calculator::response_calculator_from_async_fn):
-//!      Creates a response calculator from your async computation function.
+//! 4. **Response Calculator**: To abstract your computation into the operator, we provide a `ResponseCalculator`
+//!    trait with a standar `FunctionResponseCalculator` struct. This struct implements the trait and helpers
+//!    for turning your functions into implementations:
+//!    - `response_calculator_from_fn`: Create a response calculator from your computation function.
+//!    - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
 //!
 //!     ```ignore
 //!         let response_calculator = response_calculator_from_fn(square);
@@ -78,26 +88,13 @@
 //!
 //!    - In case you need to save state in the operator, you can use your own struct implementing the `ResponseCalculator` trait.
 //!
-//! 4. **Failing Response Calculator**: If you want to test what happens when the operator responds incorrectly
+//! 5. **Failing Response Calculator**: If you want to test what happens when the operator responds incorrectly
 //!    to a task and see how slashing works, you can wrap your logic with `failing_response_calculator` (from
 //!    `eigen-testing-utils`), to inject failures and a given failure rate. **Use this for testing purposes only.**
 //!     
 //!     ```ignore
 //!         let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
 //!     ```
-//!
-//! 5. **Create the operator configuration**: Create a [`OperatorConfig`](crate::config::OperatorConfig) struct.
-//!    This structs implements `Serialize` and `Deserialize` so you can load from a file.
-//!    - Attributes:
-//!      - `bls_private_key`: The BLS private key for
-//!      - `operator_address`: The address of the operator
-//!      - `operator_name`: The name of the operator
-//!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
-//!      - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
-//!      - `registry_coordinator_address`: The address of the registry coordinator
-//!      - `operator_state_retriever_address`: The address of the operator state retriever
-//!      - `aggregator_ip_port`: The IP and port of the aggregator
-//!      - `registration`: The registration of the operator. If you don't want to register the operator, you can set this to `None`.
 //!
 //! 6. **Run the operator**: Initialize the [`Operator`] with the configuration and start it with the processing logic
 //!

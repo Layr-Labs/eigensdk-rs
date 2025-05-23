@@ -1,3 +1,7 @@
+//! This example shows how to initialize a task spammer and start generating tasks
+//! Follow the [`eigen-task-spammer` crate documentation`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/task-spammer/src/lib.rs#L1-L110)
+//! to set up a task spammer.
+
 use alloy::{
     network::EthereumWallet,
     primitives::{Address, U256},
@@ -12,22 +16,25 @@ use std::{str::FromStr, time::Duration};
 #[tokio::main]
 async fn main() {
     let http_rpc_url = "http://localhost:8545".to_string();
+
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
+
+    // 2. Create the task manager instance
     let signer = "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
     let task_manager_address =
         Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3").unwrap();
     let url = Url::parse(&http_rpc_url).unwrap();
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
-
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
-    TaskSpammerBuilder::new(contract)
-        .with_iter((0..).map(U256::from))
-        .with_quorum(50, vec![0])
-        .with_interval(Duration::from_secs(10))
-        .build()
+    TaskSpammerBuilder::new(contract) // (3) Initialize the `TaskSpammerBuilder`
+        .with_iter((0..).map(U256::from)) // (4) Define an iterator
+        .with_quorum(50, vec![0]) // (5) Set the quorum and threshold percentage
+        .with_interval(Duration::from_secs(10)) // (6) Set the interval to wait between spamming tasks
+        .build() // (7) Build the `TaskSpammer`
         .unwrap()
-        .run()
+        .run() // (7) Run the `TaskSpammer`
         .await
         .unwrap();
 }
