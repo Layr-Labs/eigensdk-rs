@@ -1,5 +1,6 @@
-//! Incredible Dot Product Task Spammer
-
+//! This example shows how to initialize a task spammer and start generating tasks
+//! Follow the [`TaskSpammer`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L110)
+//! documentation to set up a task spammer.
 use alloy::primitives::Address;
 use awesome_vault_service::bindings::awesomevaulttaskmanager::{
     AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance, IAwesomeVaultTaskManager::TaskInput,
@@ -14,19 +15,11 @@ use rand::Rng;
 
 use std::{str::FromStr, time::Duration};
 
-/// This example shows how to initialize a task spammer and start generating tasks
-/// Follow the [`TaskSpammer`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L110) documentation to set up a task spammer.
-///
-/// 1. Define your types for the task manager (Done in [`ISTaskManager`](awesome_vault_service::task_manager::ISTaskManager))
-/// 2. Create the task manager instance from your bindings
-/// 3. Build the [`TaskSpammerBuilder`]
-/// 4. Define an iterator that creates appropriate input values for your specific AVS
-/// 5. Set the quorum and the quorum threshold percentage
-/// 6. Set the interval to wait between spamming tasks
-/// 7. Build and run the task spammer
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
+
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the task manager instance from your bindings
     let key = "4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";

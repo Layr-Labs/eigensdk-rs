@@ -1,4 +1,6 @@
-//! Awesome Vault Service Challenger
+//! This example shows how to initialize a challenger and start processing tasks.
+//! Follow the [`Challenger`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/challenger/src/lib.rs#L1-L112)
+//! documentation to set up a challenger.
 
 use alloy::primitives::Address;
 use awesome_vault_service::{
@@ -19,26 +21,16 @@ use eyre::Result;
 use std::{collections::BTreeMap, str::FromStr, sync::Arc};
 use tokio::sync::Mutex;
 
-/// This example shows how to initialize a challenger and start processing tasks.
-/// Follow the [`Challenger`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/challenger/src/lib.rs#L1-L112)
-/// documentation to set up a challenger.
-///
-/// 1. Define your types for the task manager (Done in [`ISTaskManager`](awesome_vault_service::task_manager::ISTaskManager))
-/// 2. Create the [`ChallengerConfig`]
-/// 3. Define the task verification logic (Done in [`compute_vault_root`](awesome_vault_service::response_calculator::compute_vault_root))
-/// 4. Instantiate the task manager instance from your bindings
-/// 5. Build a custom [`ResponseCalculator`](eigensdk::task_manager::response_calculator::ResponseCalculator)
-///    implementation, since we want to save the state of the vault in memory
-///    (Done in [`VaultServiceResponseCalculator`])
-/// 6. Create the verifier with [`verifier_from_compute_function`]
-/// 7. Initialize the [`IndexingChallengerProcessor`]
-/// 8. Create and start the challenger
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
 
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
+
     // 2. Create the `ChallengerConfig`
     let config: ChallengerConfig = load_config("./src/config/awesome-challenger.toml")?;
+
+    // 3. Create the logic to compute the task (we do this in `compute_vault_root`: lib.rs)
 
     // 4. Instantiate the task manager instance from your bindings
     let wallet = get_signer(FIRST_PRIVATE_KEY, &config.http_rpc_url);

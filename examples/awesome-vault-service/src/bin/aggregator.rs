@@ -1,4 +1,6 @@
-//! Incredible Dot Product Aggregator
+//! This example shows how to initialize an aggregator
+//! Follow the [`Aggregator`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/aggregator/src/lib.rs#L1-L84)
+//! documentation to set up an aggregator.
 
 use alloy::primitives::Address;
 use awesome_vault_service::{
@@ -13,20 +15,12 @@ use eigensdk::{
 use eyre::Result;
 use std::{str::FromStr, time::Duration};
 
-/// This example shows how to initialize an aggregator
-/// Follow the [`Aggregator`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/aggregator/src/lib.rs#L1-L84)
-/// documentation to set up an aggregator.
-/// The process can be split into 5 steps:
-///
-/// 1. Define your types for the task manager (Done in [`ISTaskManager`](awesome_vault_service::task_manager::ISTaskManager))
-/// 2. Create the [`AggregatorConfig`]
-/// 3. Instantiate the task manager instance from your bindings
-/// 4. Create the task processor using the [`IndexingTaskProcessor`]
-/// 5. Create and start the aggregator
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
     let logger = get_logger();
+
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the `AggregatorConfig`
     let config: AggregatorConfig = load_config("./src/config/awesome-aggregator.toml")?;
