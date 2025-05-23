@@ -1,4 +1,6 @@
-//! Incredible Dot Product Challenger
+//! This example shows how to initialize a challenger and start processing tasks.
+//! Follow the [`Challenger`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/challenger/src/lib.rs#L1-L112)
+//! documentation to set up a challenger.
 
 use alloy::primitives::Address;
 use eigensdk::{
@@ -19,24 +21,16 @@ use incredible_dot_product::{
 };
 use std::str::FromStr;
 
-/// This example shows how to initialize a challenger and start processing tasks.
-/// Follow the [`Challenger`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/challenger/src/lib.rs#L1-L112)
-/// documentation to set up a challenger.
-///
-/// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_dot_product::task_manager::ISTaskManager))
-/// 2. Create the [`ChallengerConfig`]
-/// 3. Define the task verification logic (Done in [`dot_product`])
-/// 4. Instantiate the task manager instance from your bindings
-/// 5. Build the [`ResponseCalculator`](eigensdk::task_manager::response_calculator::ResponseCalculator)
-/// 6. Create the verifier with [`verifier_from_compute_function`]
-/// 7. Initialize the [`IndexingChallengerProcessor`]
-/// 8. Create and start the challenger
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
 
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
+
     // 2. Create the `ChallengerConfig` from the toml file
     let config: ChallengerConfig = load_config("./src/config/dot-challenger.toml")?;
+
+    // 3. Create the logic to compute the task (we do this in `dot_product`: lib.rs)
 
     // 4. Instantiate the task manager instance from your bindings
     let wallet = get_signer(FIRST_PRIVATE_KEY, &config.http_rpc_url);
