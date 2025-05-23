@@ -82,6 +82,32 @@
 //! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/aggregator.rs)
 //! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/aggregator.rs)
 //! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/aggregator.rs)
+//!
+//! ## How to implement a custom Task Processor
+//!
+//! To implement a custom Task Processor, you need to implement the [`TaskProcessor`] trait.
+//!
+//! You should specify the following types:
+//!
+//! - [`Input`](TaskProcessor::Input) - The input type of the Solidity `Task`
+//! - [`Output`](TaskProcessor::Output) - The output type of the Solidity `TaskResponse`
+//! - [`NEW_TASK_EVENT_SELECTOR`](TaskProcessor::NEW_TASK_EVENT_SELECTOR) - The event signature for new task
+//!
+//! The trait defines three methods, each corresponding to a stage in the task lifecycle:
+//!
+//! - [`process_new_task`](TaskProcessor::process_new_task): Called when the contract emits a new task event.
+//!   This function should save the task for later use and return a [`TaskMetadata`], which the BLS aggregation
+//!   service requires to initiate signature collection.
+//!
+//! - [`process_task_response`](TaskProcessor::process_task_response): Called when the contract emits a task response event.
+//!   It must generate a digest of the response and store it for later aggregation. Returns the task response digest.
+//!
+//! - [`process_aggregated_response`](TaskProcessor::process_aggregated_response): Called when the BLS aggregation service
+//!   emits an aggregated response. It should retrieve the task and corresponding response using the task index and digest,
+//!   and submit the final aggregated result to the contract.
+//!
+//! Refer to the [`IndexingTaskProcessor`](crate::task_processor::indexing_task_processor::IndexingTaskProcessor)
+//! implementation for an example of how to implement a custom Task Processor.
 
 /// Aggregator Config
 pub mod config;
