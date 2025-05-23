@@ -1,3 +1,6 @@
+//! This example shows how to initialize a challenger and start processing tasks.
+//! Follow the [`Challenger`] documentation to set up a challenger.
+
 use alloy::network::EthereumWallet;
 use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
@@ -17,25 +20,18 @@ use incredible_squaring::{
 };
 use std::str::FromStr;
 
-/// This example shows how to initialize a challenger and start processing tasks.
-/// Follow the [`Challenger`] documentation to set up a challenger.
-///
-/// 1. Define your types for the task manager (Done in [`ISTaskManager`](incredible_squaring::ISTaskManager))
-/// 2. Create the [`ChallengerConfig`]
-/// 3. Define the task verification logic (Done in [`square`])
-/// 4. Instantiate the task manager instance from your bindings
-/// 5. Build the [`ResponseCalculator`](eigensdk::task_manager::response_calculator::ResponseCalculator)
-/// 6. Create the verifier with [`verifier_from_compute_function`]
-/// 7. Initialize the [`IndexingChallengerProcessor`]
-/// 8. Create and start the challenger
 #[tokio::main]
 async fn main() {
     init_logger(LogLevel::Info);
 
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
+
     // 2. Create the `ChallengerConfig`
     let config: ChallengerConfig = load_config("./src/config/squaring-challenger.toml").unwrap();
 
-    // 4. Initialize the task manager instance
+    // 3. Create the logic to compute the task (we do this in `square`: lib.rs)
+
+    // 4. Initialize the task manager instance from your bindings
     let signer = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
     let task_manager_address =
         Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3").unwrap();

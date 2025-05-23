@@ -35,7 +35,7 @@ pub struct ISTaskManager;
 
 /// Implement the [`TaskManagerDefs`] trait for a unit struct.
 /// You need to specify the input and output types of the task. In this case, U256.
-/// You also need to specify the selectors for the new task event and the task responded event.
+/// You also need to define the selectors for the new task event and the task responded event.
 impl TaskManagerDefs for ISTaskManager {
     type Input = U256;
     type Output = U256;
