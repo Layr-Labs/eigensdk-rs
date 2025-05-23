@@ -1,3 +1,7 @@
+//! This example shows how to initialize an operator and start processing tasks.
+//! Follow the [`eigen-operator` crate documentation`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L131)
+//! to set up an operator.
+
 use alloy::primitives::U256;
 use eigensdk::logging::log_level::LogLevel;
 use eigensdk::logging::{get_logger, init_logger};
@@ -6,17 +10,6 @@ use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
 use eigensdk::testing_utils::task_processor::failing_response_calculator;
 use incredible_squaring::{square, utils::load_config, ISTaskManager};
 
-/// This example shows how to initialize an operator and start processing tasks.
-/// For this example, Operator should be registered.
-/// Follow the [`Operator`] documentation to set up an operator.
-///
-/// 1. Define your types for the task manager (Done in [`ISTaskManager`])
-/// 2. Create the [`OperatorConfig`]
-/// 3. Create the logic to compute the task (Done in [`square`])
-/// 4. Build the [`ResponseCalculator`](eigensdk::task_manager::response_calculator::ResponseCalculator)
-/// 5. Use the [`failing_response_calculator`] to test how the operator behaves when
-///    it responds incorrectly to a task and how slashing works
-/// 6. Start the operator
 #[tokio::main]
 async fn main() {
     init_logger(LogLevel::Info);

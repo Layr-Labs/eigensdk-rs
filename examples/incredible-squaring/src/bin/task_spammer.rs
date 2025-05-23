@@ -1,5 +1,6 @@
 //! This example shows how to initialize a task spammer and start generating tasks
-//! Follow the [`TaskSpammer`](eigensdk::task_spammer::TaskSpammerBuilder) documentation to set up a task spammer.
+//! Follow the [`eigen-task-spammer` crate documentation`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/task-spammer/src/lib.rs#L1-L110)
+//! to set up a task spammer.
 
 use alloy::{
     network::EthereumWallet,
