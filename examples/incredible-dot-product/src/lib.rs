@@ -1,6 +1,6 @@
 //! AVS Example - Incredible Dot Product
 //!
-//! This example proposes a more complex AVS than the proposed incredible squaring.
+//! This example proposes a more complex AVS than the incredible squaring.
 //! The input type handled is a struct that contains two vectors, representing two points,
 //! that should be processed making the dot product, being the output type a U256,
 //! representing the result of the product. In this sense, the task for the operators
