@@ -1,6 +1,6 @@
 //! This example shows how to initialize a challenger and start processing tasks.
-//! Follow the [`Challenger`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/challenger/src/lib.rs#L1-L112)
-//! documentation to set up a challenger.
+//! Follow the [`eigen-challenger` crate documentation`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/challenger/src/lib.rs#L1-L112)
+//! to set up a challenger.
 
 use alloy::network::EthereumWallet;
 use alloy::primitives::Address;
