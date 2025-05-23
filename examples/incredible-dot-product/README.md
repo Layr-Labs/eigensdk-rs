@@ -47,6 +47,12 @@ To create the sequence that passes input values to the task spammer, we use the 
 
 This simple session illustrates the basic flow of the AVS:
 
+Initialize the Middleware and Forge submodules:
+
+```bash
+git submodule update --init --recursive
+```
+
 Start anvil in a separate terminal:
 
 ```bash
@@ -62,13 +68,13 @@ make deploy-el-and-avs-contracts
 Start the aggregator:
 
 ```bash
-cargo run --bin aggregator
+cargo run --bin incredible-dot-aggregator
 ```
 
 Start the operator:
 
 ```bash
-cargo run --bin operator
+cargo run --bin incredible-dot-operator
 ```
 
 The Operator will first check whether it is already registered on EigenLayer. If not, it will attempt to register automatically. To enable registration, create an [OperatorRegistrationConfig] and include it in the [OperatorConfig] struct.
@@ -78,11 +84,11 @@ The operator will produce invalid results often because it use `failing_response
 These failures result in slashing once they're challenged. To see this in action, start the challenger with:
 
 ```bash
-cargo run --bin challenger
+cargo run --bin incredible-dot-challenger
 ```
 
 To start the cycle, start the task spammer:
 
 ``` bash
-cargo run --bin task-spammer
+cargo run --bin incredible-dot-task-spammer
 ```
