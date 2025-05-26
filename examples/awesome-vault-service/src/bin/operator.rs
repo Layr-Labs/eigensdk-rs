@@ -1,5 +1,5 @@
 //! This example shows how to initialize an operator and start processing tasks.
-//! Follow the [`eigen-operator` crate documentation`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L131)
+//! Follow the [`eigen-operator` crate documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L131)
 //! to set up an operator.
 
 use alloy::primitives::B256;

@@ -1,5 +1,5 @@
 //! This example shows how to initialize a task spammer and start generating tasks
-//! Follow the [`eigen-task-spammer` crate documentation`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/task-spammer/src/lib.rs#L1-L104)
+//! Follow the [`eigen-task-spammer` crate documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/task-spammer/src/lib.rs#L1-L104)
 //! to set up a task spammer.
 
 use alloy::primitives::Address;

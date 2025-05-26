@@ -1,5 +1,5 @@
 //! This example shows how to initialize an aggregator
-//! Follow the [`eigen-aggregator` crate documentation`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/aggregator/src/lib.rs#L1-L84)
+//! Follow the [`eigen-aggregator` crate documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/aggregator/src/lib.rs#L1-L84)
 //! to set up an aggregator.
 
 use alloy::primitives::Address;
