@@ -131,7 +131,6 @@ use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
 use eigen_crypto_bls::error::BlsError;
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
-use eigen_logging::get_logger;
 use eigen_logging::logger::SharedLogger;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_services_blsaggregation::bls_agg::{
@@ -208,7 +207,7 @@ where
         .await?;
 
         let operators_info_service = OperatorInfoServiceInMemory::new(
-            logger,
+            logger.clone(),
             avs_registry_chain_reader.clone(),
             config.ws_rpc_url.clone(),
         )
@@ -229,7 +228,7 @@ where
         });
 
         let (service_handle, aggregated_response_receiver) =
-            BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
+            BlsAggregatorService::new(avs_registry_service_chaincaller, logger).start();
         Ok(Self {
             port_address: config.server_address,
             task_processor,
