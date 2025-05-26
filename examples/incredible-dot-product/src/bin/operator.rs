@@ -1,4 +1,6 @@
-//! Incredible Dot Product Operator
+//! This example shows how to initialize an operator and start processing tasks.
+//! Follow the [`eigen-operator` crate documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L131)
+//! to set up an operator.
 
 use alloy::primitives::U256;
 use eigensdk::{
@@ -17,12 +19,21 @@ use incredible_dot_product::{
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
     let logger = get_logger();
+
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
+
+    // 2. Create the `OperatorConfig`
     let config: OperatorConfig = load_config("./src/config/dot-operator.toml").unwrap();
 
+    // 3. Create the logic to compute the task (we do this in `dot_product`: lib.rs)
+
+    // 4. Build the `ResponseCalculator` with the computation function
     let response_calculator = response_calculator_from_fn(dot_product);
 
+    // 5. Use the `failing_response_calculator` with the wrong `Output` type and a given failure rate
     let logic = failing_response_calculator(response_calculator, || U256::MAX, 40);
 
+    // 6. Start the operator
     let operator = Operator::new(logger, config).await.unwrap();
     operator
         .start::<ISTaskManager>(logic)

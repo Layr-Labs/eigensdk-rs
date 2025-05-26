@@ -8,11 +8,13 @@ use eigensdk::task_manager::{
     impl_task_manager_from_defs_and_contract, TaskManagerDefs, TaskManagerError,
 };
 
-// Implement the [`TaskManagerDefs`] trait for a unit struct.
-// You need to specify the input and output types of the task. In this case, U256.
-// You also need to specify the selectors for the new task event and the task responded event.
+/// Task Manager Definition. This struct will be used to build the `TaskManager`
+/// with the [`impl_task_manager_from_defs_and_contract`] macro.
 pub struct ISTaskManager;
 
+/// Implement the [`TaskManagerDefs`] trait for a unit struct.
+/// You need to specify the input and output types of the task. In this case, U256.
+/// You also need to specify the selectors for the new task event and the task responded event.
 impl TaskManagerDefs for ISTaskManager {
     type Input = DotProductInput;
     type Output = U256;
