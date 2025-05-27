@@ -72,7 +72,11 @@
 //!         let aggregator = Aggregator::new(config, task_processor)
 //!             .await?;
 //!
-//!         aggregator.start().await?;
+//!         // Para ejecutar en segundo plano y obtener un handle:
+//!         let handle = aggregator.start();
+//!         
+//!         // O para ejecutar de forma bloqueante:
+//!         // aggregator.run().await?;
 //!     ```
 //!
 //! ## Examples
@@ -238,7 +242,7 @@ where
         })
     }
 
-    /// Starts the aggregator service
+    /// Runs the aggregator service
     ///
     /// Creates the following tasks:
     /// - start_server: Starts the server that receives signatures
@@ -248,7 +252,7 @@ where
     /// # Returns
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
-    pub async fn start(self) -> Result<(), AggregatorError> {
+    pub async fn run(self) -> Result<(), AggregatorError> {
         info!("Starting aggregator");
 
         let service_handle = self.service_handle.clone();

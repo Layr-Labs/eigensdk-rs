@@ -51,7 +51,7 @@ async fn main() -> Result<()> {
     // 8. Create and start the challenger
     let mut challenger = Challenger::new(config, task_processor);
     challenger
-        .start_challenger()
+        .run()
         .await
         .map_err(|e| eyre::eyre!("Challenger start error: {}", e))?;
 

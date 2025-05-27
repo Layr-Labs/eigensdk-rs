@@ -204,13 +204,13 @@ where
         }
     }
 
-    /// Start the service and start listening for new tasks and task responses events
+    /// Run the challenger service and start listening for new tasks and task responses events
     /// It also checks if the response is correct, if not it raises a challenge.
     ///
     /// # Returns
     ///
     /// * `Result<(), ChallengerError>` - The result of the challenger
-    pub async fn start_challenger(&mut self) -> Result<(), ChallengerError> {
+    pub async fn run(&mut self) -> Result<(), ChallengerError> {
         info!("challenger crate launched");
 
         let ws_provider = get_ws_provider(&self.ws_url).await?;
