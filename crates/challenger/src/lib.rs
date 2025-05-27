@@ -204,7 +204,7 @@ where
         }
     }
 
-    /// Run the challenger service and start listening for new tasks and task responses events
+    /// Runs the challenger service and starts listening for new tasks and task response events
     /// It also checks if the response is correct, if not it raises a challenge.
     ///
     /// # Returns
