@@ -72,11 +72,7 @@
 //!         let aggregator = Aggregator::new(config, task_processor)
 //!             .await?;
 //!
-//!         // Para ejecutar en segundo plano y obtener un handle:
 //!         let handle = aggregator.start();
-//!         
-//!         // O para ejecutar de forma bloqueante:
-//!         // aggregator.run().await?;
 //!     ```
 //!
 //! ## Examples
@@ -158,6 +154,7 @@ use std::net::SocketAddr;
 use tarpc::server::{self, Channel};
 use tarpc::tokio_serde::formats::Json;
 use task_processor::TaskProcessor;
+use tokio::task::JoinHandle;
 use tracing::info;
 
 /// The aggregator is responsible for aggregating [`SignedTaskResponse`] from operators and posting them on chain. This includes:
@@ -242,7 +239,7 @@ where
         })
     }
 
-    /// Runs the aggregator service
+    /// Runs the aggregator service blocking the current task.
     ///
     /// Creates the following tasks:
     /// - start_server: Starts the server that receives signatures
@@ -285,6 +282,18 @@ where
         aggregate_result?;
 
         Ok(())
+    }
+
+    /// Starts the aggregator service in the background.
+    ///
+    /// Equivalent to [`Self::run`], but spawns it in the background and returns a
+    /// [`JoinHandle`] to the background task.
+    ///
+    /// # Returns
+    ///
+    /// * `JoinHandle<Result<(), AggregatorError>>` - The handle to the background task
+    pub fn start(self) -> JoinHandle<Result<(), AggregatorError>> {
+        tokio::spawn(self.run())
     }
 
     /// Starts the RPC server
