@@ -238,7 +238,7 @@ where
         })
     }
 
-    /// Runs the aggregator service blocking the current task.
+    /// Runs the aggregator service, blocking the current task.
     ///
     /// Creates the following tasks:
     /// - start_server: Starts the server that receives signatures
