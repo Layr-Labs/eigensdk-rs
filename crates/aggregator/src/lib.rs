@@ -238,7 +238,7 @@ where
         })
     }
 
-    /// Starts the aggregator service
+    /// Runs the aggregator service, blocking the current task.
     ///
     /// Creates the following tasks:
     /// - start_server: Starts the server that receives signatures
@@ -248,7 +248,7 @@ where
     /// # Returns
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
-    pub async fn start(self) -> Result<(), AggregatorError> {
+    pub async fn run(self) -> Result<(), AggregatorError> {
         info!("Starting aggregator");
 
         let service_handle = self.service_handle.clone();

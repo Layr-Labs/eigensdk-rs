@@ -41,7 +41,7 @@ async fn main() -> Result<()> {
         .await
         .map_err(|e| eyre::eyre!("Aggregator new error: {}", e))?;
     aggregator
-        .start()
+        .run()
         .await
         .map_err(|e| eyre::eyre!("Aggregator start error: {}", e))?;
 

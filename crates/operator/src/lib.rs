@@ -262,7 +262,7 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation.
-    pub async fn start<TM>(
+    pub async fn run<TM>(
         &self,
         response_calculator: impl ResponseCalculator<TM::Input, TM::Output>,
     ) -> Result<(), OperatorError>
