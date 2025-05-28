@@ -306,7 +306,7 @@ where
         let service_handle_clone = service_handle.clone();
 
         let mut listener = tarpc::serde_transport::tcp::listen(&addr, Json::default).await?;
-        info!("Server running at {}", addr);
+        info!("RPC server running at {}", addr);
 
         listener.config_mut().max_frame_length(usize::MAX);
         listener
@@ -359,7 +359,9 @@ where
             .await
         {
             let (task_index, task) = decode_new_task::<TP::Input>(&log)?;
+            info!("New task created: {task_index}");
             let task_metadata = task_processor.process_new_task(task_index, task).await?;
+            info!("Sending task metadata to the BLS Aggregator Service");
             service_handle.initialize_task(task_metadata).await?;
         }
 
@@ -384,6 +386,11 @@ where
             let service_response = aggregated_response_receiver
                 .receive_aggregated_response()
                 .await?;
+
+            info!(
+                "Received an aggregated response from the BLS Aggregator Service for task index {}",
+                service_response.task_index
+            );
 
             let non_signing_operator_pubkeys =
                 get_non_signing_operator_pubkeys(service_response.clone())?;

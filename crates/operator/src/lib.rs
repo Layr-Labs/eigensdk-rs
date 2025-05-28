@@ -273,6 +273,7 @@ impl Operator {
         TM::Output: SolValue + Clone,
         TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     {
+        info!("Starting operator");
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
             .on_ws(ws)
@@ -289,7 +290,10 @@ impl Operator {
         while let Some(log) = stream.next().await {
             let (task_index, task) = decode_new_task::<TM::Input>(&log)?;
 
-            info!("{} picked up a new task", self.operator_name);
+            info!(
+                "{} picked up a new task. Task index: {}",
+                self.operator_name, task_index
+            );
 
             let output = response_calculator
                 .compute_response(task_index, task.input)
@@ -332,8 +336,12 @@ impl Operator {
         let encoded = task_response.encode();
         let hash_msg = keccak256(encoded);
         let signed_msg = key_pair.sign_message(&hash_msg);
-        let signed_task_response = SignedTaskResponse::new(task_response, signed_msg, *operator_id);
-        info!("Operator signed task response");
+        let signed_task_response =
+            SignedTaskResponse::new(task_response.clone(), signed_msg, *operator_id);
+        info!(
+            "Operator signed task response for task index {}",
+            task_response.task_index
+        );
         Ok(signed_task_response)
     }
 }

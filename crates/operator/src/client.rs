@@ -66,7 +66,10 @@ impl ClientAggregator {
                 .await?;
 
             if response.is_ok() {
-                info!("Signed task response sent to aggregator");
+                info!(
+                    "Signed task response sent to aggregator for task index {}",
+                    signed_task_response.task_response.task_index
+                );
                 return Ok(());
             }
 

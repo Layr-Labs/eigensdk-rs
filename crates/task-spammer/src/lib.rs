@@ -108,6 +108,7 @@ use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use error::TaskSpammerError;
 use std::time::Duration;
 use tokio::time::sleep;
+use tracing::info;
 
 /// Task spammer errors
 pub mod error;
@@ -253,6 +254,7 @@ where
         I::Item: Clone + Send + 'static,
     {
         for input in self.iter {
+            info!("Creating new task with input {:?}", input);
             self.task_manager
                 .create_new_task(input, self.quorum_threshold, self.quorums.clone())
                 .await?;

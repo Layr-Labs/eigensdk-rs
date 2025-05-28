@@ -211,7 +211,7 @@ where
     ///
     /// * `Result<(), ChallengerError>` - The result of the challenger
     pub async fn start_challenger(&mut self) -> Result<(), ChallengerError> {
-        info!("challenger crate launched");
+        info!("Starting challenger");
 
         let ws_provider = get_ws_provider(&self.ws_url).await?;
 
@@ -233,11 +233,13 @@ where
             tokio::select! {
                 Some(log) = task_stream.next() => {
                     let (task_index, task) = decode_new_task(&log)?;
+                    info!("New task created: {task_index}");
                     self.task_processor.handle_task_creation(task_index, task).await?;
                 },
                 Some(log) = responded_stream.next() => {
                     let (task_index, task_response, task_response_metadata) =
                         decode_task_response_event(&log).await?;
+                    info!("Task response received: {task_index}");
 
                     let non_signing_operator_pub_keys = self.get_non_signing_operator_pub_keys(log).await?;
 
