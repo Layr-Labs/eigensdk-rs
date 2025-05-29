@@ -154,7 +154,7 @@ use std::net::SocketAddr;
 use tarpc::server::{self, Channel};
 use tarpc::tokio_serde::formats::Json;
 use task_processor::TaskProcessor;
-use tracing::info;
+use tracing::{error, info};
 
 /// The aggregator is responsible for aggregating [`SignedTaskResponse`] from operators and posting them on chain. This includes:
 ///
@@ -381,9 +381,14 @@ where
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
-            let service_response = aggregated_response_receiver
+            let Ok(service_response) = aggregated_response_receiver
                 .receive_aggregated_response()
-                .await?;
+                .await
+                .inspect_err(|e| error!("Error receiving aggregated response: {}", e))
+            else {
+                // If the receiver channel is closed, we continue to the next loop
+                continue;
+            };
 
             let non_signing_operator_pubkeys =
                 get_non_signing_operator_pubkeys(service_response.clone())?;
