@@ -52,5 +52,5 @@ async fn main() {
 
     // 8. Create and start the challenger
     let mut challenger = Challenger::new(config, task_processor);
-    challenger.start_challenger().await.unwrap();
+    challenger.run().await.unwrap();
 }

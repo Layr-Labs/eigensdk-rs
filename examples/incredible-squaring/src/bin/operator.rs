@@ -30,5 +30,5 @@ async fn main() {
 
     // 6. Initialize the operator
     let operator = Operator::new(logger, config).await.unwrap();
-    operator.start::<ISTaskManager>(logic).await.unwrap();
+    operator.run::<ISTaskManager>(logic).await.unwrap();
 }

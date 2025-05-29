@@ -36,7 +36,7 @@ async fn main() -> Result<()> {
     // 6. Start the operator
     let operator = Operator::new(logger, config).await.unwrap();
     operator
-        .start::<ISTaskManager>(logic)
+        .run::<ISTaskManager>(logic)
         .await
         .map_err(|e| eyre::eyre!("Operator start error: {}", e))?;
 
