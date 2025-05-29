@@ -123,10 +123,7 @@ where
         let task_signature =
             TaskSignature::new(task_index, task_response_digest, signature, operator_id);
 
-        info!(
-            "Sending signature for index {} to BLS Aggregator Service",
-            task_index
-        );
+        info!("Sending signature for index {}", task_index);
         service_handle.process_signature(task_signature).await?;
 
         Ok(())

@@ -361,7 +361,6 @@ where
             let (task_index, task) = decode_new_task::<TP::Input>(&log)?;
             info!("New task created: {task_index}");
             let task_metadata = task_processor.process_new_task(task_index, task).await?;
-            info!("Sending task metadata to the BLS Aggregator Service");
             service_handle.initialize_task(task_metadata).await?;
         }
 
@@ -388,7 +387,7 @@ where
                 .await?;
 
             info!(
-                "Received an aggregated response from the BLS Aggregator Service for task index {}",
+                "Received an aggregated response for task index {}",
                 service_response.task_index
             );
 
