@@ -145,7 +145,7 @@ use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
 use registration::register_operator;
-use tracing::{error, info};
+use tracing::{debug, error, info};
 
 /// Tarpc Client
 pub mod client;
@@ -178,15 +178,8 @@ impl Operator {
     ///
     /// # Arguments
     ///
-    /// * `key_pair` - The key pair of the operator.
-    /// * `operator_address` - The address of the operator.
-    /// * `operator_name` - The name of the operator.
     /// * `logger` - The logger.
-    /// * `ws_rpc_url` - The URL of the WebSocket RPC.
-    /// * `http_rpc_url` - The URL of the HTTP RPC.
-    /// * `registry_coordinator_address` - The address of the registry coordinator.
-    /// * `operator_state_retriever_address` - The address of the operator state retriever.
-    /// * `aggregator_ip_port` - The IP and port of the aggregator.
+    /// * `config` - The operator configuration.
     ///
     /// # Returns
     ///
@@ -298,6 +291,9 @@ impl Operator {
             let output = response_calculator
                 .compute_response(task_index, task.input)
                 .await?;
+
+            debug!("Computed output: {:?}", output);
+
             let task_response = TaskResponse {
                 task_index,
                 response: output,

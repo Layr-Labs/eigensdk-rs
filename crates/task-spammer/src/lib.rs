@@ -253,6 +253,7 @@ where
         I: Iterator<Item = TM::Input> + Send,
         I::Item: Clone + Send + 'static,
     {
+        info!("Starting task spammer");
         for input in self.iter {
             info!("Creating new task with input {:?}", input);
             self.task_manager
