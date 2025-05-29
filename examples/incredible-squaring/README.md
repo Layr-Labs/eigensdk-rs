@@ -57,7 +57,7 @@ anvil
 Deploy contracts, set UAM permissions, and create a quorum in a single command:
 
 ```bash
-deploy-el-and-avs-contracts
+make deploy-el-and-avs-contracts
 ```
 
 Start the aggregator:
