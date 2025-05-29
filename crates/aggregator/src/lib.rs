@@ -154,7 +154,7 @@ use std::net::SocketAddr;
 use tarpc::server::{self, Channel};
 use tarpc::tokio_serde::formats::Json;
 use task_processor::TaskProcessor;
-use tracing::info;
+use tracing::{error, info};
 
 /// The aggregator is responsible for aggregating [`SignedTaskResponse`] from operators and posting them on chain. This includes:
 ///
@@ -306,7 +306,7 @@ where
         let service_handle_clone = service_handle.clone();
 
         let mut listener = tarpc::serde_transport::tcp::listen(&addr, Json::default).await?;
-        info!("RPC server running at {}", addr);
+        info!("RPC server running at {addr}");
 
         listener.config_mut().max_frame_length(usize::MAX);
         listener
@@ -350,6 +350,7 @@ where
         let ws = WsConnect::new(ws_rpc_url.clone());
         let filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
+        info!("Subscribing to NewTaskCreated event on {ws_rpc_url}");
 
         while let Some(log) = provider
             .subscribe_logs(&filter)
@@ -359,7 +360,7 @@ where
             .await
         {
             let (task_index, task) = decode_new_task::<TP::Input>(&log)?;
-            info!("New task created: {task_index}");
+            info!("Detected NewTaskCreated event for index {task_index}");
             let task_metadata = task_processor.process_new_task(task_index, task).await?;
             service_handle.initialize_task(task_metadata).await?;
         }
@@ -382,9 +383,14 @@ where
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
-            let service_response = aggregated_response_receiver
+            let Ok(service_response) = aggregated_response_receiver
                 .receive_aggregated_response()
-                .await?;
+                .await
+                .inspect_err(|e| error!("Error receiving aggregated response: {}", e))
+            else {
+                // If the receiver is closed, we continue to the next loop
+                continue;
+            };
 
             info!(
                 "Received an aggregated response for task index {}",
