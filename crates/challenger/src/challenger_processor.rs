@@ -82,6 +82,7 @@ where
                 non_signing_operator_pub_keys,
             )
             .await
+            .inspect(|_| info!("Challenge raised for task {task_index}"))
             .inspect_err(|e| error!("Challenge failed for task {task_index}: {e}"))
         });
 

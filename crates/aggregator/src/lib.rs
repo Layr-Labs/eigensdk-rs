@@ -306,7 +306,7 @@ where
         let service_handle_clone = service_handle.clone();
 
         let mut listener = tarpc::serde_transport::tcp::listen(&addr, Json::default).await?;
-        info!("Server running at {}", addr);
+        info!("RPC server running at {addr}");
 
         listener.config_mut().max_frame_length(usize::MAX);
         listener
@@ -350,6 +350,7 @@ where
         let ws = WsConnect::new(ws_rpc_url.clone());
         let filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
+        info!("Subscribing to NewTaskCreated event on {ws_rpc_url}");
 
         while let Some(log) = provider
             .subscribe_logs(&filter)
@@ -359,6 +360,7 @@ where
             .await
         {
             let (task_index, task) = decode_new_task::<TP::Input>(&log)?;
+            info!("Detected NewTaskCreated event for index {task_index}");
             let task_metadata = task_processor.process_new_task(task_index, task).await?;
             service_handle.initialize_task(task_metadata).await?;
         }
@@ -389,6 +391,11 @@ where
                 // If the receiver channel is closed, we continue to the next loop
                 continue;
             };
+
+            info!(
+                "Received an aggregated response for task index {}",
+                service_response.task_index
+            );
 
             let non_signing_operator_pubkeys =
                 get_non_signing_operator_pubkeys(service_response.clone())?;

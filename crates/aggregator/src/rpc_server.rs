@@ -56,6 +56,11 @@ where
                 )
             })?;
 
+        info!(
+            "Received signed task response for task index {}",
+            parsed.task_response.task_index
+        );
+
         Self::process_signed_task_response(&mut self.task_processor, service_handle, parsed)
             .await
             .map_err(|_| {
@@ -119,7 +124,6 @@ where
             TaskSignature::new(task_index, task_response_digest, signature, operator_id);
 
         service_handle.process_signature(task_signature).await?;
-        info!("processed signature for index {}", task_index);
 
         Ok(())
     }
