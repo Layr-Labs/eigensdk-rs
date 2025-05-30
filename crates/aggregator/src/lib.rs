@@ -388,7 +388,7 @@ where
                 .await
                 .inspect_err(|e| error!("Error receiving aggregated response: {}", e))
             else {
-                // If the receiver is closed, we continue to the next loop
+                // If the receiver channel is closed, we continue to the next loop
                 continue;
             };
 
