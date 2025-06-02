@@ -1,15 +1,17 @@
 use alloy::primitives::Address;
 use serde::{Deserialize, Serialize};
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+enum EcdsaSignerConfig {
+    PrivateKey(String),
+    Keystore(String, String),
+}
+
 /// Operator registration config
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OperatorRegistrationConfig {
-    /// Private key of the operator
-    pub operator_pvt_key: Option<String>,
-    /// Path to the ECDSA keystore file
-    pub ecdsa_keystore_path: String,
-    /// Password for the ECDSA keystore file
-    pub ecdsa_keystore_password: String,
+    /// Signer for the operator
+    pub signer: EcdsaSignerConfig,
     /// Metadata URI
     pub metadata_uri: String,
     /// Socket address
