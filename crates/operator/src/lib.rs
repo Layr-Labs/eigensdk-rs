@@ -186,11 +186,14 @@ impl<RP> Operator<RP> {
     /// # Returns
     ///
     /// * `Result<Self, OperatorError>` - The operator.
-    pub async fn new(
+    pub async fn new<Input, Output>(
         logger: SharedLogger,
         config: config::OperatorConfig,
         response_calculator: RP,
-    ) -> Result<Self, OperatorError> {
+    ) -> Result<Self, OperatorError>
+    where
+        RP: ResponseCalculator<Input, Output>,
+    {
         let config::OperatorConfig {
             bls_private_key,
             operator_address,
