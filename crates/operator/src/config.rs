@@ -19,8 +19,6 @@ pub struct OperatorConfig {
     /// Address of the registry coordinator
     /// Used to check the operator is registered.
     pub registry_coordinator_address: Address,
-    /// Address of the operator state retriever
-    pub operator_state_retriever_address: Address,
     /// IP and port of the aggregator
     pub aggregator_ip_port: String,
     /// Operator registration config
