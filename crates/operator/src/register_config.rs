@@ -2,7 +2,7 @@ use alloy::primitives::Address;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-enum EcdsaSignerConfig {
+pub enum EcdsaSignerConfig {
     PrivateKey(String),
     Keystore(String, String),
 }

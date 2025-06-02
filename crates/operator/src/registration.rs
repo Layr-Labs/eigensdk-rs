@@ -11,7 +11,7 @@ use eigen_utils::slashing::core::allocationmanager::IAllocationManagerTypes::All
 use std::str::FromStr;
 
 use crate::error::OperatorError;
-use crate::register_config::OperatorRegistrationConfig;
+use crate::register_config::{EcdsaSignerConfig, OperatorRegistrationConfig};
 
 /// Registers an operator with EigenLayer. Use this function for testing purposes.
 ///
@@ -37,10 +37,11 @@ pub async fn register_operator(
     http_rpc_url: String,
     bls_key_pair: BlsKeyPair,
 ) -> Result<(), OperatorError> {
-    let signer: LocalSigner<SigningKey> = if let Some(operator_key) = config.operator_pvt_key {
-        PrivateKeySigner::from_str(&operator_key)?
-    } else {
-        LocalSigner::decrypt_keystore(config.ecdsa_keystore_path, config.ecdsa_keystore_password)?
+    let signer: LocalSigner<SigningKey> = match config.signer {
+        EcdsaSignerConfig::PrivateKey(private_key) => PrivateKeySigner::from_str(&private_key)?,
+        EcdsaSignerConfig::Keystore(keystore_path, keystore_password) => {
+            LocalSigner::decrypt_keystore(keystore_path, keystore_password)?
+        }
     };
 
     let el_chain_reader = ELChainReader::new(
