@@ -1,9 +1,12 @@
 use alloy::primitives::Address;
 use serde::{Deserialize, Serialize};
 
+/// ECDSA signer config
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum EcdsaSignerConfig {
+    /// Private key
     PrivateKey(String),
+    /// Keystore path and password
     Keystore(String, String),
 }
 
