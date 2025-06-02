@@ -129,7 +129,7 @@
 
 use alloy::{
     dyn_abi::SolType,
-    primitives::keccak256,
+    primitives::{keccak256, Address},
     providers::{Provider, ProviderBuilder, WsConnect},
     rpc::types::Filter,
     sol_types::SolValue,
@@ -195,14 +195,15 @@ impl Operator {
             ws_rpc_url,
             http_rpc_url,
             registry_coordinator_address,
-            operator_state_retriever_address,
             aggregator_ip_port,
             registration: _,
         } = config;
         let avs_registry_reader = AvsRegistryChainReader::new(
             logger.clone(),
             registry_coordinator_address,
-            operator_state_retriever_address,
+            // We don't need to use the operator state retriever address because we don't use methods
+            // that require the address of the contract
+            Address::ZERO,
             http_rpc_url.to_string(),
         )
         .await?;
