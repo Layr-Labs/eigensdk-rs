@@ -96,11 +96,12 @@
 //!         let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
 //!     ```
 //!
-//! 6. **Run the operator**: Initialize the [`Operator`] with the configuration and start it with the processing logic
+//! 6. **Run the operator**: Initialize the [`Operator`] with the configuration and the response calculator.
+//!    Then, call the [`run`](Operator::run) method to start the operator.
 //!
 //!     ```ignore
-//!         let operator = Operator::new(logger, config).await.unwrap();
-//!         operator.start::<ISTaskManager>(logic).await.unwrap();
+//!         let operator = Operator::new(logger, config, logic).await.unwrap();
+//!         operator.run::<ISTaskManager>().await.unwrap();
 //!     ```
 //!
 //! ## Examples
@@ -164,15 +165,16 @@ pub mod registration;
 ///
 /// To more in-depth details about the operator, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L110).
 #[derive(Debug)]
-pub struct Operator {
+pub struct Operator<RP> {
     operator_id: OperatorId,
     operator_name: String,
     client_aggregator: ClientAggregator,
     ws_rpc_url: String,
     key_pair: BlsKeyPair,
+    response_calculator: RP,
 }
 
-impl Operator {
+impl<RP> Operator<RP> {
     /// Initialize a new operator.
     /// This method does not register the operator.
     ///
@@ -187,6 +189,7 @@ impl Operator {
     pub async fn new(
         logger: SharedLogger,
         config: config::OperatorConfig,
+        response_calculator: RP,
     ) -> Result<Self, OperatorError> {
         let config::OperatorConfig {
             bls_private_key,
@@ -240,6 +243,7 @@ impl Operator {
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
             key_pair,
+            response_calculator,
         })
     }
 
@@ -255,11 +259,9 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation.
-    pub async fn run<TM>(
-        &self,
-        response_calculator: impl ResponseCalculator<TM::Input, TM::Output>,
-    ) -> Result<(), OperatorError>
+    pub async fn run<TM>(&self) -> Result<(), OperatorError>
     where
+        RP: ResponseCalculator<TM::Input, TM::Output>,
         TM: TaskManagerDefs,
         TM::Input:
             From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
@@ -288,7 +290,8 @@ impl Operator {
                 self.operator_name, task_index
             );
 
-            let output = response_calculator
+            let output = self
+                .response_calculator
                 .compute_response(task_index, task.input)
                 .await?;
 
