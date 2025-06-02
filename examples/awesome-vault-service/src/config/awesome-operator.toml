@@ -4,7 +4,6 @@ operator_name = "vault"
 http_rpc_url = "http://localhost:8545"
 ws_rpc_url = "ws://localhost:8545"
 registry_coordinator_address = "0x7bc06c482dead17c0e297afbc32f6e63d3846650"
-operator_state_retriever_address = "0x4c5859f0f772848b2d91f1d83e2fe57935348029"
 aggregator_ip_port = "127.0.0.1:8080"
 
 [registration]
