@@ -197,7 +197,7 @@ impl Operator {
             registry_coordinator_address,
             operator_state_retriever_address,
             aggregator_ip_port,
-            registration: _,
+            registration: registration_config,
         } = config;
         let avs_registry_reader = AvsRegistryChainReader::new(
             logger.clone(),
@@ -215,10 +215,9 @@ impl Operator {
             .await?
         {
             // Check if a registration config was provided
-            let Some(registration_config) = config.registration else {
+            let Some(registration_config) = registration_config else {
                 error!(
-                    "Operator {} not registered and no registration config was provided",
-                    operator_name
+                    "Operator {operator_name} not registered and no registration config was provided"
                 );
                 return Err(OperatorError::RegistrationError);
             };

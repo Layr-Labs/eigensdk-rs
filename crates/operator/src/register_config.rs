@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 pub enum EcdsaSignerConfig {
     /// Private key
     PrivateKey(String),
-    /// Keystore path and password
+    /// Keystore with path and password
     Keystore(String, String),
 }
 

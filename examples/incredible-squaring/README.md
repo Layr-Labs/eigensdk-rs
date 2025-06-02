@@ -72,7 +72,7 @@ Start the operator:
 cargo run --bin incredible-squaring-operator
 ```
 
-The Operator will first check whether it is already registered on EigenLayer. If not, it will attempt to register automatically. To enable registration, create an [OperatorRegistrationConfig] and include it in the [OperatorConfig] struct.
+The Operator will first check whether it is already registered on EigenLayer. If not, it will attempt to register automatically. To enable registration, create an [OperatorRegistrationConfig] and include it in the [OperatorConfig] struct. The Keystore file is in the `examples/incredible-squaring/src/keys/test.ecdsa.key.json` file and the password is `incredible-squaring`.
 
 The operator will produce invalid results often because it use `failing_response_calculator` method, which has a failure rate of 60% and returns `U256::from(42)` as the response.
 
