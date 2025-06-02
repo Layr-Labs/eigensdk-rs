@@ -34,9 +34,9 @@ async fn main() -> Result<()> {
     let logic = failing_response_calculator(response_calculator, || U256::MAX, 40);
 
     // 6. Start the operator
-    let operator = Operator::new(logger, config).await.unwrap();
+    let operator = Operator::new(logger, config, logic).await.unwrap();
     operator
-        .run::<ISTaskManager>(logic)
+        .run::<ISTaskManager>()
         .await
         .map_err(|e| eyre::eyre!("Operator start error: {}", e))?;
 
