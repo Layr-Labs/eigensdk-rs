@@ -175,10 +175,9 @@ pub struct Operator {
 impl Operator {
     /// Creates a new operator, ensuring on‐chain registration.
     ///
-    /// It performs some sanity checks:
-    /// - If the operator is not registered in EigenLayer, verifies `config.registration` is `Some(...)` and attempts registration.
-    /// - If the operator is already registered in EigenLayer, no registration is performed.
-    /// - Verifies the operator ID derived from the BLS keypair is equal to the operator ID registered in the contracts.
+    /// It also performs some sanity checks, returning an error in these cases:
+    /// - The operator is not registered in EigenLayer and registration was not enabled or failed.
+    /// - The operator ID derived from the BLS key pair is not the same as the operator ID registered in the contracts for the given operator address.
     ///
     /// # Arguments
     ///
