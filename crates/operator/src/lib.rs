@@ -173,8 +173,12 @@ pub struct Operator {
 }
 
 impl Operator {
-    /// Initialize a new operator.
-    /// This method does not register the operator.
+    /// Creates a new operator, ensuring on‐chain registration.
+    ///
+    /// It performs some sanity checks:
+    /// - If the operator is not registered in EigenLayer, verifies `config.registration` is `Some(...)` and attempts registration.
+    /// - If the operator is already registered in EigenLayer, no registration is performed.
+    /// - Verifies the operator ID derived from the BLS keypair is equal to the operator ID registered in the contracts.
     ///
     /// # Arguments
     ///
@@ -234,7 +238,6 @@ impl Operator {
             .await
             .map_err(|_| OperatorError::OperatorIdError)?;
 
-        // Check that the operator ID from the BLS key pair is the same as the operator ID from the contract
         let operator_id_from_bls = operator_id_from_g1_pub_key(key_pair.public_key())
             .map_err(|_| OperatorError::OperatorIdError)?;
 
