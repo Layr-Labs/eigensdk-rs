@@ -211,9 +211,10 @@ impl Operator {
             .await?
             ._0;
 
+        // 0 means the operator is not registered, 1 that they are
         let is_operator_registered = operator_status == 1;
 
-        // Check if the operator is registered with EigenLayer. 0 means the operator is not registered.
+        // Check if the operator is registered with EigenLayer
         if !is_operator_registered {
             // Check if a registration config was provided.
             let Some(registration_config) = config.registration else {
