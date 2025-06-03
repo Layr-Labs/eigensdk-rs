@@ -5,13 +5,14 @@ use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
+use eigen_signer::signer::Config as EcdsaSignerConfig;
 use eigen_types::operator::Operator;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 use eigen_utils::slashing::core::allocationmanager::IAllocationManagerTypes::AllocateParams;
 use std::str::FromStr;
 
 use crate::error::OperatorError;
-use crate::register_config::{EcdsaSignerConfig, OperatorRegistrationConfig};
+use crate::register_config::OperatorRegistrationConfig;
 
 /// Registers an operator with EigenLayer. Use this function for testing purposes.
 ///
