@@ -212,10 +212,10 @@ impl Operator {
         let bls_key_pair = match bls_signer {
             BlsSignerConfig::PrivateKey(private_key) => BlsKeyPair::new(private_key)?,
             BlsSignerConfig::Keystore(path, password) => {
-                let keystore_instance = Keystore::from_file(path.as_str()).unwrap();
-                let decrypted_key = keystore_instance.decrypt(password.as_str()).unwrap();
+                let keystore_instance = Keystore::from_file(path.as_str())?;
+                let decrypted_key = keystore_instance.decrypt(password.as_str())?;
                 let fr_key: String = decrypted_key.iter().map(|&value| value as char).collect();
-                BlsKeyPair::new(fr_key).unwrap()
+                BlsKeyPair::new(fr_key)?
             }
         };
 
