@@ -226,13 +226,13 @@ impl Operator {
             info!("Operator {} registered successfully", operator_name);
         }
 
+        let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
+
         let operator_id = contract_registry_coordinator
             .getOperatorId(operator_address)
             .call()
             .await
             .map(|op| op._0)?;
-
-        let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
 
         Ok(Self {
             operator_id,
