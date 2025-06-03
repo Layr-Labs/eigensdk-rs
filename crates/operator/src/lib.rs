@@ -141,7 +141,7 @@ use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
-use eigen_types::operator::OperatorId;
+use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorId};
 use error::OperatorError;
 use futures_util::StreamExt;
 use registration::register_operator;
@@ -233,6 +233,17 @@ impl Operator {
             .get_operator_id(operator_address)
             .await
             .map_err(|_| OperatorError::OperatorIdError)?;
+
+        // Check that the operator ID from the BLS key pair is the same as the operator ID from the contract
+        let operator_id_from_bls = operator_id_from_g1_pub_key(key_pair.public_key())
+            .map_err(|_| OperatorError::OperatorIdError)?;
+
+        if operator_id_from_bls != operator_id {
+            error!(
+                "Operator ID from BLS key pair {operator_id_from_bls} does not match operator ID from contract {operator_id}",
+            );
+            return Err(OperatorError::OperatorIdMismatch);
+        }
 
         Ok(Self {
             operator_id,
