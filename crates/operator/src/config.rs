@@ -1,12 +1,13 @@
 use super::register_config::OperatorRegistrationConfig;
 use alloy::primitives::Address;
+use eigen_signer::signer::Config as BlsSignerConfig;
 use serde::{Deserialize, Serialize};
 
 /// Operator configuration struct
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OperatorConfig {
     /// BLS key pair of the operator
-    pub bls_private_key: String,
+    pub bls_signer: BlsSignerConfig,
     /// Address of the operator
     pub operator_address: Address,
     /// Name of the operator
