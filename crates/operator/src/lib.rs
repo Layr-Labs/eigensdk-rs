@@ -136,12 +136,13 @@ use alloy::{
 };
 use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
-use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
 use eigen_types::operator::OperatorId;
+use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
 use error::OperatorError;
 use futures_util::StreamExt;
 use registration::register_operator;
@@ -195,25 +196,23 @@ impl Operator {
             ws_rpc_url,
             http_rpc_url,
             registry_coordinator_address,
-            operator_state_retriever_address,
             aggregator_ip_port,
             registration: _,
         } = config;
-        let avs_registry_reader = AvsRegistryChainReader::new(
-            logger.clone(),
-            registry_coordinator_address,
-            operator_state_retriever_address,
-            http_rpc_url.to_string(),
-        )
-        .await?;
-
         let key_pair = BlsKeyPair::new(bls_private_key)?;
 
+        let provider = get_provider(&http_rpc_url);
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(registry_coordinator_address, provider);
+
+        let is_operator_registered = contract_registry_coordinator
+            .getOperatorStatus(operator_address)
+            .call()
+            .await
+            .map(|op| op._0 == 1)?;
+
         // Check if the operator is registered with EigenLayer
-        if !avs_registry_reader
-            .is_operator_registered(operator_address)
-            .await?
-        {
+        if !is_operator_registered {
             // Check if a registration config was provided
             let Some(registration_config) = config.registration else {
                 error!(
@@ -227,12 +226,13 @@ impl Operator {
             info!("Operator {} registered successfully", operator_name);
         }
 
-        let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
-
-        let operator_id = avs_registry_reader
-            .get_operator_id(operator_address)
+        let operator_id = contract_registry_coordinator
+            .getOperatorId(operator_address)
+            .call()
             .await
-            .map_err(|_| OperatorError::OperatorIdError)?;
+            .map(|op| op._0)?;
+
+        let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
 
         Ok(Self {
             operator_id,
