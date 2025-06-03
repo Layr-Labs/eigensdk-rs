@@ -205,15 +205,17 @@ impl Operator {
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_address, provider);
 
-        let is_operator_registered = contract_registry_coordinator
+        let operator_status = contract_registry_coordinator
             .getOperatorStatus(operator_address)
             .call()
-            .await
-            .map(|op| op._0 == 1)?;
+            .await?
+            ._0;
 
-        // Check if the operator is registered with EigenLayer
+        let is_operator_registered = operator_status == 1;
+
+        // Check if the operator is registered with EigenLayer. 0 means the operator is not registered.
         if !is_operator_registered {
-            // Check if a registration config was provided
+            // Check if a registration config was provided.
             let Some(registration_config) = config.registration else {
                 error!(
                     "Operator {} not registered and no registration config was provided",
@@ -231,8 +233,8 @@ impl Operator {
         let operator_id = contract_registry_coordinator
             .getOperatorId(operator_address)
             .call()
-            .await
-            .map(|op| op._0)?;
+            .await?
+            ._0;
 
         Ok(Self {
             operator_id,
