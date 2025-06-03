@@ -139,12 +139,14 @@ use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
+use eigen_signer::signer::Config as BlsSignerConfig;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
 use registration::register_operator;
+use rust_bls_bn254::keystores::base_keystore::Keystore;
 use tracing::{debug, error, info};
 
 /// Tarpc Client
@@ -189,7 +191,7 @@ impl Operator {
         config: config::OperatorConfig,
     ) -> Result<Self, OperatorError> {
         let config::OperatorConfig {
-            bls_private_key,
+            bls_signer,
             operator_address,
             operator_name,
             ws_rpc_url,
@@ -207,7 +209,15 @@ impl Operator {
         )
         .await?;
 
-        let key_pair = BlsKeyPair::new(bls_private_key)?;
+        let bls_key_pair = match bls_signer {
+            BlsSignerConfig::PrivateKey(private_key) => BlsKeyPair::new(private_key)?,
+            BlsSignerConfig::Keystore(path, password) => {
+                let keystore_instance = Keystore::from_file(path.as_str()).unwrap();
+                let decrypted_key = keystore_instance.decrypt(password.as_str()).unwrap();
+                let fr_key: String = decrypted_key.iter().map(|&value| value as char).collect();
+                BlsKeyPair::new(fr_key).unwrap()
+            }
+        };
 
         // Check if the operator is registered with EigenLayer
         if !avs_registry_reader
@@ -223,7 +233,13 @@ impl Operator {
                 return Err(OperatorError::RegistrationError);
             };
 
-            register_operator(registration_config, logger, http_rpc_url, key_pair.clone()).await?;
+            register_operator(
+                registration_config,
+                logger,
+                http_rpc_url,
+                bls_key_pair.clone(),
+            )
+            .await?;
             info!("Operator {} registered successfully", operator_name);
         }
 
@@ -239,7 +255,7 @@ impl Operator {
             operator_name: operator_name.to_string(),
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
-            key_pair,
+            key_pair: bls_key_pair,
         })
     }
 
