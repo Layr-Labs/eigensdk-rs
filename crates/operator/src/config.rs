@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OperatorConfig {
     /// BLS key pair of the operator
+    /// We support [ERC-2335](https://eips.ethereum.org/EIPS/eip-2335)
     pub bls_signer: BlsSignerConfig,
     /// Address of the operator
     pub operator_address: Address,
