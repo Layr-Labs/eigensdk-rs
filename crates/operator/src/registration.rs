@@ -39,10 +39,13 @@ pub async fn register_operator(
     bls_key_pair: BlsKeyPair,
 ) -> Result<(), OperatorError> {
     let signer: LocalSigner<SigningKey> = match config.signer {
-        EcdsaSignerConfig::PrivateKey(private_key) => PrivateKeySigner::from_str(&private_key)?,
-        EcdsaSignerConfig::Keystore(keystore_path, keystore_password) => {
-            LocalSigner::decrypt_keystore(keystore_path, keystore_password)?
+        EcdsaSignerConfig::PrivateKey { key: private_key } => {
+            PrivateKeySigner::from_str(&private_key)?
         }
+        EcdsaSignerConfig::Keystore {
+            path: keystore_path,
+            password: keystore_password,
+        } => LocalSigner::decrypt_keystore(keystore_path, keystore_password)?,
     };
 
     let el_chain_reader = ELChainReader::new(
