@@ -55,7 +55,7 @@
 //!
 //! 4. **Task Processor**: Create a `AggregatorProcessor` implementation:
 //!     - This is a trait that contains user-defined logic to handle new tasks, signed responses, and the final aggregated result.
-//!     - We provide a standard `IndexingTaskProcessor` implementation that can be used as is for most cases. You need to provide
+//!     - We provide a standard [`IndexingTaskProcessor`] implementation that can be used as is for most cases. You need to provide
 //!       the task manager, the task timeout and the task window duration.
 //!       - The task timeout is the time after which a task considered completed if the quorum threshold is not reached.
 //!       - The task window duration is the time after which a task is considered completed and continues accepting signatures.
@@ -106,20 +106,23 @@
 //!   emits an aggregated response. It should retrieve the task and corresponding response using the task index and digest,
 //!   and submit the final aggregated result to the contract.
 //!
-//! Refer to the [`IndexingTaskProcessor`](crate::task_processor::indexing_task_processor::IndexingTaskProcessor)
+//! Refer to the [`IndexingTaskProcessor`]
 //! implementation for an example of how to implement a custom Task Processor.
 
+/// Aggregator Processor
+pub mod aggregator_processor;
 /// Aggregator Config
 pub mod config;
 /// Aggregator error
 pub mod error;
+/// Indexing Task Processor
+pub mod indexing_processor;
 /// RPC server
 pub mod rpc_server;
 /// Signed Task Response
 pub mod signed_task_response;
-/// Task Processor
-pub mod task_processor;
 
+use crate::aggregator_processor::AggregatorProcessor;
 use alloy::dyn_abi::SolType;
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
@@ -147,13 +150,13 @@ use eigen_utils::slashing::middleware::{
 };
 pub use error::AggregatorError;
 use futures_util::{future, StreamExt};
+pub use indexing_processor::IndexingTaskProcessor;
 use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
 pub use signed_task_response::SignedTaskResponse;
 use std::fmt::Debug;
 use std::net::SocketAddr;
 use tarpc::server::{self, Channel};
 use tarpc::tokio_serde::formats::Json;
-use task_processor::AggregatorProcessor;
 use tracing::{error, info};
 
 /// The aggregator is responsible for aggregating [`SignedTaskResponse`] from operators and posting them on chain. This includes:

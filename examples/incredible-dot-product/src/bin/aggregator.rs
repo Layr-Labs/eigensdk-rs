@@ -4,7 +4,7 @@
 
 use alloy::primitives::Address;
 use eigensdk::{
-    aggregator::{task_processor::IndexingTaskProcessor, Aggregator, AggregatorConfig},
+    aggregator::{Aggregator, AggregatorConfig, IndexingTaskProcessor},
     common::get_signer,
     logging::{get_logger, init_logger, log_level::LogLevel},
 };

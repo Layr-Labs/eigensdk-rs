@@ -1,10 +1,10 @@
-use crate::task_processor::AggregatorProcessorError;
 use alloy::transports::{RpcError, TransportErrorKind};
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::error::BlsError;
 use eigen_services_blsaggregation::bls_aggregation_service_error::BlsAggregationServiceError;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceError;
 use eigen_task_manager::event_decoder::AbiDecodeError;
+use eigen_task_manager::TaskManagerError;
 use tarpc::ServerError;
 use thiserror::Error;
 
@@ -70,4 +70,20 @@ pub enum AggregatorError {
     /// Alloy error
     #[error("Alloy error")]
     AlloyError(#[from] alloy::sol_types::Error),
+}
+
+/// [`AggregatorProcessor`](crate::aggregator_processor) error
+#[derive(Debug, Error)]
+pub enum AggregatorProcessorError {
+    /// Task not found
+    #[error("Task not found")]
+    TaskNotFound,
+
+    /// Task response not found
+    #[error("Task response not found")]
+    TaskResponseNotFound,
+
+    /// Task manager error
+    #[error("Task manager error")]
+    TaskManagerError(#[from] TaskManagerError),
 }

@@ -7,7 +7,7 @@ use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::http::reqwest::Url;
-use eigensdk::aggregator::task_processor::IndexingTaskProcessor;
+use eigensdk::aggregator::IndexingTaskProcessor;
 use eigensdk::aggregator::{Aggregator, AggregatorConfig};
 use eigensdk::logging::get_logger;
 use eigensdk::logging::init_logger;

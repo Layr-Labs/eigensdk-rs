@@ -13,7 +13,7 @@ use std::{collections::HashMap, fmt::Debug};
 use tokio::sync::Mutex;
 use tracing::info;
 
-use super::{AggregatorProcessor, AggregatorProcessorError};
+use crate::{error::AggregatorProcessorError, AggregatorProcessor};
 
 type TaskResponsesMap<O> = HashMap<u32, HashMap<TaskResponseDigest, TaskResponse<O>>>;
 
