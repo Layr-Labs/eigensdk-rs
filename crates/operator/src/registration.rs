@@ -3,7 +3,7 @@ use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
-use eigen_signer::signer::Config as SignerConfig;
+use eigen_signer::signer::Config as EcdsaSignerConfig;
 use eigen_types::operator::Operator;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 use eigen_utils::slashing::core::allocationmanager::IAllocationManagerTypes::AllocateParams;
@@ -36,7 +36,7 @@ pub async fn register_operator(
     http_rpc_url: String,
     bls_key_pair: BlsKeyPair,
 ) -> Result<(), OperatorError> {
-    let signer = SignerConfig::signer_from_config(config.signer)?;
+    let signer = EcdsaSignerConfig::signer_from_config(config.signer)?;
 
     let el_chain_reader = ELChainReader::new(
         logger.clone(),
