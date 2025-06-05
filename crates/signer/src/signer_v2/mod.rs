@@ -7,7 +7,8 @@ use alloy::{
         Signature,
     },
 };
-use aws_config::BehaviorVersion;
+use aws_config::{BehaviorVersion, Region};
+use aws_sdk_kms::config::{Credentials, SharedCredentialsProvider};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use url::Url;
@@ -33,6 +34,10 @@ pub enum SignerConfig {
     Aws {
         key_id: String,
         chain_id: Option<u64>,
+        access_key: String,
+        secret_access_key: String,
+        region: String,
+        endpoint_url: String,
     },
 }
 
@@ -49,12 +54,29 @@ pub async fn tx_signer_from_config(
             Ok(Box::new(LocalSigner::decrypt_keystore(path, password)?))
         }
         SignerConfig::Web3 { endpoint, address } => {
-            let url: Url = endpoint.parse().unwrap();
+            let url: Url = endpoint
+                .parse()
+                .map_err(|_| SignerError::InvalidEndpointUrl)?;
             Ok(Box::new(Web3Signer::new(address, url)))
         }
-        SignerConfig::Aws { key_id, chain_id } => {
+        SignerConfig::Aws {
+            key_id,
+            chain_id,
+            access_key,
+            secret_access_key,
+            region,
+            endpoint_url,
+        } => {
             // Review default values
-            let config = aws_config::load_defaults(BehaviorVersion::latest()).await;
+            let creds = Credentials::new(access_key, secret_access_key, None, None, "Static");
+            let aws_region = Region::new(region);
+            let config = aws_config::load_defaults(BehaviorVersion::latest())
+                .await
+                .to_builder()
+                .credentials_provider(SharedCredentialsProvider::new(creds))
+                .endpoint_url(endpoint_url)
+                .region(Some(aws_region))
+                .build();
             let client = aws_sdk_kms::Client::new(&config);
             Ok(Box::new(AwsSigner::new(client, key_id, chain_id).await?))
         }
