@@ -10,11 +10,12 @@ use url::Url;
 
 /// Represents the input params to create a signer
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum Config {
     /// Hexadecimal private key
-    PrivateKey(String),
+    PrivateKey { key: String },
     /// Keystore path and password
-    Keystore(String, String),
+    Keystore { path: String, password: String },
 }
 
 /// Possible errors raised in signer creation
@@ -35,10 +36,10 @@ impl Config {
     pub fn signer_from_config(c: Config) -> Result<PrivateKeySigner, SignerError> {
         // TODO: check chain id to select signer
         match c {
-            Config::PrivateKey(key) => key
+            Config::PrivateKey { key } => key
                 .parse::<PrivateKeySigner>()
                 .map_err(|_| SignerError::InvalidPrivateKey),
-            Config::Keystore(path, password) => {
+            Config::Keystore { path, password } => {
                 let keypath = Path::new(&path);
                 let private_key =
                     decrypt_key(keypath, password).map_err(|_| SignerError::InvalidPassword)?;
@@ -103,7 +104,9 @@ mod test {
 
     #[test]
     fn sign_transaction_with_private_key() {
-        let config = Config::PrivateKey(PRIVATE_KEY.into());
+        let config = Config::PrivateKey {
+            key: PRIVATE_KEY.into(),
+        };
         let mut tx = TxLegacy {
             to: Address::from(ADDRESS).into(),
             value: U256::from(1_000_000_000),
@@ -132,7 +135,10 @@ mod test {
 
     #[test]
     fn sign_transaction_with_keystore() {
-        let config = Config::Keystore(KEYSTORE_PATH.into(), KEYSTORE_PASSWORD.into());
+        let config = Config::Keystore {
+            path: KEYSTORE_PATH.into(),
+            password: KEYSTORE_PASSWORD.into(),
+        };
         let mut tx = TxLegacy {
             to: Address::from(ADDRESS).into(),
             value: U256::from(1_000_000_000),
