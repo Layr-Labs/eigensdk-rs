@@ -3,7 +3,7 @@ pub mod error;
 /// Standar implementation of the task processor
 pub mod indexing_task_processor;
 
-pub use error::TaskProcessorError;
+pub use error::AggregatorProcessorError;
 pub use indexing_task_processor::IndexingTaskProcessor;
 
 use alloy::{primitives::B256, sol_types::SolValue};
@@ -14,7 +14,7 @@ use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureChecke
 use std::future::Future;
 
 /// Abstracts task-specific behaviour
-pub trait TaskProcessor {
+pub trait AggregatorProcessor {
     /// Input type expected by the task processor
     type Input: SolValue + Send + Sync + 'static + Clone;
 
@@ -38,7 +38,7 @@ pub trait TaskProcessor {
         &mut self,
         task_index: u32,
         task: Task<Self::Input>,
-    ) -> impl Future<Output = Result<TaskMetadata, TaskProcessorError>> + Send;
+    ) -> impl Future<Output = Result<TaskMetadata, AggregatorProcessorError>> + Send;
 
     /// Processes a task response
     ///
@@ -52,7 +52,7 @@ pub trait TaskProcessor {
     fn process_task_response(
         &mut self,
         task_response: TaskResponse<Self::Output>,
-    ) -> impl Future<Output = Result<B256, TaskProcessorError>> + Send;
+    ) -> impl Future<Output = Result<B256, AggregatorProcessorError>> + Send;
 
     /// Processes an aggregated response and sends it to the contract
     ///
@@ -68,5 +68,5 @@ pub trait TaskProcessor {
         task_index: u32,
         task_response_digest: B256,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
-    ) -> impl Future<Output = Result<(), TaskProcessorError>> + Send;
+    ) -> impl Future<Output = Result<(), AggregatorProcessorError>> + Send;
 }

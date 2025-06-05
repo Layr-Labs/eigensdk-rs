@@ -1,4 +1,4 @@
-use crate::task_processor::TaskProcessorError;
+use crate::task_processor::AggregatorProcessorError;
 use alloy::transports::{RpcError, TransportErrorKind};
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::error::BlsError;
@@ -39,9 +39,9 @@ pub enum AggregatorError {
     #[error("Operator Info Service error")]
     OperatorInfoServiceError(#[from] OperatorInfoServiceError),
 
-    /// Error returned by the `TaskProcessor`
-    #[error("Task Processing failed")]
-    TaskProcessorError(#[from] Box<dyn std::error::Error + Send>),
+    /// Error returned by the `AggregatorProcessor`
+    #[error("Aggregator Processor failed")]
+    AggregatorProcessorError(#[from] Box<dyn std::error::Error + Send>),
 
     /// Task index missing in topics
     #[error("Task index missing in topics")]
@@ -57,7 +57,7 @@ pub enum AggregatorError {
 
     /// Task processor error
     #[error("Task processor error")]
-    IndexingTaskProcessorError(#[from] TaskProcessorError),
+    IndexingTaskProcessorError(#[from] AggregatorProcessorError),
 
     /// Tarpc error
     #[error("Tarpc error")]

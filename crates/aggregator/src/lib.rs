@@ -53,7 +53,7 @@
 //!           let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 //!       ```
 //!
-//! 4. **Task Processor**: Create a `TaskProcessor` implementation:
+//! 4. **Task Processor**: Create a `AggregatorProcessor` implementation:
 //!     - This is a trait that contains user-defined logic to handle new tasks, signed responses, and the final aggregated result.
 //!     - We provide a standard `IndexingTaskProcessor` implementation that can be used as is for most cases. You need to provide
 //!       the task manager, the task timeout and the task window duration.
@@ -85,24 +85,24 @@
 //!
 //! ## How to implement a custom Task Processor
 //!
-//! To implement a custom Task Processor, you need to implement the [`TaskProcessor`] trait.
+//! To implement a custom Task Processor, you need to implement the [`AggregatorProcessor`] trait.
 //!
 //! You should specify the following types:
 //!
-//! - [`Input`](TaskProcessor::Input) - The input type of the Solidity `Task`
-//! - [`Output`](TaskProcessor::Output) - The output type of the Solidity `TaskResponse`
-//! - [`NEW_TASK_EVENT_SELECTOR`](TaskProcessor::NEW_TASK_EVENT_SELECTOR) - The event signature for new task
+//! - [`Input`](AggregatorProcessor::Input) - The input type of the Solidity `Task`
+//! - [`Output`](AggregatorProcessor::Output) - The output type of the Solidity `TaskResponse`
+//! - [`NEW_TASK_EVENT_SELECTOR`](AggregatorProcessor::NEW_TASK_EVENT_SELECTOR) - The event signature for new task
 //!
 //! The trait defines three methods, each corresponding to a stage in the task lifecycle:
 //!
-//! - [`process_new_task`](TaskProcessor::process_new_task): Called when the contract emits a new task event.
+//! - [`process_new_task`](AggregatorProcessor::process_new_task): Called when the contract emits a new task event.
 //!   This function should save the task for later use and return a [`TaskMetadata`], which the BLS aggregation
 //!   service requires to initiate signature collection.
 //!
-//! - [`process_task_response`](TaskProcessor::process_task_response): Called when the contract emits a task response event.
+//! - [`process_task_response`](AggregatorProcessor::process_task_response): Called when the contract emits a task response event.
 //!   It must generate a digest of the response and store it for later aggregation. Returns the task response digest.
 //!
-//! - [`process_aggregated_response`](TaskProcessor::process_aggregated_response): Called when the BLS aggregation service
+//! - [`process_aggregated_response`](AggregatorProcessor::process_aggregated_response): Called when the BLS aggregation service
 //!   emits an aggregated response. It should retrieve the task and corresponding response using the task index and digest,
 //!   and submit the final aggregated result to the contract.
 //!
@@ -153,7 +153,7 @@ use std::fmt::Debug;
 use std::net::SocketAddr;
 use tarpc::server::{self, Channel};
 use tarpc::tokio_serde::formats::Json;
-use task_processor::TaskProcessor;
+use task_processor::AggregatorProcessor;
 use tracing::{error, info};
 
 /// The aggregator is responsible for aggregating [`SignedTaskResponse`] from operators and posting them on chain. This includes:
@@ -163,7 +163,7 @@ use tracing::{error, info};
 /// * Receiving [`SignedTaskResponse`] from the operators.
 /// * Sending the aggregated responses received from the BLS aggregation service to the `TaskManager` contract
 ///
-/// Most of these things are delegated to the [`TaskProcessor`] trait, that processes
+/// Most of these things are delegated to the [`AggregatorProcessor`] trait, that processes
 /// tasks and communicates with the on-chain `TaskManager` contract.
 ///
 /// To more in-depth details about the aggregator, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/aggregator/src/lib.rs#L1-L84).
@@ -178,7 +178,7 @@ pub struct Aggregator<TP> {
 
 impl<TP> Aggregator<TP>
 where
-    TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP: AggregatorProcessor + Debug + Send + Sync + 'static + Clone,
     TP::Input: From<<<TP::Input as SolValue>::SolType as SolType>::RustType>,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {

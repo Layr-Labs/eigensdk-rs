@@ -3,7 +3,7 @@ use thiserror::Error;
 
 /// Task processor error
 #[derive(Debug, Error)]
-pub enum TaskProcessorError {
+pub enum AggregatorProcessorError {
     /// Task not found
     #[error("Task not found")]
     TaskNotFound,
