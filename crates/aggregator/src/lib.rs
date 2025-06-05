@@ -55,7 +55,7 @@
 //!
 //! 4. **Task Processor**: Create a `AggregatorProcessor` implementation:
 //!     - This is a trait that contains user-defined logic to handle new tasks, signed responses, and the final aggregated result.
-//!     - We provide a standard [`IndexingTaskProcessor`] implementation that can be used as is for most cases. You need to provide
+//!     - We provide a standard [`IndexingAggregatorProcessor`] implementation that can be used as is for most cases. You need to provide
 //!       the task manager, the task timeout and the task window duration.
 //!       - The task timeout is the time after which a task considered completed if the quorum threshold is not reached.
 //!       - The task window duration is the time after which a task is considered completed and continues accepting signatures.
@@ -63,7 +63,7 @@
 //!       ```ignore
 //!           let task_timeout = Duration::from_secs(60);
 //!           let task_window_duration = Duration::from_secs(15);
-//!           let task_processor = IndexingTaskProcessor::new(contract, task_timeout, task_window_duration);
+//!           let task_processor = IndexingAggregatorProcessor::new(contract, task_timeout, task_window_duration);
 //!       ```
 //!
 //! 5. **Create the aggregator**: Create an [`Aggregator`] instance with the config and the task processor:
@@ -106,7 +106,7 @@
 //!   emits an aggregated response. It should retrieve the task and corresponding response using the task index and digest,
 //!   and submit the final aggregated result to the contract.
 //!
-//! Refer to the [`IndexingTaskProcessor`]
+//! Refer to the [`IndexingAggregatorProcessor`]
 //! implementation for an example of how to implement a custom Task Processor.
 
 /// Aggregator Processor
@@ -150,7 +150,7 @@ use eigen_utils::slashing::middleware::{
 };
 pub use error::AggregatorError;
 use futures_util::{future, StreamExt};
-pub use indexing_processor::IndexingTaskProcessor;
+pub use indexing_processor::IndexingAggregatorProcessor;
 use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
 pub use signed_task_response::SignedTaskResponse;
 use std::fmt::Debug;

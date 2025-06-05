@@ -7,7 +7,7 @@ use alloy::primitives::Address;
 use alloy::providers::ProviderBuilder;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::http::reqwest::Url;
-use eigensdk::aggregator::IndexingTaskProcessor;
+use eigensdk::aggregator::IndexingAggregatorProcessor;
 use eigensdk::aggregator::{Aggregator, AggregatorConfig};
 use eigensdk::logging::get_logger;
 use eigensdk::logging::init_logger;
@@ -37,8 +37,11 @@ async fn main() {
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
     // 4. Create the task processor
-    let task_processor =
-        IndexingTaskProcessor::new(contract, Duration::from_secs(60), Duration::from_secs(15));
+    let task_processor = IndexingAggregatorProcessor::new(
+        contract,
+        Duration::from_secs(60),
+        Duration::from_secs(15),
+    );
 
     // 5. Create and start the aggregator
     let aggregator = Aggregator::new(config, task_processor, logger)

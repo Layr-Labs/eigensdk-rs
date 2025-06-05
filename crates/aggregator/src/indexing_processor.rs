@@ -19,7 +19,7 @@ type TaskResponsesMap<O> = HashMap<u32, HashMap<TaskResponseDigest, TaskResponse
 
 /// Indexing task processor
 #[derive(Debug, Clone)]
-pub struct IndexingTaskProcessor<TM>
+pub struct IndexingAggregatorProcessor<TM>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
@@ -35,7 +35,7 @@ where
     task_window_duration: Duration,
 }
 
-impl<TM> IndexingTaskProcessor<TM>
+impl<TM> IndexingAggregatorProcessor<TM>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
@@ -59,7 +59,7 @@ where
     }
 }
 
-impl<TM> AggregatorProcessor for IndexingTaskProcessor<TM>
+impl<TM> AggregatorProcessor for IndexingAggregatorProcessor<TM>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {

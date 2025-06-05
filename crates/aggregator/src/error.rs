@@ -57,7 +57,7 @@ pub enum AggregatorError {
 
     /// Task processor error
     #[error("Task processor error")]
-    IndexingTaskProcessorError(#[from] AggregatorProcessorError),
+    IndexingAggregatorProcessor(#[from] AggregatorProcessorError),
 
     /// Tarpc error
     #[error("Tarpc error")]
