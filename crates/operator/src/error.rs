@@ -1,8 +1,8 @@
-use alloy::signers::local::LocalSignerError;
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_client_elcontracts::error::ElContractsError;
 // use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
+use eigen_signer::signer::SignerError;
 use eigen_task_manager::{event_decoder::AbiDecodeError, TaskManagerError};
 use rust_bls_bn254::errors::KeystoreError;
 use tarpc::client::RpcError;
@@ -59,5 +59,5 @@ pub enum OperatorError {
     ElContractsError(#[from] ElContractsError),
     /// Failed to decrypt keystore
     #[error("Failed to decrypt keystore")]
-    SignerError(#[from] LocalSignerError),
+    SignerError(#[from] SignerError),
 }
