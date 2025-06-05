@@ -7,7 +7,7 @@ use std::future::Future;
 
 /// Aggregator processor error
 pub mod error;
-/// Standar implementation of the aggregator processor
+/// Standard implementation of the aggregator processor
 pub mod indexing;
 
 pub use error::AggregatorProcessorError;
