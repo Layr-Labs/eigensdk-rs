@@ -5,7 +5,13 @@ use eigen_task_manager::task_response::TaskResponse;
 use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use std::future::Future;
 
-use crate::error::AggregatorProcessorError;
+/// Aggregator processor error
+pub mod error;
+/// Standar implementation of the aggregator processor
+pub mod indexing;
+
+pub use error::AggregatorProcessorError;
+pub use indexing::IndexingAggregatorProcessor;
 
 /// Abstracts task-specific behaviour
 pub trait AggregatorProcessor {

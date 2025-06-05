@@ -13,11 +13,12 @@ use std::{collections::HashMap, fmt::Debug};
 use tokio::sync::Mutex;
 use tracing::info;
 
-use crate::{error::AggregatorProcessorError, AggregatorProcessor};
+use crate::processor::AggregatorProcessorError;
+use crate::AggregatorProcessor;
 
 type TaskResponsesMap<O> = HashMap<u32, HashMap<TaskResponseDigest, TaskResponse<O>>>;
 
-/// Indexing task processor
+/// Indexing Aggregator processor
 #[derive(Debug, Clone)]
 pub struct IndexingAggregatorProcessor<TM>
 where

@@ -53,7 +53,7 @@
 //!           let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 //!       ```
 //!
-//! 4. **Task Processor**: Create a `AggregatorProcessor` implementation:
+//! 4. **Task Processor**: Create a [`AggregatorProcessor`] implementation:
 //!     - This is a trait that contains user-defined logic to handle new tasks, signed responses, and the final aggregated result.
 //!     - We provide a standard [`IndexingAggregatorProcessor`] implementation that can be used as is for most cases. You need to provide
 //!       the task manager, the task timeout and the task window duration.
@@ -109,20 +109,19 @@
 //! Refer to the [`IndexingAggregatorProcessor`]
 //! implementation for an example of how to implement a custom Task Processor.
 
-/// Aggregator Processor
-pub mod aggregator_processor;
 /// Aggregator Config
 pub mod config;
 /// Aggregator error
 pub mod error;
-/// Indexing Task Processor
-pub mod indexing_processor;
+
+/// Aggregator Processor
+pub mod processor;
 /// RPC server
 pub mod rpc_server;
 /// Signed Task Response
 pub mod signed_task_response;
 
-use crate::aggregator_processor::AggregatorProcessor;
+use crate::processor::AggregatorProcessor;
 use alloy::dyn_abi::SolType;
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
@@ -150,7 +149,7 @@ use eigen_utils::slashing::middleware::{
 };
 pub use error::AggregatorError;
 use futures_util::{future, StreamExt};
-pub use indexing_processor::IndexingAggregatorProcessor;
+pub use processor::IndexingAggregatorProcessor;
 use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
 pub use signed_task_response::SignedTaskResponse;
 use std::fmt::Debug;
