@@ -39,9 +39,7 @@ pub async fn register_operator(
     bls_key_pair: BlsKeyPair,
 ) -> Result<(), OperatorError> {
     let signer: LocalSigner<SigningKey> = match config.signer {
-        EcdsaSignerConfig::PrivateKey { key: private_key } => {
-            PrivateKeySigner::from_str(&private_key)?
-        }
+        EcdsaSignerConfig::PrivateKey { private_key } => PrivateKeySigner::from_str(&private_key)?,
         EcdsaSignerConfig::Keystore {
             path: keystore_path,
             password: keystore_password,

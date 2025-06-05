@@ -13,7 +13,7 @@ use url::Url;
 #[serde(untagged)]
 pub enum Config {
     /// Hexadecimal private key
-    PrivateKey { key: String },
+    PrivateKey { private_key: String },
     /// Keystore path and password
     Keystore { path: String, password: String },
 }
@@ -36,7 +36,7 @@ impl Config {
     pub fn signer_from_config(c: Config) -> Result<PrivateKeySigner, SignerError> {
         // TODO: check chain id to select signer
         match c {
-            Config::PrivateKey { key } => key
+            Config::PrivateKey { private_key } => private_key
                 .parse::<PrivateKeySigner>()
                 .map_err(|_| SignerError::InvalidPrivateKey),
             Config::Keystore { path, password } => {
@@ -105,7 +105,7 @@ mod test {
     #[test]
     fn sign_transaction_with_private_key() {
         let config = Config::PrivateKey {
-            key: PRIVATE_KEY.into(),
+            private_key: PRIVATE_KEY.into(),
         };
         let mut tx = TxLegacy {
             to: Address::from(ADDRESS).into(),

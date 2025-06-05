@@ -1026,7 +1026,9 @@ mod tests {
             chain_id: Some(31337),
         };
 
-        let config = Config::PrivateKey(private_key_hex);
+        let config = Config::PrivateKey {
+            private_key: private_key_hex,
+        };
         let signer = Config::signer_from_config(config).unwrap();
         let signature = signer.sign_transaction_sync(&mut tx).unwrap();
         let signed_tx = tx.into_signed(signature);
