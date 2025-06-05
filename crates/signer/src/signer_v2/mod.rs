@@ -12,48 +12,51 @@ use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use url::Url;
 
-use crate::web3_signer::Web3Signer;
+use crate::{signer_v2::error::SignerError, web3_signer::Web3Signer};
 
+/// Error types for the signer v2 module
+pub mod error;
+
+/// Configuration for the existing signers
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 #[non_exhaustive]
 pub enum SignerConfig {
-    PrivateKey {
-        private_key_hex: String,
-    },
-
-    Keystore {
-        path: String,
-        password: String,
-    },
-    Web3 {
-        endpoint: String,
-        address: Address,
-    },
+    /// Hexadecimal private key
+    PrivateKey { private_key_hex: String },
+    /// Keystore path and password
+    /// Right now, only ECDSA keystore format is supported
+    Keystore { path: String, password: String },
+    /// Web3Signer endpoint and address
+    Web3 { endpoint: String, address: Address },
+    /// AWS KMS key ID and chain ID
     Aws {
         key_id: String,
         chain_id: Option<u64>,
     },
 }
 
-pub async fn tx_signer_from_config(config: SignerConfig) -> impl TxSigner<Signature> {
+/// Creates a transaction signer from a configuration
+pub async fn tx_signer_from_config(
+    config: SignerConfig,
+) -> Result<Box<dyn TxSigner<Signature>>, SignerError> {
     match config {
         SignerConfig::PrivateKey { private_key_hex } => {
-            PrivateKeySigner::from_str(&private_key_hex).unwrap()
+            Ok(Box::new(PrivateKeySigner::from_str(&private_key_hex)?))
         }
         SignerConfig::Keystore { path, password } => {
             // Support for ECDSA
-            LocalSigner::decrypt_keystore(path, password).unwrap()
+            Ok(Box::new(LocalSigner::decrypt_keystore(path, password)?))
         }
         SignerConfig::Web3 { endpoint, address } => {
             let url: Url = endpoint.parse().unwrap();
-            Web3Signer::new(address, url)
+            Ok(Box::new(Web3Signer::new(address, url)))
         }
         SignerConfig::Aws { key_id, chain_id } => {
             // Review default values
             let config = aws_config::load_defaults(BehaviorVersion::latest()).await;
             let client = aws_sdk_kms::Client::new(&config);
-            AwsSigner::new(client, key_id, chain_id)
+            Ok(Box::new(AwsSigner::new(client, key_id, chain_id).await?))
         }
     }
 }
