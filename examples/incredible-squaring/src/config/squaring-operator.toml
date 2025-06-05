@@ -9,8 +9,9 @@ aggregator_ip_port = "127.0.0.1:8080"
 
 
 [registration]
-signer.private_key = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
-# signer = { Keystore = ["./src/keys/test.ecdsa.key.json", "incredible-squaring"] }
+# signer.private_key = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+signer.path = "./src/keys/test.ecdsa.key.json"
+signer.password = "incredible-squaring"
 metadata_uri = "metadata"
 socket = "socket"
 allocation_delay = 0
