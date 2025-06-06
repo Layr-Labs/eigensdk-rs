@@ -2926,6 +2926,7 @@ dependencies = [
  "eigen-testing-utils",
  "eigen-utils",
  "rand 0.8.5",
+ "rust-bls-bn254",
  "serde",
  "serde_json",
  "thiserror 1.0.69",

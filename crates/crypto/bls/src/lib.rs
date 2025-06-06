@@ -6,6 +6,7 @@
 
 use alloy::primitives::{B256, U256};
 use ark_std::str::FromStr;
+use rust_bls_bn254::keystores::base_keystore::Keystore;
 pub mod error;
 
 use crate::error::BlsError;
@@ -424,6 +425,27 @@ where
     a.map_err(de::Error::custom)
 }
 
+/// BLS Signer configuration
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum BlsSignerConfig {
+    /// Private key
+    PrivateKey { private_key: String },
+    /// EIP 2335-compliant keystore
+    Keystore { path: String, password: String },
+}
+
+pub fn bls_key_pair_from_config(config: BlsSignerConfig) -> Result<BlsKeyPair, BlsError> {
+    match config {
+        BlsSignerConfig::PrivateKey { private_key } => BlsKeyPair::new(private_key),
+        BlsSignerConfig::Keystore { path, password } => {
+            // TODO: Add support for other keystore types
+            let secret = Keystore::from_file(&path)?.decrypt(&password)?;
+            let fr_key: String = secret.iter().map(|&value| value as char).collect();
+            BlsKeyPair::new(fr_key)
+        }
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
