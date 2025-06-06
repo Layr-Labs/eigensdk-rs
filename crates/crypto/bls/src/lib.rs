@@ -459,7 +459,11 @@ pub enum BlsSignerConfig {
 
 /// Create a [`BlsKeyPair`] from a [`BlsSignerConfig`]
 /// The config accepts a private key or the path and password of a web3 secret
-/// storage keystore
+/// storage keystore.
+///
+/// NOTE: To create a web3 secret storage keystore, you can use the `eigen-cli` crate.
+///
+/// `cargo run --package eigen-cli -- egnkey generate --key-type bls`
 ///
 /// # Arguments
 ///
