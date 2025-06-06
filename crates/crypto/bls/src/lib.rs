@@ -174,7 +174,7 @@ impl BlsKeyPair {
         })
     }
 
-    /// Create a BlsKeyPair from a byte array
+    /// Create a [`BlsKeyPair`] from a byte array
     ///
     /// # Arguments
     ///
@@ -182,7 +182,7 @@ impl BlsKeyPair {
     ///
     /// # Returns
     ///
-    /// * `Result<Self, BlsError>` - The BlsKeyPair
+    /// * `Result<Self, BlsError>` - The [`BlsKeyPair`]
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, BlsError> {
         let sk = Fr::from_be_bytes_mod_order(bytes);
         let pk = G1Projective::from(G1Affine::generator()) * sk;
@@ -457,6 +457,17 @@ pub enum BlsSignerConfig {
     Keystore { path: String, password: String },
 }
 
+/// Create a [`BlsKeyPair`] from a [`BlsSignerConfig`]
+/// The config accepts a private key or the path and password of a web3 secret
+/// storage keystore
+///
+/// # Arguments
+///
+/// * `config`: The BLS signer config
+///
+/// # Returns
+///
+/// * `Result<BlsKeyPair, BlsError>` - The [`BlsKeyPair`]
 pub fn bls_key_pair_from_config(config: BlsSignerConfig) -> Result<BlsKeyPair, BlsError> {
     match config {
         BlsSignerConfig::PrivateKey { private_key } => BlsKeyPair::new(private_key),
