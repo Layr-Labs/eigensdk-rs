@@ -8,8 +8,7 @@ use alloy::{
     },
 };
 use async_trait::async_trait;
-use aws_config::{BehaviorVersion, Region};
-use aws_sdk_kms::config::{Credentials, SharedCredentialsProvider};
+use aws_config::Region;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use url::Url;
@@ -21,7 +20,7 @@ pub mod error;
 
 /// Enum that contains all possible signer types
 #[derive(Debug)]
-enum Signer {
+enum GenericSigner {
     /// Hexadecimal private key
     PrivateKey(PrivateKeySigner),
     /// Web3 signer
@@ -31,12 +30,12 @@ enum Signer {
 }
 
 #[async_trait]
-impl TxSigner<Signature> for Signer {
+impl TxSigner<Signature> for GenericSigner {
     fn address(&self) -> Address {
         match self {
-            Signer::PrivateKey(signer) => signer.address(),
-            Signer::Web3(signer) => signer.address(),
-            Signer::Aws(signer) => signer.address(),
+            GenericSigner::PrivateKey(signer) => signer.address(),
+            GenericSigner::Web3(signer) => signer.address(),
+            GenericSigner::Aws(signer) => signer.address(),
         }
     }
 
@@ -45,9 +44,9 @@ impl TxSigner<Signature> for Signer {
         tx: &mut dyn alloy::consensus::SignableTransaction<Signature>,
     ) -> alloy::signers::Result<Signature> {
         match self {
-            Signer::PrivateKey(signer) => signer.sign_transaction(tx).await,
-            Signer::Web3(signer) => signer.sign_transaction(tx).await,
-            Signer::Aws(signer) => signer.sign_transaction(tx).await,
+            GenericSigner::PrivateKey(signer) => signer.sign_transaction(tx).await,
+            GenericSigner::Web3(signer) => signer.sign_transaction(tx).await,
+            GenericSigner::Aws(signer) => signer.sign_transaction(tx).await,
         }
     }
 }
@@ -58,20 +57,42 @@ impl TxSigner<Signature> for Signer {
 #[non_exhaustive]
 pub enum SignerConfig {
     /// Hexadecimal private key
-    PrivateKey { private_key_hex: String },
-    /// Keystore path and password
-    Keystore { path: String, password: String },
-    /// Web3Signer
-    Web3 { endpoint: String, address: Address },
+    PrivateKey(PrivateKeyConfig),
+    /// Keystore
+    Keystore(KeystoreConfig),
+    /// Web3
+    Web3(Web3Config),
     /// AWS KMS
-    Aws {
-        key_id: String,
-        chain_id: Option<u64>,
-        access_key: String,
-        secret_access_key: String,
-        region: String,
-        endpoint_url: String,
-    },
+    Aws(AwsConfig),
+}
+
+/// Configuration for a private key signer
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PrivateKeyConfig {
+    private_key: String,
+}
+
+/// Configuration for a keystore signer
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct KeystoreConfig {
+    path: String,
+    password: String,
+}
+
+/// Configuration for a web3 signer
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Web3Config {
+    endpoint: String,
+    address: Address,
+}
+
+/// Configuration for an AWS KMS signer
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AwsConfig {
+    key_id: String,
+    chain_id: Option<u64>,
+    region: String,
+    endpoint_url: String,
 }
 
 /// Creates a transaction signer from a configuration
@@ -87,37 +108,31 @@ pub async fn tx_signer_from_config(
     config: SignerConfig,
 ) -> Result<impl TxSigner<Signature>, SignerError> {
     match config {
-        SignerConfig::PrivateKey { private_key_hex } => Ok(Signer::PrivateKey(
-            PrivateKeySigner::from_str(&private_key_hex)?,
-        )),
-        SignerConfig::Keystore { path, password } => Ok(Signer::PrivateKey(
+        SignerConfig::PrivateKey(PrivateKeyConfig { private_key }) => Ok(
+            GenericSigner::PrivateKey(PrivateKeySigner::from_str(&private_key)?),
+        ),
+        SignerConfig::Keystore(KeystoreConfig { path, password }) => Ok(GenericSigner::PrivateKey(
             LocalSigner::decrypt_keystore(path, password)?,
         )),
-        SignerConfig::Web3 { endpoint, address } => {
+        SignerConfig::Web3(Web3Config { endpoint, address }) => {
             let url: Url = endpoint
                 .parse()
                 .map_err(|_| SignerError::InvalidEndpointUrl)?;
-            Ok(Signer::Web3(Web3Signer::new(address, url)))
+            Ok(GenericSigner::Web3(Web3Signer::new(address, url)))
         }
-        SignerConfig::Aws {
+        SignerConfig::Aws(AwsConfig {
             key_id,
             chain_id,
-            access_key,
-            secret_access_key,
             region,
             endpoint_url,
-        } => {
-            let creds = Credentials::new(access_key, secret_access_key, None, None, "Static");
-            let aws_region = Region::new(region);
-            let config = aws_config::load_defaults(BehaviorVersion::latest())
-                .await
-                .to_builder()
-                .credentials_provider(SharedCredentialsProvider::new(creds))
+        }) => {
+            let config = aws_config::from_env()
                 .endpoint_url(endpoint_url)
-                .region(Some(aws_region))
-                .build();
+                .region(Some(Region::new(region)))
+                .load()
+                .await;
             let client = aws_sdk_kms::Client::new(&config);
-            Ok(Signer::Aws(
+            Ok(GenericSigner::Aws(
                 AwsSigner::new(client, key_id, chain_id)
                     .await
                     .map_err(|e| SignerError::AwsSignerError(Box::new(e)))?,
@@ -128,7 +143,9 @@ pub async fn tx_signer_from_config(
 
 #[cfg(test)]
 mod test {
-    use crate::signer_v2::tx_signer_from_config;
+    use crate::signer_v2::{
+        tx_signer_from_config, AwsConfig, KeystoreConfig, PrivateKeyConfig, Web3Config,
+    };
 
     use super::SignerConfig;
     use alloy::consensus::{SignableTransaction, TxLegacy};
@@ -169,9 +186,9 @@ mod test {
 
     #[tokio::test]
     async fn sign_transaction_with_private_key() {
-        let config = SignerConfig::PrivateKey {
-            private_key_hex: PRIVATE_KEY.into(),
-        };
+        let config = SignerConfig::PrivateKey(PrivateKeyConfig {
+            private_key: PRIVATE_KEY.into(),
+        });
         let mut tx = TxLegacy {
             to: Address::from(ADDRESS).into(),
             value: U256::from(1_000_000_000),
@@ -196,10 +213,10 @@ mod test {
 
     #[tokio::test]
     async fn sign_transaction_with_keystore() {
-        let config = SignerConfig::Keystore {
+        let config = SignerConfig::Keystore(KeystoreConfig {
             path: KEYSTORE_PATH.into(),
             password: KEYSTORE_PASSWORD.into(),
-        };
+        });
         let mut tx = TxLegacy {
             to: Address::from(ADDRESS).into(),
             value: U256::from(1_000_000_000),
@@ -254,14 +271,12 @@ mod test {
         // Create a signer for the given key
         let key_id = key_metadata.key_id();
         let chain_id = Some(1);
-        let signer = tx_signer_from_config(SignerConfig::Aws {
+        let signer = tx_signer_from_config(SignerConfig::Aws(AwsConfig {
             key_id: key_id.into(),
             chain_id,
-            access_key: "localstack".into(),
-            secret_access_key: "localstack".into(),
             region: AWS_US_WEST_REGION.into(),
             endpoint_url: localstack_endpoint,
-        })
+        }))
         .await
         .unwrap();
 
@@ -283,7 +298,7 @@ mod test {
         let (_container, endpoint, _ws_endpoint) = start_anvil_container().await;
 
         let address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-        let signer = tx_signer_from_config(SignerConfig::Web3 { endpoint, address })
+        let signer = tx_signer_from_config(SignerConfig::Web3(Web3Config { endpoint, address }))
             .await
             .unwrap();
         let mut tx = TxLegacy {
