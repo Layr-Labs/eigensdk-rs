@@ -3,13 +3,12 @@ use alloy::primitives::Address;
 use alloy::signers::aws::{AwsSigner, AwsSignerError};
 use alloy::signers::local::PrivateKeySigner;
 use eth_keystore::decrypt_key;
-use serde::{Deserialize, Serialize};
 use std::path::Path;
 use thiserror::Error;
 use url::Url;
 
 /// Represents the input params to create a signer
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug)]
 pub enum Config {
     /// Hexadecimal private key
     PrivateKey(String),
