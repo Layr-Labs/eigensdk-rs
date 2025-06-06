@@ -1,4 +1,4 @@
-use rust_bls_bn254::errors::KeystoreError;
+use eth_keystore::KeystoreError;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -19,7 +19,7 @@ pub enum BlsError {
     #[error("Points missing in G2Affine")]
     InvalidG2Affine,
 
-    /// Keystore Error
-    #[error("Keystore Error")]
-    KeystoreError(#[from] KeystoreError),
+    /// Invalid Keystore
+    #[error("Invalid keystore")]
+    InvalidKeystore(#[from] KeystoreError),
 }

@@ -4,9 +4,12 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
+use std::path::Path;
+
+use alloy::hex;
 use alloy::primitives::{B256, U256};
 use ark_std::str::FromStr;
-use rust_bls_bn254::keystores::base_keystore::Keystore;
+use eth_keystore::decrypt_key;
 pub mod error;
 
 use crate::error::BlsError;
@@ -165,6 +168,24 @@ impl BlsKeyPair {
     /// Input [`Fr`] as a [`String`]
     pub fn new(fr: String) -> Result<Self, BlsError> {
         let sk = Fr::from_str(&fr).map_err(|_| BlsError::InvalidBlsPrivateKey)?;
+        let pk = G1Projective::from(G1Affine::generator()) * sk;
+        Ok(Self {
+            priv_key: sk,
+            pub_key: BlsG1Point::new(pk.into_affine()),
+        })
+    }
+
+    /// Create a BlsKeyPair from a byte array
+    ///
+    /// # Arguments
+    ///
+    /// * `bytes`: The byte array
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self, BlsError>` - The BlsKeyPair
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, BlsError> {
+        let sk = Fr::from_be_bytes_mod_order(bytes);
         let pk = G1Projective::from(G1Affine::generator()) * sk;
         Ok(Self {
             priv_key: sk,
@@ -431,7 +452,7 @@ where
 pub enum BlsSignerConfig {
     /// Private key
     PrivateKey { private_key: String },
-    /// EIP 2335-compliant keystore
+    /// Support BLS keystore version 3
     Keystore { path: String, password: String },
 }
 
@@ -439,10 +460,9 @@ pub fn bls_key_pair_from_config(config: BlsSignerConfig) -> Result<BlsKeyPair, B
     match config {
         BlsSignerConfig::PrivateKey { private_key } => BlsKeyPair::new(private_key),
         BlsSignerConfig::Keystore { path, password } => {
-            // TODO: Add support for other keystore types
-            let secret = Keystore::from_file(&path)?.decrypt(&password)?;
-            let fr_key: String = secret.iter().map(|&value| value as char).collect();
-            BlsKeyPair::new(fr_key)
+            let keypath = Path::new(&path);
+            let private_key = decrypt_key(keypath, password)?;
+            BlsKeyPair::from_bytes(&private_key)
         }
     }
 }
