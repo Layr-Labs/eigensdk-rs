@@ -9,7 +9,7 @@ pub enum SignerError {
     LocalSignerError(#[from] LocalSignerError),
     /// AwsSigner error
     #[error("aws signer error: {0}")]
-    AwsSignerError(#[from] AwsSignerError),
+    AwsSignerError(#[from] Box<AwsSignerError>),
     /// Invalid endpoint URL
     #[error("invalid endpoint URL")]
     InvalidEndpointUrl,

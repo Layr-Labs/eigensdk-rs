@@ -23,10 +23,9 @@ pub mod error;
 #[serde(untagged)]
 #[non_exhaustive]
 pub enum SignerConfig {
-    /// Hexadecimal private key
+    /// ECDSA hexadecimal private key
     PrivateKey { private_key_hex: String },
-    /// Keystore path and password
-    /// Right now, only ECDSA keystore format is supported
+    /// ECDSA keystore path and password
     Keystore { path: String, password: String },
     /// Web3Signer
     Web3 { endpoint: String, address: Address },
@@ -39,13 +38,6 @@ pub enum SignerConfig {
         region: String,
         endpoint_url: String,
     },
-}
-
-pub enum BlsKeySource {
-    /// Raw private key
-    PrivateKey { private_key_hex: String },
-    /// Keystore file + password
-    Keystore { path: String, password: String },
 }
 
 /// Creates a transaction signer from a configuration
@@ -92,7 +84,11 @@ pub async fn tx_signer_from_config(
                 .region(Some(aws_region))
                 .build();
             let client = aws_sdk_kms::Client::new(&config);
-            Ok(Box::new(AwsSigner::new(client, key_id, chain_id).await?))
+            Ok(Box::new(
+                AwsSigner::new(client, key_id, chain_id)
+                    .await
+                    .map_err(|e| SignerError::AwsSignerError(Box::new(e)))?,
+            ))
         }
     }
 }
