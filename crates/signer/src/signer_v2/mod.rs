@@ -28,9 +28,9 @@ pub enum SignerConfig {
     /// Keystore path and password
     /// Right now, only ECDSA keystore format is supported
     Keystore { path: String, password: String },
-    /// Web3Signer endpoint and address
+    /// Web3Signer
     Web3 { endpoint: String, address: Address },
-    /// AWS KMS key ID and chain ID
+    /// AWS KMS
     Aws {
         key_id: String,
         chain_id: Option<u64>,
@@ -41,7 +41,22 @@ pub enum SignerConfig {
     },
 }
 
+pub enum BlsKeySource {
+    /// Raw private key
+    PrivateKey { private_key_hex: String },
+    /// Keystore file + password
+    Keystore { path: String, password: String },
+}
+
 /// Creates a transaction signer from a configuration
+///
+/// # Arguments
+///
+/// * `config` - The signer configuration
+///
+/// # Returns
+///
+/// * A signer that implements the [`TxSigner`] trait
 pub async fn tx_signer_from_config(
     config: SignerConfig,
 ) -> Result<Box<dyn TxSigner<Signature>>, SignerError> {
@@ -50,7 +65,6 @@ pub async fn tx_signer_from_config(
             Ok(Box::new(PrivateKeySigner::from_str(&private_key_hex)?))
         }
         SignerConfig::Keystore { path, password } => {
-            // Support for ECDSA
             Ok(Box::new(LocalSigner::decrypt_keystore(path, password)?))
         }
         SignerConfig::Web3 { endpoint, address } => {
