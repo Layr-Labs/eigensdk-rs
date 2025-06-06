@@ -6,7 +6,6 @@
 
 use std::path::Path;
 
-use alloy::hex;
 use alloy::primitives::{B256, U256};
 use ark_std::str::FromStr;
 use eth_keystore::decrypt_key;
@@ -447,12 +446,14 @@ where
 }
 
 /// BLS Signer configuration
+/// We only support [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage)
+/// keystores
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum BlsSignerConfig {
     /// Private key
     PrivateKey { private_key: String },
-    /// Support BLS keystore version 3
+    /// Web3 Secret Storage Keystore
     Keystore { path: String, password: String },
 }
 

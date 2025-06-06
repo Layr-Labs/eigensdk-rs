@@ -1,4 +1,4 @@
-bls_signer_config = { path = "./src/keys/1.bls.key.json", password = "gCANg0WPJIoQvcgRH6Zu" }
+bls_signer_config = { path = "./src/keys/bls.key.json", password = "gCANg0WPJIoQvcgRH6Zu" }
 operator_address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 operator_name = "squaring"
 http_rpc_url = "http://localhost:8545"
