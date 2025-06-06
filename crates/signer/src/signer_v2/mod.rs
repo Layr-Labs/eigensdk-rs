@@ -161,6 +161,8 @@ mod test {
     const KEYSTORE_PATH: &str = "mockdata/dummy.key.json";
     const KEYSTORE_PASSWORD: &str = "testpassword";
     const LOCALSTACK_PORT: u16 = 4566;
+    // Add this port to avoid conflicts with the test of the signer v1
+    const LOCALSTACK_MAPPED_PORT: u16 = 4567;
     const AWS_US_WEST_REGION: &str = "us-west-1";
     const LOCALSTACK_IMAGE_NAME: &str = "localstack/localstack";
     const LOCALSTACK_IMAGE_TAG: &str = "latest";
@@ -223,7 +225,7 @@ mod test {
         // Start the container running Localstack
         let _container = start_localstack_container().await;
 
-        let localstack_endpoint = format!("http://localhost:{}", LOCALSTACK_PORT);
+        let localstack_endpoint = format!("http://localhost:{}", LOCALSTACK_MAPPED_PORT);
         let config = get_aws_config(
             "localstack".into(),
             "localstack".into(),
@@ -307,7 +309,7 @@ mod test {
         GenericImage::new(LOCALSTACK_IMAGE_NAME, LOCALSTACK_IMAGE_TAG)
             .with_exposed_port(LOCALSTACK_PORT.tcp())
             .with_wait_for(WaitFor::message_on_stdout("Ready."))
-            .with_mapped_port(LOCALSTACK_PORT, LOCALSTACK_PORT.tcp())
+            .with_mapped_port(LOCALSTACK_MAPPED_PORT, LOCALSTACK_PORT.tcp())
             .start()
             .await
             .expect("Error starting localstack container")
