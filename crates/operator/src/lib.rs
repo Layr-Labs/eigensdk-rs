@@ -52,7 +52,7 @@
 //! 2. **Create the operator configuration**: Create a [`OperatorConfig`](crate::config::OperatorConfig) struct.
 //!    This structs implements `Serialize` and `Deserialize` so you can load from a file.
 //!    - Attributes:
-//!      - `bls_signer`: The BLS signer for. We support [ERC-2335](https://eips.ethereum.org/EIPS/eip-2335)
+//!      - `bls_signer_config`: The BLS signer for. We support [ERC-2335](https://eips.ethereum.org/EIPS/eip-2335)
 //!      - `operator_address`: The address of the operator
 //!      - `operator_name`: The name of the operator
 //!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
