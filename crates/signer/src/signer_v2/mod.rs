@@ -107,7 +107,6 @@ pub async fn tx_signer_from_config(
             region,
             endpoint_url,
         } => {
-            // Review default values
             let creds = Credentials::new(access_key, secret_access_key, None, None, "Static");
             let aws_region = Region::new(region);
             let config = aws_config::load_defaults(BehaviorVersion::latest())

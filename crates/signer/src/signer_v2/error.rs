@@ -1,7 +1,7 @@
 use alloy::signers::{aws::AwsSignerError, local::LocalSignerError};
 use thiserror::Error;
 
-/// Possible errors raised in signer creation
+/// Error returned when creating a signer
 #[derive(Error, Debug)]
 pub enum SignerError {
     /// LocalSigner error
