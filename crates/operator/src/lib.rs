@@ -137,16 +137,14 @@ use alloy::{
 use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_crypto_bls::BlsKeyPair;
+use eigen_crypto_bls::{bls_key_pair_from_config, BlsKeyPair};
 use eigen_logging::logger::SharedLogger;
-use eigen_signer::signer::Config as BlsSignerConfig;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
 use registration::register_operator;
-use rust_bls_bn254::keystores::base_keystore::Keystore;
 use tracing::{debug, error, info};
 
 /// Tarpc Client
@@ -191,7 +189,7 @@ impl Operator {
         config: config::OperatorConfig,
     ) -> Result<Self, OperatorError> {
         let config::OperatorConfig {
-            bls_signer,
+            bls_signer_config,
             operator_address,
             operator_name,
             ws_rpc_url,
@@ -209,14 +207,7 @@ impl Operator {
         )
         .await?;
 
-        let bls_key_pair = match bls_signer {
-            BlsSignerConfig::PrivateKey(private_key) => BlsKeyPair::new(private_key)?,
-            BlsSignerConfig::Keystore(path, password) => {
-                let secret = Keystore::from_file(&path)?.decrypt(&password)?;
-                let fr_key: String = secret.iter().map(|&value| value as char).collect();
-                BlsKeyPair::new(fr_key)?
-            }
-        };
+        let bls_key_pair = bls_key_pair_from_config(bls_signer_config)?;
 
         // Check if the operator is registered with EigenLayer
         if !avs_registry_reader

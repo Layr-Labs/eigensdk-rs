@@ -1,14 +1,13 @@
 use super::register_config::OperatorRegistrationConfig;
 use alloy::primitives::Address;
-use eigen_signer::signer::Config as BlsSignerConfig;
+use eigen_crypto_bls::BlsSignerConfig;
 use serde::{Deserialize, Serialize};
 
 /// Operator configuration struct
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OperatorConfig {
     /// BLS key pair of the operator
-    /// We support [ERC-2335](https://eips.ethereum.org/EIPS/eip-2335)
-    pub bls_signer: BlsSignerConfig,
+    pub bls_signer_config: BlsSignerConfig,
     /// Address of the operator
     pub operator_address: Address,
     /// Name of the operator
