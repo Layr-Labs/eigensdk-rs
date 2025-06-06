@@ -148,6 +148,7 @@ mod test {
     use crate::signer_v2::{
         tx_signer_from_config, AwsConfig, KeystoreConfig, PrivateKeyConfig, Web3Config,
     };
+    use serde_json;
 
     use super::SignerConfig;
     use alloy::consensus::{SignableTransaction, TxLegacy};
@@ -325,6 +326,59 @@ mod test {
         let expected_signature = expected_signer.sign_transaction_sync(&mut tx).unwrap();
 
         assert_eq!(signature, expected_signature);
+    }
+
+    #[test]
+    fn test_private_key_config_serialization() {
+        let original = PrivateKeyConfig {
+            private_key: "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7".into(),
+        };
+
+        let json_str = serde_json::to_string(&original).unwrap();
+
+        let parsed: PrivateKeyConfig = serde_json::from_str(&json_str).unwrap();
+        assert_eq!(parsed, original);
+    }
+
+    #[test]
+    fn test_keystore_config_serialization() {
+        let original = KeystoreConfig {
+            path: "mockdata/dummy.key.json".into(),
+            password: "testpassword".into(),
+        };
+
+        let json_str = serde_json::to_string(&original).unwrap();
+
+        let parsed: KeystoreConfig = serde_json::from_str(&json_str).unwrap();
+        assert_eq!(parsed, original);
+    }
+
+    #[test]
+    fn test_web3_config_serialization() {
+        let original = Web3Config {
+            endpoint: "http://localhost:8545".into(),
+            address: Address::from(hex!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045")),
+        };
+
+        let json_str = serde_json::to_string(&original).unwrap();
+
+        let parsed: Web3Config = serde_json::from_str(&json_str).unwrap();
+        assert_eq!(parsed, original);
+    }
+
+    #[test]
+    fn test_aws_config_serialization() {
+        let original = AwsConfig {
+            key_id: "1234abcd-12ab-34cd-56ef-1234567890ab".into(),
+            chain_id: Some(1),
+            region: "us-west-1".into(),
+            endpoint_url: "http://localhost:4566".into(),
+        };
+
+        let json_str = serde_json::to_string(&original).unwrap();
+
+        let parsed: AwsConfig = serde_json::from_str(&json_str).unwrap();
+        assert_eq!(parsed, original);
     }
 
     async fn start_localstack_container() -> ContainerAsync<GenericImage> {
