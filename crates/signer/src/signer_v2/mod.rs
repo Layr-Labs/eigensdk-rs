@@ -161,6 +161,7 @@ mod test {
     };
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::test_data::TestData;
+    use std::env;
     use std::str::FromStr;
     use testcontainers::{
         core::{IntoContainerPort, WaitFor},
@@ -241,6 +242,10 @@ mod test {
     async fn test_sign_transaction_with_kms_signer() {
         // Start the container running Localstack
         let _container = start_localstack_container().await;
+
+        // Set the environment variables for the AWS credentials
+        env::set_var("AWS_ACCESS_KEY_ID", "localstack");
+        env::set_var("AWS_SECRET_ACCESS_KEY", "localstack");
 
         let localstack_endpoint = format!("http://localhost:{}", LOCALSTACK_MAPPED_PORT);
         let config = get_aws_config(
