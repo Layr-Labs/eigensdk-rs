@@ -1,3 +1,5 @@
+//! Signer v2 module
+
 use alloy::{
     network::TxSigner,
     primitives::Address,
@@ -52,7 +54,7 @@ impl TxSigner<Signature> for GenericSigner {
 }
 
 /// Configuration for the existing signers
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(untagged)]
 #[non_exhaustive]
 pub enum SignerConfig {
@@ -67,27 +69,27 @@ pub enum SignerConfig {
 }
 
 /// Configuration for a private key signer
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PrivateKeyConfig {
     private_key: String,
 }
 
 /// Configuration for a keystore signer
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct KeystoreConfig {
     path: String,
     password: String,
 }
 
 /// Configuration for a web3 signer
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Web3Config {
     endpoint: String,
     address: Address,
 }
 
 /// Configuration for an AWS KMS signer
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AwsConfig {
     key_id: String,
     chain_id: Option<u64>,
