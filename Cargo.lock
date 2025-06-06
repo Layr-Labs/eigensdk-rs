@@ -3124,10 +3124,10 @@ dependencies = [
  "eigen-testing-utils",
  "eth-keystore",
  "serde",
- "serde_json",
  "testcontainers",
  "thiserror 1.0.69",
  "tokio",
+ "toml",
  "url",
 ]
 

@@ -148,7 +148,6 @@ mod test {
     use crate::signer_v2::{
         tx_signer_from_config, AwsConfig, KeystoreConfig, PrivateKeyConfig, Web3Config,
     };
-    use serde_json;
 
     use super::SignerConfig;
     use alloy::consensus::{SignableTransaction, TxLegacy};
@@ -333,23 +332,32 @@ mod test {
         let original = PrivateKeyConfig {
             private_key: "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7".into(),
         };
+        let toml_str = toml::to_string(&original).unwrap();
+        let parsed: PrivateKeyConfig = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed, original);
 
-        let json_str = serde_json::to_string(&original).unwrap();
-
-        let parsed: PrivateKeyConfig = serde_json::from_str(&json_str).unwrap();
+        let toml_str = r#"
+            private_key = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7"
+        "#;
+        let parsed: PrivateKeyConfig = toml::from_str(toml_str).unwrap();
         assert_eq!(parsed, original);
     }
 
     #[test]
     fn test_keystore_config_serialization() {
         let original = KeystoreConfig {
-            path: "mockdata/dummy.key.json".into(),
+            path: "ecdsa.key.json".into(),
             password: "testpassword".into(),
         };
+        let toml_str = toml::to_string(&original).unwrap();
+        let parsed: KeystoreConfig = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed, original);
 
-        let json_str = serde_json::to_string(&original).unwrap();
-
-        let parsed: KeystoreConfig = serde_json::from_str(&json_str).unwrap();
+        let toml_str = r#"
+            path ="ecdsa.key.json"
+            password = "testpassword"
+        "#;
+        let parsed: KeystoreConfig = toml::from_str(toml_str).unwrap();
         assert_eq!(parsed, original);
     }
 
@@ -359,10 +367,15 @@ mod test {
             endpoint: "http://localhost:8545".into(),
             address: Address::from(hex!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045")),
         };
+        let toml_str = toml::to_string(&original).unwrap();
+        let parsed: Web3Config = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed, original);
 
-        let json_str = serde_json::to_string(&original).unwrap();
-
-        let parsed: Web3Config = serde_json::from_str(&json_str).unwrap();
+        let toml_str = r#"
+            endpoint = "http://localhost:8545"
+            address = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+        "#;
+        let parsed: Web3Config = toml::from_str(toml_str).unwrap();
         assert_eq!(parsed, original);
     }
 
@@ -374,10 +387,17 @@ mod test {
             region: "us-west-1".into(),
             endpoint_url: "http://localhost:4566".into(),
         };
+        let toml_str = toml::to_string(&original).unwrap();
+        let parsed: AwsConfig = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed, original);
 
-        let json_str = serde_json::to_string(&original).unwrap();
-
-        let parsed: AwsConfig = serde_json::from_str(&json_str).unwrap();
+        let toml_str = r#"
+            key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
+            chain_id = 1
+            region = "us-west-1"
+            endpoint_url = "http://localhost:4566"
+        "#;
+        let parsed: AwsConfig = toml::from_str(toml_str).unwrap();
         assert_eq!(parsed, original);
     }
 
