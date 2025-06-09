@@ -1,8 +1,8 @@
-use alloy::signers::local::LocalSignerError;
+use alloy::{contract::Error as AlloyError, providers::PendingTransactionError};
 use eigen_client_avsregistry::error::AvsRegistryError;
-use eigen_client_elcontracts::error::ElContractsError;
 // use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
+use eigen_signer::error::SignerError;
 use eigen_task_manager::{event_decoder::AbiDecodeError, TaskManagerError};
 use rust_bls_bn254::errors::KeystoreError;
 use tarpc::client::RpcError;
@@ -14,9 +14,6 @@ pub enum OperatorError {
     /// AvsRegistry Error
     #[error("AvsRegistry Error")]
     AvsRegistry(#[from] AvsRegistryError),
-    /// Operator Registration Error
-    #[error("Failed to register operator")]
-    RegistrationError,
     /// Operator Id Error
     #[error("Failed to get operator id")]
     OperatorIdError,
@@ -54,10 +51,39 @@ pub enum OperatorError {
     /// Invalid deposit tokens
     #[error("Invalid deposit tokens")]
     InvalidDepositTokens,
-    /// ELChainWriter Error
-    #[error("ElContractsError Error")]
-    ElContractsError(#[from] ElContractsError),
-    /// Failed to decrypt keystore
-    #[error("Failed to decrypt keystore")]
-    SignerError(#[from] LocalSignerError),
+    /// Registration Error
+    #[error("Registration Error")]
+    RegistrationError(#[from] OperatorRegistrationError),
+}
+
+/// Errors when registering an operator
+#[derive(Debug, Error)]
+pub enum OperatorRegistrationError {
+    /// Registration Config Error
+    #[error("Registration Config Error")]
+    RegistrationConfigError,
+    /// Alloy pending Transaction error
+    #[error("Alloy pending Transaction error {0}")]
+    AlloyPendingTransactionError(#[from] PendingTransactionError),
+    /// Alloy contract error
+    #[error("Alloy contract error: {0}")]
+    AlloyContractError(#[from] AlloyError),
+    /// Failed to register operator
+    #[error("Failed to register operator")]
+    RegistrationError,
+    /// Failed to deposit tokens into strategy
+    #[error("Failed to deposit tokens into strategy")]
+    DepositError,
+    /// Signer Error
+    #[error("Signer Error")]
+    SignerError(#[from] SignerError),
+    /// BLS conversion error
+    #[error("BLS conversion error")]
+    BlsConversionError(#[from] BlsError),
+    /// Failed to parse U256
+    #[error("Failed to parse U256")]
+    U256ParseError,
+    /// Failed to parse http url
+    #[error("Failed to parse http url")]
+    HttpUrlParseError,
 }
