@@ -52,7 +52,7 @@
 //! 2. **Create the operator configuration**: Create a [`OperatorConfig`](crate::config::OperatorConfig) struct.
 //!    This structs implements `Serialize` and `Deserialize` so you can load from a file.
 //!    - Attributes:
-//!      - `bls_signer`: The BLS signer for. We only support [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage)
+//!      - `bls_signer`: The config for the BLS signer. We only support [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage)
 //!        keystores. You can create one with the following command:
 //!        ```bash
 //!         cargo run --package eigen-cli -- egnkey generate --key-type bls
