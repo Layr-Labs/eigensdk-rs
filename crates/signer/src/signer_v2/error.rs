@@ -7,7 +7,8 @@ pub enum SignerError {
     /// LocalSigner error
     #[error("local signer error: {0}")]
     LocalSignerError(#[from] LocalSignerError),
-    /// AwsSigner error
+    /// AwsSigner error.
+    /// Boxed because [`AwsSignerError`] is much larger (344+ bytes) than other variants (32 bytes).
     #[error("aws signer error: {0}")]
     AwsSignerError(#[from] Box<AwsSignerError>),
     /// Invalid endpoint URL
