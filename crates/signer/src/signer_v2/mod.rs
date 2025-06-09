@@ -71,29 +71,38 @@ pub enum SignerConfig {
 /// Configuration for a private key signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PrivateKeyConfig {
+    /// Hexadecimal private key
     private_key: String,
 }
 
 /// Configuration for a keystore signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct KeystoreConfig {
+    /// Path to the keystore file
     path: String,
+    /// Password to decrypt the keystore file
     password: String,
 }
 
 /// Configuration for a web3 signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Web3Config {
+    /// Endpoint URL
     endpoint: String,
+    /// Address of the signer
     address: Address,
 }
 
 /// Configuration for an AWS KMS signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AwsConfig {
+    /// Key ID
     key_id: String,
+    /// Chain ID
     chain_id: Option<u64>,
+    /// Region
     region: String,
+    /// Endpoint URL
     endpoint_url: String,
 }
 
