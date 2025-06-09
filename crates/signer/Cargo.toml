@@ -15,6 +15,7 @@ aws-sdk-kms.workspace = true
 eth-keystore.workspace = true
 serde.workspace = true
 thiserror.workspace = true
+tracing.workspace = true
 url.workspace = true
 
 [dev-dependencies]

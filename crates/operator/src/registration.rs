@@ -127,7 +127,7 @@ async fn register_operator_to_eigenlayer(
     metadata_url: String,
     delegation_manager_address: Address,
 ) -> Result<(), OperatorRegistrationError> {
-    info!("registering operator {operator_address} to EigenLayer");
+    info!("Registering operator {operator_address} to EigenLayer");
 
     let contract_delegation_manager = DelegationManager::new(delegation_manager_address, provider);
     contract_delegation_manager
@@ -136,14 +136,7 @@ async fn register_operator_to_eigenlayer(
         .send()
         .await?
         .get_receipt()
-        .await
-        .inspect(|tx| {
-            info!(
-                "operator registered to EigenLayer {:?}",
-                tx.transaction_hash
-            )
-        })?;
-
+        .await?;
     Ok(())
 }
 
@@ -153,7 +146,7 @@ async fn deposit_erc20_into_strategy(
     strategy_address: Address,
     strategy_manager_address: Address,
 ) -> Result<(), OperatorRegistrationError> {
-    info!("depositing {amount:?} tokens into strategy {strategy_address:?}");
+    info!("Depositing {amount:?} tokens into strategy {strategy_address:?}");
 
     let contract_strategy = IStrategy::new(strategy_address, provider.clone());
     let token_address = contract_strategy.underlyingToken().call().await?._0;
@@ -183,7 +176,7 @@ async fn set_allocation_delay(
     delay: u32,
     allocation_manager_address: Address,
 ) -> Result<(), OperatorRegistrationError> {
-    info!("setting allocation delay for operator {operator_address} to {delay}");
+    info!("Setting allocation delay for operator {operator_address} to {delay}");
 
     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
     contract_allocation_manager
@@ -202,7 +195,7 @@ async fn modify_allocations(
     allocations: Vec<IAllocationManagerTypes::AllocateParams>,
     allocation_manager_address: Address,
 ) -> Result<(), OperatorRegistrationError> {
-    info!("modifying allocations for operator {operator_address}");
+    info!("Modifying allocations for operator {operator_address}");
 
     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
     contract_allocation_manager
@@ -227,7 +220,7 @@ async fn register_for_operator_sets(
     avs_address: Address,
 ) -> Result<(), OperatorRegistrationError> {
     info!(
-        "registering operator {operator_address} in AVS {avs_address} for operator sets {operator_set_ids:?}"
+        "Registering operator {operator_address} in AVS {avs_address} for operator sets {operator_set_ids:?}"
     );
 
     let contract_allocation_manager =

@@ -141,6 +141,7 @@ use async_trait::async_trait;
 use aws_config::Region;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
+use tracing::info;
 use url::Url;
 
 use crate::{signer_v2::error::SignerError, web3_signer::Web3Signer};
@@ -315,13 +316,20 @@ pub async fn tx_signer_from_config(
     config: SignerConfig,
 ) -> Result<impl TxSigner<Signature>, SignerError> {
     match config {
-        SignerConfig::PrivateKey(PrivateKeyConfig { private_key }) => Ok(
-            GenericSigner::PrivateKey(PrivateKeySigner::from_str(&private_key)?),
-        ),
-        SignerConfig::Keystore(KeystoreConfig { path, password }) => Ok(GenericSigner::PrivateKey(
-            LocalSigner::decrypt_keystore(path, password)?,
-        )),
+        SignerConfig::PrivateKey(PrivateKeyConfig { private_key }) => {
+            info!("Using hexadecimal private key");
+            Ok(GenericSigner::PrivateKey(PrivateKeySigner::from_str(
+                &private_key,
+            )?))
+        }
+        SignerConfig::Keystore(KeystoreConfig { path, password }) => {
+            info!("Decrypting keystore file {path}");
+            Ok(GenericSigner::PrivateKey(LocalSigner::decrypt_keystore(
+                path, password,
+            )?))
+        }
         SignerConfig::Web3(Web3Config { endpoint, address }) => {
+            info!("Building Web3 signer");
             let url: Url = endpoint
                 .parse()
                 .map_err(|_| SignerError::InvalidEndpointUrl)?;
@@ -333,6 +341,7 @@ pub async fn tx_signer_from_config(
             region,
             endpoint_url,
         }) => {
+            info!("Building AWS KMS signer");
             let config = aws_config::from_env()
                 .endpoint_url(endpoint_url)
                 .region(Some(Region::new(region)))
