@@ -504,6 +504,19 @@ mod test {
     }
 
     #[tokio::test]
+    async fn sign_transaction_with_keystore_and_no_env_password() {
+        let config = KeystoreConfig {
+            path: KEYSTORE_PATH.into(),
+            password: None,
+        };
+
+        // Will try to decrypt the keystore with the env var, but it's not set
+        // So it would use an empty password
+        let signer = tx_signer_from_config(config.into()).await;
+        assert!(signer.is_err());
+    }
+
+    #[tokio::test]
     async fn test_sign_transaction_with_kms_signer() {
         // Start the container running Localstack
         let _container = start_localstack_container().await;
