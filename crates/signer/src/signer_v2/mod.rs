@@ -277,7 +277,8 @@ pub struct KeystoreConfig {
     /// Path to the keystore file
     pub path: String,
     /// Password to decrypt the keystore file
-    pub password: String,
+    /// If no password is provided, the signer will try to use the `OPERATOR_ECDSA_KEY_PASSWORD` environment variable.
+    pub password: Option<String>,
 }
 
 /// Configuration for a web3 signer
@@ -338,9 +339,19 @@ pub async fn tx_signer_from_config(
         SignerConfig::PrivateKey(PrivateKeyConfig { private_key }) => Ok(
             GenericSigner::PrivateKey(PrivateKeySigner::from_str(&private_key)?),
         ),
-        SignerConfig::Keystore(KeystoreConfig { path, password }) => Ok(GenericSigner::PrivateKey(
-            LocalSigner::decrypt_keystore(path, password)?,
-        )),
+        SignerConfig::Keystore(KeystoreConfig { path, password }) => {
+            const ENV_VAR: &str = "OPERATOR_ECDSA_KEY_PASSWORD";
+
+            // If `password` is empty, try with the env var, and if it doesn't exist, leave "".
+            let pass = if let Some(pass) = password {
+                pass
+            } else {
+                std::env::var(ENV_VAR).unwrap_or_default()
+            };
+
+            let signer = LocalSigner::decrypt_keystore(path, pass)?;
+            Ok(GenericSigner::PrivateKey(signer))
+        }
         SignerConfig::Web3(Web3Config { endpoint, address }) => {
             let url: Url = endpoint
                 .parse()
@@ -442,7 +453,7 @@ mod test {
     async fn sign_transaction_with_keystore() {
         let config = KeystoreConfig {
             path: KEYSTORE_PATH.into(),
-            password: KEYSTORE_PASSWORD.into(),
+            password: Some(KEYSTORE_PASSWORD.into()),
         };
         let mut tx = TxLegacy {
             to: Address::from(ADDRESS).into(),
@@ -572,7 +583,7 @@ mod test {
     fn test_keystore_config_serialization() {
         let original = KeystoreConfig {
             path: "ecdsa.key.json".into(),
-            password: "testpassword".into(),
+            password: Some("testpassword".into()),
         };
         let toml_str = toml::to_string(&original).unwrap();
         let parsed: KeystoreConfig = toml::from_str(&toml_str).unwrap();
