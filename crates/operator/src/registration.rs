@@ -3,6 +3,7 @@ use alloy::network::{EthereumWallet, TxSigner};
 use alloy::primitives::Address;
 use alloy::primitives::U256;
 use alloy::providers::ProviderBuilder;
+use alloy::signers::Signature;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
@@ -23,7 +24,9 @@ use url::Url;
 use crate::error::OperatorRegistrationError;
 use crate::register_config::OperatorRegistrationConfig;
 
-type ProviderSDK = alloy::providers::fillers::FillProvider<
+/// Provider that uses a signer to sign transactions.
+/// This alias was created since we cannot clone the signer.
+type SignerProvider = alloy::providers::fillers::FillProvider<
     alloy::providers::fillers::JoinFill<
         alloy::providers::fillers::JoinFill<
             alloy::providers::Identity,
@@ -134,10 +137,12 @@ pub async fn register_operator(
     Ok(())
 }
 
+fn asd(signer: impl TxSigner<Signature>) {}
+
 // The logic for the functions below is the same as the one in the `eigen-client-elcontracts` crate.
 // With the difference that we are using the V2 signer instead of the V1 signer.
 async fn register_operator_to_eigenlayer(
-    provider: ProviderSDK,
+    provider: SignerProvider,
     operator_address: Address,
     allocation_delay: u32,
     metadata_url: String,
@@ -164,7 +169,7 @@ async fn register_operator_to_eigenlayer(
 }
 
 async fn deposit_erc20_into_strategy(
-    provider: ProviderSDK,
+    provider: SignerProvider,
     amount: U256,
     strategy_address: Address,
     strategy_manager_address: Address,
@@ -194,7 +199,7 @@ async fn deposit_erc20_into_strategy(
 }
 
 async fn set_allocation_delay(
-    provider: ProviderSDK,
+    provider: SignerProvider,
     operator_address: Address,
     delay: u32,
     allocation_manager_address: Address,
@@ -213,7 +218,7 @@ async fn set_allocation_delay(
 }
 
 async fn modify_allocations(
-    provider: ProviderSDK,
+    provider: SignerProvider,
     operator_address: Address,
     allocations: Vec<IAllocationManagerTypes::AllocateParams>,
     allocation_manager_address: Address,
@@ -233,7 +238,7 @@ async fn modify_allocations(
 
 #[allow(clippy::too_many_arguments)]
 async fn register_for_operator_sets(
-    provider: ProviderSDK,
+    provider: SignerProvider,
     operator_address: Address,
     operator_set_ids: Vec<u32>,
     bls_key_pair: BlsKeyPair,
