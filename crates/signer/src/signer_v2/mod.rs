@@ -19,16 +19,78 @@
 //!
 //! **v1**: Returns different concrete types:
 //!
-//! ```rust,ignore
-//! let private_signer = Config::signer_from_config(config)?; // PrivateKeySigner
-//! let aws_signer = Config::aws_signer(key_id, chain_id, client).await?; // AwsSigner
+//! ```rust,no_run
+//! # use eigen_signer::signer::Config;
+//! # use alloy::network::TxSigner;
+//! # use alloy::consensus::TxLegacy;
+//! # use alloy::primitives::{bytes, hex_literal::hex, Address, U256};
+//! # const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
+//! # const ADDRESS: [u8; 20] = hex!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045");
+//! # const ENDPOINT: &str = "http://localhost:8545";
+//! # #[tokio::main]
+//! # async fn main() {
+//! #     let mut tx = TxLegacy {
+//! #         to: Address::from(ADDRESS).into(),
+//! #         value: U256::from(1_000_000_000),
+//! #         gas_limit: 2_000_000,
+//! #         nonce: 0,
+//! #         gas_price: 21_000_000_000,
+//! #         input: bytes!(),
+//! #         chain_id: Some(1),
+//! #     };
+//! #
+//! // Create a signer from the private key configuration
+//! // This returns a `PrivateKeySigner`
+//! let config = Config::PrivateKey(PRIVATE_KEY.into());
+//! let private_signer = Config::signer_from_config(config).unwrap();
+//! private_signer.sign_transaction(&mut tx).await.unwrap();
+//!
+//! // Create a web3 signer from the endpoint and address
+//! // This returns a `Web3Signer`
+//! let web3_signer = Config::web3_signer(ENDPOINT.to_string(), ADDRESS.into()).unwrap();
+//! web3_signer.sign_transaction(&mut tx).await.unwrap();
+//! # }
 //! ```
 //!
 //! **v2**: Returns a unified trait object:
 //!
-//! ```rust,ignore
-//! let signer = tx_signer_from_config(any_config).await?; // impl TxSigner<Signature>
-//! signer.sign_transaction(&mut tx).await?; // Same method for all types
+//! ```rust,no_run
+//! # use eigen_signer::signer_v2::{SignerConfig, tx_signer_from_config, PrivateKeyConfig, Web3Config};
+//! # use alloy::primitives::{address, bytes, hex_literal::hex, Address, U256};
+//! # use alloy::consensus::TxLegacy;
+//! # use alloy::network::TxSigner;
+//! # const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
+//! # const ADDRESS: [u8; 20] = hex!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045");
+//! # const ENDPOINT: &str = "http://localhost:8545";
+//! # #[tokio::main]
+//! # async fn main() {
+//! #    let mut tx = TxLegacy {
+//! #        to: Address::from(ADDRESS).into(),
+//! #        value: U256::from(1_000_000_000),
+//! #        gas_limit: 2_000_000,
+//! #        nonce: 0,
+//! #        gas_price: 21_000_000_000,
+//! #        input: bytes!(),
+//! #        chain_id: Some(1),
+//! #    };
+//! #
+//! // Create a signer from the private key configuration
+//! // This returns a `GenericSigner` that implements the `TxSigner` trait
+//! let private_config = SignerConfig::PrivateKey(PrivateKeyConfig {
+//!     private_key: PRIVATE_KEY.into(),
+//! });
+//! let signer = tx_signer_from_config(private_config).await.unwrap();
+//! signer.sign_transaction(&mut tx).await.unwrap();
+//!
+//! // Create a signer from the web3 configuration
+//! // This returns a `GenericSigner` that implements the `TxSigner` trait
+//! let web3_config = SignerConfig::Web3(Web3Config {
+//!     endpoint: ENDPOINT.to_string(),
+//!     address: ADDRESS.into(),
+//! });
+//! let signer = tx_signer_from_config(web3_config).await.unwrap();
+//! signer.sign_transaction(&mut tx).await.unwrap();
+//! # }
 //! ```
 //!
 //! ### Configuration System
@@ -36,18 +98,20 @@
 //! **v1**: Simple enum with tuple variants. No serialization support, so configurations must be
 //! created programmatically.
 //!
-//! ```rust,ignore
+//! ```rust
 //! pub enum Config {
-//!     PrivateKey(String),           // Raw string
-//!     Keystore(String, String),     // (path, password) tuple
+//!     PrivateKey(String),
+//!     Keystore(String, String),
 //! }
 //! ```
 //!
 //! **v2**: Structured, serializable configuration with named fields.
 //! This is useful for configuration files.
 //!
-//! ```rust,ignore
-//! #[derive(Serialize, Deserialize)]
+//! ```rust
+//! # use eigen_signer::signer_v2::{PrivateKeyConfig, KeystoreConfig, Web3Config, AwsConfig};
+//! # use serde::{Serialize, Deserialize};
+//! #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 //! pub enum SignerConfig {
 //!     PrivateKey(PrivateKeyConfig),
 //!     Keystore(KeystoreConfig),
@@ -136,38 +200,38 @@ pub enum SignerConfig {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PrivateKeyConfig {
     /// Hexadecimal private key
-    private_key: String,
+    pub private_key: String,
 }
 
 /// Configuration for a keystore signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct KeystoreConfig {
     /// Path to the keystore file
-    path: String,
+    pub path: String,
     /// Password to decrypt the keystore file
-    password: String,
+    pub password: String,
 }
 
 /// Configuration for a web3 signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Web3Config {
     /// Endpoint URL
-    endpoint: String,
+    pub endpoint: String,
     /// Address of the signer
-    address: Address,
+    pub address: Address,
 }
 
 /// Configuration for an AWS KMS signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AwsConfig {
     /// Key ID
-    key_id: String,
+    pub key_id: String,
     /// Chain ID
-    chain_id: Option<u64>,
+    pub chain_id: Option<u64>,
     /// Region
-    region: String,
+    pub region: String,
     /// Endpoint URL
-    endpoint_url: String,
+    pub endpoint_url: String,
 }
 
 /// Creates a transaction signer from a configuration
