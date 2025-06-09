@@ -9,7 +9,7 @@
 //! * [`signer`] - Legacy signer module.
 //! * [`signer_v2`] - New signer module that supports multiple signers. The difference between this
 //!   and the legacy signer is that this module is designed to be used in a more flexible way
-//!   and has a better interface to interact with.
+//!   and has a more intuitive interface.
 //! * [`web3_signer`] - Web3 signer module.
 
 pub mod signer;
