@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OperatorConfig {
     /// BLS key pair of the operator
-    pub bls_signer_config: BlsSignerConfig,
+    pub bls_signer: BlsSignerConfig,
     /// Address of the operator
     pub operator_address: Address,
     /// Name of the operator

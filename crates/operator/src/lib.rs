@@ -52,7 +52,7 @@
 //! 2. **Create the operator configuration**: Create a [`OperatorConfig`](crate::config::OperatorConfig) struct.
 //!    This structs implements `Serialize` and `Deserialize` so you can load from a file.
 //!    - Attributes:
-//!      - `bls_signer_config`: The BLS signer for. We only support [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage)
+//!      - `bls_signer`: The BLS signer for. We only support [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage)
 //!        keystores. You can create one with the following command:
 //!        ```bash
 //!         cargo run --package eigen-cli -- egnkey generate --key-type bls
@@ -195,7 +195,7 @@ impl Operator {
         config: config::OperatorConfig,
     ) -> Result<Self, OperatorError> {
         let config::OperatorConfig {
-            bls_signer_config,
+            bls_signer,
             operator_address,
             operator_name,
             ws_rpc_url,
@@ -213,7 +213,7 @@ impl Operator {
         )
         .await?;
 
-        let bls_key_pair = bls_key_pair_from_config(bls_signer_config)?;
+        let bls_key_pair = bls_key_pair_from_config(bls_signer)?;
 
         // Check if the operator is registered with EigenLayer
         if !avs_registry_reader
