@@ -76,19 +76,19 @@
 //! #
 //! // Create a signer from the private key configuration
 //! // This returns a `GenericSigner` that implements the `TxSigner` trait
-//! let private_config = SignerConfig::PrivateKey(PrivateKeyConfig {
+//! let private_config = PrivateKeyConfig {
 //!     private_key: PRIVATE_KEY.into(),
-//! });
-//! let signer = tx_signer_from_config(private_config).await.unwrap();
+//! };
+//! let signer = tx_signer_from_config(private_config.into()).await.unwrap();
 //! signer.sign_transaction(&mut tx).await.unwrap();
 //!
 //! // Create a signer from the web3 configuration
 //! // This returns a `GenericSigner` that implements the `TxSigner` trait
-//! let web3_config = SignerConfig::Web3(Web3Config {
+//! let web3_config = Web3Config {
 //!     endpoint: ENDPOINT.to_string(),
 //!     address: ADDRESS.into(),
-//! });
-//! let signer = tx_signer_from_config(web3_config).await.unwrap();
+//! };
+//! let signer = tx_signer_from_config(web3_config.into()).await.unwrap();
 //! signer.sign_transaction(&mut tx).await.unwrap();
 //! # }
 //! ```
@@ -196,6 +196,34 @@ pub enum SignerConfig {
     Aws(AwsConfig),
 }
 
+impl From<PrivateKeyConfig> for SignerConfig {
+    /// Convert a [`PrivateKeyConfig`] into a [`SignerConfig`]
+    fn from(config: PrivateKeyConfig) -> Self {
+        SignerConfig::PrivateKey(config)
+    }
+}
+
+impl From<Web3Config> for SignerConfig {
+    /// Convert a [`Web3Config`] into a [`SignerConfig`]
+    fn from(config: Web3Config) -> Self {
+        SignerConfig::Web3(config)
+    }
+}
+
+impl From<KeystoreConfig> for SignerConfig {
+    /// Convert a [`KeystoreConfig`] into a [`SignerConfig`]
+    fn from(config: KeystoreConfig) -> Self {
+        SignerConfig::Keystore(config)
+    }
+}
+
+impl From<AwsConfig> for SignerConfig {
+    /// Convert a [`AwsConfig`] into a [`SignerConfig`]
+    fn from(config: AwsConfig) -> Self {
+        SignerConfig::Aws(config)
+    }
+}
+
 /// Configuration for a private key signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PrivateKeyConfig {
@@ -286,7 +314,6 @@ mod test {
         tx_signer_from_config, AwsConfig, KeystoreConfig, PrivateKeyConfig, Web3Config,
     };
 
-    use super::SignerConfig;
     use alloy::consensus::{SignableTransaction, TxLegacy};
     use alloy::network::{TxSigner, TxSignerSync};
     use alloy::primitives::PrimitiveSignature;
@@ -326,9 +353,9 @@ mod test {
 
     #[tokio::test]
     async fn sign_transaction_with_private_key() {
-        let config = SignerConfig::PrivateKey(PrivateKeyConfig {
+        let config = PrivateKeyConfig {
             private_key: PRIVATE_KEY.into(),
-        });
+        };
         let mut tx = TxLegacy {
             to: Address::from(ADDRESS).into(),
             value: U256::from(1_000_000_000),
@@ -339,7 +366,7 @@ mod test {
             chain_id: Some(1),
         };
 
-        let signer = tx_signer_from_config(config).await.unwrap();
+        let signer = tx_signer_from_config(config.into()).await.unwrap();
 
         let signature: [u8; 65] = signer.sign_transaction(&mut tx).await.unwrap().into();
         let sig = PrimitiveSignature::try_from(&signature[..]).unwrap();
@@ -353,10 +380,10 @@ mod test {
 
     #[tokio::test]
     async fn sign_transaction_with_keystore() {
-        let config = SignerConfig::Keystore(KeystoreConfig {
+        let config = KeystoreConfig {
             path: KEYSTORE_PATH.into(),
             password: KEYSTORE_PASSWORD.into(),
-        });
+        };
         let mut tx = TxLegacy {
             to: Address::from(ADDRESS).into(),
             value: U256::from(1_000_000_000),
@@ -371,7 +398,7 @@ mod test {
         let expected_signer = PrivateKeySigner::from_slice(&private_key).unwrap();
         let expected_signature = expected_signer.sign_transaction_sync(&mut tx).unwrap();
 
-        let signer = tx_signer_from_config(config).await.unwrap();
+        let signer = tx_signer_from_config(config.into()).await.unwrap();
         let signature = signer.sign_transaction(&mut tx).await.unwrap();
 
         assert_eq!(signature, expected_signature);
@@ -415,14 +442,13 @@ mod test {
         // Create a signer for the given key
         let key_id = key_metadata.key_id();
         let chain_id = Some(1);
-        let signer = tx_signer_from_config(SignerConfig::Aws(AwsConfig {
+        let aws_config = AwsConfig {
             key_id: key_id.into(),
             chain_id,
             region: AWS_US_WEST_REGION.into(),
             endpoint_url: localstack_endpoint,
-        }))
-        .await
-        .unwrap();
+        };
+        let signer = tx_signer_from_config(aws_config.into()).await.unwrap();
 
         // Sign the transaction
         let signature = signer.sign_transaction(&mut test_data.input).await.unwrap();
@@ -442,9 +468,11 @@ mod test {
         let (_container, endpoint, _ws_endpoint) = start_anvil_container().await;
 
         let address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-        let signer = tx_signer_from_config(SignerConfig::Web3(Web3Config { endpoint, address }))
-            .await
-            .unwrap();
+        let web3_config = Web3Config {
+            endpoint: endpoint.clone(),
+            address,
+        };
+        let signer = tx_signer_from_config(web3_config.into()).await.unwrap();
         let mut tx = TxLegacy {
             to: address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720").into(),
             value: U256::from(1_000_000_000),
