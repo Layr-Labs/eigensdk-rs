@@ -60,30 +60,24 @@ pub enum OperatorError {
 #[derive(Debug, Error)]
 pub enum OperatorRegistrationError {
     /// Registration Config Error
-    #[error("Registration Config Error")]
-    RegistrationConfigError,
+    #[error("Registration Config Missing")]
+    RegistrationConfigMissing,
     /// Alloy pending Transaction error
     #[error("Alloy pending Transaction error {0}")]
     AlloyPendingTransactionError(#[from] PendingTransactionError),
     /// Alloy contract error
     #[error("Alloy contract error: {0}")]
     AlloyContractError(#[from] AlloyError),
-    /// Failed to register operator
-    #[error("Failed to register operator")]
-    RegistrationError,
-    /// Failed to deposit tokens into strategy
-    #[error("Failed to deposit tokens into strategy")]
-    DepositError,
     /// Signer Error
     #[error("Signer Error")]
     SignerError(#[from] SignerError),
-    /// BLS conversion error
-    #[error("BLS conversion error")]
-    BlsConversionError(#[from] BlsError),
     /// Failed to parse U256
     #[error("Failed to parse U256")]
     U256ParseError,
     /// Failed to parse http url
     #[error("Failed to parse http url")]
     HttpUrlParseError,
+    /// BLS conversion error
+    #[error("BLS conversion error")]
+    BlsConversionError(#[from] BlsError),
 }

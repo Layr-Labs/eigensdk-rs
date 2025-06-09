@@ -72,7 +72,7 @@ pub async fn register_operator(
     let wallet = EthereumWallet::from(signer);
     let url =
         Url::parse(&http_rpc_url).map_err(|_| OperatorRegistrationError::HttpUrlParseError)?;
-    let provider = ProviderBuilder::new().wallet(wallet.clone()).on_http(url);
+    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
 
     register_operator_to_eigenlayer(
         provider.clone(),

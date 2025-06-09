@@ -220,7 +220,7 @@ impl Operator {
                 error!(
                     "Operator {operator_name} not registered and no registration config was provided"
                 );
-                OperatorRegistrationError::RegistrationConfigError
+                OperatorRegistrationError::RegistrationConfigMissing
             })?;
 
             register_operator(registration_config, http_rpc_url, key_pair.clone()).await?;
