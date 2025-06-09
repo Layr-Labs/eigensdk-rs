@@ -203,9 +203,9 @@ pub enum SignerConfig {
     Keystore(KeystoreConfig),
     /// Web3 signer
     ///
-    /// Delegates transaction signing to an external signing service. The endpoint
-    /// URL must be a valid JSON-RPC endpoint.
-    ///
+    /// Delegates transaction signing to an external JSON-RPC signing service
+    /// compatible with the [Web3Signer](https://docs.web3signer.consensys.io/reference/api/json-rpc)
+    /// API. The service must support the `eth_signTransaction` method.
     Web3(Web3Config),
     /// AWS KMS signer
     ///
@@ -258,7 +258,7 @@ impl From<AwsConfig> for SignerConfig {
 /// Configuration for a private key signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PrivateKeyConfig {
-    /// Hexadecimal private key
+    /// Hex-encoded private key plaintext.
     pub private_key: String,
 }
 
