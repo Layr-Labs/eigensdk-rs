@@ -217,6 +217,7 @@ impl BlsKeyPair {
             }
             BlsSignerConfig::Keystore(BlsKeystoreConfig { path, password }) => {
                 let keypath = Path::new(&path);
+                // If the config password is empty, try with the environment variable
                 let password = password
                     .or_else(|| std::env::var(OPERATOR_BLS_KEY_PASSWORD).ok())
                     .ok_or(BlsError::MissingKeystorePassword)?;
