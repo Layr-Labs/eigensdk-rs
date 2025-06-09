@@ -354,8 +354,9 @@ pub async fn tx_signer_from_config(
                 std::env::var(OPERATOR_ECDSA_KEY_PASSWORD).unwrap_or_default()
             };
 
-            let signer = LocalSigner::decrypt_keystore(path, pass)?;
-            Ok(GenericSigner::PrivateKey(signer))
+            Ok(GenericSigner::PrivateKey(LocalSigner::decrypt_keystore(
+                path, pass,
+            )?))
         }
         SignerConfig::Web3(Web3Config { endpoint, address }) => {
             let url: Url = endpoint
