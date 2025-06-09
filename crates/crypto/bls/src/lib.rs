@@ -192,6 +192,34 @@ impl BlsKeyPair {
         })
     }
 
+    /// Create a [`BlsKeyPair`] from a [`BlsSignerConfig`]
+    /// The config accepts a private key or the path and password of a web3 secret
+    /// storage keystore.
+    ///
+    /// NOTE: To create a web3 secret storage keystore, you can use the `eigen-cli` crate.
+    ///
+    /// `cargo run --package eigen-cli -- egnkey generate --key-type bls`
+    ///
+    /// # Arguments
+    ///
+    /// * `config`: The BLS signer config
+    ///
+    /// # Returns
+    ///
+    /// * `Result<BlsKeyPair, BlsError>` - The [`BlsKeyPair`]
+    pub fn from_config(config: BlsSignerConfig) -> Result<BlsKeyPair, BlsError> {
+        match config {
+            BlsSignerConfig::PrivateKey(BlsPrivateKeyConfig { private_key }) => {
+                BlsKeyPair::new(private_key)
+            }
+            BlsSignerConfig::Keystore(BlsKeystoreConfig { path, password }) => {
+                let keypath = Path::new(&path);
+                let private_key = decrypt_key(keypath, password)?;
+                BlsKeyPair::from_bytes(&private_key)
+            }
+        }
+    }
+
     /// Get public key on G1
     pub fn public_key(&self) -> BlsG1Point {
         self.pub_key.clone()
@@ -473,33 +501,6 @@ pub struct BlsKeystoreConfig {
     pub password: String,
 }
 
-/// Create a [`BlsKeyPair`] from a [`BlsSignerConfig`]
-/// The config accepts a private key or the path and password of a web3 secret
-/// storage keystore.
-///
-/// NOTE: To create a web3 secret storage keystore, you can use the `eigen-cli` crate.
-///
-/// `cargo run --package eigen-cli -- egnkey generate --key-type bls`
-///
-/// # Arguments
-///
-/// * `config`: The BLS signer config
-///
-/// # Returns
-///
-/// * `Result<BlsKeyPair, BlsError>` - The [`BlsKeyPair`]
-pub fn bls_key_pair_from_config(config: BlsSignerConfig) -> Result<BlsKeyPair, BlsError> {
-    match config {
-        BlsSignerConfig::PrivateKey(BlsPrivateKeyConfig { private_key }) => {
-            BlsKeyPair::new(private_key)
-        }
-        BlsSignerConfig::Keystore(BlsKeystoreConfig { path, password }) => {
-            let keypath = Path::new(&path);
-            let private_key = decrypt_key(keypath, password)?;
-            BlsKeyPair::from_bytes(&private_key)
-        }
-    }
-}
 #[cfg(test)]
 mod tests {
     use super::*;

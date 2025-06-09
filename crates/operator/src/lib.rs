@@ -143,7 +143,7 @@ use alloy::{
 use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_crypto_bls::{bls_key_pair_from_config, BlsKeyPair};
+use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
@@ -213,7 +213,7 @@ impl Operator {
         )
         .await?;
 
-        let bls_key_pair = bls_key_pair_from_config(bls_signer)?;
+        let bls_key_pair = BlsKeyPair::from_config(bls_signer)?;
 
         // Check if the operator is registered with EigenLayer
         if !avs_registry_reader
