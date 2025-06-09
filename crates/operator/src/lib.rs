@@ -216,12 +216,14 @@ impl Operator {
             .await?
         {
             // Check if a registration config was provided
-            let registration_config = config.registration.ok_or({
+            let Some(registration_config) = config.registration else {
                 error!(
                     "Operator {operator_name} not registered and no registration config was provided"
                 );
-                OperatorRegistrationError::RegistrationConfigMissing
-            })?;
+                return Err(OperatorError::RegistrationError(
+                    OperatorRegistrationError::RegistrationConfigMissing,
+                ));
+            };
 
             register_operator(registration_config, http_rpc_url, key_pair.clone()).await?;
             info!("Operator {} registered successfully", operator_name);

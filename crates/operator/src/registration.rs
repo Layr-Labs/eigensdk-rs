@@ -3,7 +3,6 @@ use alloy::network::{EthereumWallet, TxSigner};
 use alloy::primitives::Address;
 use alloy::primitives::U256;
 use alloy::providers::ProviderBuilder;
-use alloy::signers::Signature;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
@@ -136,8 +135,6 @@ pub async fn register_operator(
 
     Ok(())
 }
-
-fn asd(signer: impl TxSigner<Signature>) {}
 
 // The logic for the functions below is the same as the one in the `eigen-client-elcontracts` crate.
 // With the difference that we are using the V2 signer instead of the V1 signer.
