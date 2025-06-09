@@ -452,9 +452,25 @@ where
 #[serde(untagged)]
 pub enum BlsSignerConfig {
     /// Private key
-    PrivateKey { private_key: String },
+    PrivateKey(BlsPrivateKeyConfig),
     /// Web3 Secret Storage Keystore
-    Keystore { path: String, password: String },
+    Keystore(BlsKeystoreConfig),
+}
+
+/// Configuration for a BLS private key signer
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct BlsPrivateKeyConfig {
+    /// BLS private key
+    pub private_key: String,
+}
+
+/// Configuration for a BLS keystore signer
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct BlsKeystoreConfig {
+    /// Path to the keystore file
+    pub path: String,
+    /// Password to decrypt the keystore file
+    pub password: String,
 }
 
 /// Create a [`BlsKeyPair`] from a [`BlsSignerConfig`]
@@ -474,8 +490,10 @@ pub enum BlsSignerConfig {
 /// * `Result<BlsKeyPair, BlsError>` - The [`BlsKeyPair`]
 pub fn bls_key_pair_from_config(config: BlsSignerConfig) -> Result<BlsKeyPair, BlsError> {
     match config {
-        BlsSignerConfig::PrivateKey { private_key } => BlsKeyPair::new(private_key),
-        BlsSignerConfig::Keystore { path, password } => {
+        BlsSignerConfig::PrivateKey(BlsPrivateKeyConfig { private_key }) => {
+            BlsKeyPair::new(private_key)
+        }
+        BlsSignerConfig::Keystore(BlsKeystoreConfig { path, password }) => {
             let keypath = Path::new(&path);
             let private_key = decrypt_key(keypath, password)?;
             BlsKeyPair::from_bytes(&private_key)
