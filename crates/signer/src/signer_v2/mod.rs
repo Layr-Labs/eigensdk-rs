@@ -186,13 +186,37 @@ impl TxSigner<Signature> for GenericSigner {
 #[serde(untagged)]
 #[non_exhaustive]
 pub enum SignerConfig {
-    /// Hexadecimal private key
+    /// ECDSA hexadecimal private key.
+    ///
+    /// Uses a raw hexadecimal private key for transaction signing.
     PrivateKey(PrivateKeyConfig),
-    /// Keystore
+    /// Encrypted keystore file
+    ///
+    /// Uses encrypted keystore files following the [Web3 Secret Storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage) standard.
+    /// The private key is encrypted with a password and stored in a JSON file.
+    ///
+    /// To create a keystore, you can use the `eigen-cli` tool.
+    ///
+    /// ```bash
+    /// cargo run --package eigen-cli -- egnkey generate --key-type ecdsa
+    /// ```
     Keystore(KeystoreConfig),
-    /// Web3
+    /// Web3 signer
+    ///
+    /// Delegates transaction signing to an external signing service. The endpoint
+    /// URL must be a valid JSON-RPC endpoint.
     Web3(Web3Config),
-    /// AWS KMS
+    /// AWS KMS signer
+    ///
+    /// Uses an AWS KMS asymmetric key (curve `secp256k1`) to sign transactions.
+    /// The private key material never leaves AWS's Hardware Security Module.
+    ///
+    /// The AWS credentials will be loaded from the environment variables.
+    ///
+    /// ```bash
+    /// export AWS_ACCESS_KEY_ID=your-access-key-id
+    /// export AWS_SECRET_ACCESS_KEY=your-secret-access-key
+    /// ```
     Aws(AwsConfig),
 }
 
@@ -232,6 +256,15 @@ pub struct PrivateKeyConfig {
 }
 
 /// Configuration for a keystore signer
+///
+/// This must be a file in the [Web3 Secret Storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage)
+/// format.
+///
+/// To create a keystore, you can use the `eigen-cli` tool.
+///
+/// ```bash
+/// cargo run --package eigen-cli -- egnkey generate --key-type ecdsa
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct KeystoreConfig {
     /// Path to the keystore file
@@ -250,6 +283,13 @@ pub struct Web3Config {
 }
 
 /// Configuration for an AWS KMS signer
+///
+/// The AWS credentials will be loaded from the environment variables.
+///
+/// ```bash
+/// export AWS_ACCESS_KEY_ID=your-access-key-id
+/// export AWS_SECRET_ACCESS_KEY=your-secret-access-key
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AwsConfig {
     /// Key ID
