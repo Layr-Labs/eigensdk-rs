@@ -281,6 +281,10 @@ pub struct KeystoreConfig {
 }
 
 /// Configuration for a web3 signer
+///
+/// Delegates transaction signing to an external JSON-RPC signing service
+/// compatible with the [Web3Signer](https://docs.web3signer.consensys.io/reference/api/json-rpc)
+/// API. The service must support the `eth_signTransaction` method.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Web3Config {
     /// Endpoint URL
