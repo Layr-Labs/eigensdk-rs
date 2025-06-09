@@ -485,6 +485,20 @@ pub enum BlsSignerConfig {
     Keystore(BlsKeystoreConfig),
 }
 
+impl From<BlsPrivateKeyConfig> for BlsSignerConfig {
+    /// Convert a [`BlsPrivateKeyConfig`] into a [`BlsSignerConfig`]
+    fn from(config: BlsPrivateKeyConfig) -> Self {
+        BlsSignerConfig::PrivateKey(config)
+    }
+}
+
+impl From<BlsKeystoreConfig> for BlsSignerConfig {
+    /// Convert a [`BlsKeystoreConfig`] into a [`BlsSignerConfig`]
+    fn from(config: BlsKeystoreConfig) -> Self {
+        BlsSignerConfig::Keystore(config)
+    }
+}
+
 /// Configuration for a BLS private key signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct BlsPrivateKeyConfig {
@@ -492,7 +506,7 @@ pub struct BlsPrivateKeyConfig {
     pub private_key: String,
 }
 
-/// Configuration for a BLS keystore signer
+/// Configuration for a BLS keystore signer using [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage).
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct BlsKeystoreConfig {
     /// Path to the keystore file
