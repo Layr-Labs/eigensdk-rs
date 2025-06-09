@@ -14,7 +14,4 @@ pub enum SignerError {
     /// Invalid endpoint URL
     #[error("invalid endpoint URL")]
     InvalidEndpointUrl,
-    /// Environment variable not found
-    #[error("environment variable not found: {0}")]
-    EnvVariableNotFound(String),
 }

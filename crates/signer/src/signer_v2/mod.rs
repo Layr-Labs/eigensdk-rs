@@ -348,14 +348,11 @@ pub async fn tx_signer_from_config(
         ),
         SignerConfig::Keystore(KeystoreConfig { path, password }) => {
             // If the config password is empty, try with the env var, and if it doesn't exist, leave "".
-            let pass = if let Some(pass) = password {
-                pass
-            } else {
-                std::env::var(OPERATOR_ECDSA_KEY_PASSWORD).unwrap_or_default()
-            };
+            let password =
+                password.unwrap_or(std::env::var(OPERATOR_ECDSA_KEY_PASSWORD).unwrap_or_default());
 
             Ok(GenericSigner::PrivateKey(LocalSigner::decrypt_keystore(
-                path, pass,
+                path, password,
             )?))
         }
         SignerConfig::Web3(Web3Config { endpoint, address }) => {
