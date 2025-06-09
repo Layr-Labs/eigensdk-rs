@@ -199,7 +199,6 @@ pub enum SignerConfig {
     /// The private key is encrypted with a password and stored in a JSON file.
     ///
     /// If no password is provided, the signer will try to use the [`OPERATOR_ECDSA_KEY_PASSWORD`] environment variable.
-    /// If the environment variable is not set, the signer will use an empty password.
     ///
     /// To create a keystore, you can use the `eigen-cli` tool.
     ///
@@ -284,7 +283,6 @@ pub struct KeystoreConfig {
     pub path: String,
     /// Password to decrypt the keystore file
     /// If no password is provided, the signer will try to use the [`OPERATOR_ECDSA_KEY_PASSWORD`] environment variable.
-    /// If the environment variable is not set, the signer will use an empty password.
     pub password: Option<String>,
 }
 
@@ -347,9 +345,10 @@ pub async fn tx_signer_from_config(
             GenericSigner::PrivateKey(PrivateKeySigner::from_str(&private_key)?),
         ),
         SignerConfig::Keystore(KeystoreConfig { path, password }) => {
-            // If the config password is empty, try with the env var, and if it doesn't exist, leave "".
-            let password =
-                password.unwrap_or(std::env::var(OPERATOR_ECDSA_KEY_PASSWORD).unwrap_or_default());
+            // If the config password is empty, try with the environment variable
+            let password = password
+                .or_else(|| std::env::var(OPERATOR_ECDSA_KEY_PASSWORD).ok())
+                .ok_or(SignerError::MissingKeystorePassword)?;
 
             Ok(GenericSigner::PrivateKey(LocalSigner::decrypt_keystore(
                 path, password,
@@ -513,8 +512,7 @@ mod test {
             password: None,
         };
 
-        // Will try to decrypt the keystore with the env var, but it's not set
-        // So it would use an empty password
+        // Will try to decrypt the keystore with the env var, but it's not set, so it will return an error
         let signer = tx_signer_from_config(config.into()).await;
         assert!(signer.is_err());
     }
