@@ -148,6 +148,9 @@ use crate::{signer_v2::error::SignerError, web3_signer::Web3Signer};
 /// Error types for the signer v2 module
 pub mod error;
 
+/// Environment variable to use as password for the keystore signer
+const OPERATOR_ECDSA_KEY_PASSWORD: &str = "OPERATOR_ECDSA_KEY_PASSWORD";
+
 /// Enum that contains all possible signer types
 #[derive(Debug)]
 enum GenericSigner {
@@ -194,6 +197,9 @@ pub enum SignerConfig {
     ///
     /// Uses encrypted keystore files following the [Web3 Secret Storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage) standard.
     /// The private key is encrypted with a password and stored in a JSON file.
+    ///
+    /// If no password is provided, the signer will try to use the [`OPERATOR_ECDSA_KEY_PASSWORD`] environment variable.
+    /// If the environment variable is not set, the signer will use an empty password.
     ///
     /// To create a keystore, you can use the `eigen-cli` tool.
     ///
@@ -277,7 +283,8 @@ pub struct KeystoreConfig {
     /// Path to the keystore file
     pub path: String,
     /// Password to decrypt the keystore file
-    /// If no password is provided, the signer will try to use the `OPERATOR_ECDSA_KEY_PASSWORD` environment variable.
+    /// If no password is provided, the signer will try to use the [`OPERATOR_ECDSA_KEY_PASSWORD`] environment variable.
+    /// If the environment variable is not set, the signer will use an empty password.
     pub password: Option<String>,
 }
 
@@ -340,13 +347,11 @@ pub async fn tx_signer_from_config(
             GenericSigner::PrivateKey(PrivateKeySigner::from_str(&private_key)?),
         ),
         SignerConfig::Keystore(KeystoreConfig { path, password }) => {
-            const ENV_VAR: &str = "OPERATOR_ECDSA_KEY_PASSWORD";
-
-            // If `password` is empty, try with the env var, and if it doesn't exist, leave "".
+            // If the config password is empty, try with the env var, and if it doesn't exist, leave "".
             let pass = if let Some(pass) = password {
                 pass
             } else {
-                std::env::var(ENV_VAR).unwrap_or_default()
+                std::env::var(OPERATOR_ECDSA_KEY_PASSWORD).unwrap_or_default()
             };
 
             let signer = LocalSigner::decrypt_keystore(path, pass)?;
