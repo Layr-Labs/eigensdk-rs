@@ -217,6 +217,9 @@ impl BlsKeyPair {
             }
             BlsSignerConfig::Keystore(BlsKeystoreConfig { path, password }) => {
                 let keypath = Path::new(&path);
+                let password = password
+                    .or_else(|| std::env::var(OPERATOR_BLS_KEY_PASSWORD).ok())
+                    .ok_or(BlsError::MissingKeystorePassword)?;
                 let private_key = decrypt_key(keypath, password)?;
                 BlsKeyPair::from_bytes(&private_key)
             }
@@ -515,7 +518,8 @@ pub struct BlsKeystoreConfig {
     /// Path to the keystore file
     pub path: String,
     /// Password to decrypt the keystore file
-    pub password: String,
+    /// If no password is provided, the signer will try to use the [`OPERATOR_BLS_KEY_PASSWORD`] environment variable.
+    pub password: Option<String>,
 }
 
 #[cfg(test)]
