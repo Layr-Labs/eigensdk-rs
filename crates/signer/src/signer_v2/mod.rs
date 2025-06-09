@@ -186,7 +186,7 @@ impl TxSigner<Signature> for GenericSigner {
 #[serde(untagged)]
 #[non_exhaustive]
 pub enum SignerConfig {
-    /// ECDSA hexadecimal private key.
+    /// Hex-encoded private key plaintext.
     ///
     /// Uses a raw hexadecimal private key for transaction signing.
     PrivateKey(PrivateKeyConfig),
