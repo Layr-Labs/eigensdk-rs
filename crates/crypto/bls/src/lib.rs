@@ -29,6 +29,9 @@ use serde::de::{self, Visitor};
 use serde::ser;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+/// Environment variable to use as password for the BLS signer keystore
+const OPERATOR_BLS_KEY_PASSWORD: &str = "OPERATOR_BLS_KEY_PASSWORD";
+
 pub type PrivateKey = Fr;
 pub type PublicKey = G1Affine;
 pub type BlsSignature = G1Affine;
