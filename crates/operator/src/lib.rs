@@ -127,6 +127,7 @@
 //! implementation for an example of how to implement a custom Response Calculator.
 //!
 
+use crate::error::OperatorRegistrationError;
 use alloy::{
     dyn_abi::SolType,
     primitives::keccak256,
@@ -215,15 +216,14 @@ impl Operator {
             .await?
         {
             // Check if a registration config was provided
-            let Some(registration_config) = config.registration else {
+            let registration_config = config.registration.ok_or({
                 error!(
-                    "Operator {} not registered and no registration config was provided",
-                    operator_name
+                    "Operator {operator_name} not registered and no registration config was provided"
                 );
-                return Err(OperatorError::RegistrationError);
-            };
+                OperatorRegistrationError::RegistrationConfigError
+            })?;
 
-            register_operator(registration_config, logger, http_rpc_url, key_pair.clone()).await?;
+            register_operator(registration_config, http_rpc_url, key_pair.clone()).await?;
             info!("Operator {} registered successfully", operator_name);
         }
 
