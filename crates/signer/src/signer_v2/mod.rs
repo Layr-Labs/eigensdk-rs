@@ -1,4 +1,68 @@
-//! Signer v2 module
+//! Signer v2
+//!
+//! This module provides a simple and unified way to produce cryptographic signatures.
+//!
+//! ## Overview
+//!
+//! We provide a set of signers that can be used to sign transactions since they implement the
+//! [`TxSigner`] trait.
+//!
+//! * [`PrivateKeySigner`] - Signer that uses a private key.
+//! * [`Web3Signer`] - Signer that uses a Web3 endpoint.
+//! * [`AwsSigner`] - Signer that uses AWS KMS.
+//!
+//! To create a signer, you can use the [`tx_signer_from_config`] function.
+//!
+//! ## Differences from Signer v1
+//!
+//! ### Unified Interface
+//!
+//! **v1**: Returns different concrete types:
+//!
+//! ```rust,ignore
+//! let private_signer = Config::signer_from_config(config)?; // PrivateKeySigner
+//! let aws_signer = Config::aws_signer(key_id, chain_id, client).await?; // AwsSigner
+//! ```
+//!
+//! **v2**: Returns a unified trait object:
+//!
+//! ```rust,ignore
+//! let signer = tx_signer_from_config(any_config).await?; // impl TxSigner<Signature>
+//! signer.sign_transaction(&mut tx).await?; // Same method for all types
+//! ```
+//!
+//! ### Configuration System
+//!
+//! **v1**: Simple enum with tuple variants. No serialization support, so configurations must be
+//! created programmatically.
+//!
+//! ```rust,ignore
+//! pub enum Config {
+//!     PrivateKey(String),           // Raw string
+//!     Keystore(String, String),     // (path, password) tuple
+//! }
+//! ```
+//!
+//! **v2**: Structured, serializable configuration with named fields.
+//! This is useful for configuration files.
+//!
+//! ```rust,ignore
+//! #[derive(Serialize, Deserialize)]
+//! pub enum SignerConfig {
+//!     PrivateKey(PrivateKeyConfig),
+//!     Keystore(KeystoreConfig),
+//!     Web3(Web3Config),
+//!     Aws(AwsConfig),
+//! }
+//! ```
+//!
+//! ## Examples
+//!
+//! Here are some examples of how to create a signer from a configuration file:
+//!
+//! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/examples/incredible-squaring/src/config/squaring-operator.toml)
+//! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/examples/incredible-dot-product/src/config/dot-operator.toml)
+//! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/examples/awesome-vault-service/src/config/awesome-operator.toml)
 
 use alloy::{
     network::TxSigner,
