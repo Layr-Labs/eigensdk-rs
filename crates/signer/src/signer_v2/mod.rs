@@ -476,6 +476,34 @@ mod test {
     }
 
     #[tokio::test]
+    async fn sign_transaction_with_keystore_and_env_password() {
+        let config = KeystoreConfig {
+            path: KEYSTORE_PATH.into(),
+            password: None,
+        };
+        env::set_var("OPERATOR_ECDSA_KEY_PASSWORD", KEYSTORE_PASSWORD);
+
+        let mut tx = TxLegacy {
+            to: Address::from(ADDRESS).into(),
+            value: U256::from(1_000_000_000),
+            gas_limit: 2_000_000,
+            nonce: 0,
+            gas_price: 21_000_000_000,
+            input: bytes!(),
+            chain_id: Some(1),
+        };
+
+        let private_key = hex!("7a28b5ba57c53603b0b07b56bba752f7784bf506fa95edc395f5cf6c7514fe9d");
+        let expected_signer = PrivateKeySigner::from_slice(&private_key).unwrap();
+        let expected_signature = expected_signer.sign_transaction_sync(&mut tx).unwrap();
+
+        let signer = tx_signer_from_config(config.into()).await.unwrap();
+        let signature = signer.sign_transaction(&mut tx).await.unwrap();
+
+        assert_eq!(signature, expected_signature);
+    }
+
+    #[tokio::test]
     async fn test_sign_transaction_with_kms_signer() {
         // Start the container running Localstack
         let _container = start_localstack_container().await;
