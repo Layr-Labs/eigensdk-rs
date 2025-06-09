@@ -3,6 +3,7 @@ use alloy::network::{EthereumWallet, TxSigner};
 use alloy::primitives::Address;
 use alloy::primitives::U256;
 use alloy::providers::ProviderBuilder;
+use eigen_common::SdkSigner;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
@@ -22,28 +23,6 @@ use url::Url;
 
 use crate::error::OperatorRegistrationError;
 use crate::register_config::OperatorRegistrationConfig;
-
-/// Provider that uses a signer to sign transactions.
-/// This alias was created since we cannot clone the signer.
-type SignerProvider = alloy::providers::fillers::FillProvider<
-    alloy::providers::fillers::JoinFill<
-        alloy::providers::fillers::JoinFill<
-            alloy::providers::Identity,
-            alloy::providers::fillers::JoinFill<
-                alloy::providers::fillers::GasFiller,
-                alloy::providers::fillers::JoinFill<
-                    alloy::providers::fillers::BlobGasFiller,
-                    alloy::providers::fillers::JoinFill<
-                        alloy::providers::fillers::NonceFiller,
-                        alloy::providers::fillers::ChainIdFiller,
-                    >,
-                >,
-            >,
-        >,
-        alloy::providers::fillers::WalletFiller<EthereumWallet>,
-    >,
-    alloy::providers::RootProvider,
->;
 
 /// Registers an operator with EigenLayer. Use this function for testing purposes.
 ///
@@ -138,8 +117,11 @@ pub async fn register_operator(
 
 // The logic for the functions below is the same as the one in the `eigen-client-elcontracts` crate.
 // With the difference that we are using the V2 signer instead of the V1 signer.
+// There is an incompatibility with `eigen-client-elcontracts`, therefore, we need
+// to perform operator registration using the bindings.
+
 async fn register_operator_to_eigenlayer(
-    provider: SignerProvider,
+    provider: SdkSigner,
     operator_address: Address,
     allocation_delay: u32,
     metadata_url: String,
@@ -166,7 +148,7 @@ async fn register_operator_to_eigenlayer(
 }
 
 async fn deposit_erc20_into_strategy(
-    provider: SignerProvider,
+    provider: SdkSigner,
     amount: U256,
     strategy_address: Address,
     strategy_manager_address: Address,
@@ -196,7 +178,7 @@ async fn deposit_erc20_into_strategy(
 }
 
 async fn set_allocation_delay(
-    provider: SignerProvider,
+    provider: SdkSigner,
     operator_address: Address,
     delay: u32,
     allocation_manager_address: Address,
@@ -215,7 +197,7 @@ async fn set_allocation_delay(
 }
 
 async fn modify_allocations(
-    provider: SignerProvider,
+    provider: SdkSigner,
     operator_address: Address,
     allocations: Vec<IAllocationManagerTypes::AllocateParams>,
     allocation_manager_address: Address,
@@ -235,7 +217,7 @@ async fn modify_allocations(
 
 #[allow(clippy::too_many_arguments)]
 async fn register_for_operator_sets(
-    provider: SignerProvider,
+    provider: SdkSigner,
     operator_address: Address,
     operator_set_ids: Vec<u32>,
     bls_key_pair: BlsKeyPair,
