@@ -1,6 +1,5 @@
 use alloy::{contract::Error as AlloyError, providers::PendingTransactionError};
 use eigen_client_avsregistry::error::AvsRegistryError;
-// use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
 use eigen_signer::error::SignerError;
 use eigen_task_manager::{event_decoder::AbiDecodeError, TaskManagerError};
