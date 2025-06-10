@@ -26,4 +26,4 @@ avs_address = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154"
 strategies_addresses = ["0x2b961e3959b79326a8e7f64ef0d2d825707669b5"]
 
 [registration.signer]
-operator_pvt_key = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+private_key = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
