@@ -282,7 +282,8 @@ pub struct KeystoreConfig {
     /// Path to the keystore file
     pub path: String,
     /// Password to decrypt the keystore file
-    /// If no password is provided, the signer will try to use the [`OPERATOR_ECDSA_KEY_PASSWORD`] environment variable.
+    /// If no password is provided, the signer will try to use the [`OPERATOR_ECDSA_KEY_PASSWORD`]
+    /// environment variable.
     pub password: Option<String>,
 }
 

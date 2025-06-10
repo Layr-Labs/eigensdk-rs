@@ -13,13 +13,14 @@ use std::{collections::HashMap, fmt::Debug};
 use tokio::sync::Mutex;
 use tracing::info;
 
-use super::{TaskProcessor, TaskProcessorError};
+use crate::processor::AggregatorProcessorError;
+use crate::AggregatorProcessor;
 
 type TaskResponsesMap<O> = HashMap<u32, HashMap<TaskResponseDigest, TaskResponse<O>>>;
 
-/// Indexing task processor
+/// Indexing Aggregator processor
 #[derive(Debug, Clone)]
-pub struct IndexingTaskProcessor<TM>
+pub struct IndexingAggregatorProcessor<TM>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
@@ -35,7 +36,7 @@ where
     task_window_duration: Duration,
 }
 
-impl<TM> IndexingTaskProcessor<TM>
+impl<TM> IndexingAggregatorProcessor<TM>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
@@ -59,7 +60,7 @@ where
     }
 }
 
-impl<TM> TaskProcessor for IndexingTaskProcessor<TM>
+impl<TM> AggregatorProcessor for IndexingAggregatorProcessor<TM>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
 {
@@ -73,7 +74,7 @@ where
         &mut self,
         task_index: u32,
         task: Task<TM::Input>,
-    ) -> Result<TaskMetadata, TaskProcessorError> {
+    ) -> Result<TaskMetadata, AggregatorProcessorError> {
         self.tasks.lock().await.insert(task_index, task.clone());
 
         let quorum_numbers: Vec<u8> = task.quorum_numbers.into();
@@ -93,10 +94,10 @@ where
     async fn process_task_response(
         &mut self,
         response: TaskResponse<TM::Output>,
-    ) -> Result<B256, TaskProcessorError> {
+    ) -> Result<B256, AggregatorProcessorError> {
         if !self.tasks.lock().await.contains_key(&response.task_index) {
             info!("Task not found for task index: {}", response.task_index);
-            return Err(TaskProcessorError::TaskNotFound);
+            return Err(AggregatorProcessorError::TaskNotFound);
         }
 
         let digest = alloy::primitives::keccak256(response.encode());
@@ -117,7 +118,7 @@ where
         task_index: u32,
         task_response_digest: B256,
         non_signer_stakes_and_signature: NonSignerStakesAndSignature,
-    ) -> Result<(), TaskProcessorError> {
+    ) -> Result<(), AggregatorProcessorError> {
         info!(
             "Aggregated response received for task {}: {:?}",
             task_index, task_response_digest
@@ -127,14 +128,14 @@ where
             let tasks_lock = self.tasks.lock().await;
             let task = tasks_lock
                 .get(&task_index)
-                .ok_or(TaskProcessorError::TaskNotFound)?
+                .ok_or(AggregatorProcessorError::TaskNotFound)?
                 .clone();
 
             let responses_lock = self.task_responses.lock().await;
             let task_response = responses_lock
                 .get(&task_index)
                 .and_then(|map| map.get(&task_response_digest))
-                .ok_or(TaskProcessorError::TaskResponseNotFound)?
+                .ok_or(AggregatorProcessorError::TaskResponseNotFound)?
                 .clone();
 
             (task, task_response)
@@ -143,7 +144,7 @@ where
         self.task_manager
             .respond_to_task(task, task_response, non_signer_stakes_and_signature)
             .await
-            .map_err(TaskProcessorError::TaskManagerError)
+            .map_err(AggregatorProcessorError::TaskManagerError)
             .inspect(|_| info!("Aggregated response sent to contract"))?;
 
         self.tasks.lock().await.remove(&task_index);
