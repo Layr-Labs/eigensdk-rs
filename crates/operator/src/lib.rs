@@ -140,7 +140,6 @@ use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
 use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
-use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorId};
@@ -185,14 +184,13 @@ impl<RP> Operator<RP> {
     ///
     /// # Arguments
     ///
-    /// * `logger` - The logger.
     /// * `config` - The operator configuration.
+    /// * `response_calculator` - The response calculator.
     ///
     /// # Returns
     ///
     /// * `Result<Self, OperatorError>` - The operator.
     pub async fn new<Input, Output>(
-        logger: SharedLogger,
         config: config::OperatorConfig,
         response_calculator: RP,
     ) -> Result<Self, OperatorError>
