@@ -37,6 +37,6 @@ async fn main() {
     let logic = failing_response_calculator(vault_service_response_calculator, B256::default, 50);
 
     // 6. Start the operator
-    let operator = Operator::new(logger, config).await.unwrap();
-    operator.run::<ISTaskManager>(logic).await.unwrap();
+    let operator = Operator::new(logger, config, logic).await.unwrap();
+    operator.run::<ISTaskManager>().await.unwrap();
 }
