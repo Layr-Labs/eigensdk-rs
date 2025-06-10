@@ -149,7 +149,7 @@ use crate::{signer_v2::error::SignerError, web3_signer::Web3Signer};
 pub mod error;
 
 /// Environment variable to use as password for the keystore signer
-const OPERATOR_ECDSA_KEY_PASSWORD: &str = "OPERATOR_ECDSA_KEY_PASSWORD";
+const EIGEN_ECDSA_KEYSTORE_PASSWORD: &str = "EIGEN_ECDSA_KEYSTORE_PASSWORD";
 
 /// Enum that contains all possible signer types
 #[derive(Debug)]
@@ -198,7 +198,7 @@ pub enum SignerConfig {
     /// Uses encrypted keystore files following the [Web3 Secret Storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage) standard.
     /// The private key is encrypted with a password and stored in a JSON file.
     ///
-    /// If no password is provided, the signer will try to use the [`OPERATOR_ECDSA_KEY_PASSWORD`] environment variable.
+    /// If no password is provided, the signer will try to use the [`EIGEN_ECDSA_KEYSTORE_PASSWORD`] environment variable.
     ///
     /// To create a keystore, you can use the `eigen-cli` tool.
     ///
@@ -282,7 +282,7 @@ pub struct KeystoreConfig {
     /// Path to the keystore file
     pub path: String,
     /// Password to decrypt the keystore file
-    /// If no password is provided, the signer will try to use the [`OPERATOR_ECDSA_KEY_PASSWORD`]
+    /// If no password is provided, the signer will try to use the [`EIGEN_ECDSA_KEYSTORE_PASSWORD`]
     /// environment variable.
     pub password: Option<String>,
 }
@@ -348,7 +348,7 @@ pub async fn tx_signer_from_config(
         SignerConfig::Keystore(KeystoreConfig { path, password }) => {
             // If the config password is empty, try with the environment variable
             let password = password
-                .or_else(|| std::env::var(OPERATOR_ECDSA_KEY_PASSWORD).ok())
+                .or_else(|| std::env::var(EIGEN_ECDSA_KEYSTORE_PASSWORD).ok())
                 .ok_or(SignerError::MissingKeystorePassword)?;
 
             Ok(GenericSigner::PrivateKey(LocalSigner::decrypt_keystore(
@@ -484,7 +484,7 @@ mod test {
             path: KEYSTORE_PATH.into(),
             password: None,
         };
-        env::set_var("OPERATOR_ECDSA_KEY_PASSWORD", KEYSTORE_PASSWORD);
+        env::set_var("EIGEN_ECDSA_KEYSTORE_PASSWORD", KEYSTORE_PASSWORD);
 
         let mut tx = TxLegacy {
             to: Address::from(ADDRESS).into(),
