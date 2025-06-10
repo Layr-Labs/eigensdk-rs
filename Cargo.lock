@@ -3128,6 +3128,7 @@ dependencies = [
  "testcontainers",
  "thiserror 1.0.69",
  "tokio",
+ "toml",
  "url",
 ]
 

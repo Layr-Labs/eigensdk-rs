@@ -8,8 +8,9 @@ description = "aws,keystore,web3,private_key signers"
 license-file.workspace = true
 
 [dependencies]
-alloy.workspace =true 
+alloy = { workspace = true, features = ["signer-keystore"] }
 async-trait.workspace = true
+aws-config = { workspace = true, features = ["behavior-version-latest"] }
 aws-sdk-kms.workspace = true
 eth-keystore.workspace = true
 serde.workspace = true
@@ -17,7 +18,7 @@ thiserror.workspace = true
 url.workspace = true
 
 [dev-dependencies]
-aws-config.workspace = true
 eigen-testing-utils.workspace = true
 testcontainers.workspace = true
 tokio.workspace = true
+toml = "0.8"
