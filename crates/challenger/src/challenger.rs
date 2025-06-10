@@ -8,8 +8,8 @@ use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 
 use crate::error::ChallengerError;
 
-/// Challenger Task Processor trait that defines the logic for handling new tasks and task responses
-pub trait ChallengerTaskProcessor {
+/// Challenger Processor trait that defines the logic for handling new tasks and task responses
+pub trait ChallengerProcessor {
     /// Input type of the task
     type Input: Clone + SolValue + Send + Sync + 'static;
 

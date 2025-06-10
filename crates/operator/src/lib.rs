@@ -96,11 +96,12 @@
 //!         let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
 //!     ```
 //!
-//! 6. **Run the operator**: Initialize the [`Operator`] with the configuration and start it with the processing logic
+//! 6. **Run the operator**: Initialize the [`Operator`] with the configuration and the response calculator.
+//!    Then, call the [`run`](Operator::run) method to start the operator.
 //!
 //!     ```ignore
-//!         let operator = Operator::new(logger, config).await.unwrap();
-//!         operator.start::<ISTaskManager>(logic).await.unwrap();
+//!         let operator = Operator::new(logger, config, logic).await.unwrap();
+//!         operator.run::<ISTaskManager>().await.unwrap();
 //!     ```
 //!
 //! ## Examples
@@ -137,12 +138,13 @@ use alloy::{
 };
 use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
-use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
-use eigen_types::operator::OperatorId;
+use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorId};
+use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
 use error::OperatorError;
 use futures_util::StreamExt;
 use registration::register_operator;
@@ -165,17 +167,21 @@ pub mod registration;
 ///
 /// To more in-depth details about the operator, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L110).
 #[derive(Debug)]
-pub struct Operator {
+pub struct Operator<RP> {
     operator_id: OperatorId,
     operator_name: String,
     client_aggregator: ClientAggregator,
     ws_rpc_url: String,
     key_pair: BlsKeyPair,
+    response_calculator: RP,
 }
 
-impl Operator {
-    /// Initialize a new operator.
-    /// This method does not register the operator.
+impl<RP> Operator<RP> {
+    /// Creates a new operator, ensuring on‐chain registration.
+    ///
+    /// It also performs some sanity checks, returning an error in these cases:
+    /// - The operator is not registered in EigenLayer and registration was not enabled or failed.
+    /// - The operator ID derived from the BLS key pair is not the same as the operator ID registered in the contracts for the given operator address.
     ///
     /// # Arguments
     ///
@@ -185,10 +191,14 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<Self, OperatorError>` - The operator.
-    pub async fn new(
+    pub async fn new<Input, Output>(
         logger: SharedLogger,
         config: config::OperatorConfig,
-    ) -> Result<Self, OperatorError> {
+        response_calculator: RP,
+    ) -> Result<Self, OperatorError>
+    where
+        RP: ResponseCalculator<Input, Output>,
+    {
         let config::OperatorConfig {
             bls_private_key,
             operator_address,
@@ -196,26 +206,27 @@ impl Operator {
             ws_rpc_url,
             http_rpc_url,
             registry_coordinator_address,
-            operator_state_retriever_address,
             aggregator_ip_port,
             registration: _,
         } = config;
-        let avs_registry_reader = AvsRegistryChainReader::new(
-            logger.clone(),
-            registry_coordinator_address,
-            operator_state_retriever_address,
-            http_rpc_url.to_string(),
-        )
-        .await?;
-
         let key_pair = BlsKeyPair::new(bls_private_key)?;
 
-        // Check if the operator is registered with EigenLayer
-        if !avs_registry_reader
-            .is_operator_registered(operator_address)
+        let provider = get_provider(&http_rpc_url);
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(registry_coordinator_address, provider);
+
+        let operator_status = contract_registry_coordinator
+            .getOperatorStatus(operator_address)
+            .call()
             .await?
-        {
-            // Check if a registration config was provided
+            ._0;
+
+        // 0 means the operator is not registered, 1 that they are
+        let is_operator_registered = operator_status == 1;
+
+        // Check if the operator is registered with EigenLayer
+        if !is_operator_registered {
+            // Check if a registration config was provided.
             let Some(registration_config) = config.registration else {
                 error!(
                     "Operator {operator_name} not registered and no registration config was provided"
@@ -231,10 +242,21 @@ impl Operator {
 
         let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
 
-        let operator_id = avs_registry_reader
-            .get_operator_id(operator_address)
-            .await
+        let operator_id = contract_registry_coordinator
+            .getOperatorId(operator_address)
+            .call()
+            .await?
+            ._0;
+
+        let operator_id_from_bls = operator_id_from_g1_pub_key(key_pair.public_key())
             .map_err(|_| OperatorError::OperatorIdError)?;
+
+        if operator_id_from_bls != operator_id {
+            error!(
+                "Operator ID from BLS key pair {operator_id_from_bls} does not match operator ID from contract {operator_id}",
+            );
+            return Err(OperatorError::OperatorIdMismatch);
+        }
 
         Ok(Self {
             operator_id,
@@ -242,6 +264,7 @@ impl Operator {
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
             key_pair,
+            response_calculator,
         })
     }
 
@@ -257,11 +280,9 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation.
-    pub async fn run<TM>(
-        &self,
-        response_calculator: impl ResponseCalculator<TM::Input, TM::Output>,
-    ) -> Result<(), OperatorError>
+    pub async fn run<TM>(&self) -> Result<(), OperatorError>
     where
+        RP: ResponseCalculator<TM::Input, TM::Output>,
         TM: TaskManagerDefs,
         TM::Input:
             From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
@@ -290,7 +311,8 @@ impl Operator {
                 self.operator_name, task_index
             );
 
-            let output = response_calculator
+            let output = self
+                .response_calculator
                 .compute_response(task_index, task.input)
                 .await?;
 

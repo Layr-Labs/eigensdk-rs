@@ -87,7 +87,7 @@
 //!         let logic = verifier_from_compute_function(response_calculator);
 //!     ```
 //!
-//! 7. **Challenger Task Processor**: Create a [`ChallengerTaskProcessor`] trait implementation.
+//! 7. **Challenger Processor**: Create a [`ChallengerProcessor`] trait implementation.
 //!    - This will be in charge of processing the task and the response.
 //!    - We provide a standard [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor) implementation that can be used as a starting point.
 //!
@@ -111,9 +111,9 @@
 //! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/challenger.rs)
 //! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/challenger.rs)
 //!
-//! ## How to implement a custom Challenger Task Processor
+//! ## How to implement a custom Challenger Processor
 //!
-//! To implement a custom Challenger Task Processor, you need to implement the [`ChallengerTaskProcessor`] trait.
+//! To implement a custom Challenger Processor, you need to implement the [`ChallengerProcessor`] trait.
 //!
 //! This trait has two methods, which we explain in the next sections. Refer to the [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor)
 //! implementation for an example of how to implement a custom Challenger Processor.
@@ -142,7 +142,7 @@ use alloy::{
     rpc::types::{Filter, Log},
     sol_types::SolValue,
 };
-use challenger::ChallengerTaskProcessor;
+use challenger::ChallengerProcessor;
 use config::ChallengerConfig;
 use eigen_common::{get_provider, get_ws_provider};
 use eigen_task_manager::event_decoder::{
@@ -153,9 +153,9 @@ use error::ChallengerError;
 use futures_util::StreamExt;
 use tracing::info;
 
-/// Challenger Task Processor trait
+/// Challenger Processor trait
 pub mod challenger;
-/// Challenger Task Processor implementation
+/// Challenger Processor implementation
 pub mod challenger_processor;
 /// Challenger config
 pub mod config;
@@ -163,16 +163,16 @@ pub mod config;
 pub mod error;
 
 /// The challenger is the entity responsible of validating the aggregated responses
-/// from the operators. This service will listen to [`NEW_TASK_EVENT_SELECTOR`](challenger::ChallengerTaskProcessor::NEW_TASK_EVENT_SELECTOR)
-/// and [`TASK_RESPONDED_EVENT_SELECTOR`](challenger::ChallengerTaskProcessor::TASK_RESPONDED_EVENT_SELECTOR)
+/// from the operators. This service will listen to [`NEW_TASK_EVENT_SELECTOR`](challenger::ChallengerProcessor::NEW_TASK_EVENT_SELECTOR)
+/// and [`TASK_RESPONDED_EVENT_SELECTOR`](challenger::ChallengerProcessor::TASK_RESPONDED_EVENT_SELECTOR)
 /// When the incorrect responses are detected, the challenger will raise an on-chain challenge.
 ///
-/// Most of these things are delegated to the [`ChallengerTaskProcessor`] trait, that process challenges and
+/// Most of these things are delegated to the [`ChallengerProcessor`] trait, that process challenges and
 /// communicates with the on-chain task manager contract when raising a challenge.
 ///
 /// To more in-depth details about the challenger, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/challenger/src/lib.rs#L1-L112).
 #[derive(Debug)]
-pub struct Challenger<TP: ChallengerTaskProcessor> {
+pub struct Challenger<TP: ChallengerProcessor> {
     /// The rpc url
     rpc_url: String,
     /// The websocket url
@@ -181,7 +181,7 @@ pub struct Challenger<TP: ChallengerTaskProcessor> {
     task_processor: TP,
 }
 
-impl<TP: ChallengerTaskProcessor> Challenger<TP>
+impl<TP: ChallengerProcessor> Challenger<TP>
 where
     TP::Input: From<<<TP::Input as SolValue>::SolType as SolType>::RustType>,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,

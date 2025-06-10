@@ -17,6 +17,9 @@ pub enum OperatorError {
     /// Operator Id Error
     #[error("Failed to get operator id")]
     OperatorIdError,
+    /// Operator ID from BLS key pair does not match operator ID from contract
+    #[error("Operator ID from BLS key pair does not match operator ID from contract")]
+    OperatorIdMismatch,
     /// Operator Subscribe Logs Error
     #[error("Failed to subscribe logs")]
     SubscribeLogsError,
@@ -44,7 +47,9 @@ pub enum OperatorError {
     /// Failed when computing a task response
     #[error("Failed when computing a task response")]
     ComputingTaskResponseError(#[from] TaskManagerError),
-
+    /// Alloy contract error
+    #[error("Alloy contract error: {0}")]
+    AlloyContractError(#[from] AlloyError),
     /// Decoding of the new task event failed
     #[error("Decoding of new task failed")]
     LogDecodeFailed(#[from] AbiDecodeError),

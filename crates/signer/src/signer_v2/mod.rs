@@ -187,7 +187,7 @@ impl TxSigner<Signature> for GenericSigner {
 #[serde(untagged)]
 #[non_exhaustive]
 pub enum SignerConfig {
-    /// ECDSA hexadecimal private key.
+    /// Hex-encoded private key plaintext.
     ///
     /// Uses a raw hexadecimal private key for transaction signing.
     PrivateKey(PrivateKeyConfig),
@@ -204,20 +204,27 @@ pub enum SignerConfig {
     Keystore(KeystoreConfig),
     /// Web3 signer
     ///
-    /// Delegates transaction signing to an external signing service. The endpoint
-    /// URL must be a valid JSON-RPC endpoint.
+    /// Delegates transaction signing to an external JSON-RPC signing service
+    /// compatible with the [Web3Signer](https://docs.web3signer.consensys.io/reference/api/json-rpc)
+    /// API. The service must support the `eth_signTransaction` method.
     Web3(Web3Config),
     /// AWS KMS signer
     ///
     /// Uses an AWS KMS asymmetric key (curve `secp256k1`) to sign transactions.
     /// The private key material never leaves AWS's Hardware Security Module.
     ///
-    /// The AWS credentials will be loaded from the environment variables.
+    /// <div class="warning">
+    /// This signer requires AWS credentials to be set via environment variables.
+    /// See the <a href="https://docs.aws.amazon.com/sdkref/latest/guide/environment-variables.html">AWS documentation</a>
+    /// for details and the <a href="https://docs.aws.amazon.com/sdkref/latest/guide/settings-reference.html#EVarSettings">AWS Settings Reference</a>
+    /// for a full list of available environment variables.
     ///
+    /// To configure your shell, run:
     /// ```bash
     /// export AWS_ACCESS_KEY_ID=your-access-key-id
     /// export AWS_SECRET_ACCESS_KEY=your-secret-access-key
     /// ```
+    /// </div>
     Aws(AwsConfig),
 }
 
@@ -252,7 +259,7 @@ impl From<AwsConfig> for SignerConfig {
 /// Configuration for a private key signer
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PrivateKeyConfig {
-    /// Hexadecimal private key
+    /// Hex-encoded private key plaintext.
     pub private_key: String,
 }
 
@@ -275,6 +282,10 @@ pub struct KeystoreConfig {
 }
 
 /// Configuration for a web3 signer
+///
+/// Delegates transaction signing to an external JSON-RPC signing service
+/// compatible with the [Web3Signer](https://docs.web3signer.consensys.io/reference/api/json-rpc)
+/// API. The service must support the `eth_signTransaction` method.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Web3Config {
     /// Endpoint URL
@@ -283,14 +294,23 @@ pub struct Web3Config {
     pub address: Address,
 }
 
-/// Configuration for an AWS KMS signer
+/// AWS KMS signer
 ///
-/// The AWS credentials will be loaded from the environment variables.
+/// Uses an AWS KMS asymmetric key (curve `secp256k1`) to sign transactions.
+/// The private key material never leaves AWS's Hardware Security Module.
 ///
+/// <div class="warning">
+/// This signer requires AWS credentials to be set via environment variables.
+/// See the <a href="https://docs.aws.amazon.com/sdkref/latest/guide/environment-variables.html">AWS documentation</a>
+/// for details and the <a href="https://docs.aws.amazon.com/sdkref/latest/guide/settings-reference.html#EVarSettings">AWS Settings Reference</a>
+/// for a full list of available environment variables.
+///
+/// To configure your shell, run:
 /// ```bash
 /// export AWS_ACCESS_KEY_ID=your-access-key-id
 /// export AWS_SECRET_ACCESS_KEY=your-secret-access-key
 /// ```
+/// </div>
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AwsConfig {
     /// Key ID

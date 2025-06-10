@@ -8,7 +8,7 @@ use awesome_vault_service::{
     utils::load_config,
 };
 use eigensdk::{
-    aggregator::{task_processor::IndexingTaskProcessor, Aggregator, AggregatorConfig},
+    aggregator::{Aggregator, AggregatorConfig, IndexingAggregatorProcessor},
     common::get_signer,
     logging::{get_logger, init_logger, log_level::LogLevel},
 };
@@ -35,7 +35,7 @@ async fn main() -> Result<()> {
 
     // 4. Create the task processor
     let task_processor =
-        IndexingTaskProcessor::new(contract, Duration::from_secs(10), Duration::from_secs(2));
+        IndexingAggregatorProcessor::new(contract, Duration::from_secs(10), Duration::from_secs(2));
 
     // 5. Create and start the aggregator
     let aggregator = Aggregator::new(config, task_processor, logger)
