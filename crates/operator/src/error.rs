@@ -20,6 +20,9 @@ pub enum OperatorError {
     /// Operator Id Error
     #[error("Failed to get operator id")]
     OperatorIdError,
+    /// Operator ID from BLS key pair does not match operator ID from contract
+    #[error("Operator ID from BLS key pair does not match operator ID from contract")]
+    OperatorIdMismatch,
     /// Operator Subscribe Logs Error
     #[error("Failed to subscribe logs")]
     SubscribeLogsError,

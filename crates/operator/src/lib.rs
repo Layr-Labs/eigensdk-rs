@@ -142,7 +142,7 @@ use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
-use eigen_types::operator::OperatorId;
+use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorId};
 use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
 use error::OperatorError;
 use futures_util::StreamExt;
@@ -176,8 +176,11 @@ pub struct Operator<RP> {
 }
 
 impl<RP> Operator<RP> {
-    /// Initialize a new operator.
-    /// This method does not register the operator.
+    /// Creates a new operator, ensuring on‐chain registration.
+    ///
+    /// It also performs some sanity checks, returning an error in these cases:
+    /// - The operator is not registered in EigenLayer and registration was not enabled or failed.
+    /// - The operator ID derived from the BLS key pair is not the same as the operator ID registered in the contracts for the given operator address.
     ///
     /// # Arguments
     ///
@@ -242,6 +245,16 @@ impl<RP> Operator<RP> {
             .call()
             .await?
             ._0;
+
+        let operator_id_from_bls = operator_id_from_g1_pub_key(key_pair.public_key())
+            .map_err(|_| OperatorError::OperatorIdError)?;
+
+        if operator_id_from_bls != operator_id {
+            error!(
+                "Operator ID from BLS key pair {operator_id_from_bls} does not match operator ID from contract {operator_id}",
+            );
+            return Err(OperatorError::OperatorIdMismatch);
+        }
 
         Ok(Self {
             operator_id,
