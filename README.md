@@ -55,7 +55,7 @@ These are examples of the code needed to create an AVS from scratch. All include
 ### Business logic in entities
 
 * Aggregator: The aggregator does not have much business logic, as the core functionality is delegated to the `IndexingAggregatorProcessor`, which is the standard implementation that the SDK provides.If you want to implement a custom task processor, you need to implement the `AggregatorProcessor` trait.
-* Challenger: The challenger business logic lies in the task response validation. To validate the response, the challenger first calculates the response with the same function as the operator and then compares it with the received response, raising a challenge if they differ. The example is based on the `IndexingChallengerProcessor` implementation. If you want to implement a custom challenger processor, you need to implement the `ChallengerTaskProcessor` trait.
+* Challenger: The challenger business logic lies in the task response validation. To validate the response, the challenger first calculates the response with the same function as the operator and then compares it with the received response, raising a challenge if they differ. The example is based on the `IndexingChallengerProcessor` implementation. If you want to implement a custom challenger processor, you need to implement the `ChallengerProcessor` trait.
 * Operator: The operator responds to tasks using the `FunctionResponseCalculator` struct that implements `ResponseCalculator` trait. This struct must define a `compute_response` method to generate the task output.
 * Task spammer: The task spammer logic lies in an iterator that generates the inputs for the spammer to dispatch at the SDK level.
 
