@@ -4,7 +4,7 @@
 
 use alloy::primitives::U256;
 use eigensdk::{
-    logging::{get_logger, init_logger, log_level::LogLevel},
+    logging::{init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
     task_manager::response_calculator::response_calculator_from_fn,
     testing_utils::task_processor::failing_response_calculator,
@@ -18,8 +18,6 @@ use incredible_dot_product::{
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logger(LogLevel::Info);
-    let logger = get_logger();
-
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the `OperatorConfig`
@@ -34,7 +32,7 @@ async fn main() -> Result<()> {
     let logic = failing_response_calculator(response_calculator, || U256::MAX, 40);
 
     // 6. Start the operator
-    let operator = Operator::new(logger, config, logic).await.unwrap();
+    let operator = Operator::new(config, logic).await.unwrap();
     operator
         .run::<ISTaskManager>()
         .await
