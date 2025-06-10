@@ -503,6 +503,8 @@ mod test {
         let signer = tx_signer_from_config(config.into()).await.unwrap();
         let signature = signer.sign_transaction(&mut tx).await.unwrap();
 
+        env::remove_var("EIGEN_ECDSA_KEYSTORE_PASSWORD");
+
         assert_eq!(signature, expected_signature);
     }
 
