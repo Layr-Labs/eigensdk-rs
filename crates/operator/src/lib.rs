@@ -100,7 +100,7 @@
 //!    Then, call the [`run`](Operator::run) method to start the operator.
 //!
 //!     ```ignore
-//!         let operator = Operator::new(logger, config, logic).await.unwrap();
+//!         let operator = Operator::new(config, logic).await.unwrap();
 //!         operator.run::<ISTaskManager>().await.unwrap();
 //!     ```
 //!
