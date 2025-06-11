@@ -1592,9 +1592,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_1_quorum_2_operator_1_signatures_50_threshold() {
-        tracing_subscriber::fmt()
-            .with_max_level(Level::DEBUG)
-            .init();
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
