@@ -39,7 +39,7 @@ eigen-testing-utils = { path = "../../../tests/testing-utils" }
 eigen-utils = { path = "../../utils" }
 eigen-client-elcontracts = { path = "../../chainio/clients/elcontracts" }
 eigen-services-operatorsinfo = { path = "../../services/operatorsinfo" }
-
+tracing-subscriber.workspace = true
 serial_test = "3.1"
 sha2 = "0.10.8"
 testcontainers.workspace = true

@@ -12,7 +12,6 @@ async fn main() -> Result<()> {
     let holesky_provider = "https://holesky.drpc.org";
 
     let avs_registry = AvsRegistryChainReader::new(
-        get_test_logger().clone(),
         REGISTRY_COORDINATOR,
         OPERATOR_STATE_RETRIEVER,
         holesky_provider.to_string(),

@@ -27,9 +27,7 @@ lazy_static! {
 async fn main() -> Result<()> {
     let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
     let pvt_key = "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8";
-    let test_logger = get_test_logger();
     let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-        test_logger.clone(),
         holesky_provider.to_string(),
         pvt_key.to_string(),
         REGISTRY_COORDINATOR,
@@ -62,7 +60,6 @@ async fn main() -> Result<()> {
 
     // A new ElChainReader instance
     let el_chain_reader = ELChainReader::new(
-        get_test_logger().clone(),
         None,
         DELEGATION_MANAGER_ADDRESS,
         REWARDS_COORDINATOR,
