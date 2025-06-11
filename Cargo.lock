@@ -2869,6 +2869,7 @@ dependencies = [
  "num-bigint 0.4.6",
  "thiserror 1.0.69",
  "tokio",
+ "tracing",
 ]
 
 [[package]]

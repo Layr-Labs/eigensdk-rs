@@ -13,10 +13,10 @@ use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_types::operator::OperatorId;
 use error::CollectorMetricError;
 use metrics::{describe_gauge, gauge, Key, Label};
+use tracing::{debug, instrument, warn};
 /// RegisteredStakes Metrics with logger
 #[derive(Debug)]
 pub struct Collector {
-    logger: SharedLogger,
     operator_addr: Address,
     operator_id: OperatorId,
     _el_reader: ELChainReader,
@@ -29,7 +29,6 @@ impl Collector {
     /// Operator stakes in AVS registry contract.
     /// Most commonly represents a weighted combination of delegated shares in the DelegationManager EigenLayer contract.
     pub fn new(
-        logger: SharedLogger,
         operator_addr: Address,
         operator_id: OperatorId,
         el_reader: ELChainReader,
@@ -48,7 +47,6 @@ impl Collector {
         );
 
         Self {
-            logger,
             operator_addr,
             _el_reader: el_reader,
             avs_registry_reader,
@@ -58,6 +56,7 @@ impl Collector {
         }
     }
 
+    #[instrument(skip_all)]
     pub fn set_stake(&self, quorum_number: &str, quorum_name: &str, avs_name: &str, value: f64) {
         // Create the metric key with dynamic
         let key = Key::from_parts(
@@ -69,21 +68,15 @@ impl Collector {
             ],
         );
         gauge!(key.to_string()).set(value);
-        self.logger.debug(
-            &format!(
-            "set registered stakes , quorum_name: {} , quorum_number: {} , avs_name: {}, value: {}",
-            quorum_name, quorum_number, avs_name, value
-        ),
-            "eigen-metrics-collectors-economic.set_stake",
-        );
+        debug!(
+            "set registered stakes , quorum_name: {quorum_name} , quorum_number: {quorum_number} , avs_name: {avs_name}, value: {value}"
+        )
     }
 
+    #[instrument(skip_all)]
     pub async fn collect(&mut self) -> Result<(), CollectorMetricError> {
         self.init_operator_id().await.inspect_err(|e| {
-            self.logger.warn(
-                &format!("Failed to fetch and cache operator id. Skipping collection of registeredStake metric. , err {}", e),
-                "eigen-metrics-collectors-economic.collect"
-            );
+            warn!("Failed to fetch and cache operator id. Skipping collection of registeredStake metric, err {e}")
         })?;
         let quorum_stake_map = self
             .avs_registry_reader
@@ -155,7 +148,6 @@ mod tests {
         let operator_addr = Address::ZERO;
         let operator_id = FixedBytes::<32>::default();
         let avs_registry_reader = AvsRegistryChainReader::new(
-            get_test_logger(),
             get_registry_coordinator_address(http_endpoint.clone()).await,
             get_operator_state_retriever_address(http_endpoint.clone()).await,
             http_endpoint,
@@ -166,7 +158,6 @@ mod tests {
         let quorums_names = HashMap::new();
         let avs_name = "eigensdk-rs";
         let mut collector = FakeCollector::new(
-            get_test_logger(),
             operator_addr,
             operator_id,
             avs_registry_reader,

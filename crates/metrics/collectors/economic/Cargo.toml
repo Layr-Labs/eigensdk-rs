@@ -20,6 +20,7 @@ eigen-types.workspace = true
 eigen-client-elcontracts.workspace = true
 eigen-client-avsregistry.workspace = true
 thiserror.workspace = true
+tracing.workspace = true
 metrics.workspace = true
 num-bigint.workspace = true
 
