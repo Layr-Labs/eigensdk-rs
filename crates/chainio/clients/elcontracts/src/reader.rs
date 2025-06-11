@@ -4,7 +4,6 @@ use alloy::{
     providers::Provider,
 };
 use eigen_common::{get_provider, SdkProvider};
-use eigen_logging::logger::SharedLogger;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::{self, OperatorSet};
 use eigen_utils::slashing::{
     core::{

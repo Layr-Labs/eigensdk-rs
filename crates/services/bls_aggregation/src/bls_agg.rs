@@ -5,7 +5,7 @@ use ark_bn254::{G1Affine, G2Affine};
 use ark_ec::AffineRepr;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
-use eigen_logging::logger::SharedLogger;
+
 use eigen_services_avsregistry::AvsRegistryService;
 use eigen_types::avs_state::OperatorAvsState;
 use eigen_types::{
@@ -1082,7 +1082,7 @@ mod tests {
     use crate::bls_agg::{TaskMetadata, TaskSignature};
     use alloy::primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
-    use eigen_logging::get_test_logger;
+
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
     use eigen_types::avs::SignatureVerificationError::{DuplicateSignature, IncorrectSignature};
     use eigen_types::operator::{QuorumNum, QuorumThresholdPercentages};

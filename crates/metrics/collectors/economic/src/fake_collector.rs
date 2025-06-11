@@ -4,7 +4,6 @@ use crate::error::CollectorMetricError;
 
 use alloy::primitives::{Address, FixedBytes, U256};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::OperatorId;
 use metrics::{describe_gauge, gauge, Key, Label};
 use num_bigint::BigInt;

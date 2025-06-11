@@ -3,7 +3,6 @@
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
-use eigen_logging::logger::SharedLogger;
 use metrics::{describe_counter, describe_histogram, Key, Label};
 
 /// RpcCallsMetrics

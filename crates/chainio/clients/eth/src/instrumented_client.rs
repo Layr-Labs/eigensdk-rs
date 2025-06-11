@@ -11,7 +11,6 @@ use alloy::rpc::types::eth::{
 };
 use alloy::transports::ws::WsConnect;
 use alloy::transports::{TransportError, TransportResult};
-use eigen_logging::get_test_logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
 use hex;
 use std::time::Instant;

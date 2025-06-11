@@ -37,7 +37,6 @@ mod tests {
     async fn test_prometheus_server() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
-        use eigen_logging::get_test_logger;
         let socket: SocketAddr = "127.0.0.1:9091".parse().unwrap();
         init_registry(socket);
 

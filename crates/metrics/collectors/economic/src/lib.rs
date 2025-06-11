@@ -10,7 +10,6 @@ pub mod fake_collector;
 use alloy::primitives::{Address, FixedBytes, U256};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_client_elcontracts::reader::ELChainReader;
-use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::OperatorId;
 use error::CollectorMetricError;
 use metrics::{describe_gauge, gauge, Key, Label};
@@ -142,7 +141,6 @@ mod tests {
 
     use alloy::primitives::{Address, FixedBytes};
     use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-    use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{get_operator_state_retriever_address, get_registry_coordinator_address},

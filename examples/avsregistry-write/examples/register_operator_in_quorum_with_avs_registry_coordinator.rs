@@ -6,7 +6,7 @@ use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
 use eigen_crypto_bls::BlsKeyPair;
-use eigen_logging::get_test_logger;
+
 use eigen_testing_utils::anvil_constants::get_registry_coordinator_address;
 use eigen_testing_utils::m2_holesky_constants::{
     AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,

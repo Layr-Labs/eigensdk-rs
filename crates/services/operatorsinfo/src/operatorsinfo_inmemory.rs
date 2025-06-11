@@ -8,7 +8,7 @@ use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
 };
-use eigen_logging::logger::SharedLogger;
+
 use eigen_types::operator::{
     operator_id_from_g1_pub_key, OperatorId, OperatorPubKeys, OperatorTypesError,
 };
@@ -522,7 +522,7 @@ mod tests {
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_common::get_provider;
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
+
     use eigen_testing_utils::anvil::start_m2_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_avs_directory_address, get_delegation_manager_address,

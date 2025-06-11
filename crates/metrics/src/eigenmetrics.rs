@@ -1,4 +1,3 @@
-use eigen_logging::logger::SharedLogger;
 use metrics::{describe_gauge, gauge};
 use std::fmt::Debug;
 

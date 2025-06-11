@@ -7,7 +7,7 @@ use eigen_client_elcontracts::{
 };
 use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
-use eigen_logging::get_test_logger;
+
 use eigen_services_operatorsinfo::{
     operator_info::OperatorInfoService, operatorsinfo_inmemory::OperatorInfoServiceInMemory,
 };

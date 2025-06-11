@@ -10,7 +10,6 @@ use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
 };
-use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{
     bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys, QuorumNum,
 };
@@ -1135,7 +1134,6 @@ mod tests {
     use super::*;
     use alloy::primitives::address;
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{start_anvil_container, start_m2_anvil_container},
         anvil_constants::{

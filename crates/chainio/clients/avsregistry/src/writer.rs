@@ -9,7 +9,6 @@ use eigen_common::{get_provider, get_signer};
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
-use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::operator_id_from_g1_pub_key;
 use eigen_types::operator::QuorumNum;
 use eigen_utils::convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params;
@@ -1046,7 +1045,6 @@ mod tests {
     use alloy::sol_types::SolCall;
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_erc20_mock_strategy, get_registry_coordinator_address,

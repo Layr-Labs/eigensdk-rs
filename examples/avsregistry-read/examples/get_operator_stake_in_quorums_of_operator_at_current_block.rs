@@ -1,7 +1,7 @@
 //! get operators stake in quorums at current block
 use alloy::primitives::FixedBytes;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_logging::get_test_logger;
+
 use eigen_testing_utils::m2_holesky_constants::{OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR};
 use eyre::Result;
 use std::str::FromStr;

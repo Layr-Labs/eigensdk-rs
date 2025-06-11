@@ -5,7 +5,7 @@ use alloy::{
 };
 use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
 use eigen_common::{get_provider, get_signer};
-use eigen_logging::get_test_logger;
+
 use std::str::FromStr;
 
 use crate::transaction::wait_transaction;

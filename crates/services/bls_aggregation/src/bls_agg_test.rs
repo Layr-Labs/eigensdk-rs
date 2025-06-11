@@ -15,7 +15,7 @@ pub mod integration_test {
     use eigen_crypto_bls::{
         convert_to_bls_checker_g1_point, convert_to_bls_checker_g2_point, BlsKeyPair,
     };
-    use eigen_logging::get_test_logger;
+
     use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
     use eigen_services_operatorsinfo::{
         operatorsinfo_inmemory::OperatorInfoServiceInMemory,
