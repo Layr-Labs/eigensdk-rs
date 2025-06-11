@@ -4,15 +4,23 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 use metrics::{describe_counter, describe_histogram, Key, Label};
+use tracing::{debug, instrument};
 
 /// RpcCallsMetrics
 #[derive(Debug)]
 pub struct RpcCallsMetrics {
-    logger: SharedLogger,
+    // Avoid allowing instantiation of this struct
+    _private: (),
+}
+
+impl Default for RpcCallsMetrics {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl RpcCallsMetrics {
-    pub fn new(logger: SharedLogger) -> Self {
+    pub fn new() -> Self {
         describe_histogram!(
             "eigen_rpc_request_duration_seconds",
             "Duration of json-rpc <method> in seconds from Ethereum Execution client <client>"
@@ -22,10 +30,11 @@ impl RpcCallsMetrics {
             "Total of json-rpc <method> requests from Ethereum Execution client <client>"
         );
 
-        Self { logger }
+        Self { _private: () }
     }
 
     /// set_rpc_request_duration_seconds
+    #[instrument(skip_all)]
     pub fn set_rpc_request_duration_seconds(
         &self,
         method: &str,
@@ -41,13 +50,11 @@ impl RpcCallsMetrics {
         );
 
         metrics::histogram!(key.to_string()).record(duration);
-        self.logger.debug(
-            "set rpc requet duration seconds , methods : {} , client_version: {}, duration: {} ",
-            "eigen-metrics-collectors-rpc-calls.set_rpc_request_duration_seconds",
-        );
+        debug!("set rpc requet duration seconds");
     }
 
     /// set_rpc_request_total
+    #[instrument(skip_all)]
     pub fn set_rpc_request_total(
         &self,
         method: &str,
@@ -63,13 +70,6 @@ impl RpcCallsMetrics {
         );
 
         metrics::counter!(key.to_string()).absolute(rpc_request_total);
-        self.logger.debug(
-            "set rpc request total ",
-            "eigen-metrics-collectors-rpc-calls.set_rpc_request_total",
-        );
-    }
-
-    pub fn logger(&self) -> &SharedLogger {
-        &self.logger
+        debug!("set rpc request total");
     }
 }
