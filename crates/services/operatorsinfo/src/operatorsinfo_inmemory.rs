@@ -520,7 +520,6 @@ mod tests {
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
-        let test_logger = get_test_logger();
         register_operator(
             http_endpoint.clone(),
             "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
@@ -567,7 +566,6 @@ mod tests {
     async fn test_start_service_1_operator_register() {
         // start anvil in a container
         let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
-        let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             get_registry_coordinator_address(http_endpoint.clone()).await,
             get_operator_state_retriever_address(http_endpoint.clone()).await,
@@ -627,7 +625,6 @@ mod tests {
     #[tokio::test]
     async fn test_start_service_2_operator_register() {
         let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
-        let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             get_registry_coordinator_address(http_endpoint.clone()).await,
             get_operator_state_retriever_address(http_endpoint.clone()).await,
