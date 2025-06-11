@@ -111,7 +111,7 @@ impl InstrumentedClient {
         let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
         let http_client = ProviderBuilder::new()
             .disable_recommended_fillers()
-            .on_http(url);
+            .connect_http(url);
         let net_version = http_client
             .get_net_version()
             .await
@@ -145,7 +145,7 @@ impl InstrumentedClient {
 
         let ws_client = ProviderBuilder::new()
             .disable_recommended_fillers()
-            .on_ws(ws_connect)
+            .connect_ws(ws_connect)
             .await
             .unwrap();
         let net_version = ws_client
