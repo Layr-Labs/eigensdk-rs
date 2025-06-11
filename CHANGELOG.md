@@ -154,6 +154,8 @@ Alternate implementation which directly queries from middleware using view call 
 
 ### Removed
 
+* Removed `ethers` and `ethers-signers` from the root `Cargo.toml` in [#551](https://github.com/Layr-Labs/eigensdk-rs/pull/551).
+
 * Removed the `eigen-logging` crate and adopted the `tracing` crate as the standard logging in [#552](https://github.com/Layr-Labs/eigensdk-rs/pull/552).
 
 ### Documentation 📚
