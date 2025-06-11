@@ -1001,7 +1001,6 @@ mod tests {
     use std::time::Duration;
     use std::vec;
     use tokio::time::{sleep, Instant};
-    use tracing::Level;
 
     const PRIVATE_KEY_1: &str =
         "13710126902690889134622698668747132666439281256983827313388062967626731803599";
