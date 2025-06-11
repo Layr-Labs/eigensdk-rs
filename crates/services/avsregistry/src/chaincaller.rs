@@ -70,7 +70,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
                             socket: Some(socket),
                         },
                         stake_per_quorum,
-                        block_num: block_num.into(),
+                        block_num,
                     });
                 avs_state
                     .stake_per_quorum
@@ -321,7 +321,7 @@ mod tests {
                 socket: Some(String::from("test_socket")),
             },
             stake_per_quorum: test_operator.stake_per_quorum,
-            block_num: test_data.input.block_num.into(),
+            block_num: test_data.input.block_num,
         };
         let operator_state = operator_avs_state.get(&test_operator.operator_id).unwrap();
         assert_eq!(expected_operator_avs_state, *operator_state);
