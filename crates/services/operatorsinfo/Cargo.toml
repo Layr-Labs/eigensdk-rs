@@ -26,6 +26,7 @@ futures-util.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 thiserror.workspace = true
 tokio-util = "0.7.11"
+tracing.workspace = true
 futures.workspace = true
 eyre.workspace = true
 
