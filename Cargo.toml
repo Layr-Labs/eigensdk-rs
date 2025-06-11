@@ -90,8 +90,6 @@ aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
 eth-keystore = "0.5"
-ethers = "2.0"
-ethers-signers = "2.0"
 eyre = "0.6"
 futures-util = "0.3"
 futures = "0.3"
