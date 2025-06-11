@@ -24,11 +24,11 @@ use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
 use num_bigint::BigInt;
 use std::fmt::Debug;
 use std::{collections::HashMap, str::FromStr};
+use tracing::{debug, instrument};
 
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]
 pub struct AvsRegistryChainReader {
-    logger: SharedLogger,
     bls_apk_registry_addr: Address,
     registry_coordinator_addr: Address,
     operator_state_retriever: Address,
@@ -170,12 +170,10 @@ impl AvsRegistryChainReader {
     ///
     /// # Arguments
     ///
-    /// * `logger` - A reference to the logger.
     /// * `registry_coordinator_addr` - The address of the RegistryCoordinator contract.
     /// * `operator_state_retriever_addr` - The address of the OperatorStateRetriever contract.
     /// * `http_provider_url` - The http provider url.
     pub async fn new(
-        logger: SharedLogger,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
         http_provider_url: String,
@@ -205,7 +203,6 @@ impl AvsRegistryChainReader {
         } = stake_registry_return;
 
         Ok(AvsRegistryChainReader {
-            logger,
             bls_apk_registry_addr,
             registry_coordinator_addr,
             operator_state_retriever: operator_state_retriever_addr,
@@ -577,6 +574,7 @@ impl AvsRegistryChainReader {
     ///
     /// * (`Vec<Address>`, `Vec<OperatorPubKeys>`) - A vector of operator addresses and its
     ///   corresponding operator pub keys.
+    #[instrument(skip_all)]
     pub async fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: u64,
@@ -611,10 +609,7 @@ impl AvsRegistryChainReader {
             })?;
 
             let len = logs.len();
-            self.logger.debug(
-                &format!("numTransactionLogs: {len}, fromBlock: {i}, toBlock: {to_block}",),
-                "eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys",
-            );
+            debug!("numTransactionLogs: {len}, fromBlock: {i}, toBlock: {to_block}");
 
             for pub_key_reg in logs
                 .iter()
@@ -650,6 +645,7 @@ impl AvsRegistryChainReader {
     ///
     /// * `HashMap<FixedBytes<32>, String>` - Operator Id to socket mapping containing all the operator
     ///   sockets registered in the given block range
+    #[instrument(skip_all)]
     pub async fn query_existing_registered_operator_sockets(
         &self,
         start_block: u64,
@@ -694,9 +690,8 @@ impl AvsRegistryChainReader {
                 }
             }
             let len = logs.len();
-            self.logger.debug(
-                &format!("num_transaction_logs : {len} , from_block: {from_block} , to_block: {to_block}"),
-                "eigen-client-avsregistry.reader.query_existing_registered_operator_sockets",
+            debug!(
+                "num_transaction_logs : {len} , from_block: {from_block} , to_block: {to_block}"
             );
         }
         Ok(operator_id_to_socket)
@@ -1152,7 +1147,6 @@ mod tests {
             get_operator_state_retriever_address(http_endpoint.clone()).await;
 
         AvsRegistryChainReader::new(
-            get_test_logger(),
             registry_coordinator_addr,
             operator_state_retriever_address,
             http_endpoint.to_string(),
