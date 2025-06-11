@@ -154,6 +154,8 @@ Alternate implementation which directly queries from middleware using view call 
 
 ### Removed
 
+* Removed `ethers` and `ethers-signers` from the root `Cargo.toml` in [#551](https://github.com/Layr-Labs/eigensdk-rs/pull/551).
+
 ### Documentation 📚
 
 ### Other Changes
