@@ -2852,6 +2852,7 @@ dependencies = [
  "num-bigint 0.4.6",
  "reqwest 0.12.15",
  "tokio",
+ "tracing",
 ]
 
 [[package]]
