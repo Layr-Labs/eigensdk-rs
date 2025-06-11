@@ -16,7 +16,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 [dependencies]
 alloy.workspace = true
 async-trait.workspace = true
-eigen-logging.workspace = true
+
 eigen-metrics-collectors-rpc-calls.workspace = true
 hex.workspace = true
 thiserror.workspace = true

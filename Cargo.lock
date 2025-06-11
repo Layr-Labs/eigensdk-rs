@@ -1122,7 +1122,7 @@ dependencies = [
  "ark-ff 0.5.0",
  "ark-std 0.5.0",
  "tracing",
- "tracing-subscriber 0.2.25",
+ "tracing-subscriber",
 ]
 
 [[package]]
@@ -2071,7 +2071,6 @@ dependencies = [
  "ark-ff 0.5.0",
  "async-trait",
  "eigen-common",
- "eigen-logging",
  "eigen-testing-utils",
  "eigen-utils",
  "futures-util",
@@ -2412,16 +2411,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ctor"
-version = "0.2.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "32a2785755761f3ddc1492979ce1e48d2c00d09311c39e4466429188f3dd6501"
-dependencies = [
- "quote",
- "syn 2.0.100",
-]
-
-[[package]]
 name = "ctr"
 version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2742,7 +2731,6 @@ dependencies = [
  "eigen-client-elcontracts",
  "eigen-common",
  "eigen-crypto-bls",
- "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
@@ -2762,7 +2750,6 @@ dependencies = [
  "alloy",
  "eigen-common",
  "eigen-crypto-bls",
- "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
@@ -2779,7 +2766,6 @@ dependencies = [
  "alloy",
  "async-trait",
  "eigen-common",
- "eigen-logging",
  "eigen-metrics-collectors-rpc-calls",
  "eigen-testing-utils",
  "hex",
@@ -2851,23 +2837,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigen-logging"
-version = "0.5.0"
-dependencies = [
- "ctor",
- "once_cell",
- "tracing",
- "tracing-subscriber 0.3.19",
-]
-
-[[package]]
 name = "eigen-metrics"
 version = "0.5.0"
 dependencies = [
  "alloy",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
- "eigen-logging",
  "eigen-metrics-collectors-economic",
  "eigen-metrics-collectors-rpc-calls",
  "eigen-testing-utils",
@@ -2886,7 +2861,6 @@ dependencies = [
  "alloy",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
- "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "metrics",
@@ -2899,7 +2873,6 @@ dependencies = [
 name = "eigen-metrics-collectors-rpc-calls"
 version = "0.5.0"
 dependencies = [
- "eigen-logging",
  "metrics",
 ]
 
@@ -2947,7 +2920,6 @@ dependencies = [
  "eigen-common",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
- "eigen-logging",
  "eigen-services-avsregistry",
  "eigen-services-operatorsinfo",
  "eigen-testing-utils",
@@ -2978,7 +2950,6 @@ dependencies = [
  "eigen-client-elcontracts",
  "eigen-common",
  "eigen-crypto-bls",
- "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
@@ -3017,7 +2988,6 @@ dependencies = [
  "eigen-client-elcontracts",
  "eigen-common",
  "eigen-crypto-bls",
- "eigen-logging",
  "eigen-utils",
  "serde",
  "serde_json",
@@ -3065,7 +3035,6 @@ dependencies = [
  "eigen-common",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
- "eigen-logging",
  "eigen-metrics",
  "eigen-metrics-collectors-economic",
  "eigen-metrics-collectors-rpc-calls",
@@ -3572,7 +3541,6 @@ version = "0.5.0"
 dependencies = [
  "alloy",
  "eigen-client-avsregistry",
- "eigen-logging",
  "eigen-testing-utils",
  "eyre",
  "tokio",
@@ -3593,7 +3561,6 @@ dependencies = [
  "eigen-common",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
- "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
@@ -4545,7 +4512,6 @@ dependencies = [
  "eigen-client-elcontracts",
  "eigen-common",
  "eigen-crypto-bls",
- "eigen-logging",
  "eigen-services-operatorsinfo",
  "eigen-testing-utils",
  "eigen-utils",
@@ -5276,16 +5242,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "nu-ansi-term"
-version = "0.46.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "77a8165726e8236064dbb45459242600304b42a5ea24ee2948e18e023bf7ba84"
-dependencies = [
- "overload",
- "winapi",
-]
-
-[[package]]
 name = "num-bigint"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5486,12 +5442,6 @@ name = "outref"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1a80800c0488c3a21695ea981a54918fbb37abf04f4d0720c453632255e2ff0e"
-
-[[package]]
-name = "overload"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 
 [[package]]
 name = "parity-scale-codec"
@@ -6957,15 +6907,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "sharded-slab"
-version = "0.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f40ca3c46823713e0d4209592e8d6e826aa57e928f09752619fc696c499637f6"
-dependencies = [
- "lazy_static",
-]
-
-[[package]]
 name = "shlex"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7424,16 +7365,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "thread_local"
-version = "1.1.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b9ef9bad013ada3808854ceac7b46812a6465ba368859a37e2100283d2d719c"
-dependencies = [
- "cfg-if",
- "once_cell",
-]
-
-[[package]]
 name = "threadpool"
 version = "1.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7743,50 +7674,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "tracing-log"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ee855f1f400bd0e5c02d150ae5de3840039a3f54b025156404e34c23c03f47c3"
-dependencies = [
- "log",
- "once_cell",
- "tracing-core",
-]
-
-[[package]]
-name = "tracing-serde"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "704b1aeb7be0d0a84fc9828cae51dab5970fee5088f83d1dd7ee6f6246fc6ff1"
-dependencies = [
- "serde",
- "tracing-core",
-]
-
-[[package]]
 name = "tracing-subscriber"
 version = "0.2.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0e0d2eaa99c3c2e41547cfa109e910a68ea03823cccad4a0525dcbc9b01e8c71"
 dependencies = [
  "tracing-core",
-]
-
-[[package]]
-name = "tracing-subscriber"
-version = "0.3.19"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8189decb5ac0fa7bc8b96b7cb9b2701d60d48805aca84a238004d665fcc4008"
-dependencies = [
- "nu-ansi-term",
- "serde",
- "serde_json",
- "sharded-slab",
- "smallvec",
- "thread_local",
- "tracing-core",
- "tracing-log",
- "tracing-serde",
 ]
 
 [[package]]

@@ -14,5 +14,5 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
-eigen-logging.workspace = true
+
 metrics.workspace = true

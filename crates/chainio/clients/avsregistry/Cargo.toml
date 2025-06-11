@@ -24,7 +24,7 @@ ark-ff.workspace = true
 eigen-client-elcontracts.workspace = true
 eigen-common.workspace = true
 eigen-utils.workspace = true
-eigen-logging.workspace = true
+
 thiserror.workspace = true
 tracing.workspace = true
 
