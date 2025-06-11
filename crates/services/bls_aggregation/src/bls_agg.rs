@@ -1236,7 +1236,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_servic);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,

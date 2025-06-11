@@ -137,7 +137,6 @@ pub mod integration_test {
         .unwrap();
         let operator_id = operator_id_from_g1_pub_key(bls_key_pair.public_key()).unwrap();
         let el_chain_reader = ELChainReader::new(
-            get_test_logger(),
             None,
             Address::ZERO,
             Address::ZERO,
@@ -202,7 +201,6 @@ pub mod integration_test {
 
         // // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
-            get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_endpoint.clone(),
@@ -210,14 +208,11 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            ws_endpoint,
-        )
-        .await
-        .unwrap()
-        .0;
+        let operators_info =
+            OperatorInfoServiceInMemory::new(avs_registry_reader.clone(), ws_endpoint)
+                .await
+                .unwrap()
+                .0;
 
         let cancellation_token = CancellationToken::new();
         let operators_info_clone = operators_info.clone();
@@ -230,7 +225,7 @@ pub mod integration_test {
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
         let current_block_num = provider.get_block_number().await.unwrap();
 
         mine_anvil_blocks(&container, 1).await;
@@ -322,7 +317,6 @@ pub mod integration_test {
         .unwrap();
         let operator_id = operator_id_from_g1_pub_key(bls_key_pair.public_key()).unwrap();
         let el_chain_reader = ELChainReader::new(
-            get_test_logger(),
             None,
             Address::ZERO,
             Address::ZERO,
@@ -354,7 +348,6 @@ pub mod integration_test {
 
         // // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
-            get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_endpoint.clone(),
@@ -373,7 +366,7 @@ pub mod integration_test {
             operators_info_on_chain,
         );
 
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
         let current_block_num = provider.get_block_number().await.unwrap();
 
         mine_anvil_blocks(&container, 1).await;
@@ -451,7 +444,6 @@ pub mod integration_test {
         // Create Quorum
         create_quorum(PRIVATE_KEY_1, &http_endpoint).await;
         let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
             http_endpoint.to_string(),
             PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
@@ -482,7 +474,6 @@ pub mod integration_test {
 
         let current_block_num = provider.get_block_number().await.unwrap();
         let avs_registry_reader = AvsRegistryChainReader::new(
-            get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_endpoint.clone(),
@@ -490,14 +481,11 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            ws_endpoint,
-        )
-        .await
-        .unwrap()
-        .0;
+        let operators_info =
+            OperatorInfoServiceInMemory::new(avs_registry_reader.clone(), ws_endpoint)
+                .await
+                .unwrap()
+                .0;
 
         let cancellation_token = CancellationToken::new();
         let operators_info_clone = operators_info.clone();
@@ -510,7 +498,7 @@ pub mod integration_test {
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
@@ -596,7 +584,6 @@ pub mod integration_test {
         .await;
 
         let el_chain_reader = ELChainReader::new(
-            get_test_logger(),
             None,
             Address::ZERO,
             Address::ZERO,
@@ -654,7 +641,6 @@ pub mod integration_test {
         let current_block_num = provider.get_block_number().await.unwrap();
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
-            get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_endpoint.clone(),
@@ -662,14 +648,11 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            ws_endpoint,
-        )
-        .await
-        .unwrap()
-        .0;
+        let operators_info =
+            OperatorInfoServiceInMemory::new(avs_registry_reader.clone(), ws_endpoint)
+                .await
+                .unwrap()
+                .0;
 
         let cancellation_token = CancellationToken::new();
         let operators_info_clone = operators_info.clone();
@@ -682,7 +665,7 @@ pub mod integration_test {
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
@@ -783,7 +766,6 @@ pub mod integration_test {
         let operator_id_1 = operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap();
         let operator_id_2 = operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap();
         let el_chain_reader = ELChainReader::new(
-            get_test_logger(),
             None,
             Address::ZERO,
             Address::ZERO,
@@ -839,7 +821,6 @@ pub mod integration_test {
         let current_block_num = provider.get_block_number().await.unwrap();
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
-            get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_endpoint.clone(),
@@ -847,14 +828,11 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            ws_endpoint,
-        )
-        .await
-        .unwrap()
-        .0;
+        let operators_info =
+            OperatorInfoServiceInMemory::new(avs_registry_reader.clone(), ws_endpoint)
+                .await
+                .unwrap()
+                .0;
 
         let cancellation_token = CancellationToken::new();
         let operators_info_clone = operators_info.clone();
@@ -867,7 +845,7 @@ pub mod integration_test {
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
@@ -965,7 +943,6 @@ pub mod integration_test {
         let operator_id_1 = operator_id_from_g1_pub_key(bls_key_pair_1.public_key()).unwrap();
         let operator_id_2 = operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap();
         let el_chain_reader = ELChainReader::new(
-            get_test_logger(),
             None,
             Address::ZERO,
             Address::ZERO,
@@ -1021,7 +998,6 @@ pub mod integration_test {
         let current_block_num = provider.get_block_number().await.unwrap();
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
-            get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_endpoint.to_string(),
@@ -1029,14 +1005,11 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            ws_endpoint.to_string(),
-        )
-        .await
-        .unwrap()
-        .0;
+        let operators_info =
+            OperatorInfoServiceInMemory::new(avs_registry_reader.clone(), ws_endpoint.to_string())
+                .await
+                .unwrap()
+                .0;
 
         let cancellation_token = CancellationToken::new();
         let operators_info_clone = operators_info.clone();
@@ -1049,7 +1022,7 @@ pub mod integration_test {
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
@@ -1145,7 +1118,6 @@ pub mod integration_test {
 
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
-            get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_endpoint.to_string(),
@@ -1153,14 +1125,11 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            ws_endpoint.to_string(),
-        )
-        .await
-        .unwrap()
-        .0;
+        let operators_info =
+            OperatorInfoServiceInMemory::new(avs_registry_reader.clone(), ws_endpoint.to_string())
+                .await
+                .unwrap()
+                .0;
 
         let cancellation_token = CancellationToken::new();
         let operators_info_clone = operators_info.clone();
@@ -1169,7 +1138,6 @@ pub mod integration_test {
         sleep(Duration::from_secs(1)).await;
 
         let el_chain_reader = ELChainReader::new(
-            get_test_logger(),
             None,
             Address::ZERO,
             Address::ZERO,
@@ -1217,7 +1185,7 @@ pub mod integration_test {
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
@@ -1285,7 +1253,6 @@ pub mod integration_test {
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100];
 
         let el_chain_reader = ELChainReader::new(
-            get_test_logger(),
             None,
             Address::ZERO,
             Address::ZERO,
@@ -1318,7 +1285,6 @@ pub mod integration_test {
 
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
-            get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_endpoint.clone(),
@@ -1326,14 +1292,11 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            ws_endpoint,
-        )
-        .await
-        .unwrap()
-        .0;
+        let operators_info =
+            OperatorInfoServiceInMemory::new(avs_registry_reader.clone(), ws_endpoint)
+                .await
+                .unwrap()
+                .0;
 
         let cancellation_token = CancellationToken::new();
         let operators_info_clone = operators_info.clone();
@@ -1346,7 +1309,7 @@ pub mod integration_test {
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
 
         // Create the operator set and register the operators
         create_total_delegated_stake_operator_set(

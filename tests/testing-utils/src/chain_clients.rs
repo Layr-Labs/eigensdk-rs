@@ -66,7 +66,6 @@ pub async fn build_avs_registry_chain_writer(
         get_registry_coordinator_address(http_endpoint.clone()).await;
     let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
     AvsRegistryChainWriter::build_avs_registry_chain_writer(
-        get_test_logger(),
         http_endpoint,
         private_key,
         registry_coordinator_address,
@@ -83,7 +82,6 @@ pub async fn build_avs_registry_chain_reader(http_endpoint: String) -> AvsRegist
         get_operator_state_retriever_address(http_endpoint.clone()).await;
 
     AvsRegistryChainReader::new(
-        get_test_logger(),
         registry_coordinator_addr,
         operator_state_retriever_address,
         http_endpoint.to_string(),
@@ -99,7 +97,6 @@ pub async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
     let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
 
     ELChainReader::build(
-        get_test_logger().clone(),
         delegation_manager_address,
         avs_directory_address,
         rewards_coordinator,
