@@ -46,7 +46,6 @@ impl AvsRegistryChainWriter {
     ///
     /// # Arguments
     ///
-    /// * `logger` - SharedLogger used for logging
     /// * `provider` - provider string
     /// * `signer` - signer string
     /// * `registry_coordinator_addr` - registry coordinator address
@@ -60,7 +59,6 @@ impl AvsRegistryChainWriter {
     ///
     /// * `AvsRegistryError` - if any error occurs
     pub async fn build_avs_registry_chain_writer(
-        logger: SharedLogger,
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
@@ -85,7 +83,6 @@ impl AvsRegistryChainWriter {
         let rewards_coordinator_addr = Address::ZERO;
 
         let el_reader = ELChainReader::build(
-            logger.clone(),
             delegation_manager_addr,
             avs_directory,
             rewards_coordinator_addr,
@@ -1082,7 +1079,6 @@ mod tests {
             get_registry_coordinator_address(http_endpoint.clone()).await;
         let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
         AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
             http_endpoint,
             private_key,
             registry_coordinator_address,
