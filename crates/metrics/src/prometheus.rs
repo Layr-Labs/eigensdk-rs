@@ -43,7 +43,6 @@ mod tests {
         let operator_addr = Address::ZERO;
         let operator_id = FixedBytes::<32>::default();
         let avs_registry_reader = AvsRegistryChainReader::new(
-            get_test_logger(),
             get_registry_coordinator_address(http_endpoint.clone()).await,
             get_operator_state_retriever_address(http_endpoint.clone()).await,
             http_endpoint.to_string(),
@@ -55,7 +54,6 @@ mod tests {
         quorums_names.insert(1, "rust".to_string());
         let avs_name = "eigensdk-rs";
         let mut collector = FakeCollector::new(
-            get_test_logger(),
             operator_addr,
             operator_id,
             avs_registry_reader,
@@ -86,8 +84,8 @@ mod tests {
         assert!(body.contains("eigen_registered_stakes___quorum_number___1__quorum_name___rust__avs_name___eigensdk_rs__ 23"));
 
         // Initialize all the metrics
-        let metrics = EigenPerformanceMetrics::new(get_test_logger());
-        let rpc_calls = RpcCallsMetrics::new(get_test_logger());
+        let metrics = EigenPerformanceMetrics::new();
+        let rpc_calls = RpcCallsMetrics::new();
 
         sleep(Duration::from_secs(1)).await;
 
