@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FOUNDRY_IMAGE=ghcr.io/foundry-rs/foundry:stable
+FOUNDRY_IMAGE=ghcr.io/foundry-rs/foundry:nightly-548d1f0ebb811fcebd5fafdec33b7b814d0dbdbd
 
 set -e -o nounset
 
