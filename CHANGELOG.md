@@ -17,6 +17,15 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Bump `alloy` to 1.0 and change foundry image in PR [#553](https://github.com/Layr-Labs/eigensdk-rs/pull/553)
+  - With these changes, you should:
+    - Use `connect_http` instead of the deprecated `on_http`  
+    - Use `connect_ws` instead of the deprecated `on_ws`  
+    - Use `Signature` instead of the deprecated `PrimitiveSignature` alias
+    - The `foundry` image is now `ghcr.io/foundry-rs/foundry:nightly-548d1f0ebb811fcebd5fafdec33b7b814d0dbdbd`
+    - Generated binding names are now snake_case, which breaks existing import paths (e.g. `allocationmanager` → `allocation_manager`)
+    - Binding calls now return the value type directly instead of a tuple, so the `.0` suffix is no longer required
+
 * Bump MSRV and Rust to 1.82 in PR [515](https://github.com/Layr-Labs/eigensdk-rs/pull/515).
 
 * Added a method `get_operator_socket` to retrieve the socket from the `AvsRegistryServiceChainCaller` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464).
