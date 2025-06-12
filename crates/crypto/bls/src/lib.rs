@@ -4,8 +4,11 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
+use std::path::Path;
+
 use alloy::primitives::{B256, U256};
 use ark_std::str::FromStr;
+use eth_keystore::decrypt_key;
 pub mod error;
 
 use crate::error::BlsError;
@@ -169,6 +172,52 @@ impl BlsKeyPair {
             priv_key: sk,
             pub_key: BlsG1Point::new(pk.into_affine()),
         })
+    }
+
+    /// Create a [`BlsKeyPair`] from a byte array
+    ///
+    /// # Arguments
+    ///
+    /// * `bytes`: The byte array
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self, BlsError>` - The [`BlsKeyPair`]
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, BlsError> {
+        let sk = Fr::from_be_bytes_mod_order(bytes);
+        let pk = G1Projective::from(G1Affine::generator()) * sk;
+        Ok(Self {
+            priv_key: sk,
+            pub_key: BlsG1Point::new(pk.into_affine()),
+        })
+    }
+
+    /// Create a [`BlsKeyPair`] from a [`BlsSignerConfig`]
+    /// The config accepts a private key or the path and password of a web3 secret
+    /// storage keystore.
+    ///
+    /// NOTE: To create a web3 secret storage keystore, you can use the `eigen-cli` crate.
+    ///
+    /// `cargo run --package eigen-cli -- egnkey generate --key-type bls`
+    ///
+    /// # Arguments
+    ///
+    /// * `config`: The BLS signer config
+    ///
+    /// # Returns
+    ///
+    /// * `Result<BlsKeyPair, BlsError>` - The [`BlsKeyPair`]
+    pub fn from_config(config: BlsSignerConfig) -> Result<BlsKeyPair, BlsError> {
+        match config {
+            BlsSignerConfig::PrivateKey(BlsPrivateKeyConfig { private_key }) => {
+                BlsKeyPair::new(private_key)
+            }
+            BlsSignerConfig::Keystore(BlsKeystoreConfig { path, password }) => {
+                let keypath = Path::new(&path);
+                let private_key = decrypt_key(keypath, password)?;
+                BlsKeyPair::from_bytes(&private_key)
+            }
+        }
     }
 
     /// Get public key on G1
@@ -422,6 +471,48 @@ where
     let s: Vec<u8> = Deserialize::deserialize(data)?;
     let a = A::deserialize_with_mode(s.as_slice(), Compress::Yes, Validate::Yes);
     a.map_err(de::Error::custom)
+}
+
+/// BLS Signer configuration
+/// We only support [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage)
+/// keystores
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum BlsSignerConfig {
+    /// Private key
+    PrivateKey(BlsPrivateKeyConfig),
+    /// Web3 Secret Storage Keystore
+    Keystore(BlsKeystoreConfig),
+}
+
+impl From<BlsPrivateKeyConfig> for BlsSignerConfig {
+    /// Convert a [`BlsPrivateKeyConfig`] into a [`BlsSignerConfig`]
+    fn from(config: BlsPrivateKeyConfig) -> Self {
+        BlsSignerConfig::PrivateKey(config)
+    }
+}
+
+impl From<BlsKeystoreConfig> for BlsSignerConfig {
+    /// Convert a [`BlsKeystoreConfig`] into a [`BlsSignerConfig`]
+    fn from(config: BlsKeystoreConfig) -> Self {
+        BlsSignerConfig::Keystore(config)
+    }
+}
+
+/// Configuration for a BLS private key signer
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct BlsPrivateKeyConfig {
+    /// BLS private key
+    pub private_key: String,
+}
+
+/// Configuration for a BLS keystore signer using [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage).
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct BlsKeystoreConfig {
+    /// Path to the keystore file
+    pub path: String,
+    /// Password to decrypt the keystore file
+    pub password: String,
 }
 
 #[cfg(test)]
