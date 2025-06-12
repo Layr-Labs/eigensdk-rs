@@ -14,4 +14,7 @@ pub enum SignerError {
     /// Invalid endpoint URL
     #[error("invalid endpoint URL")]
     InvalidEndpointUrl,
+    /// Missing keystore password
+    #[error("missing keystore password")]
+    MissingKeystorePassword,
 }
