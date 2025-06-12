@@ -486,6 +486,7 @@ mod test {
     }
 
     #[tokio::test]
+    #[serial_test::serial]
     async fn sign_transaction_with_keystore_and_env_password() {
         let config = KeystoreConfig {
             path: KEYSTORE_PATH.into(),
@@ -516,6 +517,7 @@ mod test {
     }
 
     #[tokio::test]
+    #[serial_test::serial]
     async fn sign_transaction_with_keystore_and_no_env_password() {
         let config = KeystoreConfig {
             path: KEYSTORE_PATH.into(),
