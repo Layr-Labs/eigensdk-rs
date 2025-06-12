@@ -27,7 +27,7 @@ cargo add eigensdk --features full
 - [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
 - [eigen-common](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/common) - Common utilities like provider and signer getters.
 
-### Deprecated `eigen-logging` crate
+### Removed `eigen-logging` crate
 
 The internal `eigen-logging` crate has been removed in favor of the community-standard `tracing` crate.
 
