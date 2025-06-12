@@ -81,7 +81,7 @@ bindings_slashing_host:
 	./scripts/generate_slashing_bindings.sh
 	cargo fmt --all
 	# Apply a fix for any compile issues
-	git apply --allow-empty scripts/bindings-alloy-1.0.patch
+	git apply --allow-empty scripts/bindings.patch
 	@echo "Bindings generated"
 
 .PHONY: bindings_host
@@ -102,7 +102,7 @@ slashing-bindings:
 		-c scripts/generate_slashing_bindings.sh
 	cargo fmt --all
 	# Apply a fix for any compile issues
-	git apply --allow-empty scripts/bindings-alloy-1.0.patch
+	git apply --allow-empty scripts/bindings.patch
 
 .PHONY: bindings
 bindings: rewardsv2-bindings slashing-bindings
