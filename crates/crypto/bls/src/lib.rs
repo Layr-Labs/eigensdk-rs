@@ -12,7 +12,6 @@ use eth_keystore::decrypt_key;
 pub mod error;
 
 use crate::error::BlsError;
-use alloy::hex;
 use ark_bn254::{g1::G1Affine, Fq, Fr, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{fields::PrimeField, BigInt, BigInteger256, Fp2};
@@ -928,5 +927,64 @@ mod tests {
         let bytes = hex::decode(BLS_PRIVATE_KEY).unwrap();
         let expected_priv_key = Fr::from_be_bytes_mod_order(&bytes);
         assert_eq!(bls_key_pair.priv_key, expected_priv_key);
+    }
+
+    // fn test_aws_config_serialization() {
+    //     let original = AwsConfig {
+    //         key_id: "1234abcd-12ab-34cd-56ef-1234567890ab".into(),
+    //         chain_id: Some(1),
+    //         region: "us-west-1".into(),
+    //         endpoint_url: "http://localhost:4566".into(),
+    //     };
+    //     let toml_str = toml::to_string(&original).unwrap();
+    //     let parsed: AwsConfig = toml::from_str(&toml_str).unwrap();
+    //     assert_eq!(parsed, original);
+
+    //     let toml_str = r#"
+    //         key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
+    //         chain_id = 1
+    //         region = "us-west-1"
+    //         endpoint_url = "http://localhost:4566"
+    //     "#;
+    //     let parsed: AwsConfig = toml::from_str(toml_str).unwrap();
+    //     assert_eq!(parsed, original);
+    // }
+
+    #[test]
+    fn test_bls_serialize_deserialize_from_config_private_key() {
+        let original = BlsPrivateKeyConfig {
+            private_key:
+                "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                    .to_string(),
+        };
+
+        let toml_str = toml::to_string(&original).unwrap();
+        let parsed: BlsPrivateKeyConfig = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed, original);
+
+        let toml_str = r#"
+            private_key = "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+        "#;
+        let parsed: BlsPrivateKeyConfig = toml::from_str(toml_str).unwrap();
+        assert_eq!(parsed, original);
+    }
+
+    #[test]
+    fn test_bls_serialize_deserialize_from_config_keystore() {
+        let original = BlsKeystoreConfig {
+            path: BLS_KEYSTORE_PATH.to_string(),
+            password: Some(BLS_KEYSTORE_PASSWORD.to_string()),
+        };
+
+        let toml_str = toml::to_string(&original).unwrap();
+        let parsed: BlsKeystoreConfig = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed, original);
+
+        let toml_str = r#"
+            path = "mockdata/test.bls.key.json"
+            password = "zbEykAPaTQ5Ww3dQqXCp"
+        "#;
+        let parsed: BlsKeystoreConfig = toml::from_str(toml_str).unwrap();
+        assert_eq!(parsed, original);
     }
 }
