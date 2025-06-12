@@ -1,15 +1,12 @@
 use alloy::primitives::Address;
+use eigen_signer::SignerConfig;
 use serde::{Deserialize, Serialize};
 
 /// Operator registration config
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OperatorRegistrationConfig {
-    /// Private key of the operator
-    pub operator_pvt_key: Option<String>,
-    /// Path to the ECDSA keystore file
-    pub ecdsa_keystore_path: String,
-    /// Password for the ECDSA keystore file
-    pub ecdsa_keystore_password: String,
+    /// Signer of the operator
+    pub signer: SignerConfig,
     /// Metadata URI
     pub metadata_uri: String,
     /// Socket address

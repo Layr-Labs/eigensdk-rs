@@ -18,9 +18,9 @@ futures-util.workspace = true
 # eigen-rs
 eigen-aggregator.workspace = true
 eigen-client-avsregistry.workspace = true
-eigen-client-elcontracts.workspace = true
-eigen-crypto-bls.workspace = true
 eigen-common.workspace = true
+eigen-crypto-bls.workspace = true
+eigen-signer.workspace = true
 eigen-task-manager.workspace = true
 eigen-types.workspace = true
 rust-bls-bn254.workspace = true

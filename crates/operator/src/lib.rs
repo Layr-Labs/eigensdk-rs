@@ -106,7 +106,7 @@
 //!    Then, call the [`run`](Operator::run) method to start the operator.
 //!
 //!     ```ignore
-//!         let operator = Operator::new(logger, config, logic).await.unwrap();
+//!         let operator = Operator::new(config, logic).await.unwrap();
 //!         operator.run::<ISTaskManager>().await.unwrap();
 //!     ```
 //!
@@ -134,6 +134,7 @@
 //! implementation for an example of how to implement a custom Response Calculator.
 //!
 
+use crate::error::OperatorRegistrationError;
 use alloy::{
     dyn_abi::SolType,
     primitives::keccak256,
@@ -145,7 +146,6 @@ use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
 use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
-use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorId};
@@ -190,14 +190,13 @@ impl<RP> Operator<RP> {
     ///
     /// # Arguments
     ///
-    /// * `logger` - The logger.
     /// * `config` - The operator configuration.
+    /// * `response_calculator` - The response calculator.
     ///
     /// # Returns
     ///
     /// * `Result<Self, OperatorError>` - The operator.
     pub async fn new<Input, Output>(
-        logger: SharedLogger,
         config: config::OperatorConfig,
         response_calculator: RP,
     ) -> Result<Self, OperatorError>
@@ -235,19 +234,14 @@ impl<RP> Operator<RP> {
             // Check if a registration config was provided.
             let Some(registration_config) = config.registration else {
                 error!(
-                    "Operator {} not registered and no registration config was provided",
-                    operator_name
+                    "Operator {operator_name} not registered and no registration config was provided"
                 );
-                return Err(OperatorError::RegistrationError);
+                return Err(OperatorError::RegistrationError(
+                    OperatorRegistrationError::RegistrationConfigMissing,
+                ));
             };
 
-            register_operator(
-                registration_config,
-                logger,
-                http_rpc_url,
-                bls_key_pair.clone(),
-            )
-            .await?;
+            register_operator(registration_config, http_rpc_url, bls_key_pair.clone()).await?;
             info!("Operator {} registered successfully", operator_name);
         }
 
@@ -259,7 +253,7 @@ impl<RP> Operator<RP> {
             .await?
             ._0;
 
-        let operator_id_from_bls = operator_id_from_g1_pub_key(key_pair.public_key())
+        let operator_id_from_bls = operator_id_from_g1_pub_key(bls_key_pair.public_key())
             .map_err(|_| OperatorError::OperatorIdError)?;
 
         if operator_id_from_bls != operator_id {

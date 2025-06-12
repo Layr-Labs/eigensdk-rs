@@ -15,10 +15,12 @@ aws-sdk-kms.workspace = true
 eth-keystore.workspace = true
 serde.workspace = true
 thiserror.workspace = true
+tracing.workspace = true
 url.workspace = true
 
 [dev-dependencies]
 eigen-testing-utils.workspace = true
+serial_test = "3.2.0"
 testcontainers.workspace = true
 tokio.workspace = true
 toml = "0.8"

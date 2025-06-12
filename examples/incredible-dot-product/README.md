@@ -77,7 +77,7 @@ Start the operator:
 cargo run --bin incredible-dot-operator
 ```
 
-The Operator will first check whether it is already registered on EigenLayer. If not, it will attempt to register automatically. To enable registration, create an [OperatorRegistrationConfig] and include it in the [OperatorConfig] struct.
+The Operator will first check whether it is already registered on EigenLayer. If not, it will attempt to register automatically. To enable registration, create an `OperatorRegistrationConfig` and include it in the `OperatorConfig` struct.
 
 The operator will produce invalid results often because it use `failing_response_calculator` method, which has a failure rate of 40% and returns `U256::MAX` as the response.
 
