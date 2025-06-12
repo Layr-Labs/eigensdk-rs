@@ -241,7 +241,7 @@ impl<RP> Operator<RP> {
                 ));
             };
 
-            register_operator(registration_config, http_rpc_url, key_pair.clone()).await?;
+            register_operator(registration_config, http_rpc_url, bls_key_pair.clone()).await?;
             info!("Operator {} registered successfully", operator_name);
         }
 
@@ -253,7 +253,7 @@ impl<RP> Operator<RP> {
             .await?
             ._0;
 
-        let operator_id_from_bls = operator_id_from_g1_pub_key(key_pair.public_key())
+        let operator_id_from_bls = operator_id_from_g1_pub_key(bls_key_pair.public_key())
             .map_err(|_| OperatorError::OperatorIdError)?;
 
         if operator_id_from_bls != operator_id {
