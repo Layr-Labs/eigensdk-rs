@@ -2925,6 +2925,7 @@ dependencies = [
  "eigen-crypto-bn254",
  "eigen-testing-utils",
  "eigen-utils",
+ "eth-keystore",
  "rand 0.8.5",
  "serde",
  "serde_json",

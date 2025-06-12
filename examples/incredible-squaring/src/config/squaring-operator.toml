@@ -1,4 +1,3 @@
-bls_private_key = "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
 operator_address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 operator_name = "squaring"
 http_rpc_url = "http://localhost:8545"
@@ -7,6 +6,9 @@ registry_coordinator_address = "0x7bc06c482dead17c0e297afbc32f6e63d3846650"
 operator_state_retriever_address = "0x4c5859f0f772848b2d91f1d83e2fe57935348029"
 aggregator_ip_port = "127.0.0.1:8080"
 
+[bls_signer]
+path = "./src/keys/bls.key.json"
+password = "gCANg0WPJIoQvcgRH6Zu"
 
 [registration]
 metadata_uri = "metadata"

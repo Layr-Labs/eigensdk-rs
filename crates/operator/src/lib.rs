@@ -52,7 +52,13 @@
 //! 2. **Create the operator configuration**: Create a [`OperatorConfig`](crate::config::OperatorConfig) struct.
 //!    This structs implements `Serialize` and `Deserialize` so you can load from a file.
 //!    - Attributes:
-//!      - `bls_private_key`: The BLS private key for
+//!      - `bls_signer`: The config for the BLS signer. We only support [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage)
+//!        keystores. You can create one with the following command:
+//!        ```bash
+//!         cargo run --package eigen-cli -- egnkey generate --key-type bls
+//!        ```
+//!        The output will be a `bls.key.json` file. Please refer to the `eigen-cli` crate for more information.
+//!
 //!      - `operator_address`: The address of the operator
 //!      - `operator_name`: The name of the operator
 //!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
@@ -198,7 +204,7 @@ impl<RP> Operator<RP> {
         RP: ResponseCalculator<Input, Output>,
     {
         let config::OperatorConfig {
-            bls_private_key,
+            bls_signer,
             operator_address,
             operator_name,
             ws_rpc_url,
@@ -207,7 +213,8 @@ impl<RP> Operator<RP> {
             aggregator_ip_port,
             registration: _,
         } = config;
-        let key_pair = BlsKeyPair::new(bls_private_key)?;
+
+        let bls_key_pair = BlsKeyPair::from_config(bls_signer)?;
 
         let provider = get_provider(&http_rpc_url);
         let contract_registry_coordinator =
@@ -261,7 +268,7 @@ impl<RP> Operator<RP> {
             operator_name: operator_name.to_string(),
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
-            key_pair,
+            key_pair: bls_key_pair,
             response_calculator,
         })
     }
