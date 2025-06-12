@@ -1407,8 +1407,7 @@ mod tests {
         chain_clients::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS},
     };
     use eigen_utils::slashing::core::{
-        avs_directory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
-        delegation_manager::DelegationManager,
+        avs_directory::AVSDirectory, delegation_manager::DelegationManager,
     };
 
     #[tokio::test]
