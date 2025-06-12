@@ -526,6 +526,7 @@ pub struct BlsKeystoreConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloy::hex;
     use ark_bn254::Fq2;
     use eigen_crypto_bn254::utils::verify_message;
     use eigen_testing_utils::test_data::TestData;
