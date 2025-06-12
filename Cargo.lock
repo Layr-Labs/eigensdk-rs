@@ -3126,6 +3126,7 @@ dependencies = [
  "eigen-testing-utils",
  "eth-keystore",
  "serde",
+ "serial_test",
  "testcontainers",
  "thiserror 1.0.69",
  "tokio",
