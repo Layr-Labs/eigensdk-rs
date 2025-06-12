@@ -1,7 +1,7 @@
+use alloy::contract::Error as AlloyError;
 use alloy::signers::local::LocalSignerError;
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_client_elcontracts::error::ElContractsError;
-// use eigen_config::error::ConfigError;
 use eigen_crypto_bls::error::BlsError;
 use eigen_task_manager::{event_decoder::AbiDecodeError, TaskManagerError};
 use rust_bls_bn254::errors::KeystoreError;
@@ -20,6 +20,9 @@ pub enum OperatorError {
     /// Operator Id Error
     #[error("Failed to get operator id")]
     OperatorIdError,
+    /// Operator ID from BLS key pair does not match operator ID from contract
+    #[error("Operator ID from BLS key pair does not match operator ID from contract")]
+    OperatorIdMismatch,
     /// Operator Subscribe Logs Error
     #[error("Failed to subscribe logs")]
     SubscribeLogsError,
@@ -54,6 +57,9 @@ pub enum OperatorError {
     /// Invalid deposit tokens
     #[error("Invalid deposit tokens")]
     InvalidDepositTokens,
+    /// Alloy contract error
+    #[error("Alloy contract error: {0}")]
+    AlloyContractError(#[from] AlloyError),
     /// ELChainWriter Error
     #[error("ElContractsError Error")]
     ElContractsError(#[from] ElContractsError),

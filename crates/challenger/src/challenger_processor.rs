@@ -1,4 +1,4 @@
-use crate::{challenger::ChallengerTaskProcessor, error::ChallengerError};
+use crate::{challenger::ChallengerProcessor, error::ChallengerError};
 use alloy::dyn_abi::SolType;
 use alloy::primitives::B256;
 use alloy::sol_types::SolValue;
@@ -10,7 +10,7 @@ use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
 use tracing::{error, info};
 
-/// Standard implementation of the [`ChallengerTaskProcessor`] trait
+/// Standard implementation of the [`ChallengerProcessor`] trait
 /// It has a `HashMap` of the task index and the new tasks received.
 /// It also has a verifier that is used to verify the output of the task against the operator's response.
 #[derive(Debug)]
@@ -24,7 +24,7 @@ where
     is_response_correct: F,
 }
 
-impl<TM, F> ChallengerTaskProcessor for IndexingChallengerProcessor<TM, F>
+impl<TM, F> ChallengerProcessor for IndexingChallengerProcessor<TM, F>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,

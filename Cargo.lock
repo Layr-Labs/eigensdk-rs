@@ -3019,6 +3019,7 @@ dependencies = [
  "eigen-aggregator",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
+ "eigen-common",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",
@@ -3128,6 +3129,7 @@ dependencies = [
  "testcontainers",
  "thiserror 1.0.69",
  "tokio",
+ "toml",
  "url",
 ]
 

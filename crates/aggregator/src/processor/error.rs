@@ -1,9 +1,9 @@
 use eigen_task_manager::TaskManagerError;
 use thiserror::Error;
 
-/// Task processor error
+/// [`AggregatorProcessor`](crate::AggregatorProcessor) error
 #[derive(Debug, Error)]
-pub enum TaskProcessorError {
+pub enum AggregatorProcessorError {
     /// Task not found
     #[error("Task not found")]
     TaskNotFound,

@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-use crate::{task_processor::TaskProcessor, AggregatorError, SignedTaskResponse};
+use crate::{AggregatorError, AggregatorProcessor, SignedTaskResponse};
 use alloy::{dyn_abi::SolType, sol_types::SolValue};
 use eigen_services_blsaggregation::bls_agg::{ServiceHandle, TaskSignature};
 use tarpc::{context::Context, ServerError};
@@ -28,7 +28,7 @@ pub trait ProcessSignedTaskResponse {
 /// Server for the ProcessSignedTaskResponse RPC
 pub struct ProcessSignedTaskResponseServer<TP>
 where
-    TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP: AggregatorProcessor + Debug + Send + Sync + 'static + Clone,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
     task_processor: TP,
@@ -39,7 +39,7 @@ where
 /// The async method serves the RPC request and processes the signed task response
 impl<TP> ProcessSignedTaskResponse for ProcessSignedTaskResponseServer<TP>
 where
-    TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP: AggregatorProcessor + Debug + Send + Sync + 'static + Clone,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
     async fn process_signed_task_response(
@@ -75,7 +75,7 @@ where
 
 impl<TP> ProcessSignedTaskResponseServer<TP>
 where
-    TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP: AggregatorProcessor + Debug + Send + Sync + 'static + Clone,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
     /// Creates a new [`ProcessSignedTaskResponseServer`]
