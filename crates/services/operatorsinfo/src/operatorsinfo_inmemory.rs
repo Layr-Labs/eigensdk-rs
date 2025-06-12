@@ -359,7 +359,7 @@ impl OperatorInfoServiceInMemory {
                                 // Send message
 
                                 debug!(
-                                    "New pub key found  operator_address : {:?} , operator_pub_keys : {operator_pub_key:?}",
+                                    "New pub key found operator_address: {:?}, operator_pub_keys: {operator_pub_key:?}",
                                     event_data.operator,
                                 );
 
@@ -395,7 +395,7 @@ impl OperatorInfoServiceInMemory {
                                 // Send message
 
                                 debug!(
-                                    "Received new socket registration event  operator_id : {:?} , socket : {:?}",
+                                    "Received new socket registration event operator_id: {:?}, socket: {:?}",
                                     event_data.operatorId, event_data.socket
                                 );
 
@@ -484,7 +484,7 @@ async fn query_past_registered_operator_events_and_fill_db(
                 StateSource::Historic,
             );
             debug!(
-                "New pub key found  operator_address : {operator_address:?} , operator_pub_keys : {operator_pub_keys:?}"
+                "New pub key found operator_address: {operator_address:?}, operator_pub_keys: {operator_pub_keys:?}"
             );
             let _ = pub_keys.send(message);
         } else {

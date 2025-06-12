@@ -15,7 +15,6 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 alloy.workspace = true
-
 eigen-types.workspace = true
 eigen-client-elcontracts.workspace = true
 eigen-client-avsregistry.workspace = true

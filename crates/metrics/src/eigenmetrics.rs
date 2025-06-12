@@ -28,7 +28,7 @@ impl EigenPerformanceMetrics {
 
     #[instrument(skip_all)]
     pub fn set_performance_score(&self, score: f64) {
-        debug!("set performance score , new score {}", score);
+        debug!("set performance score, new score {}", score);
         gauge!("eigen_performance_score").set(score);
     }
 }

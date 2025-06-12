@@ -609,7 +609,11 @@ impl AvsRegistryChainReader {
             })?;
 
             let len = logs.len();
-            debug!("numTransactionLogs: {len}, fromBlock: {i}, toBlock: {to_block}");
+            debug!(
+                num_transaction_logs = len,
+                from_block = i,
+                to_block = to_block,
+            );
 
             for pub_key_reg in logs
                 .iter()
@@ -691,7 +695,9 @@ impl AvsRegistryChainReader {
             }
             let len = logs.len();
             debug!(
-                "num_transaction_logs : {len} , from_block: {from_block} , to_block: {to_block}"
+                num_transaction_logs = len,
+                from_block = from_block,
+                to_block = to_block,
             );
         }
         Ok(operator_id_to_socket)
