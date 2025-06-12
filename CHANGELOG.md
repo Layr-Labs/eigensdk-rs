@@ -177,6 +177,8 @@ Alternate implementation which directly queries from middleware using view call 
       .unwrap();
     ```
 
+    - No longer need to instantiate or pass the logger into methods, simply subscribe to `tracing` events.
+
 ### Documentation 📚
 
 ### Other Changes
