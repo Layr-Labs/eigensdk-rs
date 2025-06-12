@@ -9,7 +9,6 @@ use eigen_common::{get_provider, get_signer};
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
-use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::operator_id_from_g1_pub_key;
 use eigen_types::operator::QuorumNum;
 use eigen_utils::convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params;
@@ -47,7 +46,6 @@ impl AvsRegistryChainWriter {
     ///
     /// # Arguments
     ///
-    /// * `logger` - SharedLogger used for logging
     /// * `provider` - provider string
     /// * `signer` - signer string
     /// * `registry_coordinator_addr` - registry coordinator address
@@ -61,7 +59,6 @@ impl AvsRegistryChainWriter {
     ///
     /// * `AvsRegistryError` - if any error occurs
     pub async fn build_avs_registry_chain_writer(
-        logger: SharedLogger,
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
@@ -86,7 +83,6 @@ impl AvsRegistryChainWriter {
         let rewards_coordinator_addr = Address::ZERO;
 
         let el_reader = ELChainReader::build(
-            logger.clone(),
             delegation_manager_addr,
             avs_directory,
             rewards_coordinator_addr,
@@ -1046,7 +1042,6 @@ mod tests {
     use alloy::sol_types::SolCall;
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_erc20_mock_strategy, get_registry_coordinator_address,
@@ -1084,7 +1079,6 @@ mod tests {
             get_registry_coordinator_address(http_endpoint.clone()).await;
         let service_manager_addr = get_service_manager_address(http_endpoint.clone()).await;
         AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
             http_endpoint,
             private_key,
             registry_coordinator_address,

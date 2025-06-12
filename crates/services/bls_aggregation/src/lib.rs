@@ -42,7 +42,6 @@
 //! # };
 //! # use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 //! # use eigen_services_avsregistry::AvsRegistryService;
-//! # use eigen_logging::get_test_logger;
 //! # use eigen_testing_utils::{
 //! #     anvil_constants::{
 //! #         get_operator_state_retriever_address, get_registry_coordinator_address,
@@ -53,7 +52,6 @@
 //! # async fn main() {
 //! #     let http_endpoint = "http://localhost:8545";
 //! #     let ws_endpoint = "ws://localhost:8546";
-//! #     let logger = get_test_logger();
 //! #     let registry_coordinator_address =
 //! #         get_registry_coordinator_address(http_endpoint.to_string()).await;
 //! #     let operator_state_retriever_address =
@@ -61,7 +59,6 @@
 //! #     
 //! #     // Create avs clients to interact with contracts deployed on anvil
 //! #     let avs_registry_reader = AvsRegistryChainReader::new(
-//! #         get_test_logger(),
 //! #         registry_coordinator_address,
 //! #         operator_state_retriever_address,
 //! #         http_endpoint.to_string(),
@@ -71,7 +68,6 @@
 //! #
 //! #     // Create operators info service
 //! #     let operators_info = OperatorInfoServiceInMemory::new(
-//! #         get_test_logger(),
 //! #         avs_registry_reader.clone(),
 //! #         ws_endpoint.to_string(),
 //! #     )
@@ -83,7 +79,7 @@
 //! #     let avs_registry_service =
 //! #         AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 //!     let (service_handle, mut aggregate_receiver) =
-//!         BlsAggregatorService::new(avs_registry_service, logger).start();
+//!         BlsAggregatorService::new(avs_registry_service).start();
 //! # }
 //! ```
 //!
@@ -98,7 +94,6 @@
 //! # };
 //! # use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 //! # use eigen_services_avsregistry::AvsRegistryService;
-//! # use eigen_logging::get_test_logger;
 //! # use eigen_testing_utils::{
 //! #     anvil_constants::{
 //! #         get_operator_state_retriever_address, get_registry_coordinator_address,
@@ -111,7 +106,6 @@
 //! # async fn main() {
 //! #     let http_endpoint = ANVIL_HTTP_URL;
 //! #     let ws_endpoint = ANVIL_WS_URL;
-//! #     let logger = get_test_logger();
 //! #     let registry_coordinator_address =
 //! #         get_registry_coordinator_address(http_endpoint.to_string()).await;
 //! #     let operator_state_retriever_address =
@@ -119,7 +113,6 @@
 //! #     
 //! #     // Create avs clients to interact with contracts deployed on anvil
 //! #     let avs_registry_reader = AvsRegistryChainReader::new(
-//! #         get_test_logger(),
 //! #         registry_coordinator_address,
 //! #         operator_state_retriever_address,
 //! #         http_endpoint.to_string(),
@@ -129,7 +122,6 @@
 //! #
 //! #     // Create operators info service
 //! #     let operators_info = OperatorInfoServiceInMemory::new(
-//! #         get_test_logger(),
 //! #         avs_registry_reader.clone(),
 //! #         ws_endpoint.to_string(),
 //! #     )
@@ -141,7 +133,7 @@
 //! #     let avs_registry_service =
 //! #         AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 //! #    let (service_handle, mut aggregate_receiver) =
-//! #        BlsAggregatorService::new(avs_registry_service, logger).start();
+//! #        BlsAggregatorService::new(avs_registry_service).start();
 //! #
 //! #    let task_index = 0;
 //! #    let block_number = 1;
@@ -171,7 +163,6 @@
 //! # };
 //! # use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 //! # use eigen_services_avsregistry::AvsRegistryService;
-//! # use eigen_logging::get_test_logger;
 //! # use eigen_testing_utils::{
 //! #     anvil_constants::{
 //! #         get_operator_state_retriever_address, get_registry_coordinator_address,
@@ -186,7 +177,6 @@
 //! # async fn main() {
 //! #     let http_endpoint = ANVIL_HTTP_URL;
 //! #     let ws_endpoint = ANVIL_WS_URL;
-//! #     let logger = get_test_logger();
 //! #     let registry_coordinator_address =
 //! #         get_registry_coordinator_address(http_endpoint.to_string()).await;
 //! #     let operator_state_retriever_address =
@@ -194,7 +184,6 @@
 //! #     
 //! #     // Create avs clients to interact with contracts deployed on anvil
 //! #     let avs_registry_reader = AvsRegistryChainReader::new(
-//! #         get_test_logger(),
 //! #         registry_coordinator_address,
 //! #         operator_state_retriever_address,
 //! #         http_endpoint.to_string(),
@@ -204,7 +193,6 @@
 //! #
 //! #     // Create operators info service
 //! #     let operators_info = OperatorInfoServiceInMemory::new(
-//! #         get_test_logger(),
 //! #         avs_registry_reader.clone(),
 //! #         ws_endpoint.to_string(),
 //! #     )
@@ -216,7 +204,7 @@
 //! #     let avs_registry_service =
 //! #         AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 //! #    let (service_handle, mut aggregate_receiver) =
-//! #        BlsAggregatorService::new(avs_registry_service, logger).start();
+//! #        BlsAggregatorService::new(avs_registry_service).start();
 //! #
 //! #    let task_index = 0;
 //! #    let task_response: u64 = 123;
@@ -246,7 +234,6 @@
 //! # };
 //! # use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 //! # use eigen_services_avsregistry::AvsRegistryService;
-//! # use eigen_logging::get_test_logger;
 //! # use eigen_testing_utils::{
 //! #     anvil_constants::{
 //! #         get_operator_state_retriever_address, get_registry_coordinator_address,
@@ -258,7 +245,6 @@
 //! # async fn main() {
 //! #     let http_endpoint = ANVIL_HTTP_URL;
 //! #     let ws_endpoint = ANVIL_WS_URL;
-//! #     let logger = get_test_logger();
 //! #     let registry_coordinator_address =
 //! #         get_registry_coordinator_address(http_endpoint.to_string()).await;
 //! #     let operator_state_retriever_address =
@@ -266,7 +252,6 @@
 //! #     
 //! #     // Create avs clients to interact with contracts deployed on anvil
 //! #     let avs_registry_reader = AvsRegistryChainReader::new(
-//! #         get_test_logger(),
 //! #         registry_coordinator_address,
 //! #         operator_state_retriever_address,
 //! #         http_endpoint.to_string(),
@@ -276,7 +261,6 @@
 //! #
 //! #     // Create operators info service
 //! #     let operators_info = OperatorInfoServiceInMemory::new(
-//! #         get_test_logger(),
 //! #         avs_registry_reader.clone(),
 //! #         ws_endpoint.to_string(),
 //! #     )
@@ -288,7 +272,7 @@
 //! #     let avs_registry_service =
 //! #         AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 //! #    let (service_handle, mut aggregate_receiver) =
-//! #        BlsAggregatorService::new(avs_registry_service, logger).start();
+//! #        BlsAggregatorService::new(avs_registry_service).start();
 //! #
 //!     match aggregate_receiver.receive_aggregated_response().await {
 //!         Ok(aggregated_response) => {
