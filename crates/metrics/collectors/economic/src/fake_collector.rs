@@ -61,7 +61,11 @@ impl FakeCollector {
         );
         gauge!(key.to_string()).set(value);
         debug!(
-            "set registered stakes , quorum_name: {quorum_name} , quorum_number: {quorum_number} , avs_name: {avs_name}, value: {value}"
+            quorum_name = quorum_name,
+            quorum_number = quorum_number,
+            avs_name = avs_name,
+            value = value,
+            "set registered stakes",
         )
     }
 

@@ -69,14 +69,18 @@ impl Collector {
         );
         gauge!(key.to_string()).set(value);
         debug!(
-            "set registered stakes , quorum_name: {quorum_name} , quorum_number: {quorum_number} , avs_name: {avs_name}, value: {value}"
-        )
+            quorum_name = quorum_name,
+            quorum_number = quorum_number,
+            avs_name = avs_name,
+            value = value,
+            "set registered stakes"
+        );
     }
 
     #[instrument(skip_all)]
     pub async fn collect(&mut self) -> Result<(), CollectorMetricError> {
         self.init_operator_id().await.inspect_err(|e| {
-            warn!("Failed to fetch and cache operator id. Skipping collection of registeredStake metric, err {e}")
+            warn!(err = %e, "Failed to fetch and cache operator id. Skipping collection of registeredStake metric")
         })?;
         let quorum_stake_map = self
             .avs_registry_reader
