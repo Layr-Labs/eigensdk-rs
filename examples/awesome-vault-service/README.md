@@ -79,7 +79,7 @@ Start the operator:
 cargo run --bin awesome-vault-operator
 ```
 
-The Operator will first check whether it is already registered on EigenLayer. If not, it will attempt to register automatically. To enable registration, create an [OperatorRegistrationConfig] and include it in the [OperatorConfig] struct.
+The Operator will first check whether it is already registered on EigenLayer. If not, it will attempt to register automatically. To enable registration, create an `OperatorRegistrationConfig` and include it in the `OperatorConfig` struct.
 
 The operator will produce invalid results often because it use `failing_response_calculator` method, which has a failure rate of 50% and returns `B256::default()` as the response.
 
