@@ -12,6 +12,7 @@ use eth_keystore::decrypt_key;
 pub mod error;
 
 use crate::error::BlsError;
+use alloy::hex;
 use ark_bn254::{g1::G1Affine, Fq, Fr, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{fields::PrimeField, BigInt, BigInteger256, Fp2};
@@ -532,7 +533,7 @@ mod tests {
     type Fp = ark_ff::Fp<ark_ff::MontBackend<ark_bn254::FqConfig, 4>, 4>;
 
     /// Path to the BLS keystore file
-    const BLS_KEYSTORE_PATH: &str = "src/keys/1.bls.key.json";
+    const BLS_KEYSTORE_PATH: &str = "mockdata/test.bls.key.json";
     /// Password to decrypt the BLS keystore file
     const BLS_KEYSTORE_PASSWORD: &str = "zbEykAPaTQ5Ww3dQqXCp";
     /// Decrypted private key from the BLS keystore file
@@ -904,54 +905,28 @@ mod tests {
 
     #[test]
     fn test_bls_signature_with_keystore_password_config() {
-        let keystore_path = BLS_KEYSTORE_PATH.to_string();
-        let password = BLS_KEYSTORE_PASSWORD.to_string();
-        let expected_private_key = BLS_PRIVATE_KEY.to_string();
-
         let config = BlsSignerConfig::Keystore(BlsKeystoreConfig {
-            path: keystore_path.to_string(),
-            password: password.to_string(),
+            path: BLS_KEYSTORE_PATH.to_string(),
+            password: Some(BLS_KEYSTORE_PASSWORD.to_string()),
         });
 
         let bls_key_pair = BlsKeyPair::from_config(config).unwrap();
-
-        assert_eq!(bls_key_pair.priv_key, expected_private_key);
+        let bytes = hex::decode(BLS_PRIVATE_KEY).unwrap();
+        let expected_priv_key = Fr::from_be_bytes_mod_order(&bytes);
+        assert_eq!(bls_key_pair.priv_key, expected_priv_key);
     }
 
     #[test]
     fn test_bls_signature_with_keystore_env_password() {
-        let keystore_path = "src/keys/test.bls.key.json";
-        let password = "zbEykAPaTQ5Ww3dQqXCp";
-        let expected_private_key =
-            "036aab3e53981c1466f02c30d600589382d4c596c6a76434090c680bafc23a19";
+        let config = BlsKeystoreConfig {
+            path: BLS_KEYSTORE_PATH.to_string(),
+            password: None,
+        };
+        std::env::set_var(EIGEN_BLS_KEYSTORE_PASSWORD, BLS_KEYSTORE_PASSWORD);
 
-        // Establecer la variable de entorno para la contraseña
-        std::env::set_var("BLS_KEYSTORE_PASSWORD", password);
-
-        let config = BlsSignerConfig::Keystore(BlsKeystoreConfig {
-            path: keystore_path.to_string(),
-            password: std::env::var("BLS_KEYSTORE_PASSWORD").unwrap(),
-        });
-
-        let bls_key_pair = BlsKeyPair::from_config(config).unwrap();
-        let message: [u8; 32] = [
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-            25, 26, 27, 28, 29, 30, 31, 32,
-        ];
-
-        let signature = bls_key_pair.sign_message(&message);
-        let g1_point = signature.g1_point().g1();
-        let x = g1_point.x().unwrap();
-        let y = g1_point.y().unwrap();
-
-        // Verificar que la firma es válida
-        assert!(verify_message(
-            bls_key_pair.public_key_g2().g2(),
-            &message,
-            signature.g1_point().g1()
-        ));
-
-        // Limpiar la variable de entorno después de la prueba
-        std::env::remove_var("BLS_KEYSTORE_PASSWORD");
+        let bls_key_pair = BlsKeyPair::from_config(config.into()).unwrap();
+        let bytes = hex::decode(BLS_PRIVATE_KEY).unwrap();
+        let expected_priv_key = Fr::from_be_bytes_mod_order(&bytes);
+        assert_eq!(bls_key_pair.priv_key, expected_priv_key);
     }
 }
