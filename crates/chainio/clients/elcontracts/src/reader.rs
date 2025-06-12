@@ -4,7 +4,6 @@ use alloy::{
     providers::Provider,
 };
 use eigen_common::{get_provider, SdkProvider};
-use eigen_logging::logger::SharedLogger;
 use eigen_utils::slashing::core::allocation_manager::AllocationManager::{self, OperatorSet};
 use eigen_utils::slashing::{
     core::{
@@ -21,7 +20,6 @@ use eigen_utils::slashing::{
 };
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
-    _logger: SharedLogger,
     allocation_manager: Option<Address>,
     pub(crate) delegation_manager: Address,
     avs_directory: Address,
@@ -36,7 +34,6 @@ impl ELChainReader {
     ///
     /// # Arguments
     ///
-    /// * `_logger` - The logger to use for logging.
     /// * `allocation_manager` - The address of the allocation manager contract.
     /// * `delegation_manager` - The address of the delegation manager contract.
     /// * `rewards_coordinator` - The address of the rewards coordinator contract.
@@ -48,7 +45,6 @@ impl ELChainReader {
     ///
     /// A new `ELChainReader` instance.
     pub fn new(
-        _logger: SharedLogger,
         allocation_manager: Option<Address>,
         delegation_manager: Address,
         rewards_coordinator: Address,
@@ -57,7 +53,6 @@ impl ELChainReader {
         provider: String,
     ) -> Self {
         ELChainReader {
-            _logger,
             allocation_manager,
             delegation_manager,
             rewards_coordinator,
@@ -72,7 +67,6 @@ impl ELChainReader {
     ///
     /// # Arguments
     ///
-    /// * `_logger` - The logger to use for logging.
     /// * `delegation_manager` - The address of the delegation manager contract.
     /// * `avs_directory` - The address of the avs directory contract.
     /// * `rewards_coordinator` - The address of the rewards coordinator contract.
@@ -84,7 +78,6 @@ impl ELChainReader {
     ///
     /// # Errors
     pub async fn build(
-        _logger: SharedLogger,
         delegation_manager: Address,
         avs_directory: Address,
         rewards_coordinator: Address,
@@ -96,7 +89,6 @@ impl ELChainReader {
         let is_operator_set = contract_delegation_manager.allocationManager().call().await;
         if is_operator_set.is_err() {
             Ok(Self {
-                _logger,
                 allocation_manager: None,
                 delegation_manager,
                 avs_directory,
@@ -117,7 +109,6 @@ impl ELChainReader {
                 .map_err(ElContractsError::AlloyContractError)?;
 
             Ok(Self {
-                _logger,
                 avs_directory,
                 allocation_manager: Some(allocation_manager),
                 delegation_manager,

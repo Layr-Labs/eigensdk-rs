@@ -7,7 +7,7 @@ use eigen_client_elcontracts::{
 };
 use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
-use eigen_logging::get_test_logger;
+
 use eigen_services_operatorsinfo::{
     operator_info::OperatorInfoService, operatorsinfo_inmemory::OperatorInfoServiceInMemory,
 };
@@ -40,7 +40,6 @@ async fn main() {
     set_account_balance(&container, operator_address).await;
 
     let avs_registry_chain_reader = AvsRegistryChainReader::new(
-        get_test_logger().clone(),
         get_registry_coordinator_address(http_endpoint.clone()).await,
         get_operator_state_retriever_address(http_endpoint.clone()).await,
         http_endpoint.clone(),
@@ -48,11 +47,10 @@ async fn main() {
     .await
     .expect("failed to build avs registry chain reader");
 
-    let operators_info =
-        OperatorInfoServiceInMemory::new(get_test_logger(), avs_registry_chain_reader, ws_endpoint)
-            .await
-            .unwrap()
-            .0;
+    let operators_info = OperatorInfoServiceInMemory::new(avs_registry_chain_reader, ws_endpoint)
+        .await
+        .unwrap()
+        .0;
 
     let operators_info_clone = operators_info.clone();
     let cancellation_token: CancellationToken = CancellationToken::new();
@@ -92,7 +90,6 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         .unwrap();
 
     let el_chain_reader = ELChainReader::new(
-        get_test_logger(),
         None,
         delegation_manager_address,
         rewards_coordinator_address,
@@ -129,7 +126,6 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         .unwrap();
 
     let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-        get_test_logger(),
         http_endpoint.to_string(),
         pvt_key.to_string(),
         get_registry_coordinator_address(http_endpoint.to_owned()).await,

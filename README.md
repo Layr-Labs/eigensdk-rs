@@ -25,8 +25,31 @@ cargo add eigensdk --features full
 - [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil, holesky, mainnet addresses for eigen contracts.
 - [eigen-cli](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/eigen-cli) - ECDSA, BLS keystore cli
 - [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
-- [eigen-logging](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/logging) - Logging utilities
 - [eigen-common](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/common) - Common utilities like provider and signer getters.
+
+### Removed `eigen-logging` crate
+
+The internal `eigen-logging` crate has been removed in favor of the community-standard `tracing` crate.
+
+- All calls to `eigen_logging::info()`, `eigen_logging::warn()`, `eigen_logging::error()`, `eigen_logging::debug()` have been replaced by `tracing::{info!, warn!, error!, debug!}` macros.
+- Logs in services crates are now annotated with `#[instrument]` to automatically capture metadata information in the logs.
+
+To configure the logging, you can use the `tracing-subscriber` crate.
+
+```rust,ignore
+// Example of how to configure the logging
+tracing::subscriber::set_global_default(
+    tracing_subscriber::fmt::Subscriber::builder()
+        .with_max_level(Level::INFO)
+        .with_ansi(false)
+        .finish(),
+)
+.unwrap();
+```
+
+For more details, see:
+- [tracing](https://docs.rs/tracing)
+- [tracing-subscriber](https://docs.rs/tracing-subscriber)
 
 ## Examples
 
