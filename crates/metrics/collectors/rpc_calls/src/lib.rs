@@ -9,7 +9,7 @@ use tracing::{debug, instrument};
 /// RpcCallsMetrics
 #[derive(Debug)]
 pub struct RpcCallsMetrics {
-    // Avoid allowing instantiation of this struct
+    // Avoid direct instantiation of this struct
     _private: (),
 }
 
