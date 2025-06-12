@@ -36,7 +36,7 @@ The internal `eigen-logging` crate has been removed in favor of the community-st
 
 To configure the logging, you can use the `tracing-subscriber` crate.
 
-```rust
+```rust,ignore
 // Example of how to configure the logging
 tracing::subscriber::set_global_default(
     tracing_subscriber::fmt::Subscriber::builder()

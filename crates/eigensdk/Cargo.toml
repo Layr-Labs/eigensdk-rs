@@ -33,7 +33,6 @@ eigen-utils = { workspace = true, optional = true }
 eigen-nodeapi = { workspace = true, optional = true }
 eigen-common = { workspace = true, optional = true }
 
-
 # Feature configurations
 [features]
 default = []
