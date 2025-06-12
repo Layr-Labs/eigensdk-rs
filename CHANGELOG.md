@@ -19,9 +19,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 * Bump `alloy` to 1.0 and change foundry image in PR [#553](https://github.com/Layr-Labs/eigensdk-rs/pull/553)
   - With these changes, you should:
-    - Use `connect_http` instead of the deprecated `on_http`  
-    - Use `connect_ws` instead of the deprecated `on_ws`  
-    - Use `Signature` instead of the deprecated `PrimitiveSignature` alias
+    - Some alloy types have changed, see the [alloy migration guide](https://alloy.rs/migrating-to-core-1.0/README/) for details
     - The `foundry` image is now `ghcr.io/foundry-rs/foundry:nightly-548d1f0ebb811fcebd5fafdec33b7b814d0dbdbd`
     - Generated binding names are now snake_case, which breaks existing import paths (e.g. `allocationmanager` → `allocation_manager`)
     - 
