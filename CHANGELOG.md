@@ -168,6 +168,7 @@ Alternate implementation which directly queries from middleware using view call 
 
       // After
       // This is a minimal example of how to configure the logging
+      // No longer need to instantiate or pass the logger into methods, simply subscribe to `tracing` events.
       tracing::subscriber::set_global_default(
           tracing_subscriber::fmt::Subscriber::builder()
               .with_max_level(Level::INFO)
@@ -176,8 +177,6 @@ Alternate implementation which directly queries from middleware using view call 
       )
       .unwrap();
     ```
-
-    - No longer need to instantiate or pass the logger into methods, simply subscribe to `tracing` events.
 
 ### Documentation 📚
 
