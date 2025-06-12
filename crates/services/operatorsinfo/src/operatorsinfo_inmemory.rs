@@ -13,11 +13,11 @@ use eigen_types::operator::{
     operator_id_from_g1_pub_key, OperatorId, OperatorPubKeys, OperatorTypesError,
 };
 use eigen_utils::{
-    slashing::middleware::blsapkregistry::{
+    slashing::middleware::bls_apk_registry::{
         BLSApkRegistry,
         BN254::{G1Point, G2Point},
     },
-    slashing::middleware::registrycoordinator::RegistryCoordinator,
+    slashing::middleware::registry_coordinator::RegistryCoordinator,
 };
 use eyre::Result;
 use futures_util::StreamExt;

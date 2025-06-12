@@ -14,14 +14,14 @@ use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{
     bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys, QuorumNum,
 };
-use eigen_utils::slashing::middleware::blsapkregistry::BLSApkRegistry;
-use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever;
-use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
-use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
-use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::{
+use eigen_utils::slashing::middleware::bls_apk_registry::BLSApkRegistry;
+use eigen_utils::slashing::middleware::operator_state_retriever::OperatorStateRetriever;
+use eigen_utils::slashing::middleware::registry_coordinator::RegistryCoordinator;
+use eigen_utils::slashing::middleware::service_manager_base::ServiceManagerBase;
+use eigen_utils::slashing::middleware::stake_registry::IStakeRegistryTypes::{
     StakeUpdate, StrategyParams,
 };
-use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
+use eigen_utils::slashing::middleware::stake_registry::StakeRegistry;
 use num_bigint::BigInt;
 use std::fmt::Debug;
 use std::{collections::HashMap, str::FromStr};
@@ -104,7 +104,7 @@ impl AvsRegistryReader for AvsRegistryChainReader {
 
         let block_number_u32 =
             u32::try_from(block_number).map_err(|_e| AvsRegistryError::BlockNumberOverflow)?;
-        let operator_state = contract_operator_state_retriever
+        contract_operator_state_retriever
             .getOperatorState_0(
                 self.registry_coordinator_addr,
                 quorum_numbers,
@@ -112,10 +112,7 @@ impl AvsRegistryReader for AvsRegistryChainReader {
             )
             .call()
             .await
-            .map_err(|_| AvsRegistryError::GetOperatorState)?;
-
-        let OperatorStateRetriever::getOperatorState_0Return { _0: quorum } = operator_state;
-        Ok(quorum)
+            .map_err(|_| AvsRegistryError::GetOperatorState)
     }
 
     async fn get_check_signatures_indices(
@@ -131,7 +128,7 @@ impl AvsRegistryReader for AvsRegistryChainReader {
 
         let reference_block_number_u32 = u32::try_from(reference_block_number)
             .map_err(|_e| AvsRegistryError::BlockNumberOverflow)?;
-        let check_signature_indices = contract_operator_state_retriever
+        Ok(contract_operator_state_retriever
             .getCheckSignaturesIndices(
                 self.registry_coordinator_addr,
                 reference_block_number_u32,
@@ -139,10 +136,7 @@ impl AvsRegistryReader for AvsRegistryChainReader {
                 non_signer_operator_ids,
             )
             .call()
-            .await?;
-        let OperatorStateRetriever::getCheckSignaturesIndicesReturn { _0: indices } =
-            check_signature_indices;
-        Ok(indices)
+            .await?)
     }
 
     async fn get_operator_from_id(
@@ -154,15 +148,10 @@ impl AvsRegistryReader for AvsRegistryChainReader {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
 
-        let operator_address_return = contract_registry_coordinator
+        Ok(contract_registry_coordinator
             .getOperatorFromId(operator_id.into())
             .call()
-            .await?;
-        let RegistryCoordinator::getOperatorFromIdReturn {
-            _0: operator_address,
-        } = operator_address_return;
-
-        Ok(operator_address)
+            .await?)
     }
 }
 
@@ -185,25 +174,17 @@ impl AvsRegistryChainReader {
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, &provider);
-        let bls_apk_registry_return = contract_registry_coordinator
+        let bls_apk_registry_addr = contract_registry_coordinator
             .blsApkRegistry()
             .call()
             .await
             .map_err(|_| AvsRegistryError::GetBlsApkRegistry)?;
 
-        let RegistryCoordinator::blsApkRegistryReturn {
-            _0: bls_apk_registry_addr,
-        } = bls_apk_registry_return;
-
-        let stake_registry_return = contract_registry_coordinator
+        let stake_registry_addr = contract_registry_coordinator
             .stakeRegistry()
             .call()
             .await
             .map_err(|_| AvsRegistryError::GetStakeRegistry)?;
-
-        let RegistryCoordinator::stakeRegistryReturn {
-            _0: stake_registry_addr,
-        } = stake_registry_return;
 
         Ok(AvsRegistryChainReader {
             logger,
@@ -226,14 +207,11 @@ impl AvsRegistryChainReader {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
-        let quorum_count = contract_registry_coordinator
+        contract_registry_coordinator
             .quorumCount()
             .call()
             .await
-            .map_err(|_| AvsRegistryError::GetQuorumCount)?;
-
-        let RegistryCoordinator::quorumCountReturn { _0: quorum } = quorum_count;
-        Ok(quorum)
+            .map_err(|_| AvsRegistryError::GetQuorumCount)
     }
 
     /// Get operators stake in quorums at block operator id
@@ -351,16 +329,12 @@ impl AvsRegistryChainReader {
         let service_manager = contract_registry_coordinator
             .serviceManager()
             .call()
-            .await?
-            ._0;
+            .await?;
 
-        let strategies = ServiceManagerBase::new(service_manager, &provider)
+        Ok(ServiceManagerBase::new(service_manager, &provider)
             .getRestakeableStrategies()
             .call()
-            .await?
-            ._0;
-
-        Ok(strategies)
+            .await?)
     }
 
     /// Get operators stake in quorums of operator at current block
@@ -416,23 +390,20 @@ impl AvsRegistryChainReader {
             .call()
             .await?;
 
-        let RegistryCoordinator::getCurrentQuorumBitmapReturn { _0: quo } = quorum_bitmap;
-
-        let quorums = bitmap_to_quorum_ids_from_u192(quo);
+        let quorums = bitmap_to_quorum_ids_from_u192(quorum_bitmap);
 
         let mut quorum_stakes: HashMap<u8, BigInt> = HashMap::new();
 
         let stake_registry = StakeRegistry::new(self.stake_registry_addr, &provider);
         for quorum in quorums.iter() {
-            let stakes_result = stake_registry
+            let stake = stake_registry
                 .getCurrentStake(operator_id, *quorum)
                 .call()
                 .await?;
 
-            let StakeRegistry::getCurrentStakeReturn { _0: c_stake } = stakes_result;
             quorum_stakes.insert(
                 *quorum,
-                BigInt::from_str(&U256::from(c_stake).to_string())
+                BigInt::from_str(&U256::from(stake).to_string())
                     .map_err(|_| AvsRegistryError::ParseBigIntError)?,
             );
         }
@@ -467,7 +438,7 @@ impl AvsRegistryChainReader {
             .call()
             .await?;
 
-        let inner_value = quorum_bitmap._0.into_limbs()[0];
+        let inner_value = quorum_bitmap.into_limbs()[0];
         let mut quorums: [bool; 64] = [false; 64];
         for i in 0..64_u64 {
             if let Some(value) = quorums.get_mut(i as usize) {
@@ -498,16 +469,12 @@ impl AvsRegistryChainReader {
         let service_manager = contract_registry_coordinator
             .serviceManager()
             .call()
-            .await?
-            ._0;
+            .await?;
 
-        let strategies = ServiceManagerBase::new(service_manager, &provider)
+        Ok(ServiceManagerBase::new(service_manager, &provider)
             .getOperatorRestakedStrategies(operator_address)
             .call()
-            .await?
-            ._0;
-
-        Ok(strategies)
+            .await?)
     }
 
     /// Get operator id
@@ -528,12 +495,10 @@ impl AvsRegistryChainReader {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
-        let operator_id_return = contract_registry_coordinator
+        Ok(contract_registry_coordinator
             .getOperatorId(operator_address)
             .call()
-            .await?;
-        let RegistryCoordinator::getOperatorIdReturn { _0: operator_id } = operator_id_return;
-        Ok(operator_id)
+            .await?)
     }
 
     /// Check if operator is registered
@@ -554,14 +519,11 @@ impl AvsRegistryChainReader {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
-        let operator_status_return = contract_registry_coordinator
+        // OperatorStatus is 1 if the operator is registered, 0 otherwise
+        let operator_status = contract_registry_coordinator
             .getOperatorStatus(operator_address)
             .call()
             .await?;
-
-        let RegistryCoordinator::getOperatorStatusReturn {
-            _0: operator_status,
-        } = operator_status_return;
 
         Ok(operator_status == 1)
     }
@@ -723,13 +685,10 @@ impl AvsRegistryChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
-        let stake = contract_stake_registry
+        Ok(contract_stake_registry
             .weightOfOperatorForQuorum(quorum_number, operator_address)
             .call()
-            .await?
-            ._0;
-
-        Ok(stake)
+            .await?)
     }
 
     /// Returns the length of the strategy parameters stored for a given quorum.
@@ -748,13 +707,10 @@ impl AvsRegistryChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
-        let len = contract_stake_registry
+        Ok(contract_stake_registry
             .strategyParamsLength(quorum_number)
             .call()
-            .await?
-            ._0;
-
-        Ok(len)
+            .await?)
     }
 
     /// Returns the strategy parameters by index for a given quorum.
@@ -775,13 +731,10 @@ impl AvsRegistryChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
-        let strategy_params = contract_stake_registry
+        Ok(contract_stake_registry
             .strategyParamsByIndex(quorum_number, index)
             .call()
-            .await?
-            ._0;
-
-        Ok(strategy_params)
+            .await?)
     }
 
     /// Returns the stake history length for a given operator and quorum.
@@ -803,13 +756,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let len = contract_stake_registry
+        Ok(contract_stake_registry
             .getStakeHistoryLength(operator_id, quorum_number)
             .call()
-            .await?
-            ._0;
-
-        Ok(len)
+            .await?)
     }
 
     /// Returns the entire stake history for a given operator and quorum.
@@ -831,13 +781,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let stake_update_vec = contract_stake_registry
+        Ok(contract_stake_registry
             .getStakeHistory(operator_id, quorum_number)
             .call()
-            .await?
-            ._0;
-
-        Ok(stake_update_vec)
+            .await?)
     }
 
     /// Returns the most recent stake update for a given operator and quorum.
@@ -859,13 +806,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let stake_update = contract_stake_registry
+        Ok(contract_stake_registry
             .getLatestStakeUpdate(operator_id, quorum_number)
             .call()
-            .await?
-            ._0;
-
-        Ok(stake_update)
+            .await?)
     }
 
     /// Returns the stake update at a specific index for a given operator and quorum.
@@ -889,13 +833,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let stake_update = contract_stake_registry
+        Ok(contract_stake_registry
             .getStakeUpdateAtIndex(quorum_number, operator_id, index)
             .call()
-            .await?
-            ._0;
-
-        Ok(stake_update)
+            .await?)
     }
 
     /// Returns the stake of an operator for a given quorum at a specific block number.
@@ -919,13 +860,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let stake = contract_stake_registry
+        Ok(contract_stake_registry
             .getStakeAtBlockNumber(operator_id, quorum_number, block_number)
             .call()
-            .await?
-            ._0;
-
-        Ok(stake)
+            .await?)
     }
 
     /// Returns the index of the stake update for an operator at a given block number.
@@ -949,13 +887,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let index = contract_stake_registry
+        Ok(contract_stake_registry
             .getStakeUpdateIndexAtBlockNumber(operator_id, quorum_number, block_number)
             .call()
-            .await?
-            ._0;
-
-        Ok(index)
+            .await?)
     }
 
     /// Returns the stake of an operator for a given quorum at a specific block number and index.
@@ -981,13 +916,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let stake_weight = contract_stake_registry
+        Ok(contract_stake_registry
             .getStakeAtBlockNumberAndIndex(quorum_number, block_number, operator_id, index)
             .call()
-            .await?
-            ._0;
-
-        Ok(stake_weight)
+            .await?)
     }
 
     /// Returns the length of the total stake history for a given quorum.
@@ -1007,13 +939,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let length = contract_stake_registry
+        Ok(contract_stake_registry
             .getTotalStakeHistoryLength(quorum_number)
             .call()
-            .await?
-            ._0;
-
-        Ok(length)
+            .await?)
     }
 
     /// Returns the current total stake weight for a given quorum.
@@ -1033,13 +962,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let stake_weight = contract_stake_registry
+        Ok(contract_stake_registry
             .getCurrentTotalStake(quorum_number)
             .call()
-            .await?
-            ._0;
-
-        Ok(stake_weight)
+            .await?)
     }
 
     /// Returns the stake update at a specific index for a given quorum.
@@ -1061,13 +987,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let stake_update = contract_stake_registry
+        Ok(contract_stake_registry
             .getTotalStakeUpdateAtIndex(quorum_number, index)
             .call()
-            .await?
-            ._0;
-
-        Ok(stake_update)
+            .await?)
     }
 
     /// Returns the total stake at a given block number and index.
@@ -1091,13 +1014,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let total_stake = contract_stake_registry
+        Ok(contract_stake_registry
             .getTotalStakeAtBlockNumberFromIndex(quorum_number, block_number, index)
             .call()
-            .await?
-            ._0;
-
-        Ok(total_stake)
+            .await?)
     }
 
     /// Returns the total stake indices for the given quorum at a specific block number.
@@ -1119,13 +1039,10 @@ impl AvsRegistryChainReader {
 
         let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
 
-        let total_stakes = contract_stake_registry
+        Ok(contract_stake_registry
             .getTotalStakeIndicesAtBlockNumber(block_number, quorum_number)
             .call()
-            .await?
-            ._0;
-
-        Ok(total_stakes)
+            .await?)
     }
 }
 

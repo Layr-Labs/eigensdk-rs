@@ -1,7 +1,7 @@
 use alloy::primitives::U256;
 use ark_ff::PrimeField;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair};
-use eigen_utils::slashing::middleware::blsapkregistry::BN254::{G1Point, G2Point};
+use eigen_utils::slashing::middleware::bls_apk_registry::BN254::{G1Point, G2Point};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct OperatorPubKeys {

@@ -38,10 +38,10 @@ pub mod integration_test {
     };
 
     use eigen_utils::slashing::{
-        core::allocationmanager::{AllocationManager::OperatorSet, IAllocationManagerTypes},
+        core::allocation_manager::{AllocationManager::OperatorSet, IAllocationManagerTypes},
         middleware::{
-            blsapkregistry::BLSApkRegistry,
-            iblssignaturechecker::{
+            bls_apk_registry::BLSApkRegistry,
+            ibls_signature_checker::{
                 IBLSSignatureChecker::{self},
                 IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
                 BN254::G1Point,
@@ -539,8 +539,7 @@ pub mod integration_test {
             .getOperatorId(get_signer(PRIVATE_KEY_1, &http_endpoint).default_signer_address())
             .call()
             .await
-            .unwrap()
-            ._0;
+            .unwrap();
         let operator_id = operator_id_from_g1_pub_key(bls_key_pair.public_key()).unwrap();
         assert_eq!(s, operator_id);
         handle

@@ -7,7 +7,7 @@ use eigen_crypto_bls::{BlsG1Point, PublicKey};
 use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
 use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
 use eigen_types::operator::{OperatorInfo, OperatorPubKeys};
-use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_utils::slashing::middleware::operator_state_retriever::OperatorStateRetriever::CheckSignaturesIndices;
 use std::collections::HashMap;
 
 use crate::AvsRegistryService;

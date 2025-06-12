@@ -3,7 +3,7 @@ use std::str::FromStr;
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy::dyn_abi::DynSolValue;
-use alloy::primitives::{Address, Bytes, FixedBytes, PrimitiveSignature, TxHash, U256};
+use alloy::primitives::{Address, Bytes, FixedBytes, Signature, TxHash, U256};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::signers::Signer;
 use alloy::sol;
@@ -16,22 +16,22 @@ use eigen_types::operator::operator_id_from_g1_pub_key;
 pub use eigen_types::operator::Operator;
 
 use eigen_utils::convert_allocation_operator_set_to_rewards_operator_set;
-use eigen_utils::rewardsv2::core::delegationmanager::DelegationManager as RewardsV2DelegationManager;
-use eigen_utils::rewardsv2::core::delegationmanager::IDelegationManager::OperatorDetails;
-use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
+use eigen_utils::rewardsv2::core::delegation_manager::DelegationManager as RewardsV2DelegationManager;
+use eigen_utils::rewardsv2::core::delegation_manager::IDelegationManager::OperatorDetails;
+use eigen_utils::slashing::core::allocation_manager::AllocationManager::OperatorSet;
 
-use eigen_utils::slashing::middleware::registrycoordinator::BN254::{G1Point, G2Point};
-use eigen_utils::slashing::middleware::slashingregistrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
-use eigen_utils::slashing::middleware::slashingregistrycoordinator::SlashingRegistryCoordinator;
+use eigen_utils::slashing::middleware::registry_coordinator::BN254::{G1Point, G2Point};
+use eigen_utils::slashing::middleware::slashing_registry_coordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
+use eigen_utils::slashing::middleware::slashing_registry_coordinator::SlashingRegistryCoordinator;
 use eigen_utils::{
     slashing::core::{
-        allocationmanager::{AllocationManager, IAllocationManagerTypes},
-        delegationmanager::DelegationManager,
-        irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
-        permissioncontroller::PermissionController,
-        strategymanager::StrategyManager,
+        allocation_manager::{AllocationManager, IAllocationManagerTypes},
+        delegation_manager::DelegationManager,
+        i_rewards_coordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
+        permission_controller::PermissionController,
+        strategy_manager::StrategyManager,
     },
-    slashing::middleware::{ierc20::IERC20, registrycoordinator::RegistryCoordinator},
+    slashing::middleware::{ierc20::IERC20, registry_coordinator::RegistryCoordinator},
 };
 use tracing::info;
 
@@ -718,8 +718,7 @@ impl ELChainWriter {
         let g1_hashed_msg_to_sign = contract_registry_coordinator
             .pubkeyRegistrationMessageHash(operator_address)
             .call()
-            .await?
-            ._0;
+            .await?;
 
         let sig = bls_key_pair
             .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
@@ -1038,8 +1037,7 @@ async fn prepare_bls_keys_for_registration(
     let g1_hashed_msg_to_sign = contract_registry_coordinator
         .pubkeyRegistrationMessageHash(operator)
         .call()
-        .await?
-        ._0;
+        .await?;
 
     let sig = bls_key_pair
         .sign_hashed_to_curve_message(alloy_g1_point_slashing_to_g1_affine(g1_hashed_msg_to_sign))
@@ -1098,7 +1096,7 @@ fn build_operator_kick_params(
 /// * `churn_sig_expiry` - churn signature expiry
 ///
 /// # Returns
-/// * `PrimitiveSignature` - signed churn digest hash
+/// * `Signature` - signed churn digest hash
 ///
 /// # Errors
 /// * `ElContractsError` - if the call to the contract fails.
@@ -1112,7 +1110,7 @@ async fn sign_churn_digest(
     churn_signer_private_key: String,
     churn_sig_salt: FixedBytes<32>,
     churn_sig_expiry: U256,
-) -> Result<PrimitiveSignature, ElContractsError> {
+) -> Result<Signature, ElContractsError> {
     let provider = get_provider(rpc_url);
     let contract_registry_coordinator =
         SlashingRegistryCoordinator::new(registry_coordinator_address, &provider);
@@ -1132,8 +1130,7 @@ async fn sign_churn_digest(
             churn_sig_expiry,
         )
         .call()
-        .await?
-        ._0;
+        .await?;
 
     let signature = churn_wallet
         .sign_hash(&churn_digest_hash)
@@ -1165,7 +1162,7 @@ fn encode_registration_data(
     g1_pub_key_bn254: G1Point,
     g2_pub_key_bn254: G2Point,
     operators_to_kick_params: Vec<OperatorKickParam>,
-    churn_signature: PrimitiveSignature,
+    churn_signature: Signature,
     churn_sig_salt: FixedBytes<32>,
     churn_sig_expiry: U256,
 ) -> Vec<u8> {
@@ -1249,8 +1246,8 @@ mod tests {
     use eigen_utils::{
         convert_allocation_operator_set_to_rewards_operator_set,
         slashing::{
-            core::allocationmanager::{AllocationManager::OperatorSet, IAllocationManagerTypes},
-            middleware::slashingregistrycoordinator::{
+            core::allocation_manager::{AllocationManager::OperatorSet, IAllocationManagerTypes},
+            middleware::slashing_registry_coordinator::{
                 ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
                 SlashingRegistryCoordinator,
             },
@@ -1722,7 +1719,7 @@ mod tests {
         let allocate_params = IAllocationManagerTypes::AllocateParams {
             strategies: vec![strategy_addr],
             operatorSet:
-                eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet {
+                eigen_utils::slashing::core::allocation_manager::AllocationManager::OperatorSet {
                     avs: avs_address,
                     id: operator_set_id,
                 },

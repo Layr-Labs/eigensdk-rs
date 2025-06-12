@@ -22,7 +22,7 @@ use eigen_testing_utils::{
     },
     transaction::wait_transaction,
 };
-use eigen_utils::slashing::core::delegationmanager::DelegationManager;
+use eigen_utils::slashing::core::delegation_manager::DelegationManager;
 use std::{
     str::FromStr,
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -89,8 +89,7 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         .permissionController()
         .call()
         .await
-        .unwrap()
-        ._0;
+        .unwrap();
 
     let el_chain_reader = ELChainReader::new(
         get_test_logger(),
