@@ -157,6 +157,25 @@ Alternate implementation which directly queries from middleware using view call 
 * Removed `ethers` and `ethers-signers` from the root `Cargo.toml` in [#551](https://github.com/Layr-Labs/eigensdk-rs/pull/551).
 
 * Removed the `eigen-logging` crate and adopted the `tracing` crate as the standard logging in [#552](https://github.com/Layr-Labs/eigensdk-rs/pull/552).
+  - To migrate to `tracing`, you should:
+    - Remove the `eigen-logging` dependency from your `Cargo.toml`
+    - Use `tracing-subscriber` crate to configure the logging. Follow the [tracing-subscriber documentation](https://docs.rs/tracing-subscriber/latest/tracing_subscriber/) for more details.
+    
+    ```rust
+      // Before
+      init_logger(LogLevel::Info);
+      let logger = get_logger();
+
+      // After
+      // This is a minimal example of how to configure the logging
+      tracing::subscriber::set_global_default(
+          tracing_subscriber::fmt::Subscriber::builder()
+              .with_max_level(Level::INFO)
+              .with_ansi(false)
+              .finish(),
+      )
+      .unwrap();
+    ```
 
 ### Documentation 📚
 
