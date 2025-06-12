@@ -27,6 +27,30 @@ cargo add eigensdk --features full
 - [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
 - [eigen-common](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/common) - Common utilities like provider and signer getters.
 
+### Deprecated `eigen-logging` crate
+
+The internal `eigen-logging` crate has been removed in favor of the community-standard `tracing` crate.
+
+- All calls to `eigen_logging::info()`, `eigen_logging::warn()`, `eigen_logging::error()`, `eigen_logging::debug()` have been replaced by `tracing::{info!, warn!, error!, debug!}` macros.
+- Logs in services crates are now annotated with `#[instrument]` to automatically capture metadata information in the logs.
+
+To configure the logging, you can use the `tracing-subscriber` crate.
+
+```rust
+// Example of how to configure the logging
+tracing::subscriber::set_global_default(
+    tracing_subscriber::fmt::Subscriber::builder()
+        .with_max_level(Level::INFO)
+        .with_ansi(false)
+        .finish(),
+)
+.unwrap();
+```
+
+For more details, see:
+- [tracing](https://docs.rs/tracing)
+- [tracing-subscriber](https://docs.rs/tracing-subscriber)
+
 ## Examples
 
 You can run any [example](https://github.com/Layr-Labs/eigensdk-rs/tree/main/examples) using the command `cargo run --example <example-name>`
