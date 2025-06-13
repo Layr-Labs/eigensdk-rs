@@ -1234,7 +1234,6 @@ Alternate implementation which directly queries from middleware using view call 
 
 * Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
 * docs: improve changelog by adding examples by @maximopalopoli in <https://github.com/Layr-Labs/eigensdk-rs/pull/251>
-* Documented the release process in [#456](https://github.com/Layr-Labs/eigensdk-rs/pull/456).
 
 ### Other Changes
 
