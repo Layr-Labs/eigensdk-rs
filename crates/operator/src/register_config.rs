@@ -14,25 +14,21 @@ pub struct OperatorRegistrationConfig {
     /// Allocation delay
     pub allocation_delay: Option<u32>,
     /// Operator set ID
-    pub operator_set_id: Option<u32>,
+    pub operator_set_ids: Option<Vec<u32>>,
     /// New magnitude to allocate
-    pub new_magnitude: Vec<u64>,
+    pub new_magnitudes: Option<Vec<u64>>,
     /// Deposit tokens amount
-    pub deposit_tokens: Option<String>,
+    pub deposit_tokens_amounts: Option<Vec<String>>,
     /// Allocation manager address
     pub allocation_manager_address: Option<Address>,
     /// Registry coordinator address
     pub registry_coordinator_address: Option<Address>,
     /// Delegation manager address
     pub delegation_manager_address: Option<Address>,
-    /// AVS directory address
-    pub avs_directory_address: Option<Address>,
-    /// Strategy manager address
-    pub strategy_manager_address: Option<Address>,
-    /// ERC20 strategy address
-    pub erc20_strategy_address: Option<Address>,
-    /// AVS address
-    pub avs_address: Option<Address>,
-    /// Strategies addresses
-    pub strategies_addresses: Option<Vec<Address>>,
+    /// Strategy manager addresses
+    pub strategy_manager_addresses: Option<Vec<Address>>,
+    /// ERC20 strategy addresses
+    pub erc20_strategy_addresses: Option<Vec<Address>>,
+    /// AVS addresses
+    pub avs_addresses: Option<Vec<Address>>,
 }
