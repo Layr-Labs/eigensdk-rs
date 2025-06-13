@@ -132,8 +132,6 @@ Alternate implementation which directly queries from middleware using view call 
 * Moved test utils from chainio folder to testing/testutils folder by @maximopalopoli in [#407](https://github.com/Layr-Labs/eigensdk-rs/pull/407)
 * Added rewards utilities integration test by @maximopalopoli in [#404](https://github.com/Layr-Labs/eigensdk-rs/pull/404)
 
-* chore: use common testing utils in bls_agg_test in PR [420](https://github.com/Layr-Labs/eigensdk-rs/pull/420).
-
 ## [1.0.0] - 2025-05-09
 
 ### Added 🎉
