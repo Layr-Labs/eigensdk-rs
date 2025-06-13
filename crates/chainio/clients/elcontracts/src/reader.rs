@@ -4,17 +4,17 @@ use alloy::{
     providers::Provider,
 };
 use eigen_common::{get_provider, SdkProvider};
-use eigen_utils::slashing::core::allocationmanager::AllocationManager::{self, OperatorSet};
+use eigen_utils::slashing::core::allocation_manager::AllocationManager::{self, OperatorSet};
 use eigen_utils::slashing::{
     core::{
-        avsdirectory::AVSDirectory,
-        delegationmanager::DelegationManager,
-        irewardscoordinator::{
+        avs_directory::AVSDirectory,
+        delegation_manager::DelegationManager,
+        i_rewards_coordinator::{
             IRewardsCoordinator::{self},
             IRewardsCoordinatorTypes::{DistributionRoot, RewardsMerkleClaim},
         },
-        istrategy::IStrategy::{self, IStrategyInstance},
-        permissioncontroller::PermissionController,
+        i_strategy::IStrategy::{self, IStrategyInstance},
+        permission_controller::PermissionController,
     },
     middleware::ierc20::IERC20::{self, IERC20Instance},
 };
@@ -101,14 +101,12 @@ impl ELChainReader {
                 .allocationManager()
                 .call()
                 .await
-                .map_err(ElContractsError::AlloyContractError)?
-                ._0;
+                .map_err(ElContractsError::AlloyContractError)?;
             let permission_controller = contract_delegation_manager
                 .permissionController()
                 .call()
                 .await
-                .map_err(ElContractsError::AlloyContractError)?
-                ._0;
+                .map_err(ElContractsError::AlloyContractError)?;
 
             Ok(Self {
                 avs_directory,
@@ -148,7 +146,7 @@ impl ELChainReader {
     ) -> Result<FixedBytes<32>, ElContractsError> {
         let provider = get_provider(&self.provider);
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
-        let delegation_approval_digest_hash = contract_delegation_manager
+        contract_delegation_manager
             .calculateDelegationApprovalDigestHash(
                 staker,
                 operator,
@@ -158,12 +156,7 @@ impl ELChainReader {
             )
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let DelegationManager::calculateDelegationApprovalDigestHashReturn { _0: digest_hash } =
-            delegation_approval_digest_hash;
-
-        Ok(digest_hash)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Calculate the operator avs registration digest hash
@@ -193,16 +186,11 @@ impl ELChainReader {
 
         let contract_avs_directory = AVSDirectory::new(self.avs_directory, provider);
 
-        let operator_avs_registration_digest_hash = contract_avs_directory
+        contract_avs_directory
             .calculateOperatorAVSRegistrationDigestHash(operator, avs, salt, expiry)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn { _0: avs_hash } =
-            operator_avs_registration_digest_hash;
-
-        Ok(avs_hash)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the length of the distribution roots.
@@ -221,17 +209,11 @@ impl ELChainReader {
         let contract_rewards_coordinator =
             IRewardsCoordinator::new(self.rewards_coordinator, &provider);
 
-        let distribution_roots_lenght_call = contract_rewards_coordinator
+        contract_rewards_coordinator
             .getDistributionRootsLength()
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::getDistributionRootsLengthReturn {
-            _0: distribution_roots_length,
-        } = distribution_roots_lenght_call;
-
-        Ok(distribution_roots_length)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the current rewards calculation end timestamp (the timestamp until which rewards have been calculated).
@@ -250,14 +232,11 @@ impl ELChainReader {
         let contract_rewards_coordinator =
             IRewardsCoordinator::new(self.rewards_coordinator, &provider);
 
-        let end_timestamp = contract_rewards_coordinator
+        contract_rewards_coordinator
             .currRewardsCalculationEndTimestamp()
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(end_timestamp)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the latest claimable distribution root.
@@ -275,17 +254,11 @@ impl ELChainReader {
         let contract_rewards_coordinator =
             IRewardsCoordinator::new(self.rewards_coordinator, &provider);
 
-        let cumulative_claimed_for_root_call = contract_rewards_coordinator
+        contract_rewards_coordinator
             .getCurrentClaimableDistributionRoot()
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::getCurrentClaimableDistributionRootReturn {
-            _0: cumulative_claimed_for_root_ret,
-        } = cumulative_claimed_for_root_call;
-
-        Ok(cumulative_claimed_for_root_ret)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the root index from a given hash.
@@ -311,16 +284,11 @@ impl ELChainReader {
         let contract_rewards_coordinator =
             IRewardsCoordinator::new(self.rewards_coordinator, &provider);
 
-        let get_root_index_from_hash_call = contract_rewards_coordinator
+        contract_rewards_coordinator
             .getRootIndexFromHash(hash)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::getRootIndexFromHashReturn { _0: root_index } =
-            get_root_index_from_hash_call;
-
-        Ok(root_index)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the cumulative claimed amount for a given earner address and token.
@@ -347,17 +315,11 @@ impl ELChainReader {
         let contract_rewards_coordinator =
             IRewardsCoordinator::new(self.rewards_coordinator, &provider);
 
-        let cumulative_claimed_call = contract_rewards_coordinator
+        contract_rewards_coordinator
             .cumulativeClaimed(earner_address, token)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::cumulativeClaimedReturn {
-            _0: cumulative_claim_ret,
-        } = cumulative_claimed_call;
-
-        Ok(cumulative_claim_ret)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Check if a claim would currently pass the validations in `process_claim`
@@ -379,15 +341,11 @@ impl ELChainReader {
         let contract_rewards_coordinator =
             IRewardsCoordinator::new(self.rewards_coordinator, &provider);
 
-        let check_claim_call = contract_rewards_coordinator
+        contract_rewards_coordinator
             .checkClaim(claim)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::checkClaimReturn { _0: claim_ret } = check_claim_call;
-
-        Ok(claim_ret)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Gets the split of a specific `operator` for a specific `avs`
@@ -413,14 +371,11 @@ impl ELChainReader {
 
         let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
 
-        let operator_avs_split = rewards_coordinator
+        rewards_coordinator
             .getOperatorAVSSplit(operator, avs)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(operator_avs_split)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Gets the split of a specific `operator` for Programmatic Incentives
@@ -441,14 +396,11 @@ impl ELChainReader {
 
         let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
 
-        let operator_pi_split = rewards_coordinator
+        rewards_coordinator
             .getOperatorPISplit(operator)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(operator_pi_split)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Gets the split for a specific `operator` for a given `OperatorSet`
@@ -468,20 +420,17 @@ impl ELChainReader {
     pub async fn get_operator_set_split(
         &self,
         operator: Address,
-        operator_set: eigen_utils::slashing::core::irewardscoordinator::IRewardsCoordinator::OperatorSet,
+        operator_set: eigen_utils::slashing::core::i_rewards_coordinator::IRewardsCoordinator::OperatorSet,
     ) -> Result<u16, ElContractsError> {
         let provider = get_provider(&self.provider);
 
         let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
 
-        let operator_set_split = rewards_coordinator
+        rewards_coordinator
             .getOperatorSetSplit(operator, operator_set)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(operator_set_split)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the operator's shares in a strategy
@@ -507,14 +456,11 @@ impl ELChainReader {
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let operator_shares_in_strategy = contract_delegation_manager
+        contract_delegation_manager
             .operatorShares(operator_addr, strategy_addr)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let DelegationManager::operatorSharesReturn { shares } = operator_shares_in_strategy;
-        Ok(shares)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get strategy and underlying ERC-20 token
@@ -537,8 +483,8 @@ impl ELChainReader {
         strategy_addr: Address,
     ) -> Result<
         (
-            IStrategyInstance<(), SdkProvider>,
-            IERC20Instance<(), SdkProvider>,
+            IStrategyInstance<SdkProvider>,
+            IERC20Instance<SdkProvider>,
             Address,
         ),
         ElContractsError,
@@ -573,14 +519,11 @@ impl ELChainReader {
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let is_operator = contract_delegation_manager
+        contract_delegation_manager
             .isOperator(operator)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(is_operator)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the staker's shares in all of the strategies in which they have nonzero shares
@@ -634,15 +577,11 @@ impl ELChainReader {
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let delegated = contract_delegation_manager
+        contract_delegation_manager
             .delegatedTo(staker_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let DelegationManager::delegatedToReturn { operator } = delegated;
-
-        Ok(operator)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// # Returns the strategy contract and the underlying token address.
@@ -662,7 +601,7 @@ impl ELChainReader {
     pub async fn get_strategy_and_underlying_token(
         &self,
         strategy_addr: Address,
-    ) -> Result<(IStrategyInstance<(), SdkProvider>, Address), ElContractsError> {
+    ) -> Result<(IStrategyInstance<SdkProvider>, Address), ElContractsError> {
         let provider = get_provider(&self.provider);
 
         let contract_strategy = IStrategy::new(strategy_addr, provider);
@@ -671,8 +610,7 @@ impl ELChainReader {
             .underlyingToken()
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         Ok((contract_strategy, underlying_token))
     }
@@ -698,17 +636,11 @@ impl ELChainReader {
             provider,
         );
 
-        let allocatable_magnitude = contract_allocation_manager
+        contract_allocation_manager
             .getAllocatableMagnitude(operator_address, strategy_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let AllocationManager::getAllocatableMagnitudeReturn {
-            _0: allocatable_magnitude,
-        } = allocatable_magnitude;
-
-        Ok(allocatable_magnitude)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the maximum magnitude an operator can allocate for the given strategies
@@ -732,15 +664,11 @@ impl ELChainReader {
             provider,
         );
 
-        let max_magnitudes = contract_allocation_manager
+        contract_allocation_manager
             .getMaxMagnitudes_1(operator_address, strategy_addresses)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let AllocationManager::getMaxMagnitudes_1Return { _0: max_magnitudes } = max_magnitudes;
-
-        Ok(max_magnitudes)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the allocation info given a strategy and an operator. Returns the info for each operator set where an operator has allocation.
@@ -805,17 +733,11 @@ impl ELChainReader {
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let operator_shares = contract_delegation_manager
+        contract_delegation_manager
             .getOperatorShares(operator_address, strategy_addresses)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let DelegationManager::getOperatorSharesReturn {
-            _0: operator_shares,
-        } = operator_shares;
-
-        Ok(operator_shares)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the shares that a list of operators own in a set of strategies
@@ -835,17 +757,11 @@ impl ELChainReader {
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let operators_shares = contract_delegation_manager
+        contract_delegation_manager
             .getOperatorsShares(operator_addresses, strategy_addresses)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let DelegationManager::getOperatorsSharesReturn {
-            _0: operators_shares,
-        } = operators_shares;
-
-        Ok(operators_shares)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the number of operator sets that an operator is part of. Doesn't include M2 AVSs
@@ -883,15 +799,11 @@ impl ELChainReader {
             provider,
         );
 
-        let allocated_sets = contract_allocation_manager
+        contract_allocation_manager
             .getAllocatedSets(operator_addr)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let AllocationManager::getAllocatedSetsReturn { _0: operator_sets } = allocated_sets;
-
-        Ok(operator_sets)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Check if an operator is registered with a specific operator set
@@ -919,13 +831,13 @@ impl ELChainReader {
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)?;
-        let AllocationManager::getRegisteredSetsReturn { _0: operator_sets } =
-            registered_operator_sets;
 
-        let is_registered = operator_sets.iter().any(|registered_operator_set| {
-            registered_operator_set.id == operator_set.id
-                && registered_operator_set.avs == operator_set.avs
-        });
+        let is_registered = registered_operator_sets
+            .iter()
+            .any(|registered_operator_set| {
+                registered_operator_set.id == operator_set.id
+                    && registered_operator_set.avs == operator_set.avs
+            });
         Ok(is_registered)
     }
 
@@ -948,14 +860,11 @@ impl ELChainReader {
             provider,
         );
 
-        let operators = contract_allocation_manager
+        contract_allocation_manager
             .getMembers(operator_set)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let AllocationManager::getMembersReturn { _0: addresses } = operators;
-        Ok(addresses)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the number of operators in a specific operator set. Not supported for M2 AVSs
@@ -977,15 +886,11 @@ impl ELChainReader {
             provider,
         );
 
-        let num_operators = contract_allocation_manager
+        contract_allocation_manager
             .getMemberCount(operator_set)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let AllocationManager::getMemberCountReturn { _0: num_operators } = num_operators;
-
-        Ok(num_operators)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the strategies in a specific operator set. Not supported for M2 AVSs
@@ -1006,15 +911,11 @@ impl ELChainReader {
             provider,
         );
 
-        let strategies = contract_allocation_manager
+        contract_allocation_manager
             .getStrategiesInOperatorSet(operator_set)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let AllocationManager::getStrategiesInOperatorSetReturn { _0: strategies } = strategies;
-
-        Ok(strategies)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the slashable shares for an operator.
@@ -1051,8 +952,7 @@ impl ELChainReader {
             )
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            .slashableStake;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let Some(slashable_operator_stake) = slashable_stake.first() else {
             return Err(ElContractsError::NoSlashableSharesFound);
@@ -1124,8 +1024,7 @@ impl ELChainReader {
                     future_block,
                 )
                 .call()
-                .await?
-                .slashableStake;
+                .await?;
             operator_set_stakes.push(OperatorSetStakes {
                 operator_set,
                 strategies,
@@ -1193,17 +1092,11 @@ impl ELChainReader {
             provider,
         );
 
-        let registered_sets = contract_allocation_manager
+        contract_allocation_manager
             .getRegisteredSets(operator_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let AllocationManager::getRegisteredSetsReturn {
-            _0: registered_sets,
-        } = registered_sets;
-
-        Ok(registered_sets)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Check if the given caller has permissions to call the function
@@ -1234,14 +1127,11 @@ impl ELChainReader {
         let contract_permission_controller =
             PermissionController::new(self.permission_controller.unwrap(), provider);
 
-        let can_call = contract_permission_controller
+        contract_permission_controller
             .canCall(account_address, appointee_address, target, selector)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(can_call)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the list of appointees for a given account and function
@@ -1264,14 +1154,11 @@ impl ELChainReader {
         let contract_permission_controller =
             PermissionController::new(self.permission_controller.unwrap(), provider);
 
-        let appointees = contract_permission_controller
+        contract_permission_controller
             .getAppointees(account_address, target, selector)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(appointees)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the list of permissions of an appointee for a given account
@@ -1323,14 +1210,11 @@ impl ELChainReader {
         let contract_permission_controller =
             PermissionController::new(self.permission_controller.unwrap(), provider);
 
-        let pending_admins = contract_permission_controller
+        contract_permission_controller
             .getPendingAdmins(account_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(pending_admins)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Get the list of admins of a given account
@@ -1349,14 +1233,11 @@ impl ELChainReader {
         let contract_permission_controller =
             PermissionController::new(self.permission_controller.unwrap(), provider);
 
-        let admins = contract_permission_controller
+        contract_permission_controller
             .getAdmins(account_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(admins)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Check if an address is a pending admin of another account
@@ -1377,14 +1258,11 @@ impl ELChainReader {
         let contract_permission_controller =
             PermissionController::new(self.permission_controller.unwrap(), provider);
 
-        let is_pending_admin = contract_permission_controller
+        contract_permission_controller
             .isPendingAdmin(account_address, pending_admin_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(is_pending_admin)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Check if an address is an admin of another account
@@ -1405,14 +1283,11 @@ impl ELChainReader {
         let contract_permission_controller =
             PermissionController::new(self.permission_controller.unwrap(), provider);
 
-        let is_admin = contract_permission_controller
+        contract_permission_controller
             .isAdmin(account_address, admin_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(is_admin)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Checks if an operator is slashable by an operator set.
@@ -1434,14 +1309,11 @@ impl ELChainReader {
         let contract_allocation_manager =
             AllocationManager::new(self.allocation_manager.unwrap(), provider);
 
-        let is_slashable = contract_allocation_manager
+        contract_allocation_manager
             .isOperatorSlashable(operator_address, operator_set)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(is_slashable)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// Returns the current allocated stake, irrespective of the operator's slashable status for the [`OperatorSet`].
@@ -1464,14 +1336,11 @@ impl ELChainReader {
         let contract_allocation_manager =
             AllocationManager::new(self.allocation_manager.unwrap(), provider);
 
-        let allocated_stake = contract_allocation_manager
+        contract_allocation_manager
             .getAllocatedStake(operator_set, operators, strategies)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(allocated_stake)
+            .map_err(ElContractsError::AlloyContractError)
     }
 
     /// For a strategy, get the amount of magnitude that is allocated across one or more operator sets
@@ -1490,13 +1359,11 @@ impl ELChainReader {
         let contract_allocation_manager =
             AllocationManager::new(self.allocation_manager.unwrap(), provider);
 
-        let magnitude = contract_allocation_manager
+        contract_allocation_manager
             .getEncumberedMagnitude(operator, strategy_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-        Ok(magnitude)
+            .map_err(ElContractsError::AlloyContractError)
     }
 }
 
@@ -1531,8 +1398,7 @@ mod tests {
         chain_clients::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS},
     };
     use eigen_utils::slashing::core::{
-        avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
-        delegationmanager::DelegationManager::{self, calculateDelegationApprovalDigestHashReturn},
+        avs_directory::AVSDirectory, delegation_manager::DelegationManager,
     };
 
     #[tokio::test]
@@ -1583,10 +1449,7 @@ mod tests {
             .call()
             .await
             .unwrap();
-
-        let calculateDelegationApprovalDigestHashReturn { _0: digest_hash } = hash;
-
-        assert_eq!(digest_hash, calculate_digest_hash);
+        assert_eq!(hash, calculate_digest_hash);
     }
 
     #[tokio::test]
@@ -1620,10 +1483,7 @@ mod tests {
             .await
             .unwrap();
 
-        let calculateOperatorAVSRegistrationDigestHashReturn { _0: hash } =
-            operator_hash_from_bindings;
-
-        assert_eq!(hash, operator_hash);
+        assert_eq!(operator_hash_from_bindings, operator_hash);
     }
 
     #[tokio::test]

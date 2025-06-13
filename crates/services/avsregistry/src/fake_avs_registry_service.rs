@@ -11,7 +11,7 @@ use eigen_types::{
     operator::{OperatorInfo, OperatorPubKeys, QuorumNum},
     test::TestOperator,
 };
-use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_utils::slashing::middleware::operator_state_retriever::OperatorStateRetriever::CheckSignaturesIndices;
 
 use crate::AvsRegistryService;
 

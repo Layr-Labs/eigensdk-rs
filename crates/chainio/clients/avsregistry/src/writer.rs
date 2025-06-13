@@ -12,18 +12,18 @@ use eigen_crypto_bls::{
 use eigen_types::operator::operator_id_from_g1_pub_key;
 use eigen_types::operator::QuorumNum;
 use eigen_utils::convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params;
-use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
-use eigen_utils::slashing::middleware::registrycoordinator::{
+use eigen_utils::slashing::middleware::registry_coordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
+use eigen_utils::slashing::middleware::registry_coordinator::{
     IBLSApkRegistryTypes::PubkeyRegistrationParams,
     ISignatureUtilsMixinTypes::SignatureWithSaltAndExpiry,
     ISlashingRegistryCoordinatorTypes::OperatorSetParam, RegistryCoordinator,
 };
-use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
-use eigen_utils::slashing::middleware::servicemanagerbase::{
+use eigen_utils::slashing::middleware::service_manager_base::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
+use eigen_utils::slashing::middleware::service_manager_base::{
     IRewardsCoordinatorTypes::RewardsSubmission, ServiceManagerBase,
 };
-use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
-use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
+use eigen_utils::slashing::middleware::stake_registry::IStakeRegistryTypes::StrategyParams;
+use eigen_utils::slashing::middleware::stake_registry::StakeRegistry;
 use std::str::FromStr;
 use tracing::{info, warn};
 
@@ -70,21 +70,16 @@ impl AvsRegistryChainWriter {
         let contract_service_manager_base =
             ServiceManagerBase::new(service_manager_addr, &fill_provider);
         let stake_registry_addr = contract_registry_coordinator.stakeRegistry().call().await?;
-        let RegistryCoordinator::stakeRegistryReturn { _0: stake_registry } = stake_registry_addr;
-        let contract_stake_registry = StakeRegistry::new(stake_registry, &fill_provider);
-        let delegation_manager_return = contract_stake_registry.delegation().call().await?;
-        let StakeRegistry::delegationReturn {
-            _0: delegation_manager_addr,
-        } = delegation_manager_return;
+        let contract_stake_registry = StakeRegistry::new(stake_registry_addr, &fill_provider);
+        let delegation_manager_addr = contract_stake_registry.delegation().call().await?;
         let avs_directory_addr = contract_service_manager_base.avsDirectory().call().await?;
-        let ServiceManagerBase::avsDirectoryReturn { _0: avs_directory } = avs_directory_addr;
 
         // We set rewards coordinator address as zero because we are not going to use it on any writer operation
         let rewards_coordinator_addr = Address::ZERO;
 
         let el_reader = ELChainReader::build(
             delegation_manager_addr,
-            avs_directory,
+            avs_directory_addr,
             rewards_coordinator_addr,
             &provider,
         )
@@ -94,7 +89,7 @@ impl AvsRegistryChainWriter {
         Ok(AvsRegistryChainWriter {
             service_manager_addr,
             registry_coordinator_addr,
-            stake_registry_addr: stake_registry,
+            stake_registry_addr,
             el_reader,
             provider: provider.clone(),
             signer: signer.clone(),
@@ -144,8 +139,7 @@ impl AvsRegistryChainWriter {
             .pubkeyRegistrationMessageHash(wallet.address())
             .call()
             .await
-            .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?
-            ._0;
+            .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?;
         let sig = bls_key_pair
             .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
             .g1_point();
@@ -248,8 +242,7 @@ impl AvsRegistryChainWriter {
             .pubkeyRegistrationMessageHash(operator_address)
             .call()
             .await
-            .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?
-            ._0;
+            .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?;
 
         let sig = bls_key_pair
             .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
@@ -309,8 +302,7 @@ impl AvsRegistryChainWriter {
                 churn_sig_expiry,
             )
             .call()
-            .await?
-            ._0;
+            .await?;
 
         let churn_signature = churn_wallet
             .sign_hash(&churn_digest_hash)
@@ -749,8 +741,7 @@ impl AvsRegistryChainWriter {
             RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
                 .owner()
                 .call()
-                .await?
-                ._0;
+                .await?;
         let caller_address =
             get_signer(&self.signer.clone(), &self.provider).default_signer_address();
         if !reg_coordinator_owner.eq(&caller_address) {
@@ -791,8 +782,7 @@ impl AvsRegistryChainWriter {
             RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
                 .owner()
                 .call()
-                .await?
-                ._0;
+                .await?;
         let caller_address =
             get_signer(&self.signer.clone(), &self.provider).default_signer_address();
         if !reg_coordinator_owner.eq(&caller_address) {
@@ -835,8 +825,7 @@ impl AvsRegistryChainWriter {
             RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
                 .owner()
                 .call()
-                .await?
-                ._0;
+                .await?;
         let caller_address =
             get_signer(&self.signer.clone(), &self.provider).default_signer_address();
         if !reg_coordinator_owner.eq(&caller_address) {
@@ -878,8 +867,7 @@ impl AvsRegistryChainWriter {
             RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
                 .owner()
                 .call()
-                .await?
-                ._0;
+                .await?;
         let caller_address =
             get_signer(&self.signer.clone(), &self.provider).default_signer_address();
         if !reg_coordinator_owner.eq(&caller_address) {
@@ -1056,18 +1044,18 @@ mod tests {
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::slashing::core::{
-        allocationmanager::AllocationManager, irewardscoordinator::IRewardsCoordinator,
+        allocation_manager::AllocationManager, i_rewards_coordinator::IRewardsCoordinator,
     };
     use eigen_utils::slashing::middleware::{
-        registrycoordinator::{
+        registry_coordinator::{
             ISlashingRegistryCoordinatorTypes::OperatorSetParam, RegistryCoordinator,
         },
-        servicemanagerbase::{
+        service_manager_base::{
             IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission,
             IRewardsCoordinatorTypes::OperatorReward, IRewardsCoordinatorTypes::RewardsSubmission,
             IRewardsCoordinatorTypes::StrategyAndMultiplier, ServiceManagerBase,
         },
-        stakeregistry::{IStakeRegistryTypes::StrategyParams, StakeRegistry},
+        stake_registry::{IStakeRegistryTypes::StrategyParams, StakeRegistry},
     };
     use futures_util::StreamExt;
 
@@ -1225,8 +1213,7 @@ mod tests {
             .CALCULATION_INTERVAL_SECONDS()
             .call()
             .await
-            .unwrap()
-            ._0;
+            .unwrap();
 
         assert_ne!(calculation_interval_seconds, 0);
 
@@ -1234,8 +1221,7 @@ mod tests {
             .MAX_REWARDS_DURATION()
             .call()
             .await
-            .unwrap()
-            ._0;
+            .unwrap();
 
         // Calculate the most recent interval start time that is less than the current timestamp
         // This ensures the reward submission aligns with the contract's time-based requirements
@@ -1420,7 +1406,7 @@ mod tests {
 
         let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
 
-        let current_churn_approver = regcoord.churnApprover().call().await.unwrap()._0;
+        let current_churn_approver = regcoord.churnApprover().call().await.unwrap();
         let new_churn_approver = SECOND_ADDRESS;
         assert_ne!(current_churn_approver, new_churn_approver);
 
@@ -1436,7 +1422,7 @@ mod tests {
 
         assert!(tx_status);
 
-        let current_churn_approver = regcoord.churnApprover().call().await.unwrap()._0;
+        let current_churn_approver = regcoord.churnApprover().call().await.unwrap();
         assert_eq!(current_churn_approver, new_churn_approver);
     }
 
@@ -1452,7 +1438,7 @@ mod tests {
         let provider = get_provider(&http_endpoint);
         let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
 
-        let old_account_identifier = regcoord.avs().call().await.unwrap()._0;
+        let old_account_identifier = regcoord.avs().call().await.unwrap();
         assert_eq!(old_account_identifier, service_manager_address);
 
         let new_account_identifier = FIRST_ADDRESS;
@@ -1466,7 +1452,7 @@ mod tests {
 
         assert!(tx_status);
 
-        let current_account_identifier = regcoord.avs().call().await.unwrap()._0;
+        let current_account_identifier = regcoord.avs().call().await.unwrap();
         assert_eq!(current_account_identifier, new_account_identifier);
     }
 
@@ -1511,15 +1497,15 @@ mod tests {
             .unwrap();
 
         assert_eq!(
-            op_params._0.maxOperatorCount,
+            op_params.maxOperatorCount,
             operator_set_params.maxOperatorCount
         );
         assert_eq!(
-            op_params._0.kickBIPsOfOperatorStake,
+            op_params.kickBIPsOfOperatorStake,
             operator_set_params.kickBIPsOfOperatorStake
         );
         assert_eq!(
-            op_params._0.kickBIPsOfTotalStake,
+            op_params.kickBIPsOfTotalStake,
             operator_set_params.kickBIPsOfTotalStake
         );
     }
@@ -1642,8 +1628,7 @@ mod tests {
                 .minimumStakeForQuorum(quorum_number)
                 .call()
                 .await
-                .unwrap()
-                ._0,
+                .unwrap(),
             minimum_stake
         );
     }
@@ -1717,16 +1702,16 @@ mod tests {
             .unwrap();
 
         assert_eq!(
-            params._0.maxOperatorCount,
+            params.maxOperatorCount,
             operator_set_params.maxOperatorCount,
         );
 
         assert_eq!(
-            params._0.kickBIPsOfOperatorStake,
+            params.kickBIPsOfOperatorStake,
             operator_set_params.kickBIPsOfOperatorStake,
         );
         assert_eq!(
-            params._0.kickBIPsOfTotalStake,
+            params.kickBIPsOfTotalStake,
             operator_set_params.kickBIPsOfTotalStake
         );
 
@@ -1734,8 +1719,7 @@ mod tests {
             .quorumCount()
             .call()
             .await
-            .unwrap()
-            ._0;
+            .unwrap();
 
         assert_eq!(quorum, 1);
     }
@@ -1907,7 +1891,7 @@ mod tests {
 
         assert!(tx_status);
         let cooldown = registry_contract.ejectionCooldown().call().await.unwrap();
-        assert_eq!(cooldown._0, new_cooldown);
+        assert_eq!(cooldown, new_cooldown);
     }
 
     #[tokio::test]
@@ -2017,7 +2001,7 @@ mod tests {
             get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
         );
         let ejecutor = registry_contract.ejector().call().await.unwrap();
-        assert_ne!(ejecutor._0, new_ejector_address);
+        assert_ne!(ejecutor, new_ejector_address);
 
         let tx_hash = avs_writer.set_ejector(new_ejector_address).await.unwrap();
 
@@ -2029,7 +2013,7 @@ mod tests {
         assert!(tx_status);
 
         let ejecutor = registry_contract.ejector().call().await.unwrap();
-        assert_eq!(ejecutor._0, new_ejector_address);
+        assert_eq!(ejecutor, new_ejector_address);
     }
 
     #[tokio::test]
@@ -2048,15 +2032,13 @@ mod tests {
             .MAX_REWARDS_DURATION()
             .call()
             .await
-            .unwrap()
-            ._0;
+            .unwrap();
 
         let calculation_interval_seconds = rewards_coordinator
             .CALCULATION_INTERVAL_SECONDS()
             .call()
             .await
-            .unwrap()
-            ._0;
+            .unwrap();
 
         // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
         // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L438

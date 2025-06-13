@@ -14,28 +14,28 @@ use eigen_client_avsregistry::{reader::AvsRegistryChainReader, writer::AvsRegist
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_utils::slashing::{
     core::{
-        allocationmanager::AllocationManager,
-        delegationmanager::DelegationManager,
-        irewardscoordinator::{
+        allocation_manager::AllocationManager,
+        delegation_manager::DelegationManager,
+        i_rewards_coordinator::{
             IRewardsCoordinator,
             IRewardsCoordinatorTypes::{
                 EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
             },
         },
-        permissioncontroller::PermissionController,
+        permission_controller::PermissionController,
     },
     middleware::{
-        registrycoordinator::{
+        registry_coordinator::{
             ISlashingRegistryCoordinatorTypes::OperatorSetParam,
             IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
         },
-        slashingregistrycoordinator::{
+        slashing_registry_coordinator::{
             ISlashingRegistryCoordinatorTypes::OperatorSetParam as OperatorSetParamSlashing,
             IStakeRegistryTypes::StrategyParams as StrategyParamsSlashing,
             SlashingRegistryCoordinator,
         },
     },
-    sdk::{mockavsservicemanager::MockAvsServiceManager, mockerc20::MockERC20},
+    sdk::{mock_avs_service_manager::MockAvsServiceManager, mock_erc20::MockERC20},
 };
 
 use crate::anvil_constants::{
@@ -46,7 +46,7 @@ use crate::anvil_constants::{
     FIRST_ADDRESS, FIRST_PRIVATE_KEY,
 };
 
-use eigen_utils::rewardsv2::middleware::registrycoordinator::{
+use eigen_utils::rewardsv2::middleware::registry_coordinator::{
     IRegistryCoordinator::OperatorSetParam as RewardsV2OperatorSetParam,
     IStakeRegistry::StrategyParams as RewardsV2StrategyParams,
     RegistryCoordinator as RewardsV2RegistryCoordinator,
@@ -119,8 +119,7 @@ pub async fn new_test_writer(http_endpoint: String, private_key: String) -> ELCh
         .permissionController()
         .call()
         .await
-        .unwrap()
-        ._0;
+        .unwrap();
     let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
 
     ELChainWriter::new(
@@ -423,8 +422,7 @@ pub async fn ensure_can_set_avs_registrar(
         .getAVSRegistrar(avs_address)
         .call()
         .await
-        .unwrap()
-        ._0;
+        .unwrap();
 
     registrar == avs_address
 }
@@ -445,7 +443,6 @@ pub async fn can_set_appointee(
         .call()
         .await
         .unwrap()
-        ._0
 }
 /// Creates m2 quorum using a private key and an http endpoint
 pub async fn create_quorum(private_key: &str, http_endpoint: &str) {
@@ -592,7 +589,6 @@ pub async fn create_total_delegated_stake_operator_set(
         .call()
         .await
         .unwrap()
-        ._0
     {
         service_manager
             .setAppointee(

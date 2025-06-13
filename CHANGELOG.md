@@ -17,6 +17,30 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Bump `alloy` to 1.0 and change foundry image in PR [#553](https://github.com/Layr-Labs/eigensdk-rs/pull/553)
+  - With these changes, you should:
+    - Some alloy types have changed, see the [alloy migration guide](https://alloy.rs/migrating-to-core-1.0/README/) for details
+    - The `foundry` image is now `ghcr.io/foundry-rs/foundry:nightly-548d1f0ebb811fcebd5fafdec33b7b814d0dbdbd`
+    - Generated binding names are now snake_case, which breaks existing import paths (e.g. `allocationmanager` → `allocation_manager`)
+    - 
+      ```rust
+        // BEFORE
+        use eigen_utils::slashing::core::allocationmanager::AllocationManager
+
+        // AFTER
+        use eigen_utils::slashing::core::allocation_manager::AllocationManager
+      ```
+
+    - Binding calls now return the value type directly instead of a tuple, so the `.0` suffix is no longer required
+
+      ```rust
+        // BEFORE
+        let owner = RegistryCoordinator::new(...).owner().call().await?._0;
+
+        // AFTER
+        let owner = RegistryCoordinator::new(...).owner().call().await?;
+      ```
+
 * Bump MSRV and Rust to 1.82 in PR [515](https://github.com/Layr-Labs/eigensdk-rs/pull/515).
 
 * Added a method `get_operator_socket` to retrieve the socket from the `AvsRegistryServiceChainCaller` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464).
