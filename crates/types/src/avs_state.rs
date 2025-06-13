@@ -33,3 +33,14 @@ pub struct OperatorSet {
     /// The address of the AVS this operator set belongs to
     pub avs: Address,
 }
+
+impl From<OperatorSet>
+    for eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet
+{
+    fn from(operator_set: OperatorSet) -> Self {
+        eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet {
+            id: operator_set.id,
+            avs: operator_set.avs,
+        }
+    }
+}

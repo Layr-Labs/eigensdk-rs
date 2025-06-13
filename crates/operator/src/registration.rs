@@ -27,7 +27,7 @@ use crate::register_config::OperatorRegistrationConfig;
 // The idea is for it to be declarative, where the user declares the end state “operator registered
 // in X and Y AVSs, with x, y, and z stake in strategies a, b, and c”, and the SDK registers and deposits to reach that state.
 
-/// Registers an operator with EigenLayer. Use this function for testing purposes.
+/// Registers an operator with EigenLayer.
 ///
 /// 1. Registers the operator with EigenLayer
 /// 2. Deposits ERC20 into the strategy
@@ -54,15 +54,12 @@ pub async fn setup_operator(
         metadata_uri,
         socket,
         allocation_delay,
-        operator_set_ids,
-        new_magnitudes,
-        deposit_tokens_amounts,
         allocation_manager_address,
         registry_coordinator_address,
         delegation_manager_address,
-        strategy_manager_addresses,
-        erc20_strategy_addresses,
-        avs_addresses,
+        strategy_manager_address,
+        operator_sets,
+        deposits,
     } = config;
 
     let signer = tx_signer_from_config(signer).await?;
@@ -73,60 +70,26 @@ pub async fn setup_operator(
         Url::parse(&http_rpc_url).map_err(|_| OperatorRegistrationError::HttpUrlParseError)?;
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
 
-    // Check if operator is already registered in EigenLayer, if so, skip the registration process
-    if let (Some(allocation_delay), Some(metadata_uri), Some(delegation_manager_address)) =
-        (allocation_delay, metadata_uri, delegation_manager_address)
-    {
-        info!("Checking if operator is already registered in EigenLayer");
-
-        let is_operator_registered = is_operator_registered_in_eigenlayer(
-            provider.clone(),
-            operator_address,
-            delegation_manager_address,
-        )
-        .await?;
-
-        if !is_operator_registered {
-            info!("Operator is not registered in EigenLayer");
-            register_operator_to_eigenlayer(
-                provider.clone(),
-                operator_address,
-                allocation_delay,
-                metadata_uri,
-                delegation_manager_address,
-            )
-            .await?;
-        } else {
-            info!("Operator is already registered in EigenLayer");
-        }
-    } else {
-        warn!("Skipping registration to EigenLayer since necessary parameters are not set");
-    }
+    handle_eigenlayer_registration(
+        provider.clone(),
+        operator_address,
+        allocation_delay,
+        metadata_uri,
+        delegation_manager_address,
+    )
+    .await?;
 
     // Check if the operator has deposited tokens into the strategy and if it matches the amount in the config
     // If not, deposit the tokens into the strategy or the difference between the amount in the config and the amount in the strategy
-    if let (
-        Some(deposit_tokens_amounts),
-        Some(erc20_strategy_addresses),
-        Some(strategy_manager_addresses),
-        Some(delegation_manager_address),
-    ) = (
-        deposit_tokens_amounts,
-        erc20_strategy_addresses.clone(),
-        strategy_manager_addresses,
-        delegation_manager_address,
-    ) {
-        for ((deposit_tokens_amount, erc20_strategy_address), strategy_manager_address) in
-            deposit_tokens_amounts
-                .iter()
-                .zip(erc20_strategy_addresses)
-                .zip(strategy_manager_addresses)
-        {
+    if let (Some(strategy_manager_address), Some(delegation_manager_address)) =
+        (strategy_manager_address, delegation_manager_address)
+    {
+        for deposit in deposits.clone() {
             handle_deposit_tokens_amounts(
                 provider.clone(),
                 operator_address,
-                deposit_tokens_amount.to_string(),
-                erc20_strategy_address,
+                deposit.amount,
+                deposit.token_address,
                 strategy_manager_address,
                 delegation_manager_address,
             )
@@ -139,35 +102,17 @@ pub async fn setup_operator(
     }
 
     // Allocate stake in the strategy
-    if let (
-        Some(avs_addresses),
-        Some(operator_set_ids),
-        Some(erc20_strategy_addresses),
-        Some(allocation_manager_address),
-        Some(new_magnitudes),
-    ) = (
-        avs_addresses.clone(),
-        operator_set_ids.clone(),
-        erc20_strategy_addresses,
-        allocation_manager_address,
-        new_magnitudes,
-    ) {
-        // TODO: Check if the operator has allocated stake in the strategy
-
-        let operator_sets: Vec<OperatorSet> = operator_set_ids
-            .iter()
-            .zip(avs_addresses)
-            .map(|(id, avs)| OperatorSet { avs, id: *id })
-            .collect();
-
-        let allocate_params = operator_sets
-            .iter()
-            .map(|operator_set| AllocateParams {
-                operatorSet: operator_set.clone(),
-                strategies: erc20_strategy_addresses.clone(),
-                newMagnitudes: new_magnitudes.clone(),
-            })
-            .collect();
+    if let Some(allocation_manager_address) = allocation_manager_address {
+        let mut allocate_params = Vec::new();
+        for operator_set in operator_sets.clone() {
+            for deposit in deposits.clone() {
+                allocate_params.push(AllocateParams {
+                    operatorSet: operator_set.clone().into(),
+                    strategies: vec![deposit.token_address],
+                    newMagnitudes: vec![deposit.allocation_magnitude],
+                });
+            }
+        }
 
         modify_allocations(
             provider.clone(),
@@ -182,31 +127,17 @@ pub async fn setup_operator(
         );
     }
 
-    if let (
-        Some(operator_set_ids),
-        Some(socket),
-        Some(allocation_manager_address),
-        Some(registry_coordinator_address),
-        Some(avs_addresses),
-    ) = (
-        operator_set_ids,
+    if let (Some(socket), Some(allocation_manager_address), Some(registry_coordinator_address)) = (
         socket,
         allocation_manager_address,
         registry_coordinator_address,
-        avs_addresses,
     ) {
         info!("Checking if operator is registered for operator sets");
-
-        let operator_sets: Vec<OperatorSet> = operator_set_ids
-            .iter()
-            .zip(avs_addresses)
-            .map(|(id, avs)| OperatorSet { avs, id: *id })
-            .collect();
 
         for operator_set in operator_sets {
             let is_registered = is_operator_registered_for_operator_sets(
                 provider.clone(),
-                operator_set.clone(),
+                operator_set.clone().into(),
                 operator_address,
                 allocation_manager_address,
             )
@@ -242,6 +173,47 @@ pub async fn setup_operator(
 // With the difference that we are using the V2 signer instead of the V1 signer.
 // There is an incompatibility with `eigen-client-elcontracts`, therefore, we need
 // to perform operator registration using the bindings.
+
+async fn handle_eigenlayer_registration(
+    provider: SdkSigner,
+    operator_address: Address,
+    allocation_delay: Option<u32>,
+    metadata_uri: Option<String>,
+    delegation_manager_address: Option<Address>,
+) -> Result<(), OperatorRegistrationError> {
+    // Check if operator is already registered in EigenLayer, if so, skip the registration process
+    if let (Some(allocation_delay), Some(metadata_uri), Some(delegation_manager_address)) =
+        (allocation_delay, metadata_uri, delegation_manager_address)
+    {
+        info!("Checking if operator {operator_address:#x} is already registered in EigenLayer");
+
+        let is_operator_registered = is_operator_registered_in_eigenlayer(
+            provider.clone(),
+            operator_address,
+            delegation_manager_address,
+        )
+        .await?;
+
+        if !is_operator_registered {
+            info!("Operator is not registered in EigenLayer");
+            register_operator_to_eigenlayer(
+                provider.clone(),
+                operator_address,
+                allocation_delay,
+                metadata_uri,
+                delegation_manager_address,
+            )
+            .await?;
+            info!("Operator {operator_address:#x} registered in EigenLayer");
+        } else {
+            info!("Operator is already registered in EigenLayer");
+        }
+    } else {
+        warn!("Skipping registration to EigenLayer since necessary parameters are not set");
+    };
+
+    Ok(())
+}
 
 async fn is_operator_registered_in_eigenlayer(
     provider: SdkSigner,
@@ -366,55 +338,58 @@ async fn deposit_erc20_into_strategy(
     Ok(())
 }
 
-async fn get_allocation_delay(
-    provider: SdkSigner,
-    operator_address: Address,
-    allocation_manager_address: Address,
-) -> Result<u32, OperatorRegistrationError> {
-    let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
+// TODO: CHECK IF THIS IS NEEDED
+// async fn get_allocation_delay(
+//     provider: SdkSigner,
+//     operator_address: Address,
+//     allocation_manager_address: Address,
+// ) -> Result<u32, OperatorRegistrationError> {
+//     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
 
-    let delay = contract_allocation_manager
-        .getAllocationDelay(operator_address)
-        .call()
-        .await?
-        ._1;
+//     let delay = contract_allocation_manager
+//         .getAllocationDelay(operator_address)
+//         .call()
+//         .await?
+//         ._1;
 
-    Ok(delay)
-}
+//     Ok(delay)
+// }
 
-async fn set_allocation_delay(
-    provider: SdkSigner,
-    operator_address: Address,
-    delay: u32,
-    allocation_manager_address: Address,
-) -> Result<(), OperatorRegistrationError> {
-    let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
-    contract_allocation_manager
-        .setAllocationDelay(operator_address, delay)
-        .send()
-        .await?
-        .get_receipt()
-        .await?;
+// TODO: CHECK IF THIS IS NEEDED
+// async fn set_allocation_delay(
+//     provider: SdkSigner,
+//     operator_address: Address,
+//     delay: u32,
+//     allocation_manager_address: Address,
+// ) -> Result<(), OperatorRegistrationError> {
+//     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
+//     contract_allocation_manager
+//         .setAllocationDelay(operator_address, delay)
+//         .send()
+//         .await?
+//         .get_receipt()
+//         .await?;
 
-    Ok(())
-}
+//     Ok(())
+// }
 
-async fn get_allocated_stake(
-    provider: SdkSigner,
-    operator_set: OperatorSet,
-    operators: Vec<Address>,
-    strategies: Vec<Address>,
-    allocation_manager_address: Address,
-) -> Result<Vec<Vec<U256>>, OperatorRegistrationError> {
-    let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
-    let allocated_stake = contract_allocation_manager
-        .getAllocatedStake(operator_set, operators, strategies)
-        .call()
-        .await?
-        ._0;
+// TODO: CHECK WHICH FUNCTION TO USE - getAllocatedStake or getAllocation
+// async fn get_allocated_stake(
+//     provider: SdkSigner,
+//     operator_set: OperatorSet,
+//     operators: Vec<Address>,
+//     strategies: Vec<Address>,
+//     allocation_manager_address: Address,
+// ) -> Result<Vec<Vec<U256>>, OperatorRegistrationError> {
+//     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
+//     let allocated_stake = contract_allocation_manager
+//         .getAllocatedStake(operator_set, operators, strategies)
+//         .call()
+//         .await?
+//         ._0;
 
-    Ok(allocated_stake)
-}
+//     Ok(allocated_stake)
+// }
 
 async fn modify_allocations(
     provider: SdkSigner,
