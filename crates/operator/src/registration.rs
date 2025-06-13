@@ -41,7 +41,7 @@ use crate::register_config::OperatorRegistrationConfig;
 /// # Returns
 ///
 /// * `Result<(), OperatorError>` - The result of the operation
-pub async fn register_operator(
+pub async fn setup_operator(
     config: OperatorRegistrationConfig,
     http_rpc_url: String,
     bls_key_pair: BlsKeyPair,
@@ -55,48 +55,115 @@ pub async fn register_operator(
         Url::parse(&http_rpc_url).map_err(|_| OperatorRegistrationError::HttpUrlParseError)?;
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
 
+    // Check if operator is already registered in EigenLayer, if so, skip the registration process
     if let (Some(allocation_delay), Some(metadata_uri), Some(delegation_manager_address)) = (
         config.allocation_delay,
         config.metadata_uri,
         config.delegation_manager_address,
     ) {
-        register_operator_to_eigenlayer(
+        info!("Checking if operator is already registered in EigenLayer");
+
+        let is_operator_registered = is_operator_registered_in_eigenlayer(
             provider.clone(),
             operator_address,
-            allocation_delay,
-            metadata_uri,
             delegation_manager_address,
         )
         .await?;
+
+        if !is_operator_registered {
+            info!("Operator {operator_address:#x} is not registered in EigenLayer");
+            register_operator_to_eigenlayer(
+                provider.clone(),
+                operator_address,
+                allocation_delay,
+                metadata_uri,
+                delegation_manager_address,
+            )
+            .await?;
+        } else {
+            info!("Operator {operator_address:#x} is already registered in EigenLayer");
+        }
     }
 
-    if let (Some(deposit_tokens), Some(erc20_strategy_address), Some(strategy_manager_address)) = (
+    // Check if the operator has deposited tokens into the strategy and if it matches the amount in the config
+    // If not, deposit the tokens into the strategy or the difference between the amount in the config and the amount in the strategy
+    if let (
+        Some(deposit_tokens),
+        Some(erc20_strategy_address),
+        Some(strategy_manager_address),
+        Some(delegation_manager_address),
+    ) = (
         config.deposit_tokens,
         config.erc20_strategy_address,
         config.strategy_manager_address,
+        config.delegation_manager_address,
     ) {
         let amount = U256::from_str(&deposit_tokens)
             .map_err(|_| OperatorRegistrationError::U256ParseError)?;
 
-        deposit_erc20_into_strategy(
+        info!("Checking if operator has deposited tokens into the strategy");
+        let deposit_amount = get_deposit_amount_in_strategy(
             provider.clone(),
-            amount,
+            operator_address,
+            delegation_manager_address,
             erc20_strategy_address,
-            strategy_manager_address,
         )
         .await?;
+
+        info!(
+            "Operator {operator_address:#x} has deposited {deposit_amount} tokens into strategy {erc20_strategy_address:#x}"
+        );
+
+        if deposit_amount < amount {
+            let amount_to_deposit = amount - deposit_amount;
+            info!(
+                "Expected deposit amount: {amount}. Difference between expected and deposited amount: {amount_to_deposit}"
+            );
+            info!(
+                "Depositing {amount_to_deposit} tokens into strategy {erc20_strategy_address:#x}"
+            );
+
+            deposit_erc20_into_strategy(
+                provider.clone(),
+                amount_to_deposit,
+                erc20_strategy_address,
+                strategy_manager_address,
+            )
+            .await?;
+        } else {
+            info!(
+                "Operator {operator_address:#x} has deposited the correct amount of tokens into the strategy {erc20_strategy_address:#x}"
+            );
+        }
     }
 
+    // Check if the operator has set the allocation delay and if it matches the amount in the config
+    // If not, set the allocation delay
     if let (Some(allocation_delay), Some(allocation_manager_address)) =
         (config.allocation_delay, config.allocation_manager_address)
     {
-        set_allocation_delay(
+        info!("Checking if operator has set the allocation delay");
+        let delay = get_allocation_delay(
             provider.clone(),
             operator_address,
-            allocation_delay,
             allocation_manager_address,
         )
         .await?;
+
+        if delay != allocation_delay {
+            info!(
+                "Operator {operator_address:#x} has set the allocation delay to {delay}. Expected allocation delay: {allocation_delay}"
+            );
+            info!("Setting the allocation delay to the expected value");
+
+            set_allocation_delay(
+                provider.clone(),
+                operator_address,
+                allocation_delay,
+                allocation_manager_address,
+            )
+            .await?;
+        }
     }
 
     if let (
@@ -110,22 +177,54 @@ pub async fn register_operator(
         config.erc20_strategy_address,
         config.allocation_manager_address,
     ) {
+        let operator_set = OperatorSet {
+            avs: avs_address,
+            id: operator_set_id,
+        };
+
         let allocate_params = vec![AllocateParams {
-            operatorSet: OperatorSet {
-                avs: avs_address,
-                id: operator_set_id,
-            },
+            operatorSet: operator_set.clone(),
             strategies: vec![erc20_strategy_address],
-            newMagnitudes: config.new_magnitude,
+            newMagnitudes: config.new_magnitude.clone(),
         }];
 
-        modify_allocations(
+        info!("Checking if operator has allocated stake in the strategy");
+        let allocated_stake = get_allocated_stake(
             provider.clone(),
-            operator_address,
-            allocate_params,
+            operator_set,
+            vec![operator_address],
+            vec![erc20_strategy_address],
             allocation_manager_address,
         )
         .await?;
+
+        let current_stake = allocated_stake
+            .first()
+            .and_then(|operator_stakes| operator_stakes.first())
+            .copied()
+            .unwrap_or(U256::ZERO);
+
+        let expected_magnitude = config
+            .new_magnitude
+            .first()
+            .map(|magnitude| U256::from(*magnitude))
+            .unwrap_or(U256::ZERO);
+
+        info!(
+            "Operator {operator_address:#x} has {current_stake} of stake allocated in the strategy {erc20_strategy_address:#x}. Expected magnitude: {expected_magnitude}"
+        );
+
+        if current_stake != expected_magnitude {
+            info!("Modifying the allocation to the expected value");
+
+            modify_allocations(
+                provider.clone(),
+                operator_address,
+                allocate_params,
+                allocation_manager_address,
+            )
+            .await?;
+        }
     }
 
     if let (
@@ -141,17 +240,39 @@ pub async fn register_operator(
         config.registry_coordinator_address,
         config.avs_address,
     ) {
-        register_for_operator_sets(
+        info!("Checking if operator is registered for operator sets");
+
+        let operator_set = OperatorSet {
+            avs: avs_address,
+            id: operator_set_id,
+        };
+
+        let is_registered = is_operator_registered_for_operator_sets(
             provider.clone(),
+            operator_set,
             operator_address,
-            vec![operator_set_id],
-            bls_key_pair,
-            &socket,
             allocation_manager_address,
-            registry_coordinator_address,
-            avs_address,
         )
         .await?;
+
+        if !is_registered {
+            info!("Operator is not registered for operator sets");
+            info!("Registering operator for operator sets");
+
+            register_for_operator_sets(
+                provider.clone(),
+                operator_address,
+                vec![operator_set_id],
+                bls_key_pair,
+                &socket,
+                allocation_manager_address,
+                registry_coordinator_address,
+                avs_address,
+            )
+            .await?;
+        } else {
+            info!("Operator is registered for operator sets");
+        }
     }
 
     Ok(())
@@ -161,6 +282,22 @@ pub async fn register_operator(
 // With the difference that we are using the V2 signer instead of the V1 signer.
 // There is an incompatibility with `eigen-client-elcontracts`, therefore, we need
 // to perform operator registration using the bindings.
+
+async fn is_operator_registered_in_eigenlayer(
+    provider: SdkSigner,
+    operator_address: Address,
+    delegation_manager_address: Address,
+) -> Result<bool, OperatorRegistrationError> {
+    let contract_delegation_manager = DelegationManager::new(delegation_manager_address, provider);
+
+    let is_operator = contract_delegation_manager
+        .isOperator(operator_address)
+        .call()
+        .await?
+        ._0;
+
+    Ok(is_operator)
+}
 
 async fn register_operator_to_eigenlayer(
     provider: SdkSigner,
@@ -180,6 +317,21 @@ async fn register_operator_to_eigenlayer(
         .get_receipt()
         .await?;
     Ok(())
+}
+
+async fn get_deposit_amount_in_strategy(
+    provider: SdkSigner,
+    operator_address: Address,
+    delegation_manager: Address,
+    strategy_address: Address,
+) -> Result<U256, OperatorRegistrationError> {
+    let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
+
+    Ok(contract_delegation_manager
+        .operatorShares(operator_address, strategy_address)
+        .call()
+        .await?
+        .shares)
 }
 
 async fn deposit_erc20_into_strategy(
@@ -212,6 +364,22 @@ async fn deposit_erc20_into_strategy(
     Ok(())
 }
 
+async fn get_allocation_delay(
+    provider: SdkSigner,
+    operator_address: Address,
+    allocation_manager_address: Address,
+) -> Result<u32, OperatorRegistrationError> {
+    let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
+
+    let delay = contract_allocation_manager
+        .getAllocationDelay(operator_address)
+        .call()
+        .await?
+        ._1;
+
+    Ok(delay)
+}
+
 async fn set_allocation_delay(
     provider: SdkSigner,
     operator_address: Address,
@@ -231,6 +399,23 @@ async fn set_allocation_delay(
     Ok(())
 }
 
+async fn get_allocated_stake(
+    provider: SdkSigner,
+    operator_set: OperatorSet,
+    operators: Vec<Address>,
+    strategies: Vec<Address>,
+    allocation_manager_address: Address,
+) -> Result<Vec<Vec<U256>>, OperatorRegistrationError> {
+    let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
+    let allocated_stake = contract_allocation_manager
+        .getAllocatedStake(operator_set, operators, strategies)
+        .call()
+        .await?
+        ._0;
+
+    Ok(allocated_stake)
+}
+
 async fn modify_allocations(
     provider: SdkSigner,
     operator_address: Address,
@@ -248,6 +433,27 @@ async fn modify_allocations(
         .await?;
 
     Ok(())
+}
+
+async fn is_operator_registered_for_operator_sets(
+    provider: SdkSigner,
+    operator_set: OperatorSet,
+    operator_address: Address,
+    allocation_manager_address: Address,
+) -> Result<bool, OperatorRegistrationError> {
+    let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
+
+    let operator_sets = contract_allocation_manager
+        .getRegisteredSets(operator_address)
+        .call()
+        .await?
+        ._0;
+
+    let is_registered = operator_sets.iter().any(|registered_operator_set| {
+        registered_operator_set.id == operator_set.id
+            && registered_operator_set.avs == operator_set.avs
+    });
+    Ok(is_registered)
 }
 
 #[allow(clippy::too_many_arguments)]
