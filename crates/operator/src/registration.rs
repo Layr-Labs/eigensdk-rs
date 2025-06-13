@@ -55,62 +55,104 @@ pub async fn register_operator(
         Url::parse(&http_rpc_url).map_err(|_| OperatorRegistrationError::HttpUrlParseError)?;
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
 
-    register_operator_to_eigenlayer(
-        provider.clone(),
-        operator_address,
+    if let (Some(allocation_delay), Some(metadata_uri), Some(delegation_manager_address)) = (
         config.allocation_delay,
         config.metadata_uri,
         config.delegation_manager_address,
-    )
-    .await?;
+    ) {
+        register_operator_to_eigenlayer(
+            provider.clone(),
+            operator_address,
+            allocation_delay,
+            metadata_uri,
+            delegation_manager_address,
+        )
+        .await?;
+    }
 
-    let amount = U256::from_str(&config.deposit_tokens)
-        .map_err(|_| OperatorRegistrationError::U256ParseError)?;
-
-    deposit_erc20_into_strategy(
-        provider.clone(),
-        amount,
+    if let (Some(deposit_tokens), Some(erc20_strategy_address), Some(strategy_manager_address)) = (
+        config.deposit_tokens,
         config.erc20_strategy_address,
         config.strategy_manager_address,
-    )
-    .await?;
+    ) {
+        let amount = U256::from_str(&deposit_tokens)
+            .map_err(|_| OperatorRegistrationError::U256ParseError)?;
 
-    set_allocation_delay(
-        provider.clone(),
-        operator_address,
-        config.allocation_delay,
+        deposit_erc20_into_strategy(
+            provider.clone(),
+            amount,
+            erc20_strategy_address,
+            strategy_manager_address,
+        )
+        .await?;
+    }
+
+    if let (Some(allocation_delay), Some(allocation_manager_address)) =
+        (config.allocation_delay, config.allocation_manager_address)
+    {
+        set_allocation_delay(
+            provider.clone(),
+            operator_address,
+            allocation_delay,
+            allocation_manager_address,
+        )
+        .await?;
+    }
+
+    if let (
+        Some(avs_address),
+        Some(operator_set_id),
+        Some(erc20_strategy_address),
+        Some(allocation_manager_address),
+    ) = (
+        config.avs_address,
+        config.operator_set_id,
+        config.erc20_strategy_address,
         config.allocation_manager_address,
-    )
-    .await?;
+    ) {
+        let allocate_params = vec![AllocateParams {
+            operatorSet: OperatorSet {
+                avs: avs_address,
+                id: operator_set_id,
+            },
+            strategies: vec![erc20_strategy_address],
+            newMagnitudes: config.new_magnitude,
+        }];
 
-    let allocate_params = vec![AllocateParams {
-        operatorSet: OperatorSet {
-            avs: config.avs_address,
-            id: config.operator_set_id,
-        },
-        strategies: vec![config.erc20_strategy_address],
-        newMagnitudes: config.new_magnitude,
-    }];
+        modify_allocations(
+            provider.clone(),
+            operator_address,
+            allocate_params,
+            allocation_manager_address,
+        )
+        .await?;
+    }
 
-    modify_allocations(
-        provider.clone(),
-        operator_address,
-        allocate_params,
-        config.allocation_manager_address,
-    )
-    .await?;
-
-    register_for_operator_sets(
-        provider.clone(),
-        operator_address,
-        vec![config.operator_set_id],
-        bls_key_pair,
-        &config.socket,
+    if let (
+        Some(operator_set_id),
+        Some(socket),
+        Some(allocation_manager_address),
+        Some(registry_coordinator_address),
+        Some(avs_address),
+    ) = (
+        config.operator_set_id,
+        config.socket,
         config.allocation_manager_address,
         config.registry_coordinator_address,
         config.avs_address,
-    )
-    .await?;
+    ) {
+        register_for_operator_sets(
+            provider.clone(),
+            operator_address,
+            vec![operator_set_id],
+            bls_key_pair,
+            &socket,
+            allocation_manager_address,
+            registry_coordinator_address,
+            avs_address,
+        )
+        .await?;
+    }
 
     Ok(())
 }
