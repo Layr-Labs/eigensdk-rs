@@ -930,27 +930,6 @@ mod tests {
         assert_eq!(bls_key_pair.priv_key, expected_priv_key);
     }
 
-    // fn test_aws_config_serialization() {
-    //     let original = AwsConfig {
-    //         key_id: "1234abcd-12ab-34cd-56ef-1234567890ab".into(),
-    //         chain_id: Some(1),
-    //         region: "us-west-1".into(),
-    //         endpoint_url: "http://localhost:4566".into(),
-    //     };
-    //     let toml_str = toml::to_string(&original).unwrap();
-    //     let parsed: AwsConfig = toml::from_str(&toml_str).unwrap();
-    //     assert_eq!(parsed, original);
-
-    //     let toml_str = r#"
-    //         key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
-    //         chain_id = 1
-    //         region = "us-west-1"
-    //         endpoint_url = "http://localhost:4566"
-    //     "#;
-    //     let parsed: AwsConfig = toml::from_str(toml_str).unwrap();
-    //     assert_eq!(parsed, original);
-    // }
-
     #[test]
     fn test_bls_serialize_deserialize_from_config_private_key() {
         let original = BlsPrivateKeyConfig {
