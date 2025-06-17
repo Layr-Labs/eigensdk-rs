@@ -8,7 +8,8 @@ pub struct OperatorRegistrationConfig {
     /// Signer of the operator
     pub signer: SignerConfig,
     /// Operator config for EigenLayer registration
-    pub operator_global_config: OperatorELConfig,
+    /// Hacer option esto
+    pub operator_global_config: Option<OperatorELConfig>,
     /// AVS registration configs
     pub avs_registration_configs: Vec<AvsRegistrationConfig>,
 }
@@ -18,15 +19,14 @@ pub struct OperatorRegistrationConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OperatorELConfig {
     /// Metadata URI
-    pub metadata_uri: Option<String>,
+    pub metadata_uri: String,
     /// Allocation delay
-    pub allocation_delay: Option<u32>,
+    pub allocation_delay: u32,
     /// Delegation manager address
-    pub delegation_manager_address: Option<Address>,
-    /// Strategy manager address
-    pub strategy_manager_address: Option<Address>,
+    pub delegation_manager_address: Address,
 }
 
+// TODO: Improve name
 /// This configuration is used to register the operator to an AVS.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AvsRegistrationConfig {
@@ -38,6 +38,8 @@ pub struct AvsRegistrationConfig {
     pub allocation_manager_address: Option<Address>,
     /// Registry coordinator address
     pub registry_coordinator_address: Option<Address>,
+    /// Strategy manager address
+    pub strategy_manager_address: Address,
     /// Operator sets for this AVS
     pub operator_sets: Vec<OperatorSet>,
     /// Deposits for this AVS
@@ -47,8 +49,8 @@ pub struct AvsRegistrationConfig {
 /// Deposit information for an AVS
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DepositInfo {
-    /// Token address
-    pub token_address: Address,
+    /// Strategy address
+    pub strategy_address: Address,
     /// Amount of tokens to deposit
     pub amount: String,
     /// Amount of shares to allocate
