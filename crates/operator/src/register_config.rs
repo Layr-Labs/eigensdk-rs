@@ -1,5 +1,6 @@
 use alloy::primitives::Address;
 use eigen_signer::SignerConfig;
+use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 use serde::{Deserialize, Serialize};
 
 /// Operator registration config
@@ -29,6 +30,8 @@ pub struct OperatorELConfig {
 pub struct AvsRegistrationConfig {
     /// AVS address
     pub avs_address: Address,
+    /// Operator set IDs for this AVS
+    pub operator_set_ids: Vec<u32>,
     /// Socket address for this AVS
     pub socket: Option<String>,
     /// Allocation manager address
@@ -37,12 +40,27 @@ pub struct AvsRegistrationConfig {
     pub registry_coordinator_address: Option<Address>,
     /// Strategy manager address
     pub strategy_manager_address: Option<Address>,
-    /// Operator sets for this AVS
-    pub operator_sets: Vec<OperatorSet>,
     /// Deposits for this AVS
     pub deposits: Vec<DepositInfo>,
 }
 
+impl AvsRegistrationConfig {
+    /// Create an operator set from the AVS address and the operator set ID
+    ///
+    /// # Arguments
+    ///
+    /// * `id` - The ID of the operator set
+    ///
+    /// # Returns
+    ///
+    /// * `OperatorSet` - The operator set
+    pub fn operator_set(&self, id: u32) -> OperatorSet {
+        OperatorSet {
+            id,
+            avs: self.avs_address,
+        }
+    }
+}
 /// Deposit information for an AVS
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DepositInfo {
@@ -52,24 +70,4 @@ pub struct DepositInfo {
     pub amount: String,
     /// Amount of shares to allocate
     pub allocation_magnitude: u64,
-}
-
-///An operator set identified by the AVS address and an identifier
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct OperatorSet {
-    /// The unique identifier for the operator set
-    pub id: u32,
-    /// The address of the AVS this operator set belongs to
-    pub avs_address: Address,
-}
-
-impl From<OperatorSet>
-    for eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet
-{
-    fn from(operator_set: OperatorSet) -> Self {
-        eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet {
-            id: operator_set.id,
-            avs: operator_set.avs_address,
-        }
-    }
 }

@@ -19,7 +19,7 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_signer::tx_signer_from_config;
-use eigen_utils::slashing::core::allocationmanager::AllocationManager;
+use eigen_utils::slashing::core::allocationmanager::AllocationManager::{self, OperatorSet};
 use eigen_utils::slashing::core::allocationmanager::IAllocationManagerTypes::{
     self, AllocateParams,
 };
@@ -35,7 +35,7 @@ use url::Url;
 
 use crate::error::OperatorRegistrationError;
 use crate::register_config::{
-    AvsRegistrationConfig, DepositInfo, OperatorELConfig, OperatorRegistrationConfig, OperatorSet,
+    AvsRegistrationConfig, DepositInfo, OperatorELConfig, OperatorRegistrationConfig,
 };
 
 /// Performs full setup and registration of an operator with EigenLayer.
@@ -88,7 +88,6 @@ pub async fn setup_operator(
 
     // 2. Register operator to each AVS individually
     for avs_config in avs_registration_configs {
-        dbg!(&avs_config);
         register_operator_to_avs(
             provider.clone(),
             operator_address,
@@ -140,12 +139,19 @@ async fn register_operator_to_avs(
 
     // 2. Configure stake allocation across operator sets. If the operator has already allocated
     // the required amount, skip the allocation. If not, allocate the difference.
+
+    let operator_sets: Vec<OperatorSet> = avs_config
+        .operator_set_ids
+        .iter()
+        .map(|id| avs_config.operator_set(*id))
+        .collect();
+
     handle_allocation_of_stake_in_strategies(
         provider.clone(),
         operator_address,
         avs_config.deposits.clone(),
         avs_config.allocation_manager_address,
-        avs_config.operator_sets.clone(),
+        operator_sets.clone(),
     )
     .await?;
 
@@ -154,7 +160,7 @@ async fn register_operator_to_avs(
     handle_registration_for_operator_sets(
         provider.clone(),
         operator_address,
-        avs_config.operator_sets,
+        operator_sets,
         avs_config.allocation_manager_address,
         avs_config.registry_coordinator_address,
         avs_config.socket,
@@ -539,7 +545,7 @@ async fn get_current_allocated_stake(
 
     let allocated_stakes = contract_allocation_manager
         .getAllocatedStake(
-            operator_set.clone().into(),
+            operator_set.clone(),
             vec![operator_address],
             vec![strategy_address],
         )
@@ -639,17 +645,17 @@ async fn handle_registration_for_operator_sets(
         if !is_registered {
             info!(
                 "Operator set {:#x}/{} requires registration",
-                operator_set.avs_address, operator_set.id
+                operator_set.avs, operator_set.id
             );
             // Group by AVS address for batch registration
             operator_sets_by_avs
-                .entry(operator_set.avs_address)
+                .entry(operator_set.avs)
                 .or_insert_with(Vec::new)
                 .push(operator_set);
         } else {
             info!(
                 "Operator set {:#x}/{} already registered",
-                operator_set.avs_address, operator_set.id
+                operator_set.avs, operator_set.id
             );
         }
     }
@@ -791,7 +797,7 @@ async fn is_operator_registered_for_operator_set(
     // Check if our target operator set is in the registered list
     // We match both the operator set ID and the AVS address
     let is_registered = registered_sets.iter().any(|registered_set| {
-        registered_set.id == operator_set.id && registered_set.avs == operator_set.avs_address
+        registered_set.id == operator_set.id && registered_set.avs == operator_set.avs
     });
 
     Ok(is_registered)
