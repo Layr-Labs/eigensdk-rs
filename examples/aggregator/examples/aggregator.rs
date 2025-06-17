@@ -161,12 +161,9 @@ async fn main() {
     .await
     .unwrap();
 
-    // 3. Deploy the task contract
-    let provider = get_signer(FIRST_PRIVATE_KEY, &http_rpc);
-    let task_contract = TaskContract::deploy(&provider).await.unwrap();
     let avs_address = get_service_manager_address(http_rpc.clone()).await;
 
-    // 4. Create quorums and operator sets
+    // 3. Create quorums and operator sets
     create_total_delegated_stake_operator_set(
         &http_rpc,
         get_erc20_mock_strategy(http_rpc.clone()).await,
@@ -175,7 +172,7 @@ async fn main() {
     .await;
     info!("Operator set created");
 
-    // 5. Register operator to operator set
+    // 4. Register operator to operator set
     let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
     el_chain_writer
         .register_for_operator_sets(FIRST_ADDRESS, avs_address, vec![0], bls_key_pair, "socket")
@@ -183,7 +180,7 @@ async fn main() {
         .unwrap();
     info!("First operator registered to operator set");
 
-    // 5. Register second operator to operator set
+    // 4. Register second operator to operator set
     let bls_key_pair_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
     el_chain_writer_2
         .register_for_operator_sets(
@@ -200,7 +197,7 @@ async fn main() {
     let operator_id = avs_registry.get_operator_id(FIRST_ADDRESS).await.unwrap();
     let operator_id_2 = avs_registry.get_operator_id(SECOND_ADDRESS).await.unwrap();
 
-    // 6. Set up the aggregator config and initialize the processor
+    // 5. Set up the aggregator config and initialize the processor
     let registry_coordinator = get_registry_coordinator_address(http_rpc.clone()).await;
     let operator_state_retriever = get_operator_state_retriever_address(http_rpc.clone()).await;
     let config = AggregatorConfig {
@@ -221,7 +218,11 @@ async fn main() {
     // Wait for the aggregator to initialize
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
-    // 7. Emit a new task event
+    // 7. Deploy the task contract
+    let provider = get_signer(FIRST_PRIVATE_KEY, &http_rpc);
+    let task_contract = TaskContract::deploy(&provider).await.unwrap();
+
+    // 8. Emit a new task event
     let result = task_contract
         .createTask()
         .send()
@@ -236,7 +237,7 @@ async fn main() {
     // Send fake response from operator
     info!("Simulating operator response");
 
-    // 8. Send fake response from the first operator
+    // 9. Send fake response from the first operator
     let fake_response = FakeResponse::new("Hello world".to_string());
     let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
     let bls_signature = bls_key_pair.sign_message(fake_response.digest().as_ref());
@@ -247,7 +248,7 @@ async fn main() {
 
     info!("Threshold reached but there is a window to send another response");
 
-    // 8. Send fake response from second operator
+    // 9. Send fake response from second operator
     let fake_response_2 = FakeResponse::new("Hello world".to_string());
     let bls_key_pair_2 = BlsKeyPair::new(OPERATOR_BLS_KEY_2.to_string()).unwrap();
     let bls_signature_2 = bls_key_pair_2.sign_message(fake_response_2.digest().as_ref());
@@ -266,13 +267,6 @@ async fn main() {
     assert_eq!(aggregated_response.signers_apk_g2, signers_apk_g2);
     assert_eq!(aggregated_response.signers_agg_sig_g1, signers_agg_sig_g1);
     info!("Compared aggregated response with manual aggregation and they are equal");
-
-    // Close the aggregator
-    aggregator_handle.abort();
-    if aggregator_handle.await.is_err() {
-        info!("Aggregator finished");
-        return;
-    }
 }
 
 async fn send_signed_task_response(
