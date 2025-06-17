@@ -1,13 +1,13 @@
-//! This module contains the logic for registering an operator with EigenLayer and specified AVS configurations.
-//! It is the main entry point for operator registration. And this is used by the `operator` crate.
+//! This module defines the logic for registering an operator with EigenLayer and specifies the
+//! desired state of the operator across various AVSs. It serves as the main entry point for
+//! operator registration and is used by the [`operator`](crate::Operator) when it is initialized.
 //!
-//! The goal is to provide a declarative registration system where users specify the desired end state:
-//! "operator registered in X and Y AVSs, with x, y, and z stake in strategies a, b, and c",
-//! and the SDK automatically handles all the necessary steps to reach that state.
+//! The goal is to provide a declarative registration system: users declare the desired end state
+//! for example, "operator registered in AVSs X and Y, with stakes x, y, and z in strategies A, B, and C"
+//! and the SDK automatically executes all necessary steps to reach that state.
 //!
-//! NOTE:
-//! The logic below mirrors that in the `eigen-client-elcontracts` crate but uses the V2 signer
-//! instead of V1 due to incompatibility issues. So we need to use the bindings.
+//! NOTE: We are using the V2 signer instead of V1 here. Since we are using the V2 signer, we need to
+//! use the bindings since the V2 signer is not compatible with `eigen-client-elcontracts`.
 
 use alloy::dyn_abi::DynSolValue;
 use alloy::network::{EthereumWallet, TxSigner};
@@ -35,20 +35,20 @@ use url::Url;
 
 use crate::error::OperatorRegistrationError;
 use crate::register_config::{
-    AvsRegistrationConfig, DepositInfo, OperatorGlobalConfig, OperatorRegistrationConfig,
-    OperatorSet,
+    AvsRegistrationConfig, DepositInfo, OperatorELConfig, OperatorRegistrationConfig, OperatorSet,
 };
 
-/// Sets up and registers an operator with EigenLayer and specified AVS configurations.
+/// Performs full setup and registration of an operator with EigenLayer.
 ///
-/// This is the main entry point for operator registration. It performs a complete setup process:
-///
-/// - EigenLayer Registration: Registers the operator globally with EigenLayer
+/// * Registers the operator globally with EigenLayer
 ///
 /// Then, for each operator set, it performs the following steps:
-/// - Token Deposits: Deposits ERC20 tokens into specified strategies
-/// - Stake Allocation: Configures allocation magnitudes for strategies
-/// - AVS Registration: Registers for specified operator sets in each AVS
+///
+/// * Deposits ERC20 tokens into specified strategies
+/// * Configures allocation magnitudes for strategies
+/// * Registers for specified operator sets in each AVS
+///
+/// Each step is skipped if its target state is already satisfied.
 ///
 /// # Arguments
 ///
@@ -58,7 +58,7 @@ use crate::register_config::{
 ///
 /// # Returns
 ///
-/// * Result<(), OperatorRegistrationError> - The result of the operation
+/// * `Result<(), OperatorRegistrationError>` - The result of the operation
 pub async fn setup_operator(
     config: OperatorRegistrationConfig,
     http_rpc_url: String,
@@ -125,7 +125,7 @@ async fn register_operator_to_avs(
     provider: SdkSigner,
     operator_address: Address,
     avs_config: AvsRegistrationConfig,
-    operator_global_config: OperatorGlobalConfig,
+    operator_global_config: OperatorELConfig,
     bls_key_pair: BlsKeyPair,
 ) -> Result<(), OperatorRegistrationError> {
     // 1. Ensure required token deposits exist in strategies. If the operator has already deposited
@@ -166,13 +166,15 @@ async fn register_operator_to_avs(
     Ok(())
 }
 
-/// Handles the global EigenLayer operator registration process.
+/// Handles operator registration process to EigenLayer.
 ///
 /// This function checks if the operator is already registered with EigenLayer and performs
-/// registration if needed. Registration requires three components:
-/// - Allocation delay (time delay for allocation changes)
-/// - Metadata URI (off-chain operator information)
-/// - Delegation manager address (contract managing delegations)
+/// registration if needed. Registration requires three parameter passed in the
+/// [`OperatorELConfig`]:
+///
+/// * `allocation_delay` - Time delay for allocation changes (in seconds)
+/// * `metadata_uri` - URI pointing to operator metadata (typically IPFS or HTTP)
+/// * `delegation_manager_address` - Address of the delegation manager contract
 ///
 /// If any required parameter is missing, the registration is skipped with a warning.
 /// This allows for flexible configuration where EigenLayer registration is optional.
