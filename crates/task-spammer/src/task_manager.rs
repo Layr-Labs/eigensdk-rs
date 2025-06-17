@@ -5,7 +5,7 @@ use std::future::Future;
 use crate::error::TaskSpammerError;
 
 /// Task manager contract trait
-pub trait TaskManagerContract<Input, T, P, N: Network> {
+pub trait TaskManagerContract<Input, P, N: Network> {
     /// Create a new task
     ///
     /// # Arguments
