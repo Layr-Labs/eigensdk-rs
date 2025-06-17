@@ -124,7 +124,7 @@ async fn register_operator_to_avs(
     provider: SdkSigner,
     operator_address: Address,
     avs_config: AvsRegistrationConfig,
-    operator_global_config: OperatorELConfig,
+    operator_global_config: Option<OperatorELConfig>,
     bls_key_pair: BlsKeyPair,
 ) -> Result<(), OperatorRegistrationError> {
     // 1. Ensure required token deposits exist in strategies. If the operator has already deposited
@@ -133,8 +133,8 @@ async fn register_operator_to_avs(
         provider.clone(),
         operator_address,
         avs_config.deposits.clone(),
-        operator_global_config.strategy_manager_address,
-        operator_global_config.delegation_manager_address,
+        Some(avs_config.strategy_manager_address),
+        operator_global_config.map(|config| config.delegation_manager_address),
     )
     .await?;
 
@@ -207,7 +207,7 @@ async fn handle_eigenlayer_registration(
     let is_operator_registered = is_operator_registered_in_eigenlayer(
         provider.clone(),
         operator_address,
-        delegation_manager_address,
+        operator_el_config.delegation_manager_address,
     )
     .await?;
 
@@ -216,9 +216,9 @@ async fn handle_eigenlayer_registration(
         register_operator_to_eigenlayer(
             provider.clone(),
             operator_address,
-            allocation_delay,
-            metadata_uri,
-            delegation_manager_address,
+            operator_el_config.allocation_delay,
+            operator_el_config.metadata_uri.clone(),
+            operator_el_config.delegation_manager_address,
         )
         .await?;
         info!("Operator {operator_address:#x} registered in EigenLayer");
