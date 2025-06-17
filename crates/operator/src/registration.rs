@@ -82,14 +82,13 @@ pub async fn setup_operator(
     handle_eigenlayer_registration(
         provider.clone(),
         operator_address,
-        operator_global_config.allocation_delay,
-        operator_global_config.metadata_uri.clone(),
-        operator_global_config.delegation_manager_address,
+        operator_global_config.clone(),
     )
     .await?;
 
     // 2. Register operator to each AVS individually
     for avs_config in avs_registration_configs {
+        dbg!(&avs_config);
         register_operator_to_avs(
             provider.clone(),
             operator_address,
@@ -193,42 +192,39 @@ async fn register_operator_to_avs(
 async fn handle_eigenlayer_registration(
     provider: SdkSigner,
     operator_address: Address,
-    allocation_delay: Option<u32>,
-    metadata_uri: Option<String>,
-    delegation_manager_address: Option<Address>,
+    operator_el_config: Option<OperatorELConfig>,
 ) -> Result<(), OperatorRegistrationError> {
     // Only proceed if all required parameters are provided
     // This design allows partial configuration where EigenLayer registration is optional
-    if let (Some(allocation_delay), Some(metadata_uri), Some(delegation_manager_address)) =
-        (allocation_delay, metadata_uri, delegation_manager_address)
-    {
-        info!("Checking if operator {operator_address:#x} is already registered in EigenLayer");
+    let Some(operator_el_config) = operator_el_config else {
+        warn!("Skipping registration to EigenLayer since necessary parameters are not set");
+        return Ok(());
+    };
 
-        // Check current registration status to avoid unnecessary transactions
-        let is_operator_registered = is_operator_registered_in_eigenlayer(
+    info!("Checking if operator {operator_address:#x} is already registered in EigenLayer");
+
+    // Check current registration status to avoid unnecessary transactions
+    let is_operator_registered = is_operator_registered_in_eigenlayer(
+        provider.clone(),
+        operator_address,
+        delegation_manager_address,
+    )
+    .await?;
+
+    if !is_operator_registered {
+        info!("Operator is not registered in EigenLayer");
+        register_operator_to_eigenlayer(
             provider.clone(),
             operator_address,
+            allocation_delay,
+            metadata_uri,
             delegation_manager_address,
         )
         .await?;
-
-        if !is_operator_registered {
-            info!("Operator is not registered in EigenLayer");
-            register_operator_to_eigenlayer(
-                provider.clone(),
-                operator_address,
-                allocation_delay,
-                metadata_uri,
-                delegation_manager_address,
-            )
-            .await?;
-            info!("Operator {operator_address:#x} registered in EigenLayer");
-        } else {
-            info!("Operator {operator_address:#x} is already registered in EigenLayer");
-        }
+        info!("Operator {operator_address:#x} registered in EigenLayer");
     } else {
-        warn!("Skipping registration to EigenLayer since necessary parameters are not set");
-    };
+        info!("Operator {operator_address:#x} is already registered in EigenLayer");
+    }
 
     Ok(())
 }
@@ -326,55 +322,57 @@ async fn handle_deposit_tokens_amounts(
     strategy_manager_address: Option<Address>,
     delegation_manager_address: Option<Address>,
 ) -> Result<(), OperatorRegistrationError> {
-    if let (Some(strategy_manager_address), Some(delegation_manager_address)) =
+    let (Some(strategy_manager_address), Some(delegation_manager_address)) =
         (strategy_manager_address, delegation_manager_address)
-    {
-        for deposit in deposits.clone() {
-            let amount = U256::from_str(&deposit.amount)
-                .map_err(|_| OperatorRegistrationError::U256ParseError)?;
-
-            let deposit_amount = get_deposit_amount_in_strategy(
-                provider.clone(),
-                operator_address,
-                delegation_manager_address,
-                deposit.token_address,
-            )
-            .await?;
-
-            info!(
-                "Operator has deposited {deposit_amount} tokens into strategy {:#x}",
-                deposit.token_address,
-            );
-
-            if deposit_amount < amount {
-                let amount_to_deposit = amount - deposit_amount;
-                info!(
-                    "Expected deposit amount: {amount}. Difference between expected and deposited amount: {amount_to_deposit}"
-                );
-                info!(
-                    "Depositing {amount_to_deposit} tokens into strategy {:#x}",
-                    deposit.token_address
-                );
-
-                deposit_erc20_into_strategy(
-                    provider.clone(),
-                    amount_to_deposit,
-                    deposit.token_address,
-                    strategy_manager_address,
-                )
-                .await?;
-            } else {
-                info!(
-                    "Operator has deposited the correct amount of tokens into the strategy {:#x}",
-                    deposit.token_address
-                );
-            }
-        }
-    } else {
+    else {
         warn!(
             "Skipping deposit of tokens into the strategy since necessary parameters are not set"
         );
+        return Ok(());
+    };
+
+    for deposit in deposits.clone() {
+        let amount = U256::from_str(&deposit.amount)
+            .map_err(|_| OperatorRegistrationError::U256ParseError)?;
+
+        let deposit_amount = get_deposit_amount_in_strategy(
+            provider.clone(),
+            operator_address,
+            delegation_manager_address,
+            deposit.strategy_address,
+        )
+        .await?;
+
+        info!(
+            "Operator has deposited {deposit_amount} tokens into strategy {:#x}",
+            deposit.strategy_address,
+        );
+
+        if deposit_amount < amount {
+            let amount_to_deposit = amount - deposit_amount;
+            info!(
+                "Expected deposit amount: {amount}. Difference between expected and deposited amount: {amount_to_deposit}"
+            );
+            info!(
+                "Depositing {amount_to_deposit} tokens into strategy {:#x}",
+                deposit.strategy_address
+            );
+
+            deposit_erc20_into_strategy(
+                provider.clone(),
+                amount_to_deposit,
+                deposit.strategy_address,
+                strategy_manager_address,
+            )
+            .await?;
+        } else {
+            info!(
+                "Operator has deposited the correct amount of tokens into the strategy {:#x}",
+                deposit.strategy_address
+            );
+        }
     }
+
     Ok(())
 }
 
@@ -445,91 +443,6 @@ async fn deposit_erc20_into_strategy(
     Ok(())
 }
 
-// TODO: These functions are commented out but kept for potential future use
-// They handle allocation delay management which may be needed in certain scenarios
-
-// /// Gets the current allocation delay for an operator.
-// ///
-// /// The allocation delay is the time period that must pass before allocation changes take effect.
-// /// This is a security mechanism to prevent rapid allocation changes.
-// async fn get_allocation_delay(
-//     provider: SdkSigner,
-//     operator_address: Address,
-//     allocation_manager_address: Address,
-// ) -> Result<u32, OperatorRegistrationError> {
-//     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
-
-//     let delay = contract_allocation_manager
-//         .getAllocationDelay(operator_address)
-//         .call()
-//         .await?
-//         ._1;
-
-//     Ok(delay)
-// }
-
-// /// Sets the allocation delay for an operator.
-// ///
-// /// This function allows operators to configure how long they want allocation changes to take effect.
-// /// Longer delays provide more security but less flexibility.
-// async fn set_allocation_delay(
-//     provider: SdkSigner,
-//     operator_address: Address,
-//     delay: u32,
-//     allocation_manager_address: Address,
-// ) -> Result<(), OperatorRegistrationError> {
-//     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
-//     contract_allocation_manager
-//         .setAllocationDelay(operator_address, delay)
-//         .send()
-//         .await?
-//         .get_receipt()
-//         .await?;
-
-//     Ok(())
-// }
-
-// TODO: Determine which function is more appropriate - getAllocatedStake vs getAllocation
-// Both functions serve similar purposes but may have different use cases
-
-// /// Gets the allocated stake amounts for operators across multiple strategies and operator sets.
-// ///
-// /// This function provides a batch query mechanism to efficiently retrieve allocation information
-// /// for multiple operators and strategies at once.
-// async fn get_allocated_stake(
-//     provider: SdkSigner,
-//     operator_set: OperatorSet,
-//     operators: Vec<Address>,
-//     strategies: Vec<Address>,
-//     allocation_manager_address: Address,
-// ) -> Result<Vec<Vec<U256>>, OperatorRegistrationError> {
-//     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
-//     let allocated_stake = contract_allocation_manager
-//         .getAllocatedStake(operator_set, operators, strategies)
-//         .call()
-//         .await?
-//         ._0;
-
-//     Ok(allocated_stake)
-// }
-
-/// Handles the allocation of stake across strategies for specified operator sets.
-///
-/// This function ensures that the operator has properly allocated stake to each strategy
-/// for each operator set they want to participate in. If the operator has already allocated
-/// the required amount, skip the allocation. If not, allocate the difference.
-///
-/// # Arguments
-///
-/// * `provider` - Blockchain provider for contract interactions
-/// * `operator_address` - Address of the operator
-/// * `deposits` - Deposit information containing desired allocation magnitudes
-/// * `allocation_manager_address` - Optional address of the allocation manager contract
-/// * `operator_sets` - Vector of operator sets to allocate stake for
-///
-/// # Returns
-///
-/// * Result<(), OperatorRegistrationError> - The result of the operation
 async fn handle_allocation_of_stake_in_strategies(
     provider: SdkSigner,
     operator_address: Address,
@@ -537,60 +450,63 @@ async fn handle_allocation_of_stake_in_strategies(
     allocation_manager_address: Option<Address>,
     operator_sets: Vec<OperatorSet>,
 ) -> Result<(), OperatorRegistrationError> {
-    if let Some(allocation_manager_address) = allocation_manager_address {
-        let mut allocate_params = Vec::new();
+    let Some(allocation_manager_address) = allocation_manager_address else {
+        warn!("Skipping allocation of stake - necessary parameters are not set");
+        return Ok(());
+    };
 
-        // Build a list of allocation changes needed across all operator sets and strategies
-        for operator_set in operator_sets.clone() {
-            for deposit in deposits.clone() {
-                let current_allocation = get_current_allocation(
-                    provider.clone(),
-                    operator_address,
-                    &operator_set,
-                    deposit.token_address,
-                    allocation_manager_address,
-                )
-                .await?;
+    let mut allocate_params = Vec::new();
 
-                // TODO: Should we check current_allocation.pendingDiff???
-                if current_allocation.currentMagnitude != deposit.allocation_magnitude {
-                    info!(
-                        "Current allocation: {}, desired: {} for strategy {:#x}",
-                        current_allocation.currentMagnitude,
-                        deposit.allocation_magnitude,
-                        deposit.token_address
-                    );
-
-                    // Prepare allocation parameters for batch transaction
-                    allocate_params.push(AllocateParams {
-                        operatorSet: operator_set.clone().into(),
-                        strategies: vec![deposit.token_address],
-                        newMagnitudes: vec![deposit.allocation_magnitude],
-                    });
-                } else {
-                    info!(
-                        "Allocation already correct ({}) for strategy {:#x}",
-                        current_allocation.currentMagnitude, deposit.token_address
-                    );
-                }
-            }
-        }
-
-        // Execute batch allocation changes if any are needed
-        if !allocate_params.is_empty() {
-            info!("Modifying {} allocations", allocate_params.len());
-            modify_allocations(
-                provider,
+    // Build a list of allocation changes needed across all operator sets and strategies
+    for operator_set in operator_sets.clone() {
+        for deposit in deposits.clone() {
+            let current_allocation = get_current_allocation(
+                provider.clone(),
                 operator_address,
-                allocate_params,
+                &operator_set,
+                deposit.strategy_address,
                 allocation_manager_address,
             )
             .await?;
-        } else {
-            info!("All allocations are already correct");
+
+            // TODO: Should we check current_allocation.pendingDiff???
+            // Usar <
+            // warn si mayor
+            if current_allocation.currentMagnitude != deposit.allocation_magnitude {
+                info!(
+                    "Current allocation: {}, desired: {} for strategy {:#x}",
+                    current_allocation.currentMagnitude,
+                    deposit.allocation_magnitude,
+                    deposit.strategy_address
+                );
+
+                // Prepare allocation parameters for batch transaction
+                allocate_params.push(AllocateParams {
+                    operatorSet: operator_set.clone().into(),
+                    strategies: vec![deposit.strategy_address],
+                    newMagnitudes: vec![deposit.allocation_magnitude],
+                });
+            } else {
+                info!(
+                    "Allocation already correct ({}) for strategy {:#x}",
+                    current_allocation.currentMagnitude, deposit.strategy_address
+                );
+            }
         }
+    }
+
+    // Execute batch allocation changes if any are needed
+    if !allocate_params.is_empty() {
+        info!("Modifying {} allocations", allocate_params.len());
+        modify_allocations(
+            provider,
+            operator_address,
+            allocate_params,
+            allocation_manager_address,
+        )
+        .await?;
     } else {
-        warn!("Skipping allocation of stake - necessary parameters are not set");
+        info!("All allocations are already correct");
     }
 
     Ok(())
@@ -618,6 +534,7 @@ async fn get_current_allocation(
 ) -> Result<IAllocationManagerTypes::Allocation, OperatorRegistrationError> {
     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
 
+    // USAR getAllocatedStake
     Ok(contract_allocation_manager
         .getAllocation(
             operator_address,
@@ -685,70 +602,72 @@ async fn handle_registration_for_operator_sets(
     socket: Option<String>,
     bls_key_pair: BlsKeyPair,
 ) -> Result<(), OperatorRegistrationError> {
-    if let (Some(socket), Some(allocation_manager_address), Some(registry_coordinator_address)) = (
+    // socket vacio si no me pasa
+    let (Some(socket), Some(allocation_manager_address), Some(registry_coordinator_address)) = (
         socket,
         allocation_manager_address,
         registry_coordinator_address,
-    ) {
+    ) else {
+        warn!("Skipping registration of operator sets - necessary parameters are not set");
+        return Ok(());
+    };
+
+    info!(
+        "Checking registration for {} operator sets",
+        operator_sets.len()
+    );
+
+    // Group operator sets by AVS address for efficient batch processing
+    // Each AVS requires a separate registration transaction
+    let mut operator_sets_by_avs = HashMap::new();
+
+    for operator_set in operator_sets {
+        // Check if operator is already registered for this specific operator set
+        let is_registered = is_operator_registered_for_operator_set(
+            provider.clone(),
+            operator_address,
+            &operator_set,
+            allocation_manager_address,
+        )
+        .await?;
+
+        if !is_registered {
+            info!(
+                "Operator set {:#x}/{} requires registration",
+                operator_set.avs_address, operator_set.id
+            );
+            // Group by AVS address for batch registration
+            operator_sets_by_avs
+                .entry(operator_set.avs_address)
+                .or_insert_with(Vec::new)
+                .push(operator_set);
+        } else {
+            info!(
+                "Operator set {:#x}/{} already registered",
+                operator_set.avs_address, operator_set.id
+            );
+        }
+    }
+
+    for (avs_address, sets) in operator_sets_by_avs {
+        let operator_set_ids: Vec<u32> = sets.iter().map(|s| s.id).collect();
+
         info!(
-            "Checking registration for {} operator sets",
-            operator_sets.len()
+            "Registering {} operator sets for AVS {avs_address:#x}",
+            operator_set_ids.len(),
         );
 
-        // Group operator sets by AVS address for efficient batch processing
-        // Each AVS requires a separate registration transaction
-        let mut operator_sets_by_avs = HashMap::new();
-
-        for operator_set in operator_sets {
-            // Check if operator is already registered for this specific operator set
-            let is_registered = is_operator_registered_for_operator_set(
-                provider.clone(),
-                operator_address,
-                &operator_set,
-                allocation_manager_address,
-            )
-            .await?;
-
-            if !is_registered {
-                info!(
-                    "Operator set {:#x}/{} requires registration",
-                    operator_set.avs_address, operator_set.id
-                );
-                // Group by AVS address for batch registration
-                operator_sets_by_avs
-                    .entry(operator_set.avs_address)
-                    .or_insert_with(Vec::new)
-                    .push(operator_set);
-            } else {
-                info!(
-                    "Operator set {:#x}/{} already registered",
-                    operator_set.avs_address, operator_set.id
-                );
-            }
-        }
-
-        for (avs_address, sets) in operator_sets_by_avs {
-            let operator_set_ids: Vec<u32> = sets.iter().map(|s| s.id).collect();
-
-            info!(
-                "Registering {} operator sets for AVS {avs_address:#x}",
-                operator_set_ids.len(),
-            );
-
-            register_for_operator_sets(
-                provider.clone(),
-                operator_address,
-                operator_set_ids,
-                bls_key_pair.clone(),
-                &socket,
-                allocation_manager_address,
-                registry_coordinator_address,
-                avs_address,
-            )
-            .await?;
-        }
-    } else {
-        warn!("Skipping registration of operator sets - necessary parameters are not set");
+        register_for_operator_sets(
+            provider.clone(),
+            operator_address,
+            operator_set_ids,
+            bls_key_pair.clone(),
+            &socket,
+            allocation_manager_address,
+            registry_coordinator_address,
+            avs_address,
+        )
+        .await?;
     }
 
     Ok(())
