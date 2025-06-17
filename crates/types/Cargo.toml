@@ -19,7 +19,6 @@ alloy.workspace = true
 ark-ff.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-utils.workspace = true
-ethers.workspace = true
 serde_json.workspace = true
 serde.workspace = true
 thiserror.workspace = true

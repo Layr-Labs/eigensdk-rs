@@ -25,10 +25,6 @@ pub use eigen_crypto_bn254 as crypto_bn254;
 pub use eigen_signer as signer;
 
 #[doc(inline)]
-#[cfg(feature = "logging")]
-pub use eigen_logging as logging;
-
-#[doc(inline)]
 #[cfg(feature = "metrics")]
 pub use eigen_metrics as metrics;
 

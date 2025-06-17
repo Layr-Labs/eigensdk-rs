@@ -14,10 +14,11 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
-eigen-logging.workspace = true
+
 metrics.workspace = true
 metrics-exporter-prometheus.workspace = true
 metrics-util = "0.19.0"
+tracing.workspace = true
 
 [dev-dependencies]
 # We don't use workspace due to:

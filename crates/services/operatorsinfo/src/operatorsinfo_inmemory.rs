@@ -8,16 +8,16 @@ use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
 };
-use eigen_logging::logger::SharedLogger;
+
 use eigen_types::operator::{
     operator_id_from_g1_pub_key, OperatorId, OperatorPubKeys, OperatorTypesError,
 };
 use eigen_utils::{
-    slashing::middleware::blsapkregistry::{
+    slashing::middleware::bls_apk_registry::{
         BLSApkRegistry,
         BN254::{G1Point, G2Point},
     },
-    slashing::middleware::registrycoordinator::RegistryCoordinator,
+    slashing::middleware::registry_coordinator::RegistryCoordinator,
 };
 use eyre::Result;
 use futures_util::StreamExt;
@@ -29,15 +29,14 @@ use tokio::sync::{
     RwLock,
 };
 use tokio_util::sync::CancellationToken;
+use tracing::{debug, error, info, instrument};
 
 use crate::operator_info::OperatorInfoService;
 
 /// Fetches operator information from the registry.
 /// Loads and stores operators info (addresses and public key) in memory.
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
-    logger: SharedLogger,
     pub avs_registry_reader: AvsRegistryChainReader,
     ws: String,
     pub_keys: UnboundedSender<OperatorsInfoMessage>,
@@ -125,7 +124,6 @@ impl OperatorInfoServiceInMemory {
     ///
     /// # Arguments
     ///
-    /// * `logger` - A shared logger.
     /// * `avs_registry_chain_reader` - An avs registry chain reader.
     /// * `web_socket` - A web socket.
     ///
@@ -134,7 +132,6 @@ impl OperatorInfoServiceInMemory {
     /// A tuple of 2 elements:
     /// [`Self`] and [`mpsc::UnboundedReceiver<OperatorInfoServiceError>`] if successful, else [`OperatorInfoServiceError`]
     pub async fn new(
-        logger: SharedLogger,
         avs_registry_chain_reader: AvsRegistryChainReader,
         web_socket: String,
     ) -> Result<(Self, mpsc::UnboundedReceiver<OperatorInfoServiceError>), OperatorInfoServiceError>
@@ -249,7 +246,6 @@ impl OperatorInfoServiceInMemory {
 
         Ok((
             Self {
-                logger,
                 avs_registry_reader: avs_registry_chain_reader,
                 ws: web_socket,
                 pub_keys: pubkeys_tx,
@@ -269,6 +265,7 @@ impl OperatorInfoServiceInMemory {
     /// # Returns
     ///
     /// Ok(()) if successful, otherwise an error.
+    #[instrument(skip_all)]
     pub async fn start_service(
         &self,
         cancellation_token: &CancellationToken,
@@ -276,14 +273,12 @@ impl OperatorInfoServiceInMemory {
         end_block: u64,
     ) -> Result<(), OperatorInfoServiceError> {
         // Run asynchonous thread querying past operator registrations
-        let logger = Arc::clone(&self.logger);
         let avs_registry_reader = self.avs_registry_reader.clone();
         let ws = self.ws.clone();
         let pub_keys = self.pub_keys.clone();
         let (tx, mut rx) = mpsc::channel(1);
         let handle = tokio::spawn(async move {
             let res = query_past_registered_operator_events_and_fill_db(
-                logger,
                 start_block,
                 end_block,
                 avs_registry_reader,
@@ -320,19 +315,18 @@ impl OperatorInfoServiceInMemory {
             .into_stream()
             .fuse();
         let pub_keys = self.pub_keys.clone();
-        let self_clone = self.clone();
 
         loop {
             tokio::select! {
                 _ = cancellation_token.cancelled() => {
-                    self.logger.info("Cancellation signal received, stopping the stream.", "eigen-services-operatorsinfo.start_service");
+                    info!("Cancellation signal received, stopping the stream.");
                     handle.abort();
                     break;
                 },
                 res = rx.recv() => {
                     match res {
                         Some(Err(err)) => {
-                            self.logger.error(&format!("Failed to query past registered operator events: {:?}.", err), "eigen-services-operatorsinfo.start_service");
+                            error!("Failed to query past registered operator events: {err:?}");
                             return Err(err);
                         }
                         _ => continue,
@@ -364,12 +358,9 @@ impl OperatorInfoServiceInMemory {
                                 };
                                 // Send message
 
-                                self_clone.logger.debug(
-                                    &format!(
-                                        "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
-                                        event_data.operator, operator_pub_key
-                                    ),
-                                    "eigen-services-operatorsinfo.start_service",
+                                debug!(
+                                    "New pub key found operator_address: {:?}, operator_pub_keys: {operator_pub_key:?}",
+                                    event_data.operator,
                                 );
 
                                 let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
@@ -403,12 +394,9 @@ impl OperatorInfoServiceInMemory {
                                 };
                                 // Send message
 
-                                self_clone.logger.debug(
-                                    &format!(
-                                        "Received new socket registration event  operator_id : {:?} , socket : {:?}",
-                                        event_data.operatorId, event_data.socket
-                                    ),
-                                    "eigen-services-operatorsinfo.start_service",
+                                debug!(
+                                    "Received new socket registration event operator_id: {:?}, socket: {:?}",
+                                    event_data.operatorId, event_data.socket
                                 );
 
                                 let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
@@ -449,7 +437,6 @@ impl OperatorInfoServiceInMemory {
         end_block: u64,
     ) -> Result<(), OperatorInfoServiceError> {
         query_past_registered_operator_events_and_fill_db(
-            self.logger.clone(),
             start_block,
             end_block,
             self.avs_registry_reader.clone(),
@@ -461,7 +448,6 @@ impl OperatorInfoServiceInMemory {
 }
 
 async fn query_past_registered_operator_events_and_fill_db(
-    logger: SharedLogger,
     start_block: u64,
     end_block: u64,
     avs_registry_reader: AvsRegistryChainReader,
@@ -497,12 +483,8 @@ async fn query_past_registered_operator_events_and_fill_db(
                 }),
                 StateSource::Historic,
             );
-            logger.debug(
-                &format!(
-                    "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
-                    operator_address, operator_pub_keys
-                ),
-                "eigen-services-operatorsinfo.query_past_registered_operator_events_and_fill_db",
+            debug!(
+                "New pub key found operator_address: {operator_address:?}, operator_pub_keys: {operator_pub_keys:?}"
             );
             let _ = pub_keys.send(message);
         } else {
@@ -522,7 +504,7 @@ mod tests {
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_common::get_provider;
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
+
     use eigen_testing_utils::anvil::start_m2_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_avs_directory_address, get_delegation_manager_address,
@@ -538,7 +520,6 @@ mod tests {
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
-        let test_logger = get_test_logger();
         register_operator(
             http_endpoint.clone(),
             "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
@@ -547,7 +528,6 @@ mod tests {
         .await;
 
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
-            test_logger.clone(),
             get_registry_coordinator_address(http_endpoint.clone()).await,
             get_operator_state_retriever_address(http_endpoint.clone()).await,
             http_endpoint.clone(),
@@ -555,14 +535,11 @@ mod tests {
         .await
         .unwrap();
 
-        let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
-            test_logger.clone(),
-            avs_registry_chain_reader,
-            ws_endpoint,
-        )
-        .await
-        .unwrap()
-        .0;
+        let operators_info_service_in_memory =
+            OperatorInfoServiceInMemory::new(avs_registry_chain_reader, ws_endpoint)
+                .await
+                .unwrap()
+                .0;
 
         let end_block = get_provider(http_endpoint.as_str())
             .get_block_number()
@@ -589,9 +566,7 @@ mod tests {
     async fn test_start_service_1_operator_register() {
         // start anvil in a container
         let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
-        let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
-            test_logger.clone(),
             get_registry_coordinator_address(http_endpoint.clone()).await,
             get_operator_state_retriever_address(http_endpoint.clone()).await,
             http_endpoint.clone(),
@@ -599,14 +574,11 @@ mod tests {
         .await
         .unwrap();
 
-        let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
-            test_logger.clone(),
-            avs_registry_chain_reader,
-            ws_endpoint,
-        )
-        .await
-        .unwrap()
-        .0;
+        let operators_info_service_in_memory =
+            OperatorInfoServiceInMemory::new(avs_registry_chain_reader, ws_endpoint)
+                .await
+                .unwrap()
+                .0;
         let clone_operators_info = operators_info_service_in_memory.clone();
 
         let token = tokio_util::sync::CancellationToken::new().clone();
@@ -653,23 +625,18 @@ mod tests {
     #[tokio::test]
     async fn test_start_service_2_operator_register() {
         let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
-        let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
-            test_logger.clone(),
             get_registry_coordinator_address(http_endpoint.clone()).await,
             get_operator_state_retriever_address(http_endpoint.clone()).await,
             http_endpoint.clone(),
         )
         .await
         .unwrap();
-        let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
-            test_logger.clone(),
-            avs_registry_chain_reader,
-            ws_endpoint,
-        )
-        .await
-        .unwrap()
-        .0;
+        let operators_info_service_in_memory =
+            OperatorInfoServiceInMemory::new(avs_registry_chain_reader, ws_endpoint)
+                .await
+                .unwrap()
+                .0;
         let clone_operators_info = operators_info_service_in_memory.clone();
 
         let cancellation_token = tokio_util::sync::CancellationToken::new();
@@ -742,7 +709,6 @@ mod tests {
             get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         let el_chain_reader = ELChainReader::new(
-            get_test_logger(),
             None,
             delegation_manager_address,
             rewards_coordinator_address,
@@ -778,7 +744,6 @@ mod tests {
             .unwrap();
 
         let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
             http_endpoint.to_string(),
             pvt_key.to_string(),
             get_registry_coordinator_address(http_endpoint.clone()).await,
