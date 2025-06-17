@@ -12,7 +12,7 @@ description = "challenger example"
 alloy.workspace = true
 eigen-challenger.workspace = true
 eigen-types.workspace = true
+serde.workspace = true
 tracing.workspace = true
 tokio.workspace = true
-
 tokio-util = "0.7.11"

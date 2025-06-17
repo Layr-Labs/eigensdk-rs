@@ -29,8 +29,6 @@ use eigen_aggregator::{BlsAggregationServiceResponse, TaskMetadata};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_signer;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
-use eigen_logging::get_test_logger;
-use eigen_logging::{init_logger, log_level::LogLevel};
 use eigen_testing_utils::anvil::start_anvil_container;
 use eigen_testing_utils::anvil_constants::{
     get_erc20_mock_strategy, get_operator_state_retriever_address,
@@ -139,12 +137,10 @@ impl TaskProcessor for MockTaskProcessor {
             response.task_index, response.task_response_digest
         );
 
-        self.aggregated_response.send(response).await.map_err(|e| {
-            box_error(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                format!("Failed to send response: {}", e),
-            ))
-        })
+        self.aggregated_response
+            .send(response)
+            .await
+            .map_err(|e| box_error(std::io::Error::other(e.to_string())))
     }
 }
 
@@ -152,13 +148,12 @@ const AGGREGATOR_IP_PORT_ADDRESS: &str = "127.0.0.1:8081";
 
 #[tokio::main]
 async fn main() {
-    init_logger(LogLevel::Info);
     let (_container, http_rpc, ws_rpc) = start_anvil_container().await;
+    tracing_subscriber::fmt::init();
 
     let el_chain_writer = new_test_writer(http_rpc.clone(), FIRST_PRIVATE_KEY.to_string()).await;
     let el_chain_writer_2 = new_test_writer(http_rpc.clone(), SECOND_PRIVATE_KEY.to_string()).await;
     let avs_registry = AvsRegistryChainReader::new(
-        get_test_logger(),
         get_registry_coordinator_address(http_rpc.clone()).await,
         get_operator_state_retriever_address(http_rpc.clone()).await,
         http_rpc.clone(),

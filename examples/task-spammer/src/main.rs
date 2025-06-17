@@ -1,7 +1,5 @@
-use alloy::{
-    contract::private::{Provider, Transport},
-    network::Network,
-};
+use alloy::transports::Transport;
+use alloy::{contract::private::Provider, network::Network};
 use alloy::{
     network::EthereumWallet,
     primitives::{Address, U256},
@@ -30,7 +28,7 @@ use std::{str::FromStr, time::Duration};
 impl<T, P, N> TaskManagerContract<U256, T, P, N> for IIncredibleSquaringTaskManagerInstance<T, P, N>
 where
     T: Transport + Clone + Send + Sync,
-    P: Provider<T, N>,
+    P: Provider<N>,
     N: Network,
 {
     async fn create_new_task(

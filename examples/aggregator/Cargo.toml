@@ -19,6 +19,7 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 eigen-aggregator.workspace = true
 serde.workspace = true
 tracing.workspace = true
+tracing-subscriber = "0.3"
 serde_json.workspace = true
 
 tarpc = { version = "0.36", features = ["full"] }

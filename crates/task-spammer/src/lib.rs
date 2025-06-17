@@ -1,10 +1,7 @@
 //! This is a simple task generator that can be used to create tasks for the operators.
 //! For testing purposes.
 
-use alloy::{
-    contract::private::{Provider, Transport},
-    network::Network,
-};
+use alloy::{contract::private::Provider, network::Network, transports::Transport};
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use error::TaskSpammerError;
 use std::time::Duration;
@@ -31,7 +28,7 @@ impl<I, TM, T, P, N, Input> TaskSpammerBuilder<I, TM, T, P, N, Input>
 where
     TM: TaskManagerContract<Input, T, P, N>,
     T: Transport + Clone,
-    P: Provider<T, N>,
+    P: Provider<N>,
     N: Network,
 {
     /// Create a new task spammer builder
@@ -123,7 +120,7 @@ where
     where
         TM: TaskManagerContract<Input, T, P, N>,
         T: Transport + Clone,
-        P: Provider<T, N>,
+        P: Provider<N>,
         N: Network,
     {
         Ok(TaskSpammer {
@@ -154,7 +151,7 @@ impl<I, TM, T, P, N, Input> TaskSpammer<I, TM, T, P, N, Input>
 where
     TM: TaskManagerContract<Input, T, P, N> + Send + Sync,
     T: Transport + Clone + Send + Sync,
-    P: Provider<T, N>,
+    P: Provider<N>,
     N: Network,
 {
     /// Run the task spammer

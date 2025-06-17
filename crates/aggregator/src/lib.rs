@@ -17,7 +17,6 @@ use alloy::rpc::types::Filter;
 use alloy::sol_types::SolEvent;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
-use eigen_logging::get_logger;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle,
@@ -67,7 +66,6 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
         task_processor: TP,
     ) -> Result<Self, AggregatorError> {
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
-            get_logger(),
             config.registry_coordinator,
             config.operator_state_retriever,
             config.http_rpc_url,
@@ -75,7 +73,6 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
         .await?;
 
         let operators_info_service = OperatorInfoServiceInMemory::new(
-            get_logger(),
             avs_registry_chain_reader.clone(),
             config.ws_rpc_url.clone(),
         )
@@ -96,7 +93,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
         });
 
         let (service_handle, aggregated_response_receiver) =
-            BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
+            BlsAggregatorService::new(avs_registry_service_chaincaller).start();
         Ok(Self {
             port_address: config.server_address,
             task_processor: Arc::new(Mutex::new(task_processor)),
@@ -219,7 +216,7 @@ impl<TP: TaskProcessor + Send + Sync + 'static + Clone> Aggregator<TP> {
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
         let filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
-        let provider = ProviderBuilder::new().on_ws(ws).await?;
+        let provider = ProviderBuilder::new().connect_ws(ws).await?;
 
         while let Some(event) = provider
             .subscribe_logs(&filter)
