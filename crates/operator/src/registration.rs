@@ -124,7 +124,7 @@ async fn register_operator_to_avs(
     provider: SdkSigner,
     operator_address: Address,
     avs_config: AvsRegistrationConfig,
-    operator_global_config: Option<OperatorELConfig>,
+    operator_global_config: OperatorELConfig,
     bls_key_pair: BlsKeyPair,
 ) -> Result<(), OperatorRegistrationError> {
     // 1. Ensure required token deposits exist in strategies. If the operator has already deposited
@@ -133,8 +133,8 @@ async fn register_operator_to_avs(
         provider.clone(),
         operator_address,
         avs_config.deposits.clone(),
-        Some(avs_config.strategy_manager_address),
-        operator_global_config.map(|config| config.delegation_manager_address),
+        avs_config.strategy_manager_address,
+        operator_global_config.delegation_manager_address,
     )
     .await?;
 
@@ -186,17 +186,21 @@ async fn register_operator_to_avs(
 /// * `metadata_uri` - Optional URI pointing to operator metadata
 /// * `delegation_manager_address` - Optional address of the delegation manager contract
 ///
-/// # Errors
+/// # Returns
 ///
-/// Returns error if registration is attempted but fails due to network or contract issues
+/// * `Result<(), OperatorRegistrationError>` - The result of the operation
 async fn handle_eigenlayer_registration(
     provider: SdkSigner,
     operator_address: Address,
-    operator_el_config: Option<OperatorELConfig>,
+    operator_el_config: OperatorELConfig,
 ) -> Result<(), OperatorRegistrationError> {
     // Only proceed if all required parameters are provided
     // This design allows partial configuration where EigenLayer registration is optional
-    let Some(operator_el_config) = operator_el_config else {
+    let (Some(delegation_manager_address), Some(allocation_delay), Some(metadata_uri)) = (
+        operator_el_config.delegation_manager_address,
+        operator_el_config.allocation_delay,
+        operator_el_config.metadata_uri,
+    ) else {
         warn!("Skipping registration to EigenLayer since necessary parameters are not set");
         return Ok(());
     };
@@ -207,7 +211,7 @@ async fn handle_eigenlayer_registration(
     let is_operator_registered = is_operator_registered_in_eigenlayer(
         provider.clone(),
         operator_address,
-        operator_el_config.delegation_manager_address,
+        delegation_manager_address,
     )
     .await?;
 
@@ -216,9 +220,9 @@ async fn handle_eigenlayer_registration(
         register_operator_to_eigenlayer(
             provider.clone(),
             operator_address,
-            operator_el_config.allocation_delay,
-            operator_el_config.metadata_uri.clone(),
-            operator_el_config.delegation_manager_address,
+            allocation_delay,
+            metadata_uri,
+            delegation_manager_address,
         )
         .await?;
         info!("Operator {operator_address:#x} registered in EigenLayer");
@@ -240,10 +244,6 @@ async fn handle_eigenlayer_registration(
 /// # Returns
 ///
 /// * `true` if the operator is registered, `false` otherwise
-///
-/// # Errors
-///
-/// Returns error if the contract call fails
 async fn is_operator_registered_in_eigenlayer(
     provider: SdkSigner,
     operator_address: Address,
@@ -274,9 +274,9 @@ async fn is_operator_registered_in_eigenlayer(
 /// * `metadata_url` - URI pointing to operator metadata (typically IPFS or HTTP)
 /// * `delegation_manager_address` - Address of the delegation manager contract
 ///
-/// # Errors
+/// # Returns
 ///
-/// Returns error if the registration transaction fails or is reverted
+/// * `Result<(), OperatorRegistrationError>` - The result of the operation
 async fn register_operator_to_eigenlayer(
     provider: SdkSigner,
     operator_address: Address,
@@ -460,7 +460,7 @@ async fn handle_allocation_of_stake_in_strategies(
     // Build a list of allocation changes needed across all operator sets and strategies
     for operator_set in operator_sets.clone() {
         for deposit in deposits.clone() {
-            let current_allocation = get_current_allocation(
+            let current_allocated_stake = get_current_allocated_stake(
                 provider.clone(),
                 operator_address,
                 &operator_set,
@@ -469,14 +469,12 @@ async fn handle_allocation_of_stake_in_strategies(
             )
             .await?;
 
-            // TODO: Should we check current_allocation.pendingDiff???
-            // Usar <
-            // warn si mayor
-            if current_allocation.currentMagnitude != deposit.allocation_magnitude {
+            let desired_stake = U256::from_str(&deposit.amount)
+                .map_err(|_| OperatorRegistrationError::U256ParseError)?;
+
+            if current_allocated_stake < desired_stake {
                 info!(
-                    "Current allocation: {}, desired: {} for strategy {:#x}",
-                    current_allocation.currentMagnitude,
-                    deposit.allocation_magnitude,
+                    "Current allocated stake: {current_allocated_stake}, desired: {desired_stake} for strategy {:#x}",
                     deposit.strategy_address
                 );
 
@@ -486,10 +484,15 @@ async fn handle_allocation_of_stake_in_strategies(
                     strategies: vec![deposit.strategy_address],
                     newMagnitudes: vec![deposit.allocation_magnitude],
                 });
+            } else if current_allocated_stake > desired_stake {
+                warn!(
+                    "Current allocated stake: {current_allocated_stake} is greater than desired: {desired_stake} for strategy {:#x}",
+                    deposit.strategy_address
+                );
             } else {
                 info!(
-                    "Allocation already correct ({}) for strategy {:#x}",
-                    current_allocation.currentMagnitude, deposit.strategy_address
+                    "Current allocated stake: {current_allocated_stake}, desired: {desired_stake} for strategy {:#x}",
+                    deposit.strategy_address
                 );
             }
         }
@@ -512,7 +515,7 @@ async fn handle_allocation_of_stake_in_strategies(
     Ok(())
 }
 
-/// Retrieves the current allocation information for a specific operator set and strategy.
+/// Retrieves the current allocated stake for a specific operator set and strategy.
 ///
 /// # Arguments
 ///
@@ -524,26 +527,28 @@ async fn handle_allocation_of_stake_in_strategies(
 ///
 /// # Returns
 ///
-/// * Result<Allocation, OperatorRegistrationError> - The current allocation details
-async fn get_current_allocation(
+/// * Result<U256, OperatorRegistrationError> - The current allocated stake
+async fn get_current_allocated_stake(
     provider: SdkSigner,
     operator_address: Address,
     operator_set: &OperatorSet,
     strategy_address: Address,
     allocation_manager_address: Address,
-) -> Result<IAllocationManagerTypes::Allocation, OperatorRegistrationError> {
+) -> Result<U256, OperatorRegistrationError> {
     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
 
-    // USAR getAllocatedStake
-    Ok(contract_allocation_manager
-        .getAllocation(
-            operator_address,
+    let allocated_stakes = contract_allocation_manager
+        .getAllocatedStake(
             operator_set.clone().into(),
-            strategy_address,
+            vec![operator_address],
+            vec![strategy_address],
         )
         .call()
         .await?
-        ._0)
+        ._0;
+
+    // Return the stake for the first (and only) operator and strategy
+    Ok(allocated_stakes[0][0])
 }
 
 /// Executes batch allocation modifications for an operator.

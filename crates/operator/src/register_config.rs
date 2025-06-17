@@ -8,25 +8,22 @@ pub struct OperatorRegistrationConfig {
     /// Signer of the operator
     pub signer: SignerConfig,
     /// Operator config for EigenLayer registration
-    /// Hacer option esto
-    pub operator_global_config: Option<OperatorELConfig>,
+    pub operator_global_config: OperatorELConfig,
     /// AVS registration configs
     pub avs_registration_configs: Vec<AvsRegistrationConfig>,
 }
 
-/// TODO: Improve name
 /// This configuration is used to register the operator to EigenLayer.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OperatorELConfig {
     /// Metadata URI
-    pub metadata_uri: String,
+    pub metadata_uri: Option<String>,
     /// Allocation delay
-    pub allocation_delay: u32,
+    pub allocation_delay: Option<u32>,
     /// Delegation manager address
-    pub delegation_manager_address: Address,
+    pub delegation_manager_address: Option<Address>,
 }
 
-// TODO: Improve name
 /// This configuration is used to register the operator to an AVS.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AvsRegistrationConfig {
@@ -39,7 +36,7 @@ pub struct AvsRegistrationConfig {
     /// Registry coordinator address
     pub registry_coordinator_address: Option<Address>,
     /// Strategy manager address
-    pub strategy_manager_address: Address,
+    pub strategy_manager_address: Option<Address>,
     /// Operator sets for this AVS
     pub operator_sets: Vec<OperatorSet>,
     /// Deposits for this AVS
