@@ -7,8 +7,8 @@ use serde::{Deserialize, Serialize};
 pub struct OperatorRegistrationConfig {
     /// Signer of the operator
     pub signer: SignerConfig,
-    /// Global config for the operator
-    pub operator_global_config: OperatorGlobalConfig,
+    /// Operator config for EigenLayer registration
+    pub operator_global_config: OperatorELConfig,
     /// AVS registration configs
     pub avs_registration_configs: Vec<AvsRegistrationConfig>,
 }
@@ -16,7 +16,7 @@ pub struct OperatorRegistrationConfig {
 /// TODO: Improve name
 /// This configuration is used to register the operator to EigenLayer.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct OperatorGlobalConfig {
+pub struct OperatorELConfig {
     /// Metadata URI
     pub metadata_uri: Option<String>,
     /// Allocation delay
