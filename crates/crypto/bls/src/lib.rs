@@ -29,6 +29,9 @@ use serde::de::{self, Visitor};
 use serde::ser;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+/// Environment variable to use as password for the BLS signer keystore
+const EIGEN_BLS_KEYSTORE_PASSWORD: &str = "EIGEN_BLS_KEYSTORE_PASSWORD";
+
 pub type PrivateKey = Fr;
 pub type PublicKey = G1Affine;
 pub type BlsSignature = G1Affine;
@@ -214,6 +217,10 @@ impl BlsKeyPair {
             }
             BlsSignerConfig::Keystore(BlsKeystoreConfig { path, password }) => {
                 let keypath = Path::new(&path);
+                // If the config password is empty, try with the environment variable
+                let password = password
+                    .or_else(|| std::env::var(EIGEN_BLS_KEYSTORE_PASSWORD).ok())
+                    .ok_or(BlsError::MissingKeystorePassword)?;
                 let private_key = decrypt_key(keypath, password)?;
                 BlsKeyPair::from_bytes(&private_key)
             }
@@ -512,7 +519,8 @@ pub struct BlsKeystoreConfig {
     /// Path to the keystore file
     pub path: String,
     /// Password to decrypt the keystore file
-    pub password: String,
+    /// If no password is provided, the signer will try to use the [`EIGEN_BLS_KEYSTORE_PASSWORD`] environment variable.
+    pub password: Option<String>,
 }
 
 #[cfg(test)]
