@@ -25,9 +25,10 @@ pub trait ResponseCalculator<Input, Output> {
 #[derive(Debug)]
 pub struct FunctionResponseCalculator<F>(F);
 
-impl<F, Input, Output> ResponseCalculator<Input, Output> for FunctionResponseCalculator<F>
+impl<F, Fut, Input, Output> ResponseCalculator<Input, Output> for FunctionResponseCalculator<F>
 where
-    F: AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+    F: Fn(u32, Input) -> Fut + Send,
+    Fut: Future<Output = Result<Output, TaskManagerError>> + Send,
 {
     async fn compute_response(
         &self,
@@ -50,11 +51,12 @@ where
 /// # Returns
 ///
 /// * [`FunctionResponseCalculator`] - The new [`FunctionResponseCalculator`].
-pub fn response_calculator_from_async_fn<CF, Input, Output>(
+pub fn response_calculator_from_async_fn<CF, Fut, Input, Output>(
     compute_fn: CF,
 ) -> FunctionResponseCalculator<CF>
 where
-    CF: AsyncFn(u32, Input) -> Result<Output, TaskManagerError>,
+    CF: Fn(u32, Input) -> Fut + Send,
+    Fut: Future<Output = Result<Output, TaskManagerError>> + Send,
 {
     FunctionResponseCalculator(compute_fn)
 }
