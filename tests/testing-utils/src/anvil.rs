@@ -95,6 +95,13 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
     start_anvil_with_state(OPERATOR_SET_ANVIL_STATE_PATH).await
 }
 
+/// Start an anvil container for testing, using a specific dump state file
+pub async fn start_anvil_container_with_state(
+    state_path: &str,
+) -> (ContainerAsync<GenericImage>, String, String) {
+    start_anvil_with_state(state_path).await
+}
+
 /// Deposit 1 eth to the account in anvil
 pub async fn set_account_balance(container: &ContainerAsync<GenericImage>, address: &str) {
     let mut output = container
