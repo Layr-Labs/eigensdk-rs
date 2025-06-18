@@ -99,7 +99,9 @@ where
 /// be used in any context that requires the `Send` bound.
 ///
 /// Stable Rust can’t write that type directly, so we wrap it in this alias.
-/// **NOTE: users should not implement it manually.**
+/// **Users should not implement it manually. No stability guarantee are given
+/// to users implementing this trait.**
+#[doc(hidden)]
 pub trait AsyncFnSend<Input, Output>: Fn(u32, Input) -> Self::Future + Send {
     /// Future type returned by the closure
     type Future: Future<Output = Result<Output, TaskManagerError>> + Send;
