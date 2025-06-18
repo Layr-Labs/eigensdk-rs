@@ -22,7 +22,7 @@ pub trait ResponseCalculator<Input, Output> {
 }
 
 /// Implementation of the [`ResponseCalculator`] trait that uses a function to compute the response.
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct FunctionResponseCalculator<F>(F);
 
 impl<F, Fut, Input, Output> ResponseCalculator<Input, Output> for FunctionResponseCalculator<F>
@@ -80,9 +80,9 @@ pub fn response_calculator_from_fn<CF, Input, Output>(
     compute_fn: CF,
 ) -> FunctionResponseCalculator<impl AsyncFnSend<Input, Output>>
 where
-    CF: Fn(u32, Input) -> Result<Output, TaskManagerError> + Send + Sync + 'static,
-    Input: Send + 'static,
-    Output: Send + 'static,
+    CF: Fn(u32, Input) -> Result<Output, TaskManagerError> + Send + Sync,
+    Input: Send,
+    Output: Send,
 {
     let our_saviour = Arc::new(compute_fn);
     FunctionResponseCalculator(move |a, b| {
@@ -91,17 +91,14 @@ where
     })
 }
 
-pub trait AsyncFnSend<Input, Output>:
-    Fn(u32, Input) -> Self::Future + Send + Sync + 'static
-{
-    type Future: Future<Output = Result<Output, TaskManagerError>> + Send + 'static;
+pub trait AsyncFnSend<Input, Output>: Fn(u32, Input) -> Self::Future + Send {
+    type Future: Future<Output = Result<Output, TaskManagerError>> + Send;
 }
 
-// Impl genérico ≈ tu versión original, pero la cabecera ya exige Send/'static.
 impl<F, Fut, Input, Output> AsyncFnSend<Input, Output> for F
 where
-    F: Fn(u32, Input) -> Fut + Send + Sync + 'static,
-    Fut: Future<Output = Result<Output, TaskManagerError>> + Send + 'static,
+    F: Fn(u32, Input) -> Fut + Send,
+    Fut: Future<Output = Result<Output, TaskManagerError>> + Send,
 {
     type Future = Fut;
 }

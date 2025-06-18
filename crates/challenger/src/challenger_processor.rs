@@ -99,7 +99,7 @@ where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send + 'static,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
     Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
 {
     /// Create a new [`IndexingChallengerProcessor`]
