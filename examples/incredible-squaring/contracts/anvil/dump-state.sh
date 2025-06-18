@@ -33,7 +33,7 @@ DEPLOYER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf
 set +a
 
 # start an empty anvil chain in the background and dump its state to a json file upon exit
-start_anvil_docker "" $anvil_dir/incredible-squaring-anvil-state.json
+start_anvil_docker "" $anvil_dir/incredible-squaring-anvil-state
 sleep 1
 
 $root_dir/contracts/anvil/deploy-eigenlayer.sh
