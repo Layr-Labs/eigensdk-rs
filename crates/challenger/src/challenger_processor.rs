@@ -138,11 +138,11 @@ where
     Input: Send,
     Output: SolValue + PartialEq + Clone + Send,
 {
-    let our_saviour = Arc::new(response_calculator);
+    let response_calculator = Arc::new(response_calculator);
     move |task: Task<Input>, task_response: TaskResponse<Output>| {
-        let our_saviour = our_saviour.clone();
+        let response_calculator = response_calculator.clone();
         async move {
-            let computed_response = our_saviour
+            let computed_response = response_calculator
                 .compute_response(task_response.task_index, task.input)
                 .await?;
             Ok(computed_response == task_response.response)
@@ -150,11 +150,21 @@ where
     }
 }
 
+/// Async verifier closure alias
+///
+/// This helper trait exists only to express the type returned by
+/// [`verifier_from_compute_function`]: a closure that returns a `Future`
+/// whose output is `Result<bool, TaskManagerError>` and is `Send`, so it can
+/// be used in any context that requires the `Send` bound.
+///
+/// Stable Rust can’t write that type directly, so we wrap it in this alias.
+/// **NOTE: users should not implement it manually.**
 pub trait AsyncComputeSend<Input, Output>:
     Fn(Task<Input>, TaskResponse<Output>) -> Self::Future + Send
 where
     Output: SolValue + Clone + Send,
 {
+    /// Future type returned by the closure
     type Future: Future<Output = Result<bool, TaskManagerError>> + Send;
 }
 

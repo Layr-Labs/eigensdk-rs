@@ -84,14 +84,24 @@ where
     Input: Send,
     Output: Send,
 {
-    let our_saviour = Arc::new(compute_fn);
+    let compute = Arc::new(compute_fn);
     FunctionResponseCalculator(move |a, b| {
-        let our_saviour = our_saviour.clone();
-        async move { our_saviour(a, b) }
+        let compute = compute.clone();
+        async move { compute(a, b) }
     })
 }
 
+/// Async function closure alias
+///
+/// This helper trait exists only to express the type returned by
+/// [`response_calculator_from_fn`]: a closure that returns a `Future`
+/// whose output is `Result<Output, TaskManagerError>` and is `Send`, so it can
+/// be used in any context that requires the `Send` bound.
+///
+/// Stable Rust can’t write that type directly, so we wrap it in this alias.
+/// **NOTE: users should not implement it manually.**
 pub trait AsyncFnSend<Input, Output>: Fn(u32, Input) -> Self::Future + Send {
+    /// Future type returned by the closure
     type Future: Future<Output = Result<Output, TaskManagerError>> + Send;
 }
 
