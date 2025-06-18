@@ -93,24 +93,22 @@ async fn test_incredible_squaring() {
     start_spammer(http_endpoint.clone()).await;
 
     // Task Spammer will finished after spamming 3 tasks
+    // Give some time to the aggregator to process the last task
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
 
     for handle in [aggregator_handle, operator_handle, challenger_handle] {
         handle.abort();
     }
 
-    // Verificar resultados
     verify_tasks_completed(&http_endpoint).await;
 }
 
-// Helper simplificado para verificación
 async fn verify_tasks_completed(http_endpoint: &str) {
     let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER).await;
 
     let latest_task_num = contract.latestTaskNum().call().await.unwrap()._0;
     assert_eq!(latest_task_num, NUM_TASKS);
 
-    // Verificar que todas las tareas tienen respuestas válidas
     for task_index in 0..latest_task_num {
         let response_hash = contract
             .allTaskResponses(task_index)
@@ -122,7 +120,6 @@ async fn verify_tasks_completed(http_endpoint: &str) {
     }
 }
 
-// Helper para crear contract instances
 async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> IncredibleInstance {
     let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
     let url = Url::parse(http_endpoint).unwrap();
@@ -131,7 +128,6 @@ async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> Incr
     IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider)
 }
 
-// Funciones de servicio simplificadas
 async fn start_aggregator(logger: SharedLogger, http_endpoint: String, ws_endpoint: String) {
     let config = create_aggregator_config(http_endpoint, ws_endpoint);
     let contract = create_task_manager_contract(&config.http_rpc_url, AGGREGATOR_SIGNER).await;
@@ -179,7 +175,6 @@ async fn start_challenger(http_endpoint: String, ws_endpoint: String) {
     challenger.run().await.unwrap();
 }
 
-// Funciones de configuración simplificadas
 fn create_aggregator_config(http_endpoint: String, ws_endpoint: String) -> AggregatorConfig {
     AggregatorConfig {
         server_address: AGGREGATOR_RPC_URL.to_string(),
@@ -247,7 +242,6 @@ fn create_registration_config() -> OperatorRegistrationConfig {
     }
 }
 
-// Lógica de negocio y tipos
 pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
     Ok(number_to_be_squared * number_to_be_squared)
 }
