@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use eigen_task_manager::response_calculator::{
     response_calculator_from_async_fn, ResponseCalculator,
 };
@@ -21,8 +23,8 @@ use tracing::info;
 ///
 /// Panics if `failure_rate_percentage` is greater than 100.
 pub fn failing_response_calculator<Input, Output>(
-    response_calculator: impl ResponseCalculator<Input, Output> + Send + Sync + Clone,
-    invalid_values_builder: impl Fn() -> Output + Send + Sync + Clone,
+    response_calculator: impl ResponseCalculator<Input, Output> + Send + Sync,
+    invalid_values_builder: impl Fn() -> Output + Send + Sync,
     failure_rate_percentage: u32,
 ) -> impl ResponseCalculator<Input, Output>
 where
@@ -34,9 +36,12 @@ where
         "Failure rate percentage must be less than or equal to 100"
     );
 
+    let our_response_calculator = Arc::new(response_calculator);
+    let our_invalid_values_builder = Arc::new(invalid_values_builder);
+
     response_calculator_from_async_fn(move |task_index, input: Input| {
-        let response_calculator = response_calculator.clone();
-        let invalid_values_builder = invalid_values_builder.clone();
+        let response_calculator = our_response_calculator.clone();
+        let invalid_values_builder = our_invalid_values_builder.clone();
         async move {
             let result = response_calculator
                 .compute_response(task_index, input.clone())
