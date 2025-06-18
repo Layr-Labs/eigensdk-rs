@@ -132,11 +132,11 @@ where
 ///
 /// * `impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>` - The verifier
 pub fn verifier_from_compute_function<Input, Output>(
-    response_calculator: impl ResponseCalculator<Input, Output> + Send + Sync + 'static,
+    response_calculator: impl ResponseCalculator<Input, Output> + Send + Sync,
 ) -> impl AsyncComputeSend<Input, Output>
 where
-    Input: Send + 'static,
-    Output: SolValue + PartialEq + Clone + Send + 'static,
+    Input: Send,
+    Output: SolValue + PartialEq + Clone + Send,
 {
     let our_saviour = Arc::new(response_calculator);
     move |task: Task<Input>, task_response: TaskResponse<Output>| {
@@ -151,18 +151,18 @@ where
 }
 
 pub trait AsyncComputeSend<Input, Output>:
-    Fn(Task<Input>, TaskResponse<Output>) -> Self::Future + Send + 'static
+    Fn(Task<Input>, TaskResponse<Output>) -> Self::Future + Send
 where
-    Output: SolValue + Clone + Send + 'static,
+    Output: SolValue + Clone + Send,
 {
-    type Future: Future<Output = Result<bool, TaskManagerError>> + Send + 'static;
+    type Future: Future<Output = Result<bool, TaskManagerError>> + Send;
 }
 
 impl<F, Fut, Input, Output> AsyncComputeSend<Input, Output> for F
 where
-    F: Fn(Task<Input>, TaskResponse<Output>) -> Fut + Send + 'static,
-    Fut: Future<Output = Result<bool, TaskManagerError>> + Send + 'static,
-    Output: SolValue + Clone + Send + 'static,
+    F: Fn(Task<Input>, TaskResponse<Output>) -> Fut + Send,
+    Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
+    Output: SolValue + Clone + Send,
 {
     type Future = Fut;
 }
