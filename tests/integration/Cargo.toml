@@ -21,9 +21,6 @@ eigen-logging.workspace = true
 eigen-testing-utils.workspace = true
 eigen-utils.workspace = true
 
-[lints]
-workspace = true
-
 [dev-dependencies]
-eigen-testing-utils.workspace = true
+eigensdk.workspace = true
 futures-util.workspace = true

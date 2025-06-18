@@ -2104,6 +2104,7 @@ dependencies = [
  "eigen-logging",
  "eigen-testing-utils",
  "eigen-utils",
+ "eigensdk",
  "futures-util",
  "num-bigint 0.4.6",
  "thiserror 1.0.69",
