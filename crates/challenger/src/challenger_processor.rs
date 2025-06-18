@@ -8,28 +8,31 @@ use eigen_task_manager::{task::Task, task_response::TaskResponse};
 use eigen_task_manager::{TaskManager, TaskManagerError};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
+use std::future::Future;
 use tracing::{error, info};
 
 /// Standard implementation of the [`ChallengerProcessor`] trait
 /// It has a `HashMap` of the task index and the new tasks received.
 /// It also has a verifier that is used to verify the output of the task against the operator's response.
 #[derive(Debug)]
-pub struct IndexingChallengerProcessor<TM, F>
+pub struct IndexingChallengerProcessor<TM, F, Fut>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
-    F: AsyncFn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
+    Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
 {
     task_manager: TM,
     tasks: HashMap<u32, Task<TM::Input>>,
     is_response_correct: F,
 }
 
-impl<TM, F> ChallengerProcessor for IndexingChallengerProcessor<TM, F>
+impl<TM, F, Fut> ChallengerProcessor for IndexingChallengerProcessor<TM, F, Fut>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: AsyncFn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
+    Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
 {
     type Input = TM::Input;
 
@@ -90,12 +93,13 @@ where
     }
 }
 
-impl<TM, F> IndexingChallengerProcessor<TM, F>
+impl<TM, F, Fut> IndexingChallengerProcessor<TM, F, Fut>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: AsyncFn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
+    Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
 {
     /// Create a new [`IndexingChallengerProcessor`]
     ///
