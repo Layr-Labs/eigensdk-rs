@@ -8,28 +8,32 @@ use eigen_task_manager::{task::Task, task_response::TaskResponse};
 use eigen_task_manager::{TaskManager, TaskManagerError};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
+use std::future::Future;
+use std::sync::Arc;
 use tracing::{error, info};
 
 /// Standard implementation of the [`ChallengerProcessor`] trait
 /// It has a `HashMap` of the task index and the new tasks received.
 /// It also has a verifier that is used to verify the output of the task against the operator's response.
 #[derive(Debug)]
-pub struct IndexingChallengerProcessor<TM, F>
+pub struct IndexingChallengerProcessor<TM, F, Fut>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
-    F: AsyncFn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>,
+    F: FnMut(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
+    Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
 {
     task_manager: TM,
     tasks: HashMap<u32, Task<TM::Input>>,
     is_response_correct: F,
 }
 
-impl<TM, F> ChallengerProcessor for IndexingChallengerProcessor<TM, F>
+impl<TM, F, Fut> ChallengerProcessor for IndexingChallengerProcessor<TM, F, Fut>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: AsyncFn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
+    Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
 {
     type Input = TM::Input;
 
@@ -90,12 +94,13 @@ where
     }
 }
 
-impl<TM, F> IndexingChallengerProcessor<TM, F>
+impl<TM, F, Fut> IndexingChallengerProcessor<TM, F, Fut>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: AsyncFn(Task<TM::Input>, TaskResponse<TM::Output>) -> Result<bool, TaskManagerError>,
+    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
+    Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
 {
     /// Create a new [`IndexingChallengerProcessor`]
     ///
@@ -127,15 +132,47 @@ where
 ///
 /// * `impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>` - The verifier
 pub fn verifier_from_compute_function<Input, Output>(
-    response_calculator: impl ResponseCalculator<Input, Output>,
-) -> impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>
+    response_calculator: impl ResponseCalculator<Input, Output> + Send + Sync,
+) -> impl AsyncComputeSend<Input, Output>
 where
-    Output: SolValue + Clone + PartialEq,
+    Input: Send,
+    Output: SolValue + PartialEq + Clone + Send,
 {
-    async move |task: Task<Input>, task_response: TaskResponse<Output>| {
-        let computed_response = response_calculator
-            .compute_response(task_response.task_index, task.input)
-            .await?;
-        Ok(computed_response == task_response.response)
+    let response_calculator = Arc::new(response_calculator);
+    move |task: Task<Input>, task_response: TaskResponse<Output>| {
+        let response_calculator = response_calculator.clone();
+        async move {
+            let computed_response = response_calculator
+                .compute_response(task_response.task_index, task.input)
+                .await?;
+            Ok(computed_response == task_response.response)
+        }
     }
+}
+
+/// Async verifier closure alias
+///
+/// This helper trait exists only to express the type returned by
+/// [`verifier_from_compute_function`]: a closure that returns a `Future`
+/// whose output is `Result<bool, TaskManagerError>` and is `Send`, so it can
+/// be used in any context that requires the `Send` bound.
+///
+/// Stable Rust can’t write that type directly, so we wrap it in this alias.
+/// **NOTE: users should not implement it manually.**
+pub trait AsyncComputeSend<Input, Output>:
+    Fn(Task<Input>, TaskResponse<Output>) -> Self::Future + Send
+where
+    Output: SolValue + Clone + Send,
+{
+    /// Future type returned by the closure
+    type Future: Future<Output = Result<bool, TaskManagerError>> + Send;
+}
+
+impl<F, Fut, Input, Output> AsyncComputeSend<Input, Output> for F
+where
+    F: Fn(Task<Input>, TaskResponse<Output>) -> Fut + Send,
+    Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
+    Output: SolValue + Clone + Send,
+{
+    type Future = Fut;
 }
