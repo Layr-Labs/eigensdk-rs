@@ -2,7 +2,7 @@ use std::{str::FromStr, time::Duration};
 
 use alloy::{
     network::EthereumWallet,
-    primitives::{Address, U256},
+    primitives::{Address, FixedBytes, U256},
     providers::ProviderBuilder,
     signers::local::PrivateKeySigner,
     transports::http::reqwest::Url,
@@ -20,10 +20,7 @@ use eigensdk::{
     signer::PrivateKeyConfig,
     task_manager::response_calculator::response_calculator_from_fn,
     task_spammer::TaskSpammerBuilder,
-    testing_utils::{
-        anvil::start_anvil_container_with_incredible_squaring_state,
-        task_processor::failing_response_calculator,
-    },
+    testing_utils::anvil::start_anvil_container_with_incredible_squaring_state,
 };
 use incredible_squaring::{
     bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
@@ -31,24 +28,68 @@ use incredible_squaring::{
 };
 
 const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
+const TASK_INTERVAL: u64 = 5;
 
 #[tokio::test]
 async fn test_incredible_squaring() {
     let (_container, http_endpoint, ws_endpoint) =
         start_anvil_container_with_incredible_squaring_state().await;
 
-    println!("http_endpoint: {}", http_endpoint);
-    println!("ws_endpoint: {}", ws_endpoint);
-
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
 
-    let aggregator_handle =
-        tokio::spawn(start_aggregator(logger, http_endpoint.clone(), ws_endpoint));
+    let aggregator_handle = tokio::spawn(start_aggregator(
+        logger,
+        http_endpoint.clone(),
+        ws_endpoint.clone(),
+    ));
+    // Wait for the aggregator to start
+    tokio::time::sleep(Duration::from_secs(5)).await;
+    let operator_handle = tokio::spawn(start_operator(http_endpoint.clone(), ws_endpoint.clone()));
+    let challenger_handle =
+        tokio::spawn(start_challenger(http_endpoint.clone(), ws_endpoint.clone()));
+    // Wait for the challenger to start
+    tokio::time::sleep(Duration::from_secs(5)).await;
     let spammer_handle = tokio::spawn(start_spammer(http_endpoint.clone()));
 
-    aggregator_handle.await.unwrap();
+    // TaskSpammer will end after spamming 3 tasks, so we wait 5 more seconds
+    // to be sure that the aggregator finished sending responses to the contract
     spammer_handle.await.unwrap();
+
+    tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
+    for handle in [aggregator_handle, operator_handle, challenger_handle] {
+        handle.abort();
+    }
+
+    let signer = "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
+    let task_manager_address =
+        Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3").unwrap();
+    let url = Url::parse(&http_endpoint).unwrap();
+    let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
+    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let task_manager_contract =
+        IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+
+    let latest_task_num = task_manager_contract
+        .latestTaskNum()
+        .call()
+        .await
+        .unwrap()
+        ._0;
+
+    assert_eq!(latest_task_num, 3);
+
+    // Verify that the 3 most recent tasks have valid responses
+    for task_index in 0..latest_task_num {
+        let response_hash = task_manager_contract
+            .allTaskResponses(task_index)
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        assert_ne!(FixedBytes::<32>::default(), response_hash,);
+    }
 }
 
 async fn start_aggregator(logger: SharedLogger, http_endpoint: String, ws_endpoint: String) {
@@ -70,11 +111,8 @@ async fn start_aggregator(logger: SharedLogger, http_endpoint: String, ws_endpoi
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
-    let task_processor = IndexingAggregatorProcessor::new(
-        contract,
-        Duration::from_secs(60),
-        Duration::from_secs(15),
-    );
+    let task_processor =
+        IndexingAggregatorProcessor::new(contract, Duration::from_secs(5), Duration::from_secs(2));
     let aggregator = Aggregator::new(config, task_processor, logger)
         .await
         .unwrap();
@@ -91,9 +129,9 @@ async fn start_spammer(http_endpoint: String) {
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
     TaskSpammerBuilder::new(contract)
-        .with_iter((0..).map(U256::from))
+        .with_iter((0..3).map(U256::from))
         .with_quorum(50, vec![0])
-        .with_interval(Duration::from_secs(10))
+        .with_interval(Duration::from_secs(TASK_INTERVAL))
         .build()
         .unwrap()
         .run()
@@ -162,8 +200,7 @@ async fn start_operator(http_endpoint: String, ws_endpoint: String) {
     };
 
     let response_calculator = response_calculator_from_fn(square);
-    let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
-    let operator = Operator::new(config, logic).await.unwrap();
+    let operator = Operator::new(config, response_calculator).await.unwrap();
     operator.run::<ISTaskManager>().await.unwrap();
 }
 
