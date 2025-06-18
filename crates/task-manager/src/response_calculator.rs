@@ -1,4 +1,4 @@
-use std::future::Future;
+use std::{future::Future, sync::Arc};
 
 use crate::TaskManagerError;
 
@@ -18,7 +18,7 @@ pub trait ResponseCalculator<Input, Output> {
         &self,
         task_index: u32,
         input: Input,
-    ) -> impl Future<Output = Result<Output, TaskManagerError>>;
+    ) -> impl Future<Output = Result<Output, TaskManagerError>> + Send;
 }
 
 /// Implementation of the [`ResponseCalculator`] trait that uses a function to compute the response.
@@ -27,8 +27,10 @@ pub struct FunctionResponseCalculator<F>(F);
 
 impl<F, Fut, Input, Output> ResponseCalculator<Input, Output> for FunctionResponseCalculator<F>
 where
-    F: Fn(u32, Input) -> Fut + Send,
+    F: Fn(u32, Input) -> Fut + Send + Sync,
     Fut: Future<Output = Result<Output, TaskManagerError>> + Send,
+    Input: Send,
+    Output: Send,
 {
     async fn compute_response(
         &self,
@@ -76,9 +78,31 @@ where
 /// * [`FunctionResponseCalculator`] - The new [`FunctionResponseCalculator`].
 pub fn response_calculator_from_fn<CF, Input, Output>(
     compute_fn: CF,
-) -> FunctionResponseCalculator<impl AsyncFn(u32, Input) -> Result<Output, TaskManagerError>>
+) -> FunctionResponseCalculator<impl AsyncFnSend<Input, Output>>
 where
-    CF: Fn(u32, Input) -> Result<Output, TaskManagerError>,
+    CF: Fn(u32, Input) -> Result<Output, TaskManagerError> + Send + Sync,
+    Input: Send,
+    Output: Send,
 {
-    FunctionResponseCalculator(async move |a, b| compute_fn(a, b))
+    let our_saviour = Arc::new(compute_fn);
+    FunctionResponseCalculator(move |a, b| {
+        let our_saviour = our_saviour.clone();
+        async move { our_saviour(a, b) }
+    })
+}
+
+trait AsyncFnSend<Input, Output>:
+    Fn(u32, Input) -> <Self as AsyncFnSend<Input, Output>>::Future
+{
+    type Future: Future<Output = Self::Out>;
+    type Out;
+}
+
+impl<Fut, F, Input, Output> AsyncFnSend<Input, Output> for F
+where
+    F: Fn(u32, Input) -> Fut + Send,
+    Fut: Future<Output = Result<Output, TaskManagerError>> + Send,
+{
+    type Future = Fut;
+    type Out = Fut::Output;
 }

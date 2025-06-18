@@ -9,6 +9,7 @@ use eigen_task_manager::{TaskManager, TaskManagerError};
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use std::collections::HashMap;
 use std::future::Future;
+use std::sync::Arc;
 use tracing::{error, info};
 
 /// Standard implementation of the [`ChallengerProcessor`] trait
@@ -18,7 +19,7 @@ use tracing::{error, info};
 pub struct IndexingChallengerProcessor<TM, F, Fut>
 where
     TM: TaskManager + Send + Sync + 'static + Clone,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
+    F: FnMut(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
     Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
 {
     task_manager: TM,
@@ -98,7 +99,7 @@ where
     TM: TaskManager + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
-    F: Fn(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
+    F: FnMut(Task<TM::Input>, TaskResponse<TM::Output>) -> Fut + Send,
     Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
 {
     /// Create a new [`IndexingChallengerProcessor`]
@@ -128,18 +129,38 @@ where
 /// * `response_calculator` - The response calculator
 ///
 /// # Returns
-///
+///asddasdsadas
 /// * `impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>` - The verifier
 pub fn verifier_from_compute_function<Input, Output>(
-    response_calculator: impl ResponseCalculator<Input, Output>,
-) -> impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>
+    response_calculator: impl ResponseCalculator<Input, Output> + Send + Sync,
+) -> impl AsyncComputeSend<Input, Output>
 where
-    Output: SolValue + Clone + PartialEq,
+    Input: Send,
+    Output: SolValue + PartialEq + Clone + Send,
 {
-    async move |task: Task<Input>, task_response: TaskResponse<Output>| {
-        let computed_response = response_calculator
-            .compute_response(task_response.task_index, task.input)
-            .await?;
-        Ok(computed_response == task_response.response)
+    let our_saviour = Arc::new(response_calculator);
+    move |task: Task<Input>, task_response: TaskResponse<Output>| {
+        let our_saviour = our_saviour.clone();
+        async move {
+            let computed_response = our_saviour
+                .compute_response(task_response.task_index, task.input)
+                .await?;
+            Ok(computed_response == task_response.response)
+        }
     }
+}
+
+pub trait AsyncComputeSend<Input, Output: SolValue + Clone>:
+    FnMut(Task<Input>, TaskResponse<Output>) -> <Self as AsyncComputeSend<Input, Output>>::Future
+{
+    type Future: Future<Output = Result<bool, TaskManagerError>> + Send;
+}
+
+impl<Fut, F, Input, Output> AsyncComputeSend<Input, Output> for F
+where
+    F: FnMut(Task<Input>, TaskResponse<Output>) -> Fut + Send,
+    Fut: Future<Output = Result<bool, TaskManagerError>> + Send,
+    Output: SolValue + Clone,
+{
+    type Future = Fut;
 }
