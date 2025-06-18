@@ -16,11 +16,7 @@ num-bigint = "0.4.4"
 ark-ff.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
-eigen-common.workspace = true
-eigen-logging.workspace = true
-eigen-testing-utils.workspace = true
-eigen-utils.workspace = true
+eigensdk = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
-eigensdk.workspace = true
 futures-util.workspace = true

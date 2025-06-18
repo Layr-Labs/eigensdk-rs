@@ -1,8 +1,8 @@
 //! Integration test for rewards utilities
 
 use alloy::primitives::{aliases::U96, U256};
-use eigen_common::{get_provider, get_signer};
-use eigen_testing_utils::{
+use eigensdk::common::{get_provider, get_signer};
+use eigensdk::testing_utils::{
     anvil::start_anvil_container,
     anvil_constants::{
         get_erc20_mock_strategy, get_rewards_coordinator_address, FIRST_PRIVATE_KEY, SECOND_ADDRESS,
@@ -12,7 +12,7 @@ use eigen_testing_utils::{
     },
     transaction::wait_transaction,
 };
-use eigen_utils::slashing::{
+use eigensdk::utils::slashing::{
     core::irewardscoordinator::IRewardsCoordinator,
     middleware::servicemanagerbase::IRewardsCoordinatorTypes::{
         RewardsSubmission, StrategyAndMultiplier,
