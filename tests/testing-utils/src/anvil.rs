@@ -10,6 +10,8 @@ const M2_ANVIL_STATE_PATH: &str =
     "./crates/m2_contracts/anvil/m2_contracts_deployed_anvil_state/state.json"; // relative path from the project root
 const OPERATOR_SET_ANVIL_STATE_PATH: &str =
     "./crates/operator_sets_contracts/anvil/operatorset_contracts_deployed_anvil_state/state.json";
+const INCREDIBLE_SQUARING_ANVIL_STATE_PATH: &str =
+    "./examples/incredible-squaring/contracts/anvil/incredible-squaring-anvil-state/state.json";
 
 fn workspace_dir() -> PathBuf {
     let output = std::process::Command::new(env!("CARGO"))
@@ -100,6 +102,12 @@ pub async fn start_anvil_container_with_state(
     state_path: &str,
 ) -> (ContainerAsync<GenericImage>, String, String) {
     start_anvil_with_state(state_path).await
+}
+
+/// Start an anvil container for testing, using the dump state file for incredible squaring
+pub async fn start_anvil_container_with_incredible_squaring_state(
+) -> (ContainerAsync<GenericImage>, String, String) {
+    start_anvil_with_state(INCREDIBLE_SQUARING_ANVIL_STATE_PATH).await
 }
 
 /// Deposit 1 eth to the account in anvil
