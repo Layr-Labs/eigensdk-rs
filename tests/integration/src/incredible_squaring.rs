@@ -24,16 +24,7 @@ use eigensdk::{
         TaskManagerDefs, TaskManagerError,
     },
     task_spammer::TaskSpammerBuilder,
-    testing_utils::{
-        anvil::start_anvil_container_with_state,
-        anvil_constants::{
-            get_allocation_manager_address, get_avs_directory_address,
-            get_delegation_manager_address, get_erc20_mock_strategy,
-            get_operator_state_retriever_address, get_permission_controller_address,
-            get_registry_coordinator_address, get_rewards_coordinator_address,
-            get_strategy_manager_address,
-        },
-    },
+    testing_utils::anvil::start_anvil_container_with_state,
 };
 
 use crate::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
@@ -49,9 +40,19 @@ const INCREDIBLE_SQUARING_STATE_PATH: &str =
     "./examples/incredible-squaring/contracts/anvil/incredible-squaring-anvil-state/state.json";
 const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 const OPERATOR_BLS_SIGNER: &str =
-    "0x1371012690269088913462269866874713266643928125698382731338806296762673180359922";
+    "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
 const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
+const REGISTRY_COORDINATOR: &str = "0x7bc06c482dead17c0e297afbc32f6e63d3846650";
 const OPERATOR_ADDRESS: &str = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+const PERMISSION_CONTROLLER_ADDRESS: &str = "0x59b670e9fa9d0a427751af201d676719a970857b";
+const REWARDS_COORDINATOR_ADDRESS: &str = "0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0";
+const ALLOCATION_MANAGER_ADDRESS: &str = "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6";
+const DELEGATION_MANAGER_ADDRESS: &str = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0";
+const AVS_DIRECTORY_ADDRESS: &str = "0x610178da211fef7d417bc0e6fed39f05609ad788";
+const STRATEGY_MANAGER_ADDRESS: &str = "0x0165878a594ca255338adfa4d48449f69242eb8f";
+const ERC20_STRATEGY_ADDRESS: &str = "0x2b961e3959b79326a8e7f64ef0d2d825707669b5";
+const AVS_ADDRESS: &str = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154";
+const OPERATOR_STATE_RETRIEVER_ADDRESS: &str = "0x4c5859f0f772848b2d91f1d83e2fe57935348029";
 
 type IncredibleInstance = IncredibleSquaringTaskManagerInstance<
     (),
@@ -109,11 +110,11 @@ async fn test_incredible_squaring() {
         handle.abort();
     }
 
-    verify_tasks_completed(http_endpoint.clone()).await;
+    verify_tasks_completed(&http_endpoint).await;
 }
 
-async fn verify_tasks_completed(http_endpoint: String) {
-    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER.to_string()).await;
+async fn verify_tasks_completed(http_endpoint: &str) {
+    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER).await;
 
     let latest_task_num = contract.latestTaskNum().call().await.unwrap()._0;
     assert_eq!(latest_task_num, NUM_TASKS);
@@ -129,17 +130,17 @@ async fn verify_tasks_completed(http_endpoint: String) {
     }
 }
 
-async fn create_task_manager_contract(http_endpoint: String, signer: String) -> IncredibleInstance {
+async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> IncredibleInstance {
     let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
-    let url = Url::parse(&http_endpoint).unwrap();
-    let wallet = EthereumWallet::new(PrivateKeySigner::from_str(&signer).unwrap());
+    let url = Url::parse(http_endpoint).unwrap();
+    let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
     let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
     IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider)
 }
 
 async fn start_aggregator(logger: SharedLogger, http_endpoint: String, ws_endpoint: String) {
-    let config = create_aggregator_config(http_endpoint.clone(), ws_endpoint).await;
-    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER.to_string()).await;
+    let config = create_aggregator_config(http_endpoint, ws_endpoint);
+    let contract = create_task_manager_contract(&config.http_rpc_url, AGGREGATOR_SIGNER).await;
     let task_processor =
         IndexingAggregatorProcessor::new(contract, Duration::from_secs(5), Duration::from_secs(2));
 
@@ -150,7 +151,7 @@ async fn start_aggregator(logger: SharedLogger, http_endpoint: String, ws_endpoi
 }
 
 async fn start_spammer(http_endpoint: String) {
-    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER.to_string()).await;
+    let contract = create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER).await;
 
     TaskSpammerBuilder::new(contract)
         .with_iter((0..NUM_TASKS).map(U256::from))
@@ -164,7 +165,7 @@ async fn start_spammer(http_endpoint: String) {
 }
 
 async fn start_operator(http_endpoint: String, ws_endpoint: String) {
-    let config = create_operator_config(http_endpoint.clone(), ws_endpoint).await;
+    let config = create_operator_config(http_endpoint, ws_endpoint);
     let response_calculator = response_calculator_from_fn(square);
     let operator = Operator::new(config, response_calculator).await.unwrap();
     operator.run::<ISTaskManager>().await.unwrap();
@@ -172,12 +173,10 @@ async fn start_operator(http_endpoint: String, ws_endpoint: String) {
 
 async fn start_challenger(http_endpoint: String, ws_endpoint: String) {
     let config = ChallengerConfig {
-        http_rpc_url: http_endpoint.clone(),
+        http_rpc_url: http_endpoint,
         ws_rpc_url: ws_endpoint,
     };
-    let contract =
-        create_task_manager_contract(config.http_rpc_url.clone(), OPERATOR_SIGNER.to_string())
-            .await;
+    let contract = create_task_manager_contract(&config.http_rpc_url, OPERATOR_SIGNER).await;
     let response_calculator = response_calculator_from_fn(square);
     let logic = verifier_from_compute_function(response_calculator);
     let task_processor = IndexingChallengerProcessor::new(contract, logic);
@@ -186,34 +185,18 @@ async fn start_challenger(http_endpoint: String, ws_endpoint: String) {
     challenger.run().await.unwrap();
 }
 
-async fn create_aggregator_config(http_endpoint: String, ws_endpoint: String) -> AggregatorConfig {
+fn create_aggregator_config(http_endpoint: String, ws_endpoint: String) -> AggregatorConfig {
     AggregatorConfig {
         server_address: AGGREGATOR_RPC_URL.to_string(),
-        http_rpc_url: http_endpoint.clone(),
+        http_rpc_url: http_endpoint,
         ws_rpc_url: ws_endpoint,
-        registry_coordinator: get_registry_coordinator_address(http_endpoint.clone()).await,
-        operator_state_retriever: get_operator_state_retriever_address(http_endpoint).await,
+        registry_coordinator: Address::from_str(REGISTRY_COORDINATOR).unwrap(),
+        operator_state_retriever: Address::from_str(OPERATOR_STATE_RETRIEVER_ADDRESS).unwrap(),
     }
 }
 
-async fn create_operator_config(http_endpoint: String, ws_endpoint: String) -> OperatorConfig {
-    OperatorConfig {
-        bls_signer: BlsPrivateKeyConfig {
-            private_key: OPERATOR_BLS_SIGNER.to_string(),
-        }
-        .into(),
-        operator_address: Address::from_str(OPERATOR_ADDRESS).unwrap(),
-        operator_name: "squaring".to_string(),
-        ws_rpc_url: ws_endpoint,
-        http_rpc_url: http_endpoint.clone(),
-        registry_coordinator_address: get_registry_coordinator_address(http_endpoint.clone()).await,
-        aggregator_ip_port: AGGREGATOR_RPC_URL.to_string(),
-        registration: Some(create_registration_config(&http_endpoint).await),
-    }
-}
-
-async fn create_registration_config(http_endpoint: &str) -> OperatorRegistrationConfig {
-    OperatorRegistrationConfig {
+fn create_operator_config(http_endpoint: String, ws_endpoint: String) -> OperatorConfig {
+    let registration_config = OperatorRegistrationConfig {
         signer: PrivateKeyConfig {
             private_key: OPERATOR_SIGNER.to_string(),
         }
@@ -224,29 +207,40 @@ async fn create_registration_config(http_endpoint: &str) -> OperatorRegistration
         operator_set_id: 0,
         new_magnitude: vec![1000000000000000000],
         deposit_tokens: "5000000000000000000000".to_string(),
-        permission_controller_address: get_permission_controller_address(http_endpoint.to_string())
-            .await,
-        rewards_coordinator_address: get_rewards_coordinator_address(http_endpoint.to_string())
-            .await,
-        allocation_manager_address: get_allocation_manager_address(http_endpoint.to_string()).await,
-        registry_coordinator_address: get_registry_coordinator_address(http_endpoint.to_string())
-            .await,
-        delegation_manager_address: get_delegation_manager_address(http_endpoint.to_string()).await,
-        avs_directory_address: get_avs_directory_address(http_endpoint.to_string()).await,
-        strategy_manager_address: get_strategy_manager_address(http_endpoint.to_string()).await,
-        // 0x2b961e3959b79326a8e7f64ef0d2d825707669b5
-        erc20_strategy_address: get_erc20_mock_strategy(http_endpoint.to_string()).await,
-        avs_address: get_avs_directory_address(http_endpoint.to_string()).await,
-        strategies_addresses: vec![get_erc20_mock_strategy(http_endpoint.to_string()).await],
+        permission_controller_address: Address::from_str(PERMISSION_CONTROLLER_ADDRESS).unwrap(),
+        rewards_coordinator_address: Address::from_str(REWARDS_COORDINATOR_ADDRESS).unwrap(),
+        allocation_manager_address: Address::from_str(ALLOCATION_MANAGER_ADDRESS).unwrap(),
+        registry_coordinator_address: Address::from_str(REGISTRY_COORDINATOR).unwrap(),
+        delegation_manager_address: Address::from_str(DELEGATION_MANAGER_ADDRESS).unwrap(),
+        avs_directory_address: Address::from_str(AVS_DIRECTORY_ADDRESS).unwrap(),
+        strategy_manager_address: Address::from_str(STRATEGY_MANAGER_ADDRESS).unwrap(),
+        erc20_strategy_address: Address::from_str(ERC20_STRATEGY_ADDRESS).unwrap(),
+        avs_address: Address::from_str(AVS_ADDRESS).unwrap(),
+        strategies_addresses: vec![Address::from_str(ERC20_STRATEGY_ADDRESS).unwrap()],
+    };
+
+    OperatorConfig {
+        bls_signer: BlsPrivateKeyConfig {
+            private_key: OPERATOR_BLS_SIGNER.to_string(),
+        }
+        .into(),
+        operator_address: Address::from_str(OPERATOR_ADDRESS).unwrap(),
+        operator_name: "squaring".to_string(),
+        ws_rpc_url: ws_endpoint,
+        http_rpc_url: http_endpoint,
+        registry_coordinator_address: Address::from_str(REGISTRY_COORDINATOR).unwrap(),
+        aggregator_ip_port: AGGREGATOR_RPC_URL.to_string(),
+        registration: Some(registration_config),
     }
 }
 
+/// Compute the square of the number
 pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
     Ok(number_to_be_squared * number_to_be_squared)
 }
 
+/// Build the task manager struct for the incredible squaring task manager
 pub struct ISTaskManager;
-
 impl TaskManagerDefs for ISTaskManager {
     type Input = U256;
     type Output = U256;
