@@ -17,9 +17,6 @@ tracing.workspace = true
 serde.workspace = true
 toml = "0.8"
 
-[dev-dependencies]
-tracing-subscriber = "0.3"
-
 [lib]
 doctest = false
 
