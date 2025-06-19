@@ -151,6 +151,7 @@ use eigen_task_manager::event_decoder::{
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use error::ChallengerError;
 use futures_util::StreamExt;
+use tokio::task::JoinHandle;
 use tracing::info;
 
 /// Challenger Processor trait
@@ -181,8 +182,9 @@ pub struct Challenger<TP: ChallengerProcessor> {
     task_processor: TP,
 }
 
-impl<TP: ChallengerProcessor> Challenger<TP>
+impl<TP> Challenger<TP>
 where
+    TP: ChallengerProcessor + Send + Sync + 'static + Clone,
     TP::Input: From<<<TP::Input as SolValue>::SolType as SolType>::RustType>,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
@@ -210,7 +212,7 @@ where
     /// # Returns
     ///
     /// * `Result<(), ChallengerError>` - The result of the challenger
-    pub async fn run(&mut self) -> Result<(), ChallengerError> {
+    pub async fn run(mut self) -> Result<(), ChallengerError> {
         info!("Starting challenger");
 
         let ws_provider = get_ws_provider(&self.ws_url).await?;
@@ -261,6 +263,18 @@ where
         }
 
         Ok(())
+    }
+
+    /// Starts the challenger service in the background.
+    ///
+    /// Equivalent to [`Self::run`], but spawns it in the background and returns a
+    /// [`JoinHandle`] to the background task.
+    ///
+    /// # Returns
+    ///
+    /// * `JoinHandle<Result<(), ChallengerError>>` - The handle to the background task
+    pub fn start(self) -> JoinHandle<Result<(), ChallengerError>> {
+        tokio::spawn(self.run())
     }
 
     async fn get_non_signing_operator_pub_keys(
