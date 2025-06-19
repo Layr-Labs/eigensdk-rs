@@ -47,7 +47,7 @@ async fn main() -> Result<()> {
     let task_processor = IndexingChallengerProcessor::new(contract, verifier);
 
     // 8. Create and start the challenger
-    let mut challenger = Challenger::new(config, task_processor);
+    let challenger = Challenger::new(config, task_processor);
     challenger
         .run()
         .await
