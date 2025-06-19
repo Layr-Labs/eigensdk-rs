@@ -50,7 +50,7 @@ const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
 const TASK_SPAMMER_SIGNER: &str =
     "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
 
-type IncredibleInstance = IncredibleDotProductTaskManagerInstance<
+type TaskManagerInstance = IncredibleDotProductTaskManagerInstance<
     (),
     alloy::providers::fillers::FillProvider<
         alloy::providers::fillers::JoinFill<
@@ -166,7 +166,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
 }
 
 /// Create the task manager contract with an
-async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> IncredibleInstance {
+async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> TaskManagerInstance {
     let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
     let provider = get_signer(signer, http_endpoint);
     IncredibleDotProductTaskManagerInstance::new(task_manager_address, provider)
