@@ -486,7 +486,7 @@ async fn handle_allocation_of_stake_in_strategies(
 
                 // Prepare allocation parameters for batch transaction
                 allocate_params.push(AllocateParams {
-                    operatorSet: operator_set.clone().into(),
+                    operatorSet: operator_set.clone(),
                     strategies: vec![deposit.strategy_address],
                     newMagnitudes: vec![deposit.allocation_magnitude],
                 });
@@ -554,7 +554,10 @@ async fn get_current_allocated_stake(
         ._0;
 
     // Return the stake for the first (and only) operator and strategy
-    Ok(allocated_stakes[0][0])
+    Ok(*allocated_stakes
+        .first()
+        .and_then(|stake| stake.first())
+        .unwrap_or(&U256::ZERO))
 }
 
 /// Executes batch allocation modifications for an operator.
