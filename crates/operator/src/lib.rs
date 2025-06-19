@@ -351,7 +351,7 @@ impl<RP> Operator<RP> {
     pub fn start<TM>(self) -> JoinHandle<Result<(), OperatorError>>
     where
         RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
-        TM: TaskManagerDefs,
+        TM: TaskManagerDefs + 'static,
         TM::Input:
             From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
         TM::Output: SolValue + Clone,
