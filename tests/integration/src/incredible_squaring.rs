@@ -25,7 +25,9 @@ use crate::{
     bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
         IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
     },
-    generic_avs::{start_aggregator, start_challenger, start_operator, start_spammer, AvsConfig},
+    generic_avs::{
+        start_aggregator, start_avs, start_challenger, start_operator, start_spammer, AvsConfig,
+    },
 };
 
 const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
@@ -119,33 +121,10 @@ async fn test_incredible_squaring() {
         window_duration: Duration::from_secs(2),
     };
 
-    let contract =
-        create_task_manager_contract(&config.http_rpc_url, &config.aggregator_private_key).await;
-    let task_processor =
-        IndexingAggregatorProcessor::new(contract, config.time_to_expiry, config.window_duration);
-
-    let aggregator_handle = start_aggregator(config.clone(), task_processor, logger).await;
-
-    // Wait for the aggregator to start
-    tokio::time::sleep(Duration::from_secs(5)).await;
     let response_calculator = response_calculator_from_fn(square);
-    let operator_handle =
-        start_operator::<_, ISTaskManager>(config.clone(), response_calculator).await;
 
-    // // Wait for the operator to start
-    tokio::time::sleep(Duration::from_secs(5)).await;
-
-    let response_calculator = response_calculator_from_fn(square);
-    let logic = verifier_from_compute_function(response_calculator);
-
-    let contract =
-        create_task_manager_contract(&config.http_rpc_url, &config.challenger_private_key).await;
-    let challenger_task_processor = IndexingChallengerProcessor::new(contract, logic);
-    let challenger_handle = start_challenger(config.clone(), challenger_task_processor).await;
-
-    let task_manager =
-        create_task_manager_contract(&config.http_rpc_url, &config.task_manager_private_key).await;
-    let spammer_handle = start_spammer(config, task_manager, |i| U256::from(i)).await;
+    let (aggregator_handle, operator_handle, challenger_handle, spammer_handle) =
+        start_avs(config, response_calculator, logger, |i| U256::from(i)).await;
 
     // Wait until `NUM_TASKS` tasks are created
     spammer_handle.await.unwrap();
@@ -176,7 +155,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
     }
 }
 
-/// Create the task manager contract with a specific signer
+/// Create the task manager contract with an
 async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> IncredibleInstance {
     let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
     let url = Url::parse(http_endpoint).unwrap();
