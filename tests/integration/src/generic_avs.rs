@@ -3,12 +3,7 @@ use std::{fmt::Debug, time::Duration};
 use alloy::{dyn_abi::SolType, primitives::Address, sol_types::SolValue};
 use eigensdk::{
     aggregator::{processor::AggregatorProcessor, Aggregator, AggregatorConfig},
-    challenger::{
-        challenger::ChallengerProcessor,
-        challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
-        config::ChallengerConfig,
-        Challenger,
-    },
+    challenger::{challenger::ChallengerProcessor, config::ChallengerConfig, Challenger},
     crypto_bls::BlsPrivateKeyConfig,
     logging::logger::SharedLogger,
     operator::{config::OperatorConfig, register_config::OperatorRegistrationConfig, Operator},
@@ -16,6 +11,7 @@ use eigensdk::{
     task_manager::{response_calculator::ResponseCalculator, TaskManager, TaskManagerDefs},
     task_spammer::TaskSpammerBuilder,
 };
+use tokio::task::JoinHandle;
 
 /// Generic AVS configuration for integration tests
 #[derive(Clone)]
@@ -39,6 +35,8 @@ pub struct AvsConfig {
     pub operator_state_retriever_address: Address,
 
     // Core deployment addresses
+    /// AVS Directory contract address
+    pub avs_directory_address: Address,
     /// Allocation Manager contract address
     pub allocation_manager_address: Address,
     /// Delegation Manager contract address
@@ -63,6 +61,10 @@ pub struct AvsConfig {
     // Aggregator RPC
     /// IP address and port the aggregation server will use
     pub aggregator_ip_port: String,
+    /// Time before expiry of the task response aggregation
+    pub time_to_expiry: Duration,
+    /// Duration of the window to wait for signatures after quorum is reached
+    pub window_duration: Duration,
 
     // Task Spammer related
     /// Interval between tasks
@@ -105,7 +107,11 @@ pub struct AvsConfig {
     pub deposit_tokens: String,
 }
 
-async fn start_aggregator<TP>(config: AvsConfig, task_processor: TP, logger: SharedLogger)
+pub async fn start_aggregator<TP>(
+    config: AvsConfig,
+    task_processor: TP,
+    logger: SharedLogger,
+) -> JoinHandle<()>
 where
     TP: AggregatorProcessor + Debug + Send + Sync + 'static + Clone,
     TP::Input: From<<<TP::Input as SolValue>::SolType as SolType>::RustType>,
@@ -121,12 +127,12 @@ where
     let aggregator = Aggregator::new(config, task_processor, logger)
         .await
         .unwrap();
-    aggregator.run().await.unwrap();
+    tokio::spawn(async move { aggregator.run().await.unwrap() })
 }
 
-async fn start_operator<RP, TM>(config: AvsConfig, response_calculator: RP)
+pub async fn start_operator<RP, TM>(config: AvsConfig, response_calculator: RP) -> JoinHandle<()>
 where
-    RP: ResponseCalculator<TM::Input, TM::Output>,
+    RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
     TM: TaskManagerDefs,
     TM::Input: From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: SolValue + Clone,
@@ -148,7 +154,7 @@ where
         allocation_manager_address: config.allocation_manager_address,
         registry_coordinator_address: config.registry_coordinator_address,
         delegation_manager_address: config.delegation_manager_address,
-        avs_directory_address: config.avs_address,
+        avs_directory_address: config.avs_directory_address,
         strategy_manager_address: config.strategy_manager_address,
         erc20_strategy_address: config.strategy_address,
         avs_address: config.avs_address,
@@ -169,10 +175,10 @@ where
         registration: Some(registration_config),
     };
     let operator = Operator::new(config, response_calculator).await.unwrap();
-    operator.run::<TM>().await.unwrap();
+    tokio::spawn(async move { operator.run::<TM>().await.unwrap() })
 }
 
-async fn start_challenger<CP>(config: AvsConfig, task_processor: CP)
+pub async fn start_challenger<CP>(config: AvsConfig, task_processor: CP) -> JoinHandle<()>
 where
     CP: ChallengerProcessor + Send + Sync + 'static,
     CP::Input: From<<<CP::Input as SolValue>::SolType as SolType>::RustType>,
@@ -184,22 +190,24 @@ where
     };
 
     let mut challenger = Challenger::new(config, task_processor);
-    challenger.run().await.unwrap();
+    tokio::spawn(async move { challenger.run().await.unwrap() })
 }
 
-async fn start_spammer<TM, F>(config: AvsConfig, task_manager: TM, input: F)
+pub async fn start_spammer<TM, F>(config: AvsConfig, task_manager: TM, input: F) -> JoinHandle<()>
 where
-    TM: TaskManager + Send + Sync,
+    TM: TaskManager + Send + Sync + 'static,
     TM::Input: Clone + Send + 'static,
     F: FnMut(u64) -> TM::Input + Send + 'static,
 {
-    TaskSpammerBuilder::new(task_manager)
-        .with_iter((0..config.num_tasks).map(input))
-        .with_quorum(50, vec![0])
-        .with_interval(Duration::from_secs(config.task_interval))
-        .build()
-        .unwrap()
-        .run()
-        .await
-        .unwrap();
+    tokio::spawn(async move {
+        TaskSpammerBuilder::new(task_manager)
+            .with_iter((0..config.num_tasks).map(input))
+            .with_quorum(50, vec![0])
+            .with_interval(Duration::from_secs(config.task_interval))
+            .build()
+            .unwrap()
+            .run()
+            .await
+            .unwrap()
+    })
 }
