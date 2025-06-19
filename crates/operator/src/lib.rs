@@ -134,6 +134,8 @@
 //! implementation for an example of how to implement a custom Response Calculator.
 //!
 
+use tokio::task::JoinHandle;
+
 use crate::error::OperatorRegistrationError;
 use alloy::{
     dyn_abi::SolType,
@@ -285,7 +287,7 @@ impl<RP> Operator<RP> {
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation.
-    pub async fn run<TM>(&self) -> Result<(), OperatorError>
+    pub async fn run<TM>(self) -> Result<(), OperatorError>
     where
         RP: ResponseCalculator<TM::Input, TM::Output>,
         TM: TaskManagerDefs,
@@ -336,6 +338,26 @@ impl<RP> Operator<RP> {
         }
 
         Ok(())
+    }
+
+    /// Starts the operator in the background.
+    ///
+    /// Equivalent to [`Self::run`], but spawns it in the background and returns a
+    /// [`JoinHandle`] to the background task.
+    ///
+    /// # Returns
+    ///
+    /// * `JoinHandle<Result<(), OperatorError>>` - The handle to the background task
+    pub fn start<TM>(self) -> JoinHandle<Result<(), OperatorError>>
+    where
+        RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
+        TM: TaskManagerDefs,
+        TM::Input:
+            From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
+        TM::Output: SolValue + Clone,
+        TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
+    {
+        tokio::spawn(self.run::<TM>())
     }
 
     /// Sign the task response for the aggregator.
