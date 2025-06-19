@@ -2103,6 +2103,7 @@ dependencies = [
  "eigensdk",
  "futures-util",
  "num-bigint 0.4.6",
+ "rand 0.8.5",
  "thiserror 1.0.69",
  "tokio",
  "tracing",
