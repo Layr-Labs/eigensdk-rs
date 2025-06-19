@@ -1289,17 +1289,12 @@ interface IBLSSignatureChecker {
     error InvalidReferenceBlocknumber();
     error NonSignerPubkeysNotSorted();
     error OnlyRegistryCoordinatorOwner();
-    error StaleStakesForbidden();
-
-    event StaleStakesForbiddenUpdate(bool value);
 
     function blsApkRegistry() external view returns (address);
     function checkSignatures(bytes32 msgHash, bytes memory quorumNumbers, uint32 referenceBlockNumber, IBLSSignatureCheckerTypes.NonSignerStakesAndSignature memory nonSignerStakesAndSignature) external view returns (IBLSSignatureCheckerTypes.QuorumStakeTotals memory, bytes32);
     function delegation() external view returns (address);
     function registryCoordinator() external view returns (address);
-    function setStaleStakesForbidden(bool value) external;
     function stakeRegistry() external view returns (address);
-    function staleStakesForbidden() external view returns (bool);
     function trySignatureAndApkVerification(bytes32 msgHash, BN254.G1Point memory apk, BN254.G2Point memory apkG2, BN254.G1Point memory sigma) external view returns (bool pairingSuccessful, bool siganatureIsValid);
 }
 ```
@@ -1489,19 +1484,6 @@ interface IBLSSignatureChecker {
   },
   {
     "type": "function",
-    "name": "setStaleStakesForbidden",
-    "inputs": [
-      {
-        "name": "value",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "stakeRegistry",
     "inputs": [],
     "outputs": [
@@ -1509,19 +1491,6 @@ interface IBLSSignatureChecker {
         "name": "",
         "type": "address",
         "internalType": "contract IStakeRegistry"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "staleStakesForbidden",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
       }
     ],
     "stateMutability": "view"
@@ -1602,19 +1571,6 @@ interface IBLSSignatureChecker {
     "stateMutability": "view"
   },
   {
-    "type": "event",
-    "name": "StaleStakesForbiddenUpdate",
-    "inputs": [
-      {
-        "name": "value",
-        "type": "bool",
-        "indexed": false,
-        "internalType": "bool"
-      }
-    ],
-    "anonymous": false
-  },
-  {
     "type": "error",
     "name": "InputArrayLengthMismatch",
     "inputs": []
@@ -1657,11 +1613,6 @@ interface IBLSSignatureChecker {
   {
     "type": "error",
     "name": "OnlyRegistryCoordinatorOwner",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "StaleStakesForbidden",
     "inputs": []
   }
 ]
@@ -2309,173 +2260,6 @@ pub mod IBLSSignatureChecker {
         }
     };
     #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
-    /**Custom error with signature `StaleStakesForbidden()` and selector `0xaffc5edb`.
-    ```solidity
-    error StaleStakesForbidden();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct StaleStakesForbidden;
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<StaleStakesForbidden> for UnderlyingRustTuple<'_> {
-            fn from(value: StaleStakesForbidden) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for StaleStakesForbidden {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for StaleStakesForbidden {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "StaleStakesForbidden()";
-            const SELECTOR: [u8; 4] = [175u8, 252u8, 94u8, 219u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-            #[inline]
-            fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
-                <Self::Parameters<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
-                    data,
-                )
-                .map(Self::new)
-            }
-        }
-    };
-    #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
-    /**Event with signature `StaleStakesForbiddenUpdate(bool)` and selector `0x40e4ed880a29e0f6ddce307457fb75cddf4feef7d3ecb0301bfdf4976a0e2dfc`.
-    ```solidity
-    event StaleStakesForbiddenUpdate(bool value);
-    ```*/
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    #[derive(Clone)]
-    pub struct StaleStakesForbiddenUpdate {
-        #[allow(missing_docs)]
-        pub value: bool,
-    }
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[automatically_derived]
-        impl alloy_sol_types::SolEvent for StaleStakesForbiddenUpdate {
-            type DataTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
-            const SIGNATURE: &'static str = "StaleStakesForbiddenUpdate(bool)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    64u8, 228u8, 237u8, 136u8, 10u8, 41u8, 224u8, 246u8, 221u8, 206u8, 48u8, 116u8,
-                    87u8, 251u8, 117u8, 205u8, 223u8, 79u8, 238u8, 247u8, 211u8, 236u8, 176u8,
-                    48u8, 27u8, 253u8, 244u8, 151u8, 106u8, 14u8, 45u8, 252u8,
-                ]);
-            const ANONYMOUS: bool = false;
-            #[allow(unused_variables)]
-            #[inline]
-            fn new(
-                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
-                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                Self { value: data.0 }
-            }
-            #[inline]
-            fn check_signature(
-                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
-            ) -> alloy_sol_types::Result<()> {
-                if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
-                }
-                Ok(())
-            }
-            #[inline]
-            fn tokenize_body(&self) -> Self::DataToken<'_> {
-                (
-                    <alloy::sol_types::sol_data::Bool as alloy_sol_types::SolType>::tokenize(
-                        &self.value,
-                    ),
-                )
-            }
-            #[inline]
-            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
-                (Self::SIGNATURE_HASH.into(),)
-            }
-            #[inline]
-            fn encode_topics_raw(
-                &self,
-                out: &mut [alloy_sol_types::abi::token::WordToken],
-            ) -> alloy_sol_types::Result<()> {
-                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
-                    return Err(alloy_sol_types::Error::Overrun);
-                }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
-                Ok(())
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData for StaleStakesForbiddenUpdate {
-            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
-                From::from(self)
-            }
-            fn into_log_data(self) -> alloy_sol_types::private::LogData {
-                From::from(&self)
-            }
-        }
-        #[automatically_derived]
-        impl From<&StaleStakesForbiddenUpdate> for alloy_sol_types::private::LogData {
-            #[inline]
-            fn from(this: &StaleStakesForbiddenUpdate) -> alloy_sol_types::private::LogData {
-                alloy_sol_types::SolEvent::encode_log_data(this)
-            }
-        }
-    };
-    #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `blsApkRegistry()` and selector `0x5df45946`.
     ```solidity
     function blsApkRegistry() external view returns (address);
@@ -3061,136 +2845,6 @@ pub mod IBLSSignatureChecker {
         }
     };
     #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
-    /**Function with signature `setStaleStakesForbidden(bool)` and selector `0x416c7e5e`.
-    ```solidity
-    function setStaleStakesForbidden(bool value) external;
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct setStaleStakesForbiddenCall {
-        #[allow(missing_docs)]
-        pub value: bool,
-    }
-    ///Container type for the return parameters of the [`setStaleStakesForbidden(bool)`](setStaleStakesForbiddenCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct setStaleStakesForbiddenReturn {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (bool,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<setStaleStakesForbiddenCall> for UnderlyingRustTuple<'_> {
-                fn from(value: setStaleStakesForbiddenCall) -> Self {
-                    (value.value,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setStaleStakesForbiddenCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { value: tuple.0 }
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<setStaleStakesForbiddenReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: setStaleStakesForbiddenReturn) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setStaleStakesForbiddenReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {}
-                }
-            }
-        }
-        impl setStaleStakesForbiddenReturn {
-            fn _tokenize(
-                &self,
-            ) -> <setStaleStakesForbiddenCall as alloy_sol_types::SolCall>::ReturnToken<'_>
-            {
-                ()
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for setStaleStakesForbiddenCall {
-            type Parameters<'a> = (alloy::sol_types::sol_data::Bool,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = setStaleStakesForbiddenReturn;
-            type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "setStaleStakesForbidden(bool)";
-            const SELECTOR: [u8; 4] = [65u8, 108u8, 126u8, 94u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Bool as alloy_sol_types::SolType>::tokenize(
-                        &self.value,
-                    ),
-                )
-            }
-            #[inline]
-            fn tokenize_returns(ret: &Self::Return) -> Self::ReturnToken<'_> {
-                setStaleStakesForbiddenReturn::_tokenize(ret)
-            }
-            #[inline]
-            fn abi_decode_returns(data: &[u8]) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(data)
-                    .map(Into::into)
-            }
-            #[inline]
-            fn abi_decode_returns_validate(data: &[u8]) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
-                    data,
-                )
-                .map(Into::into)
-            }
-        }
-    };
-    #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
     /**Function with signature `stakeRegistry()` and selector `0x68304835`.
     ```solidity
     function stakeRegistry() external view returns (address);
@@ -3315,132 +2969,6 @@ pub mod IBLSSignatureChecker {
                 )
                 .map(|r| {
                     let r: stakeRegistryReturn = r.into();
-                    r._0
-                })
-            }
-        }
-    };
-    #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
-    /**Function with signature `staleStakesForbidden()` and selector `0xb98d0908`.
-    ```solidity
-    function staleStakesForbidden() external view returns (bool);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct staleStakesForbiddenCall;
-    #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
-    ///Container type for the return parameters of the [`staleStakesForbidden()`](staleStakesForbiddenCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct staleStakesForbiddenReturn {
-        #[allow(missing_docs)]
-        pub _0: bool,
-    }
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<staleStakesForbiddenCall> for UnderlyingRustTuple<'_> {
-                fn from(value: staleStakesForbiddenCall) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for staleStakesForbiddenCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (bool,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<staleStakesForbiddenReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: staleStakesForbiddenReturn) -> Self {
-                    (value._0,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for staleStakesForbiddenReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0 }
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for staleStakesForbiddenCall {
-            type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = bool;
-            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "staleStakesForbidden()";
-            const SELECTOR: [u8; 4] = [185u8, 141u8, 9u8, 8u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-            #[inline]
-            fn tokenize_returns(ret: &Self::Return) -> Self::ReturnToken<'_> {
-                (<alloy::sol_types::sol_data::Bool as alloy_sol_types::SolType>::tokenize(ret),)
-            }
-            #[inline]
-            fn abi_decode_returns(data: &[u8]) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(data).map(
-                    |r| {
-                        let r: staleStakesForbiddenReturn = r.into();
-                        r._0
-                    },
-                )
-            }
-            #[inline]
-            fn abi_decode_returns_validate(data: &[u8]) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
-                    data,
-                )
-                .map(|r| {
-                    let r: staleStakesForbiddenReturn = r.into();
                     r._0
                 })
             }
@@ -3639,11 +3167,7 @@ pub mod IBLSSignatureChecker {
         #[allow(missing_docs)]
         registryCoordinator(registryCoordinatorCall),
         #[allow(missing_docs)]
-        setStaleStakesForbidden(setStaleStakesForbiddenCall),
-        #[allow(missing_docs)]
         stakeRegistry(stakeRegistryCall),
-        #[allow(missing_docs)]
-        staleStakesForbidden(staleStakesForbiddenCall),
         #[allow(missing_docs)]
         trySignatureAndApkVerification(trySignatureAndApkVerificationCall),
     }
@@ -3657,12 +3181,10 @@ pub mod IBLSSignatureChecker {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
             [23u8, 31u8, 29u8, 91u8],
-            [65u8, 108u8, 126u8, 94u8],
             [93u8, 244u8, 89u8, 70u8],
             [104u8, 48u8, 72u8, 53u8],
             [109u8, 20u8, 169u8, 135u8],
             [110u8, 251u8, 70u8, 54u8],
-            [185u8, 141u8, 9u8, 8u8],
             [223u8, 92u8, 247u8, 35u8],
         ];
     }
@@ -3670,7 +3192,7 @@ pub mod IBLSSignatureChecker {
     impl alloy_sol_types::SolInterface for IBLSSignatureCheckerCalls {
         const NAME: &'static str = "IBLSSignatureCheckerCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 8usize;
+        const COUNT: usize = 6usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -3684,13 +3206,7 @@ pub mod IBLSSignatureChecker {
                 Self::registryCoordinator(_) => {
                     <registryCoordinatorCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::setStaleStakesForbidden(_) => {
-                    <setStaleStakesForbiddenCall as alloy_sol_types::SolCall>::SELECTOR
-                }
                 Self::stakeRegistry(_) => <stakeRegistryCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::staleStakesForbidden(_) => {
-                    <staleStakesForbiddenCall as alloy_sol_types::SolCall>::SELECTOR
-                }
                 Self::trySignatureAndApkVerification(_) => {
                     <trySignatureAndApkVerificationCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -3723,17 +3239,6 @@ pub mod IBLSSignatureChecker {
                             )
                     }
                     trySignatureAndApkVerification
-                },
-                {
-                    fn setStaleStakesForbidden(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
-                        <setStaleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data,
-                        )
-                        .map(IBLSSignatureCheckerCalls::setStaleStakesForbidden)
-                    }
-                    setStaleStakesForbidden
                 },
                 {
                     fn blsApkRegistry(
@@ -3770,15 +3275,6 @@ pub mod IBLSSignatureChecker {
                             .map(IBLSSignatureCheckerCalls::checkSignatures)
                     }
                     checkSignatures
-                },
-                {
-                    fn staleStakesForbidden(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
-                        <staleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_decode_raw(data)
-                            .map(IBLSSignatureCheckerCalls::staleStakesForbidden)
-                    }
-                    staleStakesForbidden
                 },
                 {
                     fn delegation(
@@ -3821,17 +3317,6 @@ pub mod IBLSSignatureChecker {
                             )
                     }
                     trySignatureAndApkVerification
-                },
-                {
-                    fn setStaleStakesForbidden(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
-                        <setStaleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_decode_raw_validate(
-                                data,
-                            )
-                            .map(IBLSSignatureCheckerCalls::setStaleStakesForbidden)
-                    }
-                    setStaleStakesForbidden
                 },
                 {
                     fn blsApkRegistry(
@@ -3878,17 +3363,6 @@ pub mod IBLSSignatureChecker {
                     checkSignatures
                 },
                 {
-                    fn staleStakesForbidden(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
-                        <staleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_decode_raw_validate(
-                                data,
-                            )
-                            .map(IBLSSignatureCheckerCalls::staleStakesForbidden)
-                    }
-                    staleStakesForbidden
-                },
-                {
                     fn delegation(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
@@ -3927,18 +3401,8 @@ pub mod IBLSSignatureChecker {
                         inner,
                     )
                 }
-                Self::setStaleStakesForbidden(inner) => {
-                    <setStaleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
                 Self::stakeRegistry(inner) => {
                     <stakeRegistryCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::staleStakesForbidden(inner) => {
-                    <staleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -3966,18 +3430,8 @@ pub mod IBLSSignatureChecker {
                         inner, out,
                     )
                 }
-                Self::setStaleStakesForbidden(inner) => {
-                    <setStaleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner, out,
-                    )
-                }
                 Self::stakeRegistry(inner) => {
                     <stakeRegistryCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
-                }
-                Self::staleStakesForbidden(inner) => {
-                    <staleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner, out,
-                    )
                 }
                 Self::trySignatureAndApkVerification(inner) => {
                     <trySignatureAndApkVerificationCall as alloy_sol_types::SolCall>::abi_encode_raw(
@@ -4008,8 +3462,6 @@ pub mod IBLSSignatureChecker {
         NonSignerPubkeysNotSorted(NonSignerPubkeysNotSorted),
         #[allow(missing_docs)]
         OnlyRegistryCoordinatorOwner(OnlyRegistryCoordinatorOwner),
-        #[allow(missing_docs)]
-        StaleStakesForbidden(StaleStakesForbidden),
     }
     #[automatically_derived]
     impl IBLSSignatureCheckerErrors {
@@ -4026,7 +3478,6 @@ pub mod IBLSSignatureChecker {
             [95u8, 131u8, 47u8, 65u8],
             [103u8, 152u8, 141u8, 51u8],
             [171u8, 27u8, 35u8, 107u8],
-            [175u8, 252u8, 94u8, 219u8],
             [224u8, 225u8, 231u8, 98u8],
             [225u8, 49u8, 10u8, 237u8],
             [255u8, 113u8, 148u8, 20u8],
@@ -4036,7 +3487,7 @@ pub mod IBLSSignatureChecker {
     impl alloy_sol_types::SolInterface for IBLSSignatureCheckerErrors {
         const NAME: &'static str = "IBLSSignatureCheckerErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 10usize;
+        const COUNT: usize = 9usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -4066,9 +3517,6 @@ pub mod IBLSSignatureChecker {
                 }
                 Self::OnlyRegistryCoordinatorOwner(_) => {
                     <OnlyRegistryCoordinatorOwner as alloy_sol_types::SolError>::SELECTOR
-                }
-                Self::StaleStakesForbidden(_) => {
-                    <StaleStakesForbidden as alloy_sol_types::SolError>::SELECTOR
                 }
             }
         }
@@ -4146,15 +3594,6 @@ pub mod IBLSSignatureChecker {
                             .map(IBLSSignatureCheckerErrors::InvalidBLSSignature)
                     }
                     InvalidBLSSignature
-                },
-                {
-                    fn StaleStakesForbidden(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<IBLSSignatureCheckerErrors> {
-                        <StaleStakesForbidden as alloy_sol_types::SolError>::abi_decode_raw(data)
-                            .map(IBLSSignatureCheckerErrors::StaleStakesForbidden)
-                    }
-                    StaleStakesForbidden
                 },
                 {
                     fn OnlyRegistryCoordinatorOwner(
@@ -4276,17 +3715,6 @@ pub mod IBLSSignatureChecker {
                     InvalidBLSSignature
                 },
                 {
-                    fn StaleStakesForbidden(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<IBLSSignatureCheckerErrors> {
-                        <StaleStakesForbidden as alloy_sol_types::SolError>::abi_decode_raw_validate(
-                                data,
-                            )
-                            .map(IBLSSignatureCheckerErrors::StaleStakesForbidden)
-                    }
-                    StaleStakesForbidden
-                },
-                {
                     fn OnlyRegistryCoordinatorOwner(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerErrors> {
@@ -4368,9 +3796,6 @@ pub mod IBLSSignatureChecker {
                         inner,
                     )
                 }
-                Self::StaleStakesForbidden(inner) => {
-                    <StaleStakesForbidden as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
             }
         }
         #[inline]
@@ -4414,73 +3839,6 @@ pub mod IBLSSignatureChecker {
                     <OnlyRegistryCoordinatorOwner as alloy_sol_types::SolError>::abi_encode_raw(
                         inner, out,
                     )
-                }
-                Self::StaleStakesForbidden(inner) => {
-                    <StaleStakesForbidden as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
-                }
-            }
-        }
-    }
-    ///Container for all the [`IBLSSignatureChecker`](self) events.
-    #[derive(serde::Serialize, serde::Deserialize, Debug, PartialEq, Eq, Hash)]
-    pub enum IBLSSignatureCheckerEvents {
-        #[allow(missing_docs)]
-        StaleStakesForbiddenUpdate(StaleStakesForbiddenUpdate),
-    }
-    #[automatically_derived]
-    impl IBLSSignatureCheckerEvents {
-        /// All the selectors of this enum.
-        ///
-        /// Note that the selectors might not be in the same order as the variants.
-        /// No guarantees are made about the order of the selectors.
-        ///
-        /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 32usize]] = &[[
-            64u8, 228u8, 237u8, 136u8, 10u8, 41u8, 224u8, 246u8, 221u8, 206u8, 48u8, 116u8, 87u8,
-            251u8, 117u8, 205u8, 223u8, 79u8, 238u8, 247u8, 211u8, 236u8, 176u8, 48u8, 27u8, 253u8,
-            244u8, 151u8, 106u8, 14u8, 45u8, 252u8,
-        ]];
-    }
-    #[automatically_derived]
-    impl alloy_sol_types::SolEventInterface for IBLSSignatureCheckerEvents {
-        const NAME: &'static str = "IBLSSignatureCheckerEvents";
-        const COUNT: usize = 1usize;
-        fn decode_raw_log(
-            topics: &[alloy_sol_types::Word],
-            data: &[u8],
-        ) -> alloy_sol_types::Result<Self> {
-            match topics.first().copied() {
-                Some(<StaleStakesForbiddenUpdate as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
-                    <StaleStakesForbiddenUpdate as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data,
-                    )
-                    .map(Self::StaleStakesForbiddenUpdate)
-                }
-                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                    log: alloy_sol_types::private::Box::new(
-                        alloy_sol_types::private::LogData::new_unchecked(
-                            topics.to_vec(),
-                            data.to_vec().into(),
-                        ),
-                    ),
-                }),
-            }
-        }
-    }
-    #[automatically_derived]
-    impl alloy_sol_types::private::IntoLogData for IBLSSignatureCheckerEvents {
-        fn to_log_data(&self) -> alloy_sol_types::private::LogData {
-            match self {
-                Self::StaleStakesForbiddenUpdate(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
-            }
-        }
-        fn into_log_data(self) -> alloy_sol_types::private::LogData {
-            match self {
-                Self::StaleStakesForbiddenUpdate(inner) => {
-                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
             }
         }
@@ -4668,22 +4026,9 @@ pub mod IBLSSignatureChecker {
         ) -> alloy_contract::SolCallBuilder<&P, registryCoordinatorCall, N> {
             self.call_builder(&registryCoordinatorCall)
         }
-        ///Creates a new call builder for the [`setStaleStakesForbidden`] function.
-        pub fn setStaleStakesForbidden(
-            &self,
-            value: bool,
-        ) -> alloy_contract::SolCallBuilder<&P, setStaleStakesForbiddenCall, N> {
-            self.call_builder(&setStaleStakesForbiddenCall { value })
-        }
         ///Creates a new call builder for the [`stakeRegistry`] function.
         pub fn stakeRegistry(&self) -> alloy_contract::SolCallBuilder<&P, stakeRegistryCall, N> {
             self.call_builder(&stakeRegistryCall)
-        }
-        ///Creates a new call builder for the [`staleStakesForbidden`] function.
-        pub fn staleStakesForbidden(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<&P, staleStakesForbiddenCall, N> {
-            self.call_builder(&staleStakesForbiddenCall)
         }
         ///Creates a new call builder for the [`trySignatureAndApkVerification`] function.
         pub fn trySignatureAndApkVerification(
@@ -4714,12 +4059,6 @@ pub mod IBLSSignatureChecker {
             &self,
         ) -> alloy_contract::Event<&P, E, N> {
             alloy_contract::Event::new_sol(&self.provider, &self.address)
-        }
-        ///Creates a new event filter for the [`StaleStakesForbiddenUpdate`] event.
-        pub fn StaleStakesForbiddenUpdate_filter(
-            &self,
-        ) -> alloy_contract::Event<&P, StaleStakesForbiddenUpdate, N> {
-            self.event_filter::<StaleStakesForbiddenUpdate>()
         }
     }
 }
