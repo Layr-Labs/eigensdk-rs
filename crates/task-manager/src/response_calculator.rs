@@ -22,7 +22,7 @@ pub trait ResponseCalculator<Input, Output> {
 }
 
 /// Implementation of the [`ResponseCalculator`] trait that uses a function to compute the response.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct FunctionResponseCalculator<F>(F);
 
 impl<F, Fut, Input, Output> ResponseCalculator<Input, Output> for FunctionResponseCalculator<F>
