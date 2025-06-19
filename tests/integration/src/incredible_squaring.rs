@@ -115,7 +115,6 @@ async fn test_incredible_squaring() {
 
 async fn verify_tasks_completed(http_endpoint: &str) {
     let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER).await;
-
     let latest_task_num = contract.latestTaskNum().call().await.unwrap()._0;
     assert_eq!(latest_task_num, NUM_TASKS);
 
