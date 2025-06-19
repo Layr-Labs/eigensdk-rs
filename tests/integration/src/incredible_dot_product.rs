@@ -3,10 +3,7 @@ use std::{str::FromStr, time::Duration};
 use alloy::{
     network::EthereumWallet,
     primitives::{Address, FixedBytes, B256, U256},
-    providers::ProviderBuilder,
-    signers::local::PrivateKeySigner,
     sol_types::SolEvent,
-    transports::http::reqwest::Url,
 };
 use eigensdk::{
     common::get_signer,
@@ -28,28 +25,30 @@ use crate::{
     generic_avs::{start_avs, AvsConfig},
 };
 
+const ALLOCATION_MANAGER_ADDRESS: &str = "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6";
 const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
 const AGGREGATOR_SIGNER: &str =
     "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
-const TASK_INTERVAL: u64 = 5;
-const NUM_TASKS: u64 = 3;
+const AVS_ADDRESS: &str = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154";
+const AVS_DIRECTORY_ADDRESS: &str = "0x610178da211fef7d417bc0e6fed39f05609ad788";
+const DELEGATION_MANAGER_ADDRESS: &str = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0";
+const ERC20_STRATEGY_ADDRESS: &str = "0x2b961e3959b79326a8e7f64ef0d2d825707669b5";
 const INCREDIBLE_DOT_PRODUCT_STATE_PATH: &str =
     "./examples/incredible-dot-product/contracts/anvil/incredible-dot-product-anvil-state/state.json";
-const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+const NUM_TASKS: u64 = 3;
+const OPERATOR_ADDRESS: &str = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 const OPERATOR_BLS_SIGNER: &str =
     "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
-const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
-const REGISTRY_COORDINATOR: &str = "0x7bc06c482dead17c0e297afbc32f6e63d3846650";
-const OPERATOR_ADDRESS: &str = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-const PERMISSION_CONTROLLER_ADDRESS: &str = "0x59b670e9fa9d0a427751af201d676719a970857b";
-const REWARDS_COORDINATOR_ADDRESS: &str = "0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0";
-const ALLOCATION_MANAGER_ADDRESS: &str = "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6";
-const DELEGATION_MANAGER_ADDRESS: &str = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0";
-const AVS_DIRECTORY_ADDRESS: &str = "0x610178da211fef7d417bc0e6fed39f05609ad788";
-const STRATEGY_MANAGER_ADDRESS: &str = "0x0165878a594ca255338adfa4d48449f69242eb8f";
-const ERC20_STRATEGY_ADDRESS: &str = "0x2b961e3959b79326a8e7f64ef0d2d825707669b5";
-const AVS_ADDRESS: &str = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154";
+const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 const OPERATOR_STATE_RETRIEVER_ADDRESS: &str = "0x4c5859f0f772848b2d91f1d83e2fe57935348029";
+const PERMISSION_CONTROLLER_ADDRESS: &str = "0x59b670e9fa9d0a427751af201d676719a970857b";
+const REGISTRY_COORDINATOR: &str = "0x7bc06c482dead17c0e297afbc32f6e63d3846650";
+const REWARDS_COORDINATOR_ADDRESS: &str = "0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0";
+const STRATEGY_MANAGER_ADDRESS: &str = "0x0165878a594ca255338adfa4d48449f69242eb8f";
+const TASK_INTERVAL: u64 = 5;
+const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
+const TASK_SPAMMER_SIGNER: &str =
+    "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
 
 type IncredibleInstance = IncredibleDotProductTaskManagerInstance<
     (),
@@ -82,16 +81,12 @@ async fn test_incredible_dot_product() {
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
 
-    let aggregator_provider = get_signer(AGGREGATOR_SIGNER, &http_endpoint);
-    let aggregator_task_manager = IncredibleDotProductTaskManagerInstance::new(
-        Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
-        aggregator_provider,
-    );
-    let challenger_provider = get_signer(OPERATOR_SIGNER, &http_endpoint);
-    let challenger_task_manager = IncredibleDotProductTaskManagerInstance::new(
-        Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
-        challenger_provider,
-    );
+    let aggregator_task_manager =
+        create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER).await;
+    let challenger_task_manager =
+        create_task_manager_contract(&http_endpoint, OPERATOR_SIGNER).await;
+    let task_spammer_task_manager =
+        create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER).await;
 
     let config = AvsConfig {
         task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
@@ -129,6 +124,7 @@ async fn test_incredible_dot_product() {
         window_duration: Duration::from_secs(2),
         aggregator_task_manager,
         challenger_task_manager,
+        task_spammer_task_manager,
     };
 
     let response_calculator = response_calculator_from_fn(dot_product);
@@ -172,9 +168,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
 /// Create the task manager contract with an
 async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> IncredibleInstance {
     let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
-    let url = Url::parse(http_endpoint).unwrap();
-    let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let provider = get_signer(signer, http_endpoint);
     IncredibleDotProductTaskManagerInstance::new(task_manager_address, provider)
 }
 
