@@ -47,6 +47,8 @@ const STRATEGY_MANAGER_ADDRESS: &str = "0x0165878a594ca255338adfa4d48449f69242eb
 const ERC20_STRATEGY_ADDRESS: &str = "0x2b961e3959b79326a8e7f64ef0d2d825707669b5";
 const AVS_ADDRESS: &str = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154";
 const OPERATOR_STATE_RETRIEVER_ADDRESS: &str = "0x4c5859f0f772848b2d91f1d83e2fe57935348029";
+const TASK_SPAMMER_SIGNER: &str =
+    "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
 
 type IncredibleInstance = IncredibleSquaringTaskManagerInstance<
     (),
@@ -90,6 +92,12 @@ async fn test_incredible_squaring() {
         challenger_provider,
     );
 
+    let task_spammer_provider = get_signer(TASK_SPAMMER_SIGNER, &http_endpoint);
+    let task_spammer_task_manager = IncredibleSquaringTaskManagerInstance::new(
+        Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
+        task_spammer_provider,
+    );
+
     let config = AvsConfig {
         task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
         http_rpc_url: http_endpoint.to_string(),
@@ -126,6 +134,7 @@ async fn test_incredible_squaring() {
         window_duration: Duration::from_secs(2),
         aggregator_task_manager,
         challenger_task_manager,
+        task_spammer_task_manager,
     };
 
     let response_calculator = response_calculator_from_fn(square);

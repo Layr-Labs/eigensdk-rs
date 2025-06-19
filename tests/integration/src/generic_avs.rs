@@ -28,6 +28,8 @@ where
     pub aggregator_task_manager: TM,
     /// Challenger task manager instance
     pub challenger_task_manager: TM,
+    /// Task spammer task manager instance
+    pub task_spammer_task_manager: TM,
     /// Address of the task manager contract
     pub task_manager_address: Address,
 
@@ -303,7 +305,7 @@ where
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
 {
     tokio::spawn(async move {
-        TaskSpammerBuilder::new(config.aggregator_task_manager)
+        TaskSpammerBuilder::new(config.task_spammer_task_manager)
             .with_iter((0..config.num_tasks).map(input))
             .with_quorum(50, vec![0])
             .with_interval(Duration::from_secs(config.task_interval))
