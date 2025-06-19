@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use std::{fmt::Debug, time::Duration};
 
 use alloy::{dyn_abi::SolType, primitives::Address, sol_types::SolValue};
 use eigensdk::{
@@ -71,6 +71,8 @@ pub struct AvsConfig {
     pub quorum_threshold: u8,
     /// Quorum participants
     pub quorums: Vec<u8>,
+    /// Number of tasks
+    pub num_tasks: u64,
 
     // Entities private keys
     /// Private key of the operator
@@ -185,18 +187,19 @@ where
     challenger.run().await.unwrap();
 }
 
-async fn start_spammer(http_endpoint: String) {
-    let contract = create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER).await;
-
-    TaskSpammerBuilder::new(contract)
-        .with_iter((0..NUM_TASKS).map(U256::from))
+async fn start_spammer<TM, F>(config: AvsConfig, task_manager: TM, input: F)
+where
+    TM: TaskManager + Send + Sync,
+    TM::Input: Clone + Send + 'static,
+    F: FnMut(u64) -> TM::Input + Send + 'static,
+{
+    TaskSpammerBuilder::new(task_manager)
+        .with_iter((0..config.num_tasks).map(input))
         .with_quorum(50, vec![0])
-        .with_interval(Duration::from_secs(TASK_INTERVAL))
+        .with_interval(Duration::from_secs(config.task_interval))
         .build()
         .unwrap()
         .run()
         .await
         .unwrap();
 }
-
-async fn create_task_manager_contract(config: AvsConfig) -> impl TaskManager {}
