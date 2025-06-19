@@ -130,7 +130,8 @@ where
 ///
 /// # Returns
 ///
-/// * `impl AsyncFn(Task<Input>, TaskResponse<Output>) -> Result<bool, TaskManagerError>` - The verifier
+/// * A verifier, which is a closure that returns a `Future` whose output is
+///   `Result<bool, TaskManagerError>` and is `Send`
 pub fn verifier_from_compute_function<Input, Output>(
     response_calculator: impl ResponseCalculator<Input, Output> + Send + Sync,
 ) -> impl AsyncComputeSend<Input, Output>
@@ -158,7 +159,9 @@ where
 /// be used in any context that requires the `Send` bound.
 ///
 /// Stable Rust can’t write that type directly, so we wrap it in this alias.
-/// **NOTE: users should not implement it manually.**
+/// **Users should not implement it manually. No stability guarantee are given
+/// to users implementing this trait.**
+#[doc(hidden)]
 pub trait AsyncComputeSend<Input, Output>:
     Fn(Task<Input>, TaskResponse<Output>) -> Self::Future + Send
 where
