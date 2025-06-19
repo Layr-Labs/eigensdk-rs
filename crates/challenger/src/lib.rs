@@ -99,7 +99,7 @@
 //! 8. **Challenger Initialization**: Initialize the [`Challenger`] with the configuration and start it with the processing logic
 //!
 //!     ```ignore
-//!         let mut challenger = Challenger::new(config, task_processor);
+//!         let challenger = Challenger::new(config, task_processor);
 //!         challenger.start_challenger().await?;
 //!     ```
 //!
@@ -184,7 +184,7 @@ pub struct Challenger<TP: ChallengerProcessor> {
 
 impl<TP> Challenger<TP>
 where
-    TP: ChallengerProcessor + Send + Sync + 'static + Clone,
+    TP: ChallengerProcessor + Send + Sync + 'static,
     TP::Input: From<<<TP::Input as SolValue>::SolType as SolType>::RustType>,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
