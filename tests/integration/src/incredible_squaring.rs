@@ -9,33 +9,30 @@ use alloy::{
     transports::http::reqwest::Url,
 };
 use eigensdk::{
-    aggregator::{Aggregator, AggregatorConfig, IndexingAggregatorProcessor},
-    challenger::{
-        challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
-        config::ChallengerConfig,
-        Challenger,
+    aggregator::IndexingAggregatorProcessor,
+    challenger::challenger_processor::{
+        verifier_from_compute_function, IndexingChallengerProcessor,
     },
-    crypto_bls::BlsPrivateKeyConfig,
-    logging::{get_test_logger, init_logger, log_level::LogLevel, logger::SharedLogger},
-    operator::{config::OperatorConfig, register_config::OperatorRegistrationConfig, Operator},
-    signer::PrivateKeyConfig,
+    logging::{get_test_logger, init_logger, log_level::LogLevel},
     task_manager::{
         impl_task_manager_from_defs_and_contract, response_calculator::response_calculator_from_fn,
         TaskManagerDefs, TaskManagerError,
     },
-    task_spammer::TaskSpammerBuilder,
     testing_utils::anvil::start_anvil_container_with_state,
 };
 
-use crate::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
-    IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
+use crate::{
+    bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
+        IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
+    },
+    generic_avs::{start_aggregator, start_challenger, start_operator, start_spammer, AvsConfig},
 };
 
 const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
 const AGGREGATOR_SIGNER: &str =
     "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
 const TASK_INTERVAL: u64 = 5;
-const NUM_TASKS: u32 = 3;
+const NUM_TASKS: u64 = 3;
 const INCREDIBLE_SQUARING_STATE_PATH: &str =
     "./examples/incredible-squaring/contracts/anvil/incredible-squaring-anvil-state/state.json";
 const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
@@ -85,24 +82,74 @@ async fn test_incredible_squaring() {
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
 
-    let aggregator_handle = tokio::spawn(start_aggregator(
-        logger,
-        http_endpoint.clone(),
-        ws_endpoint.clone(),
-    ));
+    let config = AvsConfig {
+        task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
+        http_rpc_url: http_endpoint.to_string(),
+        ws_rpc_url: ws_endpoint.to_string(),
+        avs_address: Address::from_str(AVS_ADDRESS).unwrap(),
+        registry_coordinator_address: Address::from_str(REGISTRY_COORDINATOR).unwrap(),
+        operator_state_retriever_address: Address::from_str(OPERATOR_STATE_RETRIEVER_ADDRESS)
+            .unwrap(),
+        allocation_manager_address: Address::from_str(ALLOCATION_MANAGER_ADDRESS).unwrap(),
+        delegation_manager_address: Address::from_str(DELEGATION_MANAGER_ADDRESS).unwrap(),
+        strategy_manager_address: Address::from_str(STRATEGY_MANAGER_ADDRESS).unwrap(),
+        strategy_address: Address::from_str(ERC20_STRATEGY_ADDRESS).unwrap(),
+        rewards_coordinator_address: Address::from_str(REWARDS_COORDINATOR_ADDRESS).unwrap(),
+        avs_directory_address: Address::from_str(AVS_DIRECTORY_ADDRESS).unwrap(),
+        permission_controller_address: Address::from_str(PERMISSION_CONTROLLER_ADDRESS).unwrap(),
+        operator_bls_private_key: OPERATOR_BLS_SIGNER.to_string(),
+        aggregator_ip_port: AGGREGATOR_RPC_URL.to_string(),
+        task_interval: TASK_INTERVAL,
+        quorum_threshold: 50,
+        quorums: vec![0],
+        num_tasks: NUM_TASKS,
+        operator_private_key: OPERATOR_SIGNER.to_string(),
+        challenger_private_key: OPERATOR_SIGNER.to_string(),
+        aggregator_private_key: AGGREGATOR_SIGNER.to_string(),
+        task_manager_private_key: AGGREGATOR_SIGNER.to_string(),
+        operator_address: Address::from_str(OPERATOR_ADDRESS).unwrap(),
+        operator_name: "squaring".to_string(),
+        metadata_uri: "metadata".to_string(),
+        socket: "127.0.0.1:8080".to_string(),
+        allocation_delay: 0,
+        operator_set_id: 0,
+        new_magnitude: vec![1000000000000000000],
+        deposit_tokens: "5000000000000000000000".to_string(),
+        time_to_expiry: Duration::from_secs(5),
+        window_duration: Duration::from_secs(2),
+    };
+
+    let contract =
+        create_task_manager_contract(&config.http_rpc_url, &config.aggregator_private_key).await;
+    let task_processor =
+        IndexingAggregatorProcessor::new(contract, config.time_to_expiry, config.window_duration);
+
+    let aggregator_handle = start_aggregator(config.clone(), task_processor, logger).await;
 
     // Wait for the aggregator to start
     tokio::time::sleep(Duration::from_secs(5)).await;
-    let operator_handle = tokio::spawn(start_operator(http_endpoint.clone(), ws_endpoint.clone()));
+    let response_calculator = response_calculator_from_fn(square);
+    let operator_handle =
+        start_operator::<_, ISTaskManager>(config.clone(), response_calculator).await;
 
-    // Wait for the operator to start
+    // // Wait for the operator to start
     tokio::time::sleep(Duration::from_secs(5)).await;
-    let challenger_handle =
-        tokio::spawn(start_challenger(http_endpoint.clone(), ws_endpoint.clone()));
 
-    start_spammer(http_endpoint.clone()).await;
+    let response_calculator = response_calculator_from_fn(square);
+    let logic = verifier_from_compute_function(response_calculator);
 
-    // Task Spammer will finished after spamming 3 tasks
+    let contract =
+        create_task_manager_contract(&config.http_rpc_url, &config.challenger_private_key).await;
+    let challenger_task_processor = IndexingChallengerProcessor::new(contract, logic);
+    let challenger_handle = start_challenger(config.clone(), challenger_task_processor).await;
+
+    let task_manager =
+        create_task_manager_contract(&config.http_rpc_url, &config.task_manager_private_key).await;
+    let spammer_handle = start_spammer(config, task_manager, |i| U256::from(i)).await;
+
+    // Wait until `NUM_TASKS` tasks are created
+    spammer_handle.await.unwrap();
+
     // Give some time to the aggregator to process the last task
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
 
@@ -116,7 +163,7 @@ async fn test_incredible_squaring() {
 async fn verify_tasks_completed(http_endpoint: &str) {
     let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER).await;
     let latest_task_num = contract.latestTaskNum().call().await.unwrap()._0;
-    assert_eq!(latest_task_num, NUM_TASKS);
+    assert_eq!(latest_task_num, NUM_TASKS as u32);
 
     for task_index in 0..latest_task_num {
         let response_hash = contract
@@ -129,6 +176,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
     }
 }
 
+/// Create the task manager contract with a specific signer
 async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> IncredibleInstance {
     let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
     let url = Url::parse(http_endpoint).unwrap();
@@ -137,108 +185,13 @@ async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> Incr
     IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider)
 }
 
-async fn start_aggregator(logger: SharedLogger, http_endpoint: String, ws_endpoint: String) {
-    let config = create_aggregator_config(http_endpoint, ws_endpoint);
-    let contract = create_task_manager_contract(&config.http_rpc_url, AGGREGATOR_SIGNER).await;
-    let task_processor =
-        IndexingAggregatorProcessor::new(contract, Duration::from_secs(5), Duration::from_secs(2));
-
-    let aggregator = Aggregator::new(config, task_processor, logger)
-        .await
-        .unwrap();
-    aggregator.run().await.unwrap();
-}
-
-async fn start_spammer(http_endpoint: String) {
-    let contract = create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER).await;
-
-    TaskSpammerBuilder::new(contract)
-        .with_iter((0..NUM_TASKS).map(U256::from))
-        .with_quorum(50, vec![0])
-        .with_interval(Duration::from_secs(TASK_INTERVAL))
-        .build()
-        .unwrap()
-        .run()
-        .await
-        .unwrap();
-}
-
-async fn start_operator(http_endpoint: String, ws_endpoint: String) {
-    let config = create_operator_config(http_endpoint, ws_endpoint);
-    let response_calculator = response_calculator_from_fn(square);
-    let operator = Operator::new(config, response_calculator).await.unwrap();
-    operator.run::<ISTaskManager>().await.unwrap();
-}
-
-async fn start_challenger(http_endpoint: String, ws_endpoint: String) {
-    let config = ChallengerConfig {
-        http_rpc_url: http_endpoint,
-        ws_rpc_url: ws_endpoint,
-    };
-    let contract = create_task_manager_contract(&config.http_rpc_url, OPERATOR_SIGNER).await;
-    let response_calculator = response_calculator_from_fn(square);
-    let logic = verifier_from_compute_function(response_calculator);
-    let task_processor = IndexingChallengerProcessor::new(contract, logic);
-
-    let mut challenger = Challenger::new(config, task_processor);
-    challenger.run().await.unwrap();
-}
-
-fn create_aggregator_config(http_endpoint: String, ws_endpoint: String) -> AggregatorConfig {
-    AggregatorConfig {
-        server_address: AGGREGATOR_RPC_URL.to_string(),
-        http_rpc_url: http_endpoint,
-        ws_rpc_url: ws_endpoint,
-        registry_coordinator: Address::from_str(REGISTRY_COORDINATOR).unwrap(),
-        operator_state_retriever: Address::from_str(OPERATOR_STATE_RETRIEVER_ADDRESS).unwrap(),
-    }
-}
-
-fn create_operator_config(http_endpoint: String, ws_endpoint: String) -> OperatorConfig {
-    let registration_config = OperatorRegistrationConfig {
-        signer: PrivateKeyConfig {
-            private_key: OPERATOR_SIGNER.to_string(),
-        }
-        .into(),
-        metadata_uri: "metadata".to_string(),
-        socket: "socket".to_string(),
-        allocation_delay: 0,
-        operator_set_id: 0,
-        new_magnitude: vec![1000000000000000000],
-        deposit_tokens: "5000000000000000000000".to_string(),
-        permission_controller_address: Address::from_str(PERMISSION_CONTROLLER_ADDRESS).unwrap(),
-        rewards_coordinator_address: Address::from_str(REWARDS_COORDINATOR_ADDRESS).unwrap(),
-        allocation_manager_address: Address::from_str(ALLOCATION_MANAGER_ADDRESS).unwrap(),
-        registry_coordinator_address: Address::from_str(REGISTRY_COORDINATOR).unwrap(),
-        delegation_manager_address: Address::from_str(DELEGATION_MANAGER_ADDRESS).unwrap(),
-        avs_directory_address: Address::from_str(AVS_DIRECTORY_ADDRESS).unwrap(),
-        strategy_manager_address: Address::from_str(STRATEGY_MANAGER_ADDRESS).unwrap(),
-        erc20_strategy_address: Address::from_str(ERC20_STRATEGY_ADDRESS).unwrap(),
-        avs_address: Address::from_str(AVS_ADDRESS).unwrap(),
-        strategies_addresses: vec![Address::from_str(ERC20_STRATEGY_ADDRESS).unwrap()],
-    };
-
-    OperatorConfig {
-        bls_signer: BlsPrivateKeyConfig {
-            private_key: OPERATOR_BLS_SIGNER.to_string(),
-        }
-        .into(),
-        operator_address: Address::from_str(OPERATOR_ADDRESS).unwrap(),
-        operator_name: "squaring".to_string(),
-        ws_rpc_url: ws_endpoint,
-        http_rpc_url: http_endpoint,
-        registry_coordinator_address: Address::from_str(REGISTRY_COORDINATOR).unwrap(),
-        aggregator_ip_port: AGGREGATOR_RPC_URL.to_string(),
-        registration: Some(registration_config),
-    }
-}
-
 /// Compute the square of the number
 pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
     Ok(number_to_be_squared * number_to_be_squared)
 }
 
 /// Build the task manager struct for the incredible squaring task manager
+#[derive(Debug)]
 pub struct ISTaskManager;
 impl TaskManagerDefs for ISTaskManager {
     type Input = U256;
