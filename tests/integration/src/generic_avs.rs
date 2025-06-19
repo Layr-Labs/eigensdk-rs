@@ -2,11 +2,8 @@ use std::{fmt::Debug, time::Duration};
 
 use alloy::{dyn_abi::SolType, primitives::Address, sol_types::SolValue};
 use eigensdk::{
-    aggregator::{
-        processor::AggregatorProcessor, Aggregator, AggregatorConfig, IndexingAggregatorProcessor,
-    },
+    aggregator::{Aggregator, AggregatorConfig, IndexingAggregatorProcessor},
     challenger::{
-        challenger::ChallengerProcessor,
         challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
         config::ChallengerConfig,
         Challenger,
@@ -15,7 +12,7 @@ use eigensdk::{
     logging::logger::SharedLogger,
     operator::{config::OperatorConfig, register_config::OperatorRegistrationConfig, Operator},
     signer::PrivateKeyConfig,
-    task_manager::{response_calculator::ResponseCalculator, TaskManager, TaskManagerDefs},
+    task_manager::{response_calculator::ResponseCalculator, TaskManager},
     task_spammer::TaskSpammerBuilder,
 };
 use tokio::task::JoinHandle;
@@ -24,11 +21,13 @@ use tokio::task::JoinHandle;
 #[derive(Clone)]
 pub struct AvsConfig<TM>
 where
-    TM: TaskManager + Debug + Send + Sync + 'static + Clone,
+    TM: TaskManager,
 {
     // Task Manager related
-    /// Task manager instance
-    pub task_manager: TM,
+    /// Aggregator task manager instance
+    pub aggregator_task_manager: TM,
+    /// Challenger task manager instance
+    pub challenger_task_manager: TM,
     /// Address of the task manager contract
     pub task_manager_address: Address,
 
@@ -62,15 +61,9 @@ where
     /// Permission Controller contract address
     pub permission_controller_address: Address,
 
-    // Operator bls private key
-    /// BLS private key of the operator
-    pub operator_bls_private_key: String,
-
-    // Logic to compute
-    /// Response calculator
-    // pub response_calculator: RP,
-
     // Aggregator RPC
+    /// Private key of the aggregator
+    pub aggregator_private_key: String,
     /// IP address and port the aggregation server will use
     pub aggregator_ip_port: String,
     /// Time before expiry of the task response aggregation
@@ -89,21 +82,18 @@ where
     pub num_tasks: u64,
 
     // Entities private keys
-    /// Private key of the operator
-    pub operator_private_key: String,
     /// Private key of the challenger
     pub challenger_private_key: String,
-    /// Private key of the aggregator
-    pub aggregator_private_key: String,
-    /// Private key of the task manager
-    /// This one must match the task_generator_addr passed to the Task manager in deployment
-    pub task_manager_private_key: String,
 
-    // Operator Addresses
+    // Operator related
     /// Address of the operator
     pub operator_address: Address,
     /// Name of the operator
     pub operator_name: String,
+    /// Private key of the operator
+    pub operator_private_key: String,
+    /// BLS private key of the operator
+    pub operator_bls_private_key: String,
 
     // Operator registration config values
     pub metadata_uri: String,
@@ -119,6 +109,18 @@ where
     pub deposit_tokens: String,
 }
 
+/// Start the AVS integration tests.
+///
+/// # Arguments
+///
+/// * `config` - The configuration for the AVS integration tests.
+/// * `response_calculator` - The response calculator with the compute logic
+/// * `logger` - The logger
+/// * `input` - The input that will be used to spam the tasks
+///
+/// # Returns
+///
+/// * `(JoinHandle<()>, JoinHandle<()>, JoinHandle<()>, JoinHandle<()>)` - The handles for the AVS integration tests.
 pub async fn start_avs<TM, RP, F>(
     config: AvsConfig<TM>,
     response_calculator: RP,
@@ -160,6 +162,16 @@ where
     )
 }
 
+/// Start the aggregator.
+///
+/// # Arguments
+///
+/// * `config` - The configuration for the aggregator.
+/// * `logger` - The logger.
+///
+/// # Returns
+///
+/// * `JoinHandle<()>` - The handle for the aggregator.
 async fn start_aggregator<TM>(config: AvsConfig<TM>, logger: SharedLogger) -> JoinHandle<()>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
@@ -174,7 +186,7 @@ where
         operator_state_retriever: config.operator_state_retriever_address,
     };
     let task_processor = IndexingAggregatorProcessor::new(
-        config.task_manager,
+        config.aggregator_task_manager,
         config.time_to_expiry,
         config.window_duration,
     );
@@ -184,6 +196,16 @@ where
     tokio::spawn(async move { aggregator.run().await.unwrap() })
 }
 
+/// Start the operator
+///
+/// # Arguments
+///
+/// * `config` - The configuration for the operator
+/// * `response_calculator` - The response calculator with the compute logic
+///
+/// # Returns
+///
+/// * `JoinHandle<()>` - The handle for the operator
 async fn start_operator<RP, TM>(config: AvsConfig<TM>, response_calculator: RP) -> JoinHandle<()>
 where
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
@@ -232,6 +254,16 @@ where
     tokio::spawn(async move { operator.run::<TM>().await.unwrap() })
 }
 
+/// Start the challenger
+///
+/// # Arguments
+///
+/// * `config` - The configuration for the challenger
+/// * `response_calculator` - The response calculator with the compute logic
+///
+/// # Returns
+///
+/// * `JoinHandle<()>` - The handle for the challenger
 async fn start_challenger<RP, TM>(config: AvsConfig<TM>, response_calculator: RP) -> JoinHandle<()>
 where
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
@@ -246,11 +278,22 @@ where
     };
 
     let logic = verifier_from_compute_function(response_calculator);
-    let challenger_task_processor = IndexingChallengerProcessor::new(config.task_manager, logic);
+    let challenger_task_processor =
+        IndexingChallengerProcessor::new(config.challenger_task_manager, logic);
     let mut challenger = Challenger::new(challenger_config, challenger_task_processor);
     tokio::spawn(async move { challenger.run().await.unwrap() })
 }
 
+/// Start the spammer
+///
+/// # Arguments
+///
+/// * `config` - The configuration for the spammer
+/// * `input` - The input that will be used to spam the tasks
+///
+/// # Returns
+///
+/// * `JoinHandle<()>` - The handle for the spammer
 async fn start_spammer<TM, F>(config: AvsConfig<TM>, input: F) -> JoinHandle<()>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
@@ -260,7 +303,7 @@ where
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
 {
     tokio::spawn(async move {
-        TaskSpammerBuilder::new(config.task_manager)
+        TaskSpammerBuilder::new(config.aggregator_task_manager)
             .with_iter((0..config.num_tasks).map(input))
             .with_quorum(50, vec![0])
             .with_interval(Duration::from_secs(config.task_interval))

@@ -9,10 +9,7 @@ use alloy::{
     transports::http::reqwest::Url,
 };
 use eigensdk::{
-    aggregator::IndexingAggregatorProcessor,
-    challenger::challenger_processor::{
-        verifier_from_compute_function, IndexingChallengerProcessor,
-    },
+    common::get_signer,
     logging::{get_test_logger, init_logger, log_level::LogLevel},
     task_manager::{
         impl_task_manager_from_defs_and_contract, response_calculator::response_calculator_from_fn,
@@ -25,9 +22,7 @@ use crate::{
     bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
         IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
     },
-    generic_avs::{
-        start_aggregator, start_avs, start_challenger, start_operator, start_spammer, AvsConfig,
-    },
+    generic_avs::{start_avs, AvsConfig},
 };
 
 const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
@@ -84,6 +79,17 @@ async fn test_incredible_squaring() {
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
 
+    let aggregator_provider = get_signer(AGGREGATOR_SIGNER, &http_endpoint);
+    let aggregator_task_manager = IncredibleSquaringTaskManagerInstance::new(
+        Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
+        aggregator_provider,
+    );
+    let challenger_provider = get_signer(OPERATOR_SIGNER, &http_endpoint);
+    let challenger_task_manager = IncredibleSquaringTaskManagerInstance::new(
+        Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
+        challenger_provider,
+    );
+
     let config = AvsConfig {
         task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
         http_rpc_url: http_endpoint.to_string(),
@@ -108,7 +114,6 @@ async fn test_incredible_squaring() {
         operator_private_key: OPERATOR_SIGNER.to_string(),
         challenger_private_key: OPERATOR_SIGNER.to_string(),
         aggregator_private_key: AGGREGATOR_SIGNER.to_string(),
-        task_manager_private_key: AGGREGATOR_SIGNER.to_string(),
         operator_address: Address::from_str(OPERATOR_ADDRESS).unwrap(),
         operator_name: "squaring".to_string(),
         metadata_uri: "metadata".to_string(),
@@ -119,6 +124,8 @@ async fn test_incredible_squaring() {
         deposit_tokens: "5000000000000000000000".to_string(),
         time_to_expiry: Duration::from_secs(5),
         window_duration: Duration::from_secs(2),
+        aggregator_task_manager,
+        challenger_task_manager,
     };
 
     let response_calculator = response_calculator_from_fn(square);
@@ -170,7 +177,7 @@ pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, Task
 }
 
 /// Build the task manager struct for the incredible squaring task manager
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ISTaskManager;
 impl TaskManagerDefs for ISTaskManager {
     type Input = U256;
