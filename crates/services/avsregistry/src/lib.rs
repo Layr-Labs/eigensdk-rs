@@ -202,7 +202,7 @@ use alloy::primitives::FixedBytes;
 use async_trait::async_trait;
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
-use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_utils::slashing::middleware::operator_state_retriever::OperatorStateRetriever::CheckSignaturesIndices;
 
 pub mod chaincaller;
 #[doc(hidden)]

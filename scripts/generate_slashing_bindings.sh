@@ -68,8 +68,9 @@ forge bind --alloy --skip-build --bindings-path $SDK_BINDINGS_PATH --overwrite \
     $SDK_CONTRACTS_ARGS
 
 # Generate middleware bindings
-forge bind --alloy --skip-build --bindings-path "$MIDDLEWARE_BINDINGS_PATH" --overwrite \
-    --root $MIDDLEWARE_CONTRACTS_LOCATION --module $MIDDLEWARE_CONTRACTS_ARGS 
+forge bind --alloy --skip-build --bindings-path $MIDDLEWARE_BINDINGS_PATH --overwrite \
+    --root $MIDDLEWARE_CONTRACTS_LOCATION --module \
+    $MIDDLEWARE_CONTRACTS_ARGS
 
 # Generate core bindings
 forge bind --alloy --skip-build --bindings-path $CORE_BINDINGS_PATH --overwrite \

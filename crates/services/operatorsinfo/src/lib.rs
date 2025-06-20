@@ -50,10 +50,8 @@
 //!#     get_operator_state_retriever_address, get_registry_coordinator_address,
 //!# };
 //!# use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-//!# use eigen_logging::get_test_logger;
 //!# use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 //!# async fn example () {
-//!#     let logger = get_test_logger();
 //!#     let http_endpoint = ANVIL_HTTP_URL;
 //!#     let ws_endpoint = ANVIL_WS_URL;
 //!#
@@ -61,7 +59,6 @@
 //!#     let operator_state_retriever_address = get_operator_state_retriever_address(http_endpoint.to_string()).await;
 //!#
 //!#     let avs_registry_chain_reader = AvsRegistryChainReader::new(
-//!#         logger.clone(),
 //!#         registry_coordinator_address,
 //!#         operator_state_retriever_address,
 //!#         http_endpoint.to_string(),
@@ -70,7 +67,6 @@
 //!#     .unwrap();
 //!#
 //!     let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
-//!         logger.clone(),
 //!         avs_registry_chain_reader,
 //!         ws_endpoint.to_string(),
 //!     )
@@ -85,7 +81,6 @@
 //! and `OPERATOR_SOCKET_UPDATE` and save the data in memory. To stop the service, you can use the `CancellationToken`.
 //!
 //! ```rust,no_run
-//!# use eigen_logging::get_test_logger;
 //!# use eigen_testing_utils::anvil_constants::{
 //!#     ANVIL_HTTP_URL, ANVIL_WS_URL,
 //!#     get_operator_state_retriever_address, get_registry_coordinator_address,
@@ -95,7 +90,6 @@
 //!# };
 //!# use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 //!# async fn example () {
-//!#     let logger = get_test_logger();
 //!#     let http_endpoint = ANVIL_HTTP_URL;
 //!#     let ws_endpoint = ANVIL_WS_URL;
 //!#
@@ -103,7 +97,6 @@
 //!#     let operator_state_retriever_address = get_operator_state_retriever_address(http_endpoint.to_string()).await;
 //!#
 //!#     let avs_registry_chain_reader = AvsRegistryChainReader::new(
-//!#         logger.clone(),
 //!#         registry_coordinator_address,
 //!#         operator_state_retriever_address,
 //!#         http_endpoint.to_string(),
@@ -112,7 +105,6 @@
 //!#     .unwrap();
 //!#
 //!#     let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
-//!#         logger.clone(),
 //!#         avs_registry_chain_reader,
 //!#         ws_endpoint.to_string(),
 //!#     )
@@ -151,10 +143,8 @@
 //!# use eigen_services_operatorsinfo::{
 //!#     operator_info::OperatorInfoService, operatorsinfo_inmemory::OperatorInfoServiceInMemory,
 //!# };
-//!# use eigen_logging::get_test_logger;
 //!# use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 //!# async fn example () {
-//!#     let logger = get_test_logger();
 //!#     let http_endpoint = ANVIL_HTTP_URL;
 //!#     let ws_endpoint = ANVIL_WS_URL;
 //!#
@@ -162,7 +152,6 @@
 //!#     let operator_state_retriever_address = get_operator_state_retriever_address(http_endpoint.to_string()).await;
 //!#
 //!#     let avs_registry_chain_reader = AvsRegistryChainReader::new(
-//!#         logger.clone(),
 //!#         registry_coordinator_address,
 //!#         operator_state_retriever_address,
 //!#         http_endpoint.to_string(),
@@ -171,7 +160,6 @@
 //!#     .unwrap();
 //!#
 //!#     let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
-//!#         logger,
 //!#         avs_registry_chain_reader,
 //!#         ws_endpoint.to_string(),
 //!#     )
@@ -191,7 +179,6 @@
 //! To retrieve operator information, you can call the [`get_operator_info`] or [`get_operator_socket`] methods.
 //!
 //! ```rust,no_run
-//!# use eigen_logging::get_test_logger;
 //!# use alloy::primitives::{Address};
 //!# use eigen_testing_utils::anvil_constants::{
 //!#     ANVIL_HTTP_URL, ANVIL_WS_URL, FIRST_ADDRESS,
@@ -202,7 +189,6 @@
 //!# };
 //!# use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 //!# async fn example () {
-//!#     let logger = get_test_logger();
 //!#     let http_endpoint = ANVIL_HTTP_URL;
 //!#     let ws_endpoint = ANVIL_WS_URL;
 //!#
@@ -210,7 +196,6 @@
 //!#     let operator_state_retriever_address = get_operator_state_retriever_address(http_endpoint.to_string()).await;
 //!#
 //!#     let avs_registry_chain_reader = AvsRegistryChainReader::new(
-//!#         logger.clone(),
 //!#         registry_coordinator_address,
 //!#         operator_state_retriever_address,
 //!#         http_endpoint.to_string(),
@@ -219,7 +204,6 @@
 //!#     .unwrap();
 //!#
 //!#     let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
-//!#         logger.clone(),
 //!#         avs_registry_chain_reader,
 //!#         ws_endpoint.to_string(),
 //!#     )

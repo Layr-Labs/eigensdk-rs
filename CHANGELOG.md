@@ -27,6 +27,121 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Other Changes
 
+## [2.0.0] - 2025-06-13
+
+### Added 🎉
+
+* Bump `alloy` to 1.0 and change foundry image in PR [#553](https://github.com/Layr-Labs/eigensdk-rs/pull/553)
+  - With these changes, you should:
+    - Some alloy types have changed, see the [alloy migration guide](https://alloy.rs/migrating-to-core-1.0/README/) for details
+    - The `foundry` image is now `ghcr.io/foundry-rs/foundry:nightly-548d1f0ebb811fcebd5fafdec33b7b814d0dbdbd`
+    - Generated binding names are now snake_case, which breaks existing import paths (e.g. `allocationmanager` → `allocation_manager`)
+    - 
+      ```rust
+        // BEFORE
+        use eigen_utils::slashing::core::allocationmanager::AllocationManager
+
+        // AFTER
+        use eigen_utils::slashing::core::allocation_manager::AllocationManager
+      ```
+
+    - Binding calls now return the value type directly instead of a tuple, so the `.0` suffix is no longer required
+
+      ```rust
+        // BEFORE
+        let owner = RegistryCoordinator::new(...).owner().call().await?._0;
+
+        // AFTER
+        let owner = RegistryCoordinator::new(...).owner().call().await?;
+      ```
+
+* Bump MSRV and Rust to 1.82 in PR [515](https://github.com/Layr-Labs/eigensdk-rs/pull/515).
+
+### Breaking Changes 🛠
+
+*  Alternate impl for OperatorsInfo for retrieving pub keys and socket for the operator from middleware directly in [#414](https://github.com/Layr-Labs/eigensdk-rs/pull/414)
+
+Old Implementation which uses indexing :
+
+  ```rust 
+    use eigen_services_operatorsinfo::{operatorsinfo_inmemory::OperatorInfoServiceInMemory};
+    let operators_info = OperatorInfoServiceInMemory::new(
+        get_test_logger(),
+        avs_registry_reader.clone(),
+        ws_endpoint,
+    )
+    .await
+    .unwrap()
+    .0;
+
+    let cancellation_token = CancellationToken::new();
+    let operators_info_clone = operators_info.clone();
+    let token_clone = cancellation_token.clone();
+    task::spawn(async move { operators_info_clone.start_service(&token_clone, start_block, end_block).await });
+    // Sleep to wait for the operator info service to start
+    sleep(Duration::from_secs(1)).await;
+
+    let avs_registry_service =
+        AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
+  ```
+
+Alternate implementation which directly queries from middleware using view call :
+
+  ```rust
+    use eigen_services_operatorsinfo::{operatorsinfo_inmemory::OperatorInfoOnChain};
+    let operators_info_on_chain = OperatorInfoOnChain::new(
+        &http_endpoint,
+        bls_apk_registry_address,
+        socket_registry_address,
+    );
+
+    let avs_registry_service = AvsRegistryServiceChainCaller::new(
+        avs_registry_reader.clone(),
+        operators_info_on_chain,
+    );
+
+    let pub_keys = operator_info_on_chain
+        .get_operator_info(OPERATOR_ADDRESS)
+        .await
+        .unwrap();
+    
+    let socket = operator_info_on_chain
+        .get_operator_socket(OPERATOR_ADDRESS)
+        .await
+        .unwrap();
+  ```
+
+### Removed
+
+* Removed `ethers` and `ethers-signers` from the root `Cargo.toml` in [#551](https://github.com/Layr-Labs/eigensdk-rs/pull/551).
+
+* Removed the `eigen-logging` crate and adopted the `tracing` crate as the standard logging in [#552](https://github.com/Layr-Labs/eigensdk-rs/pull/552).
+  - To migrate to `tracing`, you should:
+    - Remove the `eigen-logging` dependency from your `Cargo.toml`
+    - Use `tracing-subscriber` crate to configure the logging. Follow the [tracing-subscriber documentation](https://docs.rs/tracing-subscriber/latest/tracing_subscriber/) for more details.
+    
+    ```rust
+      // Before
+      init_logger(LogLevel::Info);
+      let logger = get_logger();
+
+      // After
+      // This is a minimal example of how to configure the logging
+      // No longer need to instantiate or pass the logger into methods, simply subscribe to `tracing` events.
+      tracing::subscriber::set_global_default(
+          tracing_subscriber::fmt::Subscriber::builder()
+              .with_max_level(Level::INFO)
+              .with_ansi(false)
+              .finish(),
+      )
+      .unwrap();
+    ```
+
+### Other Changes
+
+* Moved test utils from chainio folder to testing/testutils folder by @maximopalopoli in [#407](https://github.com/Layr-Labs/eigensdk-rs/pull/407)
+* Added rewards utilities integration test by @maximopalopoli in [#404](https://github.com/Layr-Labs/eigensdk-rs/pull/404)
+
 ## [1.0.0] - 2025-05-09
 
 ### Added 🎉
@@ -192,8 +307,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ## [0.5.0] - 2025-03-18
 
-### Security 🔒
-
 ### Added 🎉
 
 * Added all features of the `eigensdk` crate to its `"full"` feature [#370](https://github.com/Layr-Labs/eigensdk-rs/pull/370)
@@ -319,8 +432,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
     * `SenderError` is returned when the sender channel fails to send a message to the service.
     * `ReceiverError` is returned when the receiver channel fails to receive a message from the service.
 
-### Deprecated ⚠️
-
 ### Removed
 
 * Removed unused empty structs from the library in [#371](https://github.com/Layr-Labs/eigensdk-rs/pull/371)
@@ -333,11 +444,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 * Reflect 2 bindings(rewardsv2 and slashing) in readme in [#383](https://github.com/Layr-Labs/eigensdk-rs/pull/383).
 
-### Other Changes
-
 ## [0.4.0] - 2025-02-20
-
-### Security 🔒
 
 ### Added 🎉
 
@@ -528,16 +635,12 @@ Those changes in added, changed or breaking changes, should include usage exampl
   * `check_if_stake_thresholds_met`
   * `verify_signature`
 
-### Deprecated ⚠️
-
 ### Removed 🗑
 
 * Removed `eigen-testing-utils` dependency from `eigen-cli` crate in [#353](https://github.com/Layr-Labs/eigensdk-rs/pull/353).
 * Modifications to `eigen-testing-utils` in [#357](https://github.com/Layr-Labs/eigensdk-rs/pull/357).
   * Removed `mine_anvil_blocks_operator_set` from `eigen-testing-utils`. Users should use `mine_anvil_blocks` that does the same thing.
   * Removed the third parameter of `set_account_balance`. Now the port used is the default used on `start_anvil_container` and `start_m2_anvil_container`.
-
-### Documentation 📚
 
 ### Other Changes
 
@@ -975,8 +1078,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
             .unwrap();
   ```
 
-### Changed
-
 ### Breaking changes
 
 * refactor: update interface on `bls aggregation` in [#254](https://github.com/Layr-Labs/eigensdk-rs/pull/254)
@@ -1052,8 +1153,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
     ```
 
 * Slashing UAM changes in [#248](https://github.com/Layr-Labs/eigensdk-rs/pull/248).
-
-### Removed
 
 ## [0.2.0] - 2025-02-06
 

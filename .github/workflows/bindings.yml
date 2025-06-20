@@ -21,6 +21,9 @@ jobs:
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
+        with:
+          # We need this because of alloy 1.0 not beeing supported in stable yet
+          version: nightly
 
       - name: Show Forge version
         run: forge --version

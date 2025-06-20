@@ -11,7 +11,7 @@ use eigen_types::{
     operator::{OperatorInfo, OperatorPubKeys, QuorumNum},
     test::TestOperator,
 };
-use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_utils::slashing::middleware::operator_state_retriever::OperatorStateRetriever::CheckSignaturesIndices;
 
 use crate::AvsRegistryService;
 
@@ -43,7 +43,7 @@ impl FakeAvsRegistryService {
                     pub_keys: Some(OperatorPubKeys::from(op.bls_keypair)),
                     socket: None,
                 },
-                block_num: block_number.into(),
+                block_num: block_number,
                 stake_per_quorum: op.stake_per_quorum,
             };
             state_per_operator_id.insert(op.operator_id, state);

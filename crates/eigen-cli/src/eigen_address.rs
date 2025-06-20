@@ -4,10 +4,10 @@ use alloy::primitives::Address;
 use alloy::providers::Provider;
 use eigen_common::get_provider;
 use eigen_utils::slashing::{
-    core::delegationmanager::DelegationManager,
+    core::delegation_manager::DelegationManager,
     middleware::{
-        iblssignaturechecker::IBLSSignatureChecker, registrycoordinator::RegistryCoordinator,
-        stakeregistry::StakeRegistry,
+        ibls_signature_checker::IBLSSignatureChecker, registry_coordinator::RegistryCoordinator,
+        stake_registry::StakeRegistry,
     },
 };
 use serde::{Deserialize, Serialize};
@@ -111,14 +111,13 @@ impl ContractAddresses {
     ///
     /// * `(Address, Address)` - The registry coordinator and service manager contract addresses,
     ///   used to call `get_avs_contract_addresses` and `get_eigenlayer_contract_addresses` functions.
-    async fn get_registry_coord_and_service_manager_addr<T, P, N>(
+    async fn get_registry_coord_and_service_manager_addr<P, N>(
         registry_coordinator: Option<Address>,
         service_manager: Option<Address>,
         client: P,
     ) -> Result<(Address, Address), EigenAddressCliError>
     where
-        T: alloy::contract::private::Transport + ::core::clone::Clone,
-        P: alloy::contract::private::Provider<T, N>,
+        P: alloy::contract::private::Provider<N>,
         N: alloy::contract::private::Network,
     {
         match (registry_coordinator, service_manager) {
@@ -131,7 +130,6 @@ impl ContractAddresses {
                     .serviceManager()
                     .call()
                     .await
-                    .map(|r| r._0)
                     .unwrap_or(Address::ZERO);
                 Ok((registry_coord_addr, service_manager_addr))
             }
@@ -141,8 +139,7 @@ impl ContractAddresses {
                     .registryCoordinator()
                     .call()
                     .await
-                    .map_err(EigenAddressCliError::ContractError)?
-                    ._0;
+                    .map_err(EigenAddressCliError::ContractError)?;
                 Ok((registry_coord_addr, service_manager_addr))
             }
             _ => unreachable!(),
@@ -159,34 +156,24 @@ impl ContractAddresses {
     /// # Returns
     ///
     /// * `ContractAddresses` - The Eigenlayer contract addresses.
-    async fn get_eigenlayer_contract_addresses<T, P, N>(
+    async fn get_eigenlayer_contract_addresses<P, N>(
         registry_coordinator: Address,
         client: P,
     ) -> Result<EigenLayerAddresses, ContractError>
     where
-        P: alloy::contract::private::Provider<T, N>,
-        T: alloy::contract::private::Transport + ::core::clone::Clone,
+        P: alloy::contract::private::Provider<N>,
         N: alloy::contract::private::Network,
     {
         let registry_coordinator_instance = RegistryCoordinator::new(registry_coordinator, &client);
-        let stake_registry_addr = registry_coordinator_instance
-            .stakeRegistry()
-            .call()
-            .await?
-            ._0;
+        let stake_registry_addr = registry_coordinator_instance.stakeRegistry().call().await?;
         let stake_registry_instance = StakeRegistry::new(stake_registry_addr, &client);
-        let delegation_manager = stake_registry_instance.delegation().call().await?._0;
+        let delegation_manager = stake_registry_instance.delegation().call().await?;
         let delegation_manager_instance = DelegationManager::new(delegation_manager, &client);
         let allocation_manager = delegation_manager_instance
             .allocationManager()
             .call()
-            .await?
-            ._0;
-        let strategy_manager = delegation_manager_instance
-            .strategyManager()
-            .call()
-            .await?
-            ._0;
+            .await?;
+        let strategy_manager = delegation_manager_instance.strategyManager().call().await?;
         Ok(EigenLayerAddresses {
             allocation_manager,
             delegation_manager,
@@ -204,32 +191,22 @@ impl ContractAddresses {
     /// # Returns
     ///
     /// * `AvsAddresses` - The AVS contract addresses.
-    async fn get_avs_contract_addresses<T, P, N>(
+    async fn get_avs_contract_addresses<P, N>(
         registry_coordinator: Address,
         service_manager: Address,
         client: P,
     ) -> Result<AvsAddresses, ContractError>
     where
-        P: alloy::contract::private::Provider<T, N>,
-        T: alloy::contract::private::Transport + ::core::clone::Clone,
+        P: alloy::contract::private::Provider<N>,
         N: alloy::contract::private::Network,
     {
         let registry_coordinator_instance = RegistryCoordinator::new(registry_coordinator, &client);
         let bls_apk_registry = registry_coordinator_instance
             .blsApkRegistry()
             .call()
-            .await?
-            ._0;
-        let index_registry = registry_coordinator_instance
-            .indexRegistry()
-            .call()
-            .await?
-            ._0;
-        let stake_registry = registry_coordinator_instance
-            .stakeRegistry()
-            .call()
-            .await?
-            ._0;
+            .await?;
+        let index_registry = registry_coordinator_instance.indexRegistry().call().await?;
+        let stake_registry = registry_coordinator_instance.stakeRegistry().call().await?;
         Ok(AvsAddresses {
             service_manager,
             registry_coordinator,

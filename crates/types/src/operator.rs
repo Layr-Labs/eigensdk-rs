@@ -1,7 +1,6 @@
-use alloy::primitives::{aliases::U192, Address, FixedBytes, U256};
+use alloy::primitives::{aliases::U192, keccak256, Address, FixedBytes, U256};
 use eigen_crypto_bls::{convert_to_g1_point, error::BlsError, BlsG1Point, BlsKeyPair};
 use eigen_utils::common::get_url_content;
-use ethers::utils::keccak256;
 use num_bigint::BigUint;
 use thiserror::Error;
 use url::Url;
@@ -145,7 +144,7 @@ pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<OperatorId, Op
     let mut bytes = [0_u8; 64];
     bytes[..32].copy_from_slice(&x);
     bytes[32..].copy_from_slice(&y);
-    Ok(keccak256(bytes).into())
+    Ok(keccak256(bytes))
 }
 
 pub type QuorumThresholdPercentage = u8;

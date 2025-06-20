@@ -68,7 +68,7 @@ mod test {
     use super::Config;
     use alloy::consensus::{SignableTransaction, TxLegacy};
     use alloy::network::{TxSigner, TxSignerSync};
-    use alloy::primitives::PrimitiveSignature;
+    use alloy::primitives::Signature;
     use alloy::primitives::{address, bytes, hex_literal::hex, keccak256, Address, U256};
     use alloy::signers::local::PrivateKeySigner;
     use aws_config::{BehaviorVersion, Region, SdkConfig};
@@ -120,8 +120,8 @@ mod test {
             .sign_transaction_sync(&mut tx)
             .unwrap()
             .into();
-        let sig = PrimitiveSignature::try_from(&signature[..]).unwrap();
-        let expected_signature = PrimitiveSignature::new(
+        let sig = Signature::try_from(&signature[..]).unwrap();
+        let expected_signature = Signature::new(
             U256::from_str(SIGNATURE_R).unwrap(),
             U256::from_str(SIGNATURE_S).unwrap(),
             false,

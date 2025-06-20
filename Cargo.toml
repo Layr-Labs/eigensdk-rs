@@ -8,7 +8,6 @@ members = [
     "crates/crypto/bls/",
     "crates/crypto/bn254/",
     "crates/eigen-cli/",
-    "crates/logging/",
     "crates/metrics/",
     "crates/metrics/collectors/economic/",
     "crates/metrics/collectors/rpc_calls/",
@@ -30,10 +29,10 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "1.0.0"
+version = "2.0.0"
 edition = "2021"
 authors = ["Eigen Layer contributors"]
-rust-version = "1.81"
+rust-version = "1.82"
 repository = "https://github.com/Layr-Labs/eigensdk-rs"
 homepage = ""
 license-file = "LICENSE"
@@ -60,25 +59,24 @@ clippy.implicit_return = "allow"
 
 [workspace.dependencies]
 # eigensdk
-eigen-common = { version = "1.0.0", path = "crates/common/" }
-eigen-client-elcontracts = { version = "1.0.0", path = "crates/chainio/clients/elcontracts" }
-eigen-client-avsregistry = { version = "1.0.0", path = "crates/chainio/clients/avsregistry" }
-eigen-client-eth = { version = "1.0.0", path = "crates/chainio/clients/eth" }
-eigen-client-fireblocks = { version = "1.0.0", path = "crates/chainio/clients/fireblocks" }
-eigen-crypto-bls = { version = "1.0.0", path = "crates/crypto/bls/" }
-eigen-crypto-bn254 = { version = "1.0.0", path = "crates/crypto/bn254/" }
-eigen-logging = { version = "1.0.0", path = "crates/logging/" }
-eigen-metrics = { version = "1.0.0", path = "crates/metrics/" }
-eigen-metrics-collectors-economic = { version = "1.0.0", path = "crates/metrics/collectors/economic" }
-eigen-metrics-collectors-rpc-calls = { version = "1.0.0", path = "crates/metrics/collectors/rpc_calls" }
-eigen-services-avsregistry = { version = "1.0.0", path = "crates/services/avsregistry" }
-eigen-services-blsaggregation = { version = "1.0.0", path = "crates/services/bls_aggregation" }
-eigen-services-operatorsinfo = { version = "1.0.0", path = "crates/services/operatorsinfo" }
-eigen-signer = { version = "1.0.0", path = "crates/signer/" }
-eigen-types = { version = "1.0.0", path = "crates/types/" }
-eigen-utils = { version = "1.0.0", path = "crates/utils/" }
-eigen-nodeapi = { version = "1.0.0", path = "crates/nodeapi/" }
-eigen-testing-utils = { version = "1.0.0", path = "tests/testing-utils" }
+eigen-common = { version = "2.0.0", path = "crates/common/" }
+eigen-client-elcontracts = { version = "2.0.0", path = "crates/chainio/clients/elcontracts" }
+eigen-client-avsregistry = { version = "2.0.0", path = "crates/chainio/clients/avsregistry" }
+eigen-client-eth = { version = "2.0.0", path = "crates/chainio/clients/eth" }
+eigen-client-fireblocks = { version = "2.0.0", path = "crates/chainio/clients/fireblocks" }
+eigen-crypto-bls = { version = "2.0.0", path = "crates/crypto/bls/" }
+eigen-crypto-bn254 = { version = "2.0.0", path = "crates/crypto/bn254/" }
+eigen-metrics = { version = "2.0.0", path = "crates/metrics/" }
+eigen-metrics-collectors-economic = { version = "2.0.0", path = "crates/metrics/collectors/economic" }
+eigen-metrics-collectors-rpc-calls = { version = "2.0.0", path = "crates/metrics/collectors/rpc_calls" }
+eigen-services-avsregistry = { version = "2.0.0", path = "crates/services/avsregistry" }
+eigen-services-blsaggregation = { version = "2.0.0", path = "crates/services/bls_aggregation" }
+eigen-services-operatorsinfo = { version = "2.0.0", path = "crates/services/operatorsinfo" }
+eigen-signer = { version = "2.0.0", path = "crates/signer/" }
+eigen-types = { version = "2.0.0", path = "crates/types/" }
+eigen-utils = { version = "2.0.0", path = "crates/utils/" }
+eigen-nodeapi = { version = "2.0.0", path = "crates/nodeapi/" }
+eigen-testing-utils = { version = "2.0.0", path = "tests/testing-utils" }
 
 ark-bn254 = "0.5.0"
 ark-ec = "0.5.0"
@@ -90,8 +88,6 @@ aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
 eth-keystore = "0.5"
-ethers = "2.0"
-ethers-signers = "2.0"
 eyre = "0.6"
 futures-util = "0.3"
 futures = "0.3"
@@ -118,7 +114,6 @@ testcontainers = "0.23"
 thiserror = "1.0"
 tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
 tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5"
 
 #misc
@@ -130,7 +125,7 @@ parking_lot = "0.12"
 
 
 # alloy
-alloy = { version = "0.13", features = [
+alloy = { version = "1.0", features = [
     "sol-types",
     "contract",
     "full",
