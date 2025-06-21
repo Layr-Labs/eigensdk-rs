@@ -27,23 +27,20 @@ use crate::{
 
 // Contract addresses
 const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
-const AVS_ADDRESS: &str = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154";
-const REGISTRY_COORDINATOR: &str = "0x7bc06c482dead17c0e297afbc32f6e63d3846650";
-const OPERATOR_STATE_RETRIEVER_ADDRESS: &str = "0x4c5859f0f772848b2d91f1d83e2fe57935348029";
-const ALLOCATION_MANAGER_ADDRESS: &str = "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6";
-const DELEGATION_MANAGER_ADDRESS: &str = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0";
-const STRATEGY_MANAGER_ADDRESS: &str = "0x0165878a594ca255338adfa4d48449f69242eb8f";
-const ERC20_STRATEGY_ADDRESS: &str = "0x2b961e3959b79326a8e7f64ef0d2d825707669b5";
-const REWARDS_COORDINATOR_ADDRESS: &str = "0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0";
-const AVS_DIRECTORY_ADDRESS: &str = "0x610178da211fef7d417bc0e6fed39f05609ad788";
-const PERMISSION_CONTROLLER_ADDRESS: &str = "0x59b670e9fa9d0a427751af201d676719a970857b";
 
-// Task spammer configuration
+// Task spammer config
 const NUM_TASKS: u64 = 3;
 const TASK_INTERVAL: u64 = 5;
+const QUORUM_THRESHOLD: u8 = 50;
+const QUORUMS: [u8; 1] = [0];
 
-// Aggregator configuration
-const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
+// Aggregator config
+const TIME_TO_EXPIRY: Duration = Duration::from_secs(5);
+const WINDOW_DURATION: Duration = Duration::from_secs(3);
+
+// Strategy config
+const NEW_MAGNITUDE: [u64; 1] = [1000000000000000000];
+const DEPOSIT_TOKENS: &str = "5000000000000000000000";
 
 // Signers
 const AGGREGATOR_SIGNER: &str =
@@ -51,11 +48,6 @@ const AGGREGATOR_SIGNER: &str =
 const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 const TASK_SPAMMER_SIGNER: &str =
     "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
-
-// Operator configuration
-const OPERATOR_ADDRESS: &str = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-const OPERATOR_BLS_SIGNER: &str =
-    "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
 
 // Anvil state path
 const AWESOME_VAULT_SERVICE_STATE_PATH: &str =
@@ -96,12 +88,21 @@ async fn test_awesome_vault_service() {
     let logger = get_test_logger();
 
     // Create the AVS config
-    let config = create_avs_config(
-        &http_endpoint,
-        &ws_endpoint,
+    let config = AvsConfig::with_default_addresses_and_keys(
         create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER),
         create_task_manager_contract(&http_endpoint, OPERATOR_SIGNER),
         create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER),
+        http_endpoint.to_string(),
+        ws_endpoint.to_string(),
+        "awesome-vault".to_string(),
+        TIME_TO_EXPIRY,
+        WINDOW_DURATION,
+        TASK_INTERVAL,
+        QUORUM_THRESHOLD,
+        QUORUMS.to_vec(),
+        NUM_TASKS,
+        DEPOSIT_TOKENS.to_string(),
+        NEW_MAGNITUDE.to_vec(),
     );
 
     // Build the response calculator, which is used to compute the response for a task
@@ -148,54 +149,6 @@ async fn verify_tasks_completed(http_endpoint: &str) {
             "Tarea {} sin respuesta",
             task_index
         );
-    }
-}
-
-/// Create the AVS config with hardcoded values
-fn create_avs_config(
-    http_endpoint: &str,
-    ws_endpoint: &str,
-    aggregator_task_manager: TaskManagerInstance,
-    challenger_task_manager: TaskManagerInstance,
-    task_spammer_task_manager: TaskManagerInstance,
-) -> AvsConfig<TaskManagerInstance> {
-    AvsConfig {
-        task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
-        http_rpc_url: http_endpoint.to_string(),
-        ws_rpc_url: ws_endpoint.to_string(),
-        avs_address: Address::from_str(AVS_ADDRESS).unwrap(),
-        registry_coordinator_address: Address::from_str(REGISTRY_COORDINATOR).unwrap(),
-        operator_state_retriever_address: Address::from_str(OPERATOR_STATE_RETRIEVER_ADDRESS)
-            .unwrap(),
-        allocation_manager_address: Address::from_str(ALLOCATION_MANAGER_ADDRESS).unwrap(),
-        delegation_manager_address: Address::from_str(DELEGATION_MANAGER_ADDRESS).unwrap(),
-        strategy_manager_address: Address::from_str(STRATEGY_MANAGER_ADDRESS).unwrap(),
-        strategy_address: Address::from_str(ERC20_STRATEGY_ADDRESS).unwrap(),
-        rewards_coordinator_address: Address::from_str(REWARDS_COORDINATOR_ADDRESS).unwrap(),
-        avs_directory_address: Address::from_str(AVS_DIRECTORY_ADDRESS).unwrap(),
-        permission_controller_address: Address::from_str(PERMISSION_CONTROLLER_ADDRESS).unwrap(),
-        operator_bls_private_key: OPERATOR_BLS_SIGNER.to_string(),
-        aggregator_ip_port: AGGREGATOR_RPC_URL.to_string(),
-        task_interval: TASK_INTERVAL,
-        quorum_threshold: 50,
-        quorums: vec![0],
-        num_tasks: NUM_TASKS,
-        operator_private_key: OPERATOR_SIGNER.to_string(),
-        challenger_private_key: OPERATOR_SIGNER.to_string(),
-        aggregator_private_key: AGGREGATOR_SIGNER.to_string(),
-        operator_address: Address::from_str(OPERATOR_ADDRESS).unwrap(),
-        operator_name: "awesome-vault".to_string(),
-        metadata_uri: "metadata".to_string(),
-        socket: "127.0.0.1:8080".to_string(),
-        allocation_delay: 0,
-        operator_set_id: 0,
-        new_magnitude: vec![1000000000000000000],
-        deposit_tokens: "5000000000000000000000".to_string(),
-        time_to_expiry: Duration::from_secs(5),
-        window_duration: Duration::from_secs(2),
-        aggregator_task_manager,
-        challenger_task_manager,
-        task_spammer_task_manager,
     }
 }
 
