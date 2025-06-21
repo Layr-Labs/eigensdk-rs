@@ -25,30 +25,41 @@ use crate::{
     generic_avs::{start_avs, AvsConfig},
 };
 
+// Contract addresses
+const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
+const AVS_ADDRESS: &str = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154";
+const REGISTRY_COORDINATOR: &str = "0x7bc06c482dead17c0e297afbc32f6e63d3846650";
+const OPERATOR_STATE_RETRIEVER_ADDRESS: &str = "0x4c5859f0f772848b2d91f1d83e2fe57935348029";
 const ALLOCATION_MANAGER_ADDRESS: &str = "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6";
+const DELEGATION_MANAGER_ADDRESS: &str = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0";
+const STRATEGY_MANAGER_ADDRESS: &str = "0x0165878a594ca255338adfa4d48449f69242eb8f";
+const ERC20_STRATEGY_ADDRESS: &str = "0x2b961e3959b79326a8e7f64ef0d2d825707669b5";
+const REWARDS_COORDINATOR_ADDRESS: &str = "0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0";
+const AVS_DIRECTORY_ADDRESS: &str = "0x610178da211fef7d417bc0e6fed39f05609ad788";
+const PERMISSION_CONTROLLER_ADDRESS: &str = "0x59b670e9fa9d0a427751af201d676719a970857b";
+
+// Task spammer configuration
+const NUM_TASKS: u64 = 3;
+const TASK_INTERVAL: u64 = 5;
+
+// Aggregator configuration
 const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
+
+// Signers
 const AGGREGATOR_SIGNER: &str =
     "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
-const AVS_ADDRESS: &str = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154";
-const AVS_DIRECTORY_ADDRESS: &str = "0x610178da211fef7d417bc0e6fed39f05609ad788";
-const DELEGATION_MANAGER_ADDRESS: &str = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0";
-const ERC20_STRATEGY_ADDRESS: &str = "0x2b961e3959b79326a8e7f64ef0d2d825707669b5";
-const AWESOME_VAULT_SERVICE_STATE_PATH: &str =
-    "./examples/awesome-vault-service/contracts/anvil/awesome-vault-service-anvil-state/state.json";
-const NUM_TASKS: u64 = 3;
+const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+const TASK_SPAMMER_SIGNER: &str =
+    "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
+
+// Operator configuration
 const OPERATOR_ADDRESS: &str = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 const OPERATOR_BLS_SIGNER: &str =
     "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
-const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-const OPERATOR_STATE_RETRIEVER_ADDRESS: &str = "0x4c5859f0f772848b2d91f1d83e2fe57935348029";
-const PERMISSION_CONTROLLER_ADDRESS: &str = "0x59b670e9fa9d0a427751af201d676719a970857b";
-const REGISTRY_COORDINATOR: &str = "0x7bc06c482dead17c0e297afbc32f6e63d3846650";
-const REWARDS_COORDINATOR_ADDRESS: &str = "0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0";
-const STRATEGY_MANAGER_ADDRESS: &str = "0x0165878a594ca255338adfa4d48449f69242eb8f";
-const TASK_INTERVAL: u64 = 5;
-const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
-const TASK_SPAMMER_SIGNER: &str =
-    "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
+
+// Anvil state path
+const AWESOME_VAULT_SERVICE_STATE_PATH: &str =
+    "./examples/awesome-vault-service/contracts/anvil/awesome-vault-service-anvil-state/state.json";
 
 type TaskManagerInstance = AwesomeVaultTaskManagerInstance<
     (),
@@ -73,6 +84,9 @@ type TaskManagerInstance = AwesomeVaultTaskManagerInstance<
     >,
 >;
 
+// Test the awesome vault service
+// This test will deploy the AVS, start the aggregator, operator, challenger and task spammer
+// and verify that all tasks (`NUM_TASKS`) have been completed
 #[tokio::test]
 async fn test_awesome_vault_service() {
     let (_container, http_endpoint, ws_endpoint) =
@@ -81,12 +95,71 @@ async fn test_awesome_vault_service() {
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
 
-    let aggregator_task_manager = create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER);
-    let challenger_task_manager = create_task_manager_contract(&http_endpoint, OPERATOR_SIGNER);
-    let task_spammer_task_manager =
-        create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER);
+    // Create the AVS config
+    let config = create_avs_config(
+        &http_endpoint,
+        &ws_endpoint,
+        create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER),
+        create_task_manager_contract(&http_endpoint, OPERATOR_SIGNER),
+        create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER),
+    );
 
-    let config = AvsConfig {
+    // Build the response calculator, which is used to compute the response for a task
+    let response_calculator = VaultServiceResponseCalculator {
+        vault: Arc::new(Mutex::new(BTreeMap::new())),
+    };
+
+    // Start the AVS
+    let (aggregator_handle, operator_handle, challenger_handle, spammer_handle) =
+        start_avs(config, response_calculator, logger, |_| generate_input()).await;
+
+    // Wait until `NUM_TASKS` tasks are created
+    spammer_handle.await.unwrap();
+
+    // Give some time to the aggregator to process the last task
+    tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
+
+    // Abort the aggregator, operator and challenger handles
+    for handle in [aggregator_handle, operator_handle, challenger_handle] {
+        handle.abort();
+    }
+
+    // Verify that all tasks have been completed
+    verify_tasks_completed(&http_endpoint).await;
+}
+
+/// Verify that all tasks that have been created by the task spammer have been completed
+async fn verify_tasks_completed(http_endpoint: &str) {
+    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER);
+    let latest_task_num = contract.latestTaskNum().call().await.unwrap()._0;
+    assert_eq!(latest_task_num, NUM_TASKS as u32);
+
+    // Verify that all tasks have responses
+    for task_index in 0..latest_task_num {
+        let response_hash = contract
+            .allTaskResponses(task_index)
+            .call()
+            .await
+            .unwrap()
+            ._0;
+        assert_ne!(
+            B256::default(),
+            response_hash,
+            "Tarea {} sin respuesta",
+            task_index
+        );
+    }
+}
+
+/// Create the AVS config with hardcoded values
+fn create_avs_config(
+    http_endpoint: &str,
+    ws_endpoint: &str,
+    aggregator_task_manager: TaskManagerInstance,
+    challenger_task_manager: TaskManagerInstance,
+    task_spammer_task_manager: TaskManagerInstance,
+) -> AvsConfig<TaskManagerInstance> {
+    AvsConfig {
         task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
         http_rpc_url: http_endpoint.to_string(),
         ws_rpc_url: ws_endpoint.to_string(),
@@ -123,45 +196,10 @@ async fn test_awesome_vault_service() {
         aggregator_task_manager,
         challenger_task_manager,
         task_spammer_task_manager,
-    };
-
-    let response_calculator = VaultServiceResponseCalculator {
-        vault: Arc::new(Mutex::new(BTreeMap::new())),
-    };
-
-    let (aggregator_handle, operator_handle, challenger_handle, spammer_handle) =
-        start_avs(config, response_calculator, logger, |_| generate_input()).await;
-
-    // Wait until `NUM_TASKS` tasks are created
-    spammer_handle.await.unwrap();
-
-    // Give some time to the aggregator to process the last task
-    tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
-
-    for handle in [aggregator_handle, operator_handle, challenger_handle] {
-        handle.abort();
-    }
-
-    verify_tasks_completed(&http_endpoint).await;
-}
-
-async fn verify_tasks_completed(http_endpoint: &str) {
-    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER);
-    let latest_task_num = contract.latestTaskNum().call().await.unwrap()._0;
-    assert_eq!(latest_task_num, NUM_TASKS as u32);
-
-    for task_index in 0..latest_task_num {
-        let response_hash = contract
-            .allTaskResponses(task_index)
-            .call()
-            .await
-            .unwrap()
-            ._0;
-        assert_ne!(B256::default(), response_hash);
     }
 }
 
-/// Create the task manager contract with an
+/// Create the task manager contract for a specific signer
 fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> TaskManagerInstance {
     let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
     let provider = get_signer(signer, http_endpoint);
@@ -203,14 +241,6 @@ impl ResponseCalculator<TaskInput, B256> for VaultServiceResponseCalculator {
 }
 
 /// Compute the vault root
-///
-/// # Arguments
-///
-/// * `map` - The Redis state
-///
-/// # Returns
-///
-/// * `Result<B256, TaskManagerError>` - The vault root
 pub fn compute_vault_root(map: &BTreeMap<String, String>) -> Result<B256, TaskManagerError> {
     if map.is_empty() {
         return Ok(Default::default());
@@ -231,30 +261,16 @@ pub fn compute_vault_root(map: &BTreeMap<String, String>) -> Result<B256, TaskMa
     Ok(root)
 }
 
-/// Generate a random key and value to store in the vault
-///
-/// # Returns
-///
-/// * `TaskInput` - The random task input
+/// Generate random input for the vault
 fn generate_input() -> TaskInput {
-    let random_key = format!("key_{}", rand::thread_rng().gen_range(0..1000000));
-    let random_value = format!("value_{}", rand::thread_rng().gen_range(0..1000000));
+    let mut rng = rand::thread_rng();
     TaskInput {
-        key: random_key.clone(),
-        value: random_value.clone(),
+        key: format!("key_{}", rng.gen_range(0..1000000)),
+        value: format!("value_{}", rng.gen_range(0..1000000)),
     }
 }
 
-/// Hash two nodes
-///
-/// # Arguments
-///
-/// * `left` - The left node
-/// * `right` - The right node
-///
-/// # Returns
-///
-/// * `[u8; 32]` - The hash of the two nodes
+/// Hash two nodes of the Merkle tree
 fn hash_nodes(left: [u8; 32], right: [u8; 32]) -> [u8; 32] {
     let (a, b) = if left > right {
         (right, left)
@@ -267,16 +283,7 @@ fn hash_nodes(left: [u8; 32], right: [u8; 32]) -> [u8; 32] {
     hasher.finalize().into()
 }
 
-/// Hash a leaf
-///
-/// # Arguments
-///
-/// * `key` - The key
-/// * `value` - The value
-///
-/// # Returns
-///
-/// * `[u8; 32]` - The hash of the leaf
+/// Hash a leaf of the tree (key-value)
 fn hash_leaf(key: &str, value: &str) -> [u8; 32] {
     let mut hasher = Keccak256::new();
     hasher.update(key.as_bytes());
