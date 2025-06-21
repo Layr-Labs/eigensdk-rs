@@ -12,8 +12,7 @@ use eigensdk::{
     common::get_signer,
     logging::{get_test_logger, init_logger, log_level::LogLevel},
     task_manager::{
-        impl_task_manager_from_defs_and_contract,
-        response_calculator::{response_calculator_from_async_fn, ResponseCalculator},
+        impl_task_manager_from_defs_and_contract, response_calculator::ResponseCalculator,
         TaskManagerDefs, TaskManagerError,
     },
     testing_utils::anvil::start_anvil_container_with_state,
@@ -141,29 +140,12 @@ async fn test_awesome_vault_service() {
         task_spammer_task_manager,
     };
 
-    let vault_service_response_calculator = VaultServiceResponseCalculator {
+    let response_calculator = VaultServiceResponseCalculator {
         vault: Arc::new(Mutex::new(BTreeMap::new())),
     };
 
-    let response_calculator = response_calculator_from_async_fn(move |task_index, input| {
-        let vault_service_response_calculator = vault_service_response_calculator.clone();
-        async move {
-            vault_service_response_calculator
-                .compute_response(task_index, input)
-                .await
-        }
-    });
-
     let (aggregator_handle, operator_handle, challenger_handle, spammer_handle) =
-        start_avs(config, response_calculator, logger, |_| {
-            let random_key = format!("key_{}", rand::thread_rng().gen_range(0..1000000));
-            let random_value = format!("value_{}", rand::thread_rng().gen_range(0..1000000));
-            TaskInput {
-                key: random_key.clone(),
-                value: random_value.clone(),
-            }
-        })
-        .await;
+        start_avs(config, response_calculator, logger, |_| generate_input()).await;
 
     // Wait until `NUM_TASKS` tasks are created
     spammer_handle.await.unwrap();
@@ -264,6 +246,20 @@ pub fn compute_vault_root(map: &BTreeMap<String, String>) -> Result<B256, TaskMa
     }
     let root = B256::from_slice(&leaves[0]);
     Ok(root)
+}
+
+/// Generate a random key and value to store in the vault
+///
+/// # Returns
+///
+/// * `TaskInput` - The random task input
+fn generate_input() -> TaskInput {
+    let random_key = format!("key_{}", rand::thread_rng().gen_range(0..1000000));
+    let random_value = format!("value_{}", rand::thread_rng().gen_range(0..1000000));
+    TaskInput {
+        key: random_key.clone(),
+        value: random_value.clone(),
+    }
 }
 
 /// Hash two nodes
