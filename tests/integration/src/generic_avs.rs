@@ -1,4 +1,4 @@
-use std::{fmt::Debug, time::Duration};
+use std::{fmt::Debug, str::FromStr, time::Duration};
 
 use alloy::{dyn_abi::SolType, primitives::Address, sol_types::SolValue};
 use eigensdk::{
@@ -16,6 +16,32 @@ use eigensdk::{
     task_spammer::TaskSpammerBuilder,
 };
 use tokio::task::JoinHandle;
+
+// Contracts addresses
+const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
+const AVS_ADDRESS: &str = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154";
+const REGISTRY_COORDINATOR: &str = "0x7bc06c482dead17c0e297afbc32f6e63d3846650";
+const OPERATOR_STATE_RETRIEVER_ADDRESS: &str = "0x4c5859f0f772848b2d91f1d83e2fe57935348029";
+const ALLOCATION_MANAGER_ADDRESS: &str = "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6";
+const DELEGATION_MANAGER_ADDRESS: &str = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0";
+const STRATEGY_MANAGER_ADDRESS: &str = "0x0165878a594ca255338adfa4d48449f69242eb8f";
+const ERC20_STRATEGY_ADDRESS: &str = "0x2b961e3959b79326a8e7f64ef0d2d825707669b5";
+const REWARDS_COORDINATOR_ADDRESS: &str = "0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0";
+const AVS_DIRECTORY_ADDRESS: &str = "0x610178da211fef7d417bc0e6fed39f05609ad788";
+const PERMISSION_CONTROLLER_ADDRESS: &str = "0x59b670e9fa9d0a427751af201d676719a970857b";
+
+// Aggregator config
+const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
+
+// Signers
+const AGGREGATOR_SIGNER: &str =
+    "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
+const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+
+// Operator config
+const OPERATOR_ADDRESS: &str = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+const OPERATOR_BLS_SIGNER: &str =
+    "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
 
 /// Generic AVS configuration for integration tests
 #[derive(Clone)]
@@ -109,6 +135,110 @@ where
     pub new_magnitude: Vec<u64>,
     /// Deposit tokens amount
     pub deposit_tokens: String,
+}
+
+impl<TM> AvsConfig<TM>
+where
+    TM: TaskManager + Clone + Send + Sync + 'static,
+{
+    /// Create a new AVS configuration with default addresses and keys.
+    ///
+    /// Addresses will not change unless the corresponding contracts are updated.
+    ///
+    /// # Arguments
+    ///
+    /// * `aggregator_task_manager` - The aggregator task manager
+    /// * `challenger_task_manager` - The challenger task manager
+    /// * `task_spammer_task_manager` - The task spammer task manager
+    /// * `http_rpc_url` - The HTTP RPC URL
+    /// * `ws_rpc_url` - The WebSocket RPC URL
+    /// * `operator_name` - The name of the operator
+    /// * `time_to_expiry` - The time until the task expires
+    /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
+    /// * `task_interval` - The interval between the creation of tasks
+    /// * `quorum_threshold` - The quorum threshold
+    /// * `quorums` - The quorums
+    /// * `num_tasks` - The number of tasks to spam
+    /// * `deposit_tokens` - The deposit tokens amount
+    /// * `new_magnitude` - The new magnitude to allocate
+    ///
+    /// # Returns
+    ///
+    /// * `AvsConfig<TM>` - The AVS configuration
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_default_addresses_and_keys(
+        aggregator_task_manager: TM,
+        challenger_task_manager: TM,
+        task_spammer_task_manager: TM,
+        http_rpc_url: String,
+        ws_rpc_url: String,
+        operator_name: String,
+        time_to_expiry: Duration,
+        window_duration: Duration,
+        task_interval: u64,
+        quorum_threshold: u8,
+        quorums: Vec<u8>,
+        num_tasks: u64,
+        deposit_tokens: String,
+        new_magnitude: Vec<u64>,
+    ) -> Self {
+        AvsConfig {
+            // Task managers
+            task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
+            aggregator_task_manager,
+            challenger_task_manager,
+            task_spammer_task_manager,
+
+            // Default RPC endpoints
+            http_rpc_url,
+            ws_rpc_url,
+
+            // Aggregator defaults
+            aggregator_private_key: AGGREGATOR_SIGNER.to_string(),
+            aggregator_ip_port: AGGREGATOR_RPC_URL.to_string(),
+            time_to_expiry,
+            window_duration,
+
+            // Spammer defaults
+            task_interval,
+            quorum_threshold,
+            quorums,
+            num_tasks,
+
+            // Challenger
+            challenger_private_key: OPERATOR_SIGNER.to_string(),
+
+            // Operator defaults
+            operator_address: Address::from_str(OPERATOR_ADDRESS).unwrap(),
+            operator_name,
+            operator_private_key: OPERATOR_SIGNER.to_string(),
+            operator_bls_private_key: OPERATOR_BLS_SIGNER.to_string(),
+
+            // Registration defaults
+            metadata_uri: "metadata".to_string(),
+            socket: "127.0.0.1:0".to_string(),
+            allocation_delay: 0,
+            operator_set_id: 0,
+            new_magnitude,
+            deposit_tokens,
+
+            // AVS deployment
+            avs_address: Address::from_str(AVS_ADDRESS).unwrap(),
+            registry_coordinator_address: Address::from_str(REGISTRY_COORDINATOR).unwrap(),
+            operator_state_retriever_address: Address::from_str(OPERATOR_STATE_RETRIEVER_ADDRESS)
+                .unwrap(),
+
+            // Core deployment
+            avs_directory_address: Address::from_str(AVS_DIRECTORY_ADDRESS).unwrap(),
+            allocation_manager_address: Address::from_str(ALLOCATION_MANAGER_ADDRESS).unwrap(),
+            delegation_manager_address: Address::from_str(DELEGATION_MANAGER_ADDRESS).unwrap(),
+            strategy_manager_address: Address::from_str(STRATEGY_MANAGER_ADDRESS).unwrap(),
+            strategy_address: Address::from_str(ERC20_STRATEGY_ADDRESS).unwrap(),
+            rewards_coordinator_address: Address::from_str(REWARDS_COORDINATOR_ADDRESS).unwrap(),
+            permission_controller_address: Address::from_str(PERMISSION_CONTROLLER_ADDRESS)
+                .unwrap(),
+        }
+    }
 }
 
 /// Start the AVS integration tests.
