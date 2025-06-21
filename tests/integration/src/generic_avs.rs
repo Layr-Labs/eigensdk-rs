@@ -1,3 +1,35 @@
+//! Generic AVS Integration Testing Framework
+//!
+//! This module provides helpers methods to run a AVS integration test.
+//!
+//! ## Overview
+//!
+//! The main goal is to launch a complete AVS testing environment by simply providing
+//! configuration parameters. The module handles the orchestration of all necessary components:
+//!
+//! - **Aggregator**: Collects and aggregates responses from operators
+//! - **Operator**: Processes tasks and submits responses
+//! - **Challenger**: Validates responses and challenges incorrect ones
+//! - **Task Spammer**: Generates tasks at specified intervals for testing
+//!
+//! ## Configuration
+//!
+//! The module offers flexible configuration options:
+//!
+//! ### Default Configuration
+//!
+//! The module includes pre-configured default values ([`AvsConfig::with_default_addresses_and_keys`])
+//! for all contract addresses, private keys, and operational parameters that are used
+//! across the example AVS implementations. The value of the addresses were taken from the values
+//! obtained by running the example contracts (`/examples`) with anvil.
+//!
+//! ### Custom Configuration
+//!
+//! While defaults cover most use cases, you can easily customize any aspect of the configuration
+//! to match your specific AVS requirements, test scenarios, or deployment environments
+//! creating a new [`AvsConfig`] struct.
+//!
+
 use std::{fmt::Debug, str::FromStr, time::Duration};
 
 use alloy::{dyn_abi::SolType, primitives::Address, sol_types::SolValue};
