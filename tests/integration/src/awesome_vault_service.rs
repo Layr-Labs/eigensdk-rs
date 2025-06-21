@@ -3,10 +3,7 @@ use std::{collections::BTreeMap, str::FromStr, sync::Arc, time::Duration};
 use alloy::{
     network::EthereumWallet,
     primitives::{Address, Keccak256, B256},
-    providers::ProviderBuilder,
-    signers::local::PrivateKeySigner,
     sol_types::SolEvent,
-    transports::http::reqwest::Url,
 };
 use eigensdk::{
     common::get_signer,
@@ -84,22 +81,10 @@ async fn test_awesome_vault_service() {
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
 
-    let aggregator_provider = get_signer(AGGREGATOR_SIGNER, &http_endpoint);
-    let aggregator_task_manager = AwesomeVaultTaskManagerInstance::new(
-        Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
-        aggregator_provider,
-    );
-    let challenger_provider = get_signer(OPERATOR_SIGNER, &http_endpoint);
-    let challenger_task_manager = AwesomeVaultTaskManagerInstance::new(
-        Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
-        challenger_provider,
-    );
-
-    let task_spammer_provider = get_signer(TASK_SPAMMER_SIGNER, &http_endpoint);
-    let task_spammer_task_manager = AwesomeVaultTaskManagerInstance::new(
-        Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
-        task_spammer_provider,
-    );
+    let aggregator_task_manager = create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER);
+    let challenger_task_manager = create_task_manager_contract(&http_endpoint, OPERATOR_SIGNER);
+    let task_spammer_task_manager =
+        create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER);
 
     let config = AvsConfig {
         task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
@@ -161,7 +146,7 @@ async fn test_awesome_vault_service() {
 }
 
 async fn verify_tasks_completed(http_endpoint: &str) {
-    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER).await;
+    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER);
     let latest_task_num = contract.latestTaskNum().call().await.unwrap()._0;
     assert_eq!(latest_task_num, NUM_TASKS as u32);
 
@@ -177,11 +162,9 @@ async fn verify_tasks_completed(http_endpoint: &str) {
 }
 
 /// Create the task manager contract with an
-async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> TaskManagerInstance {
+fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> TaskManagerInstance {
     let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
-    let url = Url::parse(http_endpoint).unwrap();
-    let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let provider = get_signer(signer, http_endpoint);
     AwesomeVaultTaskManagerInstance::new(task_manager_address, provider)
 }
 
