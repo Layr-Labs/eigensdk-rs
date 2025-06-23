@@ -2,7 +2,7 @@ use crate::{error::AvsRegistryError, reader::AvsRegistryReader};
 use alloy::primitives::{aliases::U96, Address, Bytes, FixedBytes};
 use async_trait::async_trait;
 use eigen_types::test::TestOperator;
-use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever;
+use eigen_utils::slashing::middleware::operator_state_retriever::OperatorStateRetriever;
 
 /// This struct is used to test AvsRegistryServiceChainCaller methods.
 #[derive(Debug)]

@@ -14,26 +14,28 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
+eigen-aggregator = { workspace = true, optional = true }
+eigen-challenger = { workspace = true, optional = true }
 eigen-client-avsregistry = { workspace = true, optional = true }
 eigen-client-elcontracts = { workspace = true, optional = true }
 eigen-client-eth = { workspace = true, optional = true }
 eigen-client-fireblocks = { workspace = true, optional = true }
 eigen-crypto-bls = { workspace = true, optional = true }
 eigen-crypto-bn254 = { workspace = true, optional = true }
-eigen-logging = { workspace = true, optional = true }
 eigen-metrics = { workspace = true, optional = true }
 eigen-metrics-collectors-economic = { workspace = true, optional = true }
 eigen-metrics-collectors-rpc-calls = { workspace = true, optional = true }
+eigen-operator = { workspace = true, optional = true }
 eigen-services-avsregistry = { workspace = true, optional = true }
 eigen-services-blsaggregation = { workspace = true, optional = true }
 eigen-services-operatorsinfo = { workspace = true, optional = true }
 eigen-signer = { workspace = true, optional = true }
+eigen-task-spammer = { workspace = true, optional = true }
 eigen-testing-utils = { workspace = true, optional = true }
 eigen-types = { workspace = true, optional = true }
 eigen-utils = { workspace = true, optional = true }
 eigen-nodeapi = { workspace = true, optional = true }
 eigen-common = { workspace = true, optional = true }
-
 
 # Feature configurations
 [features]
@@ -42,6 +44,8 @@ default = []
 
 # Full features set for full usage
 full = [
+    "aggregator",
+    "challenger",
     "client-avsregistry",
     "client-elcontracts",
     "client-eth",
@@ -49,12 +53,13 @@ full = [
     "common",
     "crypto-bls",
     "crypto-bn254",
-    "logging",
     "metrics",
+    "operator",
     "services-avsregistry",
     "services-blsaggregation",
     "services-operatorsinfo",
     "signer",
+    "task-spammer",
     "testing-utils",
     "nodeapi",
     "metrics-collectors-economic",
@@ -87,8 +92,7 @@ services-operatorsinfo = ["dep:eigen-services-operatorsinfo"]
 # Node API related features
 nodeapi = ["dep:eigen-nodeapi"]
 
-# Logging and utilities
-logging = ["dep:eigen-logging"]
+# Utilities
 utils = ["dep:eigen-utils"]
 
 # Testing utilities
@@ -102,3 +106,15 @@ types = ["dep:eigen-types"]
 
 #common utilities
 common = ["dep:eigen-common"]
+
+# aggregator
+aggregator = ["dep:eigen-aggregator"]
+
+# challenger
+challenger = ["dep:eigen-challenger"]
+
+# operator
+operator = ["dep:eigen-operator"]
+
+# task generator
+task-spammer = ["dep:eigen-task-spammer"]

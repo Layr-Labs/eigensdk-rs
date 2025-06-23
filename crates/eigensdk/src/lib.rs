@@ -25,10 +25,6 @@ pub use eigen_crypto_bn254 as crypto_bn254;
 pub use eigen_signer as signer;
 
 #[doc(inline)]
-#[cfg(feature = "logging")]
-pub use eigen_logging as logging;
-
-#[doc(inline)]
 #[cfg(feature = "metrics")]
 pub use eigen_metrics as metrics;
 
@@ -91,3 +87,27 @@ pub use eigen_metrics_collectors_rpc_calls as metrics_collectors_rpc_calls;
 #[doc(inline)]
 #[cfg(feature = "common")]
 pub use eigen_common as common;
+
+/* ------------------------------------ Aggregator Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "aggregator")]
+pub use eigen_aggregator as aggregator;
+
+/* ------------------------------------ Challenger Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "challenger")]
+pub use eigen_challenger as challenger;
+
+/* ------------------------------------ Operator Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "operator")]
+pub use eigen_operator as operator;
+
+/* ------------------------------------ Task Spammer Re-exports -------------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "task-spammer")]
+pub use eigen_task_spammer as task_spammer;

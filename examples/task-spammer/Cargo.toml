@@ -1,0 +1,19 @@
+[package]
+name = "examples-task-spammer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license-file.workspace = true
+authors.workspace = true
+description = "task-spammer example"
+
+[dependencies]
+alloy.workspace = true
+eigen-task-spammer.workspace = true
+eigen-types.workspace = true
+serde.workspace = true
+tracing.workspace = true
+tokio.workspace = true
+
+async-trait = "0.1"
