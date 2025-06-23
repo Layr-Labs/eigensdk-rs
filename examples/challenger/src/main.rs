@@ -1,9 +1,10 @@
+use eigen_challenger::{challenger::ChallengerTaskProcessor, Challenger};
 use std::collections::HashMap;
 
-use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
-    NewTaskCreated, Task, TaskResponded, TaskResponse,
+use crate::bindings::iincrediblesquaringtaskmanager::{
+    IIncredibleSquaringTaskManager::{Task, TaskResponse},
+    IncredibleSquaringTaskManager::{NewTaskCreated, TaskResponded},
 };
-use eigen_challenger::{challenger::ChallengerTaskProcessor, Challenger};
 
 pub mod bindings;
 

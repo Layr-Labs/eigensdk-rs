@@ -1,7 +1,5 @@
-use alloy::{
-    contract::private::{Provider, Transport},
-    network::Network,
-};
+use crate::bindings::iincrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
+use alloy::{contract::private::Provider, network::Network};
 use alloy::{
     network::EthereumWallet,
     primitives::{Address, U256},
@@ -9,7 +7,6 @@ use alloy::{
     signers::local::PrivateKeySigner,
     transports::http::reqwest::Url,
 };
-use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::IIncredibleSquaringTaskManagerInstance;
 use eigen_task_spammer::{
     error::TaskSpammerError, task_manager::TaskManagerContract, TaskSpammerBuilder,
 };
@@ -27,10 +24,9 @@ use std::{str::FromStr, time::Duration};
 // struct TaskManagerWrapper<T, P, N>(IncredibleSquaringTaskManagerInstance<T, P, N>);
 //
 // impl<T, P, N> TaskManagerContract<U256, T, P, N> for TaskManagerWrapper<T, P, N> { ... }
-impl<T, P, N> TaskManagerContract<U256, T, P, N> for IIncredibleSquaringTaskManagerInstance<T, P, N>
+impl<P, N> TaskManagerContract<U256, P, N> for IncredibleSquaringTaskManagerInstance<P, N>
 where
-    T: Transport + Clone + Send + Sync,
-    P: Provider<T, N>,
+    P: Provider<N>,
     N: Network,
 {
     async fn create_new_task(
@@ -60,9 +56,9 @@ async fn main() {
         Address::from_str("0x742d35cc6634c0532925a3b844f51254ab06f58e").unwrap();
     let url = Url::parse(&http_rpc_url).unwrap();
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let provider = ProviderBuilder::new().wallet(wallet).connect_http(url);
 
-    let contract = IIncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+    let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
     TaskSpammerBuilder::new(contract)
         .with_iter((0..).map(U256::from))

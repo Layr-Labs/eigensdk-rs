@@ -1,11 +1,9 @@
 #![allow(missing_docs)]
 
 use alloy::primitives::address;
-use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::{
-    NewTaskCreated, TaskResponse,
-};
+use bindings::iincrediblesquaringtaskmanager::IIncredibleSquaringTaskManager::TaskResponse;
+use bindings::iincrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
 use eigen_crypto_bls::BlsKeyPair;
-use eigen_logging::get_logger;
 use eigen_operator::{error::OperatorError, Operator};
 use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, OPERATOR_BLS_KEY};
 
@@ -30,7 +28,6 @@ async fn main() {
     let server_address = "http://localhost:8080".to_string();
     let http_rpc_url = "http://localhost:8545".to_string();
     let ws_rpc_url = "ws://localhost:8545".to_string();
-    let logger = get_logger();
 
     let bls_key_pair = BlsKeyPair::new(OPERATOR_BLS_KEY.to_string()).unwrap();
 
@@ -39,7 +36,6 @@ async fn main() {
         &bls_key_pair,
         FIRST_ADDRESS,
         "OPERATOR NAME",
-        logger,
         &ws_rpc_url,
         &http_rpc_url,
         registry_coordiator_address,

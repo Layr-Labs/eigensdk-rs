@@ -20,3 +20,4 @@ doctest = false
 alloy.workspace = true
 regex = "1"
 reqwest.workspace = true
+serde.workspace = true
