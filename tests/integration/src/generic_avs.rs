@@ -80,14 +80,6 @@ const OPERATOR_BLS_SIGNER: &str =
 const METADATA_URI: &str = "https://example.com/metadata";
 const SOCKET: &str = "127.0.0.1:0";
 
-/// Alias for the aggregator, operator, challenger and spammer handles
-type AvsComponents = (
-    JoinHandle<Result<(), AggregatorError>>,
-    JoinHandle<Result<(), OperatorError>>,
-    JoinHandle<Result<(), ChallengerError>>,
-    JoinHandle<Result<(), TaskSpammerError>>,
-);
-
 /// Generic AVS configuration for integration tests
 #[derive(Debug, Clone)]
 pub struct AvsConfig<TM>
@@ -306,8 +298,8 @@ pub async fn start_avs<TM, RP, F>(
     response_calculator: RP,
     logger: SharedLogger,
     input: F,
-) -> AvsComponents
-where
+    timeout_duration: Duration,
+) where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: SolValue + Clone + PartialEq,
@@ -316,25 +308,46 @@ where
     F: FnMut(u64) -> TM::Input + Send + 'static,
     TM::Input: Clone + Send + 'static,
 {
-    let aggregator_handle = start_aggregator(config.clone(), logger).await;
+    let mut aggregator_handle = start_aggregator(config.clone(), logger).await;
 
     // Wait until the aggregator is ready
     tokio::time::sleep(Duration::from_secs(5)).await;
 
-    let operator_handle = start_operator(config.clone(), response_calculator.clone()).await;
-    let challenger_handle = start_challenger(config.clone(), response_calculator).await;
+    let mut operator_handle = start_operator(config.clone(), response_calculator.clone()).await;
+    let mut challenger_handle = start_challenger(config.clone(), response_calculator).await;
 
     // Wait until the operator and challenger are ready
     tokio::time::sleep(Duration::from_secs(5)).await;
 
-    let spammer_handle = start_spammer(config.clone(), input).await;
+    let mut spammer_handle = start_spammer(config.clone(), input).await;
 
-    (
-        aggregator_handle,
-        operator_handle,
-        challenger_handle,
-        spammer_handle,
-    )
+    tokio::select! {
+        // Spammer finished
+        res = &mut spammer_handle => {
+            res.unwrap().unwrap();
+        }
+
+        // Service finished (should not happen)
+        res = &mut aggregator_handle => {
+            res.unwrap().unwrap();
+        }
+        res = &mut operator_handle => {
+            res.unwrap().unwrap();
+        }
+        res = &mut challenger_handle => {
+            res.unwrap().unwrap();
+        }
+
+        // Task spammer should finish before the timeout
+        _ = tokio::time::sleep(timeout_duration) => {
+            panic!("timeout: TaskSpammer took too long. Aborting...");
+        }
+    }
+
+    // Abort the handles
+    aggregator_handle.abort();
+    operator_handle.abort();
+    challenger_handle.abort();
 }
 
 /// Start the aggregator.
