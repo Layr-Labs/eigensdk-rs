@@ -1,5 +1,11 @@
 use std::{str::FromStr, time::Duration};
 
+use crate::{
+    bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
+        IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
+    },
+    generic_avs::{start_avs, AvsConfig},
+};
 use alloy::{
     network::EthereumWallet,
     primitives::{Address, B256, U256},
@@ -14,13 +20,7 @@ use eigensdk::{
     },
     testing_utils::anvil::start_anvil_container_with_state,
 };
-
-use crate::{
-    bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
-        IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
-    },
-    generic_avs::{start_avs, AvsConfig},
-};
+use tracing::error;
 
 // Contracts addresses
 const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
@@ -42,7 +42,9 @@ const DEPOSIT_TOKENS: &str = "5000000000000000000000";
 // Signers
 const AGGREGATOR_SIGNER: &str =
     "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
-const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+const CHALLENGER_SIGNER: &str =
+    "0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba";
+// This one must match the `task_generator_addr` passed to the Task manager in deployment
 const TASK_SPAMMER_SIGNER: &str =
     "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
 
@@ -85,7 +87,7 @@ async fn test_incredible_squaring() {
     // Create the AVS config using defaults
     let config = AvsConfig::with_default_addresses_and_keys(
         create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER),
-        create_task_manager_contract(&http_endpoint, OPERATOR_SIGNER),
+        create_task_manager_contract(&http_endpoint, CHALLENGER_SIGNER),
         create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER),
         http_endpoint.to_string(),
         ws_endpoint.to_string(),
@@ -104,11 +106,23 @@ async fn test_incredible_squaring() {
     let response_calculator = response_calculator_from_fn(square);
 
     // Start the AVS
-    let (aggregator_handle, operator_handle, challenger_handle, spammer_handle) =
+    let (aggregator_handle, operator_handle, challenger_handle, mut spammer_handle) =
         start_avs(config, response_calculator, logger, |i| U256::from(i)).await;
 
-    // Wait until `NUM_TASKS` tasks are created
-    spammer_handle.await.unwrap();
+    // Task spammer should finish when all tasks are created (`NUM_TASKS` * `TASK_INTERVAL`)
+    // so we add 5 seconds to the timeout
+    let timeout_duration = Duration::from_secs(NUM_TASKS * TASK_INTERVAL + 5);
+
+    // Task spammer should finish before the timeout
+    match tokio::time::timeout(timeout_duration, &mut spammer_handle).await {
+        Ok(result) => {
+            result.unwrap();
+        }
+        Err(_) => {
+            error!("Timeout: spammer took too long. Aborting...");
+            spammer_handle.abort();
+        }
+    }
 
     // Give some time to the aggregator to process the last task
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
