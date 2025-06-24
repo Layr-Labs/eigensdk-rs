@@ -9,23 +9,30 @@ use alloy::{
     transports::http::reqwest::Url,
 };
 use eigensdk::{
-    aggregator::{Aggregator, AggregatorConfig, IndexingAggregatorProcessor},
+    aggregator::{
+        error::AggregatorError, Aggregator, AggregatorConfig, IndexingAggregatorProcessor,
+    },
     challenger::{
         challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
         config::ChallengerConfig,
+        error::ChallengerError,
         Challenger,
     },
     crypto_bls::BlsPrivateKeyConfig,
     logging::{get_test_logger, init_logger, log_level::LogLevel, logger::SharedLogger},
-    operator::{config::OperatorConfig, register_config::OperatorRegistrationConfig, Operator},
+    operator::{
+        config::OperatorConfig, error::OperatorError, register_config::OperatorRegistrationConfig,
+        Operator,
+    },
     signer::PrivateKeyConfig,
     task_manager::{
         impl_task_manager_from_defs_and_contract, response_calculator::response_calculator_from_fn,
         TaskManagerDefs, TaskManagerError,
     },
     task_spammer::TaskSpammerBuilder,
-    testing_utils::anvil::start_anvil_container_with_state,
+    testing_utils::anvil::start_anvil_with_state,
 };
+use tokio::task::JoinHandle;
 
 use crate::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
     IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
@@ -80,25 +87,21 @@ type IncredibleInstance = IncredibleSquaringTaskManagerInstance<
 #[tokio::test]
 async fn test_incredible_squaring() {
     let (_container, http_endpoint, ws_endpoint) =
-        start_anvil_container_with_state(INCREDIBLE_SQUARING_STATE_PATH).await;
+        start_anvil_with_state(INCREDIBLE_SQUARING_STATE_PATH).await;
 
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
 
-    let aggregator_handle = tokio::spawn(start_aggregator(
-        logger,
-        http_endpoint.clone(),
-        ws_endpoint.clone(),
-    ));
+    let aggregator_handle =
+        start_aggregator(logger, http_endpoint.clone(), ws_endpoint.clone()).await;
 
     // Wait for the aggregator to start
     tokio::time::sleep(Duration::from_secs(5)).await;
-    let operator_handle = tokio::spawn(start_operator(http_endpoint.clone(), ws_endpoint.clone()));
+    let operator_handle = start_operator(http_endpoint.clone(), ws_endpoint.clone()).await;
 
     // Wait for the operator to start
     tokio::time::sleep(Duration::from_secs(5)).await;
-    let challenger_handle =
-        tokio::spawn(start_challenger(http_endpoint.clone(), ws_endpoint.clone()));
+    let challenger_handle = start_challenger(http_endpoint.clone(), ws_endpoint.clone()).await;
 
     start_spammer(http_endpoint.clone()).await;
 
@@ -106,9 +109,10 @@ async fn test_incredible_squaring() {
     // Give some time to the aggregator to process the last task
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
 
-    for handle in [aggregator_handle, operator_handle, challenger_handle] {
-        handle.abort();
-    }
+    // Abort the handles
+    aggregator_handle.abort();
+    operator_handle.abort();
+    challenger_handle.abort();
 
     verify_tasks_completed(&http_endpoint).await;
 }
@@ -138,7 +142,11 @@ async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> Incr
     IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider)
 }
 
-async fn start_aggregator(logger: SharedLogger, http_endpoint: String, ws_endpoint: String) {
+async fn start_aggregator(
+    logger: SharedLogger,
+    http_endpoint: String,
+    ws_endpoint: String,
+) -> JoinHandle<Result<(), AggregatorError>> {
     let config = create_aggregator_config(http_endpoint, ws_endpoint);
     let contract = create_task_manager_contract(&config.http_rpc_url, AGGREGATOR_SIGNER).await;
     let task_processor =
@@ -147,7 +155,7 @@ async fn start_aggregator(logger: SharedLogger, http_endpoint: String, ws_endpoi
     let aggregator = Aggregator::new(config, task_processor, logger)
         .await
         .unwrap();
-    aggregator.run().await.unwrap();
+    aggregator.start()
 }
 
 async fn start_spammer(http_endpoint: String) {
@@ -164,14 +172,20 @@ async fn start_spammer(http_endpoint: String) {
         .unwrap();
 }
 
-async fn start_operator(http_endpoint: String, ws_endpoint: String) {
+async fn start_operator(
+    http_endpoint: String,
+    ws_endpoint: String,
+) -> JoinHandle<Result<(), OperatorError>> {
     let config = create_operator_config(http_endpoint, ws_endpoint);
     let response_calculator = response_calculator_from_fn(square);
     let operator = Operator::new(config, response_calculator).await.unwrap();
-    operator.run::<ISTaskManager>().await.unwrap();
+    operator.start::<ISTaskManager>()
 }
 
-async fn start_challenger(http_endpoint: String, ws_endpoint: String) {
+async fn start_challenger(
+    http_endpoint: String,
+    ws_endpoint: String,
+) -> JoinHandle<Result<(), ChallengerError>> {
     let config = ChallengerConfig {
         http_rpc_url: http_endpoint,
         ws_rpc_url: ws_endpoint,
@@ -181,8 +195,8 @@ async fn start_challenger(http_endpoint: String, ws_endpoint: String) {
     let logic = verifier_from_compute_function(response_calculator);
     let task_processor = IndexingChallengerProcessor::new(contract, logic);
 
-    let mut challenger = Challenger::new(config, task_processor);
-    challenger.run().await.unwrap();
+    let challenger = Challenger::new(config, task_processor);
+    challenger.start()
 }
 
 fn create_aggregator_config(http_endpoint: String, ws_endpoint: String) -> AggregatorConfig {
