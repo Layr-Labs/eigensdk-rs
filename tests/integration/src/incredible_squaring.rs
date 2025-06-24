@@ -20,7 +20,6 @@ use eigensdk::{
     },
     testing_utils::anvil::start_anvil_container_with_state,
 };
-use tracing::error;
 
 // Contracts addresses
 const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
@@ -106,21 +105,33 @@ async fn test_incredible_squaring() {
     let response_calculator = response_calculator_from_fn(square);
 
     // Start the AVS
-    let (aggregator_handle, operator_handle, challenger_handle, mut spammer_handle) =
+    let (mut aggregator_handle, mut operator_handle, mut challenger_handle, mut spammer_handle) =
         start_avs(config, response_calculator, logger, |i| U256::from(i)).await;
 
     // Task spammer should finish when all tasks are created (`NUM_TASKS` * `TASK_INTERVAL`)
     // so we add 5 seconds to the timeout
     let timeout_duration = Duration::from_secs(NUM_TASKS * TASK_INTERVAL + 5);
 
-    // Task spammer should finish before the timeout
-    match tokio::time::timeout(timeout_duration, &mut spammer_handle).await {
-        Ok(result) => {
-            result.unwrap();
+    tokio::select! {
+        // Spammer finished
+        res = &mut spammer_handle => {
+            res.unwrap().unwrap();
         }
-        Err(_) => {
-            error!("Timeout: spammer took too long. Aborting...");
-            spammer_handle.abort();
+
+        // Service finished (should not happen)
+        res = &mut aggregator_handle => {
+            res.unwrap().unwrap();
+        }
+        res = &mut operator_handle => {
+            res.unwrap().unwrap();
+        }
+        res = &mut challenger_handle => {
+            res.unwrap().unwrap();
+        }
+
+        // Task spammer should finish before the timeout
+        _ = tokio::time::sleep(timeout_duration) => {
+            panic!("timeout: TaskSpammer took too long. Aborting...");
         }
     }
 
@@ -128,9 +139,9 @@ async fn test_incredible_squaring() {
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
 
     // Abort the aggregator, operator and challenger handles
-    for handle in [aggregator_handle, operator_handle, challenger_handle] {
-        handle.abort();
-    }
+    aggregator_handle.abort();
+    operator_handle.abort();
+    challenger_handle.abort();
 
     verify_tasks_completed(&http_endpoint).await;
 }
