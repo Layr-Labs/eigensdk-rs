@@ -18,7 +18,7 @@ use eigensdk::{
         impl_task_manager_from_defs_and_contract, response_calculator::response_calculator_from_fn,
         TaskManagerDefs, TaskManagerError,
     },
-    testing_utils::anvil::start_anvil_container_with_state,
+    testing_utils::anvil::start_anvil_with_state,
 };
 
 // Contracts addresses
@@ -78,7 +78,7 @@ type IncredibleInstance = IncredibleSquaringTaskManagerInstance<
 #[tokio::test]
 async fn test_incredible_squaring() {
     let (_container, http_endpoint, ws_endpoint) =
-        start_anvil_container_with_state(INCREDIBLE_SQUARING_STATE_PATH).await;
+        start_anvil_with_state(INCREDIBLE_SQUARING_STATE_PATH).await;
 
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
