@@ -914,7 +914,7 @@ pub mod IBLSApkRegistryTypes {
             #[inline]
             fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
                 alloy_sol_types::private::Cow::Borrowed(
-                    "PubkeyRegistrationParams(BN254.G1Point pubkeyRegistrationSignature,BN254.G1Point pubkeyG1,BN254.G2Point pubkeyG2)",
+                    "PubkeyRegistrationParams(G1Point pubkeyRegistrationSignature,G1Point pubkeyG1,G2Point pubkeyG2)",
                 )
             }
             #[inline]
