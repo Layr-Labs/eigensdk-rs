@@ -21,7 +21,8 @@
 //! The module includes pre-configured default values ([`AvsConfig::with_default_addresses_and_keys`])
 //! for all contract addresses, private keys, and operational parameters that are used
 //! across the example AVS implementations. The value of the addresses were taken from the values
-//! obtained by running the example contracts (`/examples`) with anvil.
+//! obtained by running the example contracts (`/examples`) with anvil. The private keys came from
+//! anvil available accounts.
 //!
 //! ### Custom Configuration
 //!
@@ -64,19 +65,27 @@ const PERMISSION_CONTROLLER_ADDRESS: &str = "0x59b670e9fa9d0a427751af201d676719a
 
 // Aggregator config
 const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
-
-// Signers
 const AGGREGATOR_SIGNER: &str =
     "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
-const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
 // Operator config
 const OPERATOR_ADDRESS: &str = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 const OPERATOR_BLS_SIGNER: &str =
     "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
+const METADATA_URI: &str = "https://example.com/metadata";
+const SOCKET: &str = "127.0.0.1:0";
+
+/// Alias for the aggregator, operator, challenger and spammer handles
+type AvsComponents = (
+    JoinHandle<()>,
+    JoinHandle<()>,
+    JoinHandle<()>,
+    JoinHandle<()>,
+);
 
 /// Generic AVS configuration for integration tests
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct AvsConfig<TM>
 where
     TM: TaskManager,
@@ -91,21 +100,19 @@ where
     /// Address of the task manager contract
     pub task_manager_address: Address,
 
-    // Ethereum RPC
+    // Ethereum RPC endpoints
     /// URL of the Ethereum HTTP RPC
     pub http_rpc_url: String,
     /// URL of the Ethereum WebSocket RPC
     pub ws_rpc_url: String,
 
-    // Avs deployment Addresses
+    // Contract addresses
     /// Address of the AVS contract
     pub avs_address: Address,
     /// Registry Coordinator contract address
     pub registry_coordinator_address: Address,
     /// Operator State Retriever contract address
     pub operator_state_retriever_address: Address,
-
-    // Core deployment addresses
     /// AVS Directory contract address
     pub avs_directory_address: Address,
     /// Allocation Manager contract address
@@ -121,7 +128,7 @@ where
     /// Permission Controller contract address
     pub permission_controller_address: Address,
 
-    // Aggregator RPC
+    // Aggregator related
     /// Private key of the aggregator
     pub aggregator_private_key: String,
     /// IP address and port the aggregation server will use
@@ -141,7 +148,7 @@ where
     /// Number of tasks
     pub num_tasks: u64,
 
-    // Entities private keys
+    // Challenger related
     /// Private key of the challenger
     pub challenger_private_key: String,
 
@@ -156,6 +163,7 @@ where
     pub operator_bls_private_key: String,
 
     // Operator registration config values
+    /// Metadata URI
     pub metadata_uri: String,
     /// Socket address
     pub socket: String,
@@ -173,30 +181,34 @@ impl<TM> AvsConfig<TM>
 where
     TM: TaskManager + Clone + Send + Sync + 'static,
 {
-    /// Create a new AVS configuration with default addresses and keys.
+    /// Create a new AVS configuration with pre-configured default addresses and keys.
     ///
-    /// Addresses will not change unless the corresponding contracts are updated.
+    /// This function provides a convenient way to create an AVS configuration using the standard
+    /// contract addresses and private keys from the example AVS implementations.
+    ///
+    /// The values of the addresses were taken from the values obtained by running the example contracts
+    /// (`/examples`) with anvil. The private keys came from anvil available accounts.
     ///
     /// # Arguments
     ///
-    /// * `aggregator_task_manager` - The aggregator task manager
-    /// * `challenger_task_manager` - The challenger task manager
-    /// * `task_spammer_task_manager` - The task spammer task manager
-    /// * `http_rpc_url` - The HTTP RPC URL
-    /// * `ws_rpc_url` - The WebSocket RPC URL
-    /// * `operator_name` - The name of the operator
-    /// * `time_to_expiry` - The time until the task expires
-    /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
-    /// * `task_interval` - The interval between the creation of tasks
-    /// * `quorum_threshold` - The quorum threshold
-    /// * `quorums` - The quorums
-    /// * `num_tasks` - The number of tasks to spam
-    /// * `deposit_tokens` - The deposit tokens amount
-    /// * `new_magnitude` - The new magnitude to allocate
+    /// * `aggregator_task_manager` - Task manager instance for the aggregator component
+    /// * `challenger_task_manager` - Task manager instance for the challenger component  
+    /// * `task_spammer_task_manager` - Task manager instance for the task spammer component
+    /// * `http_rpc_url` - HTTP RPC endpoint URL
+    /// * `ws_rpc_url` - WebSocket RPC endpoint URL
+    /// * `operator_name` - Operator name for testing purposes
+    /// * `time_to_expiry` - Time until the task expires
+    /// * `window_duration` - Duration of the window to wait for signatures after quorum is reached
+    /// * `task_interval` - Interval between the creation of tasks
+    /// * `quorum_threshold` - Thresholds for each quorum
+    /// * `quorums` - Quorum numbers which should respond to the task
+    /// * `num_tasks` - Number of tasks to spam
+    /// * `deposit_tokens` - Deposit tokens amount
+    /// * `new_magnitude` - New magnitude to allocate
     ///
     /// # Returns
     ///
-    /// * `AvsConfig<TM>` - The AVS configuration
+    /// A fully configured [`AvsConfig`] with all default addresses and keys populated.
     #[allow(clippy::too_many_arguments)]
     pub fn with_default_addresses_and_keys(
         aggregator_task_manager: TM,
@@ -247,8 +259,8 @@ where
             operator_bls_private_key: OPERATOR_BLS_SIGNER.to_string(),
 
             // Registration defaults
-            metadata_uri: "metadata".to_string(),
-            socket: "127.0.0.1:0".to_string(),
+            metadata_uri: METADATA_URI.to_string(),
+            socket: SOCKET.to_string(),
             allocation_delay: 0,
             operator_set_id: 0,
             new_magnitude,
@@ -284,18 +296,13 @@ where
 ///
 /// # Returns
 ///
-/// * `(JoinHandle<()>, JoinHandle<()>, JoinHandle<()>, JoinHandle<()>)` - The handles for the AVS integration tests.
+/// * [`AvsComponents`] - The handles for the AVS integration tests.
 pub async fn start_avs<TM, RP, F>(
     config: AvsConfig<TM>,
     response_calculator: RP,
     logger: SharedLogger,
     input: F,
-) -> (
-    JoinHandle<()>,
-    JoinHandle<()>,
-    JoinHandle<()>,
-    JoinHandle<()>,
-)
+) -> AvsComponents
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
