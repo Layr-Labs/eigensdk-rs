@@ -82,9 +82,10 @@ const SOCKET: &str = "127.0.0.1:0";
 
 /// Generic AVS configuration for integration tests
 #[derive(Debug, Clone)]
-pub struct AvsConfig<TM>
+pub struct AvsConfig<TM, RP>
 where
     TM: TaskManager,
+    RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
 {
     // Task Manager related
     /// Aggregator task manager instance
@@ -95,6 +96,10 @@ where
     pub task_spammer_task_manager: TM,
     /// Address of the task manager contract
     pub task_manager_address: Address,
+
+    // Response calculator with the compute logic
+    /// Response calculator instance
+    pub response_calculator: RP,
 
     // Ethereum RPC endpoints
     /// URL of the Ethereum HTTP RPC
@@ -173,9 +178,10 @@ where
     pub deposit_tokens: String,
 }
 
-impl<TM> AvsConfig<TM>
+impl<TM, RP> AvsConfig<TM, RP>
 where
     TM: TaskManager + Clone + Send + Sync + 'static,
+    RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
 {
     /// Create a new AVS configuration with pre-configured default addresses and keys.
     ///
@@ -210,6 +216,7 @@ where
         aggregator_task_manager: TM,
         challenger_task_manager: TM,
         task_spammer_task_manager: TM,
+        response_calculator: RP,
         http_rpc_url: String,
         ws_rpc_url: String,
         operator_name: String,
@@ -228,6 +235,9 @@ where
             aggregator_task_manager,
             challenger_task_manager,
             task_spammer_task_manager,
+
+            // Response calculator
+            response_calculator,
 
             // Default RPC endpoints
             http_rpc_url,
@@ -298,8 +308,7 @@ where
 /// * `input` - The input that will be used to spam the tasks
 /// * `timeout` - A timeout duration if the spammer takes too long to finish
 pub async fn start_avs<TM, RP, F>(
-    config: AvsConfig<TM>,
-    response_calculator: RP,
+    config: AvsConfig<TM, RP>,
     logger: SharedLogger,
     input: F,
     timeout: Duration,
@@ -317,8 +326,8 @@ pub async fn start_avs<TM, RP, F>(
     // Wait until the aggregator is ready
     tokio::time::sleep(Duration::from_secs(5)).await;
 
-    let mut operator_handle = start_operator(config.clone(), response_calculator.clone()).await;
-    let mut challenger_handle = start_challenger(config.clone(), response_calculator).await;
+    let mut operator_handle = start_operator(config.clone()).await;
+    let mut challenger_handle = start_challenger(config.clone()).await;
 
     // Wait until the operator and challenger are ready
     tokio::time::sleep(Duration::from_secs(5)).await;
@@ -364,14 +373,15 @@ pub async fn start_avs<TM, RP, F>(
 /// # Returns
 ///
 /// * `JoinHandle<()>` - The handle for the aggregator.
-async fn start_aggregator<TM>(
-    config: AvsConfig<TM>,
+async fn start_aggregator<TM, RP>(
+    config: AvsConfig<TM, RP>,
     logger: SharedLogger,
 ) -> JoinHandle<Result<(), AggregatorError>>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
+    RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
 {
     let aggregator_config = AggregatorConfig {
         server_address: config.aggregator_ip_port,
@@ -401,10 +411,7 @@ where
 /// # Returns
 ///
 /// * `JoinHandle<()>` - The handle for the operator
-async fn start_operator<RP, TM>(
-    config: AvsConfig<TM>,
-    response_calculator: RP,
-) -> JoinHandle<Result<(), OperatorError>>
+async fn start_operator<RP, TM>(config: AvsConfig<TM, RP>) -> JoinHandle<Result<(), OperatorError>>
 where
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
@@ -435,7 +442,7 @@ where
         strategies_addresses: vec![config.strategy_address],
     };
 
-    let config = OperatorConfig {
+    let operator_config = OperatorConfig {
         http_rpc_url: config.http_rpc_url,
         ws_rpc_url: config.ws_rpc_url,
         bls_signer: BlsPrivateKeyConfig {
@@ -448,7 +455,7 @@ where
         aggregator_ip_port: config.aggregator_ip_port,
         registration: Some(registration_config),
     };
-    Operator::new(config, response_calculator)
+    Operator::new(operator_config, config.response_calculator)
         .await
         .unwrap()
         .start::<TM>()
@@ -465,8 +472,7 @@ where
 ///
 /// * `JoinHandle<()>` - The handle for the challenger
 async fn start_challenger<RP, TM>(
-    config: AvsConfig<TM>,
-    response_calculator: RP,
+    config: AvsConfig<TM, RP>,
 ) -> JoinHandle<Result<(), ChallengerError>>
 where
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
@@ -480,7 +486,7 @@ where
         ws_rpc_url: config.ws_rpc_url,
     };
 
-    let logic = verifier_from_compute_function(response_calculator);
+    let logic = verifier_from_compute_function(config.response_calculator);
     let challenger_task_processor =
         IndexingChallengerProcessor::new(config.challenger_task_manager, logic);
     Challenger::new(challenger_config, challenger_task_processor).start()
@@ -496,8 +502,8 @@ where
 /// # Returns
 ///
 /// * `JoinHandle<Result<(), TaskSpammerError>>` - The handle for the spammer
-async fn start_spammer<TM, F>(
-    config: AvsConfig<TM>,
+async fn start_spammer<TM, RP, F>(
+    config: AvsConfig<TM, RP>,
     input: F,
 ) -> JoinHandle<Result<(), TaskSpammerError>>
 where
@@ -506,6 +512,7 @@ where
     F: FnMut(u64) -> TM::Input + Send + 'static,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
+    RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
 {
     TaskSpammerBuilder::new(config.task_spammer_task_manager)
         .with_iter((0..config.num_tasks).map(input))

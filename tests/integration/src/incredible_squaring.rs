@@ -88,6 +88,7 @@ async fn test_incredible_squaring() {
         create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER),
         create_task_manager_contract(&http_endpoint, CHALLENGER_SIGNER),
         create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER),
+        response_calculator_from_fn(square),
         http_endpoint.to_string(),
         ws_endpoint.to_string(),
         "incredible-operator".to_string(),
@@ -101,22 +102,12 @@ async fn test_incredible_squaring() {
         NEW_MAGNITUDE.to_vec(),
     );
 
-    // Build the response calculator, which is used to compute the response for a task
-    let response_calculator = response_calculator_from_fn(square);
-
     // Task spammer should finish when all tasks are created (`NUM_TASKS` * `TASK_INTERVAL`)
     // so we add 5 seconds to the timeout
     let timeout_duration = Duration::from_secs(NUM_TASKS * TASK_INTERVAL + 5);
 
     // Start the AVS
-    start_avs(
-        config,
-        response_calculator,
-        logger,
-        |i| U256::from(i),
-        timeout_duration,
-    )
-    .await;
+    start_avs(config, logger, |i| U256::from(i), timeout_duration).await;
 
     // Give some time to the aggregator to process the last task
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
