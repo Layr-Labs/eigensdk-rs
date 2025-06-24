@@ -1167,8 +1167,7 @@ mod tests {
             .DEALLOCATION_DELAY()
             .call()
             .await
-            .unwrap()
-            ._0;
+            .unwrap();
 
         // Set the slashable stake lookahead period. Old period is 0.
         let quorum_number = 0_u8;
