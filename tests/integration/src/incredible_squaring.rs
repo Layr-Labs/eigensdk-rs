@@ -104,44 +104,22 @@ async fn test_incredible_squaring() {
     // Build the response calculator, which is used to compute the response for a task
     let response_calculator = response_calculator_from_fn(square);
 
-    // Start the AVS
-    let (mut aggregator_handle, mut operator_handle, mut challenger_handle, mut spammer_handle) =
-        start_avs(config, response_calculator, logger, |i| U256::from(i)).await;
-
     // Task spammer should finish when all tasks are created (`NUM_TASKS` * `TASK_INTERVAL`)
     // so we add 5 seconds to the timeout
     let timeout_duration = Duration::from_secs(NUM_TASKS * TASK_INTERVAL + 5);
 
-    tokio::select! {
-        // Spammer finished
-        res = &mut spammer_handle => {
-            res.unwrap().unwrap();
-        }
-
-        // Service finished (should not happen)
-        res = &mut aggregator_handle => {
-            res.unwrap().unwrap();
-        }
-        res = &mut operator_handle => {
-            res.unwrap().unwrap();
-        }
-        res = &mut challenger_handle => {
-            res.unwrap().unwrap();
-        }
-
-        // Task spammer should finish before the timeout
-        _ = tokio::time::sleep(timeout_duration) => {
-            panic!("timeout: TaskSpammer took too long. Aborting...");
-        }
-    }
+    // Start the AVS
+    start_avs(
+        config,
+        response_calculator,
+        logger,
+        |i| U256::from(i),
+        timeout_duration,
+    )
+    .await;
 
     // Give some time to the aggregator to process the last task
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
-
-    // Abort the aggregator, operator and challenger handles
-    aggregator_handle.abort();
-    operator_handle.abort();
-    challenger_handle.abort();
 
     verify_tasks_completed(&http_endpoint).await;
 }
