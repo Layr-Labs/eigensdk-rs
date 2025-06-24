@@ -33,7 +33,7 @@ use eigensdk::{
     testing_utils::anvil::start_anvil_with_state,
 };
 use tokio::task::JoinHandle;
-use tracing::{error, info};
+use tracing::error;
 
 use crate::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
     IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
@@ -111,16 +111,11 @@ async fn test_incredible_squaring() {
     let timeout_duration = Duration::from_secs(NUM_TASKS as u64 * TASK_INTERVAL + 5);
 
     // Task spammer should finish before the timeout
-    match tokio::time::timeout(timeout_duration, &mut spammer_handle).await {
-        Ok(result) => {
-            info!("Spammer finished");
-            let _ = result.unwrap();
-        }
-        Err(_) => {
-            error!("Timeout: spammer took too long. Aborting...");
-            spammer_handle.abort();
-        }
+    if (tokio::time::timeout(timeout_duration, &mut spammer_handle).await).is_err() {
+        error!("Timeout: spammer took too long. Aborting...");
+        spammer_handle.abort();
     }
+
     // Task Spammer will finished after spamming 3 tasks
     // Give some time to the aggregator to process the last task
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
