@@ -283,18 +283,26 @@ where
 
 /// Start the AVS integration tests.
 ///
+/// This will start the aggregator, operator, challenger and spammer services
+/// and will wait for the spammer to finish. When the spammer completes, the other
+/// three services are aborted to free resources.
+///
+/// The function will panic if any service returns an error or if the spammer does not finish
+/// before the timeout.
+///
 /// # Arguments
 ///
 /// * `config` - The configuration for the AVS integration tests.
 /// * `response_calculator` - The response calculator with the compute logic
 /// * `logger` - The logger
 /// * `input` - The input that will be used to spam the tasks
+/// * `timeout` - A timeout duration if the spammer takes too long to finish
 pub async fn start_avs<TM, RP, F>(
     config: AvsConfig<TM>,
     response_calculator: RP,
     logger: SharedLogger,
     input: F,
-    timeout_duration: Duration,
+    timeout: Duration,
 ) where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
@@ -323,7 +331,7 @@ pub async fn start_avs<TM, RP, F>(
             res.unwrap().unwrap();
         }
 
-        // Service finished (should not happen)
+        // Check if the services finished or if there was an error
         res = &mut aggregator_handle => {
             res.unwrap().unwrap();
         }
@@ -335,7 +343,7 @@ pub async fn start_avs<TM, RP, F>(
         }
 
         // Task spammer should finish before the timeout
-        _ = tokio::time::sleep(timeout_duration) => {
+        _ = tokio::time::sleep(timeout) => {
             panic!("timeout: TaskSpammer took too long. Aborting...");
         }
     }
