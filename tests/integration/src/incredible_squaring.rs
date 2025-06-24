@@ -2,7 +2,7 @@ use std::{str::FromStr, time::Duration};
 
 use alloy::{
     network::EthereumWallet,
-    primitives::{Address, FixedBytes, B256, U256},
+    primitives::{Address, B256, U256},
     providers::ProviderBuilder,
     signers::local::PrivateKeySigner,
     sol_types::SolEvent,
@@ -141,7 +141,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
             .await
             .unwrap()
             ._0;
-        assert_ne!(FixedBytes::<32>::default(), response_hash);
+        assert_ne!(B256::default(), response_hash);
     }
 }
 
