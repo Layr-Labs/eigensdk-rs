@@ -29,10 +29,11 @@ use eigensdk::{
         impl_task_manager_from_defs_and_contract, response_calculator::response_calculator_from_fn,
         TaskManagerDefs, TaskManagerError,
     },
-    task_spammer::TaskSpammerBuilder,
+    task_spammer::{error::TaskSpammerError, TaskSpammerBuilder},
     testing_utils::anvil::start_anvil_with_state,
 };
 use tokio::task::JoinHandle;
+use tracing::{error, info};
 
 use crate::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
     IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
@@ -103,8 +104,23 @@ async fn test_incredible_squaring() {
     tokio::time::sleep(Duration::from_secs(5)).await;
     let challenger_handle = start_challenger(http_endpoint.clone(), ws_endpoint.clone()).await;
 
-    start_spammer(http_endpoint.clone()).await;
+    let mut spammer_handle = start_spammer(http_endpoint.clone()).await;
 
+    // Task spammer should finish when all tasks are created (`NUM_TASKS` * `TASK_INTERVAL`)
+    // so we add 5 seconds to the timeout
+    let timeout_duration = Duration::from_secs(NUM_TASKS as u64 * TASK_INTERVAL + 5);
+
+    // Task spammer should finish before the timeout
+    match tokio::time::timeout(timeout_duration, &mut spammer_handle).await {
+        Ok(result) => {
+            info!("Spammer finished");
+            let _ = result.unwrap();
+        }
+        Err(_) => {
+            error!("Timeout: spammer took too long. Aborting...");
+            spammer_handle.abort();
+        }
+    }
     // Task Spammer will finished after spamming 3 tasks
     // Give some time to the aggregator to process the last task
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
@@ -158,7 +174,7 @@ async fn start_aggregator(
     aggregator.start()
 }
 
-async fn start_spammer(http_endpoint: String) {
+async fn start_spammer(http_endpoint: String) -> JoinHandle<Result<(), TaskSpammerError>> {
     let contract = create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER).await;
 
     TaskSpammerBuilder::new(contract)
@@ -167,9 +183,7 @@ async fn start_spammer(http_endpoint: String) {
         .with_interval(Duration::from_secs(TASK_INTERVAL))
         .build()
         .unwrap()
-        .run()
-        .await
-        .unwrap();
+        .start()
 }
 
 async fn start_operator(
