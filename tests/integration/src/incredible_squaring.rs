@@ -33,7 +33,6 @@ use eigensdk::{
     testing_utils::anvil::start_anvil_with_state,
 };
 use tokio::task::JoinHandle;
-use tracing::error;
 
 use crate::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
     IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
@@ -93,16 +92,16 @@ async fn test_incredible_squaring() {
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
 
-    let aggregator_handle =
+    let mut aggregator_handle =
         start_aggregator(logger, http_endpoint.clone(), ws_endpoint.clone()).await;
 
     // Wait for the aggregator to start
     tokio::time::sleep(Duration::from_secs(5)).await;
-    let operator_handle = start_operator(http_endpoint.clone(), ws_endpoint.clone()).await;
+    let mut operator_handle = start_operator(http_endpoint.clone(), ws_endpoint.clone()).await;
 
     // Wait for the operator to start
     tokio::time::sleep(Duration::from_secs(5)).await;
-    let challenger_handle = start_challenger(http_endpoint.clone(), ws_endpoint.clone()).await;
+    let mut challenger_handle = start_challenger(http_endpoint.clone(), ws_endpoint.clone()).await;
 
     let mut spammer_handle = start_spammer(http_endpoint.clone()).await;
 
@@ -110,10 +109,27 @@ async fn test_incredible_squaring() {
     // so we add 5 seconds to the timeout
     let timeout_duration = Duration::from_secs(NUM_TASKS as u64 * TASK_INTERVAL + 5);
 
-    // Task spammer should finish before the timeout
-    if (tokio::time::timeout(timeout_duration, &mut spammer_handle).await).is_err() {
-        error!("Timeout: spammer took too long. Aborting...");
-        spammer_handle.abort();
+    tokio::select! {
+        // Spammer finished
+        res = &mut spammer_handle => {
+            res.unwrap().unwrap();
+        }
+
+        // Service finished (should not happen)
+        res = &mut aggregator_handle => {
+            res.unwrap().unwrap();
+        }
+        res = &mut operator_handle => {
+            res.unwrap().unwrap();
+        }
+        res = &mut challenger_handle => {
+            res.unwrap().unwrap();
+        }
+
+        // Task spammer should finish before the timeout
+        _ = tokio::time::sleep(timeout_duration) => {
+            panic!("timeout: TaskSpammer took too long. Aborting...");
+        }
     }
 
     // Task Spammer will finished after spamming 3 tasks
