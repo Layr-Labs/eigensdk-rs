@@ -289,10 +289,6 @@ where
 /// * `response_calculator` - The response calculator with the compute logic
 /// * `logger` - The logger
 /// * `input` - The input that will be used to spam the tasks
-///
-/// # Returns
-///
-/// * [`AvsComponents`] - The handles for the AVS integration tests.
 pub async fn start_avs<TM, RP, F>(
     config: AvsConfig<TM>,
     response_calculator: RP,
