@@ -35,18 +35,22 @@ use std::{fmt::Debug, str::FromStr, time::Duration};
 
 use alloy::{dyn_abi::SolType, primitives::Address, sol_types::SolValue};
 use eigensdk::{
-    aggregator::{Aggregator, AggregatorConfig, IndexingAggregatorProcessor},
+    aggregator::{Aggregator, AggregatorConfig, AggregatorError, IndexingAggregatorProcessor},
     challenger::{
         challenger_processor::{verifier_from_compute_function, IndexingChallengerProcessor},
         config::ChallengerConfig,
+        error::ChallengerError,
         Challenger,
     },
     crypto_bls::BlsPrivateKeyConfig,
     logging::logger::SharedLogger,
-    operator::{config::OperatorConfig, register_config::OperatorRegistrationConfig, Operator},
+    operator::{
+        config::OperatorConfig, error::OperatorError, register_config::OperatorRegistrationConfig,
+        Operator,
+    },
     signer::PrivateKeyConfig,
     task_manager::{response_calculator::ResponseCalculator, TaskManager},
-    task_spammer::TaskSpammerBuilder,
+    task_spammer::{error::TaskSpammerError, TaskSpammerBuilder},
 };
 use tokio::task::JoinHandle;
 
@@ -78,10 +82,10 @@ const SOCKET: &str = "127.0.0.1:0";
 
 /// Alias for the aggregator, operator, challenger and spammer handles
 type AvsComponents = (
-    JoinHandle<()>,
-    JoinHandle<()>,
-    JoinHandle<()>,
-    JoinHandle<()>,
+    JoinHandle<Result<(), AggregatorError>>,
+    JoinHandle<Result<(), OperatorError>>,
+    JoinHandle<Result<(), ChallengerError>>,
+    JoinHandle<Result<(), TaskSpammerError>>,
 );
 
 /// Generic AVS configuration for integration tests
@@ -343,7 +347,10 @@ where
 /// # Returns
 ///
 /// * `JoinHandle<()>` - The handle for the aggregator.
-async fn start_aggregator<TM>(config: AvsConfig<TM>, logger: SharedLogger) -> JoinHandle<()>
+async fn start_aggregator<TM>(
+    config: AvsConfig<TM>,
+    logger: SharedLogger,
+) -> JoinHandle<Result<(), AggregatorError>>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
@@ -361,10 +368,10 @@ where
         config.time_to_expiry,
         config.window_duration,
     );
-    let aggregator = Aggregator::new(aggregator_config, task_processor, logger)
+    Aggregator::new(aggregator_config, task_processor, logger)
         .await
-        .unwrap();
-    tokio::spawn(async move { aggregator.run().await.unwrap() })
+        .unwrap()
+        .start()
 }
 
 /// Start the operator
@@ -377,7 +384,10 @@ where
 /// # Returns
 ///
 /// * `JoinHandle<()>` - The handle for the operator
-async fn start_operator<RP, TM>(config: AvsConfig<TM>, response_calculator: RP) -> JoinHandle<()>
+async fn start_operator<RP, TM>(
+    config: AvsConfig<TM>,
+    response_calculator: RP,
+) -> JoinHandle<Result<(), OperatorError>>
 where
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
@@ -421,8 +431,10 @@ where
         aggregator_ip_port: config.aggregator_ip_port,
         registration: Some(registration_config),
     };
-    let operator = Operator::new(config, response_calculator).await.unwrap();
-    tokio::spawn(async move { operator.run::<TM>().await.unwrap() })
+    Operator::new(config, response_calculator)
+        .await
+        .unwrap()
+        .start::<TM>()
 }
 
 /// Start the challenger
@@ -435,7 +447,10 @@ where
 /// # Returns
 ///
 /// * `JoinHandle<()>` - The handle for the challenger
-async fn start_challenger<RP, TM>(config: AvsConfig<TM>, response_calculator: RP) -> JoinHandle<()>
+async fn start_challenger<RP, TM>(
+    config: AvsConfig<TM>,
+    response_calculator: RP,
+) -> JoinHandle<Result<(), ChallengerError>>
 where
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
@@ -451,8 +466,7 @@ where
     let logic = verifier_from_compute_function(response_calculator);
     let challenger_task_processor =
         IndexingChallengerProcessor::new(config.challenger_task_manager, logic);
-    let mut challenger = Challenger::new(challenger_config, challenger_task_processor);
-    tokio::spawn(async move { challenger.run().await.unwrap() })
+    Challenger::new(challenger_config, challenger_task_processor).start()
 }
 
 /// Start the spammer
@@ -464,8 +478,11 @@ where
 ///
 /// # Returns
 ///
-/// * `JoinHandle<()>` - The handle for the spammer
-async fn start_spammer<TM, F>(config: AvsConfig<TM>, input: F) -> JoinHandle<()>
+/// * `JoinHandle<Result<(), TaskSpammerError>>` - The handle for the spammer
+async fn start_spammer<TM, F>(
+    config: AvsConfig<TM>,
+    input: F,
+) -> JoinHandle<Result<(), TaskSpammerError>>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
     TM::Input: Clone + Send + 'static,
@@ -473,15 +490,11 @@ where
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
 {
-    tokio::spawn(async move {
-        TaskSpammerBuilder::new(config.task_spammer_task_manager)
-            .with_iter((0..config.num_tasks).map(input))
-            .with_quorum(50, vec![0])
-            .with_interval(Duration::from_secs(config.task_interval))
-            .build()
-            .unwrap()
-            .run()
-            .await
-            .unwrap()
-    })
+    TaskSpammerBuilder::new(config.task_spammer_task_manager)
+        .with_iter((0..config.num_tasks).map(input))
+        .with_quorum(50, vec![0])
+        .with_interval(Duration::from_secs(config.task_interval))
+        .build()
+        .unwrap()
+        .start()
 }
