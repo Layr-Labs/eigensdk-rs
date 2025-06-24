@@ -1159,9 +1159,23 @@ mod tests {
         let event = contract_stake_registry.LookAheadPeriodChanged_filter();
         let poller = event.watch().await.unwrap();
 
+        let allocation_manager_address =
+            get_allocation_manager_address(http_endpoint.clone()).await;
+        let allocation_manager =
+            AllocationManager::new(allocation_manager_address, get_provider(&http_endpoint));
+        let deallocation_delay = allocation_manager
+            .DEALLOCATION_DELAY()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
         // Set the slashable stake lookahead period. Old period is 0.
         let quorum_number = 0_u8;
-        let lookahead = 10_u32;
+        let lookahead = 1_u32;
+        // StakeRegistry requires this check to hold
+        assert!(lookahead <= deallocation_delay);
+
         let tx_hash = avs_writer
             .set_slashable_stake_lookahead(quorum_number, lookahead)
             .await
