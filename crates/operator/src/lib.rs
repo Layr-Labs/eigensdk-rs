@@ -233,7 +233,7 @@ impl<RP> Operator<RP> {
             // Check if a registration config was provided.
             let Some(registration_config) = config.registration else {
                 error!(
-                    "Operator {operator_address} not registered and no registration config was provided"
+                    "Operator {operator_address:#x} not registered and no registration config was provided"
                 );
                 return Err(OperatorError::RegistrationError(
                     OperatorRegistrationError::RegistrationConfigMissing,
@@ -241,7 +241,7 @@ impl<RP> Operator<RP> {
             };
 
             register_operator(registration_config, http_rpc_url, bls_key_pair.clone()).await?;
-            info!("Operator {} registered successfully", operator_address);
+            info!("Operator {operator_address:#x} registered successfully");
         }
 
         let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
