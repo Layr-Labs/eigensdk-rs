@@ -22,7 +22,7 @@ pub trait ResponseCalculator<Input, Output> {
 }
 
 /// Implementation of the [`ResponseCalculator`] trait that uses a function to compute the response.
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct FunctionResponseCalculator<F>(F);
 
 impl<F, Fut, Input, Output> ResponseCalculator<Input, Output> for FunctionResponseCalculator<F>
@@ -102,14 +102,14 @@ where
 /// **Users should not implement it manually. No stability guarantee are given
 /// to users implementing this trait.**
 #[doc(hidden)]
-pub trait AsyncFnSend<Input, Output>: Fn(u32, Input) -> Self::Future + Send + Clone {
+pub trait AsyncFnSend<Input, Output>: Fn(u32, Input) -> Self::Future + Send {
     /// Future type returned by the closure
     type Future: Future<Output = Result<Output, TaskManagerError>> + Send;
 }
 
 impl<F, Fut, Input, Output> AsyncFnSend<Input, Output> for F
 where
-    F: Fn(u32, Input) -> Fut + Send + Clone,
+    F: Fn(u32, Input) -> Fut + Send,
     Fut: Future<Output = Result<Output, TaskManagerError>> + Send,
 {
     type Future = Fut;
