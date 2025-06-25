@@ -25,4 +25,5 @@ eth-keystore.workspace = true
 eigen-testing-utils.workspace = true
 rand = "0.8.4"
 tokio = { workspace = true, features = ["full"] }
+toml = "0.8"
 serde_json.workspace = true
