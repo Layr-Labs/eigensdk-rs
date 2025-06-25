@@ -33,13 +33,29 @@ jobs:
           version: nightly
 
       - name: Show Forge version
-        run: forge --version
+        run: |
+          forge --version 
+          
+          
+
+      - name: Capture bindings state
+        run: |
+          find crates/utils/src -type f -name "*.rs" -exec sha256sum {} \; > bindings-before.txt
       
       - name: Generate new bindings
         run: make bindings_host
 
       - name: Print diff file names
         run: git diff --name-only -- crates/utils/src/
+
+      - name: Compare bindings
+        run: |
+          find crates/utils/src -type f -name "*.rs" -exec sha256sum {} \; > bindings-after.txt
+          cat bindings-before.txt
+          cat bindings-after.txt
+          diff -u bindings-before.txt bindings-after.txt || true
+          git diff --stat
+          git diff --exit-code
 
       - name: Compare existing and new bindings
         working-directory: crates/utils/src/
