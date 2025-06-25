@@ -40,8 +40,8 @@ pub async fn mine_anvil_blocks(container: &ContainerAsync<GenericImage>, n: u32)
     assert_eq!(output.exit_code().await.unwrap().unwrap(), 0);
 }
 
-/// Start an anvil container for testing, using the dump state file `ANVIL_STATE_PATH`
-async fn start_anvil_with_state(
+/// Start an anvil container for testing, using an specific dump state file
+pub async fn start_anvil_with_state(
     state_path: &str,
 ) -> (ContainerAsync<GenericImage>, String, String) {
     let relative_path = PathBuf::from(state_path);
