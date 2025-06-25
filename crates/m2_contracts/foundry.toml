@@ -6,6 +6,7 @@ fs_permissions = [{ access = "read-write", path = "./" }]
 solc = "0.8.27"
 via-ir = true
 optimizer = true
+bytecode_hash = "none"
 
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

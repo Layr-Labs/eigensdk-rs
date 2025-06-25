@@ -30,7 +30,6 @@ jobs:
       - name: Show Forge version
         run: |
           forge --version
-          solc --version
 
       - name: Generate new bindings
         run: make bindings_host
