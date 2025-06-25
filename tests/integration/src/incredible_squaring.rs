@@ -31,7 +31,7 @@ const QUORUM_THRESHOLD: u8 = 50;
 const QUORUMS: [u8; 1] = [0];
 
 // Aggregator config
-const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8081";
+const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
 const TIME_TO_EXPIRY: Duration = Duration::from_secs(5);
 const WINDOW_DURATION: Duration = Duration::from_secs(3);
 
