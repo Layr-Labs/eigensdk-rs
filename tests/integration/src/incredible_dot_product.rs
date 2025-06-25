@@ -164,14 +164,14 @@ fn generate_input(task_index: u64) -> DotProductInput {
     }
 }
 
-/// Build the task manager struct for the incredible squaring task manager
+/// Build the task manager struct for the incredible dot product task manager
 #[derive(Debug, Clone)]
-pub struct ISTaskManager;
-impl TaskManagerDefs for ISTaskManager {
+pub struct IncredibleDotTaskManager;
+impl TaskManagerDefs for IncredibleDotTaskManager {
     type Input = DotProductInput;
     type Output = U256;
     const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
     const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
 }
 
-impl_task_manager_from_defs_and_contract!(ISTaskManager => IncredibleDotProductTaskManagerInstance);
+impl_task_manager_from_defs_and_contract!(IncredibleDotTaskManager => IncredibleDotProductTaskManagerInstance);
