@@ -107,7 +107,7 @@ use eigen_task_manager::TaskManager;
 use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
 use error::TaskSpammerError;
 use std::time::Duration;
-use tokio::time::sleep;
+use tokio::{task::JoinHandle, time::sleep};
 use tracing::info;
 
 /// Task spammer errors
@@ -239,7 +239,7 @@ pub struct TaskSpammer<I, TM> {
 
 impl<I, TM> TaskSpammer<I, TM>
 where
-    TM: TaskManager + Send + Sync,
+    TM: TaskManager + Send + Sync + 'static,
 {
     /// Run the task spammer
     /// This will create N tasks, where N is the number of items in the iterator
@@ -262,5 +262,21 @@ where
             sleep(self.interval).await;
         }
         Ok(())
+    }
+
+    /// Starts the task spammer in the background.
+    ///
+    /// Equivalent to [`Self::run`], but spawns it in the background and returns a
+    /// [`JoinHandle`] to the background task.
+    ///
+    /// # Returns
+    ///
+    /// * `JoinHandle<Result<(), TaskSpammerError>>` - The handle to the background task
+    pub fn start(self) -> JoinHandle<Result<(), TaskSpammerError>>
+    where
+        I: Iterator<Item = TM::Input> + Send + 'static,
+        I::Item: Clone + Send + 'static,
+    {
+        tokio::spawn(self.run())
     }
 }

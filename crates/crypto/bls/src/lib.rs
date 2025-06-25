@@ -526,10 +526,19 @@ pub struct BlsKeystoreConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloy::hex;
     use ark_bn254::Fq2;
     use eigen_crypto_bn254::utils::verify_message;
     use eigen_testing_utils::test_data::TestData;
     type Fp = ark_ff::Fp<ark_ff::MontBackend<ark_bn254::FqConfig, 4>, 4>;
+
+    /// Path to the BLS keystore file
+    const BLS_KEYSTORE_PATH: &str = "mockdata/test.bls.key.json";
+    /// Password to decrypt the BLS keystore file
+    const BLS_KEYSTORE_PASSWORD: &str = "zbEykAPaTQ5Ww3dQqXCp";
+    /// Decrypted private key from the BLS keystore file
+    const BLS_PRIVATE_KEY: &str =
+        "036aab3e53981c1466f02c30d600589382d4c596c6a76434090c680bafc23a19";
 
     #[test]
     fn test_convert_to_g1_point() {
@@ -892,5 +901,70 @@ mod tests {
 
         assert_eq!(original.priv_key, decoded.priv_key);
         assert_eq!(original.pub_key.g1, decoded.pub_key.g1);
+    }
+
+    #[test]
+    fn test_bls_signature_with_keystore_password_config() {
+        let config = BlsSignerConfig::Keystore(BlsKeystoreConfig {
+            path: BLS_KEYSTORE_PATH.to_string(),
+            password: Some(BLS_KEYSTORE_PASSWORD.to_string()),
+        });
+
+        let bls_key_pair = BlsKeyPair::from_config(config).unwrap();
+        let bytes = hex::decode(BLS_PRIVATE_KEY).unwrap();
+        let expected_priv_key = Fr::from_be_bytes_mod_order(&bytes);
+        assert_eq!(bls_key_pair.priv_key, expected_priv_key);
+    }
+
+    #[test]
+    fn test_bls_signature_with_keystore_env_password() {
+        let config = BlsKeystoreConfig {
+            path: BLS_KEYSTORE_PATH.to_string(),
+            password: None,
+        };
+        std::env::set_var(EIGEN_BLS_KEYSTORE_PASSWORD, BLS_KEYSTORE_PASSWORD);
+
+        let bls_key_pair = BlsKeyPair::from_config(config.into()).unwrap();
+        let bytes = hex::decode(BLS_PRIVATE_KEY).unwrap();
+        let expected_priv_key = Fr::from_be_bytes_mod_order(&bytes);
+        assert_eq!(bls_key_pair.priv_key, expected_priv_key);
+    }
+
+    #[test]
+    fn test_bls_serialize_deserialize_from_config_private_key() {
+        let original = BlsPrivateKeyConfig {
+            private_key:
+                "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                    .to_string(),
+        };
+
+        let toml_str = toml::to_string(&original).unwrap();
+        let parsed: BlsPrivateKeyConfig = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed, original);
+
+        let toml_str = r#"
+            private_key = "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+        "#;
+        let parsed: BlsPrivateKeyConfig = toml::from_str(toml_str).unwrap();
+        assert_eq!(parsed, original);
+    }
+
+    #[test]
+    fn test_bls_serialize_deserialize_from_config_keystore() {
+        let original = BlsKeystoreConfig {
+            path: BLS_KEYSTORE_PATH.to_string(),
+            password: Some(BLS_KEYSTORE_PASSWORD.to_string()),
+        };
+
+        let toml_str = toml::to_string(&original).unwrap();
+        let parsed: BlsKeystoreConfig = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed, original);
+
+        let toml_str = r#"
+            path = "mockdata/test.bls.key.json"
+            password = "zbEykAPaTQ5Ww3dQqXCp"
+        "#;
+        let parsed: BlsKeystoreConfig = toml::from_str(toml_str).unwrap();
+        assert_eq!(parsed, original);
     }
 }
