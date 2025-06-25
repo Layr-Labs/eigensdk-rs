@@ -55,7 +55,6 @@ use eigensdk::{
 use tokio::task::JoinHandle;
 
 // Contracts addresses
-const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
 const AVS_ADDRESS: &str = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154";
 const REGISTRY_COORDINATOR: &str = "0x7bc06c482dead17c0e297afbc32f6e63d3846650";
 const OPERATOR_STATE_RETRIEVER_ADDRESS: &str = "0x4c5859f0f772848b2d91f1d83e2fe57935348029";
@@ -98,8 +97,6 @@ where
     pub challenger_task_manager: TM,
     /// Task spammer task manager instance
     pub task_spammer_task_manager: TM,
-    /// Address of the task manager contract
-    pub task_manager_address: Address,
 
     // Response calculator with the compute logic
     /// Response calculator instance
@@ -249,7 +246,6 @@ where
             logger,
 
             // Task managers
-            task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
             aggregator_task_manager,
             challenger_task_manager,
             task_spammer_task_manager,
