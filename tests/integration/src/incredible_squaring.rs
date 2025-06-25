@@ -264,7 +264,6 @@ fn create_operator_config(http_endpoint: String, ws_endpoint: String) -> Operato
         }
         .into(),
         operator_address: Address::from_str(OPERATOR_ADDRESS).unwrap(),
-        operator_name: "squaring".to_string(),
         ws_rpc_url: ws_endpoint,
         http_rpc_url: http_endpoint,
         registry_coordinator_address: Address::from_str(REGISTRY_COORDINATOR).unwrap(),

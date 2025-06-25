@@ -10,9 +10,6 @@ pub struct OperatorConfig {
     pub bls_signer: BlsSignerConfig,
     /// Address of the operator
     pub operator_address: Address,
-    /// Name of the operator
-    /// This is used for logging and debugging purposes.
-    pub operator_name: String,
     /// Ethereum WebSocket RPC URL
     pub ws_rpc_url: String,
     /// Ethereum HTTP RPC URL
