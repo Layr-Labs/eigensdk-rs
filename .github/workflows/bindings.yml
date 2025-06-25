@@ -28,9 +28,8 @@ jobs:
           version: nightly
 
       - name: Show Forge version
-        run: |
-          forge --version
-
+        run: forge --version
+      
       - name: Generate new bindings
         run: make bindings_host
 
