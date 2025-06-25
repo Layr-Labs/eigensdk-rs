@@ -38,6 +38,9 @@ jobs:
       - name: Generate new bindings
         run: make bindings_host
 
+      - name: Print diff file names
+        run: git diff --name-only -- crates/utils/src/
+
       - name: Compare existing and new bindings
         working-directory: crates/utils/src/
         run: git diff --exit-code
