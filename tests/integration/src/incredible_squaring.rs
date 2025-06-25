@@ -106,7 +106,6 @@ async fn test_incredible_squaring() {
         http_endpoint.to_string(),
         ws_endpoint.to_string(),
         AGGREGATOR_RPC_URL.to_string(),
-        "incredible-operator".to_string(),
         TIME_TO_EXPIRY,
         WINDOW_DURATION,
         TASK_INTERVAL,

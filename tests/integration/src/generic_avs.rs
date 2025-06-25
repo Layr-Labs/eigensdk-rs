@@ -160,8 +160,6 @@ where
     // Operator related
     /// Address of the operator
     pub operator_address: Address,
-    /// Name of the operator
-    pub operator_name: String,
     /// Private key of the operator
     pub operator_private_key: String,
     /// BLS private key of the operator
@@ -207,7 +205,6 @@ where
     /// * `timeout` - TaskSpammer timeout duration
     /// * `http_rpc_url` - HTTP RPC endpoint URL
     /// * `ws_rpc_url` - WebSocket RPC endpoint URL
-    /// * `operator_name` - Operator name for testing purposes
     /// * `time_to_expiry` - Time until the task expires
     /// * `window_duration` - Duration of the window to wait for signatures after quorum is reached
     /// * `task_interval` - Interval between the creation of tasks
@@ -232,7 +229,6 @@ where
         http_rpc_url: String,
         ws_rpc_url: String,
         aggregator_ip_port: String,
-        operator_name: String,
         time_to_expiry: Duration,
         window_duration: Duration,
         task_interval: u64,
@@ -276,7 +272,6 @@ where
 
             // Operator defaults
             operator_address: Address::from_str(OPERATOR_ADDRESS).unwrap(),
-            operator_name,
             operator_private_key: OPERATOR_SIGNER.to_string(),
             operator_bls_private_key: OPERATOR_BLS_SIGNER.to_string(),
 
@@ -462,7 +457,6 @@ where
         }
         .into(),
         operator_address: config.operator_address,
-        operator_name: config.operator_name.clone(),
         registry_coordinator_address: config.registry_coordinator_address,
         aggregator_ip_port: config.aggregator_ip_port.clone(),
         registration: Some(registration_config),
