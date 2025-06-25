@@ -60,7 +60,6 @@
 //!        The output will be a `bls.key.json` file. Please refer to the `eigen-cli` crate for more information.
 //!
 //!      - `operator_address`: The address of the operator
-//!      - `operator_name`: The name of the operator
 //!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
 //!      - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
 //!      - `registry_coordinator_address`: The address of the registry coordinator
@@ -176,7 +175,6 @@ pub mod registration;
 #[derive(Debug)]
 pub struct Operator<RP> {
     operator_id: OperatorId,
-    operator_name: String,
     client_aggregator: ClientAggregator,
     ws_rpc_url: String,
     key_pair: BlsKeyPair,
@@ -208,7 +206,6 @@ impl<RP> Operator<RP> {
         let config::OperatorConfig {
             bls_signer,
             operator_address,
-            operator_name,
             ws_rpc_url,
             http_rpc_url,
             registry_coordinator_address,
@@ -236,7 +233,7 @@ impl<RP> Operator<RP> {
             // Check if a registration config was provided.
             let Some(registration_config) = config.registration else {
                 error!(
-                    "Operator {operator_name} not registered and no registration config was provided"
+                    "Operator {operator_address:#x} not registered and no registration config was provided"
                 );
                 return Err(OperatorError::RegistrationError(
                     OperatorRegistrationError::RegistrationConfigMissing,
@@ -244,7 +241,7 @@ impl<RP> Operator<RP> {
             };
 
             register_operator(registration_config, http_rpc_url, bls_key_pair.clone()).await?;
-            info!("Operator {} registered successfully", operator_name);
+            info!("Operator {operator_address:#x} registered successfully");
         }
 
         let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
@@ -267,7 +264,6 @@ impl<RP> Operator<RP> {
 
         Ok(Self {
             operator_id,
-            operator_name: operator_name.to_string(),
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
             key_pair: bls_key_pair,
@@ -313,10 +309,7 @@ impl<RP> Operator<RP> {
         while let Some(log) = stream.next().await {
             let (task_index, task) = decode_new_task::<TM::Input>(&log)?;
 
-            info!(
-                "{} picked up a new task. Task index: {}",
-                self.operator_name, task_index
-            );
+            info!("Operator picked up a new task. Task index: {task_index}");
 
             let output = self
                 .response_calculator

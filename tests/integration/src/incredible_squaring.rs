@@ -104,7 +104,6 @@ async fn test_incredible_squaring() {
         timeout_duration,
         http_endpoint.to_string(),
         ws_endpoint.to_string(),
-        "incredible-operator".to_string(),
         TIME_TO_EXPIRY,
         WINDOW_DURATION,
         TASK_INTERVAL,
