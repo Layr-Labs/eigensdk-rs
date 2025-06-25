@@ -12,7 +12,7 @@ use eigensdk::{
         impl_task_manager_from_defs_and_contract, response_calculator::response_calculator_from_fn,
         TaskManagerDefs, TaskManagerError,
     },
-    testing_utils::anvil::start_anvil_container_with_state,
+    testing_utils::anvil::start_anvil_with_state,
 };
 
 use crate::{
@@ -45,7 +45,9 @@ const DEPOSIT_TOKENS: &str = "5000000000000000000000";
 // Signers
 const AGGREGATOR_SIGNER: &str =
     "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
-const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+const CHALLENGER_SIGNER: &str =
+    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+// This one must match the `task_generator_addr` passed to the Task manager in deployment
 const TASK_SPAMMER_SIGNER: &str =
     "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
 
@@ -79,16 +81,27 @@ type TaskManagerInstance = IncredibleDotProductTaskManagerInstance<
 #[tokio::test]
 async fn test_incredible_dot_product() {
     let (_container, http_endpoint, ws_endpoint) =
-        start_anvil_container_with_state(INCREDIBLE_DOT_PRODUCT_STATE_PATH).await;
+        start_anvil_with_state(INCREDIBLE_DOT_PRODUCT_STATE_PATH).await;
 
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
 
+    // Response calculator
+    let response_calculator = || response_calculator_from_fn(dot_product);
+
+    // Task spammer should finish when all tasks are created (`NUM_TASKS` * `TASK_INTERVAL`)
+    // so we add 5 seconds to the timeout
+    let timeout_duration = Duration::from_secs(NUM_TASKS * TASK_INTERVAL + 5);
+
     // Create the AVS config using defaults
     let config = AvsConfig::with_default_addresses_and_keys(
         create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER).await,
-        create_task_manager_contract(&http_endpoint, OPERATOR_SIGNER).await,
+        create_task_manager_contract(&http_endpoint, CHALLENGER_SIGNER).await,
         create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER).await,
+        response_calculator,
+        generate_input,
+        logger,
+        timeout_duration,
         http_endpoint.to_string(),
         ws_endpoint.to_string(),
         "incredible-dot-product".to_string(),
@@ -102,23 +115,11 @@ async fn test_incredible_dot_product() {
         NEW_MAGNITUDE.to_vec(),
     );
 
-    // Build the response calculator, which is used to compute the response for a task
-    let response_calculator = response_calculator_from_fn(dot_product);
-
     // Start the AVS
-    let (aggregator_handle, operator_handle, challenger_handle, spammer_handle) =
-        start_avs(config, response_calculator, logger, generate_input).await;
-
-    // Wait until `NUM_TASKS` tasks are created
-    spammer_handle.await.unwrap();
+    start_avs(&config).await;
 
     // Give some time to the aggregator to process the last task
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
-
-    // Abort the aggregator, operator and challenger handles
-    for handle in [aggregator_handle, operator_handle, challenger_handle] {
-        handle.abort();
-    }
 
     verify_tasks_completed(&http_endpoint).await;
 }
@@ -140,7 +141,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
     }
 }
 
-/// Create the task manager contract with an
+/// Create the task manager contract with a specific signer
 async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> TaskManagerInstance {
     let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
     let provider = get_signer(signer, http_endpoint);
