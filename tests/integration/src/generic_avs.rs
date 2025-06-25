@@ -82,11 +82,15 @@ const SOCKET: &str = "127.0.0.1:0";
 
 /// Generic AVS configuration for integration tests
 #[derive(Debug)]
-pub struct AvsConfig<TM, RP>
+pub struct AvsConfig<TM, RP, F>
 where
     TM: TaskManager,
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
+    F: FnMut(u64) -> TM::Input + Send + 'static,
 {
+    /// Logger
+    logger: SharedLogger,
+
     // Task Manager related
     /// Aggregator task manager instance
     pub aggregator_task_manager: TM,
@@ -148,6 +152,10 @@ where
     pub quorums: Vec<u8>,
     /// Number of tasks
     pub num_tasks: u64,
+    /// Input generator
+    pub input: F,
+    /// Timeout duration
+    pub timeout: Duration,
 
     // Challenger related
     /// Private key of the challenger
@@ -178,10 +186,11 @@ where
     pub deposit_tokens: String,
 }
 
-impl<TM, RP> AvsConfig<TM, RP>
+impl<TM, RP, F> AvsConfig<TM, RP, F>
 where
     TM: TaskManager + Clone + Send + Sync + 'static,
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
+    F: FnMut(u64) -> TM::Input + Send + 'static,
 {
     /// Create a new AVS configuration with pre-configured default addresses and keys.
     ///
@@ -217,6 +226,9 @@ where
         challenger_task_manager: TM,
         task_spammer_task_manager: TM,
         response_calculator: fn() -> RP,
+        input: F,
+        logger: SharedLogger,
+        timeout: Duration,
         http_rpc_url: String,
         ws_rpc_url: String,
         operator_name: String,
@@ -230,6 +242,8 @@ where
         new_magnitude: Vec<u64>,
     ) -> Self {
         AvsConfig {
+            logger,
+
             // Task managers
             task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
             aggregator_task_manager,
@@ -254,6 +268,8 @@ where
             quorum_threshold,
             quorums,
             num_tasks,
+            input,
+            timeout,
 
             // Challenger
             challenger_private_key: OPERATOR_SIGNER.to_string(),
@@ -307,21 +323,17 @@ where
 /// * `logger` - The logger
 /// * `input` - The input that will be used to spam the tasks
 /// * `timeout` - A timeout duration if the spammer takes too long to finish
-pub async fn start_avs<TM, RP, F>(
-    config: &AvsConfig<TM, RP>,
-    logger: SharedLogger,
-    input: F,
-    timeout: Duration,
-) where
+pub async fn start_avs<TM, RP, F>(config: &AvsConfig<TM, RP, F>)
+where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: SolValue + Clone + PartialEq,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
-    F: FnMut(u64) -> TM::Input + Send + 'static,
     TM::Input: Clone + Send + 'static,
+    F: FnMut(u64) -> TM::Input + Send + 'static + Clone,
 {
-    let mut aggregator_handle = start_aggregator(config, logger).await;
+    let mut aggregator_handle = start_aggregator(config, config.logger.clone()).await;
 
     // Wait until the aggregator is ready
     tokio::time::sleep(Duration::from_secs(5)).await;
@@ -332,7 +344,7 @@ pub async fn start_avs<TM, RP, F>(
     // Wait until the operator and challenger are ready
     tokio::time::sleep(Duration::from_secs(5)).await;
 
-    let mut spammer_handle = start_spammer(config, input).await;
+    let mut spammer_handle = start_spammer(config, config.input.clone()).await;
 
     tokio::select! {
         // Spammer finished
@@ -352,7 +364,7 @@ pub async fn start_avs<TM, RP, F>(
         }
 
         // Task spammer should finish before the timeout
-        _ = tokio::time::sleep(timeout) => {
+        _ = tokio::time::sleep(config.timeout) => {
             panic!("timeout: TaskSpammer took too long. Aborting...");
         }
     }
@@ -373,8 +385,8 @@ pub async fn start_avs<TM, RP, F>(
 /// # Returns
 ///
 /// * `JoinHandle<()>` - The handle for the aggregator.
-async fn start_aggregator<TM, RP>(
-    config: &AvsConfig<TM, RP>,
+async fn start_aggregator<TM, RP, F>(
+    config: &AvsConfig<TM, RP, F>,
     logger: SharedLogger,
 ) -> JoinHandle<Result<(), AggregatorError>>
 where
@@ -382,6 +394,7 @@ where
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
+    F: FnMut(u64) -> TM::Input + Send + 'static,
 {
     let aggregator_config = AggregatorConfig {
         server_address: config.aggregator_ip_port.clone(),
@@ -411,13 +424,16 @@ where
 /// # Returns
 ///
 /// * `JoinHandle<()>` - The handle for the operator
-async fn start_operator<RP, TM>(config: &AvsConfig<TM, RP>) -> JoinHandle<Result<(), OperatorError>>
+async fn start_operator<RP, TM, F>(
+    config: &AvsConfig<TM, RP, F>,
+) -> JoinHandle<Result<(), OperatorError>>
 where
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: SolValue + Clone,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
+    F: FnMut(u64) -> TM::Input + Send + 'static,
 {
     let registration_config = OperatorRegistrationConfig {
         signer: PrivateKeyConfig {
@@ -471,8 +487,8 @@ where
 /// # Returns
 ///
 /// * `JoinHandle<()>` - The handle for the challenger
-async fn start_challenger<RP, TM>(
-    config: &AvsConfig<TM, RP>,
+async fn start_challenger<RP, TM, F>(
+    config: &AvsConfig<TM, RP, F>,
 ) -> JoinHandle<Result<(), ChallengerError>>
 where
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
@@ -480,6 +496,7 @@ where
     TM::Input: From<<<TM::Input as SolValue>::SolType as SolType>::RustType>,
     TM::Output: SolValue + Clone + PartialEq,
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
+    F: FnMut(u64) -> TM::Input + Send + 'static,
 {
     let challenger_config = ChallengerConfig {
         http_rpc_url: config.http_rpc_url.clone(),
@@ -503,7 +520,7 @@ where
 ///
 /// * `JoinHandle<Result<(), TaskSpammerError>>` - The handle for the spammer
 async fn start_spammer<TM, RP, F>(
-    config: &AvsConfig<TM, RP>,
+    config: &AvsConfig<TM, RP, F>,
     input: F,
 ) -> JoinHandle<Result<(), TaskSpammerError>>
 where
