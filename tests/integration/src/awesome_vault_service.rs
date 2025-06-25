@@ -12,7 +12,7 @@ use eigensdk::{
         impl_task_manager_from_defs_and_contract, response_calculator::ResponseCalculator,
         TaskManagerDefs, TaskManagerError,
     },
-    testing_utils::anvil::start_anvil_container_with_state,
+    testing_utils::anvil::start_anvil_with_state,
 };
 use rand::Rng;
 use tokio::sync::Mutex;
@@ -45,7 +45,9 @@ const DEPOSIT_TOKENS: &str = "5000000000000000000000";
 // Signers
 const AGGREGATOR_SIGNER: &str =
     "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
-const OPERATOR_SIGNER: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+const CHALLENGER_SIGNER: &str =
+    "0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba";
+// This one must match the `task_generator_addr` passed to the Task manager in deployment
 const TASK_SPAMMER_SIGNER: &str =
     "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
 
@@ -77,21 +79,31 @@ type TaskManagerInstance = AwesomeVaultTaskManagerInstance<
 >;
 
 // Test the awesome vault service
-// This test will deploy the AVS, start the aggregator, operator, challenger and task spammer
-// and verify that all tasks (`NUM_TASKS`) have been completed
 #[tokio::test]
 async fn test_awesome_vault_service() {
     let (_container, http_endpoint, ws_endpoint) =
-        start_anvil_container_with_state(AWESOME_VAULT_SERVICE_STATE_PATH).await;
+        start_anvil_with_state(AWESOME_VAULT_SERVICE_STATE_PATH).await;
 
     init_logger(LogLevel::Info);
     let logger = get_test_logger();
 
+    // Task spammer should finish when all tasks are created (`NUM_TASKS` * `TASK_INTERVAL`)
+    // so we add 5 seconds to the timeout
+    let timeout_duration = Duration::from_secs(NUM_TASKS * TASK_INTERVAL + 5);
+
+    // Vault service response calculator
+
     // Create the AVS config
     let config = AvsConfig::with_default_addresses_and_keys(
         create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER),
-        create_task_manager_contract(&http_endpoint, OPERATOR_SIGNER),
+        create_task_manager_contract(&http_endpoint, CHALLENGER_SIGNER),
         create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER),
+        || VaultServiceResponseCalculator {
+            vault: Arc::new(Mutex::new(BTreeMap::new())),
+        },
+        generate_input,
+        logger,
+        timeout_duration,
         http_endpoint.to_string(),
         ws_endpoint.to_string(),
         "awesome-vault".to_string(),
@@ -105,25 +117,11 @@ async fn test_awesome_vault_service() {
         NEW_MAGNITUDE.to_vec(),
     );
 
-    // Build the response calculator, which is used to compute the response for a task
-    let response_calculator = VaultServiceResponseCalculator {
-        vault: Arc::new(Mutex::new(BTreeMap::new())),
-    };
-
     // Start the AVS
-    let (aggregator_handle, operator_handle, challenger_handle, spammer_handle) =
-        start_avs(config, response_calculator, logger, |_| generate_input()).await;
-
-    // Wait until `NUM_TASKS` tasks are created
-    spammer_handle.await.unwrap();
+    start_avs(&config).await;
 
     // Give some time to the aggregator to process the last task
     tokio::time::sleep(Duration::from_secs(TASK_INTERVAL)).await;
-
-    // Abort the aggregator, operator and challenger handles
-    for handle in [aggregator_handle, operator_handle, challenger_handle] {
-        handle.abort();
-    }
 
     // Verify that all tasks have been completed
     verify_tasks_completed(&http_endpoint).await;
@@ -143,12 +141,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
             .await
             .unwrap()
             ._0;
-        assert_ne!(
-            B256::default(),
-            response_hash,
-            "Tarea {} sin respuesta",
-            task_index
-        );
+        assert_ne!(B256::default(), response_hash,);
     }
 }
 
@@ -161,15 +154,15 @@ fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> TaskManage
 
 /// Build the task manager struct for the awesome vault task manager
 #[derive(Debug, Clone)]
-pub struct ISTaskManager;
-impl TaskManagerDefs for ISTaskManager {
+pub struct AwesomeVaultTaskManager;
+impl TaskManagerDefs for AwesomeVaultTaskManager {
     type Input = TaskInput;
     type Output = B256;
     const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
     const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
 }
 
-impl_task_manager_from_defs_and_contract!(ISTaskManager => AwesomeVaultTaskManagerInstance);
+impl_task_manager_from_defs_and_contract!(AwesomeVaultTaskManager => AwesomeVaultTaskManagerInstance);
 
 /// Response Calculator for the Vault Service
 /// We want to simulate a vault service that stores key-value pairs in a BTreeMap
@@ -215,7 +208,7 @@ pub fn compute_vault_root(map: &BTreeMap<String, String>) -> Result<B256, TaskMa
 }
 
 /// Generate random input for the vault
-fn generate_input() -> TaskInput {
+fn generate_input(_: u64) -> TaskInput {
     let mut rng = rand::thread_rng();
     TaskInput {
         key: format!("key_{}", rng.gen_range(0..1000000)),
