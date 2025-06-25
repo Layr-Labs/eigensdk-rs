@@ -205,6 +205,10 @@ where
     /// * `aggregator_task_manager` - Task manager instance for the aggregator component
     /// * `challenger_task_manager` - Task manager instance for the challenger component  
     /// * `task_spammer_task_manager` - Task manager instance for the task spammer component
+    /// * `response_calculator` - Function that returns a response calculator with the compute logic
+    /// * `input` - Task input generator
+    /// * `logger` - Logger
+    /// * `timeout` - TaskSpammer timeout duration
     /// * `http_rpc_url` - HTTP RPC endpoint URL
     /// * `ws_rpc_url` - WebSocket RPC endpoint URL
     /// * `operator_name` - Operator name for testing purposes
@@ -319,10 +323,6 @@ where
 /// # Arguments
 ///
 /// * `config` - The configuration for the AVS integration tests.
-/// * `response_calculator` - The response calculator with the compute logic
-/// * `logger` - The logger
-/// * `input` - The input that will be used to spam the tasks
-/// * `timeout` - A timeout duration if the spammer takes too long to finish
 pub async fn start_avs<TM, RP, F>(config: &AvsConfig<TM, RP, F>)
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
