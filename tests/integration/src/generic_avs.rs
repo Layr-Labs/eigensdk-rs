@@ -67,7 +67,6 @@ const AVS_DIRECTORY_ADDRESS: &str = "0x610178da211fef7d417bc0e6fed39f05609ad788"
 const PERMISSION_CONTROLLER_ADDRESS: &str = "0x59b670e9fa9d0a427751af201d676719a970857b";
 
 // Aggregator config
-const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
 const AGGREGATOR_SIGNER: &str =
     "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
 
@@ -229,6 +228,7 @@ where
         timeout: Duration,
         http_rpc_url: String,
         ws_rpc_url: String,
+        aggregator_ip_port: String,
         time_to_expiry: Duration,
         window_duration: Duration,
         task_interval: u64,
@@ -255,7 +255,7 @@ where
 
             // Aggregator defaults
             aggregator_private_key: AGGREGATOR_SIGNER.to_string(),
-            aggregator_ip_port: AGGREGATOR_RPC_URL.to_string(),
+            aggregator_ip_port,
             time_to_expiry,
             window_duration,
 

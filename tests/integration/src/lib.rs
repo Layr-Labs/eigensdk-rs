@@ -16,4 +16,6 @@ pub mod bindings;
 pub mod generic_avs;
 /// Incredible Squaring integration test
 #[cfg(test)]
+pub mod incredible_dot_product;
+#[cfg(test)]
 pub mod incredible_squaring;
