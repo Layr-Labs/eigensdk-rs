@@ -55,7 +55,6 @@ use eigensdk::{
 use tokio::task::JoinHandle;
 
 // Contracts addresses
-const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
 const AVS_ADDRESS: &str = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154";
 const REGISTRY_COORDINATOR: &str = "0x7bc06c482dead17c0e297afbc32f6e63d3846650";
 const OPERATOR_STATE_RETRIEVER_ADDRESS: &str = "0x4c5859f0f772848b2d91f1d83e2fe57935348029";
@@ -68,7 +67,6 @@ const AVS_DIRECTORY_ADDRESS: &str = "0x610178da211fef7d417bc0e6fed39f05609ad788"
 const PERMISSION_CONTROLLER_ADDRESS: &str = "0x59b670e9fa9d0a427751af201d676719a970857b";
 
 // Aggregator config
-const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8080";
 const AGGREGATOR_SIGNER: &str =
     "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
 
@@ -98,8 +96,6 @@ where
     pub challenger_task_manager: TM,
     /// Task spammer task manager instance
     pub task_spammer_task_manager: TM,
-    /// Address of the task manager contract
-    pub task_manager_address: Address,
 
     // Response calculator with the compute logic
     /// Response calculator instance
@@ -164,8 +160,6 @@ where
     // Operator related
     /// Address of the operator
     pub operator_address: Address,
-    /// Name of the operator
-    pub operator_name: String,
     /// Private key of the operator
     pub operator_private_key: String,
     /// BLS private key of the operator
@@ -211,7 +205,6 @@ where
     /// * `timeout` - TaskSpammer timeout duration
     /// * `http_rpc_url` - HTTP RPC endpoint URL
     /// * `ws_rpc_url` - WebSocket RPC endpoint URL
-    /// * `operator_name` - Operator name for testing purposes
     /// * `time_to_expiry` - Time until the task expires
     /// * `window_duration` - Duration of the window to wait for signatures after quorum is reached
     /// * `task_interval` - Interval between the creation of tasks
@@ -235,7 +228,7 @@ where
         timeout: Duration,
         http_rpc_url: String,
         ws_rpc_url: String,
-        operator_name: String,
+        aggregator_ip_port: String,
         time_to_expiry: Duration,
         window_duration: Duration,
         task_interval: u64,
@@ -249,7 +242,6 @@ where
             logger,
 
             // Task managers
-            task_manager_address: Address::from_str(TASK_MANAGER_ADDRESS).unwrap(),
             aggregator_task_manager,
             challenger_task_manager,
             task_spammer_task_manager,
@@ -263,7 +255,7 @@ where
 
             // Aggregator defaults
             aggregator_private_key: AGGREGATOR_SIGNER.to_string(),
-            aggregator_ip_port: AGGREGATOR_RPC_URL.to_string(),
+            aggregator_ip_port,
             time_to_expiry,
             window_duration,
 
@@ -280,7 +272,6 @@ where
 
             // Operator defaults
             operator_address: Address::from_str(OPERATOR_ADDRESS).unwrap(),
-            operator_name,
             operator_private_key: OPERATOR_SIGNER.to_string(),
             operator_bls_private_key: OPERATOR_BLS_SIGNER.to_string(),
 
@@ -466,7 +457,6 @@ where
         }
         .into(),
         operator_address: config.operator_address,
-        operator_name: config.operator_name.clone(),
         registry_coordinator_address: config.registry_coordinator_address,
         aggregator_ip_port: config.aggregator_ip_port.clone(),
         registration: Some(registration_config),
