@@ -157,7 +157,17 @@ async fn register_operator_to_avs(
     )
     .await?;
 
-    // 3. Register for operator sets. Check if the operator is already registered for the operator sets.
+    // 3. Set the allocation delay for the operator. If the operator has already set the allocation delay,
+    // skip the allocation delay. If not, set the allocation delay.
+    handle_allocation_delay(
+        provider.clone(),
+        operator_address,
+        avs_config.allocation_manager_address,
+        operator_global_config.allocation_delay,
+    )
+    .await?;
+
+    // 4. Register for operator sets. Check if the operator is already registered for the operator sets.
     // If not, register the operator for the operator sets.
     handle_registration_for_operator_sets(
         provider.clone(),
@@ -612,6 +622,59 @@ async fn modify_allocations(
         .await?
         .get_receipt()
         .await?;
+
+    Ok(())
+}
+
+/// Handles the allocation delay for an operator.
+///
+/// # Arguments
+///
+/// * `provider` - Blockchain provider for contract interactions
+/// * `operator_address` - Address of the operator
+/// * `allocation_manager_address` - Address of the allocation manager contract
+/// * `allocation_delay` - Allocation delay to set
+///
+/// # Returns
+///
+/// * Result<(), OperatorRegistrationError> - The result of the operation
+async fn handle_allocation_delay(
+    provider: SdkSigner,
+    operator_address: Address,
+    allocation_manager_address: Option<Address>,
+    allocation_delay: Option<u32>,
+) -> Result<(), OperatorRegistrationError> {
+    let (Some(allocation_manager_address), Some(allocation_delay)) =
+        (allocation_manager_address, allocation_delay)
+    else {
+        warn!("Skipping allocation delay - necessary parameters are not set");
+        return Ok(());
+    };
+
+    let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
+
+    let allocation_return = contract_allocation_manager
+        .getAllocationDelay(operator_address)
+        .call()
+        .await?;
+
+    let AllocationManager::getAllocationDelayReturn {
+        _0: is_allocation_delay_set,
+        _1: current_allocation_delay,
+    } = allocation_return;
+
+    if current_allocation_delay != allocation_delay || !is_allocation_delay_set {
+        info!("Current allocation delay: {current_allocation_delay}, desired: {allocation_delay}");
+        contract_allocation_manager
+            .setAllocationDelay(operator_address, allocation_delay)
+            .send()
+            .await?
+            .get_receipt()
+            .await?;
+        info!("Allocation delay set to {allocation_delay}");
+    } else {
+        info!("Allocation delay is already correct");
+    }
 
     Ok(())
 }
