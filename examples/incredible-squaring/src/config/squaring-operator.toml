@@ -16,16 +16,19 @@ password = "incredible-squaring"
 [registration.operator_global_config]
 metadata_uri = "metadata"
 allocation_delay = 0
+delegation_manager_address = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
 
-[[registration.avs_registration_configs]]
+[registration.avs_registration_config]
 avs_address = "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154"
 socket = "socket"
 allocation_manager_address = "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6"
 registry_coordinator_address = "0x7bc06c482dead17c0e297afbc32f6e63d3846650"
-strategy_manager_address = "0x0165878a594ca255338adfa4d48449f69242eb8f"
-operator_set_ids = [0]
+strategy_manager_address  = "0x0165878a594ca255338adfa4d48449f69242eb8f"
 
-[[registration.avs_registration_configs.deposits]]
+[[registration.avs_registration_config.operator_set_configs]]
+id = 0
+
+[[registration.avs_registration_config.operator_set_configs.deposits]]
 strategy_address = "0x2b961e3959b79326a8e7f64ef0d2d825707669b5"
 amount = "5000000000000000000000"
-allocation_magnitude = 1000000000000000000 
+allocation_magnitude = 1000000000000000000
