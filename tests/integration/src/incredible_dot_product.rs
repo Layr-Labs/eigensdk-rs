@@ -75,12 +75,10 @@ async fn test_incredible_dot_product() {
     let aggregator_task_manager =
         IncredibleDotProductTaskManagerInstance::new(task_manager_address, provider);
 
-    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
     let provider = get_signer(CHALLENGER_SIGNER, &http_endpoint);
     let challenger_task_manager =
         IncredibleDotProductTaskManagerInstance::new(task_manager_address, provider);
 
-    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
     let provider = get_signer(TASK_SPAMMER_SIGNER, &http_endpoint);
     let task_spammer_task_manager =
         IncredibleDotProductTaskManagerInstance::new(task_manager_address, provider);
