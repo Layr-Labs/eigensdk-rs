@@ -10,8 +10,8 @@ pub struct OperatorRegistrationConfig {
     pub signer: SignerConfig,
     /// Operator config for EigenLayer registration
     pub operator_global_config: OperatorELConfig,
-    /// AVS registration configs
-    pub avs_registration_configs: Vec<AvsRegistrationConfig>,
+    /// AVS registration config
+    pub avs_registration_config: AvsRegistrationConfig,
 }
 
 /// This configuration is used to register the operator to EigenLayer.

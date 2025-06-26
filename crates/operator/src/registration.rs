@@ -67,7 +67,7 @@ pub async fn setup_operator(
     let OperatorRegistrationConfig {
         signer,
         operator_global_config,
-        avs_registration_configs,
+        avs_registration_config,
     } = config;
 
     let signer = tx_signer_from_config(signer).await?;
@@ -87,16 +87,15 @@ pub async fn setup_operator(
     .await?;
 
     // 2. Register operator to each AVS individually
-    for avs_config in avs_registration_configs {
-        register_operator_to_avs(
-            provider.clone(),
-            operator_address,
-            avs_config,
-            operator_global_config.clone(),
-            bls_key_pair.clone(),
-        )
-        .await?;
-    }
+
+    register_operator_to_avs(
+        provider.clone(),
+        operator_address,
+        avs_registration_config,
+        operator_global_config.clone(),
+        bls_key_pair.clone(),
+    )
+    .await?;
 
     Ok(())
 }
