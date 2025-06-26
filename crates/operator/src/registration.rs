@@ -36,6 +36,7 @@ use url::Url;
 use crate::error::OperatorRegistrationError;
 use crate::register_config::{
     AvsRegistrationConfig, DepositInfo, OperatorELConfig, OperatorRegistrationConfig,
+    OperatorSetConfig,
 };
 
 /// Performs full setup and registration of an operator with EigenLayer.
@@ -127,10 +128,18 @@ async fn register_operator_to_avs(
 ) -> Result<(), OperatorRegistrationError> {
     // 1. Ensure required token deposits exist in strategies. If the operator has already deposited
     // the required amount, skip the deposit. If not, deposit the difference.
+
+    // Get all deposits for all operator sets
+    let deposits = avs_config
+        .operator_set_configs
+        .iter()
+        .flat_map(|config| config.deposits.clone())
+        .collect();
+
     handle_deposit_tokens_amounts(
         provider.clone(),
         operator_address,
-        avs_config.deposits.clone(),
+        deposits,
         avs_config.strategy_manager_address,
         operator_global_config.delegation_manager_address,
     )
@@ -139,18 +148,12 @@ async fn register_operator_to_avs(
     // 2. Configure stake allocation across operator sets. If the operator has already allocated
     // the required amount, skip the allocation. If not, allocate the difference.
 
-    let operator_sets: Vec<OperatorSet> = avs_config
-        .operator_set_ids
-        .iter()
-        .map(|id| avs_config.operator_set(*id))
-        .collect();
-
     handle_allocation_of_stake_in_strategies(
         provider.clone(),
         operator_address,
-        avs_config.deposits.clone(),
         avs_config.allocation_manager_address,
-        operator_sets.clone(),
+        avs_config.operator_set_configs.clone(),
+        avs_config.avs_address,
     )
     .await?;
 
@@ -159,7 +162,8 @@ async fn register_operator_to_avs(
     handle_registration_for_operator_sets(
         provider.clone(),
         operator_address,
-        operator_sets,
+        avs_config.avs_address,
+        avs_config.operator_set_configs,
         avs_config.allocation_manager_address,
         avs_config.registry_coordinator_address,
         avs_config.socket,
@@ -336,24 +340,29 @@ async fn handle_deposit_tokens_amounts(
         return Ok(());
     };
 
-    for deposit in deposits.clone() {
+    // Get all strategy addresses for all deposits
+    let strategy_addresses = deposits.iter().map(|d| d.strategy_address).collect();
+
+    // Get the current deposit amount for all strategies
+    let deposit_amounts = get_deposit_amount_in_strategy(
+        provider.clone(),
+        operator_address,
+        delegation_manager_address,
+        strategy_addresses,
+    )
+    .await?;
+
+    // Should be the same length
+    assert_eq!(deposit_amounts.len(), deposits.len());
+
+    for (deposit, deposit_amount) in deposits.iter().zip(deposit_amounts.iter()) {
+        // Amount declared by the user
         let amount = U256::from_str(&deposit.amount)
             .map_err(|_| OperatorRegistrationError::U256ParseError)?;
 
-        let deposit_amount = get_deposit_amount_in_strategy(
-            provider.clone(),
-            operator_address,
-            delegation_manager_address,
-            deposit.strategy_address,
-        )
-        .await?;
-
-        info!(
-            "Operator has deposited {deposit_amount} tokens into strategy {:#x}",
-            deposit.strategy_address,
-        );
-
-        if deposit_amount < amount {
+        // If the operator has not deposited the required amount, deposit the difference
+        // If not, skip the deposit
+        if deposit_amount < &amount {
             let amount_to_deposit = amount - deposit_amount;
             info!(
                 "Expected deposit amount: {amount}. Difference between expected and deposited amount: {amount_to_deposit}"
@@ -397,15 +406,15 @@ async fn get_deposit_amount_in_strategy(
     provider: SdkSigner,
     operator_address: Address,
     delegation_manager: Address,
-    strategy_address: Address,
-) -> Result<U256, OperatorRegistrationError> {
+    strategy_addresses: Vec<Address>,
+) -> Result<Vec<U256>, OperatorRegistrationError> {
     let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
 
     Ok(contract_delegation_manager
-        .operatorShares(operator_address, strategy_address)
+        .getOperatorShares(operator_address, strategy_addresses)
         .call()
         .await?
-        .shares)
+        ._0)
 }
 
 /// Deposits ERC20 tokens into a specific strategy through the strategy manager.
@@ -451,9 +460,9 @@ async fn deposit_erc20_into_strategy(
 async fn handle_allocation_of_stake_in_strategies(
     provider: SdkSigner,
     operator_address: Address,
-    deposits: Vec<DepositInfo>,
     allocation_manager_address: Option<Address>,
-    operator_sets: Vec<OperatorSet>,
+    operator_set_configs: Vec<OperatorSetConfig>,
+    avs_address: Address,
 ) -> Result<(), OperatorRegistrationError> {
     let Some(allocation_manager_address) = allocation_manager_address else {
         warn!("Skipping allocation of stake - necessary parameters are not set");
@@ -463,49 +472,62 @@ async fn handle_allocation_of_stake_in_strategies(
     let mut allocate_params = Vec::new();
 
     // Build a list of allocation changes needed across all operator sets and strategies
-    for operator_set in operator_sets.clone() {
-        for deposit in deposits.clone() {
-            let current_allocated_stake = get_current_allocated_stake(
-                provider.clone(),
-                operator_address,
-                &operator_set,
-                deposit.strategy_address,
-                allocation_manager_address,
-            )
-            .await?;
+    for operator_set_config in operator_set_configs.clone() {
+        let operator_set = operator_set_config.operator_set(avs_address);
+        let strategy_addresses: Vec<Address> = operator_set_config
+            .deposits
+            .iter()
+            .map(|deposit| deposit.strategy_address)
+            .collect();
 
+        // Get the current allocated stake for all strategies
+        let current_allocated_stakes = get_current_allocated_stake(
+            provider.clone(),
+            operator_address,
+            &operator_set,
+            strategy_addresses.clone(),
+            allocation_manager_address,
+        )
+        .await?;
+
+        // Collect strategies and magnitudes that need updates
+        let mut strategies_to_update = Vec::new();
+        let mut new_magnitudes = Vec::new();
+
+        for (i, deposit) in operator_set_config.deposits.iter().enumerate() {
+            let current_stake = current_allocated_stakes.get(i).unwrap_or(&U256::ZERO);
             let desired_stake = U256::from_str(&deposit.amount)
                 .map_err(|_| OperatorRegistrationError::U256ParseError)?;
 
-            if current_allocated_stake < desired_stake {
+            if current_stake != &desired_stake {
                 info!(
-                    "Current allocated stake: {current_allocated_stake}, desired: {desired_stake} for strategy {:#x}",
+                    "Current allocated stake: {current_stake}, desired: {desired_stake} for strategy {:#x}",
                     deposit.strategy_address
                 );
 
-                // Prepare allocation parameters for batch transaction
-                allocate_params.push(AllocateParams {
-                    operatorSet: operator_set.clone(),
-                    strategies: vec![deposit.strategy_address],
-                    newMagnitudes: vec![deposit.allocation_magnitude],
-                });
-            } else if current_allocated_stake > desired_stake {
-                warn!(
-                    "Current allocated stake: {current_allocated_stake} is greater than desired: {desired_stake} for strategy {:#x}",
-                    deposit.strategy_address
-                );
+                strategies_to_update.push(deposit.strategy_address);
+                new_magnitudes.push(deposit.allocation_magnitude);
             } else {
                 info!(
-                    "Current allocated stake: {current_allocated_stake}, desired: {desired_stake} for strategy {:#x}",
+                    "Allocation already correct for strategy {:#x}: {current_stake}",
                     deposit.strategy_address
                 );
             }
+        }
+
+        // Create AllocateParams if there are strategies to update for this operator set
+        if !strategies_to_update.is_empty() {
+            allocate_params.push(AllocateParams {
+                operatorSet: operator_set,
+                strategies: strategies_to_update,
+                newMagnitudes: new_magnitudes,
+            });
         }
     }
 
     // Execute batch allocation changes if any are needed
     if !allocate_params.is_empty() {
-        info!("Modifying {} allocations", allocate_params.len());
+        info!("Modifying {} allocation batches", allocate_params.len());
         modify_allocations(
             provider,
             operator_address,
@@ -537,26 +559,26 @@ async fn get_current_allocated_stake(
     provider: SdkSigner,
     operator_address: Address,
     operator_set: &OperatorSet,
-    strategy_address: Address,
+    strategy_addresses: Vec<Address>,
     allocation_manager_address: Address,
-) -> Result<U256, OperatorRegistrationError> {
+) -> Result<Vec<U256>, OperatorRegistrationError> {
     let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
 
     let allocated_stakes = contract_allocation_manager
         .getAllocatedStake(
             operator_set.clone(),
             vec![operator_address],
-            vec![strategy_address],
+            strategy_addresses,
         )
         .call()
         .await?
         ._0;
 
     // Return the stake for the first (and only) operator and strategy
-    Ok(*allocated_stakes
+    Ok(allocated_stakes
         .first()
-        .and_then(|stake| stake.first())
-        .unwrap_or(&U256::ZERO))
+        .unwrap_or(&vec![U256::ZERO])
+        .clone())
 }
 
 /// Executes batch allocation modifications for an operator.
@@ -609,13 +631,13 @@ async fn modify_allocations(
 async fn handle_registration_for_operator_sets(
     provider: SdkSigner,
     operator_address: Address,
-    operator_sets: Vec<OperatorSet>,
+    avs_address: Address,
+    operator_set_configs: Vec<OperatorSetConfig>,
     allocation_manager_address: Option<Address>,
     registry_coordinator_address: Option<Address>,
     socket: Option<String>,
     bls_key_pair: BlsKeyPair,
 ) -> Result<(), OperatorRegistrationError> {
-    // socket vacio si no me pasa
     let (Some(socket), Some(allocation_manager_address), Some(registry_coordinator_address)) = (
         socket,
         allocation_manager_address,
@@ -627,14 +649,15 @@ async fn handle_registration_for_operator_sets(
 
     info!(
         "Checking registration for {} operator sets",
-        operator_sets.len()
+        operator_set_configs.len()
     );
 
     // Group operator sets by AVS address for efficient batch processing
     // Each AVS requires a separate registration transaction
     let mut operator_sets_by_avs = HashMap::new();
 
-    for operator_set in operator_sets {
+    for operator_set_config in operator_set_configs.clone() {
+        let operator_set = operator_set_config.operator_set(avs_address);
         // Check if operator is already registered for this specific operator set
         let is_registered = is_operator_registered_for_operator_set(
             provider.clone(),

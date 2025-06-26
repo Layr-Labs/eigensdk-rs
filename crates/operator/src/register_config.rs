@@ -31,7 +31,7 @@ pub struct AvsRegistrationConfig {
     /// AVS address
     pub avs_address: Address,
     /// Operator set IDs for this AVS
-    pub operator_set_ids: Vec<u32>,
+    pub operator_set_configs: Vec<OperatorSetConfig>,
     /// Socket address for this AVS
     pub socket: Option<String>,
     /// Allocation manager address
@@ -40,11 +40,17 @@ pub struct AvsRegistrationConfig {
     pub registry_coordinator_address: Option<Address>,
     /// Strategy manager address
     pub strategy_manager_address: Option<Address>,
-    /// Deposits for this AVS
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OperatorSetConfig {
+    /// Operator set ID
+    pub id: u32,
+    /// Deposits for this operator set
     pub deposits: Vec<DepositInfo>,
 }
 
-impl AvsRegistrationConfig {
+impl OperatorSetConfig {
     /// Create an operator set from the AVS address and the operator set ID
     ///
     /// # Arguments
@@ -54,13 +60,14 @@ impl AvsRegistrationConfig {
     /// # Returns
     ///
     /// * `OperatorSet` - The operator set
-    pub fn operator_set(&self, id: u32) -> OperatorSet {
+    pub fn operator_set(&self, avs_address: Address) -> OperatorSet {
         OperatorSet {
-            id,
-            avs: self.avs_address,
+            id: self.id,
+            avs: avs_address,
         }
     }
 }
+
 /// Deposit information for an AVS
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DepositInfo {
