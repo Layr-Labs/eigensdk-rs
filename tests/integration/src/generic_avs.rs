@@ -45,7 +45,11 @@ use eigensdk::{
     crypto_bls::BlsPrivateKeyConfig,
     logging::logger::SharedLogger,
     operator::{
-        config::OperatorConfig, error::OperatorError, register_config::OperatorRegistrationConfig,
+        config::OperatorConfig,
+        error::OperatorError,
+        register_config::{
+            AvsRegistrationConfig, DepositInfo, OperatorELConfig, OperatorRegistrationConfig,
+        },
         Operator,
     },
     signer::PrivateKeyConfig,
@@ -426,27 +430,33 @@ where
     TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     F: FnMut(u64) -> TM::Input + Send + 'static,
 {
+    let operator_global_config = OperatorELConfig {
+        metadata_uri: Some(config.metadata_uri.clone()),
+        allocation_delay: Some(config.allocation_delay),
+        delegation_manager_address: Some(config.delegation_manager_address),
+    };
+
+    let avs_registration_config = AvsRegistrationConfig {
+        avs_address: config.avs_address,
+        operator_set_ids: vec![config.operator_set_id],
+        socket: Some(config.socket.clone()),
+        allocation_manager_address: Some(config.allocation_manager_address),
+        registry_coordinator_address: Some(config.registry_coordinator_address),
+        strategy_manager_address: Some(config.strategy_manager_address),
+        deposits: vec![DepositInfo {
+            strategy_address: config.strategy_address,
+            amount: config.deposit_tokens.clone(),
+            allocation_magnitude: config.new_magnitude[0],
+        }],
+    };
+
     let registration_config = OperatorRegistrationConfig {
         signer: PrivateKeyConfig {
             private_key: config.operator_private_key.clone(),
         }
         .into(),
-        metadata_uri: config.metadata_uri.clone(),
-        socket: config.socket.clone(),
-        allocation_delay: config.allocation_delay,
-        operator_set_id: config.operator_set_id,
-        new_magnitude: config.new_magnitude.clone(),
-        deposit_tokens: config.deposit_tokens.clone(),
-        permission_controller_address: config.permission_controller_address,
-        rewards_coordinator_address: config.rewards_coordinator_address,
-        allocation_manager_address: config.allocation_manager_address,
-        registry_coordinator_address: config.registry_coordinator_address,
-        delegation_manager_address: config.delegation_manager_address,
-        avs_directory_address: config.avs_directory_address,
-        strategy_manager_address: config.strategy_manager_address,
-        erc20_strategy_address: config.strategy_address,
-        avs_address: config.avs_address,
-        strategies_addresses: vec![config.strategy_address],
+        operator_global_config,
+        avs_registration_config,
     };
 
     let operator_config = OperatorConfig {
