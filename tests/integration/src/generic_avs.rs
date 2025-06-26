@@ -49,6 +49,7 @@ use eigensdk::{
         error::OperatorError,
         register_config::{
             AvsRegistrationConfig, DepositInfo, OperatorELConfig, OperatorRegistrationConfig,
+            OperatorSetConfig,
         },
         Operator,
     },
@@ -436,18 +437,22 @@ where
         delegation_manager_address: Some(config.delegation_manager_address),
     };
 
+    let deposits = vec![DepositInfo {
+        strategy_address: config.strategy_address,
+        amount: config.deposit_tokens.clone(),
+        allocation_magnitude: config.new_magnitude[0],
+    }];
+
     let avs_registration_config = AvsRegistrationConfig {
         avs_address: config.avs_address,
-        operator_set_ids: vec![config.operator_set_id],
+        operator_set_configs: vec![OperatorSetConfig {
+            id: config.operator_set_id,
+            deposits,
+        }],
         socket: Some(config.socket.clone()),
         allocation_manager_address: Some(config.allocation_manager_address),
         registry_coordinator_address: Some(config.registry_coordinator_address),
         strategy_manager_address: Some(config.strategy_manager_address),
-        deposits: vec![DepositInfo {
-            strategy_address: config.strategy_address,
-            amount: config.deposit_tokens.clone(),
-            allocation_magnitude: config.new_magnitude[0],
-        }],
     };
 
     let registration_config = OperatorRegistrationConfig {
