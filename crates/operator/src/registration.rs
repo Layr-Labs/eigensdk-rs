@@ -177,23 +177,13 @@ async fn register_operator_to_avs(
 /// Handles operator registration process to EigenLayer.
 ///
 /// This function checks if the operator is already registered with EigenLayer and performs
-/// registration if needed. Registration requires three parameter passed in the
-/// [`OperatorELConfig`]:
-///
-/// * `allocation_delay` - Time delay for allocation changes (in seconds)
-/// * `metadata_uri` - URI pointing to operator metadata (typically IPFS or HTTP)
-/// * `delegation_manager_address` - Address of the delegation manager contract
-///
-/// If any required parameter is missing, the registration is skipped with a warning.
-/// This allows for flexible configuration where EigenLayer registration is optional.
+/// registration if needed.
 ///
 /// # Arguments
 ///
 /// * `provider` - Blockchain provider for contract interactions
 /// * `operator_address` - Address of the operator to register
-/// * `allocation_delay` - Optional time delay for allocation changes (in seconds)
-/// * `metadata_uri` - Optional URI pointing to operator metadata
-/// * `delegation_manager_address` - Optional address of the delegation manager contract
+/// * `operator_el_config` - Operator configuration for EigenLayer registration
 ///
 /// # Returns
 ///
@@ -203,8 +193,6 @@ async fn handle_eigenlayer_registration(
     operator_address: Address,
     operator_el_config: OperatorELConfig,
 ) -> Result<(), OperatorRegistrationError> {
-    // Only proceed if all required parameters are provided
-    // This design allows partial configuration where EigenLayer registration is optional
     let (Some(delegation_manager_address), Some(allocation_delay), Some(metadata_uri)) = (
         operator_el_config.delegation_manager_address,
         operator_el_config.allocation_delay,
@@ -397,7 +385,7 @@ async fn handle_deposit_tokens_amounts(
 /// * `provider` - Blockchain provider for contract interactions
 /// * `operator_address` - Address of the operator
 /// * `delegation_manager` - Address of the delegation manager contract
-/// * `strategy_address` - Address of the strategy contract
+/// * `strategy_addresses` - Addresses of the strategy contracts
 ///
 /// # Returns
 ///
@@ -457,6 +445,23 @@ async fn deposit_erc20_into_strategy(
     Ok(())
 }
 
+/// Handles the allocation of stake in strategies for an operator.
+///
+/// This function ensures that the operator has allocated the required amounts of stake
+/// into each specified strategy. If the operator has already allocated the required amount,
+/// skip the allocation. If not, allocate the difference between the required amount and the allocated amount.
+///
+/// # Arguments
+///
+/// * `provider` - Blockchain provider for contract interactions
+/// * `operator_address` - Address of the operator
+/// * `allocation_manager_address` - Address of the allocation manager contract
+/// * `operator_set_configs` - Configuration for operator sets
+/// * `avs_address` - Address of the AVS contract
+///
+/// # Returns
+///
+/// * Result<(), OperatorRegistrationError> - The result of the operation
 async fn handle_allocation_of_stake_in_strategies(
     provider: SdkSigner,
     operator_address: Address,
@@ -549,7 +554,7 @@ async fn handle_allocation_of_stake_in_strategies(
 /// * `provider` - Blockchain provider for contract interactions
 /// * `operator_address` - Address of the operator
 /// * `operator_set` - The operator set to query
-/// * `strategy_address` - Address of the strategy contract
+/// * `strategy_addresses` - Addresses of the strategy contracts
 /// * `allocation_manager_address` - Address of the allocation manager contract
 ///
 /// # Returns
@@ -619,7 +624,8 @@ async fn modify_allocations(
 ///
 /// * `provider` - Blockchain provider for contract interactions
 /// * `operator_address` - Address of the operator
-/// * `operator_sets` - Vector of operator sets to register for
+/// * `avs_address` - Address of the AVS contract
+/// * `operator_set_configs` - Configuration for operator sets
 /// * `allocation_manager_address` - Optional address of the allocation manager contract
 /// * `registry_coordinator_address` - Optional address of the registry coordinator contract
 /// * `socket` - Optional socket address for operator communication
@@ -628,6 +634,7 @@ async fn modify_allocations(
 /// # Returns
 ///
 /// * Result<(), OperatorRegistrationError> - The result of the operation
+#[allow(clippy::too_many_arguments)]
 async fn handle_registration_for_operator_sets(
     provider: SdkSigner,
     operator_address: Address,
