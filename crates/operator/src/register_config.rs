@@ -56,7 +56,7 @@ impl OperatorSetConfig {
     ///
     /// # Arguments
     ///
-    /// * `id` - The ID of the operator set
+    /// * `avs_address` - The address of the AVS
     ///
     /// # Returns
     ///
