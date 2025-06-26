@@ -36,7 +36,7 @@ pub trait ChallengerProcessor {
         &mut self,
         task_index: u32,
         task: Task<Self::Input>,
-    ) -> impl Future<Output = Result<(), ChallengerError>>;
+    ) -> impl Future<Output = Result<(), ChallengerError>> + Send;
 
     /// Handle the response of a task when a task response event is received
     ///
@@ -56,5 +56,5 @@ pub trait ChallengerProcessor {
         task_response: TaskResponse<Self::Output>,
         task_response_metadata: TaskResponseMetadataSol,
         non_signing_operator_pub_keys: Vec<G1Point>,
-    ) -> impl Future<Output = Result<(), ChallengerError>>;
+    ) -> impl Future<Output = Result<(), ChallengerError>> + Send;
 }

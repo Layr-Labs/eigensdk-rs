@@ -60,7 +60,6 @@
 //!        The output will be a `bls.key.json` file. Please refer to the `eigen-cli` crate for more information.
 //!
 //!      - `operator_address`: The address of the operator
-//!      - `operator_name`: The name of the operator
 //!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
 //!      - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
 //!      - `registry_coordinator_address`: The address of the registry coordinator
@@ -134,6 +133,8 @@
 //! implementation for an example of how to implement a custom Response Calculator.
 //!
 
+use tokio::task::JoinHandle;
+
 use crate::registration::setup_operator;
 use alloy::{
     dyn_abi::SolType,
@@ -173,7 +174,6 @@ pub mod registration;
 #[derive(Debug)]
 pub struct Operator<RP> {
     operator_id: OperatorId,
-    operator_name: String,
     client_aggregator: ClientAggregator,
     ws_rpc_url: String,
     key_pair: BlsKeyPair,
@@ -205,7 +205,6 @@ impl<RP> Operator<RP> {
         let config::OperatorConfig {
             bls_signer,
             operator_address,
-            operator_name,
             ws_rpc_url,
             http_rpc_url,
             registry_coordinator_address,
@@ -244,7 +243,6 @@ impl<RP> Operator<RP> {
 
         Ok(Self {
             operator_id,
-            operator_name: operator_name.to_string(),
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
             key_pair: bls_key_pair,
@@ -264,7 +262,7 @@ impl<RP> Operator<RP> {
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation.
-    pub async fn run<TM>(&self) -> Result<(), OperatorError>
+    pub async fn run<TM>(self) -> Result<(), OperatorError>
     where
         RP: ResponseCalculator<TM::Input, TM::Output>,
         TM: TaskManagerDefs,
@@ -290,10 +288,7 @@ impl<RP> Operator<RP> {
         while let Some(log) = stream.next().await {
             let (task_index, task) = decode_new_task::<TM::Input>(&log)?;
 
-            info!(
-                "{} picked up a new task. Task index: {}",
-                self.operator_name, task_index
-            );
+            info!("Operator picked up a new task. Task index: {task_index}");
 
             let output = self
                 .response_calculator
@@ -315,6 +310,26 @@ impl<RP> Operator<RP> {
         }
 
         Ok(())
+    }
+
+    /// Starts the operator in the background.
+    ///
+    /// Equivalent to [`Self::run`], but spawns it in the background and returns a
+    /// [`JoinHandle`] to the background task.
+    ///
+    /// # Returns
+    ///
+    /// * `JoinHandle<Result<(), OperatorError>>` - The handle to the background task
+    pub fn start<TM>(self) -> JoinHandle<Result<(), OperatorError>>
+    where
+        RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
+        TM: TaskManagerDefs + 'static,
+        TM::Input:
+            From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
+        TM::Output: SolValue + Clone,
+        TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
+    {
+        tokio::spawn(self.run::<TM>())
     }
 
     /// Sign the task response for the aggregator.

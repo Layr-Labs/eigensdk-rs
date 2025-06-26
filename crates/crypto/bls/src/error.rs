@@ -22,4 +22,8 @@ pub enum BlsError {
     /// Invalid Keystore
     #[error("Invalid keystore")]
     InvalidKeystore(#[from] KeystoreError),
+
+    /// Missing password
+    #[error("Missing keystore password")]
+    MissingKeystorePassword,
 }

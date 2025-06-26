@@ -2100,10 +2100,7 @@ dependencies = [
  "alloy",
  "ark-ff 0.5.0",
  "async-trait",
- "eigen-common",
- "eigen-logging",
- "eigen-testing-utils",
- "eigen-utils",
+ "eigensdk",
  "futures-util",
  "num-bigint 0.4.6",
  "thiserror 1.0.69",
@@ -2931,6 +2928,7 @@ dependencies = [
  "serde_json",
  "thiserror 1.0.69",
  "tokio",
+ "toml",
 ]
 
 [[package]]

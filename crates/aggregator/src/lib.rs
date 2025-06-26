@@ -156,6 +156,7 @@ use std::fmt::Debug;
 use std::net::SocketAddr;
 use tarpc::server::{self, Channel};
 use tarpc::tokio_serde::formats::Json;
+use tokio::task::JoinHandle;
 use tracing::{error, info};
 
 /// The aggregator is responsible for aggregating [`SignedTaskResponse`] from operators and posting them on chain. This includes:
@@ -283,6 +284,18 @@ where
         aggregate_result?;
 
         Ok(())
+    }
+
+    /// Starts the aggregator service in the background.
+    ///
+    /// Equivalent to [`Self::run`], but spawns it in the background and returns a
+    /// [`JoinHandle`] to the background task.
+    ///
+    /// # Returns
+    ///
+    /// * `JoinHandle<Result<(), AggregatorError>>` - The handle to the background task
+    pub fn start(self) -> JoinHandle<Result<(), AggregatorError>> {
+        tokio::spawn(self.run())
     }
 
     /// Starts the RPC server

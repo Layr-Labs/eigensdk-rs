@@ -27,6 +27,9 @@ start_docker:
 		ghcr.io/foundry-rs/foundry:latest --host 0.0.0.0
 	sleep 2
 
+dump-state:
+	./contracts/anvil/dump-state.sh
+
 RUST_BINDINGS_PATH:=src/bindings
 
 generate-bindings:
