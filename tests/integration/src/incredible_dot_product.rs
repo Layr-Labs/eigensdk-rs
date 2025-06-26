@@ -1,7 +1,6 @@
 use std::{str::FromStr, time::Duration};
 
 use alloy::{
-    network::EthereumWallet,
     primitives::{Address, B256, U256},
     sol_types::SolEvent,
 };
@@ -56,29 +55,6 @@ const TASK_SPAMMER_SIGNER: &str =
 const INCREDIBLE_DOT_PRODUCT_STATE_PATH: &str =
     "./examples/incredible-dot-product/contracts/anvil/incredible-dot-product-anvil-state/state.json";
 
-type TaskManagerInstance = IncredibleDotProductTaskManagerInstance<
-    (),
-    alloy::providers::fillers::FillProvider<
-        alloy::providers::fillers::JoinFill<
-            alloy::providers::fillers::JoinFill<
-                alloy::providers::Identity,
-                alloy::providers::fillers::JoinFill<
-                    alloy::providers::fillers::GasFiller,
-                    alloy::providers::fillers::JoinFill<
-                        alloy::providers::fillers::BlobGasFiller,
-                        alloy::providers::fillers::JoinFill<
-                            alloy::providers::fillers::NonceFiller,
-                            alloy::providers::fillers::ChainIdFiller,
-                        >,
-                    >,
-                >,
-            >,
-            alloy::providers::fillers::WalletFiller<EthereumWallet>,
-        >,
-        alloy::providers::RootProvider,
-    >,
->;
-
 #[tokio::test]
 async fn test_incredible_dot_product() {
     let (_container, http_endpoint, ws_endpoint) =
@@ -94,11 +70,26 @@ async fn test_incredible_dot_product() {
     // so we add 5 seconds to the timeout
     let timeout_duration = Duration::from_secs(NUM_TASKS * TASK_INTERVAL + 5);
 
+    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
+    let provider = get_signer(AGGREGATOR_SIGNER, &http_endpoint);
+    let aggregator_task_manager =
+        IncredibleDotProductTaskManagerInstance::new(task_manager_address, provider);
+
+    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
+    let provider = get_signer(CHALLENGER_SIGNER, &http_endpoint);
+    let challenger_task_manager =
+        IncredibleDotProductTaskManagerInstance::new(task_manager_address, provider);
+
+    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
+    let provider = get_signer(TASK_SPAMMER_SIGNER, &http_endpoint);
+    let task_spammer_task_manager =
+        IncredibleDotProductTaskManagerInstance::new(task_manager_address, provider);
+
     // Create the AVS config using defaults
     let config = AvsConfig::with_default_addresses_and_keys(
-        create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER).await,
-        create_task_manager_contract(&http_endpoint, CHALLENGER_SIGNER).await,
-        create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER).await,
+        aggregator_task_manager,
+        challenger_task_manager,
+        task_spammer_task_manager,
         response_calculator,
         generate_input,
         logger,
@@ -127,12 +118,20 @@ async fn test_incredible_dot_product() {
 
 /// Verify that all tasks created by the task spammer have been completed
 async fn verify_tasks_completed(http_endpoint: &str) {
-    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER).await;
-    let latest_task_num = contract.latestTaskNum().call().await.unwrap()._0;
+    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
+    let provider = get_signer(AGGREGATOR_SIGNER, http_endpoint);
+    let aggregator_task_manager =
+        IncredibleDotProductTaskManagerInstance::new(task_manager_address, provider);
+    let latest_task_num = aggregator_task_manager
+        .latestTaskNum()
+        .call()
+        .await
+        .unwrap()
+        ._0;
     assert_eq!(latest_task_num, NUM_TASKS as u32);
 
     for task_index in 0..latest_task_num {
-        let response_hash = contract
+        let response_hash = aggregator_task_manager
             .allTaskResponses(task_index)
             .call()
             .await
@@ -140,13 +139,6 @@ async fn verify_tasks_completed(http_endpoint: &str) {
             ._0;
         assert_ne!(B256::default(), response_hash);
     }
-}
-
-/// Create the task manager contract with a specific signer
-async fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> TaskManagerInstance {
-    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
-    let provider = get_signer(signer, http_endpoint);
-    IncredibleDotProductTaskManagerInstance::new(task_manager_address, provider)
 }
 
 /// Computes the dot product of a pair of points
