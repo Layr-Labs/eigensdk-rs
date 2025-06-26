@@ -1,7 +1,6 @@
 use std::{collections::BTreeMap, str::FromStr, sync::Arc, time::Duration};
 
 use alloy::{
-    network::EthereumWallet,
     primitives::{Address, Keccak256, B256},
     sol_types::SolEvent,
 };
@@ -35,6 +34,7 @@ const QUORUM_THRESHOLD: u8 = 50;
 const QUORUMS: [u8; 1] = [0];
 
 // Aggregator config
+const AGGREGATOR_RPC_URL: &str = "127.0.0.1:8082";
 const TIME_TO_EXPIRY: Duration = Duration::from_secs(5);
 const WINDOW_DURATION: Duration = Duration::from_secs(3);
 
@@ -55,29 +55,6 @@ const TASK_SPAMMER_SIGNER: &str =
 const AWESOME_VAULT_SERVICE_STATE_PATH: &str =
     "./examples/awesome-vault-service/contracts/anvil/awesome-vault-service-anvil-state/state.json";
 
-type TaskManagerInstance = AwesomeVaultTaskManagerInstance<
-    (),
-    alloy::providers::fillers::FillProvider<
-        alloy::providers::fillers::JoinFill<
-            alloy::providers::fillers::JoinFill<
-                alloy::providers::Identity,
-                alloy::providers::fillers::JoinFill<
-                    alloy::providers::fillers::GasFiller,
-                    alloy::providers::fillers::JoinFill<
-                        alloy::providers::fillers::BlobGasFiller,
-                        alloy::providers::fillers::JoinFill<
-                            alloy::providers::fillers::NonceFiller,
-                            alloy::providers::fillers::ChainIdFiller,
-                        >,
-                    >,
-                >,
-            >,
-            alloy::providers::fillers::WalletFiller<EthereumWallet>,
-        >,
-        alloy::providers::RootProvider,
-    >,
->;
-
 // Test the awesome vault service
 #[tokio::test]
 async fn test_awesome_vault_service() {
@@ -91,13 +68,24 @@ async fn test_awesome_vault_service() {
     // so we add 5 seconds to the timeout
     let timeout_duration = Duration::from_secs(NUM_TASKS * TASK_INTERVAL + 5);
 
-    // Vault service response calculator
+    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
+    let provider = get_signer(AGGREGATOR_SIGNER, &http_endpoint);
+    let aggregator_task_manager =
+        AwesomeVaultTaskManagerInstance::new(task_manager_address, provider);
+
+    let provider = get_signer(CHALLENGER_SIGNER, &http_endpoint);
+    let challenger_task_manager =
+        AwesomeVaultTaskManagerInstance::new(task_manager_address, provider);
+
+    let provider = get_signer(TASK_SPAMMER_SIGNER, &http_endpoint);
+    let task_spammer_task_manager =
+        AwesomeVaultTaskManagerInstance::new(task_manager_address, provider);
 
     // Create the AVS config
     let config = AvsConfig::with_default_addresses_and_keys(
-        create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER),
-        create_task_manager_contract(&http_endpoint, CHALLENGER_SIGNER),
-        create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER),
+        aggregator_task_manager,
+        challenger_task_manager,
+        task_spammer_task_manager,
         || VaultServiceResponseCalculator {
             vault: Arc::new(Mutex::new(BTreeMap::new())),
         },
@@ -106,7 +94,7 @@ async fn test_awesome_vault_service() {
         timeout_duration,
         http_endpoint.to_string(),
         ws_endpoint.to_string(),
-        "awesome-vault".to_string(),
+        AGGREGATOR_RPC_URL.to_string(),
         TIME_TO_EXPIRY,
         WINDOW_DURATION,
         TASK_INTERVAL,
@@ -129,13 +117,21 @@ async fn test_awesome_vault_service() {
 
 /// Verify that all tasks that have been created by the task spammer have been completed
 async fn verify_tasks_completed(http_endpoint: &str) {
-    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER);
-    let latest_task_num = contract.latestTaskNum().call().await.unwrap()._0;
+    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
+    let provider = get_signer(AGGREGATOR_SIGNER, http_endpoint);
+    let aggregator_task_manager =
+        AwesomeVaultTaskManagerInstance::new(task_manager_address, provider);
+    let latest_task_num = aggregator_task_manager
+        .latestTaskNum()
+        .call()
+        .await
+        .unwrap()
+        ._0;
     assert_eq!(latest_task_num, NUM_TASKS as u32);
 
     // Verify that all tasks have responses
     for task_index in 0..latest_task_num {
-        let response_hash = contract
+        let response_hash = aggregator_task_manager
             .allTaskResponses(task_index)
             .call()
             .await
@@ -143,13 +139,6 @@ async fn verify_tasks_completed(http_endpoint: &str) {
             ._0;
         assert_ne!(B256::default(), response_hash,);
     }
-}
-
-/// Create the task manager contract for a specific signer
-fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> TaskManagerInstance {
-    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
-    let provider = get_signer(signer, http_endpoint);
-    AwesomeVaultTaskManagerInstance::new(task_manager_address, provider)
 }
 
 /// Build the task manager struct for the awesome vault task manager
