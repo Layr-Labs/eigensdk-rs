@@ -42,6 +42,7 @@ pub struct AvsRegistrationConfig {
     pub strategy_manager_address: Option<Address>,
 }
 
+/// Operator set configuration for an AVS with its deposits
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OperatorSetConfig {
     /// Operator set ID

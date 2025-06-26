@@ -329,7 +329,10 @@ async fn handle_deposit_tokens_amounts(
     };
 
     // Get all strategy addresses for all deposits
-    let strategy_addresses = deposits.iter().map(|d| d.strategy_address).collect();
+    let strategy_addresses = deposits
+        .iter()
+        .map(|deposit| deposit.strategy_address)
+        .collect();
 
     // Get the current deposit amount for all strategies
     let deposit_amounts = get_deposit_amount_in_strategy(
@@ -339,9 +342,6 @@ async fn handle_deposit_tokens_amounts(
         strategy_addresses,
     )
     .await?;
-
-    // Should be the same length
-    assert_eq!(deposit_amounts.len(), deposits.len());
 
     for (deposit, deposit_amount) in deposits.iter().zip(deposit_amounts.iter()) {
         // Amount declared by the user
@@ -716,6 +716,42 @@ async fn handle_registration_for_operator_sets(
     Ok(())
 }
 
+/// Checks if an operator is registered for a specific operator set.
+///
+/// # Arguments
+///
+/// * `provider` - Blockchain provider for contract interactions
+/// * `operator_address` - Address of the operator
+/// * `operator_set` - The operator set to check registration for
+/// * `allocation_manager_address` - Address of the allocation manager contract
+///
+/// # Returns
+///
+/// * Result<bool, OperatorRegistrationError> - True if the operator is registered for the operator set, false otherwise
+async fn is_operator_registered_for_operator_set(
+    provider: SdkSigner,
+    operator_address: Address,
+    operator_set: &OperatorSet,
+    allocation_manager_address: Address,
+) -> Result<bool, OperatorRegistrationError> {
+    let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
+
+    // Get all registered operator sets for this operator
+    let registered_sets = contract_allocation_manager
+        .getRegisteredSets(operator_address)
+        .call()
+        .await?
+        ._0;
+
+    // Check if our target operator set is in the registered list
+    // We match both the operator set ID and the AVS address
+    let is_registered = registered_sets.iter().any(|registered_set| {
+        registered_set.id == operator_set.id && registered_set.avs == operator_set.avs
+    });
+
+    Ok(is_registered)
+}
+
 /// Registers the operator for a set of operator sets.
 ///
 /// # Arguments
@@ -797,40 +833,4 @@ async fn register_for_operator_sets(
         .await?;
 
     Ok(())
-}
-
-/// Checks if an operator is registered for a specific operator set.
-///
-/// # Arguments
-///
-/// * `provider` - Blockchain provider for contract interactions
-/// * `operator_address` - Address of the operator
-/// * `operator_set` - The operator set to check registration for
-/// * `allocation_manager_address` - Address of the allocation manager contract
-///
-/// # Returns
-///
-/// * Result<bool, OperatorRegistrationError> - True if the operator is registered for the operator set, false otherwise
-async fn is_operator_registered_for_operator_set(
-    provider: SdkSigner,
-    operator_address: Address,
-    operator_set: &OperatorSet,
-    allocation_manager_address: Address,
-) -> Result<bool, OperatorRegistrationError> {
-    let contract_allocation_manager = AllocationManager::new(allocation_manager_address, provider);
-
-    // Get all registered operator sets for this operator
-    let registered_sets = contract_allocation_manager
-        .getRegisteredSets(operator_address)
-        .call()
-        .await?
-        ._0;
-
-    // Check if our target operator set is in the registered list
-    // We match both the operator set ID and the AVS address
-    let is_registered = registered_sets.iter().any(|registered_set| {
-        registered_set.id == operator_set.id && registered_set.avs == operator_set.avs
-    });
-
-    Ok(is_registered)
 }
