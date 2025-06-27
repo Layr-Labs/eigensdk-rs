@@ -703,9 +703,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         current_aggregated_response: &Option<BlsAggregationServiceResponse>,
     ) -> Result<(), BlsAggregationServiceError> {
         logger.debug(
-            &format!(
-                "Window finished. Send aggregated response for task index: {task_index}"
-            ),
+            &format!("Window finished. Send aggregated response for task index: {task_index}"),
             "eigen-services-blsaggregation.bls_agg.handle_window_finished",
         );
 
@@ -865,9 +863,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ) {
         let sender = window_tx.clone();
         logger.debug(
-            &format!(
-                "Create window to wait for new signatures for task index: {task_index}"
-            ),
+            &format!("Create window to wait for new signatures for task index: {task_index}"),
             "eigen-services-blsaggregation.bls_agg.start_window",
         );
         tokio::spawn(async move {
@@ -911,9 +907,7 @@ async fn verify_signature(
 
     let Some(pub_keys) = &operator_state.operator_info.pub_keys else {
         logger.error(
-            &format!(
-                "Operator Public Key Not Found for task index: {task_index}"
-            ),
+            &format!("Operator Public Key Not Found for task index: {task_index}"),
             "eigen-services-blsaggregation.bls_agg.verify_signature",
         );
         return Err(SignatureVerificationError::OperatorPublicKeyNotFound);
@@ -934,17 +928,13 @@ async fn verify_signature(
     .ok_or(SignatureVerificationError::IncorrectSignature)
     .inspect(|_| {
         logger.debug(
-            &format!(
-                "Signature verification successful for task index: {task_index}"
-            ),
+            &format!("Signature verification successful for task index: {task_index}"),
             "eigen-services-blsaggregation.bls_agg.verify_signature",
         );
     })
     .inspect_err(|_| {
         logger.error(
-            &format!(
-                "Signature verification failed for task index: {task_index}"
-            ),
+            &format!("Signature verification failed for task index: {task_index}"),
             "eigen-services-blsaggregation.bls_agg.verify_signature",
         );
     })
@@ -1046,9 +1036,7 @@ fn aggregate_new_operator(
         .insert(operator_id, true);
 
     logger.debug(
-        &format!(
-            "operator {operator_id} inserted in signers_operator_ids_set"
-        ),
+        &format!("operator {operator_id} inserted in signers_operator_ids_set"),
         "eigen-services-blsaggregation.bls_agg.aggregate_new_operator",
     );
 
