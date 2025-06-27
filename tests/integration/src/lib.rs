@@ -7,15 +7,18 @@
 //! * [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/tree/v2-dev-2/examples/incredible-dot-product)
 //! * [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/tree/v2-dev-2/examples/awesome-vault-service)
 
+/// Awesome Vault Service integration test
+#[cfg(test)]
+pub mod awesome_vault_service;
 /// AVS bindings
 #[allow(warnings)]
 pub mod bindings;
-
 /// Generic AVS code
 #[cfg(test)]
 pub mod generic_avs;
-/// Incredible Squaring integration test
+/// Incredible Dot Product integration test
 #[cfg(test)]
 pub mod incredible_dot_product;
+/// Incredible Squaring integration test
 #[cfg(test)]
 pub mod incredible_squaring;

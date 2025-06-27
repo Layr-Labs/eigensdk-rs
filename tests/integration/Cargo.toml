@@ -20,6 +20,7 @@ ark-ff.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 eigensdk = { workspace = true, features = ["full"] }
+rand = "0.8"
 
 [dev-dependencies]
 futures-util.workspace = true
