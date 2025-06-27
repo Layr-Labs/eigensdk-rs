@@ -27,8 +27,7 @@ async fn main() -> Result<()> {
         .await?;
 
     println!(
-        "operator state from block: {:?} to block: {:?} is {:?}",
-        start_block, to_block, operators_state
+        "operator state from block: {start_block:?} to block: {to_block:?} is {operators_state:?}"
     );
 
     Ok(())

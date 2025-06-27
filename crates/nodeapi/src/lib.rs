@@ -215,7 +215,7 @@ async fn node_info(api: web::types::State<Arc<Mutex<NodeInfo>>>) -> impl Respond
         Ok(guard) => guard,
         Err(err) => {
             return HttpResponse::InternalServerError()
-                .body(format!("Internal Server Error: {}", err));
+                .body(format!("Internal Server Error: {err}"));
         }
     };
     let response = serde_json::json!({
@@ -231,7 +231,7 @@ async fn health_check(api: web::types::State<Arc<Mutex<NodeInfo>>>) -> impl Resp
         Ok(guard) => guard,
         Err(err) => {
             return HttpResponse::InternalServerError()
-                .body(format!("Internal Server Error: {}", err));
+                .body(format!("Internal Server Error: {err}"));
         }
     };
     let health = &data.health;
@@ -248,7 +248,7 @@ async fn list_services(api: web::types::State<Arc<Mutex<NodeInfo>>>) -> impl Res
         Ok(guard) => guard,
         Err(err) => {
             return HttpResponse::InternalServerError()
-                .body(format!("Internal Server Error: {}", err));
+                .body(format!("Internal Server Error: {err}"));
         }
     };
     let services = &data.services;
@@ -264,7 +264,7 @@ async fn service_health(
         Ok(guard) => guard,
         Err(err) => {
             return HttpResponse::InternalServerError()
-                .body(format!("Internal Server Error: {}", err));
+                .body(format!("Internal Server Error: {err}"));
         }
     };
     let services = &data.services;
@@ -455,7 +455,7 @@ mod tests {
 
         // Test the /eigen/node route
         let resp = client
-            .get(format!("http://{}/eigen/node", ip_port_addr))
+            .get(format!("http://{ip_port_addr}/eigen/node"))
             .send()
             .await
             .unwrap();
@@ -463,7 +463,7 @@ mod tests {
 
         // Test the /eigen/node/health route
         let resp = client
-            .get(format!("http://{}/eigen/node/health", ip_port_addr))
+            .get(format!("http://{ip_port_addr}/eigen/node/health"))
             .send()
             .await
             .unwrap();
@@ -471,7 +471,7 @@ mod tests {
 
         // // Test the /eigen/node/services route
         let resp = client
-            .get(format!("http://{}/eigen/node/services", ip_port_addr))
+            .get(format!("http://{ip_port_addr}/eigen/node/services"))
             .send()
             .await
             .unwrap();
@@ -480,8 +480,7 @@ mod tests {
         // Test the /eigen/node/services/{id}/health route
         let resp = client
             .get(format!(
-                "http://{}/eigen/node/services/test_service/health",
-                ip_port_addr
+                "http://{ip_port_addr}/eigen/node/services/test_service/health"
             ))
             .send()
             .await
@@ -500,8 +499,7 @@ mod tests {
         // Test health endpoint
         let resp = client
             .get(format!(
-                "http://{}/eigen/node/services/test_service/health",
-                ip_port_addr
+                "http://{ip_port_addr}/eigen/node/services/test_service/health"
             ))
             .send()
             .await

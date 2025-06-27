@@ -157,7 +157,7 @@ mod test {
         // Start the container running Localstack
         let _container = start_localstack_container().await;
 
-        let localstack_endpoint = format!("http://localhost:{}", LOCALSTACK_PORT);
+        let localstack_endpoint = format!("http://localhost:{LOCALSTACK_PORT}");
         let config = get_aws_config(
             "localstack".into(),
             "localstack".into(),
