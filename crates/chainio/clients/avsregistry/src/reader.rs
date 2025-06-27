@@ -1502,7 +1502,7 @@ mod tests {
             .await
             .unwrap();
 
-        println!("{:?}", ret_query_registration_detail);
+        println!("{ret_query_registration_detail:?}");
 
         // all the value are false
         for ret_value in ret_query_registration_detail.iter() {

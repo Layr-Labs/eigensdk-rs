@@ -115,7 +115,7 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
         EigenKeyCommand::DeriveOperatorId { private_key } => {
             let operator_id =
                 derive_operator_id(private_key).map_err(EigenKeyCliError::BLSError)?;
-            println!("{}", operator_id);
+            println!("{operator_id}");
             Ok(())
         }
 
@@ -136,7 +136,7 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             let word_list = language.try_from().1;
             let mnemonic = Mnemonic::get_mnemonic_without_word_path(word_list, None).unwrap();
 
-            println!("New mnemonic generated : {}", mnemonic);
+            println!("New mnemonic generated : {mnemonic}");
             println!("{}", "Please store it safely!".red().bold());
             Ok(())
         }
@@ -144,7 +144,7 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             let language_string = language.try_from().0;
 
             let mnemonic = Mnemonic::get_mnemonic(language_string, &path, None).unwrap();
-            println!("New mnemonic generated : {}", mnemonic);
+            println!("New mnemonic generated : {mnemonic}");
             println!("{}", "Please store it safely!".red().bold());
             Ok(())
         }
@@ -381,7 +381,7 @@ mod test {
         };
         let key_path = output_path
             .join(DEFAULT_KEY_FOLDER)
-            .join(format!("1.{}.key.json", key_name));
+            .join(format!("1.{key_name}.key.json"));
 
         let decrypted_bytes = decrypt_key(key_path, password).unwrap();
         let decrypted_private_key = SecretKey::from_slice(&decrypted_bytes).unwrap().to_bytes();

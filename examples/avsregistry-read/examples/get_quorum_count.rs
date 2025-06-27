@@ -19,6 +19,6 @@ async fn main() -> Result<()> {
 
     let quorum_count = avs_registry.get_quorum_count().await?;
 
-    println!("quorum count is :{:?}", quorum_count);
+    println!("quorum count is :{quorum_count:?}");
     Ok(())
 }

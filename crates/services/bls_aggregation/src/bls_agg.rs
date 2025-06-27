@@ -340,7 +340,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         )
                         .await
                         .inspect_err(|err| {
-                            println!("Error with single_task_aggregator: {:?}", err);
+                            println!("Error with single_task_aggregator: {err:?}");
                         });
                     });
 
@@ -548,7 +548,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         signed_task_digest: Option<SignedTaskResponseDigest>,
     ) -> Result<(), BlsAggregationServiceError> {
         logger.debug(
-            &format!("New signature received for task index: {}", task_index),
+            &format!("New signature received for task index: {task_index}"),
             "eigen-services-blsaggregation.bls_agg.handle_new_signature",
         );
 
@@ -615,7 +615,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
 
         logger.debug(
-            &format!("Signature threshold is met for task index: {}", task_index),
+            &format!("Signature threshold is met for task index: {task_index}"),
             "eigen-services-blsaggregation.bls_agg.handle_new_signature",
         );
 
@@ -665,8 +665,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         if open_window {
             logger.debug(
                 &format!(
-                    "task_expired_timer while in the waiting window for task index: {}",
-                    task_index
+                    "task_expired_timer while in the waiting window for task index: {task_index}"
                 ),
                 "eigen-services-blsaggregation.bls_agg.handle_task_expired",
             );
@@ -676,8 +675,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         } else {
             logger.debug(
                 &format!(
-                    "task_expired_timer NOT in the waiting window for task index: {}",
-                    task_index
+                    "task_expired_timer NOT in the waiting window for task index: {task_index}"
                 ),
                 "eigen-services-blsaggregation.bls_agg.handle_task_expired",
             );
@@ -706,8 +704,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ) -> Result<(), BlsAggregationServiceError> {
         logger.debug(
             &format!(
-                "Window finished. Send aggregated response for task index: {}",
-                task_index
+                "Window finished. Send aggregated response for task index: {task_index}"
             ),
             "eigen-services-blsaggregation.bls_agg.handle_window_finished",
         );
@@ -748,7 +745,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         logger: SharedLogger,
     ) -> Result<BlsAggregationServiceResponse, BlsAggregationServiceError> {
         logger.debug(
-            &format!("Build aggregated response for task index: {}", task_index),
+            &format!("Build aggregated response for task index: {task_index}"),
             "eigen-services-blsaggregation.bls_agg.build_aggregated_response",
         );
 
@@ -869,8 +866,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         let sender = window_tx.clone();
         logger.debug(
             &format!(
-                "Create window to wait for new signatures for task index: {}",
-                task_index
+                "Create window to wait for new signatures for task index: {task_index}"
             ),
             "eigen-services-blsaggregation.bls_agg.start_window",
         );
@@ -907,7 +903,7 @@ async fn verify_signature(
     let Some(operator_state) = operator_avs_state.get(&signed_task_response_digest.operator_id)
     else {
         logger.error(
-            &format!("Operator Not Found for task index: {}", task_index),
+            &format!("Operator Not Found for task index: {task_index}"),
             "eigen-services-blsaggregation.bls_agg.verify_signature",
         );
         return Err(SignatureVerificationError::OperatorNotFound);
@@ -916,8 +912,7 @@ async fn verify_signature(
     let Some(pub_keys) = &operator_state.operator_info.pub_keys else {
         logger.error(
             &format!(
-                "Operator Public Key Not Found for task index: {}",
-                task_index
+                "Operator Public Key Not Found for task index: {task_index}"
             ),
             "eigen-services-blsaggregation.bls_agg.verify_signature",
         );
@@ -940,8 +935,7 @@ async fn verify_signature(
     .inspect(|_| {
         logger.debug(
             &format!(
-                "Signature verification successful for task index: {}",
-                task_index
+                "Signature verification successful for task index: {task_index}"
             ),
             "eigen-services-blsaggregation.bls_agg.verify_signature",
         );
@@ -949,8 +943,7 @@ async fn verify_signature(
     .inspect_err(|_| {
         logger.error(
             &format!(
-                "Signature verification failed for task index: {}",
-                task_index
+                "Signature verification failed for task index: {task_index}"
             ),
             "eigen-services-blsaggregation.bls_agg.verify_signature",
         );
@@ -1054,8 +1047,7 @@ fn aggregate_new_operator(
 
     logger.debug(
         &format!(
-            "operator {} inserted in signers_operator_ids_set",
-            operator_id
+            "operator {operator_id} inserted in signers_operator_ids_set"
         ),
         "eigen-services-blsaggregation.bls_agg.aggregate_new_operator",
     );

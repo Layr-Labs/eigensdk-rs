@@ -90,7 +90,7 @@ pub trait GetTransaction {
 impl GetTransaction for Client {
     async fn get_transaction(&self, tx_id: String) -> Result<Transaction, FireBlockError> {
         let transaction = self
-            .get_request(&format!("/v1/transactions/{}", tx_id))
+            .get_request(&format!("/v1/transactions/{tx_id}"))
             .await?;
 
         serde_json::from_str(&transaction).map_err(FireBlockError::SerdeError)

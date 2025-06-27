@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
         )
         .await?;
 
-    println!("operator state at current block is {:?}", operators_state);
+    println!("operator state at current block is {operators_state:?}");
 
     Ok(())
 }

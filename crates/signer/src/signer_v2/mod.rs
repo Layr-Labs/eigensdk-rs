@@ -538,7 +538,7 @@ mod test {
         env::set_var("AWS_ACCESS_KEY_ID", "localstack");
         env::set_var("AWS_SECRET_ACCESS_KEY", "localstack");
 
-        let localstack_endpoint = format!("http://localhost:{}", LOCALSTACK_MAPPED_PORT);
+        let localstack_endpoint = format!("http://localhost:{LOCALSTACK_MAPPED_PORT}");
         let config = get_aws_config(
             "localstack".into(),
             "localstack".into(),
