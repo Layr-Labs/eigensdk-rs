@@ -135,7 +135,7 @@
 
 use tokio::task::JoinHandle;
 
-use crate::error::OperatorRegistrationError;
+use crate::registration::setup_operator;
 use alloy::{
     dyn_abi::SolType,
     primitives::keccak256,
@@ -153,7 +153,6 @@ use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorId};
 use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
 use error::OperatorError;
 use futures_util::StreamExt;
-use registration::register_operator;
 use tracing::{debug, error, info};
 
 /// Tarpc Client
@@ -219,30 +218,10 @@ impl<RP> Operator<RP> {
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_address, provider);
 
-        let operator_status = contract_registry_coordinator
-            .getOperatorStatus(operator_address)
-            .call()
-            .await?
-            ._0;
-
-        // 0 means the operator is not registered, 1 that they are
-        let is_operator_registered = operator_status == 1;
-
-        // Check if the operator is registered with EigenLayer
-        if !is_operator_registered {
-            // Check if a registration config was provided.
-            let Some(registration_config) = config.registration else {
-                error!(
-                    "Operator {operator_address:#x} not registered and no registration config was provided"
-                );
-                return Err(OperatorError::RegistrationError(
-                    OperatorRegistrationError::RegistrationConfigMissing,
-                ));
-            };
-
-            register_operator(registration_config, http_rpc_url, bls_key_pair.clone()).await?;
-            info!("Operator {operator_address:#x} registered successfully");
-        }
+        if let Some(registration_config) = config.registration {
+            info!("You provided a registration config. Running the registration process");
+            setup_operator(registration_config, http_rpc_url, bls_key_pair.clone()).await?;
+        };
 
         let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
 
