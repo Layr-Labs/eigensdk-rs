@@ -11,13 +11,17 @@ cargo add eigensdk --features full
 ## Overview
 
  List of crates in the repository :-
-
+- [eigen-aggregator](https://github.com/Layr-Labs/eigensdk-rs/tree/v2-dev-2/crates/aggregator) - Orchestrates the task lifecycle by subscribing to on-chain events, forwarding signed operator responses to the BLS service, and handling aggregated results once quorum is reached
+- [eigen-challenger](https://github.com/Layr-Labs/eigensdk-rs/tree/v2-dev-2/crates/challenger) - Subscribes to on-chain events, verifies operator responses, and challenges invalid responses.
 - [eigen-client-avsregistry](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
 - [eigen-client-elcontracts](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/elcontracts) - Convenience methods to call Eigenlayer contracts
 - [eigen-crypto-bls](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bls) - New bls key pair, sign message, conversion utilites between alloy and arkworks bn254.
 - [eigen-crypto-bn254](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bn254) - verify message on G2, map to curve.
 - [eigen-metrics](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/metrics) - performance, rpc and economic metrics
+- [eigen-operator](https://github.com/Layr-Labs/eigensdk-rs/tree/v2-dev-2/crates/operator) - In charge of processing tasks and submitting results to the Aggregator
 - [eigen-services](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/services) - Spawn tokio services for operators info, bls aggregation
+- [eigen-task-manager](https://github.com/Layr-Labs/eigensdk-rs/tree/v2-dev-2/crates/task-manager) - Wrapper of the Task Manager contract
+- [eigen-task-spammer](https://github.com/Layr-Labs/eigensdk-rs/tree/v2-dev-2/crates/task-spammer) - Spammer for testing the task lifecycle
 - [eigen-types](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/types) - Common types
 - [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) 
     - `rewardsv2` - Publicly exportable `mainnet rewards-v2 v0.5.4` compatible alloy bindings.
@@ -37,6 +41,23 @@ Example :
 ```bash
 cargo run --example get_quorum_count
 ```
+
+## AVS use examples
+
+This SDK has three AVS use examples:
+
+* [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/tree/v2-dev-2/examples/incredible-squaring)
+* [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/tree/v2-dev-2/examples/incredible-dot-product)
+* [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/tree/v2-dev-2/examples/awesome-vault-service)
+
+These are examples of the code needed to create an AVS from scratch. All include the contracts needed to execute them, with further instructions in their respective readme files.
+
+### Business logic in entities
+
+* Aggregator: The aggregator does not have much business logic, as the core functionality is delegated to the `IndexingAggregatorProcessor`, which is the standard implementation that the SDK provides.If you want to implement a custom task processor, you need to implement the `AggregatorProcessor` trait.
+* Challenger: The challenger business logic lies in the task response validation. To validate the response, the challenger first calculates the response with the same function as the operator and then compares it with the received response, raising a challenge if they differ. The example is based on the `IndexingChallengerProcessor` implementation. If you want to implement a custom challenger processor, you need to implement the `ChallengerProcessor` trait.
+* Operator: The operator responds to tasks using the `FunctionResponseCalculator` struct that implements `ResponseCalculator` trait. This struct must define a `compute_response` method to generate the task output.
+* Task spammer: The task spammer logic lies in an iterator that generates the inputs for the spammer to dispatch at the SDK level.
 
 ## Generating and saving anvil state
 
@@ -60,7 +81,6 @@ To update the bindings of this repo, run:
 ```bash
 make bindings
 ```
-
 This command will generate the bindings files in the folder: `crates/utils`.
 
 **Important:** this command requires Docker installed and running since it uses a container to generate the bindings.
@@ -105,7 +125,6 @@ Add the following variables to your env
 
 ```bash
 make fireblocks-tests
-
 ```
 
 ### Test Coverage

@@ -1,4 +1,140 @@
-#![allow(missing_docs)]
+//! # Challenger
+//!
+//! ## What is a Challenger
+//!
+//! A Challenger is a validator component that monitors the network for the creation of new tasks
+//! and task responses submitted by operators, verifies their correctness, and raises challenges
+//! when incorrect responses are detected. If the challenge is successful, the operator will be slashed.
+//!
+//! ## How the Logic Works
+//!
+//! The Challenger operates through a well-defined workflow:
+//!
+//! 1. **Event Subscription**:
+//!    - Subscribes to blockchain events for new tasks and task responses
+//!    - Monitors for `NewTaskEvent` to track new tasks created in the system
+//!    - Watches for `TaskResponseEvent` when operators submit responses to tasks
+//!
+//! 2. **Verification Process**:
+//!    - When a new task is detected, user defined logic is used to process the new task
+//!    - When a task response is received, user defined logic is used to process the task response and verify it
+//!    - Uses a user-defined verification function to determine if the response is correct
+//!    - The verification logic can be customized based on the specific AVS requirements
+//!
+//! 3. **Challenge Mechanism**:
+//!    - If a response is verified as correct, the challenger logs the result and takes no action
+//!    - If a response is determined to be incorrect, the challenger raises a challenge
+//!    - Includes identifying the non-signing operators who might have abstained from the incorrect response
+//!
+//! ## How to Set Up a Challenger
+//!
+//! 1. **Task Manager Definition**: Create a struct implementing the `TaskManagerDefs` trait that defines:
+//!    - `Input` and `Output` types for your tasks
+//!    - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
+//!    - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
+//!
+//!     ```ignore
+//!         // Implement the [`TaskManagerDefs`] trait for a unit struct.
+//!         // You need to specify the input and output types of the task.
+//!         // You also need to specify the selectors for the new task event and the task responded event.
+//!         pub struct ISTaskManager;
+//!
+//!         impl TaskManagerDefs for ISTaskManager {
+//!             type Input = U256;
+//!             type Output = U256;
+//!             const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+//!             const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+//!         }
+//!
+//!         impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
+//!     ```
+//!
+//! 2. **Challenger Configuration**: Create a [`ChallengerConfig`] struct. This struct implements `Serialize` and `Deserialize` so you can load from a file.
+//!    - Attributes:
+//!      - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
+//!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
+//!
+//! 3. **Task Verification Logic**: Define a function that computes the expected result for a task, which will be used to verify operator responses
+//!    - This would be the logic to compute a new task.
+//!
+//!     ```ignore
+//!         pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
+//!             Ok(number_to_be_squared * number_to_be_squared)
+//!         }
+//!     ```
+//!
+//! 4. **Task Manager Contract**: Create an instance of your `TaskManager` contract:
+//!     - This struct should come from your bindings.
+//!
+//!     ```ignore
+//!         let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+//!     ```
+//!
+//! 5. **Response Calculator**: To abstract your computation into the operator, we provide a
+//!    `ResponseCalculator` trait with a standard `FunctionResponseCalculator` struct.
+//!    This struct implements the trait and helpers for turning your functions into implementations:
+//!      - `response_calculator_from_fn`: Create a response calculator from your computation function.
+//!      - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
+//!
+//!     ```ignore
+//!         let response_calculator = response_calculator_from_fn(square);
+//!     ```
+//!
+//! 6. **Verifier**: Create a verifier from the response calculator.
+//!    - This will be in charge of computing the response of a task and comparing it with the operator's response.
+//!
+//!     ```ignore
+//!         let logic = verifier_from_compute_function(response_calculator);
+//!     ```
+//!
+//! 7. **Challenger Processor**: Create a [`ChallengerProcessor`] trait implementation.
+//!    - This will be in charge of processing the task and the response.
+//!    - We provide a standard [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor) implementation that can be used as a starting point.
+//!
+//!     ```ignore
+//!         let task_processor = IndexingChallengerProcessor::new(contract, logic);
+//!     ```
+//!
+//!
+//! 8. **Challenger Initialization**: Initialize the [`Challenger`] with the configuration and start it with the processing logic
+//!
+//!     ```ignore
+//!         let challenger = Challenger::new(config, task_processor);
+//!         challenger.start_challenger().await?;
+//!     ```
+//!
+//! ## Examples
+//!
+//! Here are some examples of challenger implementations:
+//!
+//! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/challenger.rs)
+//! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/challenger.rs)
+//! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/challenger.rs)
+//!
+//! ## How to implement a custom Challenger Processor
+//!
+//! To implement a custom Challenger Processor, you need to implement the [`ChallengerProcessor`] trait.
+//!
+//! This trait has two methods, which we explain in the next sections. Refer to the [`IndexingChallengerProcessor`](crate::challenger_processor::IndexingChallengerProcessor)
+//! implementation for an example of how to implement a custom Challenger Processor.
+//!
+//! ### `handle_task_creation`
+//!
+//! Invoked when a new task is emitted by the contract. `ProcessNewTaskCreated` is
+//! commonly used to store the task (e.g., in a map, in a database, etc.), so that
+//! when a response arrives, you can retrieve the corresponding input.
+//!
+//! ### `handle_task_response`
+//!
+//! Invoked when a task response is received. This method should verify the operator's
+//! response and raise a challenge for invalid responses. Step by step, this method:
+//!
+//! 1. Retrieves the original task using the index.
+//! 2. Verifies the operator’s response against the task's input.
+//! 3. Raises a challenge through the `TaskManager` if the responses differ.
+//!
+//!
+
 use alloy::{
     consensus::Transaction,
     dyn_abi::SolType,
@@ -6,7 +142,7 @@ use alloy::{
     rpc::types::{Filter, Log},
     sol_types::SolValue,
 };
-use challenger::ChallengerTaskProcessor;
+use challenger::ChallengerProcessor;
 use config::ChallengerConfig;
 use eigen_common::{get_provider, get_ws_provider};
 use eigen_task_manager::event_decoder::{
@@ -15,16 +151,29 @@ use eigen_task_manager::event_decoder::{
 use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
 use error::ChallengerError;
 use futures_util::StreamExt;
+use tokio::task::JoinHandle;
 use tracing::info;
 
+/// Challenger Processor trait
 pub mod challenger;
+/// Challenger Processor implementation
 pub mod challenger_processor;
+/// Challenger config
 pub mod config;
+/// Challenger error
 pub mod error;
 
-/// Main Challenger struct
+/// The challenger is the entity responsible of validating the aggregated responses
+/// from the operators. This service will listen to [`NEW_TASK_EVENT_SELECTOR`](challenger::ChallengerProcessor::NEW_TASK_EVENT_SELECTOR)
+/// and [`TASK_RESPONDED_EVENT_SELECTOR`](challenger::ChallengerProcessor::TASK_RESPONDED_EVENT_SELECTOR)
+/// When the incorrect responses are detected, the challenger will raise an on-chain challenge.
+///
+/// Most of these things are delegated to the [`ChallengerProcessor`] trait, that process challenges and
+/// communicates with the on-chain task manager contract when raising a challenge.
+///
+/// To more in-depth details about the challenger, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/challenger/src/lib.rs#L1-L112).
 #[derive(Debug)]
-pub struct Challenger<TP: ChallengerTaskProcessor> {
+pub struct Challenger<TP: ChallengerProcessor> {
     /// The rpc url
     rpc_url: String,
     /// The websocket url
@@ -33,8 +182,9 @@ pub struct Challenger<TP: ChallengerTaskProcessor> {
     task_processor: TP,
 }
 
-impl<TP: ChallengerTaskProcessor> Challenger<TP>
+impl<TP> Challenger<TP>
 where
+    TP: ChallengerProcessor + Send + Sync + 'static,
     TP::Input: From<<<TP::Input as SolValue>::SolType as SolType>::RustType>,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
@@ -56,14 +206,14 @@ where
         }
     }
 
-    /// Start the service and start listening for new tasks and task responses events
+    /// Runs the challenger service and starts listening for new tasks and task response events
     /// It also checks if the response is correct, if not it raises a challenge.
     ///
     /// # Returns
     ///
     /// * `Result<(), ChallengerError>` - The result of the challenger
-    pub async fn start_challenger(&mut self) -> Result<(), ChallengerError> {
-        info!("challenger crate launched");
+    pub async fn run(mut self) -> Result<(), ChallengerError> {
+        info!("Starting challenger");
 
         let ws_provider = get_ws_provider(&self.ws_url).await?;
 
@@ -85,11 +235,13 @@ where
             tokio::select! {
                 Some(log) = task_stream.next() => {
                     let (task_index, task) = decode_new_task(&log)?;
+                    info!("New task created: {task_index}");
                     self.task_processor.handle_task_creation(task_index, task).await?;
                 },
                 Some(log) = responded_stream.next() => {
                     let (task_index, task_response, task_response_metadata) =
                         decode_task_response_event(&log).await?;
+                    info!("Task response received: {task_index}");
 
                     let non_signing_operator_pub_keys = self.get_non_signing_operator_pub_keys(log).await?;
 
@@ -111,6 +263,18 @@ where
         }
 
         Ok(())
+    }
+
+    /// Starts the challenger service in the background.
+    ///
+    /// Equivalent to [`Self::run`], but spawns it in the background and returns a
+    /// [`JoinHandle`] to the background task.
+    ///
+    /// # Returns
+    ///
+    /// * `JoinHandle<Result<(), ChallengerError>>` - The handle to the background task
+    pub fn start(self) -> JoinHandle<Result<(), ChallengerError>> {
+        tokio::spawn(self.run())
     }
 
     async fn get_non_signing_operator_pub_keys(

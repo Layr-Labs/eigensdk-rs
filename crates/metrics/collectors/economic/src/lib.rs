@@ -72,8 +72,7 @@ impl Collector {
         gauge!(key.to_string()).set(value);
         self.logger.debug(
             &format!(
-            "set registered stakes , quorum_name: {} , quorum_number: {} , avs_name: {}, value: {}",
-            quorum_name, quorum_number, avs_name, value
+            "set registered stakes , quorum_name: {quorum_name} , quorum_number: {quorum_number} , avs_name: {avs_name}, value: {value}"
         ),
             "eigen-metrics-collectors-economic.set_stake",
         );
@@ -82,7 +81,7 @@ impl Collector {
     pub async fn collect(&mut self) -> Result<(), CollectorMetricError> {
         self.init_operator_id().await.inspect_err(|e| {
             self.logger.warn(
-                &format!("Failed to fetch and cache operator id. Skipping collection of registeredStake metric. , err {}", e),
+                &format!("Failed to fetch and cache operator id. Skipping collection of registeredStake metric. , err {e}"),
                 "eigen-metrics-collectors-economic.collect"
             );
         })?;

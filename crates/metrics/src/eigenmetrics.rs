@@ -21,7 +21,7 @@ impl EigenPerformanceMetrics {
 
     pub fn set_performance_score(&self, score: f64) {
         self.logger.debug(
-            &format!("set performance score , new score {}", score),
+            &format!("set performance score , new score {score}"),
             "eigen-metrics.set_performance_score",
         );
         gauge!("eigen_performance_score").set(score);

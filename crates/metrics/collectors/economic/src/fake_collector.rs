@@ -64,8 +64,7 @@ impl FakeCollector {
         gauge!(key.to_string()).set(value);
         self.logger.debug(
             &format!(
-            "set registered stakes , quorum_name: {} , quorum_number: {} , avs_name: {}, value: {}",
-            quorum_name, quorum_number, avs_name, value
+            "set registered stakes , quorum_name: {quorum_name} , quorum_number: {quorum_number} , avs_name: {avs_name}, value: {value}"
         ),
             "eigen-metrics-collectors-economic.set_stake",
         );

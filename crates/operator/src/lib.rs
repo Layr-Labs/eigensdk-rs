@@ -1,5 +1,141 @@
-//! Operator common functions.
+//! # Operator
+//!
+//! ## What is an Operator
+//!
+//! Operators are off-chain nodes that perform, sign, and submit verifiable computations for
+//! Autonomous Verifiable Services (AVSs) using Ethereum restaking for security. They first register on
+//! EigenLayer’s core contracts, then opt-in to provide a range of services to AVSs.
+//! Operators listen for new task events, execute the supplied computation logic,
+//! cryptographically sign the results with `BLS/ECDSA` keys, and finally send the proofs
+//! to an aggregator for final consolidation.
+//!
+//! ## How the Logic Works
+//!
+//! The Operator functions through the following flow:
+//!
+//! 1. **Task Subscription**:
+//!    - The operator subscribes to specific event signatures emitted by task processors
+//!    - Uses WebSocket connection to listen to blockchain events
+//!    - Filters only for the specific task type it's designed to handle
+//!
+//! 2. **Task Processing**:
+//!    - When a new task is detected, it extracts the task index and input data
+//!    - Applies a computation function to the input data. This computation function is provided when starting the operator.
+//!
+//! 3. **Response Signing**:
+//!    - Signs the computed result using the operator's BLS Key Pair.
+//!    - Creates a `SignedTaskResponse` containing the result, signature, and operator ID
+//!
+//! 4. **Response Submission**:
+//!    - Sends the signed response to an Aggregator service through a RPC request.
+//!
+//! ## How to Set Up an Operator
+//!
+//! 1. **Task Manager Definition**: Create a struct implementing the [`TaskManagerDefs`] trait:
+//!    - [`Input`](eigen_task_manager::TaskManagerDefs::Input) and [`Output`](eigen_task_manager::TaskManagerDefs::Output)
+//!      types for your tasks. This should come from your bindings.
+//!    - [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR) - the event signature for new task events
+//!    - Use the [`impl_task_manager_from_defs_and_contract`](eigen_task_manager::impl_task_manager_from_defs_and_contract)
+//!      macro to build your `TaskManager`.
+//!
+//!     ```ignore
+//!         impl TaskManagerDefs for ISTaskManager {
+//!             type Input = U256;
+//!             type Output = U256;
+//!             const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+//!             const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+//!         }
+//!
+//!         impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
+//!     ```
+//!
+//! 2. **Create the operator configuration**: Create a [`OperatorConfig`](crate::config::OperatorConfig) struct.
+//!    This structs implements `Serialize` and `Deserialize` so you can load from a file.
+//!    - Attributes:
+//!      - `bls_signer`: The config for the BLS signer. We only support [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage)
+//!        keystores. You can create one with the following command:
+//!        ```bash
+//!         cargo run --package eigen-cli -- egnkey generate --key-type bls
+//!        ```
+//!        The output will be a `bls.key.json` file. Please refer to the `eigen-cli` crate for more information.
+//!
+//!      - `operator_address`: The address of the operator
+//!      - `ws_rpc_url`: The WebSocket RPC URL of the Ethereum node
+//!      - `http_rpc_url`: The HTTP RPC URL of the Ethereum node
+//!      - `registry_coordinator_address`: The address of the registry coordinator
+//!      - `operator_state_retriever_address`: The address of the operator state retriever
+//!      - `aggregator_ip_port`: The IP and port of the aggregator
+//!      - `registration`: The registration of the operator. If you don't want to register the operator, you can set this to `None`.
+//!
+//! 3. **Processing Logic**: Implement the computation function that processes task inputs and produces outputs
+//!    - This function will be called when the operator receives a `NEW_TASK_EVENT_SELECTOR` event.
+//!
+//!     ```ignore
+//!         // Your custom logic to process the input and generate a response.
+//!         // Example: square the input.
+//!         pub async fn square(
+//!             task_index: u32,
+//!             number_to_be_squared: U256
+//!         ) -> Result<U256, TaskManagerError> {
+//!             Ok(number_to_be_squared * number_to_be_squared)
+//!         }
+//!     ```
+//!
+//! 4. **Response Calculator**: To abstract your computation into the operator, we provide a `ResponseCalculator`
+//!    trait with a standar `FunctionResponseCalculator` struct. This struct implements the trait and helpers
+//!    for turning your functions into implementations:
+//!    - `response_calculator_from_fn`: Create a response calculator from your computation function.
+//!    - `response_calculator_from_async_fn`: Create a response calculator from your async computation function.
+//!
+//!     ```ignore
+//!         let response_calculator = response_calculator_from_fn(square);
+//!     ```
+//!
+//!    - In case you need to save state in the operator, you can use your own struct implementing the `ResponseCalculator` trait.
+//!
+//! 5. **Failing Response Calculator**: If you want to test what happens when the operator responds incorrectly
+//!    to a task and see how slashing works, you can wrap your logic with `failing_response_calculator` (from
+//!    `eigen-testing-utils`), to inject failures and a given failure rate. **Use this for testing purposes only.**
+//!     
+//!     ```ignore
+//!         let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
+//!     ```
+//!
+//! 6. **Run the operator**: Initialize the [`Operator`] with the configuration and the response calculator.
+//!    Then, call the [`run`](Operator::run) method to start the operator.
+//!
+//!     ```ignore
+//!         let operator = Operator::new(config, logic).await.unwrap();
+//!         operator.run::<ISTaskManager>().await.unwrap();
+//!     ```
+//!
+//! ## Examples
+//!
+//! Here are some examples of operators that are already implemented:
+//!
+//! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/operator.rs)
+//! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/operator.rs)
+//! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/operator.rs)
+//!
+//! ## How to implement a custom Response Calculator
+//!
+//! To implement a custom Response Calculator, you need to implement the [`ResponseCalculator`] trait.
+//!
+//! The struct needs to implement the [`compute_response`](ResponseCalculator::compute_response) method. This method will be called
+//! when the operator receives a [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR)
+//! event. This should contain the logic to compute the response for a given task.
+//!
+//! We recommend implementing your own Response Calculator if you need to save state between operator responses.
+//! If you don't need to save a state, you can use the standard [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
+//! implementation.
+//!
+//! Refer to the [`FunctionResponseCalculator`](eigen_task_manager::response_calculator::FunctionResponseCalculator)
+//! implementation for an example of how to implement a custom Response Calculator.
+//!
 
+use tokio::task::JoinHandle;
+
+use crate::registration::setup_operator;
 use alloy::{
     dyn_abi::SolType,
     primitives::keccak256,
@@ -9,114 +145,108 @@ use alloy::{
 };
 use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
-use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
-use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
-use eigen_types::operator::OperatorId;
+use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorId};
+use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
 use error::OperatorError;
 use futures_util::StreamExt;
-use registration::register_operator;
-use tracing::{error, info};
+use tracing::{debug, error, info};
 
 /// Tarpc Client
 pub mod client;
 /// Operator config
 pub mod config;
-/// Error
+/// Operator error
 pub mod error;
 /// Operator registration config
 pub mod register_config;
 /// Operator registration utils
 pub mod registration;
 
-/// Operator struct to handle the operator logic of processing new tasks
-/// and sending signed task responses to the aggregator.
+/// The operator listens for [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR)
+/// events, computes the task response, and signs it with the operator's BLS key pair.
+/// Then, it sends the signed task response to the aggregator via RPC.
+///
+/// To more in-depth details about the operator, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L110).
 #[derive(Debug)]
-pub struct Operator {
+pub struct Operator<RP> {
     operator_id: OperatorId,
-    operator_name: String,
     client_aggregator: ClientAggregator,
     ws_rpc_url: String,
     key_pair: BlsKeyPair,
+    response_calculator: RP,
 }
 
-impl Operator {
-    /// Initialize a new operator.
-    /// This method does not register the operator.
+impl<RP> Operator<RP> {
+    /// Creates a new operator, ensuring on‐chain registration.
+    ///
+    /// It also performs some sanity checks, returning an error in these cases:
+    /// - The operator is not registered in EigenLayer and registration was not enabled or failed.
+    /// - The operator ID derived from the BLS key pair is not the same as the operator ID registered in the contracts for the given operator address.
     ///
     /// # Arguments
     ///
-    /// * `key_pair` - The key pair of the operator.
-    /// * `operator_address` - The address of the operator.
-    /// * `operator_name` - The name of the operator.
-    /// * `logger` - The logger.
-    /// * `ws_rpc_url` - The URL of the WebSocket RPC.
-    /// * `http_rpc_url` - The URL of the HTTP RPC.
-    /// * `registry_coordinator_address` - The address of the registry coordinator.
-    /// * `operator_state_retriever_address` - The address of the operator state retriever.
-    /// * `aggregator_ip_port` - The IP and port of the aggregator.
+    /// * `config` - The operator configuration.
+    /// * `response_calculator` - The response calculator.
     ///
     /// # Returns
     ///
     /// * `Result<Self, OperatorError>` - The operator.
-    pub async fn new(
-        logger: SharedLogger,
+    pub async fn new<Input, Output>(
         config: config::OperatorConfig,
-    ) -> Result<Self, OperatorError> {
+        response_calculator: RP,
+    ) -> Result<Self, OperatorError>
+    where
+        RP: ResponseCalculator<Input, Output>,
+    {
         let config::OperatorConfig {
-            bls_private_key,
+            bls_signer,
             operator_address,
-            operator_name,
             ws_rpc_url,
             http_rpc_url,
             registry_coordinator_address,
-            operator_state_retriever_address,
             aggregator_ip_port,
             registration: _,
         } = config;
-        let avs_registry_reader = AvsRegistryChainReader::new(
-            logger.clone(),
-            registry_coordinator_address,
-            operator_state_retriever_address,
-            http_rpc_url.to_string(),
-        )
-        .await?;
 
-        let key_pair = BlsKeyPair::new(bls_private_key)?;
+        let bls_key_pair = BlsKeyPair::from_config(bls_signer)?;
 
-        // Check if the operator is registered with EigenLayer
-        if !avs_registry_reader
-            .is_operator_registered(operator_address)
-            .await?
-        {
-            // Check if a registration config was provided
-            let Some(registration_config) = config.registration else {
-                error!(
-                    "Operator {} not registered and no registration config was provided",
-                    operator_name
-                );
-                return Err(OperatorError::RegistrationError);
-            };
+        let provider = get_provider(&http_rpc_url);
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(registry_coordinator_address, provider);
 
-            register_operator(registration_config, logger, http_rpc_url, key_pair.clone()).await?;
-            info!("Operator {} registered successfully", operator_name);
-        }
+        if let Some(registration_config) = config.registration {
+            info!("You provided a registration config. Running the registration process");
+            setup_operator(registration_config, http_rpc_url, bls_key_pair.clone()).await?;
+        };
 
         let client_aggregator = ClientAggregator::new(aggregator_ip_port).await?;
 
-        let operator_id = avs_registry_reader
-            .get_operator_id(operator_address)
-            .await
+        let operator_id = contract_registry_coordinator
+            .getOperatorId(operator_address)
+            .call()
+            .await?
+            ._0;
+
+        let operator_id_from_bls = operator_id_from_g1_pub_key(bls_key_pair.public_key())
             .map_err(|_| OperatorError::OperatorIdError)?;
+
+        if operator_id_from_bls != operator_id {
+            error!(
+                "Operator ID from BLS key pair {operator_id_from_bls} does not match operator ID from contract {operator_id}",
+            );
+            return Err(OperatorError::OperatorIdMismatch);
+        }
 
         Ok(Self {
             operator_id,
-            operator_name: operator_name.to_string(),
             ws_rpc_url: ws_rpc_url.to_string(),
             client_aggregator: client_aggregator.clone(),
-            key_pair,
+            key_pair: bls_key_pair,
+            response_calculator,
         })
     }
 
@@ -132,17 +262,16 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<(), OperatorError>` - The result of the operation.
-    pub async fn start<TM>(
-        &self,
-        response_calculator: impl ResponseCalculator<TM::Input, TM::Output>,
-    ) -> Result<(), OperatorError>
+    pub async fn run<TM>(self) -> Result<(), OperatorError>
     where
+        RP: ResponseCalculator<TM::Input, TM::Output>,
         TM: TaskManagerDefs,
         TM::Input:
             From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
         TM::Output: SolValue + Clone,
         TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
     {
+        info!("Starting operator");
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
             .on_ws(ws)
@@ -159,11 +288,15 @@ impl Operator {
         while let Some(log) = stream.next().await {
             let (task_index, task) = decode_new_task::<TM::Input>(&log)?;
 
-            info!("{} picked up a new task", self.operator_name);
+            info!("Operator picked up a new task. Task index: {task_index}");
 
-            let output = response_calculator
+            let output = self
+                .response_calculator
                 .compute_response(task_index, task.input)
                 .await?;
+
+            debug!("Computed output: {:?}", output);
+
             let task_response = TaskResponse {
                 task_index,
                 response: output,
@@ -177,6 +310,26 @@ impl Operator {
         }
 
         Ok(())
+    }
+
+    /// Starts the operator in the background.
+    ///
+    /// Equivalent to [`Self::run`], but spawns it in the background and returns a
+    /// [`JoinHandle`] to the background task.
+    ///
+    /// # Returns
+    ///
+    /// * `JoinHandle<Result<(), OperatorError>>` - The handle to the background task
+    pub fn start<TM>(self) -> JoinHandle<Result<(), OperatorError>>
+    where
+        RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
+        TM: TaskManagerDefs + 'static,
+        TM::Input:
+            From<<<<TM as TaskManagerDefs>::Input as SolValue>::SolType as SolType>::RustType>,
+        TM::Output: SolValue + Clone,
+        TM::Output: From<<<TM::Output as SolValue>::SolType as SolType>::RustType>,
+    {
+        tokio::spawn(self.run::<TM>())
     }
 
     /// Sign the task response for the aggregator.
@@ -202,8 +355,12 @@ impl Operator {
         let encoded = task_response.encode();
         let hash_msg = keccak256(encoded);
         let signed_msg = key_pair.sign_message(&hash_msg);
-        let signed_task_response = SignedTaskResponse::new(task_response, signed_msg, *operator_id);
-        info!("Operator signed task response");
+        let signed_task_response =
+            SignedTaskResponse::new(task_response.clone(), signed_msg, *operator_id);
+        info!(
+            "Operator signed task response for task index {}",
+            task_response.task_index
+        );
         Ok(signed_task_response)
     }
 }

@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use eigen_task_manager::response_calculator::{
     response_calculator_from_async_fn, ResponseCalculator,
 };
@@ -21,32 +23,40 @@ use tracing::info;
 ///
 /// Panics if `failure_rate_percentage` is greater than 100.
 pub fn failing_response_calculator<Input, Output>(
-    response_calculator: impl ResponseCalculator<Input, Output>,
-    invalid_values_builder: impl Fn() -> Output,
+    response_calculator: impl ResponseCalculator<Input, Output> + Send + Sync,
+    invalid_values_builder: impl Fn() -> Output + Send + Sync,
     failure_rate_percentage: u32,
 ) -> impl ResponseCalculator<Input, Output>
 where
-    Input: Clone,
+    Input: Clone + Send + Sync,
+    Output: Send + Sync,
 {
     assert!(
         failure_rate_percentage <= 100,
         "Failure rate percentage must be less than or equal to 100"
     );
 
-    response_calculator_from_async_fn(async move |task_index, input: Input| {
-        let result = response_calculator
-            .compute_response(task_index, input.clone())
-            .await;
+    let our_response_calculator = Arc::new(response_calculator);
+    let our_invalid_values_builder = Arc::new(invalid_values_builder);
 
-        let mut rng = rand::thread_rng();
-        let should_fail = rng.gen_bool(failure_rate_percentage as f64 / 100.0);
+    response_calculator_from_async_fn(move |task_index, input: Input| {
+        let response_calculator = our_response_calculator.clone();
+        let invalid_values_builder = our_invalid_values_builder.clone();
+        async move {
+            let result = response_calculator
+                .compute_response(task_index, input.clone())
+                .await;
 
-        if should_fail {
-            info!("Operator computed the task with a wrong response");
-            Ok(invalid_values_builder())
-        } else {
-            info!("Operator computed the task successfully");
-            result
+            let mut rng = rand::thread_rng();
+            let should_fail = rng.gen_bool(failure_rate_percentage as f64 / 100.0);
+
+            if should_fail {
+                info!("Operator computed the task with a wrong response");
+                Ok(invalid_values_builder())
+            } else {
+                info!("Operator computed the task successfully");
+                result
+            }
         }
     })
 }

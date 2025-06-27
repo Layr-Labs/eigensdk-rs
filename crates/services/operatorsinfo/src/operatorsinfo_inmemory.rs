@@ -332,7 +332,7 @@ impl OperatorInfoServiceInMemory {
                 res = rx.recv() => {
                     match res {
                         Some(Err(err)) => {
-                            self.logger.error(&format!("Failed to query past registered operator events: {:?}.", err), "eigen-services-operatorsinfo.start_service");
+                            self.logger.error(&format!("Failed to query past registered operator events: {err:?}."), "eigen-services-operatorsinfo.start_service");
                             return Err(err);
                         }
                         _ => continue,
@@ -499,8 +499,7 @@ async fn query_past_registered_operator_events_and_fill_db(
             );
             logger.debug(
                 &format!(
-                    "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
-                    operator_address, operator_pub_keys
+                    "New pub key found  operator_address : {operator_address:?} , operator_pub_keys : {operator_pub_keys:?}"
                 ),
                 "eigen-services-operatorsinfo.query_past_registered_operator_events_and_fill_db",
             );

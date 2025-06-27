@@ -1,3 +1,4 @@
+use eth_keystore::KeystoreError;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -17,4 +18,12 @@ pub enum BlsError {
     /// Invalid G2Affine
     #[error("Points missing in G2Affine")]
     InvalidG2Affine,
+
+    /// Invalid Keystore
+    #[error("Invalid keystore")]
+    InvalidKeystore(#[from] KeystoreError),
+
+    /// Missing password
+    #[error("Missing keystore password")]
+    MissingKeystorePassword,
 }

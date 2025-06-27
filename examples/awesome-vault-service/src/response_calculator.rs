@@ -5,10 +5,15 @@ use std::{collections::BTreeMap, sync::Arc};
 use tokio::sync::Mutex;
 use tracing::info;
 
+/// Response Calculator for the Vault Service
+/// We want to simulate a vault service that stores key-value pairs in a BTreeMap
+/// and computes the vault root as the hash of the leaves.
 pub struct VaultServiceResponseCalculator {
     pub vault: Arc<Mutex<BTreeMap<String, String>>>,
 }
 
+/// Implement the [`ResponseCalculator`] trait for the Vault Service
+/// This trait is used to compute the response for a task.
 impl ResponseCalculator<TaskInput, B256> for VaultServiceResponseCalculator {
     async fn compute_response(
         &self,

@@ -1,4 +1,15 @@
-//! Example AVS which squares a number
+//! AVS Example - Incredible Squaring
+//!
+//! This example is a basic proposal of AVS, where the input and output type are `U256` values,
+//! representing the number to be squared and the number squared. In this sense, the task for
+//! the operators to complete is squaring the received number, and returning the result of the
+//! operation as the response value submitted to the Task Manager on-chain contract.
+//!
+//! To learn how to implement each module, refer to the corresponding binary files.
+//! Each file contains step-by-step instructions for setting up the module.
+//!
+//! For more details about the example logic and how to run it, see the
+//! [README](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/examples/incredible-squaring/README.md).
 
 use alloy::primitives::B256;
 use alloy::primitives::U256;
@@ -6,24 +17,36 @@ use alloy::sol_types::SolEvent;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
 use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::TaskResponded;
-use eigen_task_manager::impl_task_manager_from_defs_and_contract;
-use eigen_task_manager::TaskManagerDefs;
-use eigen_task_manager::TaskManagerError;
+use eigensdk::task_manager::impl_task_manager_from_defs_and_contract;
+use eigensdk::task_manager::TaskManagerDefs;
+use eigensdk::task_manager::TaskManagerError;
 
 // Allow warnings in auto-generated code
 #[allow(warnings)]
 pub mod bindings;
 pub mod utils;
 
+/// Compute the square of a number
+///
+/// # Arguments
+///
+/// * `_task_index` - The index of the task
+/// * `number_to_be_squared` - The number to be squared
+///
+/// # Returns
+///
+/// * `Result<U256, TaskManagerError>` - The square of the number
 pub fn square(_task_index: u32, number_to_be_squared: U256) -> Result<U256, TaskManagerError> {
     Ok(number_to_be_squared * number_to_be_squared)
 }
 
-// Implement the [`TaskManagerDefs`] trait for a unit struct.
-// You need to specify the input and output types of the task. In this case, U256.
-// You also need to specify the selectors for the new task event and the task responded event.
+/// Task Manager Definition. This struct will be used to build the `TaskManager`
+/// with the [`impl_task_manager_from_defs_and_contract`] macro.
 pub struct ISTaskManager;
 
+/// Implement the [`TaskManagerDefs`] trait for a unit struct.
+/// You need to specify the input and output types of the task. In this case, U256.
+/// You also need to define the selectors for the new task event and the task responded event.
 impl TaskManagerDefs for ISTaskManager {
     type Input = U256;
     type Output = U256;

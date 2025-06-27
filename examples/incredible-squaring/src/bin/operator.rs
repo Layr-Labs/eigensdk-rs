@@ -1,26 +1,31 @@
-#![allow(missing_docs)]
+//! This example shows how to initialize an operator and start processing tasks.
+//! Follow the [`eigen-operator` crate documentation`](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/operator/src/lib.rs#L1-L131)
+//! to set up an operator.
 
 use alloy::primitives::U256;
-use eigen_logging::get_logger;
-use eigen_operator::{config::OperatorConfig, Operator};
-use eigen_task_manager::response_calculator::response_calculator_from_fn;
-use eigen_testing_utils::task_processor::failing_response_calculator;
+use eigensdk::logging::{init_logger, log_level::LogLevel};
+use eigensdk::operator::{config::OperatorConfig, Operator};
+use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
+use eigensdk::testing_utils::task_processor::failing_response_calculator;
 use incredible_squaring::{square, utils::load_config, ISTaskManager};
 
-// This example shows how to initialize an operator and start to listen for new task events.
-// For this example, Operator should be registered.
 #[tokio::main]
 async fn main() {
-    let logger = get_logger();
+    init_logger(LogLevel::Info);
+    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
+
+    // 2. Create the `OperatorConfig`
     let config: OperatorConfig = load_config("./src/config/squaring-operator.toml").unwrap();
 
-    // Initialize the operator
-    let operator = Operator::new(logger, config).await.unwrap();
+    // 3. Create the logic to compute the task (we do this in `square`: lib.rs)
 
+    // 4. Build the `ResponseCalculator` with the computation function
     let response_calculator = response_calculator_from_fn(square);
+
+    // 5. Use the `failing_response_calculator` with the wrong `Output` type and a given failure rate
     let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
 
-    // Subscribe to the new task events and start listening. When a new task is created,
-    // the operator will process it and send the signed task response to the aggregator.
-    operator.start::<ISTaskManager>(logic).await.unwrap();
+    // 6. Initialize the operator
+    let operator = Operator::new(config, logic).await.unwrap();
+    operator.run::<ISTaskManager>().await.unwrap();
 }

@@ -1,16 +1,127 @@
-//! Aggregator crate
+//! # Aggregator
+//!
+//! ## What is an Aggregator
+//!
+//! The Aggregator is a service component that coordinates BLS signature aggregation from multiple operators for each task.
+//! It acts as the bridge between the off-chain operator network and the on-chain smart contracts.
+//!
+//! ## How the Logic Works
+//!
+//! The Aggregator operates through three main asynchronous processes:
+//!
+//! 1. **RPC Server Process**:
+//!    - Runs a TARPC-based server that listens for incoming operator responses
+//!    - When an operator submits a signed task response, the Aggregator validates it and forwards the signature to the BLS aggregation service.
+//!
+//! 2. **Task Monitoring Process**:
+//!    - Subscribes to blockchain events for new tasks
+//!    - When a new task is detected, it creates a task metadata record
+//!    - Sends the task metadata to the BLS Aggregation Service to begin signature collection
+//!
+//! 3. **Aggregation Process**:
+//!    - Listens for aggregated results from the BLS aggregation service
+//!    - When enough signatures are collected (meeting the quorum threshold), processes the result
+//!    - Submits the aggregated signature along with information about non-signing operators to the blockchain
+//!
+//! This flow ensures tasks are initialized, signatures collected, and the final response confirmed and forwarded to the AVS logic.
+//!
+//! ## How to Set Up an Aggregator
+//!
+//! 1. **Task Manager Definition**: Create a struct implementing the `TaskManagerDefs` trait:
+//!     - `Input` and `Output` types for your tasks. This should come from your bindings.
+//!     - `NEW_TASK_EVENT_SELECTOR` - the event signature for new task events
+//!     - Use the `impl_task_manager_from_defs_and_contract` macro to build your `TaskManager`.
+//!
+//!       ```ignore
+//!           impl TaskManagerDefs for ISTaskManager {
+//!               type Input = U256;
+//!               type Output = U256;
+//!               const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;
+//!               const TASK_RESPONDED_EVENT_SELECTOR: B256 = TaskResponded::SIGNATURE_HASH;
+//!           }
+//!
+//!           impl_task_manager_from_defs_and_contract!(ISTaskManager => YOUR_BINDING_CONTRACT_INSTANCE);
+//!       ```
+//!
+//! 2. **Create the aggregator configuration**: Create a [`AggregatorConfig`] struct.
+//!     - This struct implements `Serialize` and `Deserialize` so you can load from a file.
+//!
+//! 3. **Task Manager Instance**: Create an instance of your `TaskManager` contract:
+//!     - This struct should come from your bindings.
+//!
+//!       ```ignore
+//!           let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+//!       ```
+//!
+//! 4. **Task Processor**: Create a [`AggregatorProcessor`] implementation:
+//!     - This is a trait that contains user-defined logic to handle new tasks, signed responses, and the final aggregated result.
+//!     - We provide a standard [`IndexingAggregatorProcessor`] implementation that can be used as is for most cases. You need to provide
+//!       the task manager, the task timeout and the task window duration.
+//!       - The task timeout is the time after which a task considered completed if the quorum threshold is not reached.
+//!       - The task window duration is the time after which a task is considered completed and continues accepting signatures.
+//!
+//!       ```ignore
+//!           let task_timeout = Duration::from_secs(60);
+//!           let task_window_duration = Duration::from_secs(15);
+//!           let task_processor = IndexingAggregatorProcessor::new(contract, task_timeout, task_window_duration);
+//!       ```
+//!
+//! 5. **Create the aggregator**: Create an [`Aggregator`] instance with the config and the task processor:
+//!
+//!     ```ignore
+//!         let aggregator = Aggregator::new(config, task_processor)
+//!             .await?;
+//!
+//!         aggregator.start().await?;
+//!     ```
+//!
+//! ## Examples
+//!
+//! Here are some examples of aggregator implementations:
+//!
+//! - [Incredible Squaring](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-squaring/src/bin/aggregator.rs)
+//! - [Incredible Dot Product](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/incredible-dot-product/src/bin/aggregator.rs)
+//! - [Awesome Vault Service](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-1/examples/awesome-vault-service/src/bin/aggregator.rs)
+//!
+//! ## How to implement a custom Task Processor
+//!
+//! To implement a custom Task Processor, you need to implement the [`AggregatorProcessor`] trait.
+//!
+//! You should specify the following types:
+//!
+//! - [`Input`](AggregatorProcessor::Input) - The input type of the Solidity `Task`
+//! - [`Output`](AggregatorProcessor::Output) - The output type of the Solidity `TaskResponse`
+//! - [`NEW_TASK_EVENT_SELECTOR`](AggregatorProcessor::NEW_TASK_EVENT_SELECTOR) - The event signature for new task
+//!
+//! The trait defines three methods, each corresponding to a stage in the task lifecycle:
+//!
+//! - [`process_new_task`](AggregatorProcessor::process_new_task): Called when the contract emits a new task event.
+//!   This function should save the task for later use and return a [`TaskMetadata`], which the BLS aggregation
+//!   service requires to initiate signature collection.
+//!
+//! - [`process_task_response`](AggregatorProcessor::process_task_response): Called when the contract emits a task response event.
+//!   It must generate a digest of the response and store it for later aggregation. Returns the task response digest.
+//!
+//! - [`process_aggregated_response`](AggregatorProcessor::process_aggregated_response): Called when the BLS aggregation service
+//!   emits an aggregated response. It should retrieve the task and corresponding response using the task index and digest,
+//!   and submit the final aggregated result to the contract.
+//!
+//! Refer to the [`IndexingAggregatorProcessor`]
+//! implementation for an example of how to implement a custom Task Processor.
 
 /// Aggregator Config
 pub mod config;
 /// Aggregator error
 pub mod error;
+
+/// Aggregator Processor
+pub mod processor;
 /// RPC server
 pub mod rpc_server;
 /// Signed Task Response
 pub mod signed_task_response;
-/// Task Processor
-pub mod task_processor;
 
+use crate::processor::AggregatorProcessor;
 use alloy::dyn_abi::SolType;
 use alloy::providers::Provider;
 use alloy::providers::{ProviderBuilder, WsConnect};
@@ -22,7 +133,6 @@ use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
 use eigen_crypto_bls::error::BlsError;
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
-use eigen_logging::get_logger;
 use eigen_logging::logger::SharedLogger;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_services_blsaggregation::bls_agg::{
@@ -39,16 +149,27 @@ use eigen_utils::slashing::middleware::{
 };
 pub use error::AggregatorError;
 use futures_util::{future, StreamExt};
+pub use processor::IndexingAggregatorProcessor;
 use rpc_server::{ProcessSignedTaskResponse, ProcessSignedTaskResponseServer};
 pub use signed_task_response::SignedTaskResponse;
 use std::fmt::Debug;
 use std::net::SocketAddr;
 use tarpc::server::{self, Channel};
 use tarpc::tokio_serde::formats::Json;
-use task_processor::TaskProcessor;
-use tracing::info;
+use tokio::task::JoinHandle;
+use tracing::{error, info};
 
-/// Aggregator
+/// The aggregator is responsible for aggregating [`SignedTaskResponse`] from operators and posting them on chain. This includes:
+///
+/// * Listening to [`NEW_TASK_EVENT_SELECTOR`](eigen_task_manager::TaskManagerDefs::NEW_TASK_EVENT_SELECTOR)
+///   events.
+/// * Receiving [`SignedTaskResponse`] from the operators.
+/// * Sending the aggregated responses received from the BLS aggregation service to the `TaskManager` contract
+///
+/// Most of these things are delegated to the [`AggregatorProcessor`] trait, that processes
+/// tasks and communicates with the on-chain `TaskManager` contract.
+///
+/// To more in-depth details about the aggregator, refer to the [module documentation](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/crates/aggregator/src/lib.rs#L1-L84).
 #[derive(Debug)]
 pub struct Aggregator<TP> {
     port_address: String,
@@ -60,7 +181,7 @@ pub struct Aggregator<TP> {
 
 impl<TP> Aggregator<TP>
 where
-    TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP: AggregatorProcessor + Debug + Send + Sync + 'static + Clone,
     TP::Input: From<<<TP::Input as SolValue>::SolType as SolType>::RustType>,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
@@ -89,7 +210,7 @@ where
         .await?;
 
         let operators_info_service = OperatorInfoServiceInMemory::new(
-            logger,
+            logger.clone(),
             avs_registry_chain_reader.clone(),
             config.ws_rpc_url.clone(),
         )
@@ -110,7 +231,7 @@ where
         });
 
         let (service_handle, aggregated_response_receiver) =
-            BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
+            BlsAggregatorService::new(avs_registry_service_chaincaller, logger).start();
         Ok(Self {
             port_address: config.server_address,
             task_processor,
@@ -120,7 +241,7 @@ where
         })
     }
 
-    /// Starts the aggregator service
+    /// Runs the aggregator service, blocking the current task.
     ///
     /// Creates the following tasks:
     /// - start_server: Starts the server that receives signatures
@@ -130,7 +251,7 @@ where
     /// # Returns
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
-    pub async fn start(self) -> Result<(), AggregatorError> {
+    pub async fn run(self) -> Result<(), AggregatorError> {
         info!("Starting aggregator");
 
         let service_handle = self.service_handle.clone();
@@ -165,6 +286,18 @@ where
         Ok(())
     }
 
+    /// Starts the aggregator service in the background.
+    ///
+    /// Equivalent to [`Self::run`], but spawns it in the background and returns a
+    /// [`JoinHandle`] to the background task.
+    ///
+    /// # Returns
+    ///
+    /// * `JoinHandle<Result<(), AggregatorError>>` - The handle to the background task
+    pub fn start(self) -> JoinHandle<Result<(), AggregatorError>> {
+        tokio::spawn(self.run())
+    }
+
     /// Starts the RPC server
     ///
     /// # Arguments
@@ -188,7 +321,7 @@ where
         let service_handle_clone = service_handle.clone();
 
         let mut listener = tarpc::serde_transport::tcp::listen(&addr, Json::default).await?;
-        info!("Server running at {}", addr);
+        info!("RPC server running at {addr}");
 
         listener.config_mut().max_frame_length(usize::MAX);
         listener
@@ -232,6 +365,7 @@ where
         let ws = WsConnect::new(ws_rpc_url.clone());
         let filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
+        info!("Subscribing to NewTaskCreated event on {ws_rpc_url}");
 
         while let Some(log) = provider
             .subscribe_logs(&filter)
@@ -241,6 +375,7 @@ where
             .await
         {
             let (task_index, task) = decode_new_task::<TP::Input>(&log)?;
+            info!("Detected NewTaskCreated event for index {task_index}");
             let task_metadata = task_processor.process_new_task(task_index, task).await?;
             service_handle.initialize_task(task_metadata).await?;
         }
@@ -263,9 +398,19 @@ where
         mut aggregated_response_receiver: AggregateReceiver,
     ) -> Result<(), AggregatorError> {
         loop {
-            let service_response = aggregated_response_receiver
+            let Ok(service_response) = aggregated_response_receiver
                 .receive_aggregated_response()
-                .await?;
+                .await
+                .inspect_err(|e| error!("Error receiving aggregated response: {}", e))
+            else {
+                // If the receiver channel is closed, we continue to the next loop
+                continue;
+            };
+
+            info!(
+                "Received an aggregated response for task index {}",
+                service_response.task_index
+            );
 
             let non_signing_operator_pubkeys =
                 get_non_signing_operator_pubkeys(service_response.clone())?;

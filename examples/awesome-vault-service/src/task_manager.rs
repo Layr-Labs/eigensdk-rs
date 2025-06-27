@@ -10,13 +10,14 @@ use crate::bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::NewTaskCr
 use crate::bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::TaskResponded;
 use crate::bindings::awesomevaulttaskmanager::IAwesomeVaultTaskManager::TaskInput;
 
+/// Task Manager Definition. This struct will be used to build the `TaskManager`
+/// with the [`impl_task_manager_from_defs_and_contract`] macro.
+pub struct ISTaskManager;
+
 // Implement the [`TaskManagerDefs`] trait for a unit struct.
 // You need to specify the input and output types of the task.
 // You also need to specify the selectors for the new task event and the task responded event.
-pub struct ISTaskManager;
-
 impl TaskManagerDefs for ISTaskManager {
-    // TODO SDK: Should we remove the `Debug` bound in TM::Input?
     type Input = TaskInput;
     type Output = B256;
     const NEW_TASK_EVENT_SELECTOR: B256 = NewTaskCreated::SIGNATURE_HASH;

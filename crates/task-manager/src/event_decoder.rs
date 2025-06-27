@@ -29,7 +29,7 @@ pub enum AbiDecodeError {
     LogDecodeFailed(#[from] alloy::sol_types::Error),
 }
 
-/// The tuple for NewTaskCreated: (u32, Input)
+/// The tuple for NewTaskCreated: (`u32`, `Input`)
 pub type NewTaskEventTuple<Input> = (
     <Input as SolValue>::SolType,
     <u32 as SolValue>::SolType,
@@ -37,13 +37,13 @@ pub type NewTaskEventTuple<Input> = (
     <u32 as SolValue>::SolType,
 );
 
-/// The tuple for TaskResponded: ((u32, Output), Metadata)
+/// The tuple for TaskResponded: (`(u32, Output)`, `Metadata`)
 pub type TaskResponseEventTuple<Output> = (
     (<u32 as SolValue>::SolType, <Output as SolValue>::SolType),
     <TaskResponseMetadataSol as SolValue>::SolType,
 );
 
-/// The tuple for RespondToTaskCalldata: (Input, (TaskIndex, Output), NonSignerStakesAndSignature)
+/// The tuple for RespondToTaskCalldata: (`Input`, `(TaskIndex, Output)`, `NonSignerStakesAndSignature`)
 pub type RespondToTaskCalldata<Input, Output> = (
     (
         <Input as SolValue>::SolType,
@@ -55,7 +55,7 @@ pub type RespondToTaskCalldata<Input, Output> = (
     <NonSignerStakesAndSignature as SolValue>::SolType,
 );
 
-/// The tuple for SignedTaskResponse: (TaskResponse<Output>, G1Point, OperatorId)
+/// The tuple for SignedTaskResponse: (`TaskResponse<Output>`, `G1Point`, `OperatorId`)
 pub type SignedTaskResponseTuple<Output> = (
     (<u32 as SolValue>::SolType, <Output as SolValue>::SolType),
     <G1Point as SolValue>::SolType,

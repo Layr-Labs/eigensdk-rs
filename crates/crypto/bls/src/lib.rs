@@ -4,8 +4,11 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
+use std::path::Path;
+
 use alloy::primitives::{B256, U256};
 use ark_std::str::FromStr;
+use eth_keystore::decrypt_key;
 pub mod error;
 
 use crate::error::BlsError;
@@ -25,6 +28,9 @@ use eigen_utils::slashing::middleware::slashingregistrycoordinator::BN254::G1Poi
 use serde::de::{self, Visitor};
 use serde::ser;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+/// Environment variable to use as password for the BLS signer keystore
+const EIGEN_BLS_KEYSTORE_PASSWORD: &str = "EIGEN_BLS_KEYSTORE_PASSWORD";
 
 pub type PrivateKey = Fr;
 pub type PublicKey = G1Affine;
@@ -169,6 +175,56 @@ impl BlsKeyPair {
             priv_key: sk,
             pub_key: BlsG1Point::new(pk.into_affine()),
         })
+    }
+
+    /// Create a [`BlsKeyPair`] from a byte array
+    ///
+    /// # Arguments
+    ///
+    /// * `bytes`: The byte array
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self, BlsError>` - The [`BlsKeyPair`]
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, BlsError> {
+        let sk = Fr::from_be_bytes_mod_order(bytes);
+        let pk = G1Projective::from(G1Affine::generator()) * sk;
+        Ok(Self {
+            priv_key: sk,
+            pub_key: BlsG1Point::new(pk.into_affine()),
+        })
+    }
+
+    /// Create a [`BlsKeyPair`] from a [`BlsSignerConfig`]
+    /// The config accepts a private key or the path and password of a web3 secret
+    /// storage keystore.
+    ///
+    /// NOTE: To create a web3 secret storage keystore, you can use the `eigen-cli` crate.
+    ///
+    /// `cargo run --package eigen-cli -- egnkey generate --key-type bls`
+    ///
+    /// # Arguments
+    ///
+    /// * `config`: The BLS signer config
+    ///
+    /// # Returns
+    ///
+    /// * `Result<BlsKeyPair, BlsError>` - The [`BlsKeyPair`]
+    pub fn from_config(config: BlsSignerConfig) -> Result<BlsKeyPair, BlsError> {
+        match config {
+            BlsSignerConfig::PrivateKey(BlsPrivateKeyConfig { private_key }) => {
+                BlsKeyPair::new(private_key)
+            }
+            BlsSignerConfig::Keystore(BlsKeystoreConfig { path, password }) => {
+                let keypath = Path::new(&path);
+                // If the config password is empty, try with the environment variable
+                let password = password
+                    .or_else(|| std::env::var(EIGEN_BLS_KEYSTORE_PASSWORD).ok())
+                    .ok_or(BlsError::MissingKeystorePassword)?;
+                let private_key = decrypt_key(keypath, password)?;
+                BlsKeyPair::from_bytes(&private_key)
+            }
+        }
     }
 
     /// Get public key on G1
@@ -424,13 +480,65 @@ where
     a.map_err(de::Error::custom)
 }
 
+/// BLS Signer configuration
+/// We only support [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage)
+/// keystores
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum BlsSignerConfig {
+    /// Private key
+    PrivateKey(BlsPrivateKeyConfig),
+    /// Web3 Secret Storage Keystore
+    Keystore(BlsKeystoreConfig),
+}
+
+impl From<BlsPrivateKeyConfig> for BlsSignerConfig {
+    /// Convert a [`BlsPrivateKeyConfig`] into a [`BlsSignerConfig`]
+    fn from(config: BlsPrivateKeyConfig) -> Self {
+        BlsSignerConfig::PrivateKey(config)
+    }
+}
+
+impl From<BlsKeystoreConfig> for BlsSignerConfig {
+    /// Convert a [`BlsKeystoreConfig`] into a [`BlsSignerConfig`]
+    fn from(config: BlsKeystoreConfig) -> Self {
+        BlsSignerConfig::Keystore(config)
+    }
+}
+
+/// Configuration for a BLS private key signer
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct BlsPrivateKeyConfig {
+    /// BLS private key
+    pub private_key: String,
+}
+
+/// Configuration for a BLS keystore signer using [web3-secret-storage](https://ethereum.org/es/developers/docs/data-structures-and-encoding/web3-secret-storage).
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct BlsKeystoreConfig {
+    /// Path to the keystore file
+    pub path: String,
+    /// Password to decrypt the keystore file
+    /// If no password is provided, the signer will try to use the [`EIGEN_BLS_KEYSTORE_PASSWORD`] environment variable.
+    pub password: Option<String>,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloy::hex;
     use ark_bn254::Fq2;
     use eigen_crypto_bn254::utils::verify_message;
     use eigen_testing_utils::test_data::TestData;
     type Fp = ark_ff::Fp<ark_ff::MontBackend<ark_bn254::FqConfig, 4>, 4>;
+
+    /// Path to the BLS keystore file
+    const BLS_KEYSTORE_PATH: &str = "mockdata/test.bls.key.json";
+    /// Password to decrypt the BLS keystore file
+    const BLS_KEYSTORE_PASSWORD: &str = "zbEykAPaTQ5Ww3dQqXCp";
+    /// Decrypted private key from the BLS keystore file
+    const BLS_PRIVATE_KEY: &str =
+        "036aab3e53981c1466f02c30d600589382d4c596c6a76434090c680bafc23a19";
 
     #[test]
     fn test_convert_to_g1_point() {
@@ -793,5 +901,70 @@ mod tests {
 
         assert_eq!(original.priv_key, decoded.priv_key);
         assert_eq!(original.pub_key.g1, decoded.pub_key.g1);
+    }
+
+    #[test]
+    fn test_bls_signature_with_keystore_password_config() {
+        let config = BlsSignerConfig::Keystore(BlsKeystoreConfig {
+            path: BLS_KEYSTORE_PATH.to_string(),
+            password: Some(BLS_KEYSTORE_PASSWORD.to_string()),
+        });
+
+        let bls_key_pair = BlsKeyPair::from_config(config).unwrap();
+        let bytes = hex::decode(BLS_PRIVATE_KEY).unwrap();
+        let expected_priv_key = Fr::from_be_bytes_mod_order(&bytes);
+        assert_eq!(bls_key_pair.priv_key, expected_priv_key);
+    }
+
+    #[test]
+    fn test_bls_signature_with_keystore_env_password() {
+        let config = BlsKeystoreConfig {
+            path: BLS_KEYSTORE_PATH.to_string(),
+            password: None,
+        };
+        std::env::set_var(EIGEN_BLS_KEYSTORE_PASSWORD, BLS_KEYSTORE_PASSWORD);
+
+        let bls_key_pair = BlsKeyPair::from_config(config.into()).unwrap();
+        let bytes = hex::decode(BLS_PRIVATE_KEY).unwrap();
+        let expected_priv_key = Fr::from_be_bytes_mod_order(&bytes);
+        assert_eq!(bls_key_pair.priv_key, expected_priv_key);
+    }
+
+    #[test]
+    fn test_bls_serialize_deserialize_from_config_private_key() {
+        let original = BlsPrivateKeyConfig {
+            private_key:
+                "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                    .to_string(),
+        };
+
+        let toml_str = toml::to_string(&original).unwrap();
+        let parsed: BlsPrivateKeyConfig = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed, original);
+
+        let toml_str = r#"
+            private_key = "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+        "#;
+        let parsed: BlsPrivateKeyConfig = toml::from_str(toml_str).unwrap();
+        assert_eq!(parsed, original);
+    }
+
+    #[test]
+    fn test_bls_serialize_deserialize_from_config_keystore() {
+        let original = BlsKeystoreConfig {
+            path: BLS_KEYSTORE_PATH.to_string(),
+            password: Some(BLS_KEYSTORE_PASSWORD.to_string()),
+        };
+
+        let toml_str = toml::to_string(&original).unwrap();
+        let parsed: BlsKeystoreConfig = toml::from_str(&toml_str).unwrap();
+        assert_eq!(parsed, original);
+
+        let toml_str = r#"
+            path = "mockdata/test.bls.key.json"
+            password = "zbEykAPaTQ5Ww3dQqXCp"
+        "#;
+        let parsed: BlsKeystoreConfig = toml::from_str(toml_str).unwrap();
+        assert_eq!(parsed, original);
     }
 }

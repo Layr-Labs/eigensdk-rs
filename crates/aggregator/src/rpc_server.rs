@@ -1,13 +1,13 @@
 use std::fmt::Debug;
 
-use crate::{task_processor::TaskProcessor, AggregatorError, SignedTaskResponse};
+use crate::{AggregatorError, AggregatorProcessor, SignedTaskResponse};
 use alloy::{dyn_abi::SolType, sol_types::SolValue};
 use eigen_services_blsaggregation::bls_agg::{ServiceHandle, TaskSignature};
 use tarpc::{context::Context, ServerError};
 use tracing::info;
 
 #[tarpc::service]
-/// This is the service definition. It defines one RPC, [`process_signed_task_response`].
+/// This is the service definition. It defines one RPC, [`process_signed_task_response`](ProcessSignedTaskResponse::process_signed_task_response).
 /// This is the RPC that the aggregator will use to process the signed task response.
 pub trait ProcessSignedTaskResponse {
     /// Processes the signed task response
@@ -28,7 +28,7 @@ pub trait ProcessSignedTaskResponse {
 /// Server for the ProcessSignedTaskResponse RPC
 pub struct ProcessSignedTaskResponseServer<TP>
 where
-    TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP: AggregatorProcessor + Debug + Send + Sync + 'static + Clone,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
     task_processor: TP,
@@ -39,7 +39,7 @@ where
 /// The async method serves the RPC request and processes the signed task response
 impl<TP> ProcessSignedTaskResponse for ProcessSignedTaskResponseServer<TP>
 where
-    TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP: AggregatorProcessor + Debug + Send + Sync + 'static + Clone,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
     async fn process_signed_task_response(
@@ -52,9 +52,14 @@ where
             SignedTaskResponse::<TP::Output>::decode(&signed_task_response).map_err(|e| {
                 ServerError::new(
                     std::io::ErrorKind::Other,
-                    format!("Error decoding signed task response: {}", e),
+                    format!("Error decoding signed task response: {e}"),
                 )
             })?;
+
+        info!(
+            "Received signed task response for task index {}",
+            parsed.task_response.task_index
+        );
 
         Self::process_signed_task_response(&mut self.task_processor, service_handle, parsed)
             .await
@@ -70,7 +75,7 @@ where
 
 impl<TP> ProcessSignedTaskResponseServer<TP>
 where
-    TP: TaskProcessor + Debug + Send + Sync + 'static + Clone,
+    TP: AggregatorProcessor + Debug + Send + Sync + 'static + Clone,
     TP::Output: From<<<TP::Output as SolValue>::SolType as SolType>::RustType>,
 {
     /// Creates a new [`ProcessSignedTaskResponseServer`]
@@ -119,7 +124,6 @@ where
             TaskSignature::new(task_index, task_response_digest, signature, operator_id);
 
         service_handle.process_signature(task_signature).await?;
-        info!("processed signature for index {}", task_index);
 
         Ok(())
     }

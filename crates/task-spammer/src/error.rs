@@ -1,5 +1,3 @@
-//! Task generator errors
-
 use alloy::contract::Error as AlloyError;
 use eigen_task_manager::TaskManagerError;
 use thiserror::Error;
