@@ -1985,7 +1985,7 @@ checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
 name = "chainio-integration-test"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "ark-ff 0.5.0",
@@ -2475,7 +2475,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-aggregator"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-client-avsregistry",
@@ -2498,7 +2498,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-challenger"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-aggregator",
@@ -2520,7 +2520,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-cli"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "ark-ec 0.5.0",
@@ -2550,7 +2550,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-client-avsregistry"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "ark-ff 0.5.0",
@@ -2572,7 +2572,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-client-elcontracts"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-common",
@@ -2588,7 +2588,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-client-eth"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "async-trait",
@@ -2606,7 +2606,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-client-fireblocks"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "chrono",
@@ -2626,7 +2626,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-common"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "url",
@@ -2634,7 +2634,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-crypto-bls"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "ark-bn254 0.5.0",
@@ -2654,7 +2654,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-crypto-bn254"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "ark-bn254 0.5.0",
  "ark-ec 0.5.0",
@@ -2666,7 +2666,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-metrics"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-client-avsregistry",
@@ -2685,7 +2685,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-metrics-collectors-economic"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-client-avsregistry",
@@ -2701,7 +2701,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-metrics-collectors-rpc-calls"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "metrics",
  "tracing",
@@ -2709,7 +2709,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-nodeapi"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "ntex",
  "reqwest 0.12.15",
@@ -2722,7 +2722,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-operator"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-aggregator",
@@ -2747,7 +2747,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-services-avsregistry"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "ark-bn254 0.5.0",
@@ -2766,7 +2766,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-services-blsaggregation"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "ark-bn254 0.5.0",
@@ -2796,7 +2796,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-services-operatorsinfo"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "ark-bn254 0.5.0",
@@ -2822,7 +2822,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-signer"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "async-trait",
@@ -2839,7 +2839,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-task-spammer"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-types",
@@ -2851,7 +2851,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-testing-utils"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-client-avsregistry",
@@ -2867,7 +2867,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-types"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "ark-bn254 0.5.0",
@@ -2886,7 +2886,7 @@ dependencies = [
 
 [[package]]
 name = "eigen-utils"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "regex",
@@ -2896,7 +2896,7 @@ dependencies = [
 
 [[package]]
 name = "eigensdk"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "eigen-aggregator",
  "eigen-challenger",
@@ -3077,7 +3077,7 @@ dependencies = [
 
 [[package]]
 name = "examples-aggregator"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-aggregator",
@@ -3096,7 +3096,7 @@ dependencies = [
 
 [[package]]
 name = "examples-anvil-utils"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-client-avsregistry",
@@ -3107,7 +3107,7 @@ dependencies = [
 
 [[package]]
 name = "examples-avsregistry-read"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-client-avsregistry",
@@ -3118,7 +3118,7 @@ dependencies = [
 
 [[package]]
 name = "examples-avsregistry-write"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "ark-bn254 0.4.0",
@@ -3141,7 +3141,7 @@ dependencies = [
 
 [[package]]
 name = "examples-challenger"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-challenger",
@@ -3154,7 +3154,7 @@ dependencies = [
 
 [[package]]
 name = "examples-operator"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-aggregator",
@@ -3172,7 +3172,7 @@ dependencies = [
 
 [[package]]
 name = "examples-task-spammer"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "async-trait",
@@ -4055,7 +4055,7 @@ dependencies = [
 
 [[package]]
 name = "info-operator-service"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "alloy",
  "eigen-client-avsregistry",

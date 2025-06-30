@@ -130,7 +130,7 @@ impl Client {
         let mut headers = HeaderMap::new();
         headers.insert(
             AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", token))?,
+            HeaderValue::from_str(&format!("Bearer {token}"))?,
         );
         headers.insert(X_API_KEY, HeaderValue::from_str(&self.api_key)?);
 
@@ -165,7 +165,7 @@ impl Client {
         let mut headers = HeaderMap::new();
         headers.insert(
             AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", token))?,
+            HeaderValue::from_str(&format!("Bearer {token}"))?,
         );
         headers.insert(X_API_KEY, HeaderValue::from_str(&self.api_key)?);
 

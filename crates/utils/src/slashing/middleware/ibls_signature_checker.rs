@@ -743,7 +743,7 @@ pub mod IBLSSignatureCheckerTypes {
             #[inline]
             fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
                 alloy_sol_types::private::Cow::Borrowed(
-                    "NonSignerStakesAndSignature(uint32[] nonSignerQuorumBitmapIndices,BN254.G1Point[] nonSignerPubkeys,BN254.G1Point[] quorumApks,BN254.G2Point apkG2,BN254.G1Point sigma,uint32[] quorumApkIndices,uint32[] totalStakeIndices,uint32[][] nonSignerStakeIndices)",
+                    "NonSignerStakesAndSignature(uint32[] nonSignerQuorumBitmapIndices,BN254.G1Point[] nonSignerPubkeys,BN254.G1Point[] quorumApks,G2Point apkG2,G1Point sigma,uint32[] quorumApkIndices,uint32[] totalStakeIndices,uint32[][] nonSignerStakeIndices)",
                 )
             }
             #[inline]
@@ -1289,17 +1289,12 @@ interface IBLSSignatureChecker {
     error InvalidReferenceBlocknumber();
     error NonSignerPubkeysNotSorted();
     error OnlyRegistryCoordinatorOwner();
-    error StaleStakesForbidden();
-
-    event StaleStakesForbiddenUpdate(bool value);
 
     function blsApkRegistry() external view returns (address);
     function checkSignatures(bytes32 msgHash, bytes memory quorumNumbers, uint32 referenceBlockNumber, IBLSSignatureCheckerTypes.NonSignerStakesAndSignature memory nonSignerStakesAndSignature) external view returns (IBLSSignatureCheckerTypes.QuorumStakeTotals memory, bytes32);
     function delegation() external view returns (address);
     function registryCoordinator() external view returns (address);
-    function setStaleStakesForbidden(bool value) external;
     function stakeRegistry() external view returns (address);
-    function staleStakesForbidden() external view returns (bool);
     function trySignatureAndApkVerification(bytes32 msgHash, BN254.G1Point memory apk, BN254.G2Point memory apkG2, BN254.G1Point memory sigma) external view returns (bool pairingSuccessful, bool siganatureIsValid);
 }
 ```
@@ -1489,19 +1484,6 @@ interface IBLSSignatureChecker {
   },
   {
     "type": "function",
-    "name": "setStaleStakesForbidden",
-    "inputs": [
-      {
-        "name": "value",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "stakeRegistry",
     "inputs": [],
     "outputs": [
@@ -1509,19 +1491,6 @@ interface IBLSSignatureChecker {
         "name": "",
         "type": "address",
         "internalType": "contract IStakeRegistry"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "staleStakesForbidden",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
       }
     ],
     "stateMutability": "view"
@@ -1602,19 +1571,6 @@ interface IBLSSignatureChecker {
     "stateMutability": "view"
   },
   {
-    "type": "event",
-    "name": "StaleStakesForbiddenUpdate",
-    "inputs": [
-      {
-        "name": "value",
-        "type": "bool",
-        "indexed": false,
-        "internalType": "bool"
-      }
-    ],
-    "anonymous": false
-  },
-  {
     "type": "error",
     "name": "InputArrayLengthMismatch",
     "inputs": []
@@ -1657,11 +1613,6 @@ interface IBLSSignatureChecker {
   {
     "type": "error",
     "name": "OnlyRegistryCoordinatorOwner",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "StaleStakesForbidden",
     "inputs": []
   }
 ]
@@ -2299,6 +2250,7 @@ pub mod IBLSSignatureChecker {
             fn tokenize(&self) -> Self::Token<'_> {
                 ()
             }
+<<<<<<< HEAD
             #[inline]
             fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
                 <Self::Parameters<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
@@ -2440,38 +2392,14 @@ pub mod IBLSSignatureChecker {
                     <alloy::sol_types::sol_data::Bool as alloy_sol_types::SolType>::tokenize(
                         &self.value,
                     ),
+=======
+            #[inline]
+            fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
+                <Self::Parameters<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
+                    data,
+>>>>>>> dev
                 )
-            }
-            #[inline]
-            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
-                (Self::SIGNATURE_HASH.into(),)
-            }
-            #[inline]
-            fn encode_topics_raw(
-                &self,
-                out: &mut [alloy_sol_types::abi::token::WordToken],
-            ) -> alloy_sol_types::Result<()> {
-                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
-                    return Err(alloy_sol_types::Error::Overrun);
-                }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
-                Ok(())
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData for StaleStakesForbiddenUpdate {
-            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
-                From::from(self)
-            }
-            fn into_log_data(self) -> alloy_sol_types::private::LogData {
-                From::from(&self)
-            }
-        }
-        #[automatically_derived]
-        impl From<&StaleStakesForbiddenUpdate> for alloy_sol_types::private::LogData {
-            #[inline]
-            fn from(this: &StaleStakesForbiddenUpdate) -> alloy_sol_types::private::LogData {
-                alloy_sol_types::SolEvent::encode_log_data(this)
+                .map(Self::new)
             }
         }
     };
@@ -3033,6 +2961,7 @@ pub mod IBLSSignatureChecker {
             }
             #[inline]
             fn tokenize_returns(ret: &Self::Return) -> Self::ReturnToken<'_> {
+<<<<<<< HEAD
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         ret,
@@ -3166,13 +3095,16 @@ pub mod IBLSSignatureChecker {
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
+=======
+>>>>>>> dev
                 (
-                    <alloy::sol_types::sol_data::Bool as alloy_sol_types::SolType>::tokenize(
-                        &self.value,
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        ret,
                     ),
                 )
             }
             #[inline]
+<<<<<<< HEAD
             fn tokenize_returns(ret: &Self::Return) -> Self::ReturnToken<'_> {
                 setStaleStakesForbiddenReturn::_tokenize(ret)
             }
@@ -3185,8 +3117,25 @@ pub mod IBLSSignatureChecker {
             fn abi_decode_returns_validate(data: &[u8]) -> alloy_sol_types::Result<Self::Return> {
                 <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
                     data,
+=======
+            fn abi_decode_returns(data: &[u8]) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(data).map(
+                    |r| {
+                        let r: registryCoordinatorReturn = r.into();
+                        r._0
+                    },
+>>>>>>> dev
                 )
-                .map(Into::into)
+            }
+            #[inline]
+            fn abi_decode_returns_validate(data: &[u8]) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
+                    data,
+                )
+                .map(|r| {
+                    let r: registryCoordinatorReturn = r.into();
+                    r._0
+                })
             }
         }
     };
@@ -3317,6 +3266,7 @@ pub mod IBLSSignatureChecker {
                     let r: stakeRegistryReturn = r.into();
                     r._0
                 })
+<<<<<<< HEAD
             }
         }
     };
@@ -3443,6 +3393,8 @@ pub mod IBLSSignatureChecker {
                     let r: staleStakesForbiddenReturn = r.into();
                     r._0
                 })
+=======
+>>>>>>> dev
             }
         }
     };
@@ -3639,11 +3591,7 @@ pub mod IBLSSignatureChecker {
         #[allow(missing_docs)]
         registryCoordinator(registryCoordinatorCall),
         #[allow(missing_docs)]
-        setStaleStakesForbidden(setStaleStakesForbiddenCall),
-        #[allow(missing_docs)]
         stakeRegistry(stakeRegistryCall),
-        #[allow(missing_docs)]
-        staleStakesForbidden(staleStakesForbiddenCall),
         #[allow(missing_docs)]
         trySignatureAndApkVerification(trySignatureAndApkVerificationCall),
     }
@@ -3657,12 +3605,10 @@ pub mod IBLSSignatureChecker {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
             [23u8, 31u8, 29u8, 91u8],
-            [65u8, 108u8, 126u8, 94u8],
             [93u8, 244u8, 89u8, 70u8],
             [104u8, 48u8, 72u8, 53u8],
             [109u8, 20u8, 169u8, 135u8],
             [110u8, 251u8, 70u8, 54u8],
-            [185u8, 141u8, 9u8, 8u8],
             [223u8, 92u8, 247u8, 35u8],
         ];
     }
@@ -3670,7 +3616,7 @@ pub mod IBLSSignatureChecker {
     impl alloy_sol_types::SolInterface for IBLSSignatureCheckerCalls {
         const NAME: &'static str = "IBLSSignatureCheckerCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 8usize;
+        const COUNT: usize = 6usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -3684,13 +3630,7 @@ pub mod IBLSSignatureChecker {
                 Self::registryCoordinator(_) => {
                     <registryCoordinatorCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::setStaleStakesForbidden(_) => {
-                    <setStaleStakesForbiddenCall as alloy_sol_types::SolCall>::SELECTOR
-                }
                 Self::stakeRegistry(_) => <stakeRegistryCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::staleStakesForbidden(_) => {
-                    <staleStakesForbiddenCall as alloy_sol_types::SolCall>::SELECTOR
-                }
                 Self::trySignatureAndApkVerification(_) => {
                     <trySignatureAndApkVerificationCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -3725,6 +3665,7 @@ pub mod IBLSSignatureChecker {
                     trySignatureAndApkVerification
                 },
                 {
+<<<<<<< HEAD
                     fn setStaleStakesForbidden(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
@@ -3736,6 +3677,8 @@ pub mod IBLSSignatureChecker {
                     setStaleStakesForbidden
                 },
                 {
+=======
+>>>>>>> dev
                     fn blsApkRegistry(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
@@ -3772,6 +3715,7 @@ pub mod IBLSSignatureChecker {
                     checkSignatures
                 },
                 {
+<<<<<<< HEAD
                     fn staleStakesForbidden(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
@@ -3781,6 +3725,8 @@ pub mod IBLSSignatureChecker {
                     staleStakesForbidden
                 },
                 {
+=======
+>>>>>>> dev
                     fn delegation(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
@@ -3823,6 +3769,7 @@ pub mod IBLSSignatureChecker {
                     trySignatureAndApkVerification
                 },
                 {
+<<<<<<< HEAD
                     fn setStaleStakesForbidden(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
@@ -3834,6 +3781,8 @@ pub mod IBLSSignatureChecker {
                     setStaleStakesForbidden
                 },
                 {
+=======
+>>>>>>> dev
                     fn blsApkRegistry(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
@@ -3878,6 +3827,7 @@ pub mod IBLSSignatureChecker {
                     checkSignatures
                 },
                 {
+<<<<<<< HEAD
                     fn staleStakesForbidden(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
@@ -3889,6 +3839,8 @@ pub mod IBLSSignatureChecker {
                     staleStakesForbidden
                 },
                 {
+=======
+>>>>>>> dev
                     fn delegation(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerCalls> {
@@ -3927,18 +3879,8 @@ pub mod IBLSSignatureChecker {
                         inner,
                     )
                 }
-                Self::setStaleStakesForbidden(inner) => {
-                    <setStaleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
                 Self::stakeRegistry(inner) => {
                     <stakeRegistryCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::staleStakesForbidden(inner) => {
-                    <staleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -3966,18 +3908,8 @@ pub mod IBLSSignatureChecker {
                         inner, out,
                     )
                 }
-                Self::setStaleStakesForbidden(inner) => {
-                    <setStaleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner, out,
-                    )
-                }
                 Self::stakeRegistry(inner) => {
                     <stakeRegistryCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
-                }
-                Self::staleStakesForbidden(inner) => {
-                    <staleStakesForbiddenCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner, out,
-                    )
                 }
                 Self::trySignatureAndApkVerification(inner) => {
                     <trySignatureAndApkVerificationCall as alloy_sol_types::SolCall>::abi_encode_raw(
@@ -4008,8 +3940,6 @@ pub mod IBLSSignatureChecker {
         NonSignerPubkeysNotSorted(NonSignerPubkeysNotSorted),
         #[allow(missing_docs)]
         OnlyRegistryCoordinatorOwner(OnlyRegistryCoordinatorOwner),
-        #[allow(missing_docs)]
-        StaleStakesForbidden(StaleStakesForbidden),
     }
     #[automatically_derived]
     impl IBLSSignatureCheckerErrors {
@@ -4026,7 +3956,6 @@ pub mod IBLSSignatureChecker {
             [95u8, 131u8, 47u8, 65u8],
             [103u8, 152u8, 141u8, 51u8],
             [171u8, 27u8, 35u8, 107u8],
-            [175u8, 252u8, 94u8, 219u8],
             [224u8, 225u8, 231u8, 98u8],
             [225u8, 49u8, 10u8, 237u8],
             [255u8, 113u8, 148u8, 20u8],
@@ -4036,7 +3965,7 @@ pub mod IBLSSignatureChecker {
     impl alloy_sol_types::SolInterface for IBLSSignatureCheckerErrors {
         const NAME: &'static str = "IBLSSignatureCheckerErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 10usize;
+        const COUNT: usize = 9usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -4066,9 +3995,6 @@ pub mod IBLSSignatureChecker {
                 }
                 Self::OnlyRegistryCoordinatorOwner(_) => {
                     <OnlyRegistryCoordinatorOwner as alloy_sol_types::SolError>::SELECTOR
-                }
-                Self::StaleStakesForbidden(_) => {
-                    <StaleStakesForbidden as alloy_sol_types::SolError>::SELECTOR
                 }
             }
         }
@@ -4148,6 +4074,7 @@ pub mod IBLSSignatureChecker {
                     InvalidBLSSignature
                 },
                 {
+<<<<<<< HEAD
                     fn StaleStakesForbidden(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerErrors> {
@@ -4157,6 +4084,8 @@ pub mod IBLSSignatureChecker {
                     StaleStakesForbidden
                 },
                 {
+=======
+>>>>>>> dev
                     fn OnlyRegistryCoordinatorOwner(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerErrors> {
@@ -4276,6 +4205,7 @@ pub mod IBLSSignatureChecker {
                     InvalidBLSSignature
                 },
                 {
+<<<<<<< HEAD
                     fn StaleStakesForbidden(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerErrors> {
@@ -4287,6 +4217,8 @@ pub mod IBLSSignatureChecker {
                     StaleStakesForbidden
                 },
                 {
+=======
+>>>>>>> dev
                     fn OnlyRegistryCoordinatorOwner(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IBLSSignatureCheckerErrors> {
@@ -4368,9 +4300,6 @@ pub mod IBLSSignatureChecker {
                         inner,
                     )
                 }
-                Self::StaleStakesForbidden(inner) => {
-                    <StaleStakesForbidden as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
             }
         }
         #[inline]
@@ -4415,6 +4344,7 @@ pub mod IBLSSignatureChecker {
                         inner, out,
                     )
                 }
+<<<<<<< HEAD
                 Self::StaleStakesForbidden(inner) => {
                     <StaleStakesForbidden as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
@@ -4482,6 +4412,8 @@ pub mod IBLSSignatureChecker {
                 Self::StaleStakesForbiddenUpdate(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
+=======
+>>>>>>> dev
             }
         }
     }
@@ -4667,6 +4599,7 @@ pub mod IBLSSignatureChecker {
             &self,
         ) -> alloy_contract::SolCallBuilder<&P, registryCoordinatorCall, N> {
             self.call_builder(&registryCoordinatorCall)
+<<<<<<< HEAD
         }
         ///Creates a new call builder for the [`setStaleStakesForbidden`] function.
         pub fn setStaleStakesForbidden(
@@ -4674,16 +4607,21 @@ pub mod IBLSSignatureChecker {
             value: bool,
         ) -> alloy_contract::SolCallBuilder<&P, setStaleStakesForbiddenCall, N> {
             self.call_builder(&setStaleStakesForbiddenCall { value })
+=======
+>>>>>>> dev
         }
         ///Creates a new call builder for the [`stakeRegistry`] function.
         pub fn stakeRegistry(&self) -> alloy_contract::SolCallBuilder<&P, stakeRegistryCall, N> {
             self.call_builder(&stakeRegistryCall)
+<<<<<<< HEAD
         }
         ///Creates a new call builder for the [`staleStakesForbidden`] function.
         pub fn staleStakesForbidden(
             &self,
         ) -> alloy_contract::SolCallBuilder<&P, staleStakesForbiddenCall, N> {
             self.call_builder(&staleStakesForbiddenCall)
+=======
+>>>>>>> dev
         }
         ///Creates a new call builder for the [`trySignatureAndApkVerification`] function.
         pub fn trySignatureAndApkVerification(
@@ -4715,11 +4653,14 @@ pub mod IBLSSignatureChecker {
         ) -> alloy_contract::Event<&P, E, N> {
             alloy_contract::Event::new_sol(&self.provider, &self.address)
         }
+<<<<<<< HEAD
         ///Creates a new event filter for the [`StaleStakesForbiddenUpdate`] event.
         pub fn StaleStakesForbiddenUpdate_filter(
             &self,
         ) -> alloy_contract::Event<&P, StaleStakesForbiddenUpdate, N> {
             self.event_filter::<StaleStakesForbiddenUpdate>()
         }
+=======
+>>>>>>> dev
     }
 }

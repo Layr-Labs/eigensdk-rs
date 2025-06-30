@@ -12,7 +12,6 @@ interface IEigenPodManager {
     error OnlyDelegationManager();
     error OnlyEigenPod();
     error OnlyPauser();
-    error OnlyProofTimestampSetter();
     error OnlyUnpauser();
     error SharesNegative();
     error SharesNotMultipleOfGwei();
@@ -23,10 +22,8 @@ interface IEigenPodManager {
     event BurnableETHSharesIncreased(uint256 shares);
     event NewTotalShares(address indexed podOwner, int256 newTotalShares);
     event Paused(address indexed account, uint256 newPausedStatus);
-    event PectraForkTimestampSet(uint64 newPectraForkTimestamp);
     event PodDeployed(address indexed eigenPod, address indexed podOwner);
     event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
-    event ProofTimestampSetterSet(address newProofTimestampSetter);
     event Unpaused(address indexed account, uint256 newPausedStatus);
 
     function addShares(address staker, address strategy, uint256 shares) external returns (uint256, uint256);
@@ -46,12 +43,9 @@ interface IEigenPodManager {
     function paused(uint8 index) external view returns (bool);
     function paused() external view returns (uint256);
     function pauserRegistry() external view returns (address);
-    function pectraForkTimestamp() external view returns (uint64);
     function podOwnerDepositShares(address podOwner) external view returns (int256);
     function recordBeaconChainETHBalanceUpdate(address podOwner, uint256 prevRestakedBalanceWei, int256 balanceDeltaWei) external;
     function removeDepositShares(address staker, address strategy, uint256 depositSharesToRemove) external returns (uint256);
-    function setPectraForkTimestamp(uint64 timestamp) external;
-    function setProofTimestampSetter(address newProofTimestampSetter) external;
     function stake(bytes memory pubkey, bytes memory signature, bytes32 depositDataRoot) external payable;
     function stakerDepositShares(address user, address strategy) external view returns (uint256 depositShares);
     function unpause(uint256 newPausedStatus) external;
@@ -336,19 +330,6 @@ interface IEigenPodManager {
   },
   {
     "type": "function",
-    "name": "pectraForkTimestamp",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint64",
-        "internalType": "uint64"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "podOwnerDepositShares",
     "inputs": [
       {
@@ -416,32 +397,6 @@ interface IEigenPodManager {
         "internalType": "uint256"
       }
     ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setPectraForkTimestamp",
-    "inputs": [
-      {
-        "name": "timestamp",
-        "type": "uint64",
-        "internalType": "uint64"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setProofTimestampSetter",
-    "inputs": [
-      {
-        "name": "newProofTimestampSetter",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
@@ -685,19 +640,6 @@ interface IEigenPodManager {
   },
   {
     "type": "event",
-    "name": "PectraForkTimestampSet",
-    "inputs": [
-      {
-        "name": "newPectraForkTimestamp",
-        "type": "uint64",
-        "indexed": false,
-        "internalType": "uint64"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
     "name": "PodDeployed",
     "inputs": [
       {
@@ -730,19 +672,6 @@ interface IEigenPodManager {
         "type": "int256",
         "indexed": false,
         "internalType": "int256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "ProofTimestampSetterSet",
-    "inputs": [
-      {
-        "name": "newProofTimestampSetter",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
       }
     ],
     "anonymous": false
@@ -809,11 +738,6 @@ interface IEigenPodManager {
   {
     "type": "error",
     "name": "OnlyPauser",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "OnlyProofTimestampSetter",
     "inputs": []
   },
   {
@@ -1466,6 +1390,7 @@ pub mod IEigenPodManager {
             fn tokenize(&self) -> Self::Token<'_> {
                 ()
             }
+<<<<<<< HEAD
             #[inline]
             fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
                 <Self::Parameters<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
@@ -1524,15 +1449,14 @@ pub mod IEigenPodManager {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyProofTimestampSetter()";
             const SELECTOR: [u8; 4] = [152u8, 97u8, 19u8, 112u8];
+=======
+>>>>>>> dev
             #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
+            fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
+                <Self::Parameters<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
+                    data,
+                )
+                .map(Self::new)
             }
             #[inline]
             fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
@@ -2438,6 +2362,7 @@ pub mod IEigenPodManager {
         }
     };
     #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
+<<<<<<< HEAD
     /**Event with signature `PectraForkTimestampSet(uint64)` and selector `0x1bc8f042a52db3a437620dea4548f2031fb2a16dd8d3b0b854295528dd2cdd33`.
     ```solidity
     event PectraForkTimestampSet(uint64 newPectraForkTimestamp);
@@ -2539,6 +2464,8 @@ pub mod IEigenPodManager {
         }
     };
     #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
+=======
+>>>>>>> dev
     /**Event with signature `PodDeployed(address,address)` and selector `0x21c99d0db02213c32fff5b05cf0a718ab5f858802b91498f80d82270289d856a`.
     ```solidity
     event PodDeployed(address indexed eigenPod, address indexed podOwner);
@@ -2763,6 +2690,7 @@ pub mod IEigenPodManager {
         }
     };
     #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
+<<<<<<< HEAD
     /**Event with signature `ProofTimestampSetterSet(address)` and selector `0x7025c71a9fe60d709e71b377dc5f7c72c3e1d8539f8022574254e736ceca01e5`.
     ```solidity
     event ProofTimestampSetterSet(address newProofTimestampSetter);
@@ -2864,6 +2792,8 @@ pub mod IEigenPodManager {
         }
     };
     #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
+=======
+>>>>>>> dev
     /**Event with signature `Unpaused(address,uint256)` and selector `0x3582d1828e26bf56bd801502bc021ac0bc8afb57c826e4986b45593c8fad389c`.
     ```solidity
     event Unpaused(address indexed account, uint256 newPausedStatus);
@@ -5261,6 +5191,7 @@ pub mod IEigenPodManager {
                     let r: pauserRegistryReturn = r.into();
                     r._0
                 })
+<<<<<<< HEAD
             }
         }
     };
@@ -5391,6 +5322,8 @@ pub mod IEigenPodManager {
                     let r: pectraForkTimestampReturn = r.into();
                     r._0
                 })
+=======
+>>>>>>> dev
             }
         }
     };
@@ -5828,6 +5761,7 @@ pub mod IEigenPodManager {
             }
             #[inline]
             fn tokenize_returns(ret: &Self::Return) -> Self::ReturnToken<'_> {
+<<<<<<< HEAD
                 (
                     <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
                         ret,
@@ -5961,13 +5895,16 @@ pub mod IEigenPodManager {
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
+=======
+>>>>>>> dev
                 (
-                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
-                        &self.timestamp,
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        ret,
                     ),
                 )
             }
             #[inline]
+<<<<<<< HEAD
             fn tokenize_returns(ret: &Self::Return) -> Self::ReturnToken<'_> {
                 setPectraForkTimestampReturn::_tokenize(ret)
             }
@@ -6107,13 +6044,29 @@ pub mod IEigenPodManager {
             fn abi_decode_returns(data: &[u8]) -> alloy_sol_types::Result<Self::Return> {
                 <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(data)
                     .map(Into::into)
+=======
+            fn abi_decode_returns(data: &[u8]) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(data).map(
+                    |r| {
+                        let r: removeDepositSharesReturn = r.into();
+                        r._0
+                    },
+                )
+>>>>>>> dev
             }
             #[inline]
             fn abi_decode_returns_validate(data: &[u8]) -> alloy_sol_types::Result<Self::Return> {
                 <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
                     data,
                 )
+<<<<<<< HEAD
                 .map(Into::into)
+=======
+                .map(|r| {
+                    let r: removeDepositSharesReturn = r.into();
+                    r._0
+                })
+>>>>>>> dev
             }
         }
     };
@@ -6885,17 +6838,11 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         pauserRegistry(pauserRegistryCall),
         #[allow(missing_docs)]
-        pectraForkTimestamp(pectraForkTimestampCall),
-        #[allow(missing_docs)]
         podOwnerDepositShares(podOwnerDepositSharesCall),
         #[allow(missing_docs)]
         recordBeaconChainETHBalanceUpdate(recordBeaconChainETHBalanceUpdateCall),
         #[allow(missing_docs)]
         removeDepositShares(removeDepositSharesCall),
-        #[allow(missing_docs)]
-        setPectraForkTimestamp(setPectraForkTimestampCall),
-        #[allow(missing_docs)]
-        setProofTimestampSetter(setProofTimestampSetterCall),
         #[allow(missing_docs)]
         stake(stakeCall),
         #[allow(missing_docs)]
@@ -6916,15 +6863,12 @@ pub mod IEigenPodManager {
         ///
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
-            [13u8, 30u8, 157u8, 225u8],
             [19u8, 100u8, 57u8, 221u8],
-            [39u8, 4u8, 53u8, 26u8],
             [41u8, 43u8, 123u8, 43u8],
             [46u8, 174u8, 65u8, 140u8],
             [80u8, 255u8, 114u8, 37u8],
             [84u8, 253u8, 77u8, 80u8],
             [89u8, 92u8, 106u8, 103u8],
-            [90u8, 38u8, 251u8, 244u8],
             [90u8, 200u8, 106u8, 183u8],
             [92u8, 151u8, 90u8, 187u8],
             [114u8, 74u8, 244u8, 35u8],
@@ -6950,7 +6894,7 @@ pub mod IEigenPodManager {
     impl alloy_sol_types::SolInterface for IEigenPodManagerCalls {
         const NAME: &'static str = "IEigenPodManagerCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 28usize;
+        const COUNT: usize = 25usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -6983,9 +6927,6 @@ pub mod IEigenPodManager {
                 Self::pauserRegistry(_) => {
                     <pauserRegistryCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::pectraForkTimestamp(_) => {
-                    <pectraForkTimestampCall as alloy_sol_types::SolCall>::SELECTOR
-                }
                 Self::podOwnerDepositShares(_) => {
                     <podOwnerDepositSharesCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -6994,12 +6935,6 @@ pub mod IEigenPodManager {
                 }
                 Self::removeDepositShares(_) => {
                     <removeDepositSharesCall as alloy_sol_types::SolCall>::SELECTOR
-                }
-                Self::setPectraForkTimestamp(_) => {
-                    <setPectraForkTimestampCall as alloy_sol_types::SolCall>::SELECTOR
-                }
-                Self::setProofTimestampSetter(_) => {
-                    <setProofTimestampSetterCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::stake(_) => <stakeCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::stakerDepositShares(_) => {
@@ -7025,6 +6960,7 @@ pub mod IEigenPodManager {
         fn abi_decode_raw(selector: [u8; 4], data: &[u8]) -> alloy_sol_types::Result<Self> {
             static DECODE_SHIMS: &[fn(&[u8]) -> alloy_sol_types::Result<IEigenPodManagerCalls>] = &[
                 {
+<<<<<<< HEAD
                     fn setProofTimestampSetter(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
@@ -7036,6 +6972,8 @@ pub mod IEigenPodManager {
                     setProofTimestampSetter
                 },
                 {
+=======
+>>>>>>> dev
                     fn pause(data: &[u8]) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <pauseCall as alloy_sol_types::SolCall>::abi_decode_raw(data)
                             .map(IEigenPodManagerCalls::pause)
@@ -7043,6 +6981,7 @@ pub mod IEigenPodManager {
                     pause
                 },
                 {
+<<<<<<< HEAD
                     fn pectraForkTimestamp(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
@@ -7052,6 +6991,8 @@ pub mod IEigenPodManager {
                     pectraForkTimestamp
                 },
                 {
+=======
+>>>>>>> dev
                     fn eigenPodBeacon(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
@@ -7093,6 +7034,7 @@ pub mod IEigenPodManager {
                     pauseAll
                 },
                 {
+<<<<<<< HEAD
                     fn setPectraForkTimestamp(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
@@ -7104,6 +7046,8 @@ pub mod IEigenPodManager {
                     setPectraForkTimestamp
                 },
                 {
+=======
+>>>>>>> dev
                     fn paused_0(data: &[u8]) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <paused_0Call as alloy_sol_types::SolCall>::abi_decode_raw(data)
                             .map(IEigenPodManagerCalls::paused_0)
@@ -7287,6 +7231,7 @@ pub mod IEigenPodManager {
                 IEigenPodManagerCalls,
             >] = &[
                 {
+<<<<<<< HEAD
                     fn setProofTimestampSetter(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
@@ -7298,6 +7243,8 @@ pub mod IEigenPodManager {
                     setProofTimestampSetter
                 },
                 {
+=======
+>>>>>>> dev
                     fn pause(data: &[u8]) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <pauseCall as alloy_sol_types::SolCall>::abi_decode_raw_validate(data)
                             .map(IEigenPodManagerCalls::pause)
@@ -7305,6 +7252,7 @@ pub mod IEigenPodManager {
                     pause
                 },
                 {
+<<<<<<< HEAD
                     fn pectraForkTimestamp(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
@@ -7316,6 +7264,8 @@ pub mod IEigenPodManager {
                     pectraForkTimestamp
                 },
                 {
+=======
+>>>>>>> dev
                     fn eigenPodBeacon(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
@@ -7359,6 +7309,7 @@ pub mod IEigenPodManager {
                     pauseAll
                 },
                 {
+<<<<<<< HEAD
                     fn setPectraForkTimestamp(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
@@ -7370,6 +7321,8 @@ pub mod IEigenPodManager {
                     setPectraForkTimestamp
                 },
                 {
+=======
+>>>>>>> dev
                     fn paused_0(data: &[u8]) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <paused_0Call as alloy_sol_types::SolCall>::abi_decode_raw_validate(data)
                             .map(IEigenPodManagerCalls::paused_0)
@@ -7615,11 +7568,6 @@ pub mod IEigenPodManager {
                         inner,
                     )
                 }
-                Self::pectraForkTimestamp(inner) => {
-                    <pectraForkTimestampCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
                 Self::podOwnerDepositShares(inner) => {
                     <podOwnerDepositSharesCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
@@ -7632,16 +7580,6 @@ pub mod IEigenPodManager {
                 }
                 Self::removeDepositShares(inner) => {
                     <removeDepositSharesCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::setPectraForkTimestamp(inner) => {
-                    <setPectraForkTimestampCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::setProofTimestampSetter(inner) => {
-                    <setProofTimestampSetterCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -7756,12 +7694,6 @@ pub mod IEigenPodManager {
                         out,
                     )
                 }
-                Self::pectraForkTimestamp(inner) => {
-                    <pectraForkTimestampCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
                 Self::podOwnerDepositShares(inner) => {
                     <podOwnerDepositSharesCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
@@ -7776,18 +7708,6 @@ pub mod IEigenPodManager {
                 }
                 Self::removeDepositShares(inner) => {
                     <removeDepositSharesCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
-                Self::setPectraForkTimestamp(inner) => {
-                    <setPectraForkTimestampCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
-                Self::setProofTimestampSetter(inner) => {
-                    <setProofTimestampSetterCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -7838,8 +7758,6 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         OnlyPauser(OnlyPauser),
         #[allow(missing_docs)]
-        OnlyProofTimestampSetter(OnlyProofTimestampSetter),
-        #[allow(missing_docs)]
         OnlyUnpauser(OnlyUnpauser),
         #[allow(missing_docs)]
         SharesNegative(SharesNegative),
@@ -7864,7 +7782,6 @@ pub mod IEigenPodManager {
             [121u8, 72u8, 33u8, 255u8],
             [132u8, 10u8, 72u8, 213u8],
             [143u8, 160u8, 229u8, 118u8],
-            [152u8, 97u8, 19u8, 112u8],
             [198u8, 29u8, 202u8, 93u8],
             [239u8, 20u8, 125u8, 225u8],
             [247u8, 57u8, 88u8, 155u8],
@@ -7874,7 +7791,7 @@ pub mod IEigenPodManager {
     impl alloy_sol_types::SolInterface for IEigenPodManagerErrors {
         const NAME: &'static str = "IEigenPodManagerErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 13usize;
+        const COUNT: usize = 12usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -7901,9 +7818,6 @@ pub mod IEigenPodManager {
                 }
                 Self::OnlyEigenPod(_) => <OnlyEigenPod as alloy_sol_types::SolError>::SELECTOR,
                 Self::OnlyPauser(_) => <OnlyPauser as alloy_sol_types::SolError>::SELECTOR,
-                Self::OnlyProofTimestampSetter(_) => {
-                    <OnlyProofTimestampSetter as alloy_sol_types::SolError>::SELECTOR
-                }
                 Self::OnlyUnpauser(_) => <OnlyUnpauser as alloy_sol_types::SolError>::SELECTOR,
                 Self::SharesNegative(_) => <SharesNegative as alloy_sol_types::SolError>::SELECTOR,
                 Self::SharesNotMultipleOfGwei(_) => {
@@ -8021,6 +7935,7 @@ pub mod IEigenPodManager {
                         SharesNotMultipleOfGwei
                     },
                     {
+<<<<<<< HEAD
                         fn OnlyProofTimestampSetter(
                             data: &[u8],
                         ) -> alloy_sol_types::Result<IEigenPodManagerErrors>
@@ -8033,6 +7948,8 @@ pub mod IEigenPodManager {
                         OnlyProofTimestampSetter
                     },
                     {
+=======
+>>>>>>> dev
                         fn InvalidNewPausedStatus(
                             data: &[u8],
                         ) -> alloy_sol_types::Result<IEigenPodManagerErrors>
@@ -8178,6 +8095,7 @@ pub mod IEigenPodManager {
                     SharesNotMultipleOfGwei
                 },
                 {
+<<<<<<< HEAD
                     fn OnlyProofTimestampSetter(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodManagerErrors> {
@@ -8189,6 +8107,8 @@ pub mod IEigenPodManager {
                     OnlyProofTimestampSetter
                 },
                 {
+=======
+>>>>>>> dev
                     fn InvalidNewPausedStatus(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodManagerErrors> {
@@ -8260,9 +8180,6 @@ pub mod IEigenPodManager {
                 Self::OnlyPauser(inner) => {
                     <OnlyPauser as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
-                Self::OnlyProofTimestampSetter(inner) => {
-                    <OnlyProofTimestampSetter as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
                 Self::OnlyUnpauser(inner) => {
                     <OnlyUnpauser as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
@@ -8308,11 +8225,6 @@ pub mod IEigenPodManager {
                 Self::OnlyPauser(inner) => {
                     <OnlyPauser as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
-                Self::OnlyProofTimestampSetter(inner) => {
-                    <OnlyProofTimestampSetter as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner, out,
-                    )
-                }
                 Self::OnlyUnpauser(inner) => {
                     <OnlyUnpauser as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
@@ -8343,13 +8255,9 @@ pub mod IEigenPodManager {
         #[allow(missing_docs)]
         Paused(Paused),
         #[allow(missing_docs)]
-        PectraForkTimestampSet(PectraForkTimestampSet),
-        #[allow(missing_docs)]
         PodDeployed(PodDeployed),
         #[allow(missing_docs)]
         PodSharesUpdated(PodSharesUpdated),
-        #[allow(missing_docs)]
-        ProofTimestampSetterSet(ProofTimestampSetterSet),
         #[allow(missing_docs)]
         Unpaused(Unpaused),
     }
@@ -8362,11 +8270,6 @@ pub mod IEigenPodManager {
         ///
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
-            [
-                27u8, 200u8, 240u8, 66u8, 165u8, 45u8, 179u8, 164u8, 55u8, 98u8, 13u8, 234u8, 69u8,
-                72u8, 242u8, 3u8, 31u8, 178u8, 161u8, 109u8, 216u8, 211u8, 176u8, 184u8, 84u8,
-                41u8, 85u8, 40u8, 221u8, 44u8, 221u8, 51u8,
-            ],
             [
                 30u8, 208u8, 75u8, 127u8, 210u8, 98u8, 192u8, 217u8, 229u8, 15u8, 160u8, 41u8,
                 87u8, 243u8, 42u8, 129u8, 161u8, 81u8, 240u8, 59u8, 170u8, 163u8, 103u8, 250u8,
@@ -8393,11 +8296,6 @@ pub mod IEigenPodManager {
                 192u8, 16u8, 112u8, 11u8, 140u8, 97u8, 147u8,
             ],
             [
-                112u8, 37u8, 199u8, 26u8, 159u8, 230u8, 13u8, 112u8, 158u8, 113u8, 179u8, 119u8,
-                220u8, 95u8, 124u8, 114u8, 195u8, 225u8, 216u8, 83u8, 159u8, 128u8, 34u8, 87u8,
-                66u8, 84u8, 231u8, 54u8, 206u8, 202u8, 1u8, 229u8,
-            ],
-            [
                 166u8, 186u8, 177u8, 213u8, 90u8, 54u8, 31u8, 206u8, 162u8, 238u8, 226u8, 188u8,
                 148u8, 145u8, 228u8, 240u8, 30u8, 108u8, 243u8, 51u8, 223u8, 3u8, 201u8, 196u8,
                 242u8, 193u8, 68u8, 70u8, 100u8, 41u8, 247u8, 214u8,
@@ -8422,7 +8320,7 @@ pub mod IEigenPodManager {
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for IEigenPodManagerEvents {
         const NAME: &'static str = "IEigenPodManagerEvents";
-        const COUNT: usize = 11usize;
+        const COUNT: usize = 9usize;
         fn decode_raw_log(
             topics: &[alloy_sol_types::Word],
             data: &[u8],
@@ -8475,6 +8373,7 @@ pub mod IEigenPodManager {
                     <Paused as alloy_sol_types::SolEvent>::decode_raw_log(topics, data)
                         .map(Self::Paused)
                 }
+<<<<<<< HEAD
                 Some(
                     <PectraForkTimestampSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
                 ) => {
@@ -8484,6 +8383,8 @@ pub mod IEigenPodManager {
                         )
                         .map(Self::PectraForkTimestampSet)
                 }
+=======
+>>>>>>> dev
                 Some(<PodDeployed as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <PodDeployed as alloy_sol_types::SolEvent>::decode_raw_log(
                             topics,
@@ -8498,6 +8399,7 @@ pub mod IEigenPodManager {
                         )
                         .map(Self::PodSharesUpdated)
                 }
+<<<<<<< HEAD
                 Some(
                     <ProofTimestampSetterSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
                 ) => {
@@ -8507,6 +8409,8 @@ pub mod IEigenPodManager {
                         )
                         .map(Self::ProofTimestampSetterSet)
                 }
+=======
+>>>>>>> dev
                 Some(<Unpaused as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <Unpaused as alloy_sol_types::SolEvent>::decode_raw_log(topics, data)
                         .map(Self::Unpaused)
@@ -8545,16 +8449,10 @@ pub mod IEigenPodManager {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::Paused(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
-                Self::PectraForkTimestampSet(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
                 Self::PodDeployed(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::PodSharesUpdated(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
-                Self::ProofTimestampSetterSet(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::Unpaused(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
@@ -8578,16 +8476,10 @@ pub mod IEigenPodManager {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::Paused(inner) => alloy_sol_types::private::IntoLogData::into_log_data(inner),
-                Self::PectraForkTimestampSet(inner) => {
-                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
-                }
                 Self::PodDeployed(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::PodSharesUpdated(inner) => {
-                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
-                }
-                Self::ProofTimestampSetterSet(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::Unpaused(inner) => {
@@ -8850,12 +8742,15 @@ pub mod IEigenPodManager {
         ///Creates a new call builder for the [`pauserRegistry`] function.
         pub fn pauserRegistry(&self) -> alloy_contract::SolCallBuilder<&P, pauserRegistryCall, N> {
             self.call_builder(&pauserRegistryCall)
+<<<<<<< HEAD
         }
         ///Creates a new call builder for the [`pectraForkTimestamp`] function.
         pub fn pectraForkTimestamp(
             &self,
         ) -> alloy_contract::SolCallBuilder<&P, pectraForkTimestampCall, N> {
             self.call_builder(&pectraForkTimestampCall)
+=======
+>>>>>>> dev
         }
         ///Creates a new call builder for the [`podOwnerDepositShares`] function.
         pub fn podOwnerDepositShares(
@@ -8890,6 +8785,7 @@ pub mod IEigenPodManager {
                 depositSharesToRemove,
             })
         }
+<<<<<<< HEAD
         ///Creates a new call builder for the [`setPectraForkTimestamp`] function.
         pub fn setPectraForkTimestamp(
             &self,
@@ -8906,6 +8802,8 @@ pub mod IEigenPodManager {
                 newProofTimestampSetter,
             })
         }
+=======
+>>>>>>> dev
         ///Creates a new call builder for the [`stake`] function.
         pub fn stake(
             &self,
@@ -9000,12 +8898,15 @@ pub mod IEigenPodManager {
         pub fn Paused_filter(&self) -> alloy_contract::Event<&P, Paused, N> {
             self.event_filter::<Paused>()
         }
+<<<<<<< HEAD
         ///Creates a new event filter for the [`PectraForkTimestampSet`] event.
         pub fn PectraForkTimestampSet_filter(
             &self,
         ) -> alloy_contract::Event<&P, PectraForkTimestampSet, N> {
             self.event_filter::<PectraForkTimestampSet>()
         }
+=======
+>>>>>>> dev
         ///Creates a new event filter for the [`PodDeployed`] event.
         pub fn PodDeployed_filter(&self) -> alloy_contract::Event<&P, PodDeployed, N> {
             self.event_filter::<PodDeployed>()
@@ -9014,12 +8915,15 @@ pub mod IEigenPodManager {
         pub fn PodSharesUpdated_filter(&self) -> alloy_contract::Event<&P, PodSharesUpdated, N> {
             self.event_filter::<PodSharesUpdated>()
         }
+<<<<<<< HEAD
         ///Creates a new event filter for the [`ProofTimestampSetterSet`] event.
         pub fn ProofTimestampSetterSet_filter(
             &self,
         ) -> alloy_contract::Event<&P, ProofTimestampSetterSet, N> {
             self.event_filter::<ProofTimestampSetterSet>()
         }
+=======
+>>>>>>> dev
         ///Creates a new event filter for the [`Unpaused`] event.
         pub fn Unpaused_filter(&self) -> alloy_contract::Event<&P, Unpaused, N> {
             self.event_filter::<Unpaused>()

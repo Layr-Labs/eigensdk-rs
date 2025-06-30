@@ -81,24 +81,30 @@ bindings_slashing_host:
 	./scripts/generate_slashing_bindings.sh
 	cargo fmt --all
 	# Apply a fix for any compile issues
-	git apply --allow-empty scripts/bindings.patch
+	# Ignore any failures
+	-git apply --allow-empty scripts/bindings.patch
 	@echo "Bindings generated"
 
 .PHONY: bindings_host
 bindings_host: bindings_rewardsv2_host bindings_slashing_host
+
 .PHONY: rewardsv2-bindings
 rewardsv2-bindings:
 	@echo "Starting Docker container..."
+	# Since we want to use alloy 1.0, we need to use the nightly version of foundry
+	# TODO: Use stable version of foundry once they upgrade to alloy 1.0
 	@docker run --rm -v "$(PWD):/sdk" -w "/sdk" \
-		ghcr.io/foundry-rs/foundry:nightly-548d1f0ebb811fcebd5fafdec33b7b814d0dbdbd \
+		ghcr.io/foundry-rs/foundry:nightly \
 		-c scripts/generate_rewardsv2_bindings.sh
 	cargo fmt --all
 
 .PHONY: slashing-bindings
 slashing-bindings:
 	@echo "Starting Docker container..."
+	# Since we want to use alloy 1.0, we need to use the nightly version of foundry
+	# TODO: Use stable version of foundry once they upgrade to alloy 1.0
 	@docker run --rm -v "$(PWD):/sdk" -w "/sdk" \
-		ghcr.io/foundry-rs/foundry:nightly-548d1f0ebb811fcebd5fafdec33b7b814d0dbdbd \
+		ghcr.io/foundry-rs/foundry:nightly \
 		-c scripts/generate_slashing_bindings.sh
 	cargo fmt --all
 	# Apply a fix for any compile issues

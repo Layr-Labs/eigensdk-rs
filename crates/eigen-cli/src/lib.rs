@@ -115,7 +115,7 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
         EigenKeyCommand::DeriveOperatorId { private_key } => {
             let operator_id =
                 derive_operator_id(private_key).map_err(EigenKeyCliError::BLSError)?;
-            println!("{}", operator_id);
+            println!("{operator_id}");
             Ok(())
         }
 
@@ -136,7 +136,7 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             let word_list = language.try_from().1;
             let mnemonic = Mnemonic::get_mnemonic_without_word_path(word_list, None).unwrap();
 
-            println!("New mnemonic generated : {}", mnemonic);
+            println!("New mnemonic generated : {mnemonic}");
             println!("{}", "Please store it safely!".red().bold());
             Ok(())
         }
@@ -144,7 +144,7 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             let language_string = language.try_from().0;
 
             let mnemonic = Mnemonic::get_mnemonic(language_string, &path, None).unwrap();
-            println!("New mnemonic generated : {}", mnemonic);
+            println!("New mnemonic generated : {mnemonic}");
             println!("{}", "Please store it safely!".red().bold());
             Ok(())
         }
@@ -290,11 +290,11 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(&format!(
             r#"{{
                 "avs": {{
-                    "bls-apk-registry": "0xfd471836031dc5108809d173a067e8486b9047a3",
-                    "index-registry": "0x1429859428c0abc9c2c47c8ee9fbaf82cfa0f20f",
-                    "registry-coordinator": "0x7bc06c482dead17c0e297afbc32f6e63d3846650",
-                    "service-manager": "0xcd8a1c3ba11cf5ecfa6267617243239504a98d90",
-                    "stake-registry": "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3"
+                    "bls-apk-registry": "0x1429859428c0abc9c2c47c8ee9fbaf82cfa0f20f",
+                    "index-registry": "0x162a433068f51e18b7d13932f27e66a3f99e6890",
+                    "registry-coordinator": "0xfd471836031dc5108809d173a067e8486b9047a3",
+                    "service-manager": "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3",
+                    "stake-registry": "0x7bc06c482dead17c0e297afbc32f6e63d3846650"
                 }},
                 "eigenlayer": {{
                     "delegation-manager": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
@@ -329,11 +329,11 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(&format!(
             r#"{{
                 "avs": {{
-                    "bls-apk-registry": "0xfd471836031dc5108809d173a067e8486b9047a3",
-                    "index-registry": "0x1429859428c0abc9c2c47c8ee9fbaf82cfa0f20f",
-                    "registry-coordinator": "0x7bc06c482dead17c0e297afbc32f6e63d3846650",
+                    "bls-apk-registry": "0x1429859428c0abc9c2c47c8ee9fbaf82cfa0f20f",
+                    "index-registry": "0x162a433068f51e18b7d13932f27e66a3f99e6890",
+                    "registry-coordinator": "0xfd471836031dc5108809d173a067e8486b9047a3",
                     "service-manager": "0x0000000000000000000000000000000000000000",
-                    "stake-registry": "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3"
+                    "stake-registry": "0x7bc06c482dead17c0e297afbc32f6e63d3846650"
                 }},
                 "eigenlayer": {{
                     "delegation-manager": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
@@ -381,7 +381,7 @@ mod test {
         };
         let key_path = output_path
             .join(DEFAULT_KEY_FOLDER)
-            .join(format!("1.{}.key.json", key_name));
+            .join(format!("1.{key_name}.key.json"));
 
         let decrypted_bytes = decrypt_key(key_path, password).unwrap();
         let decrypted_private_key = SecretKey::from_slice(&decrypted_bytes).unwrap().to_bytes();
