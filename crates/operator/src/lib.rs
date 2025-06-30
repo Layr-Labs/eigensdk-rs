@@ -11,9 +11,12 @@ use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
+<<<<<<< HEAD
 use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
+=======
+>>>>>>> v2-dev-0
 use eigen_types::operator::OperatorId;
 use error::OperatorError;
 use futures_util::StreamExt;
@@ -62,8 +65,19 @@ impl Operator {
     ///
     /// * `Result<Self, OperatorError>` - The operator.
     pub async fn new(
+<<<<<<< HEAD
         logger: SharedLogger,
         config: config::OperatorConfig,
+=======
+        key_pair: &BlsKeyPair,
+        operator_address: Address,
+        operator_name: &str,
+        ws_rpc_url: &str,
+        http_rpc_url: &str,
+        registry_coordinator_address: Address,
+        operator_state_retriever_address: Address,
+        aggregator_ip_port: String,
+>>>>>>> v2-dev-0
     ) -> Result<Self, OperatorError> {
         let config::OperatorConfig {
             bls_private_key,
@@ -77,7 +91,10 @@ impl Operator {
             registration: _,
         } = config;
         let avs_registry_reader = AvsRegistryChainReader::new(
+<<<<<<< HEAD
             logger.clone(),
+=======
+>>>>>>> v2-dev-0
             registry_coordinator_address,
             operator_state_retriever_address,
             http_rpc_url.to_string(),
@@ -145,7 +162,7 @@ impl Operator {
     {
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
-            .on_ws(ws)
+            .connect_ws(ws)
             .await
             .map_err(|_| OperatorError::TransportError)?;
 

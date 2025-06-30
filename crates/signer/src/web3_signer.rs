@@ -9,7 +9,7 @@ use url::Url;
 
 /// A signer that sends an RPC request to sign a transaction remotely
 /// Implements `eth_signTransaction` method of Consensys Web3 Signer
-/// Reference: https://docs.web3signer.consensys.io/reference/api/json-rpc#eth_signtransaction
+/// Reference: <https://docs.web3signer.consensys.io/reference/api/json-rpc#eth_signtransaction>
 #[derive(Debug)]
 pub struct Web3Signer {
     /// Client used to send an RPC request
@@ -57,7 +57,7 @@ impl TxSigner<Signature> for Web3Signer {
             to: tx.to().into(),
             value: tx.value(),
             gas: format!("0x{:x}", tx.gas_limit()),
-            gas_price: tx.gas_price().map(|price| format!("0x{:x}", price)),
+            gas_price: tx.gas_price().map(|price| format!("0x{price:x}")),
             nonce: format!("0x{:x}", tx.nonce()),
             data: Bytes::copy_from_slice(tx.input()).to_string(),
         };

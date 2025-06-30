@@ -19,6 +19,7 @@ set +a
 
 # CHAIN_ID=$(cast chain-id --rpc-url $RPC_URL)
 
+FOUNDRY_IMAGE=ghcr.io/foundry-rs/foundry:stable
 # # start an empty anvil chain in the background and dump its state to a json file upon exit
 start_anvil_docker "" $parent_path/operatorset_contracts_deployed_anvil_state
 

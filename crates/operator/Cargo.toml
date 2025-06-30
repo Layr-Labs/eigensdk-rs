@@ -29,7 +29,6 @@ tokio.workspace = true
 tracing.workspace = true
 rand.workspace = true
 rand_core.workspace = true
-eigen-logging.workspace = true
 eigen-crypto-bn254.workspace = true
 eigen-utils.workspace = true
 url.workspace = true

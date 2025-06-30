@@ -7,20 +7,28 @@ repository.workspace = true
 description = "eigen layer instrumented client "
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 alloy.workspace = true
 async-trait.workspace = true
-eigen-logging.workspace = true
+
 eigen-metrics-collectors-rpc-calls.workspace = true
 hex.workspace = true
 thiserror.workspace = true
+tracing.workspace = true
 url.workspace = true
 
 [dev-dependencies]
-eigen-signer.workspace = true
-eigen-testing-utils.workspace = true
-eigen-utils.workspace = true
-eigen-common.workspace = true
+# We don't use workspace due to:
+# https://github.com/rust-lang/cargo/issues/4242#issuecomment-2578428685
+eigen-testing-utils = { path = "../../../../tests/testing-utils" }
+eigen-common = { path = "../../../common" }
+
 once_cell.workspace = true
 serial_test.workspace = true
 tokio.workspace = true

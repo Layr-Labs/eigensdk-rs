@@ -1,10 +1,10 @@
 [workspace]
-changelog_update = false # disable changelog updates
-dependencies_update = true # update dependencies with `cargo update`
-pr_branch_prefix = "release-plz-" # PR branch prefix
+changelog_update = false                         # disable changelog updates
+dependencies_update = true                       # update dependencies with `cargo update`
+pr_branch_prefix = "release-plz-"                # PR branch prefix
 pr_name = "Release {{ package }} v{{ version }}" # template for the PR name
-pr_labels = ["release"] # add the `release` label to the release Pull Request
-release_always = false
+pr_labels = ["release"]                          # add the `release` label to the release Pull Request
+release_always = true
 git_release_draft = false
 git_release_enable = false
 git_tag_enable = false
@@ -15,3 +15,8 @@ git_tag_name = "v{{ version }}"
 git_tag_enable = true
 git_release_enable = true
 git_release_draft = true
+
+# Integration test packages
+[[package]]
+name = "chainio-integration-test"
+release = false

@@ -1,7 +1,7 @@
 //! get operators stake in quorums at current block
 use alloy::primitives::FixedBytes;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_logging::get_test_logger;
+
 use eigen_testing_utils::m2_holesky_constants::{OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR};
 use eyre::Result;
 use std::str::FromStr;
@@ -11,7 +11,6 @@ use std::str::FromStr;
 async fn main() -> Result<()> {
     let holesky_provider = "https://holesky.drpc.org";
     let avs_registry = AvsRegistryChainReader::new(
-        get_test_logger().clone(),
         REGISTRY_COORDINATOR,
         OPERATOR_STATE_RETRIEVER,
         holesky_provider.to_string(),
@@ -27,7 +26,7 @@ async fn main() -> Result<()> {
         )
         .await?;
 
-    println!("operator state at current block is {:?}", operators_state);
+    println!("operator state at current block is {operators_state:?}");
 
     Ok(())
 }

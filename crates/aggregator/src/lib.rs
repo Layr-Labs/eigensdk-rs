@@ -20,10 +20,13 @@ use ark_ec::AffineRepr;
 pub use config::AggregatorConfig;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
+<<<<<<< HEAD
 use eigen_crypto_bls::error::BlsError;
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
 use eigen_logging::get_logger;
 use eigen_logging::logger::SharedLogger;
+=======
+>>>>>>> v2-dev-0
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle,
@@ -81,7 +84,10 @@ where
         logger: SharedLogger,
     ) -> Result<Self, AggregatorError> {
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
+<<<<<<< HEAD
             logger.clone(),
+=======
+>>>>>>> v2-dev-0
             config.registry_coordinator,
             config.operator_state_retriever,
             config.http_rpc_url,
@@ -89,7 +95,10 @@ where
         .await?;
 
         let operators_info_service = OperatorInfoServiceInMemory::new(
+<<<<<<< HEAD
             logger,
+=======
+>>>>>>> v2-dev-0
             avs_registry_chain_reader.clone(),
             config.ws_rpc_url.clone(),
         )
@@ -110,7 +119,7 @@ where
         });
 
         let (service_handle, aggregated_response_receiver) =
-            BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
+            BlsAggregatorService::new(avs_registry_service_chaincaller).start();
         Ok(Self {
             port_address: config.server_address,
             task_processor,
@@ -230,8 +239,13 @@ where
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
+<<<<<<< HEAD
         let filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
+=======
+        let filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
+        let provider = ProviderBuilder::new().connect_ws(ws).await?;
+>>>>>>> v2-dev-0
 
         while let Some(log) = provider
             .subscribe_logs(&filter)
