@@ -13,11 +13,11 @@ use eigensdk::testing_utils::{
     transaction::wait_transaction,
 };
 use eigensdk::utils::slashing::{
-    core::irewardscoordinator::IRewardsCoordinator,
-    middleware::servicemanagerbase::IRewardsCoordinatorTypes::{
+    core::i_rewards_coordinator::IRewardsCoordinator,
+    middleware::service_manager_base::IRewardsCoordinatorTypes::{
         RewardsSubmission, StrategyAndMultiplier,
     },
-    sdk::mockerc20::MockERC20,
+    sdk::mock_erc20::MockERC20,
 };
 
 #[tokio::test]
@@ -50,15 +50,13 @@ async fn test_process_claim() {
         .MAX_REWARDS_DURATION()
         .call()
         .await
-        .unwrap()
-        ._0;
+        .unwrap();
 
     let calculation_interval_seconds = rewards_coordinator
         .CALCULATION_INTERVAL_SECONDS()
         .call()
         .await
-        .unwrap()
-        ._0;
+        .unwrap();
 
     let current_timestamp: u32 = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
@@ -101,7 +99,7 @@ async fn test_process_claim() {
 
     // Check claimer balance at strategy before claim
     let token = MockERC20::new(token_address, &signer);
-    let initial_balance = token.balanceOf(claimer_address).call().await.unwrap()._0;
+    let initial_balance = token.balanceOf(claimer_address).call().await.unwrap();
 
     let rewards_amount = U256::from(42);
     let (_root, claim) = new_claim(&http_endpoint, rewards_amount).await;
@@ -115,7 +113,7 @@ async fn test_process_claim() {
     assert!(receipt.status());
 
     // Check balance at strategy after claim
-    let balance_after_claim = token.balanceOf(claimer_address).call().await.unwrap()._0;
+    let balance_after_claim = token.balanceOf(claimer_address).call().await.unwrap();
 
     assert!(balance_after_claim == initial_balance + rewards_amount);
 }
