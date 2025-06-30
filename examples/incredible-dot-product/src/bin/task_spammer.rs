@@ -10,6 +10,7 @@ use incredible_dot_product::{
     IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
 use std::{str::FromStr, time::Duration};
+use tracing::Level;
 
 #[tokio::main]
 async fn main() -> Result<()> {

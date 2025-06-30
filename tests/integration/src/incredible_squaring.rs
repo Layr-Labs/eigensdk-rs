@@ -57,14 +57,6 @@ async fn test_incredible_squaring() {
     let (_container, http_endpoint, ws_endpoint) =
         start_anvil_with_state(INCREDIBLE_SQUARING_STATE_PATH).await;
 
-    tracing::subscriber::set_global_default(
-        tracing_subscriber::fmt::Subscriber::builder()
-            .with_max_level(Level::INFO)
-            .with_ansi(false)
-            .finish(),
-    )
-    .unwrap();
-
     // Task spammer should finish when all tasks are created (`NUM_TASKS` * `TASK_INTERVAL`)
     // so we add 5 seconds to the timeout
     let timeout_duration = Duration::from_secs(NUM_TASKS * TASK_INTERVAL + 5);

@@ -11,6 +11,7 @@ use eigensdk::{
     operator::{config::OperatorConfig, Operator},
     testing_utils::task_processor::failing_response_calculator,
 };
+use tracing::Level;
 
 use std::{collections::BTreeMap, sync::Arc};
 use tokio::sync::Mutex;

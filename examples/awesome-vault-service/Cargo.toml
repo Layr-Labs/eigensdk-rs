@@ -23,6 +23,7 @@ serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
 toml = "0.8"
 tracing = "0.1"
+tracing-subscriber = "0.3"
 
 [[bin]]
 name = "awesome-vault-aggregator"

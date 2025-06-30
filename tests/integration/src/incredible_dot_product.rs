@@ -60,14 +60,6 @@ async fn test_incredible_dot_product() {
     let (_container, http_endpoint, ws_endpoint) =
         start_anvil_with_state(INCREDIBLE_DOT_PRODUCT_STATE_PATH).await;
 
-    tracing::subscriber::set_global_default(
-        tracing_subscriber::fmt::Subscriber::builder()
-            .with_max_level(Level::INFO)
-            .with_ansi(false)
-            .finish(),
-    )
-    .unwrap();
-
     // Response calculator
     let response_calculator = || response_calculator_from_fn(dot_product);
 

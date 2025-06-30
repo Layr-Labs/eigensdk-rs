@@ -13,6 +13,7 @@ use eigensdk::{
 };
 use eyre::Result;
 use std::{str::FromStr, time::Duration};
+use tracing::Level;
 
 #[tokio::main]
 async fn main() -> Result<()> {

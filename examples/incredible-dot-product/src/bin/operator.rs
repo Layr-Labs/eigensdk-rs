@@ -13,6 +13,7 @@ use incredible_dot_product::{
     task_manager::{dot_product, ISTaskManager},
     utils::load_config,
 };
+use tracing::Level;
 
 #[tokio::main]
 async fn main() -> Result<()> {

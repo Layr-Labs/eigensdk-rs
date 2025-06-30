@@ -9,6 +9,7 @@ use awesome_vault_service::bindings::awesome_vault_task_manager::{
 use eigensdk::{common::get_signer, task_spammer::TaskSpammerBuilder};
 use eyre::Result;
 use rand::Rng;
+use tracing::Level;
 
 use std::{str::FromStr, time::Duration};
 

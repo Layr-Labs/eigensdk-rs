@@ -11,6 +11,7 @@ use eigensdk::aggregator::IndexingAggregatorProcessor;
 use eigensdk::aggregator::{Aggregator, AggregatorConfig};
 use incredible_squaring::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use incredible_squaring::utils::load_config;
+use tracing::Level;
 use std::str::FromStr;
 use std::time::Duration;
 

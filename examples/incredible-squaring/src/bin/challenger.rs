@@ -18,6 +18,7 @@ use incredible_squaring::{
     square, utils::load_config,
 };
 use std::str::FromStr;
+use tracing::Level;
 
 #[tokio::main]
 async fn main() {

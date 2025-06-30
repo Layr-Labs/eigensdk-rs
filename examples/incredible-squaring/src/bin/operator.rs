@@ -7,6 +7,7 @@ use eigensdk::operator::{config::OperatorConfig, Operator};
 use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
 use eigensdk::testing_utils::task_processor::failing_response_calculator;
 use incredible_squaring::{square, utils::load_config, ISTaskManager};
+use tracing::Level;
 
 #[tokio::main]
 async fn main() {

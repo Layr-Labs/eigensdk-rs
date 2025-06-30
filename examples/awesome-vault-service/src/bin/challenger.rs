@@ -19,6 +19,7 @@ use eigensdk::{
 use eyre::Result;
 use std::{collections::BTreeMap, str::FromStr, sync::Arc};
 use tokio::sync::Mutex;
+use tracing::Level;
 
 #[tokio::main]
 async fn main() -> Result<()> {
