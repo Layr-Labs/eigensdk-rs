@@ -3,15 +3,22 @@
 //! to set up an operator.
 
 use alloy::primitives::U256;
-use eigensdk::logging::{init_logger, log_level::LogLevel};
 use eigensdk::operator::{config::OperatorConfig, Operator};
 use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
 use eigensdk::testing_utils::task_processor::failing_response_calculator;
 use incredible_squaring::{square, utils::load_config, ISTaskManager};
+use tracing::Level;
 
 #[tokio::main]
 async fn main() {
-    init_logger(LogLevel::Info);
+    tracing::subscriber::set_global_default(
+        tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(Level::INFO)
+            .with_ansi(false)
+            .finish(),
+    )
+    .unwrap();
+
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the `OperatorConfig`

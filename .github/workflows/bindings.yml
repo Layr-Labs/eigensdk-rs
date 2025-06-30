@@ -2,7 +2,7 @@ name: Bindings
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
     branches: [ '**' ]
 
@@ -11,12 +11,9 @@ env:
 
 jobs:
   check:
-    strategy:
-      fail-fast: true
-
     name: Check bindings are up to date
     runs-on: ubuntu-22.04
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,11 +22,12 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: stable
+          # We need this because of alloy 1.0 not beeing supported in stable yet
+          version: nightly
 
       - name: Show Forge version
         run: forge --version
-      
+
       - name: Generate new bindings
         run: make bindings_host
 

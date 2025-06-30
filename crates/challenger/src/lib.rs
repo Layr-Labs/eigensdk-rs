@@ -148,7 +148,7 @@ use eigen_common::{get_provider, get_ws_provider};
 use eigen_task_manager::event_decoder::{
     decode_new_task, decode_params, decode_task_response_event, RespondToTaskCalldata,
 };
-use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
+use eigen_utils::slashing::middleware::ibls_signature_checker::BN254::G1Point;
 use error::ChallengerError;
 use futures_util::StreamExt;
 use tokio::task::JoinHandle;
@@ -302,7 +302,7 @@ where
 
         // Decode the tuple of the form: Task<TM::Input>, TaskResponse<TM::Output>, NonSignerStakesAndSignature
         let decoded_calldata =
-            decode_params::<RespondToTaskCalldata<TP::Input, TP::Output>>(calldata, false)?;
+            decode_params::<RespondToTaskCalldata<TP::Input, TP::Output>>(calldata)?;
 
         Ok(decoded_calldata
             .2
@@ -341,7 +341,7 @@ mod tests {
         let data = raw_bytes.get(32..).unwrap().to_vec();
 
         let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
-            decode_params::<NewTaskEventTuple<U256>>(&data, false).unwrap();
+            decode_params::<NewTaskEventTuple<U256>>(&data).unwrap();
 
         assert_eq!(input, U256::ONE);
         assert_eq!(task_created_block, 226);
@@ -363,7 +363,7 @@ mod tests {
         let data = raw_bytes.as_slice();
 
         let ((task_index, response), metadata) =
-            decode_params::<TaskResponseEventTuple<U256>>(data, false).unwrap();
+            decode_params::<TaskResponseEventTuple<U256>>(data).unwrap();
 
         assert_eq!(task_index, 0);
         assert_eq!(response, U256::ONE);
@@ -419,7 +419,7 @@ mod tests {
         let calldata = raw_bytes.get(4..).unwrap();
 
         let decoded_calldata =
-            decode_params::<RespondToTaskCalldata<U256, U256>>(calldata, false).unwrap();
+            decode_params::<RespondToTaskCalldata<U256, U256>>(calldata).unwrap();
 
         let expected_pub_key = G1Point {
             X: U256::from_str_radix(
@@ -513,7 +513,7 @@ mod tests {
 
         let data = raw_bytes.get(32..).unwrap();
 
-        let decoded = decode_params::<ComplexInputSol>(data, false).unwrap();
+        let decoded = decode_params::<ComplexInputSol>(data).unwrap();
 
         assert_eq!(decoded, input);
     }

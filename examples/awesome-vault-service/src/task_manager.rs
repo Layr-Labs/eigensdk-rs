@@ -5,10 +5,10 @@ use alloy::sol_types::SolEvent;
 use eigensdk::task_manager::impl_task_manager_from_defs_and_contract;
 use eigensdk::task_manager::TaskManagerDefs;
 
-use crate::bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance;
-use crate::bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::NewTaskCreated;
-use crate::bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::TaskResponded;
-use crate::bindings::awesomevaulttaskmanager::IAwesomeVaultTaskManager::TaskInput;
+use crate::bindings::awesome_vault_task_manager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance;
+use crate::bindings::awesome_vault_task_manager::AwesomeVaultTaskManager::NewTaskCreated;
+use crate::bindings::awesome_vault_task_manager::AwesomeVaultTaskManager::TaskResponded;
+use crate::bindings::awesome_vault_task_manager::IAwesomeVaultTaskManager::TaskInput;
 
 /// Task Manager Definition. This struct will be used to build the `TaskManager`
 /// with the [`impl_task_manager_from_defs_and_contract`] macro.

@@ -1,19 +1,17 @@
 use std::{str::FromStr, time::Duration};
 
 use crate::{
-    bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::{
+    bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::{
         IncredibleSquaringTaskManagerInstance, NewTaskCreated, TaskResponded,
     },
     generic_avs::{start_avs, AvsConfig},
 };
 use alloy::{
-    network::EthereumWallet,
     primitives::{Address, B256, U256},
     sol_types::SolEvent,
 };
 use eigensdk::{
     common::get_signer,
-    logging::{get_test_logger, init_logger, log_level::LogLevel},
     task_manager::{
         impl_task_manager_from_defs_and_contract, response_calculator::response_calculator_from_fn,
         TaskManagerDefs, TaskManagerError,
@@ -52,37 +50,11 @@ const TASK_SPAMMER_SIGNER: &str =
 const INCREDIBLE_SQUARING_STATE_PATH: &str =
     "./examples/incredible-squaring/contracts/anvil/incredible-squaring-anvil-state/state.json";
 
-type IncredibleInstance = IncredibleSquaringTaskManagerInstance<
-    (),
-    alloy::providers::fillers::FillProvider<
-        alloy::providers::fillers::JoinFill<
-            alloy::providers::fillers::JoinFill<
-                alloy::providers::Identity,
-                alloy::providers::fillers::JoinFill<
-                    alloy::providers::fillers::GasFiller,
-                    alloy::providers::fillers::JoinFill<
-                        alloy::providers::fillers::BlobGasFiller,
-                        alloy::providers::fillers::JoinFill<
-                            alloy::providers::fillers::NonceFiller,
-                            alloy::providers::fillers::ChainIdFiller,
-                        >,
-                    >,
-                >,
-            >,
-            alloy::providers::fillers::WalletFiller<EthereumWallet>,
-        >,
-        alloy::providers::RootProvider,
-    >,
->;
-
 /// Test incredible squaring
 #[tokio::test]
 async fn test_incredible_squaring() {
     let (_container, http_endpoint, ws_endpoint) =
         start_anvil_with_state(INCREDIBLE_SQUARING_STATE_PATH).await;
-
-    init_logger(LogLevel::Info);
-    let logger = get_test_logger();
 
     // Task spammer should finish when all tasks are created (`NUM_TASKS` * `TASK_INTERVAL`)
     // so we add 5 seconds to the timeout
@@ -94,14 +66,26 @@ async fn test_incredible_squaring() {
     // Response calculator
     let response_calculator = || response_calculator_from_fn(square);
 
+    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
+    let provider = get_signer(AGGREGATOR_SIGNER, &http_endpoint);
+    let aggregator_task_manager =
+        IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+
+    let provider = get_signer(CHALLENGER_SIGNER, &http_endpoint);
+    let challenger_task_manager =
+        IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+
+    let provider = get_signer(TASK_SPAMMER_SIGNER, &http_endpoint);
+    let task_spammer_task_manager =
+        IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+
     // Create the AVS config using defaults
     let config = AvsConfig::with_default_addresses_and_keys(
-        create_task_manager_contract(&http_endpoint, AGGREGATOR_SIGNER),
-        create_task_manager_contract(&http_endpoint, CHALLENGER_SIGNER),
-        create_task_manager_contract(&http_endpoint, TASK_SPAMMER_SIGNER),
+        aggregator_task_manager,
+        challenger_task_manager,
+        task_spammer_task_manager,
         response_calculator,
         input,
-        logger,
         timeout_duration,
         http_endpoint.to_string(),
         ws_endpoint.to_string(),
@@ -127,27 +111,17 @@ async fn test_incredible_squaring() {
 
 /// Verify that all tasks created by the task spammer have been completed
 async fn verify_tasks_completed(http_endpoint: &str) {
-    let contract = create_task_manager_contract(http_endpoint, AGGREGATOR_SIGNER);
-    let latest_task_num = contract.latestTaskNum().call().await.unwrap()._0;
+    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
+    let provider = get_signer(AGGREGATOR_SIGNER, http_endpoint);
+    let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
+    let latest_task_num = contract.latestTaskNum().call().await.unwrap();
     assert_eq!(latest_task_num, NUM_TASKS as u32);
 
     // Verify that all tasks have responses
     for task_index in 0..latest_task_num {
-        let response_hash = contract
-            .allTaskResponses(task_index)
-            .call()
-            .await
-            .unwrap()
-            ._0;
+        let response_hash = contract.allTaskResponses(task_index).call().await.unwrap();
         assert_ne!(B256::default(), response_hash,);
     }
-}
-
-/// Create the task manager contract with a specific signer
-fn create_task_manager_contract(http_endpoint: &str, signer: &str) -> IncredibleInstance {
-    let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
-    let provider = get_signer(signer, http_endpoint);
-    IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider)
 }
 
 /// Compute the square of the number

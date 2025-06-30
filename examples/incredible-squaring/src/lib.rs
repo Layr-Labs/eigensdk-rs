@@ -11,12 +11,12 @@
 //! For more details about the example logic and how to run it, see the
 //! [README](https://github.com/Layr-Labs/eigensdk-rs/blob/v2-dev-2/examples/incredible-squaring/README.md).
 
+use crate::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
+use crate::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::NewTaskCreated;
+use crate::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::TaskResponded;
 use alloy::primitives::B256;
 use alloy::primitives::U256;
 use alloy::sol_types::SolEvent;
-use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
-use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
-use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::TaskResponded;
 use eigensdk::task_manager::impl_task_manager_from_defs_and_contract;
 use eigensdk::task_manager::TaskManagerDefs;
 use eigensdk::task_manager::TaskManagerError;

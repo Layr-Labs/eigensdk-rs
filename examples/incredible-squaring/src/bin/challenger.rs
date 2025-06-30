@@ -12,18 +12,23 @@ use eigensdk::challenger::{
     config::ChallengerConfig,
     Challenger,
 };
-use eigensdk::logging::init_logger;
-use eigensdk::logging::log_level::LogLevel;
 use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
 use incredible_squaring::{
-    bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
+    bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
     square, utils::load_config,
 };
 use std::str::FromStr;
+use tracing::Level;
 
 #[tokio::main]
 async fn main() {
-    init_logger(LogLevel::Info);
+    tracing::subscriber::set_global_default(
+        tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(Level::INFO)
+            .with_ansi(false)
+            .finish(),
+    )
+    .unwrap();
 
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
@@ -38,7 +43,8 @@ async fn main() {
         Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3").unwrap();
     let url = Url::parse(&config.http_rpc_url).unwrap();
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let provider = ProviderBuilder::new().wallet(wallet).connect_http(url);
+
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
     // 5. Build the `ResponseCalculator` with the computation function

@@ -6,7 +6,6 @@ use alloy::{
 };
 use eigensdk::{
     common::get_signer,
-    logging::{get_test_logger, init_logger, log_level::LogLevel},
     task_manager::{
         impl_task_manager_from_defs_and_contract, response_calculator::ResponseCalculator,
         TaskManagerDefs, TaskManagerError,
@@ -17,7 +16,7 @@ use rand::Rng;
 use tokio::sync::Mutex;
 
 use crate::{
-    bindings::awesomevaulttaskmanager::{
+    bindings::awesome_vault_task_manager::{
         AwesomeVaultTaskManager::{AwesomeVaultTaskManagerInstance, NewTaskCreated, TaskResponded},
         IAwesomeVaultTaskManager::TaskInput,
     },
@@ -61,9 +60,6 @@ async fn test_awesome_vault_service() {
     let (_container, http_endpoint, ws_endpoint) =
         start_anvil_with_state(AWESOME_VAULT_SERVICE_STATE_PATH).await;
 
-    init_logger(LogLevel::Info);
-    let logger = get_test_logger();
-
     // Task spammer should finish when all tasks are created (`NUM_TASKS` * `TASK_INTERVAL`)
     // so we add 5 seconds to the timeout
     let timeout_duration = Duration::from_secs(NUM_TASKS * TASK_INTERVAL + 5);
@@ -90,7 +86,6 @@ async fn test_awesome_vault_service() {
             vault: Arc::new(Mutex::new(BTreeMap::new())),
         },
         generate_input,
-        logger,
         timeout_duration,
         http_endpoint.to_string(),
         ws_endpoint.to_string(),
@@ -125,8 +120,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
         .latestTaskNum()
         .call()
         .await
-        .unwrap()
-        ._0;
+        .unwrap();
     assert_eq!(latest_task_num, NUM_TASKS as u32);
 
     // Verify that all tasks have responses
@@ -135,8 +129,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
             .allTaskResponses(task_index)
             .call()
             .await
-            .unwrap()
-            ._0;
+            .unwrap();
         assert_ne!(B256::default(), response_hash,);
     }
 }

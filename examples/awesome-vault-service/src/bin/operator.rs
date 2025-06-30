@@ -8,17 +8,24 @@ use awesome_vault_service::{
     utils::load_config,
 };
 use eigensdk::{
-    logging::{init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
     testing_utils::task_processor::failing_response_calculator,
 };
+use tracing::Level;
 
 use std::{collections::BTreeMap, sync::Arc};
 use tokio::sync::Mutex;
 
 #[tokio::main]
 async fn main() {
-    init_logger(LogLevel::Info);
+    tracing::subscriber::set_global_default(
+        tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(Level::INFO)
+            .with_ansi(false)
+            .finish(),
+    )
+    .unwrap();
+
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the `OperatorConfig`

@@ -10,11 +10,20 @@ use alloy::{
     transports::http::reqwest::Url,
 };
 use eigensdk::task_spammer::TaskSpammerBuilder;
-use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
+use incredible_squaring::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
+use tracing::Level;
 use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
 async fn main() {
+    tracing::subscriber::set_global_default(
+        tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(Level::INFO)
+            .with_ansi(false)
+            .finish(),
+    )
+    .unwrap();
+
     let http_rpc_url = "http://localhost:8545".to_string();
 
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
@@ -25,7 +34,8 @@ async fn main() {
         Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3").unwrap();
     let url = Url::parse(&http_rpc_url).unwrap();
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let provider = ProviderBuilder::new().wallet(wallet).connect_http(url);
+
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
     TaskSpammerBuilder::new(contract) // (3) Initialize the `TaskSpammerBuilder`

@@ -20,5 +20,4 @@ eigen-utils.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 tokio.workspace = true
-
 tokio-util = "0.7.11"

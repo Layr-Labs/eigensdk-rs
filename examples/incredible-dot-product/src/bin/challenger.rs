@@ -10,7 +10,6 @@ use eigensdk::{
         Challenger,
     },
     common::get_signer,
-    logging::{init_logger, log_level::LogLevel},
     task_manager::response_calculator::response_calculator_from_fn,
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
@@ -20,10 +19,17 @@ use incredible_dot_product::{
     IncredibleDotProductTaskManager::IncredibleDotProductTaskManagerInstance,
 };
 use std::str::FromStr;
+use tracing::Level;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
+    tracing::subscriber::set_global_default(
+        tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(Level::INFO)
+            .with_ansi(false)
+            .finish(),
+    )
+    .unwrap();
 
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 

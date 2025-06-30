@@ -4,25 +4,27 @@
 
 use alloy::primitives::Address;
 use awesome_vault_service::{
-    bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
+    bindings::awesome_vault_task_manager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
     utils::load_config,
 };
 use eigensdk::{
     aggregator::{Aggregator, AggregatorConfig, IndexingAggregatorProcessor},
     common::get_signer,
-    logging::{get_logger, init_logger, log_level::LogLevel},
 };
 use eyre::Result;
 use std::{str::FromStr, time::Duration};
+use tracing::Level;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
-    let logger = get_logger();
+    tracing::subscriber::set_global_default(
+        tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(Level::INFO)
+            .with_ansi(false)
+            .finish(),
+    )
+    .unwrap();
 
-    // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
-
-    // 2. Create the `AggregatorConfig`
     let config: AggregatorConfig = load_config("./src/config/awesome-aggregator.toml")?;
 
     // 3. Instantiate the task manager instance from your bindings
@@ -37,8 +39,7 @@ async fn main() -> Result<()> {
     let task_processor =
         IndexingAggregatorProcessor::new(contract, Duration::from_secs(10), Duration::from_secs(2));
 
-    // 5. Create and start the aggregator
-    let aggregator = Aggregator::new(config, task_processor, logger)
+    let aggregator = Aggregator::new(config, task_processor)
         .await
         .map_err(|e| eyre::eyre!("Aggregator new error: {}", e))?;
     aggregator

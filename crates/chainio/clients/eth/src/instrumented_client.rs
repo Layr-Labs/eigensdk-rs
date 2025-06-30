@@ -11,11 +11,11 @@ use alloy::rpc::types::eth::{
 };
 use alloy::transports::ws::WsConnect;
 use alloy::transports::{TransportError, TransportResult};
-use eigen_logging::get_test_logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
 use hex;
 use std::time::Instant;
 use thiserror::Error;
+use tracing::error;
 use url::Url;
 
 const PENDING_TAG: &str = "pending";
@@ -56,11 +56,7 @@ impl BackendClient for InstrumentedClient {
     async fn block_number(&self) -> Result<BlockNumber, Self::Error> {
         self.instrument_function("eth_blockNumber", ())
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get block number", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get block number: {:?}", err.to_string()))
             .map_err(|_err| InstrumentedClientError::CommandError)
             .map(|result: U64| result.to())
     }
@@ -84,11 +80,7 @@ impl BackendClient for InstrumentedClient {
     ) -> Result<Option<Block>, Self::Error> {
         self.instrument_function("eth_getBlockByNumber", (number, true))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get block by number", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get block by number: {:?}", err.to_string()))
             .map_err(|_err| InstrumentedClientError::CommandError)
     }
 }
@@ -111,13 +103,13 @@ impl InstrumentedClient {
         let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
         let http_client = ProviderBuilder::new()
             .disable_recommended_fillers()
-            .on_http(url);
+            .connect_http(url);
         let net_version = http_client
             .get_net_version()
             .await
             .map_err(|_| InstrumentedClientError::ErrorGettingVersion)?;
 
-        let rpc_collector = RpcCallsCollector::new(get_test_logger().clone());
+        let rpc_collector = RpcCallsCollector::new();
         Ok(InstrumentedClient {
             http_client: Some(http_client),
             ws_client: None,
@@ -145,7 +137,7 @@ impl InstrumentedClient {
 
         let ws_client = ProviderBuilder::new()
             .disable_recommended_fillers()
-            .on_ws(ws_connect)
+            .connect_ws(ws_connect)
             .await
             .unwrap();
         let net_version = ws_client
@@ -153,7 +145,7 @@ impl InstrumentedClient {
             .await
             .map_err(|_| InstrumentedClientError::ErrorGettingVersion)?;
 
-        let rpc_collector = RpcCallsCollector::new(get_test_logger().clone());
+        let rpc_collector = RpcCallsCollector::new();
         Ok(InstrumentedClient {
             http_client: None,
             ws_client: Some(ws_client),
@@ -181,7 +173,7 @@ impl InstrumentedClient {
             .await
             .map_err(|_| InstrumentedClientError::ErrorGettingVersion)?;
 
-        let rpc_collector = RpcCallsCollector::new(get_test_logger().clone());
+        let rpc_collector = RpcCallsCollector::new();
         Ok(InstrumentedClient {
             http_client: Some(client),
             ws_client: None,
@@ -202,11 +194,7 @@ impl InstrumentedClient {
     pub async fn chain_id(&self) -> TransportResult<ChainId> {
         self.instrument_function("eth_chainId", ())
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get chain id", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get chain id: {:?}", err.to_string()))
             .map(|result: U64| result.to())
     }
 
@@ -227,11 +215,7 @@ impl InstrumentedClient {
     ) -> TransportResult<U256> {
         self.instrument_function("eth_getBalance", (account, block_number))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get balance", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get balance: {:?}", err.to_string()))
     }
 
     /// Returns the block having the given block hash.
@@ -246,11 +230,7 @@ impl InstrumentedClient {
     pub async fn block_by_hash(&self, hash: BlockHash) -> TransportResult<Option<Block>> {
         self.instrument_function("eth_getBlockByHash", (hash, true))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get block by hash", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get block by hash: {:?}", err.to_string()))
     }
 
     /// Executes a message call transaction.
@@ -270,11 +250,7 @@ impl InstrumentedClient {
     ) -> TransportResult<Bytes> {
         self.instrument_function("eth_call", (call, block_number))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to call contract", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to call contract: {:?}", err.to_string()))
     }
 
     /// Returns the compiled bytecode of a smart contract given its address and block number.
@@ -294,11 +270,7 @@ impl InstrumentedClient {
     ) -> TransportResult<Bytes> {
         self.instrument_function("eth_getCode", (address, block_number))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get code", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get code: {:?}", err.to_string()))
     }
 
     /// Estimates the gas needed to execute a specific transaction.
@@ -313,11 +285,7 @@ impl InstrumentedClient {
     pub async fn estimate_gas(&self, tx: TransactionRequest) -> TransportResult<u64> {
         self.instrument_function("eth_estimateGas", (tx,))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to estimate gas", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to estimate gas: {:?}", err.to_string()))
             .map(|result: U64| result.to())
     }
 
@@ -341,11 +309,7 @@ impl InstrumentedClient {
             (block_count, last_block, reward_percentiles),
         )
         .await
-        .inspect_err(|err| {
-            self.rpc_collector
-                .logger()
-                .error("Failed to get fee history", err.to_string().as_str())
-        })
+        .inspect_err(|err| error!("Failed to get fee history: {:?}", err.to_string()))
     }
     /// Executes a filter query.
     ///
@@ -359,11 +323,7 @@ impl InstrumentedClient {
     pub async fn filter_logs(&self, filter: Filter) -> TransportResult<Vec<Log>> {
         self.instrument_function("eth_getLogs", (filter,))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get filter logs", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get filter logs: {:?}", err.to_string()))
     }
 
     /// Returns the block header with the given hash.
@@ -379,11 +339,7 @@ impl InstrumentedClient {
         let transaction_detail = false;
         self.instrument_function("eth_getBlockByHash", (hash, transaction_detail))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get header by hash", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get header by hash: {:?}", err.to_string()))
     }
 
     /// Returns a block header with the given block number.
@@ -402,11 +358,7 @@ impl InstrumentedClient {
         let transaction_detail = false;
         self.instrument_function("eth_getBlockByNumber", (block_number, transaction_detail))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get header by number", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get header by number: {:?}", err.to_string()))
     }
 
     /// Returns the nonce of the given account.
@@ -426,11 +378,7 @@ impl InstrumentedClient {
     ) -> TransportResult<u64> {
         self.instrument_function("eth_getTransactionCount", (account, block_number))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get nonce", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get nonce: {:?}", err.to_string()))
             .map(|result: U64| result.to())
     }
 
@@ -446,11 +394,7 @@ impl InstrumentedClient {
     pub async fn pending_balance_at(&self, account: Address) -> TransportResult<U256> {
         self.instrument_function("eth_getBalance", (account, PENDING_TAG))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get pending balance", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get pending balance: {:?}", err.to_string()))
     }
 
     /// Executes a message call transaction using the EVM.
@@ -479,11 +423,7 @@ impl InstrumentedClient {
     pub async fn pending_code_at(&self, account: Address) -> TransportResult<Bytes> {
         self.instrument_function("eth_getCode", (account, PENDING_TAG))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get pending code", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get pending code: {:?}", err.to_string()))
     }
 
     /// Returns the account nonce of the given account in the pending state.
@@ -499,11 +439,7 @@ impl InstrumentedClient {
     pub async fn pending_nonce_at(&self, account: Address) -> TransportResult<u64> {
         self.instrument_function("eth_getTransactionCount", (account, PENDING_TAG))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get pending nonce", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get pending nonce: {:?}", err.to_string()))
             .map(|result: U64| result.to())
     }
 
@@ -520,11 +456,7 @@ impl InstrumentedClient {
     pub async fn pending_storage_at(&self, account: Address, key: U256) -> TransportResult<U256> {
         self.instrument_function("eth_getStorageAt", (account, key, PENDING_TAG))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get pending storage", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get pending storage: {:?}", err.to_string()))
     }
 
     /// Returns the total number of transactions in the pending state.
@@ -535,11 +467,7 @@ impl InstrumentedClient {
     pub async fn pending_transaction_count(&self) -> TransportResult<u64> {
         self.instrument_function("eth_getBlockTransactionCountByNumber", (PENDING_TAG,))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get transaction count", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get transaction count: {:?}", err.to_string()))
             .map(|result: U64| result.to())
     }
 
@@ -557,11 +485,7 @@ impl InstrumentedClient {
         tx.encode(&mut encoded_tx);
         self.instrument_function("eth_sendRawTransaction", (hex::encode(encoded_tx),))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to send transaction", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to send transaction: {:?}", err.to_string()))
     }
 
     /// Returns the value of key in the contract storage of the given account.
@@ -583,11 +507,7 @@ impl InstrumentedClient {
     ) -> TransportResult<U256> {
         self.instrument_function("eth_getStorageAt", (account, key, block_number))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get storage", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get storage: {:?}", err.to_string()))
     }
 
     /// Subscribes to the results of a streaming filter query.
@@ -611,10 +531,7 @@ impl InstrumentedClient {
             .instrument_function("eth_subscribe", ("logs", filter))
             .await
             .inspect_err(|err| {
-                self.rpc_collector.logger().error(
-                    "Failed to get logs subscription id",
-                    err.to_string().as_str(),
-                )
+                error!("Failed to get logs subscription id: {:?}", err.to_string())
             })?;
         if let Some(ws_client) = self.ws_client.as_ref() {
             ws_client.get_subscription(id.into()).await
@@ -639,11 +556,7 @@ impl InstrumentedClient {
         let id: U256 = self
             .instrument_function("eth_subscribe", ("newHeads",))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to subscribe new head", err.to_string().as_str())
-            })?;
+            .inspect_err(|err| error!("Failed to subscribe new head: {:?}", err.to_string()))?;
         if let Some(ws_client) = self.ws_client.as_ref() {
             ws_client.get_subscription(id.into()).await
         } else {
@@ -661,11 +574,7 @@ impl InstrumentedClient {
     pub async fn suggest_gas_price(&self) -> TransportResult<u64> {
         self.instrument_function("eth_gasPrice", ())
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to suggest gas price", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to suggest gas price: {:?}", err.to_string()))
             .map(|result: U64| result.to())
     }
 
@@ -677,11 +586,7 @@ impl InstrumentedClient {
     pub async fn suggest_gas_tip_cap(&self) -> TransportResult<u64> {
         self.instrument_function("eth_maxPriorityFeePerGas", ())
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to suggest gas tip cap", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to suggest gas tip cap: {:?}", err.to_string()))
             .map(|result: U64| result.to())
     }
 
@@ -694,11 +599,7 @@ impl InstrumentedClient {
     pub async fn sync_progress(&self) -> TransportResult<SyncStatus> {
         self.instrument_function("eth_syncing", ())
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get sync progress", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get sync progress: {:?}", err.to_string()))
     }
 
     /// Returns the transaction with the given hash.
@@ -713,12 +614,7 @@ impl InstrumentedClient {
     pub async fn transaction_by_hash(&self, tx_hash: B256) -> TransportResult<Transaction> {
         self.instrument_function("eth_getTransactionByHash", (tx_hash,))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector.logger().error(
-                    "Failed to get transaction by hash",
-                    err.to_string().as_str(),
-                )
-            })
+            .inspect_err(|err| error!("Failed to get transaction by hash: {:?}", err.to_string()))
     }
 
     /// Returns the total number of transactions in the given block.
@@ -733,11 +629,7 @@ impl InstrumentedClient {
     pub async fn transaction_count(&self, block_hash: B256) -> TransportResult<u64> {
         self.instrument_function("eth_getBlockTransactionCountByHash", (block_hash,))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get transaction count", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get transaction count: {:?}", err.to_string()))
             .map(|result: U64| result.to())
     }
 
@@ -758,11 +650,7 @@ impl InstrumentedClient {
     ) -> TransportResult<Transaction> {
         self.instrument_function("eth_getTransactionByBlockHashAndIndex", (block_hash, index))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get transaction", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get transaction: {:?}", err.to_string()))
     }
 
     /// Returns the receipt of a transaction by transaction hash.
@@ -778,11 +666,7 @@ impl InstrumentedClient {
     pub async fn transaction_receipt(&self, tx_hash: B256) -> TransportResult<TransactionReceipt> {
         self.instrument_function("eth_getTransactionReceipt", (tx_hash,))
             .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get receipt", err.to_string().as_str())
-            })
+            .inspect_err(|err| error!("Failed to get receipt: {:?}", err.to_string()))
     }
 
     /// Instrument a function call with the given method name and parameters.
@@ -836,8 +720,8 @@ mod tests {
     use alloy::primitives::address;
     use alloy::primitives::{bytes, TxKind::Call, U256};
     use alloy::rpc::types::eth::{pubsub::SubscriptionResult, BlockId, BlockNumberOrTag};
+    use alloy::signers::local::PrivateKeySigner;
     use eigen_common::get_provider;
-    use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::{set_account_balance, start_anvil_container};
     use eigen_testing_utils::transaction::wait_transaction;
     use tokio;
@@ -1026,8 +910,7 @@ mod tests {
             chain_id: Some(31337),
         };
 
-        let config = Config::PrivateKey(private_key_hex);
-        let signer = Config::signer_from_config(config).unwrap();
+        let signer = private_key_hex.parse::<PrivateKeySigner>().unwrap();
         let signature = signer.sign_transaction_sync(&mut tx).unwrap();
         let signed_tx = tx.into_signed(signature);
         let tx: TxEnvelope = TxEnvelope::from(signed_tx);

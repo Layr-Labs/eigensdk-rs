@@ -150,7 +150,7 @@ use eigen_crypto_bls::BlsKeyPair;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorId};
-use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+use eigen_utils::slashing::middleware::registry_coordinator::RegistryCoordinator;
 use error::OperatorError;
 use futures_util::StreamExt;
 use tracing::{debug, error, info};
@@ -228,8 +228,7 @@ impl<RP> Operator<RP> {
         let operator_id = contract_registry_coordinator
             .getOperatorId(operator_address)
             .call()
-            .await?
-            ._0;
+            .await?;
 
         let operator_id_from_bls = operator_id_from_g1_pub_key(bls_key_pair.public_key())
             .map_err(|_| OperatorError::OperatorIdError)?;
@@ -274,7 +273,7 @@ impl<RP> Operator<RP> {
         info!("Starting operator");
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
-            .on_ws(ws)
+            .connect_ws(ws)
             .await
             .map_err(|_| OperatorError::TransportError)?;
 

@@ -1,6 +1,6 @@
 use alloy::primitives::Address;
 use eigen_signer::SignerConfig;
-use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
+use eigen_utils::slashing::core::allocation_manager::AllocationManager::OperatorSet;
 use serde::{Deserialize, Serialize};
 
 /// Operator registration config

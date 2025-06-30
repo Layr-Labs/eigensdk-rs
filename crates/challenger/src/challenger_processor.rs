@@ -6,7 +6,7 @@ use eigen_task_manager::response_calculator::ResponseCalculator;
 use eigen_task_manager::task_response_metadata_sol::TaskResponseMetadataSol;
 use eigen_task_manager::{task::Task, task_response::TaskResponse};
 use eigen_task_manager::{TaskManager, TaskManagerError};
-use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
+use eigen_utils::slashing::middleware::ibls_signature_checker::BN254::G1Point;
 use std::collections::HashMap;
 use std::future::Future;
 use std::sync::Arc;

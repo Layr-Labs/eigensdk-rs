@@ -6,7 +6,7 @@ use eigen_task_manager::task::Task;
 use eigen_task_manager::task_response::TaskResponse;
 use eigen_task_manager::TaskManager;
 use eigen_types::avs::TaskResponseDigest;
-use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
+use eigen_utils::slashing::middleware::ibls_signature_checker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use std::sync::Arc;
 use std::time::Duration;
 use std::{collections::HashMap, fmt::Debug};

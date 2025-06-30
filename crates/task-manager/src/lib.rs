@@ -127,8 +127,8 @@ pub mod task_response_metadata_sol;
 use alloy::primitives::B256;
 use alloy::sol_types::SolValue;
 pub use eigen_types::operator::{QuorumNum, QuorumThresholdPercentage};
-pub use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
-pub use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::G1Point;
+pub use eigen_utils::slashing::middleware::ibls_signature_checker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
+pub use eigen_utils::slashing::middleware::ibls_signature_checker::BN254::G1Point;
 use std::{fmt::Debug, future::Future};
 use task::Task;
 use task_response::TaskResponse;
@@ -222,10 +222,9 @@ pub trait TaskManager: TaskManagerDefs {
 /// This requires the contract to have `createNewTask`, `respondToTask` and `raiseAndResolveChallenge` functions.
 macro_rules! impl_task_manager_from_defs_and_contract {
     ($defs:ty => $contract:ident) => {
-        impl<T, P, N> $crate::TaskManagerDefs for $contract<T, P, N>
+        impl<P, N> $crate::TaskManagerDefs for $contract<P, N>
         where
-            T: ::alloy::contract::private::Transport + Clone + Send + Sync,
-            P: ::alloy::contract::private::Provider<T, N>,
+            P: ::alloy::contract::private::Provider<N>,
             N: ::alloy::network::Network,
         {
             type Input = <$defs as TaskManagerDefs>::Input;
@@ -236,10 +235,9 @@ macro_rules! impl_task_manager_from_defs_and_contract {
                 <$defs as $crate::TaskManagerDefs>::TASK_RESPONDED_EVENT_SELECTOR;
         }
 
-        impl<T, P, N> $crate::TaskManager for $contract<T, P, N>
+        impl<P, N> $crate::TaskManager for $contract<P, N>
         where
-            T: ::alloy::contract::private::Transport + Clone + Send + Sync,
-            P: ::alloy::contract::private::Provider<T, N>,
+            P: ::alloy::contract::private::Provider<N>,
             N: ::alloy::network::Network,
         {
             $crate::default_contract_impl!();

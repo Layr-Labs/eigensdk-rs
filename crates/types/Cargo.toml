@@ -8,12 +8,17 @@ rust-version.workspace = true
 repository.workspace = true
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 alloy.workspace = true
 ark-ff.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-utils.workspace = true
-ethers.workspace = true
 serde_json.workspace = true
 serde.workspace = true
 thiserror.workspace = true
