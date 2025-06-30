@@ -68,7 +68,6 @@ where
     ///
     /// * `config` - The configuration for the aggregator
     /// * `task_processor` - The task processor
-    /// * `logger` - The logger
     ///
     /// # Returns
     ///

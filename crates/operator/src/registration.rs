@@ -23,7 +23,6 @@ use crate::register_config::OperatorRegistrationConfig;
 /// # Arguments
 ///
 /// * `config` - The operator registration config
-/// * `logger` - The logger
 /// * `http_rpc_url` - The HTTP RPC URL
 /// * `bls_key_pair` - The BLS key pair
 ///

@@ -50,7 +50,6 @@ impl Operator {
     /// * `key_pair` - The key pair of the operator.
     /// * `operator_address` - The address of the operator.
     /// * `operator_name` - The name of the operator.
-    /// * `logger` - The logger.
     /// * `ws_rpc_url` - The URL of the WebSocket RPC.
     /// * `http_rpc_url` - The URL of the HTTP RPC.
     /// * `registry_coordinator_address` - The address of the registry coordinator.
