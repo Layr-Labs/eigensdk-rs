@@ -4690,8 +4690,6 @@ pub mod ISlashingRegistryCoordinator {
         }
     };
     #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
-<<<<<<< HEAD
-=======
     /**Custom error with signature `OperatorNotRegisteredForQuorum()` and selector `0x4c74e42a`.
     ```solidity
     error OperatorNotRegisteredForQuorum();
@@ -4760,7 +4758,6 @@ pub mod ISlashingRegistryCoordinator {
         }
     };
     #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
->>>>>>> dev
     /**Custom error with signature `QuorumDoesNotExist()` and selector `0xe6219fea`.
     ```solidity
     error QuorumDoesNotExist();
@@ -13986,8 +13983,6 @@ pub mod ISlashingRegistryCoordinator {
                         data: &[u8],
                     ) -> alloy_sol_types::Result<ISlashingRegistryCoordinatorErrors>
                     {
-<<<<<<< HEAD
-=======
                         <OperatorNotRegisteredForQuorum as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                             )
@@ -14002,7 +13997,6 @@ pub mod ISlashingRegistryCoordinator {
                         data: &[u8],
                     ) -> alloy_sol_types::Result<ISlashingRegistryCoordinatorErrors>
                     {
->>>>>>> dev
                         <InvalidAVS as alloy_sol_types::SolError>::abi_decode_raw(data)
                             .map(ISlashingRegistryCoordinatorErrors::InvalidAVS)
                     }
@@ -14273,8 +14267,6 @@ pub mod ISlashingRegistryCoordinator {
                     InsufficientStakeForChurn
                 },
                 {
-<<<<<<< HEAD
-=======
                     fn OperatorNotRegisteredForQuorum(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<ISlashingRegistryCoordinatorErrors>
@@ -14289,7 +14281,6 @@ pub mod ISlashingRegistryCoordinator {
                     OperatorNotRegisteredForQuorum
                 },
                 {
->>>>>>> dev
                     fn InvalidAVS(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<ISlashingRegistryCoordinatorErrors>

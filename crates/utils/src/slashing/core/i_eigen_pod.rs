@@ -3070,74 +3070,6 @@ pub mod IEigenPod {
             fn tokenize(&self) -> Self::Token<'_> {
                 ()
             }
-<<<<<<< HEAD
-            #[inline]
-            fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
-                <Self::Parameters<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
-                    data,
-                )
-                .map(Self::new)
-            }
-        }
-    };
-    #[derive(serde::Serialize, serde::Deserialize, Default, Debug, PartialEq, Eq, Hash)]
-    /**Custom error with signature `ForkTimestampZero()` and selector `0x41a02cc9`.
-    ```solidity
-    error ForkTimestampZero();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct ForkTimestampZero;
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<ForkTimestampZero> for UnderlyingRustTuple<'_> {
-            fn from(value: ForkTimestampZero) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ForkTimestampZero {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for ForkTimestampZero {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "ForkTimestampZero()";
-            const SELECTOR: [u8; 4] = [65u8, 160u8, 44u8, 201u8];
-=======
->>>>>>> dev
-            #[inline]
-            fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
-                <Self::Parameters<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
-                    data,
-                )
-                .map(Self::new)
-            }
             #[inline]
             fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
                 <Self::Parameters<'_> as alloy_sol_types::SolType>::abi_decode_sequence_validate(
@@ -9871,16 +9803,6 @@ pub mod IEigenPod {
                     BeaconTimestampTooFarInPast
                 },
                 {
-<<<<<<< HEAD
-                    fn ForkTimestampZero(data: &[u8]) -> alloy_sol_types::Result<IEigenPodErrors> {
-                        <ForkTimestampZero as alloy_sol_types::SolError>::abi_decode_raw(data)
-                            .map(IEigenPodErrors::ForkTimestampZero)
-                    }
-                    ForkTimestampZero
-                },
-                {
-=======
->>>>>>> dev
                     fn OnlyEigenPodOwnerOrProofSubmitter(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodErrors> {
@@ -10112,18 +10034,6 @@ pub mod IEigenPod {
                     BeaconTimestampTooFarInPast
                 },
                 {
-<<<<<<< HEAD
-                    fn ForkTimestampZero(data: &[u8]) -> alloy_sol_types::Result<IEigenPodErrors> {
-                        <ForkTimestampZero as alloy_sol_types::SolError>::abi_decode_raw_validate(
-                            data,
-                        )
-                        .map(IEigenPodErrors::ForkTimestampZero)
-                    }
-                    ForkTimestampZero
-                },
-                {
-=======
->>>>>>> dev
                     fn OnlyEigenPodOwnerOrProofSubmitter(
                         data: &[u8],
                     ) -> alloy_sol_types::Result<IEigenPodErrors> {
