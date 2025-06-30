@@ -336,7 +336,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         )
                         .await
                         .inspect_err(|err| {
-                            println!("Error with single_task_aggregator: {:?}", err);
+                            println!("Error with single_task_aggregator: {err:?}");
                         });
                     });
 

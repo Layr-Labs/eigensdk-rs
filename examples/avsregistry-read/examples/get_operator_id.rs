@@ -20,6 +20,6 @@ async fn main() -> Result<()> {
     let operator: Address = address!("1D79000206BAFfaE662fFCdba1C2a6176d14dF48");
     let operator_id = avs_registry.get_operator_id(operator).await?;
 
-    println!("operator id is  :{:?}", operator_id);
+    println!("operator id is  :{operator_id:?}");
     Ok(())
 }
