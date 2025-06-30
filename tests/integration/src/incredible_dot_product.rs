@@ -12,7 +12,6 @@ use eigensdk::{
     },
     testing_utils::anvil::start_anvil_with_state,
 };
-use tracing::Level;
 
 use crate::{
     bindings::incredible_dot_product_task_manager::{

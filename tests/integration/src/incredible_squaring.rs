@@ -18,7 +18,6 @@ use eigensdk::{
     },
     testing_utils::anvil::start_anvil_with_state,
 };
-use tracing::Level;
 
 // Contracts addresses
 const TASK_MANAGER_ADDRESS: &str = "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3";
