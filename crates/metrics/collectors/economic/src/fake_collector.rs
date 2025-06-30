@@ -4,15 +4,14 @@ use crate::error::CollectorMetricError;
 
 use alloy::primitives::{Address, FixedBytes, U256};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::OperatorId;
 use metrics::{describe_gauge, gauge, Key, Label};
 use num_bigint::BigInt;
+use tracing::{debug, instrument};
 
 /// RegisteredStakes Metrics with logger
 #[derive(Debug)]
 pub struct FakeCollector {
-    logger: SharedLogger,
     operator_addr: Address,
     operator_id: OperatorId,
     avs_registry_reader: AvsRegistryChainReader,
@@ -24,7 +23,6 @@ impl FakeCollector {
     /// Operator stakes in AVS registry contract.
     /// Most commonly represents a weighted combination of delegated shares in the DelegationManager EigenLayer contract.
     pub fn new(
-        logger: SharedLogger,
         operator_addr: Address,
         operator_id: OperatorId,
         avs_registry_reader: AvsRegistryChainReader,
@@ -42,7 +40,6 @@ impl FakeCollector {
         );
 
         Self {
-            logger,
             operator_addr,
             avs_registry_reader,
             operator_id,
@@ -51,6 +48,7 @@ impl FakeCollector {
         }
     }
 
+    #[instrument(skip_all)]
     pub fn set_stake(&self, quorum_number: &str, quorum_name: &str, avs_name: &str, value: f64) {
         // Create the metric key with dynamic
         let key = Key::from_parts(
@@ -62,12 +60,13 @@ impl FakeCollector {
             ],
         );
         gauge!(key.to_string()).set(value);
-        self.logger.debug(
-            &format!(
-            "set registered stakes , quorum_name: {quorum_name} , quorum_number: {quorum_number} , avs_name: {avs_name}, value: {value}"
-        ),
-            "eigen-metrics-collectors-economic.set_stake",
-        );
+        debug!(
+            quorum_name = quorum_name,
+            quorum_number = quorum_number,
+            avs_name = avs_name,
+            value = value,
+            "set registered stakes",
+        )
     }
 
     pub async fn collect(

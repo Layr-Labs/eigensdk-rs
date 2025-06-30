@@ -25,7 +25,8 @@ async fn main() {
         Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3").unwrap();
     let url = Url::parse(&http_rpc_url).unwrap();
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let provider = ProviderBuilder::new().wallet(wallet).connect_http(url);
+
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
     TaskSpammerBuilder::new(contract) // (3) Initialize the `TaskSpammerBuilder`

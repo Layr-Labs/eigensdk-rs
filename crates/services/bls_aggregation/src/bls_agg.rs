@@ -5,7 +5,7 @@ use ark_bn254::{G1Affine, G2Affine};
 use ark_ec::AffineRepr;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
-use eigen_logging::logger::SharedLogger;
+
 use eigen_services_avsregistry::AvsRegistryService;
 use eigen_types::avs_state::OperatorAvsState;
 use eigen_types::{
@@ -20,6 +20,7 @@ use tokio::{
     },
     time::Duration,
 };
+use tracing::{debug, error, instrument};
 
 /// Contains the aggregated operators signers information
 #[derive(Debug, Clone)]
@@ -232,7 +233,6 @@ pub struct BlsAggregatorService<A: AvsRegistryService>
 where
     A: Clone,
 {
-    logger: SharedLogger,
     avs_registry_service: A,
 }
 
@@ -256,10 +256,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// # Arguments
     ///
     /// * `avs_registry_service` - The AVS registry service
-    /// * `logger` - Logger to log messages
-    pub fn new(avs_registry_service: A, logger: SharedLogger) -> Self {
+    pub fn new(avs_registry_service: A) -> Self {
         Self {
-            logger,
             avs_registry_service,
         }
     }
@@ -328,7 +326,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
                     let avs_registry_service = self.avs_registry_service.clone();
                     let aggregated_response_sender = aggregate_sender.clone();
-                    let logger = self.logger.clone();
 
                     tokio::spawn(async move {
                         let _ = Self::single_task_aggregator(
@@ -336,7 +333,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                             metadata,
                             aggregated_response_sender,
                             signature_rx,
-                            logger,
                         )
                         .await
                         .inspect_err(|err| {
@@ -384,7 +380,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `metadata` - task metadata
     /// * `aggregated_response_sender` - The sender channel for the aggregated responses
     /// * `signatures_rx` - The receiver channel for the signed task responses
-    /// * `logger` - The logger to log messages.
     async fn single_task_aggregator(
         avs_registry_service: A,
         metadata: TaskMetadata,
@@ -392,7 +387,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
         >,
         signatures_rx: UnboundedReceiver<SignedTaskResponseDigest>,
-        logger: SharedLogger,
     ) -> Result<(), BlsAggregationServiceError> {
         let quorum_threshold_percentage_map: HashMap<u8, u8> = metadata
             .quorum_numbers
@@ -433,7 +427,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             quorum_apks_g1,
             metadata.quorum_numbers,
             metadata.window_duration,
-            logger,
         )
         .await
     }
@@ -454,7 +447,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         quorum_apks_g1: Vec<BlsG1Point>,
         quorum_nums: Vec<u8>,
         window_duration: Duration,
-        logger: SharedLogger,
     ) -> Result<(), BlsAggregationServiceError> {
         let mut aggregated_operators: HashMap<FixedBytes<32>, AggregatedOperators> = HashMap::new();
         let mut open_window = false;
@@ -468,7 +460,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 _ = &mut task_expired_timer => {
                     // If the task is expired, send the aggregated response
                     Self::handle_task_expired(
-                        &logger,
                         &aggregated_response_sender,
                         task_index,
                         open_window,
@@ -479,7 +470,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 _ = window_rx.recv() => {
                     // If the window is finished, send the aggregated response
                     Self::handle_window_finished(
-                        &logger,
                         &aggregated_response_sender,
                         task_index,
                         &current_aggregated_response,
@@ -489,7 +479,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 signed_task_digest = signatures_rx.recv() => {
                     // If a new signature is received, handle it
                     Self::handle_new_signature(
-                        &logger,
                         &avs_registry_service,
                         &mut aggregated_operators,
                         &mut open_window,
@@ -514,7 +503,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `logger` - The logger to log messages.
     /// * `avs_registry_service` - The avs registry service.
     /// * `aggregated_operators` - The aggregated operators.
     /// * `open_window` - Whether the window is open.
@@ -530,8 +518,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `window_duration` - The window duration.
     /// * `signed_task_digest` - The signed task digest.
     #[allow(clippy::too_many_arguments)]
+    #[instrument(skip_all)]
     async fn handle_new_signature(
-        logger: &SharedLogger,
         avs_registry_service: &A,
         aggregated_operators: &mut HashMap<FixedBytes<32>, AggregatedOperators>,
         open_window: &mut bool,
@@ -547,10 +535,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         window_duration: Duration,
         signed_task_digest: Option<SignedTaskResponseDigest>,
     ) -> Result<(), BlsAggregationServiceError> {
-        logger.debug(
-            &format!("New signature received for task index: {task_index}"),
-            "eigen-services-blsaggregation.bls_agg.handle_new_signature",
-        );
+        debug!("New signature received for task index: {task_index}");
 
         let signed_digest =
             signed_task_digest.ok_or(BlsAggregationServiceError::SignaturesChannelClosed)?;
@@ -567,14 +552,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
 
         // Verify the signature
-        let verification_result = verify_signature(
-            task_index,
-            &signed_digest,
-            operator_state_avs,
-            logger.clone(),
-        )
-        .await
-        .map_err(BlsAggregationServiceError::SignatureVerificationError);
+        let verification_result = verify_signature(task_index, &signed_digest, operator_state_avs)
+            .await
+            .map_err(BlsAggregationServiceError::SignatureVerificationError);
 
         let verification_has_error = verification_result.is_err();
 
@@ -598,7 +578,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             signed_digest.task_response_digest,
             signed_digest.bls_signature,
             signed_digest.operator_id,
-            logger.clone(),
         );
         aggregated_operators.insert(
             signed_digest.task_response_digest,
@@ -614,15 +593,12 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             return Ok(());
         }
 
-        logger.debug(
-            &format!("Signature threshold is met for task index: {task_index}"),
-            "eigen-services-blsaggregation.bls_agg.handle_new_signature",
-        );
+        debug!("Signature threshold is met for task index: {task_index}");
 
         // If the window is not open, open it
         if !*open_window {
             *open_window = true;
-            Self::start_window(window_tx, window_duration, task_index, logger.clone());
+            Self::start_window(window_tx, window_duration, task_index);
         }
 
         *current_aggregated_response = Some(
@@ -635,7 +611,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 avs_registry_service,
                 quorum_apks_g1,
                 quorum_nums,
-                logger.clone(),
             )
             .await?,
         );
@@ -648,13 +623,12 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `logger` - The logger to log messages.
     /// * `aggregated_response_sender` - The aggregated response sender.
     /// * `task_index` - The task index.
     /// * `open_window` - Whether the window is open.
     /// * `current_aggregated_response` - The current aggregated response.
+    #[instrument(skip_all)]
     fn handle_task_expired(
-        logger: &SharedLogger,
         aggregated_response_sender: &UnboundedSender<
             Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
         >,
@@ -663,22 +637,12 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         current_aggregated_response: &Option<BlsAggregationServiceResponse>,
     ) -> Result<(), BlsAggregationServiceError> {
         if open_window {
-            logger.debug(
-                &format!(
-                    "task_expired_timer while in the waiting window for task index: {task_index}"
-                ),
-                "eigen-services-blsaggregation.bls_agg.handle_task_expired",
-            );
+            debug!("task_expired_timer while in the waiting window for task index: {task_index}",);
             aggregated_response_sender
                 .send(Ok(current_aggregated_response.clone().unwrap()))
                 .map_err(|_| BlsAggregationServiceError::SenderError)?;
         } else {
-            logger.debug(
-                &format!(
-                    "task_expired_timer NOT in the waiting window for task index: {task_index}"
-                ),
-                "eigen-services-blsaggregation.bls_agg.handle_task_expired",
-            );
+            debug!("task_expired_timer NOT in the waiting window for task index: {task_index}",);
 
             let _ = aggregated_response_sender.send(Err(BlsAggregationServiceError::TaskExpired));
         }
@@ -690,22 +654,18 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `logger` - The logger to log messages.
     /// * `aggregated_response_sender` - The aggregated response sender.
     /// * `task_index` - The task index.
     /// * `current_aggregated_response` - The current aggregated response.
+    #[instrument(skip_all)]
     fn handle_window_finished(
-        logger: &SharedLogger,
         aggregated_response_sender: &UnboundedSender<
             Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
         >,
         task_index: TaskIndex,
         current_aggregated_response: &Option<BlsAggregationServiceResponse>,
     ) -> Result<(), BlsAggregationServiceError> {
-        logger.debug(
-            &format!("Window finished. Send aggregated response for task index: {task_index}"),
-            "eigen-services-blsaggregation.bls_agg.handle_window_finished",
-        );
+        debug!("Window finished. Send aggregated response for task index: {task_index}");
 
         aggregated_response_sender
             .send(Ok(current_aggregated_response.clone().unwrap()))
@@ -725,12 +685,12 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `avs_registry_service` - The avs registry service.
     /// * `quorum_apks_g1` - The quorum aggregated public keys.
     /// * `quorum_nums` - The quorum numbers.
-    /// * `logger` - The logger to log messages.
     ///
     /// # Returns
     ///
     /// The BLS aggregation service response.
     #[allow(clippy::too_many_arguments)]
+    #[instrument(skip_all)]
     async fn build_aggregated_response(
         task_index: TaskIndex,
         task_created_block: u64,
@@ -740,12 +700,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         avs_registry_service: &A,
         quorum_apks_g1: &[BlsG1Point],
         quorum_nums: &[u8],
-        logger: SharedLogger,
     ) -> Result<BlsAggregationServiceResponse, BlsAggregationServiceError> {
-        logger.debug(
-            &format!("Build aggregated response for task index: {task_index}"),
-            "eigen-services-blsaggregation.bls_agg.build_aggregated_response",
-        );
+        debug!("Build aggregated response for task index: {task_index}");
 
         let mut non_signers_operators_ids: Vec<FixedBytes<32>> = operator_state_avs
             .keys()
@@ -854,18 +810,14 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `window_tx` - The unbounded sender to send the window signal.
     /// * `window_duration` - The duration of the window.
     /// * `task_index` - The task index.
-    /// * `logger` - The logger to log messages.
+    #[instrument(skip_all)]
     fn start_window(
         window_tx: &UnboundedSender<bool>,
         window_duration: Duration,
         task_index: TaskIndex,
-        logger: SharedLogger,
     ) {
         let sender = window_tx.clone();
-        logger.debug(
-            &format!("Create window to wait for new signatures for task index: {task_index}"),
-            "eigen-services-blsaggregation.bls_agg.start_window",
-        );
+        debug!("Create window to wait for new signatures for task index: {task_index}");
         tokio::spawn(async move {
             tokio::time::sleep(window_duration).await;
             let _ = sender.send(true);
@@ -882,7 +834,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 /// * `signed_task_response_digest` - The signed task response digest
 /// * `operator_avs_state` - A hashmap containing the staked of all the operator indexed by operator_id.
 ///   This is used to get the `operator_state` to obtain the operator public key.
-/// * `logger` - The logger to log messages.
 ///
 /// # Error
 ///
@@ -890,26 +841,20 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 /// - `SignatureVerificationError::OperatorNotFound` if the operator is not found,
 /// - `SignatureVerificationError::OperatorPublicKeyNotFound` if the operator public key is not found,
 /// - `SignatureVerificationError::IncorrectSignature` if the signature is incorrect.
+#[instrument(skip_all)]
 async fn verify_signature(
     task_index: TaskIndex,
     signed_task_response_digest: &SignedTaskResponseDigest,
     operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
-    logger: SharedLogger,
 ) -> Result<(), SignatureVerificationError> {
     let Some(operator_state) = operator_avs_state.get(&signed_task_response_digest.operator_id)
     else {
-        logger.error(
-            &format!("Operator Not Found for task index: {task_index}"),
-            "eigen-services-blsaggregation.bls_agg.verify_signature",
-        );
+        error!("Operator Not Found for task index: {task_index}");
         return Err(SignatureVerificationError::OperatorNotFound);
     };
 
     let Some(pub_keys) = &operator_state.operator_info.pub_keys else {
-        logger.error(
-            &format!("Operator Public Key Not Found for task index: {task_index}"),
-            "eigen-services-blsaggregation.bls_agg.verify_signature",
-        );
+        error!("Operator Public Key Not Found for task index: {task_index}");
         return Err(SignatureVerificationError::OperatorPublicKeyNotFound);
     };
 
@@ -927,16 +872,10 @@ async fn verify_signature(
     .then_some(())
     .ok_or(SignatureVerificationError::IncorrectSignature)
     .inspect(|_| {
-        logger.debug(
-            &format!("Signature verification successful for task index: {task_index}"),
-            "eigen-services-blsaggregation.bls_agg.verify_signature",
-        );
+        debug!("Signature verification successful for task index: {task_index}");
     })
     .inspect_err(|_| {
-        logger.error(
-            &format!("Signature verification failed for task index: {task_index}"),
-            "eigen-services-blsaggregation.bls_agg.verify_signature",
-        );
+        error!("Signature verification failed for task index: {task_index}");
     })
 }
 
@@ -949,7 +888,6 @@ async fn verify_signature(
 /// * `task_response_digest` - The task response digest.
 /// * `bls_signature` - The BLS signature.
 /// * `operator_id` - The operator id.
-/// * `logger` - The logger to log messages.
 ///
 /// # Returns
 ///
@@ -960,12 +898,8 @@ fn update_aggregated_operators(
     task_response_digest: FixedBytes<32>,
     bls_signature: Signature,
     operator_id: FixedBytes<32>,
-    logger: SharedLogger,
 ) -> AggregatedOperators {
-    logger.debug(
-        "Update aggregated operators",
-        "eigen-services-blsaggregation.bls_agg.update_aggregated_operators",
-    );
+    debug!("Update aggregated operators");
 
     let bls_signature_g1_point = bls_signature.g1_point().g1();
 
@@ -976,7 +910,6 @@ fn update_aggregated_operators(
             operator_state.clone(),
             operator_id,
             bls_signature_g1_point,
-            logger,
         );
         updated.clone()
     } else {
@@ -1012,17 +945,16 @@ fn update_aggregated_operators(
 /// - `aggregated_operators` - Contains the information of all the aggregated operators.
 /// - `operator_state` - The state of the operator, contains information about its stake.
 /// - `signed_task_digest` - Contains the id and signature of the new operator.
-/// - `logger` - The logger to log messages.
 ///
 /// # Returns
 ///
 /// The given aggregated operators, aggregated with the new operator info.
+#[instrument(skip_all)]
 fn aggregate_new_operator(
     aggregated_operators: &mut AggregatedOperators,
     operator_state: OperatorAvsState,
     operator_id: FixedBytes<32>,
     signature_g1_point: G1Affine,
-    logger: SharedLogger,
 ) -> &mut AggregatedOperators {
     let operator_g2_pubkey = operator_state
         .operator_info
@@ -1035,10 +967,7 @@ fn aggregate_new_operator(
         .signers_operator_ids_set
         .insert(operator_id, true);
 
-    logger.debug(
-        &format!("operator {operator_id} inserted in signers_operator_ids_set"),
-        "eigen-services-blsaggregation.bls_agg.aggregate_new_operator",
-    );
+    debug!("operator {operator_id} inserted in signers_operator_ids_set");
 
     for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
         // For each quorum the operator has stake in, we aggregate the signature and update the stake
@@ -1062,7 +991,7 @@ mod tests {
     use crate::bls_agg::{TaskMetadata, TaskSignature};
     use alloy::primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
-    use eigen_logging::get_test_logger;
+
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
     use eigen_types::avs::SignatureVerificationError::{DuplicateSignature, IncorrectSignature};
     use eigen_types::operator::{QuorumNum, QuorumThresholdPercentages};
@@ -1134,8 +1063,7 @@ mod tests {
             .sign_message(task_response_digest.as_ref());
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
         let metadata = TaskMetadata::new(
             task_index,
             block_number,
@@ -1200,8 +1128,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
         let metadata = TaskMetadata::new(
             task_index,
             block_number,
@@ -1309,8 +1236,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,
@@ -1407,8 +1333,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,
@@ -1494,8 +1419,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         // initialize 2 concurrent tasks
         let task_1_index = 1;
@@ -1649,8 +1573,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
         let metadata = TaskMetadata::new(
             task_index,
             block_number,
@@ -1692,8 +1615,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,
@@ -1763,8 +1685,7 @@ mod tests {
             .sign_message(task_response_digest.as_ref());
 
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,
@@ -1817,8 +1738,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,
@@ -1918,8 +1838,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,
@@ -2020,8 +1939,7 @@ mod tests {
         let task_response_digest = hash(task_response);
 
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,
@@ -2084,8 +2002,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,
@@ -2142,8 +2059,7 @@ mod tests {
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
 
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,
@@ -2189,8 +2105,7 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
@@ -2227,8 +2142,7 @@ mod tests {
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100u8];
         let time_to_expiry = Duration::from_secs(1);
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let metadata = TaskMetadata::new(
             task_index,
@@ -2296,8 +2210,7 @@ mod tests {
             .sign_message(hash(task_response).as_ref());
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
         let metadata = TaskMetadata::new(
             task_index,
             block_number,
@@ -2358,8 +2271,7 @@ mod tests {
         let quorum_numbers: Vec<QuorumNum> = vec![0];
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![50_u8];
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let time_to_expiry = Duration::from_secs(5);
         let window_duration = Duration::from_secs(1);
@@ -2476,8 +2388,7 @@ mod tests {
         let quorum_numbers: Vec<QuorumNum> = vec![0];
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![40_u8];
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let time_to_expiry = Duration::from_secs(2);
         let window_duration = Duration::from_secs(10);
@@ -2573,8 +2484,7 @@ mod tests {
         let quorum_numbers: Vec<QuorumNum> = vec![0];
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![40_u8];
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let time_to_expiry = Duration::from_secs(2);
         let window_duration = Duration::ZERO;
@@ -2672,8 +2582,7 @@ mod tests {
         let quorum_numbers: Vec<QuorumNum> = vec![0];
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![40_u8];
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service =
-            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         let time_to_expiry = Duration::from_secs(5);
         let window_duration = Duration::from_secs(1);

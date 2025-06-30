@@ -20,6 +20,15 @@ pub trait OperatorInfoService {
         address: Address,
     ) -> Result<Option<OperatorPubKeys>, OperatorInfoServiceError>;
 
+    /// Get the operator socket from the operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id
+    ///
+    /// # Returns
+    ///
+    /// The operator socket
     async fn get_operator_socket(
         &self,
         address: Address,

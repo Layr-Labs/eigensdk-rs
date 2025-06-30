@@ -4,7 +4,7 @@
 
 use alloy::primitives::Address;
 use awesome_vault_service::{
-    bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
+    bindings::awesome_vault_task_manager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
     response_calculator::VaultServiceResponseCalculator, utils::load_config,
 };
 use eigensdk::{
@@ -14,7 +14,6 @@ use eigensdk::{
         Challenger,
     },
     common::get_signer,
-    logging::{init_logger, log_level::LogLevel},
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
@@ -23,8 +22,6 @@ use tokio::sync::Mutex;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
-
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the `ChallengerConfig`

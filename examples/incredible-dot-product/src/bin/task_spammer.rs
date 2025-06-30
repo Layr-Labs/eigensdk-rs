@@ -3,11 +3,7 @@
 //! to set up a task spammer.
 
 use alloy::primitives::{Address, U256};
-use eigensdk::{
-    common::get_signer,
-    logging::{init_logger, log_level::LogLevel},
-    task_spammer::TaskSpammerBuilder,
-};
+use eigensdk::{common::get_signer, task_spammer::TaskSpammerBuilder};
 use eyre::Result;
 use incredible_dot_product::{
     IIncredibleDotProductTaskManager::DotProductInput,
@@ -17,8 +13,6 @@ use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
-
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the task manager instance

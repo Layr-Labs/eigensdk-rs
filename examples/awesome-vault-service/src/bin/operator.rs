@@ -8,7 +8,6 @@ use awesome_vault_service::{
     utils::load_config,
 };
 use eigensdk::{
-    logging::{init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
     testing_utils::task_processor::failing_response_calculator,
 };
@@ -18,7 +17,6 @@ use tokio::sync::Mutex;
 
 #[tokio::main]
 async fn main() {
-    init_logger(LogLevel::Info);
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the `OperatorConfig`

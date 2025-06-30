@@ -2,7 +2,7 @@ use alloy::{primitives::B256, sol_types::SolValue};
 use eigen_services_blsaggregation::bls_agg::TaskMetadata;
 use eigen_task_manager::task::Task;
 use eigen_task_manager::task_response::TaskResponse;
-use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
+use eigen_utils::slashing::middleware::ibls_signature_checker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
 use std::future::Future;
 
 /// Aggregator processor error

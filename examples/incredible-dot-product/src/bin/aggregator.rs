@@ -6,7 +6,6 @@ use alloy::primitives::Address;
 use eigensdk::{
     aggregator::{Aggregator, AggregatorConfig, IndexingAggregatorProcessor},
     common::get_signer,
-    logging::{get_logger, init_logger, log_level::LogLevel},
 };
 use eyre::Result;
 use incredible_dot_product::{
@@ -16,7 +15,6 @@ use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
     let logger = get_logger();
 
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
@@ -36,8 +34,7 @@ async fn main() -> Result<()> {
     let task_processor =
         IndexingAggregatorProcessor::new(contract, Duration::from_secs(10), Duration::from_secs(2));
 
-    // 5. Create and start the aggregator
-    let aggregator = Aggregator::new(config, task_processor, logger)
+    let aggregator = Aggregator::new(config, task_processor)
         .await
         .map_err(|e| eyre::eyre!("Aggregator new error: {}", e))?;
     aggregator

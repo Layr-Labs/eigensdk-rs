@@ -274,7 +274,7 @@ impl<RP> Operator<RP> {
         info!("Starting operator");
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
-            .on_ws(ws)
+            .connect_ws(ws)
             .await
             .map_err(|_| OperatorError::TransportError)?;
 

@@ -7,6 +7,12 @@ repository.workspace = true
 description = "publicly exportable alloy bindings and utilities"
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [lib]
 doctest = false
 
@@ -14,3 +20,4 @@ doctest = false
 alloy.workspace = true
 regex = "1"
 reqwest.workspace = true
+serde.workspace = true

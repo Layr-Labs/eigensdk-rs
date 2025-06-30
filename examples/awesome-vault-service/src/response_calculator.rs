@@ -1,4 +1,4 @@
-use crate::bindings::awesomevaulttaskmanager::IAwesomeVaultTaskManager::TaskInput;
+use crate::bindings::awesome_vault_task_manager::IAwesomeVaultTaskManager::TaskInput;
 use alloy::primitives::{Keccak256, B256};
 use eigensdk::task_manager::{response_calculator::ResponseCalculator, TaskManagerError};
 use std::{collections::BTreeMap, sync::Arc};

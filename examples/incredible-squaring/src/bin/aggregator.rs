@@ -25,7 +25,6 @@ async fn main() {
 
     // 2. Create the aggregator configuration from the toml file
     let config: AggregatorConfig = load_config("./src/config/squaring-aggregator.toml").unwrap();
-    let logger = get_logger();
 
     // 3. Create the task manager instance
     let signer = "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
@@ -33,7 +32,8 @@ async fn main() {
         Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3").unwrap();
     let url = Url::parse(&config.http_rpc_url).unwrap();
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let provider = ProviderBuilder::new().wallet(wallet).connect_http(url);
+
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 
     // 4. Create the task processor
@@ -44,8 +44,6 @@ async fn main() {
     );
 
     // 5. Create and start the aggregator
-    let aggregator = Aggregator::new(config, task_processor, logger)
-        .await
-        .unwrap();
+    let aggregator = Aggregator::new(config, task_processor).await.unwrap();
     aggregator.run().await.unwrap();
 }

@@ -3,10 +3,10 @@ pub mod common;
 pub mod rewardsv2;
 pub mod slashing;
 
-use crate::slashing::core::allocationmanager::AllocationManager::OperatorSet;
-use crate::slashing::core::irewardscoordinator::IRewardsCoordinator::OperatorSet as RewardsOperatorSet;
-use crate::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams as RegistryCoordiinatorStrategyParams;
-use crate::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
+use crate::slashing::core::allocation_manager::AllocationManager::OperatorSet;
+use crate::slashing::core::i_rewards_coordinator::IRewardsCoordinator::OperatorSet as RewardsOperatorSet;
+use crate::slashing::middleware::registry_coordinator::IStakeRegistryTypes::StrategyParams as RegistryCoordiinatorStrategyParams;
+use crate::slashing::middleware::stake_registry::IStakeRegistryTypes::StrategyParams;
 /// Converts [`OperatorSet`] to [`RewardsOperatorSet`]
 pub fn convert_allocation_operator_set_to_rewards_operator_set(
     operator_set: OperatorSet,

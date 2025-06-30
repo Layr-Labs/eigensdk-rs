@@ -10,7 +10,6 @@ use eigensdk::{
         Challenger,
     },
     common::get_signer,
-    logging::{init_logger, log_level::LogLevel},
     task_manager::response_calculator::response_calculator_from_fn,
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
@@ -23,8 +22,6 @@ use std::str::FromStr;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
-
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the `ChallengerConfig` from the toml file

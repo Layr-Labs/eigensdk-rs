@@ -7,6 +7,12 @@ repository.workspace = true
 description = "Common functions for EigenLayer SDK"
 license-file.workspace = true
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 alloy.workspace = true
 url.workspace = true

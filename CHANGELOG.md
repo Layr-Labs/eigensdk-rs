@@ -17,36 +17,47 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
-* Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
-
 ### Breaking Changes 🛠
 
-* Changing NodeApi to allow concurrent modifications of the internal state of the node in PR [401](https://github.com/Layr-Labs/eigensdk-rs/pull/401).
+### Deprecated ⚠️
 
-  Before: `NodeApi` had the function `create_server` to start the Node API. Now, there are two functions `NodeApi::new` and `NodeApi::start_server` to create the server and then start it.
+### Removed
 
-  Also, users can now call functions to modify the information served dynamically by interacting with the `NodeApi` methods. As an end-to-end example:
+### Documentation 📚
 
-  ``` rust
-    let mut node_info = NodeInfo::new("test_node", "v1.0.0");
-    node_info.register_service(
-        "test_service",
-        "Test Service",
-        "Test service description",
-        ServiceStatus::Up,
-    );
+### Other Changes
 
-    // Set up a server running on a test address (e.g., 127.0.0.1:8081)
-    let ip_port_addr = "127.0.0.1:8081";
+## [2.0.0] - 2025-06-13
 
-    let mut node_api = NodeApi::new(node_info);
-    let server = node_api.start_server(ip_port_addr).unwrap();
+### Added 🎉
 
-    // and then you can dinamically modify the state of the node:
-    node_api
-        .update_service_status("test_service", ServiceStatus::Down)
-        .unwrap();
-  ```
+* Bump `alloy` to 1.0 and change foundry image in PR [#553](https://github.com/Layr-Labs/eigensdk-rs/pull/553)
+  - With these changes, you should:
+    - Some alloy types have changed, see the [alloy migration guide](https://alloy.rs/migrating-to-core-1.0/README/) for details
+    - The `foundry` image is now `ghcr.io/foundry-rs/foundry:nightly-548d1f0ebb811fcebd5fafdec33b7b814d0dbdbd`
+    - Generated binding names are now snake_case, which breaks existing import paths (e.g. `allocationmanager` → `allocation_manager`)
+    - 
+      ```rust
+        // BEFORE
+        use eigen_utils::slashing::core::allocationmanager::AllocationManager
+
+        // AFTER
+        use eigen_utils::slashing::core::allocation_manager::AllocationManager
+      ```
+
+    - Binding calls now return the value type directly instead of a tuple, so the `.0` suffix is no longer required
+
+      ```rust
+        // BEFORE
+        let owner = RegistryCoordinator::new(...).owner().call().await?._0;
+
+        // AFTER
+        let owner = RegistryCoordinator::new(...).owner().call().await?;
+      ```
+
+* Bump MSRV and Rust to 1.82 in PR [515](https://github.com/Layr-Labs/eigensdk-rs/pull/515).
+
+### Breaking Changes 🛠
 
 *  Alternate impl for OperatorsInfo for retrieving pub keys and socket for the operator from middleware directly in [#414](https://github.com/Layr-Labs/eigensdk-rs/pull/414)
 
@@ -100,22 +111,201 @@ Alternate implementation which directly queries from middleware using view call 
         .unwrap();
   ```
 
-### Deprecated ⚠️
-
 ### Removed
 
-### Documentation 📚
+* Removed `ethers` and `ethers-signers` from the root `Cargo.toml` in [#551](https://github.com/Layr-Labs/eigensdk-rs/pull/551).
+
+* Removed the `eigen-logging` crate and adopted the `tracing` crate as the standard logging in [#552](https://github.com/Layr-Labs/eigensdk-rs/pull/552).
+  - To migrate to `tracing`, you should:
+    - Remove the `eigen-logging` dependency from your `Cargo.toml`
+    - Use `tracing-subscriber` crate to configure the logging. Follow the [tracing-subscriber documentation](https://docs.rs/tracing-subscriber/latest/tracing_subscriber/) for more details.
+    
+    ```rust
+      // Before
+      init_logger(LogLevel::Info);
+      let logger = get_logger();
+
+      // After
+      // This is a minimal example of how to configure the logging
+      // No longer need to instantiate or pass the logger into methods, simply subscribe to `tracing` events.
+      tracing::subscriber::set_global_default(
+          tracing_subscriber::fmt::Subscriber::builder()
+              .with_max_level(Level::INFO)
+              .with_ansi(false)
+              .finish(),
+      )
+      .unwrap();
+    ```
 
 ### Other Changes
 
 * Moved test utils from chainio folder to testing/testutils folder by @maximopalopoli in [#407](https://github.com/Layr-Labs/eigensdk-rs/pull/407)
 * Added rewards utilities integration test by @maximopalopoli in [#404](https://github.com/Layr-Labs/eigensdk-rs/pull/404)
 
-* chore: use common testing utils in bls_agg_test in PR [420](https://github.com/Layr-Labs/eigensdk-rs/pull/420).
+## [1.0.0] - 2025-05-09
+
+### Added 🎉
+
+* Bump alloy to 0.13 and MSRV to 1.81 in PR [419](https://github.com/Layr-Labs/eigensdk-rs/pull/419).
+* Bump middleware to [v1.3.0](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.0) in PR [443](https://github.com/Layr-Labs/eigensdk-rs/pull/443).
+* Bump middleware to [v1.3.1](https://github.com/Layr-Labs/eigenlayer-middleware/releases/tag/v1.3.1) in PR [488](https://github.com/Layr-Labs/eigensdk-rs/pull/488).
+* Added an additional implementation for `OperatorInfoService` for retrieving operator BLS pubkeys and sockets directly from middleware in [#414](https://github.com/Layr-Labs/eigensdk-rs/pull/414). The new `OperatorInfoOnChain` is more stable and efficient since it doesn't subscribe or fetch events, but it requires functionality from the recent v1.3.0 middleware release.
+
+  Old Implementation which indexes middleware events:
+
+    ```rust
+      use eigen_services_operatorsinfo::{operatorsinfo_inmemory::OperatorInfoServiceInMemory};
+      let operators_info = OperatorInfoServiceInMemory::new(
+          get_test_logger(),
+          avs_registry_reader.clone(),
+          ws_endpoint,
+      )
+      .await
+      .unwrap()
+      .0;
+
+      let cancellation_token = CancellationToken::new();
+      let operators_info_clone = operators_info.clone();
+      let token_clone = cancellation_token.clone();
+      task::spawn(async move { operators_info_clone.start_service(&token_clone, start_block, end_block).await });
+      // Sleep to wait for the operator info service to start
+      sleep(Duration::from_secs(1)).await;
+
+      let avs_registry_service =
+          AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
+    ```
+
+  New alternate implementation which directly queries from middleware using view call:
+
+    ```rust
+      use eigen_services_operatorsinfo::{operatorsinfo_inmemory::OperatorInfoOnChain};
+      let operators_info_on_chain = OperatorInfoOnChain::new(
+          &http_endpoint,
+          bls_apk_registry_address,
+          socket_registry_address,
+      );
+
+      let avs_registry_service = AvsRegistryServiceChainCaller::new(
+          avs_registry_reader.clone(),
+          operators_info_on_chain,
+      );
+
+      let pub_keys = operator_info_on_chain
+          .get_operator_info(OPERATOR_ADDRESS)
+          .await
+          .unwrap();
+      
+      let socket = operator_info_on_chain
+          .get_operator_socket(OPERATOR_ADDRESS)
+          .await
+          .unwrap();
+    ```
+
+* Added a method `get_operator_socket` to retrieve the socket from the `AvsRegistryServiceChainCaller` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464).
+
+  ```rust
+    let socket = self.get_operator_socket(*operator.operatorId).await.unwrap();
+  ```
+
+### Breaking Changes 🛠
+
+* Changing NodeApi to allow concurrent modifications of the internal state of the node in PR [401](https://github.com/Layr-Labs/eigensdk-rs/pull/401).
+
+  Before: `NodeApi` had the function `create_server` to start the Node API. Now, there are two functions `NodeApi::new` and `NodeApi::start_server` to create the server and then start it.
+
+  Also, users can now call functions to modify the information served dynamically by interacting with the `NodeApi` methods. As an end-to-end example:
+
+  ``` rust
+    let mut node_info = NodeInfo::new("test_node", "v1.0.0");
+    node_info.register_service(
+        "test_service",
+        "Test Service",
+        "Test service description",
+        ServiceStatus::Up,
+    );
+
+    // Set up a server running on a test address (e.g., 127.0.0.1:8081)
+    let ip_port_addr = "127.0.0.1:8081";
+
+    let mut node_api = NodeApi::new(node_info);
+    let server = node_api.start_server(ip_port_addr).unwrap();
+
+    // and then you can dinamically modify the state of the node:
+    node_api
+        .update_service_status("test_service", ServiceStatus::Down)
+        .unwrap();
+  ```
+
+* Added field `socket` to `OperatorInfo` in PR [464](https://github.com/Layr-Labs/eigensdk-rs/pull/464)
+
+  ```rust
+    // BEFORE
+    let info = self.get_operator_info(*operator.operatorId).await?;
+    let stake_per_quorum = HashMap::new();
+    let avs_state = operators_avs_state
+        .entry(FixedBytes(*operator.operatorId))
+        .or_insert_with(|| OperatorAvsState {
+            operator_id: operator.operatorId,
+            operator_info: OperatorInfo {
+                pub_keys: Some(info),
+            },
+            stake_per_quorum,
+            block_num: block_num.into(),
+        });
+    avs_state
+        .stake_per_quorum
+        .insert(*quorum_num, U256::from(operator.stake));
+
+    // AFTER
+    // Now we use the new method to retrieve the socket in `get_operators_avs_state_at_block`
+    // And use the value in the new field `socket` in `OperatorInfo`
+    let socket = self.get_operator_socket(*operator.operatorId).await?;
+    let info = self.get_operator_info(*operator.operatorId).await?;
+    let stake_per_quorum = HashMap::new();
+    let avs_state = operators_avs_state
+        .entry(FixedBytes(*operator.operatorId))
+        .or_insert_with(|| OperatorAvsState {
+            operator_id: operator.operatorId,
+            operator_info: OperatorInfo {
+                pub_keys: Some(info),
+                socket: Some(socket),
+            },
+            stake_per_quorum,
+            block_num: block_num.into(),
+        });
+    avs_state
+        .stake_per_quorum
+        .insert(*quorum_num, U256::from(operator.stake));
+  ```
+
+### Documentation 📚
+
+* Added documentation for service crates:
+  * docs: avs registry service by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/409>
+  * docs: operator info service by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/406>
+  * docs: BLS Aggregator Service by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/387>
+
+* Improved documentation compiling on docs.rs
+  * chore: apply cargo doc metadata to crates by @damiramirez in <https://github.com/Layr-Labs/eigensdk-rs/pull/441>
+  * docs: fix doc warnings by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/438>
+  * docs: inline `eigensdk` documentation by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/439>
+
+### Other Changes
+
+* Moved test utils from chainio folder to testing/testutils folder by @maximopalopoli in [#407](https://github.com/Layr-Labs/eigensdk-rs/pull/407)
+* Added rewards utilities integration test by @maximopalopoli in [#404](https://github.com/Layr-Labs/eigensdk-rs/pull/404)
+* test: check quorum creation after service initialization is working by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/400>
+* chore: use common testing utils in bls_agg_test in PR [#420](https://github.com/Layr-Labs/eigensdk-rs/pull/420).
+* chore: remove unused dependency in `eigen-cli` by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/421>
+* test: wait for transaction before doing call by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/422>
+* chore: merge changes from main branch by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/446>
+
+* Fixed release workflow. We now use release-plz for releases.
+  * ci: add workflow_dispatch for release-plz by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/448>
+  * fix: ignore integration tests crate when publishing by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/449>
+  * fix: use path-only dependency for testing utils by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/450>
 
 ## [0.5.0] - 2025-03-18
-
-### Security 🔒
 
 ### Added 🎉
 
@@ -242,8 +432,6 @@ Alternate implementation which directly queries from middleware using view call 
     * `SenderError` is returned when the sender channel fails to send a message to the service.
     * `ReceiverError` is returned when the receiver channel fails to receive a message from the service.
 
-### Deprecated ⚠️
-
 ### Removed
 
 * Removed unused empty structs from the library in [#371](https://github.com/Layr-Labs/eigensdk-rs/pull/371)
@@ -256,11 +444,7 @@ Alternate implementation which directly queries from middleware using view call 
 
 * Reflect 2 bindings(rewardsv2 and slashing) in readme in [#383](https://github.com/Layr-Labs/eigensdk-rs/pull/383).
 
-### Other Changes
-
 ## [0.4.0] - 2025-02-20
-
-### Security 🔒
 
 ### Added 🎉
 
@@ -451,16 +635,12 @@ Alternate implementation which directly queries from middleware using view call 
   * `check_if_stake_thresholds_met`
   * `verify_signature`
 
-### Deprecated ⚠️
-
 ### Removed 🗑
 
 * Removed `eigen-testing-utils` dependency from `eigen-cli` crate in [#353](https://github.com/Layr-Labs/eigensdk-rs/pull/353).
 * Modifications to `eigen-testing-utils` in [#357](https://github.com/Layr-Labs/eigensdk-rs/pull/357).
   * Removed `mine_anvil_blocks_operator_set` from `eigen-testing-utils`. Users should use `mine_anvil_blocks` that does the same thing.
   * Removed the third parameter of `set_account_balance`. Now the port used is the default used on `start_anvil_container` and `start_m2_anvil_container`.
-
-### Documentation 📚
 
 ### Other Changes
 
@@ -898,8 +1078,6 @@ Alternate implementation which directly queries from middleware using view call 
             .unwrap();
   ```
 
-### Changed
-
 ### Breaking changes
 
 * refactor: update interface on `bls aggregation` in [#254](https://github.com/Layr-Labs/eigensdk-rs/pull/254)
@@ -975,8 +1153,6 @@ Alternate implementation which directly queries from middleware using view call 
     ```
 
 * Slashing UAM changes in [#248](https://github.com/Layr-Labs/eigensdk-rs/pull/248).
-
-### Removed
 
 ## [0.2.0] - 2025-02-06
 
@@ -1058,6 +1234,7 @@ Alternate implementation which directly queries from middleware using view call 
 
 * Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
 * docs: improve changelog by adding examples by @maximopalopoli in <https://github.com/Layr-Labs/eigensdk-rs/pull/251>
+* Documented the release process in [#456](https://github.com/Layr-Labs/eigensdk-rs/pull/456).
 
 ### Other Changes
 

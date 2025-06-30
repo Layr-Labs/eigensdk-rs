@@ -8,8 +8,8 @@ use alloy::{
     sol_types::SolValue,
 };
 use eigen_crypto_bls::OperatorId;
-use eigen_utils::slashing::middleware::iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
-use eigen_utils::slashing::middleware::registrycoordinator::BN254::G1Point;
+use eigen_utils::slashing::middleware::ibls_signature_checker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature;
+use eigen_utils::slashing::middleware::registry_coordinator::BN254::G1Point;
 use thiserror::Error;
 
 /// Error returned by the [`decode_new_task`] function.
@@ -101,7 +101,7 @@ where
         .ok_or(AbiDecodeError::TaskDataTooShort)?;
 
     let (input, task_created_block, quorum_numbers, quorum_threshold_percentage) =
-        decode_params::<NewTaskEventTuple<Input>>(data, false)?;
+        decode_params::<NewTaskEventTuple<Input>>(data)?;
 
     Ok((
         task_index,
@@ -132,7 +132,7 @@ where
     let data = log.inner.data.data.0.clone();
 
     // Decode the tuple of the form: (TaskResponse<TM::Output>, TaskResponseMetadata)
-    let decoded_task_response = decode_params::<TaskResponseEventTuple<Output>>(&data, false)?;
+    let decoded_task_response = decode_params::<TaskResponseEventTuple<Output>>(&data)?;
 
     let task_index = decoded_task_response.0 .0;
     let task_response = decoded_task_response.0 .1;
@@ -156,10 +156,10 @@ where
 /// # Returns
 ///
 /// * `Result<T::RustType, AbiDecodeError>` - The decoded data
-pub fn decode_params<T>(data: &[u8], validate: bool) -> Result<T::RustType, AbiDecodeError>
+pub fn decode_params<T>(data: &[u8]) -> Result<T::RustType, AbiDecodeError>
 where
     T: SolType,
     for<'de> <T as SolType>::Token<'de>: TokenSeq<'de>,
 {
-    Ok(T::abi_decode_params(data, validate)?)
+    Ok(T::abi_decode_params(data)?)
 }

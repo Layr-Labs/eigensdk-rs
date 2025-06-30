@@ -3,14 +3,10 @@
 //! to set up a task spammer.
 
 use alloy::primitives::Address;
-use awesome_vault_service::bindings::awesomevaulttaskmanager::{
+use awesome_vault_service::bindings::awesome_vault_task_manager::{
     AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance, IAwesomeVaultTaskManager::TaskInput,
 };
-use eigensdk::{
-    common::get_signer,
-    logging::{init_logger, log_level::LogLevel},
-    task_spammer::TaskSpammerBuilder,
-};
+use eigensdk::{common::get_signer, task_spammer::TaskSpammerBuilder};
 use eyre::Result;
 use rand::Rng;
 
@@ -18,8 +14,6 @@ use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
-
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the task manager instance from your bindings
