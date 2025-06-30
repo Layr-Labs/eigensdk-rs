@@ -121,7 +121,7 @@ async fn test_incredible_squaring() {
 /// Verify that all tasks created by the task spammer have been completed
 async fn verify_tasks_completed(http_endpoint: &str) {
     let task_manager_address = Address::from_str(TASK_MANAGER_ADDRESS).unwrap();
-    let provider = get_signer(AGGREGATOR_SIGNER, &http_endpoint);
+    let provider = get_signer(AGGREGATOR_SIGNER, http_endpoint);
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
     let latest_task_num = contract.latestTaskNum().call().await.unwrap();
     assert_eq!(latest_task_num, NUM_TASKS as u32);
