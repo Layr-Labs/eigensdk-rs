@@ -52,7 +52,7 @@ where
             SignedTaskResponse::<TP::Output>::decode(&signed_task_response).map_err(|e| {
                 ServerError::new(
                     std::io::ErrorKind::Other,
-                    format!("Error decoding signed task response: {}", e),
+                    format!("Error decoding signed task response: {e}"),
                 )
             })?;
 

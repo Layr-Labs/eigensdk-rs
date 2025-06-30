@@ -1,7 +1,6 @@
 #![allow(missing_docs)]
 
 use alloy::primitives::U256;
-use eigen_logging::get_logger;
 use eigen_operator::{config::OperatorConfig, Operator};
 use eigen_task_manager::response_calculator::response_calculator_from_fn;
 use eigen_testing_utils::task_processor::failing_response_calculator;
@@ -11,11 +10,10 @@ use incredible_squaring::{square, utils::load_config, ISTaskManager};
 // For this example, Operator should be registered.
 #[tokio::main]
 async fn main() {
-    let logger = get_logger();
     let config: OperatorConfig = load_config("./src/config/squaring-operator.toml").unwrap();
 
     // Initialize the operator
-    let operator = Operator::new(logger, config).await.unwrap();
+    let operator = Operator::new(config).await.unwrap();
 
     let response_calculator = response_calculator_from_fn(square);
     let logic = failing_response_calculator(response_calculator, || U256::from(42), 60);
