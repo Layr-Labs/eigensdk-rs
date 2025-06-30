@@ -15,6 +15,14 @@ use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    tracing::subscriber::set_global_default(
+        tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(Level::INFO)
+            .with_ansi(false)
+            .finish(),
+    )
+    .unwrap();
+
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the aggregator configuration from the toml file

@@ -16,6 +16,14 @@ use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    tracing::subscriber::set_global_default(
+        tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(Level::INFO)
+            .with_ansi(false)
+            .finish(),
+    )
+    .unwrap();
+
     let config: AggregatorConfig = load_config("./src/config/awesome-aggregator.toml")?;
 
     // 3. Instantiate the task manager instance from your bindings
