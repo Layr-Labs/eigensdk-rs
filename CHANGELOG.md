@@ -17,6 +17,20 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+### Breaking Changes 🛠
+
+### Deprecated ⚠️
+
+### Removed
+
+### Documentation 📚
+
+### Other Changes
+
+## [2.0.0] - 2025-06-13
+
+### Added 🎉
+
 * Bump `alloy` to 1.0 and change foundry image in PR [#553](https://github.com/Layr-Labs/eigensdk-rs/pull/553)
   - With these changes, you should:
     - Some alloy types have changed, see the [alloy migration guide](https://alloy.rs/migrating-to-core-1.0/README/) for details
@@ -97,8 +111,6 @@ Alternate implementation which directly queries from middleware using view call 
         .unwrap();
   ```
 
-### Deprecated ⚠️
-
 ### Removed
 
 * Removed `ethers` and `ethers-signers` from the root `Cargo.toml` in [#551](https://github.com/Layr-Labs/eigensdk-rs/pull/551).
@@ -124,8 +136,6 @@ Alternate implementation which directly queries from middleware using view call 
       )
       .unwrap();
     ```
-
-### Documentation 📚
 
 ### Other Changes
 
@@ -297,8 +307,6 @@ Alternate implementation which directly queries from middleware using view call 
 
 ## [0.5.0] - 2025-03-18
 
-### Security 🔒
-
 ### Added 🎉
 
 * Added all features of the `eigensdk` crate to its `"full"` feature [#370](https://github.com/Layr-Labs/eigensdk-rs/pull/370)
@@ -424,8 +432,6 @@ Alternate implementation which directly queries from middleware using view call 
     * `SenderError` is returned when the sender channel fails to send a message to the service.
     * `ReceiverError` is returned when the receiver channel fails to receive a message from the service.
 
-### Deprecated ⚠️
-
 ### Removed
 
 * Removed unused empty structs from the library in [#371](https://github.com/Layr-Labs/eigensdk-rs/pull/371)
@@ -438,11 +444,7 @@ Alternate implementation which directly queries from middleware using view call 
 
 * Reflect 2 bindings(rewardsv2 and slashing) in readme in [#383](https://github.com/Layr-Labs/eigensdk-rs/pull/383).
 
-### Other Changes
-
 ## [0.4.0] - 2025-02-20
-
-### Security 🔒
 
 ### Added 🎉
 
@@ -633,16 +635,12 @@ Alternate implementation which directly queries from middleware using view call 
   * `check_if_stake_thresholds_met`
   * `verify_signature`
 
-### Deprecated ⚠️
-
 ### Removed 🗑
 
 * Removed `eigen-testing-utils` dependency from `eigen-cli` crate in [#353](https://github.com/Layr-Labs/eigensdk-rs/pull/353).
 * Modifications to `eigen-testing-utils` in [#357](https://github.com/Layr-Labs/eigensdk-rs/pull/357).
   * Removed `mine_anvil_blocks_operator_set` from `eigen-testing-utils`. Users should use `mine_anvil_blocks` that does the same thing.
   * Removed the third parameter of `set_account_balance`. Now the port used is the default used on `start_anvil_container` and `start_m2_anvil_container`.
-
-### Documentation 📚
 
 ### Other Changes
 
@@ -1080,8 +1078,6 @@ Alternate implementation which directly queries from middleware using view call 
             .unwrap();
   ```
 
-### Changed
-
 ### Breaking changes
 
 * refactor: update interface on `bls aggregation` in [#254](https://github.com/Layr-Labs/eigensdk-rs/pull/254)
@@ -1157,8 +1153,6 @@ Alternate implementation which directly queries from middleware using view call 
     ```
 
 * Slashing UAM changes in [#248](https://github.com/Layr-Labs/eigensdk-rs/pull/248).
-
-### Removed
 
 ## [0.2.0] - 2025-02-06
 
