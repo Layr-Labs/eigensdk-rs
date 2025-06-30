@@ -23,6 +23,6 @@ async fn main() -> Result<()> {
             .expect("invalid operator id ");
     let operator_address = avs_registry.get_operator_from_id(*operator_id).await?;
 
-    println!("operator address is  :{:?}", operator_address);
+    println!("operator address is  :{operator_address:?}");
     Ok(())
 }
