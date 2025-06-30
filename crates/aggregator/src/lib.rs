@@ -20,13 +20,8 @@ use ark_ec::AffineRepr;
 pub use config::AggregatorConfig;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
-<<<<<<< HEAD
 use eigen_crypto_bls::error::BlsError;
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
-use eigen_logging::get_logger;
-use eigen_logging::logger::SharedLogger;
-=======
->>>>>>> v2-dev-0
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle,
@@ -37,8 +32,8 @@ pub use eigen_services_blsaggregation::{
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_task_manager::event_decoder::decode_new_task;
 use eigen_utils::slashing::middleware::{
-    iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
-    iblssignaturechecker::BN254::{G1Point, G2Point},
+    ibls_signature_checker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
+    ibls_signature_checker::BN254::{G1Point, G2Point},
 };
 pub use error::AggregatorError;
 use futures_util::{future, StreamExt};
@@ -81,13 +76,8 @@ where
     pub async fn new(
         config: AggregatorConfig,
         task_processor: TP,
-        logger: SharedLogger,
     ) -> Result<Self, AggregatorError> {
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
-<<<<<<< HEAD
-            logger.clone(),
-=======
->>>>>>> v2-dev-0
             config.registry_coordinator,
             config.operator_state_retriever,
             config.http_rpc_url,
@@ -95,10 +85,6 @@ where
         .await?;
 
         let operators_info_service = OperatorInfoServiceInMemory::new(
-<<<<<<< HEAD
-            logger,
-=======
->>>>>>> v2-dev-0
             avs_registry_chain_reader.clone(),
             config.ws_rpc_url.clone(),
         )
@@ -239,13 +225,8 @@ where
         service_handle: ServiceHandle,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
-<<<<<<< HEAD
         let filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
-        let provider = ProviderBuilder::new().on_ws(ws).await?;
-=======
-        let filter = Filter::new().event_signature(TP::NewTaskEvent::SIGNATURE_HASH);
         let provider = ProviderBuilder::new().connect_ws(ws).await?;
->>>>>>> v2-dev-0
 
         while let Some(log) = provider
             .subscribe_logs(&filter)

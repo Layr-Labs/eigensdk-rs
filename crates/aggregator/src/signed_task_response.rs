@@ -78,7 +78,7 @@ where
     /// A new [`SignedTaskResponse`]
     pub fn decode(data: &[u8]) -> Result<Self, AggregatorError> {
         let (task_response, g1_point, operator_id) =
-            decode_params::<SignedTaskResponseTuple<T>>(data, false)?;
+            decode_params::<SignedTaskResponseTuple<T>>(data)?;
 
         let task_response = TaskResponse {
             task_index: task_response.0,
