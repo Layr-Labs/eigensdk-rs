@@ -10,7 +10,7 @@ use alloy::{
     transports::http::reqwest::Url,
 };
 use eigensdk::task_spammer::TaskSpammerBuilder;
-use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
+use incredible_squaring::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use std::{str::FromStr, time::Duration};
 
 #[tokio::main]

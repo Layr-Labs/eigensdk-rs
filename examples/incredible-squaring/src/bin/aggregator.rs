@@ -9,18 +9,13 @@ use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::http::reqwest::Url;
 use eigensdk::aggregator::IndexingAggregatorProcessor;
 use eigensdk::aggregator::{Aggregator, AggregatorConfig};
-use eigensdk::logging::get_logger;
-use eigensdk::logging::init_logger;
-use eigensdk::logging::log_level::LogLevel;
-use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
+use incredible_squaring::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use incredible_squaring::utils::load_config;
 use std::str::FromStr;
 use std::time::Duration;
 
 #[tokio::main]
 async fn main() {
-    init_logger(LogLevel::Info);
-
     // 1. Define your types for the task manager (we do this in `ISTaskManager`: lib.rs)
 
     // 2. Create the aggregator configuration from the toml file

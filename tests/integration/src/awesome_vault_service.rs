@@ -17,7 +17,7 @@ use rand::Rng;
 use tokio::sync::Mutex;
 
 use crate::{
-    bindings::awesomevaulttaskmanager::{
+    bindings::awesome_vault_service_manager::{
         AwesomeVaultTaskManager::{AwesomeVaultTaskManagerInstance, NewTaskCreated, TaskResponded},
         IAwesomeVaultTaskManager::TaskInput,
     },

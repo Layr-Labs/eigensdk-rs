@@ -6,16 +6,16 @@ use alloy::{
 };
 use eigensdk::{
     common::get_signer,
-    logging::{get_test_logger, init_logger, log_level::LogLevel},
     task_manager::{
         impl_task_manager_from_defs_and_contract, response_calculator::response_calculator_from_fn,
         TaskManagerDefs, TaskManagerError,
     },
     testing_utils::anvil::start_anvil_with_state,
 };
+use tracing::Level;
 
 use crate::{
-    bindings::incredibledotproducttaskmanager::{
+    bindings::incredible_dot_product_task_manager::{
         IIncredibleDotProductTaskManager::DotProductInput,
         IncredibleDotProductTaskManager::{
             IncredibleDotProductTaskManagerInstance, NewTaskCreated, TaskResponded,
@@ -60,8 +60,13 @@ async fn test_incredible_dot_product() {
     let (_container, http_endpoint, ws_endpoint) =
         start_anvil_with_state(INCREDIBLE_DOT_PRODUCT_STATE_PATH).await;
 
-    init_logger(LogLevel::Info);
-    let logger = get_test_logger();
+    tracing::subscriber::set_global_default(
+        tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(Level::INFO)
+            .with_ansi(false)
+            .finish(),
+    )
+    .unwrap();
 
     // Response calculator
     let response_calculator = || response_calculator_from_fn(dot_product);
@@ -90,7 +95,6 @@ async fn test_incredible_dot_product() {
         task_spammer_task_manager,
         response_calculator,
         generate_input,
-        logger,
         timeout_duration,
         http_endpoint.to_string(),
         ws_endpoint.to_string(),
@@ -124,8 +128,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
         .latestTaskNum()
         .call()
         .await
-        .unwrap()
-        ._0;
+        .unwrap();
     assert_eq!(latest_task_num, NUM_TASKS as u32);
 
     for task_index in 0..latest_task_num {
@@ -133,8 +136,7 @@ async fn verify_tasks_completed(http_endpoint: &str) {
             .allTaskResponses(task_index)
             .call()
             .await
-            .unwrap()
-            ._0;
+            .unwrap();
         assert_ne!(B256::default(), response_hash);
     }
 }

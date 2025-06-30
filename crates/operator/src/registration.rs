@@ -19,15 +19,15 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_signer::tx_signer_from_config;
-use eigen_utils::slashing::core::allocationmanager::AllocationManager::{self, OperatorSet};
-use eigen_utils::slashing::core::allocationmanager::IAllocationManagerTypes::{
+use eigen_utils::slashing::core::allocation_manager::AllocationManager::{self, OperatorSet};
+use eigen_utils::slashing::core::allocation_manager::IAllocationManagerTypes::{
     self, AllocateParams,
 };
-use eigen_utils::slashing::core::delegationmanager::DelegationManager;
-use eigen_utils::slashing::core::istrategy::IStrategy;
-use eigen_utils::slashing::core::strategymanager::StrategyManager;
+use eigen_utils::slashing::core::delegation_manager::DelegationManager;
+use eigen_utils::slashing::core::i_strategy::IStrategy;
+use eigen_utils::slashing::core::strategy_manager::StrategyManager;
 use eigen_utils::slashing::middleware::ierc20::IERC20;
-use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+use eigen_utils::slashing::middleware::registry_coordinator::RegistryCoordinator;
 use std::collections::HashMap;
 use std::str::FromStr;
 use tracing::{info, warn};
@@ -77,7 +77,7 @@ pub async fn setup_operator(
     let wallet = EthereumWallet::from(signer);
     let url =
         Url::parse(&http_rpc_url).map_err(|_| OperatorRegistrationError::HttpUrlParseError)?;
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let provider = ProviderBuilder::new().wallet(wallet).connect_http(url);
 
     // 1. Operator registration in EigenLayer
     handle_eigenlayer_registration(
@@ -259,13 +259,10 @@ async fn is_operator_registered_in_eigenlayer(
     let contract_delegation_manager = DelegationManager::new(delegation_manager_address, provider);
 
     // Query the delegation manager to check operator status
-    let is_operator = contract_delegation_manager
+    Ok(contract_delegation_manager
         .isOperator(operator_address)
         .call()
-        .await?
-        ._0;
-
-    Ok(is_operator)
+        .await?)
 }
 
 /// Registers an operator with EigenLayer by calling the delegation manager contract.
@@ -411,8 +408,7 @@ async fn get_deposit_amount_in_strategy(
     Ok(contract_delegation_manager
         .getOperatorShares(operator_address, strategy_addresses)
         .call()
-        .await?
-        ._0)
+        .await?)
 }
 
 /// Deposits ERC20 tokens into a specific strategy through the strategy manager.
@@ -434,7 +430,7 @@ async fn deposit_erc20_into_strategy(
     strategy_manager_address: Address,
 ) -> Result<(), OperatorRegistrationError> {
     let contract_strategy = IStrategy::new(strategy_address, provider.clone());
-    let token_address = contract_strategy.underlyingToken().call().await?._0;
+    let token_address = contract_strategy.underlyingToken().call().await?;
 
     let token_contract = IERC20::new(token_address, &provider);
     token_contract
@@ -586,8 +582,7 @@ async fn get_current_allocated_stake(
             strategy_addresses,
         )
         .call()
-        .await?
-        ._0;
+        .await?;
 
     // Return the stake for the first (and only) operator and strategy
     Ok(allocated_stakes
@@ -803,8 +798,7 @@ async fn is_operator_registered_for_operator_set(
     let registered_sets = contract_allocation_manager
         .getRegisteredSets(operator_address)
         .call()
-        .await?
-        ._0;
+        .await?;
 
     // Check if our target operator set is in the registered list
     // We match both the operator set ID and the AVS address
@@ -850,8 +844,7 @@ async fn register_for_operator_sets(
     let g1_hashed_msg_to_sign = contract_registry_coordinator
         .pubkeyRegistrationMessageHash(operator_address)
         .call()
-        .await?
-        ._0;
+        .await?;
 
     let sig = bls_key_pair
         .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))

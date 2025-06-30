@@ -17,8 +17,10 @@ alloy.workspace = true
 async-trait.workspace = true
 num-bigint = "0.4.4"
 ark-ff.workspace = true
+serde.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
+tracing-subscriber = "0.3"
 eigensdk = { workspace = true, features = ["full"] }
 rand = "0.8"
 

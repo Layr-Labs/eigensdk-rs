@@ -12,8 +12,6 @@ use eigensdk::challenger::{
     config::ChallengerConfig,
     Challenger,
 };
-use eigensdk::logging::init_logger;
-use eigensdk::logging::log_level::LogLevel;
 use eigensdk::task_manager::response_calculator::response_calculator_from_fn;
 use incredible_squaring::{
     bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,

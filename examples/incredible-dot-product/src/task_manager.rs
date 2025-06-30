@@ -6,6 +6,13 @@ use eigensdk::task_manager::{
     impl_task_manager_from_defs_and_contract, TaskManagerDefs, TaskManagerError,
 };
 
+use crate::{
+    IIncredibleDotProductTaskManager::DotProductInput,
+    IncredibleDotProductTaskManager::{
+        IncredibleDotProductTaskManagerInstance, NewTaskCreated, TaskResponded,
+    },
+};
+
 /// Task Manager Definition. This struct will be used to build the `TaskManager`
 /// with the [`impl_task_manager_from_defs_and_contract`] macro.
 pub struct ISTaskManager;

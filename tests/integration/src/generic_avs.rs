@@ -43,7 +43,6 @@ use eigensdk::{
         Challenger,
     },
     crypto_bls::BlsPrivateKeyConfig,
-    logging::logger::SharedLogger,
     operator::{
         config::OperatorConfig,
         error::OperatorError,
@@ -91,9 +90,6 @@ where
     RP: ResponseCalculator<TM::Input, TM::Output> + Send + Sync + 'static,
     F: FnMut(u64) -> TM::Input + Send + 'static,
 {
-    /// Logger
-    logger: SharedLogger,
-
     // Task Manager related
     /// Aggregator task manager instance
     pub aggregator_task_manager: TM,
@@ -206,7 +202,6 @@ where
     /// * `task_spammer_task_manager` - Task manager instance for the task spammer component
     /// * `response_calculator` - Function that returns a response calculator with the compute logic
     /// * `input` - Task input generator
-    /// * `logger` - Logger
     /// * `timeout` - TaskSpammer timeout duration
     /// * `http_rpc_url` - HTTP RPC endpoint URL
     /// * `ws_rpc_url` - WebSocket RPC endpoint URL
@@ -229,7 +224,6 @@ where
         task_spammer_task_manager: TM,
         response_calculator: fn() -> RP,
         input: F,
-        logger: SharedLogger,
         timeout: Duration,
         http_rpc_url: String,
         ws_rpc_url: String,
@@ -244,8 +238,6 @@ where
         new_magnitude: Vec<u64>,
     ) -> Self {
         AvsConfig {
-            logger,
-
             // Task managers
             aggregator_task_manager,
             challenger_task_manager,
@@ -329,7 +321,7 @@ where
     TM::Input: Clone + Send + 'static,
     F: FnMut(u64) -> TM::Input + Send + 'static + Clone,
 {
-    let mut aggregator_handle = start_aggregator(config, config.logger.clone()).await;
+    let mut aggregator_handle = start_aggregator(config).await;
 
     // Wait until the aggregator is ready
     tokio::time::sleep(Duration::from_secs(5)).await;
@@ -376,14 +368,12 @@ where
 /// # Arguments
 ///
 /// * `config` - The configuration for the aggregator.
-/// * `logger` - The logger.
 ///
 /// # Returns
 ///
 /// * `JoinHandle<()>` - The handle for the aggregator.
 async fn start_aggregator<TM, RP, F>(
     config: &AvsConfig<TM, RP, F>,
-    logger: SharedLogger,
 ) -> JoinHandle<Result<(), AggregatorError>>
 where
     TM: TaskManager + Debug + Send + Sync + 'static + Clone,
@@ -404,7 +394,7 @@ where
         config.time_to_expiry,
         config.window_duration,
     );
-    Aggregator::new(aggregator_config, task_processor, logger)
+    Aggregator::new(aggregator_config, task_processor)
         .await
         .unwrap()
         .start()
