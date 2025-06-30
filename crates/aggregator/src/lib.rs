@@ -22,8 +22,6 @@ use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
 use eigen_crypto_bls::error::BlsError;
 use eigen_crypto_bls::{convert_to_g1_point, convert_to_g2_point};
-use eigen_logging::get_logger;
-use eigen_logging::logger::SharedLogger;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_services_blsaggregation::bls_agg::{
     AggregateReceiver, BlsAggregatorService, ServiceHandle,
@@ -34,8 +32,8 @@ pub use eigen_services_blsaggregation::{
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_task_manager::event_decoder::decode_new_task;
 use eigen_utils::slashing::middleware::{
-    iblssignaturechecker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
-    iblssignaturechecker::BN254::{G1Point, G2Point},
+    ibls_signature_checker::IBLSSignatureCheckerTypes::NonSignerStakesAndSignature,
+    ibls_signature_checker::BN254::{G1Point, G2Point},
 };
 pub use error::AggregatorError;
 use futures_util::{future, StreamExt};
@@ -70,7 +68,6 @@ where
     ///
     /// * `config` - The configuration for the aggregator
     /// * `task_processor` - The task processor
-    /// * `logger` - The logger
     ///
     /// # Returns
     ///
@@ -78,10 +75,8 @@ where
     pub async fn new(
         config: AggregatorConfig,
         task_processor: TP,
-        logger: SharedLogger,
     ) -> Result<Self, AggregatorError> {
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
-            logger.clone(),
             config.registry_coordinator,
             config.operator_state_retriever,
             config.http_rpc_url,
@@ -89,7 +84,6 @@ where
         .await?;
 
         let operators_info_service = OperatorInfoServiceInMemory::new(
-            logger,
             avs_registry_chain_reader.clone(),
             config.ws_rpc_url.clone(),
         )
@@ -110,7 +104,7 @@ where
         });
 
         let (service_handle, aggregated_response_receiver) =
-            BlsAggregatorService::new(avs_registry_service_chaincaller, get_logger()).start();
+            BlsAggregatorService::new(avs_registry_service_chaincaller).start();
         Ok(Self {
             port_address: config.server_address,
             task_processor,
@@ -231,7 +225,7 @@ where
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
         let filter = Filter::new().event_signature(TP::NEW_TASK_EVENT_SELECTOR);
-        let provider = ProviderBuilder::new().on_ws(ws).await?;
+        let provider = ProviderBuilder::new().connect_ws(ws).await?;
 
         while let Some(log) = provider
             .subscribe_logs(&filter)

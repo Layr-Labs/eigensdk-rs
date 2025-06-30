@@ -6,7 +6,7 @@ use alloy::{
     transports::http::reqwest::Url,
 };
 use eigen_task_spammer::TaskSpammerBuilder;
-use incredible_squaring::bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
+use incredible_squaring::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
 use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
@@ -17,7 +17,7 @@ async fn main() {
         Address::from_str("0x742d35cc6634c0532925a3b844f51254ab06f58e").unwrap();
     let url = Url::parse(&http_rpc_url).unwrap();
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let provider = ProviderBuilder::new().wallet(wallet).connect_http(url);
 
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 

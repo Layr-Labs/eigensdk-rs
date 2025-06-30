@@ -1,11 +1,7 @@
 //! Incredible Dot Product Task Spammer
 
 use alloy::primitives::{Address, U256};
-use eigensdk::{
-    common::get_signer,
-    logging::{init_logger, log_level::LogLevel},
-    task_spammer::TaskSpammerBuilder,
-};
+use eigensdk::{common::get_signer, task_spammer::TaskSpammerBuilder};
 use eyre::Result;
 use incredible_dot_product::{
     IIncredibleDotProductTaskManager::DotProductInput,
@@ -15,7 +11,6 @@ use std::{str::FromStr, time::Duration};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
     let key = "4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
     let http_rpc_url = "http://localhost:8545".to_string();
     let wallet = get_signer(key, &http_rpc_url);

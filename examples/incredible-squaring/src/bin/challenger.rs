@@ -12,7 +12,7 @@ use eigen_challenger::{
 };
 use eigen_task_manager::response_calculator::response_calculator_from_fn;
 use incredible_squaring::{
-    bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
+    bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance,
     square, utils::load_config,
 };
 
@@ -24,7 +24,7 @@ async fn main() {
         Address::from_str("0x742d35cc6634c0532925a3b844f51254ab06f58e").unwrap();
     let url = Url::parse(&config.http_rpc_url).unwrap();
     let wallet = EthereumWallet::new(PrivateKeySigner::from_str(signer).unwrap());
-    let provider = ProviderBuilder::new().wallet(wallet).on_http(url);
+    let provider = ProviderBuilder::new().wallet(wallet).connect_http(url);
 
     let contract = IncredibleSquaringTaskManagerInstance::new(task_manager_address, provider);
 

@@ -3,12 +3,13 @@
 use alloy::primitives::B256;
 use alloy::primitives::U256;
 use alloy::sol_types::SolEvent;
-use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
-use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::NewTaskCreated;
-use bindings::incrediblesquaringtaskmanager::IncredibleSquaringTaskManager::TaskResponded;
 use eigen_task_manager::impl_task_manager_from_defs_and_contract;
 use eigen_task_manager::TaskManagerDefs;
 use eigen_task_manager::TaskManagerError;
+
+use crate::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::IncredibleSquaringTaskManagerInstance;
+use crate::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::NewTaskCreated;
+use crate::bindings::incredible_squaring_task_manager::IncredibleSquaringTaskManager::TaskResponded;
 
 // Allow warnings in auto-generated code
 #[allow(warnings)]

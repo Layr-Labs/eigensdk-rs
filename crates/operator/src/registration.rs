@@ -4,10 +4,9 @@ use alloy::{hex, primitives::U256};
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
 use eigen_crypto_bls::BlsKeyPair;
-use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
-use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
-use eigen_utils::slashing::core::allocationmanager::IAllocationManagerTypes::AllocateParams;
+use eigen_utils::slashing::core::allocation_manager::AllocationManager::OperatorSet;
+use eigen_utils::slashing::core::allocation_manager::IAllocationManagerTypes::AllocateParams;
 use std::str::FromStr;
 
 use crate::error::OperatorError;
@@ -24,7 +23,6 @@ use crate::register_config::OperatorRegistrationConfig;
 /// # Arguments
 ///
 /// * `config` - The operator registration config
-/// * `logger` - The logger
 /// * `http_rpc_url` - The HTTP RPC URL
 /// * `bls_key_pair` - The BLS key pair
 ///
@@ -33,7 +31,6 @@ use crate::register_config::OperatorRegistrationConfig;
 /// * `Result<(), OperatorError>` - The result of the operation
 pub async fn register_operator(
     config: OperatorRegistrationConfig,
-    logger: SharedLogger,
     http_rpc_url: String,
     bls_key_pair: BlsKeyPair,
 ) -> Result<(), OperatorError> {
@@ -44,7 +41,6 @@ pub async fn register_operator(
     };
 
     let el_chain_reader = ELChainReader::new(
-        logger.clone(),
         Some(config.allocation_manager_address),
         config.delegation_manager_address,
         config.rewards_coordinator_address,

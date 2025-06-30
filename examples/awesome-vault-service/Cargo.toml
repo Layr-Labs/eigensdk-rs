@@ -7,7 +7,7 @@ edition = "2021"
 doctest = false
 
 [dependencies]
-alloy = { version = "0.13", features = [
+alloy = { version = "1.0", features = [
     "sol-types",
     "contract",
     "full",

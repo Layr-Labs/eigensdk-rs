@@ -7,6 +7,12 @@ repository.workspace = true
 license-file.workspace = true
 description = "eigenlayer nodeapi implementation"
 
+# docs.rs-specific configuration
+# see https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 serde_json.workspace =true
 ntex = { version = "2.0", features = ["tokio"] }

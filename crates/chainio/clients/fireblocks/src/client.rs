@@ -84,7 +84,7 @@ pub struct Client {
     api_key: String,
     /// Fireblocks generated secret key based on RS256 (RSASSA-PKCS1-v1_5 using SHA-256 hash) algorithm
     private_key: String,
-    ///  Aandbox:  https://sandbox-api.fireblocks.io/v1 , Mainnet: https://api.fireblocks.io/v1
+    /// Aandbox:  <https://sandbox-api.fireblocks.io/v1>, Mainnet: <https://api.fireblocks.io/v1>
     api_url: String,
 }
 
@@ -130,7 +130,7 @@ impl Client {
         let mut headers = HeaderMap::new();
         headers.insert(
             AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", token))?,
+            HeaderValue::from_str(&format!("Bearer {token}"))?,
         );
         headers.insert(X_API_KEY, HeaderValue::from_str(&self.api_key)?);
 
@@ -165,7 +165,7 @@ impl Client {
         let mut headers = HeaderMap::new();
         headers.insert(
             AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", token))?,
+            HeaderValue::from_str(&format!("Bearer {token}"))?,
         );
         headers.insert(X_API_KEY, HeaderValue::from_str(&self.api_key)?);
 

@@ -7,7 +7,9 @@ use eigen_crypto_bls::{
     BlsG2Point,
 };
 use eigen_types::operator::OperatorPubKeys;
-use eigen_utils::slashing::middleware::{blsapkregistry, socketregistry};
+use eigen_utils::slashing::middleware::{
+    bls_apk_registry::BLSApkRegistry, socket_registry::SocketRegistry,
+};
 
 /// Retrieves operator's [`OperatorPubKeys`] directly from middleware.
 #[derive(Debug, Clone)]
@@ -23,10 +25,8 @@ impl OperatorInfoService for OperatorInfoOnChain {
         &self,
         address: Address,
     ) -> Result<Option<OperatorPubKeys>, OperatorInfoServiceError> {
-        let contract_bls_apk_registry = blsapkregistry::BLSApkRegistry::new(
-            self.bls_apk_registry,
-            get_provider(&self.http_url),
-        );
+        let contract_bls_apk_registry =
+            BLSApkRegistry::new(self.bls_apk_registry, get_provider(&self.http_url));
         let g1_point = contract_bls_apk_registry
             .getRegisteredPubkey(address)
             .call()
@@ -35,8 +35,7 @@ impl OperatorInfoService for OperatorInfoOnChain {
         let g2_point = contract_bls_apk_registry
             .getOperatorPubkeyG2(address)
             .call()
-            .await?
-            ._0;
+            .await?;
         let bls_g1_point = BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(g1_point));
         let bls_g2_point = BlsG2Point::new(alloy_registry_g2_point_to_g2_affine(g2_point));
         Ok(Some(OperatorPubKeys {
@@ -50,22 +49,18 @@ impl OperatorInfoService for OperatorInfoOnChain {
         address: Address,
     ) -> Result<Option<String>, OperatorInfoServiceError> {
         let contract_socket_registry =
-            socketregistry::SocketRegistry::new(self.socket_registry, get_provider(&self.http_url));
-        let contract_bls_apk_registry = blsapkregistry::BLSApkRegistry::new(
-            self.bls_apk_registry,
-            get_provider(&self.http_url),
-        );
+            SocketRegistry::new(self.socket_registry, get_provider(&self.http_url));
+        let contract_bls_apk_registry =
+            BLSApkRegistry::new(self.bls_apk_registry, get_provider(&self.http_url));
 
         let operator_id = contract_bls_apk_registry
             .getOperatorId(address)
             .call()
-            .await?
-            ._0;
+            .await?;
         let socket = contract_socket_registry
             .getOperatorSocket(operator_id)
             .call()
-            .await?
-            ._0;
+            .await?;
         if socket.is_empty() {
             Ok(None)
         } else {
@@ -96,7 +91,7 @@ mod tests {
         chain_clients::{build_el_chain_reader, create_operator_set, new_test_writer},
         transaction::wait_transaction,
     };
-    use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
+    use eigen_utils::slashing::core::allocation_manager::AllocationManager::OperatorSet;
 
     use crate::{operator_info::OperatorInfoService, operatorsinfo_onchain::OperatorInfoOnChain};
 

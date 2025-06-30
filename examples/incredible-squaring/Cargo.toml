@@ -12,7 +12,6 @@ license-file.workspace = true
 alloy.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-crypto-bls.workspace = true
-eigen-logging.workspace = true
 eigen-testing-utils.workspace = true
 eigen-types.workspace = true
 eigen-common.workspace = true

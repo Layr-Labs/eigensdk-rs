@@ -11,7 +11,6 @@ use client::ClientAggregator;
 use eigen_aggregator::SignedTaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::BlsKeyPair;
-use eigen_logging::logger::SharedLogger;
 use eigen_task_manager::{event_decoder::decode_new_task, task_response::TaskResponse};
 use eigen_task_manager::{response_calculator::ResponseCalculator, TaskManagerDefs};
 use eigen_types::operator::OperatorId;
@@ -51,7 +50,6 @@ impl Operator {
     /// * `key_pair` - The key pair of the operator.
     /// * `operator_address` - The address of the operator.
     /// * `operator_name` - The name of the operator.
-    /// * `logger` - The logger.
     /// * `ws_rpc_url` - The URL of the WebSocket RPC.
     /// * `http_rpc_url` - The URL of the HTTP RPC.
     /// * `registry_coordinator_address` - The address of the registry coordinator.
@@ -61,10 +59,7 @@ impl Operator {
     /// # Returns
     ///
     /// * `Result<Self, OperatorError>` - The operator.
-    pub async fn new(
-        logger: SharedLogger,
-        config: config::OperatorConfig,
-    ) -> Result<Self, OperatorError> {
+    pub async fn new(config: config::OperatorConfig) -> Result<Self, OperatorError> {
         let config::OperatorConfig {
             bls_private_key,
             operator_address,
@@ -77,7 +72,6 @@ impl Operator {
             registration: _,
         } = config;
         let avs_registry_reader = AvsRegistryChainReader::new(
-            logger.clone(),
             registry_coordinator_address,
             operator_state_retriever_address,
             http_rpc_url.to_string(),
@@ -100,7 +94,7 @@ impl Operator {
                 return Err(OperatorError::RegistrationError);
             };
 
-            register_operator(registration_config, logger, http_rpc_url, key_pair.clone()).await?;
+            register_operator(registration_config, http_rpc_url, key_pair.clone()).await?;
             info!("Operator {} registered successfully", operator_name);
         }
 
@@ -145,7 +139,7 @@ impl Operator {
     {
         let ws = WsConnect::new(&self.ws_rpc_url);
         let provider = ProviderBuilder::new()
-            .on_ws(ws)
+            .connect_ws(ws)
             .await
             .map_err(|_| OperatorError::TransportError)?;
 

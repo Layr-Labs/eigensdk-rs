@@ -43,8 +43,7 @@ impl GetAssetAddresses for Client {
     ) -> Result<AddressesResponse, FireBlockError> {
         let asset_addresses = self
             .get_request(&format!(
-                "/v1/vault/accounts/{}/{}/addresses_paginated",
-                vault_id, asset_id
+                "/v1/vault/accounts/{vault_id}/{asset_id}/addresses_paginated"
             ))
             .await?;
 

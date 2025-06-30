@@ -8,7 +8,6 @@ use eigensdk::{
         Challenger,
     },
     common::get_signer,
-    logging::{init_logger, log_level::LogLevel},
     task_manager::response_calculator::response_calculator_from_fn,
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
@@ -21,7 +20,6 @@ use std::str::FromStr;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
     let config: ChallengerConfig = load_config("./src/config/dot-challenger.toml")?;
     let wallet = get_signer(FIRST_PRIVATE_KEY, &config.http_rpc_url);
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;

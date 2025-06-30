@@ -13,7 +13,7 @@ use url::Url;
 ///
 /// # Returns
 ///
-/// A [`TransportResult`] containing the transaction hash.
+/// A [`TransactionReceipt`] containing the transaction receipt.
 pub async fn wait_transaction(
     rpc_url: &str,
     tx_hash: FixedBytes<32>,
@@ -21,7 +21,7 @@ pub async fn wait_transaction(
     let url = Url::parse(rpc_url).map_err(|_| TransportErrorKind::custom_str("Invalid RPC URL"))?;
     let root_provider = ProviderBuilder::new()
         .disable_recommended_fillers()
-        .on_http(url);
+        .connect_http(url);
     let pending_tx = PendingTransactionBuilder::new(root_provider, tx_hash);
     pending_tx.get_receipt().await
 }

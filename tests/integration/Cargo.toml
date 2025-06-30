@@ -8,7 +8,10 @@ rust-version.workspace = true
 repository.workspace = true
 license-file.workspace = true
 
-[dependencies]
+[lints]
+workspace = true
+
+[dev-dependencies]
 tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }
 alloy.workspace = true
 async-trait.workspace = true
@@ -17,13 +20,6 @@ ark-ff.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 eigen-common.workspace = true
-eigen-logging.workspace = true
 eigen-testing-utils.workspace = true
 eigen-utils.workspace = true
-
-[lints]
-workspace = true
-
-[dev-dependencies]
-eigen-testing-utils.workspace = true
 futures-util.workspace = true

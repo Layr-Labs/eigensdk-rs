@@ -6,7 +6,6 @@ use awesome_vault_service::{
     utils::load_config,
 };
 use eigensdk::{
-    logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
     testing_utils::task_processor::failing_response_calculator,
 };
@@ -18,12 +17,10 @@ use tokio::sync::Mutex;
 // For this example, Operator should be registered.
 #[tokio::main]
 async fn main() {
-    init_logger(LogLevel::Info);
-    let logger = get_logger();
     let config: OperatorConfig = load_config("./src/config/awesome-operator.toml").unwrap();
 
     // Initialize the operator
-    let operator = Operator::new(logger, config).await.unwrap();
+    let operator = Operator::new(config).await.unwrap();
 
     let vault_service_response_calculator = VaultServiceResponseCalculator {
         vault: Arc::new(Mutex::new(BTreeMap::new())),
