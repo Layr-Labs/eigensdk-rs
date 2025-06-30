@@ -109,10 +109,9 @@ pub trait TaskManager: TaskManagerDefs {
 /// This requires the contract to have [`createNewTask`], [`respondToTask`] and [`raiseAndResolveChallenge`] functions.
 macro_rules! impl_task_manager_from_defs_and_contract {
     ($defs:ty => $contract:ident) => {
-        impl<T, P, N> $crate::TaskManagerDefs for $contract<T, P, N>
+        impl<P, N> $crate::TaskManagerDefs for $contract<P, N>
         where
-            T: ::alloy::contract::private::Transport + Clone + Send + Sync,
-            P: ::alloy::contract::private::Provider<T, N>,
+            P: ::alloy::contract::private::Provider<N>,
             N: ::alloy::network::Network,
         {
             type Input = <$defs as TaskManagerDefs>::Input;
@@ -123,10 +122,9 @@ macro_rules! impl_task_manager_from_defs_and_contract {
                 <$defs as $crate::TaskManagerDefs>::TASK_RESPONDED_EVENT_SELECTOR;
         }
 
-        impl<T, P, N> $crate::TaskManager for $contract<T, P, N>
+        impl<P, N> $crate::TaskManager for $contract<P, N>
         where
-            T: ::alloy::contract::private::Transport + Clone + Send + Sync,
-            P: ::alloy::contract::private::Provider<T, N>,
+            P: ::alloy::contract::private::Provider<N>,
             N: ::alloy::network::Network,
         {
             $crate::default_contract_impl!();

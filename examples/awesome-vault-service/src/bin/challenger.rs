@@ -2,7 +2,7 @@
 
 use alloy::primitives::Address;
 use awesome_vault_service::{
-    bindings::awesomevaulttaskmanager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
+    bindings::awesome_vault_task_manager::AwesomeVaultTaskManager::AwesomeVaultTaskManagerInstance,
     response_calculator::VaultServiceResponseCalculator, utils::load_config,
 };
 use eigensdk::{
@@ -12,7 +12,6 @@ use eigensdk::{
         Challenger,
     },
     common::get_signer,
-    logging::{init_logger, log_level::LogLevel},
     testing_utils::anvil_constants::FIRST_PRIVATE_KEY,
 };
 use eyre::Result;
@@ -21,7 +20,6 @@ use tokio::sync::Mutex;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
     let config: ChallengerConfig = load_config("./src/config/awesome-challenger.toml")?;
     let wallet = get_signer(FIRST_PRIVATE_KEY, &config.http_rpc_url);
     let task_manager_address = Address::from_str("0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3")?;

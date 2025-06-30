@@ -2,7 +2,6 @@
 
 use alloy::primitives::U256;
 use eigensdk::{
-    logging::{get_logger, init_logger, log_level::LogLevel},
     operator::{config::OperatorConfig, Operator},
     task_manager::response_calculator::response_calculator_from_fn,
     testing_utils::task_processor::failing_response_calculator,
@@ -15,15 +14,13 @@ use incredible_dot_product::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    init_logger(LogLevel::Info);
-    let logger = get_logger();
     let config: OperatorConfig = load_config("./src/config/dot-operator.toml").unwrap();
 
     let response_calculator = response_calculator_from_fn(dot_product);
 
     let logic = failing_response_calculator(response_calculator, || U256::MAX, 40);
 
-    let operator = Operator::new(logger, config).await.unwrap();
+    let operator = Operator::new(config).await.unwrap();
     operator
         .start::<ISTaskManager>(logic)
         .await

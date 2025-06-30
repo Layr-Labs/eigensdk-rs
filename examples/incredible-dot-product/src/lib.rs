@@ -9,4 +9,4 @@ pub mod task_manager;
 /// Utils for the Incredible Dot Product Operator
 pub mod utils;
 
-pub use bindings::incredibledotproducttaskmanager::*;
+pub use bindings::incredible_dot_product_task_manager::*;

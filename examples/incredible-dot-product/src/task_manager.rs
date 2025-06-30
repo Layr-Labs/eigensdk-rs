@@ -1,11 +1,16 @@
-use crate::IIncredibleDotProductTaskManager::DotProductInput;
-use crate::IncredibleDotProductTaskManager::{
-    IncredibleDotProductTaskManagerInstance, NewTaskCreated, TaskResponded,
+use alloy::{
+    primitives::{B256, U256},
+    sol_types::SolEvent,
 };
-use alloy::primitives::{B256, U256};
-use alloy::sol_types::SolEvent;
 use eigensdk::task_manager::{
     impl_task_manager_from_defs_and_contract, TaskManagerDefs, TaskManagerError,
+};
+
+use crate::{
+    IIncredibleDotProductTaskManager::DotProductInput,
+    IncredibleDotProductTaskManager::{
+        IncredibleDotProductTaskManagerInstance, NewTaskCreated, TaskResponded,
+    },
 };
 
 // Implement the [`TaskManagerDefs`] trait for a unit struct.
