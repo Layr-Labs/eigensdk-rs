@@ -6,6 +6,8 @@ permissions:
 
 on:
   pull_request:
+    branches:
+      - dev
 
 jobs:
   security:
