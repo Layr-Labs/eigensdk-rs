@@ -269,7 +269,7 @@ impl ELChainWriter {
 
         let contract_call = token_contract.approve(self.strategy_manager, amount);
 
-        let _approve = contract_call.send().await?;
+        let _approve = contract_call.send().await?.get_receipt().await?;
 
         let contract_strategy_manager = StrategyManager::new(self.strategy_manager, &provider);
 
