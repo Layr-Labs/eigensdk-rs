@@ -31,6 +31,6 @@ eigen-utils.workspace = true
 # https://github.com/rust-lang/cargo/issues/4242#issuecomment-2578428685
 eigen-testing-utils = { path = "../../../tests/testing-utils" }
 
-rand = "0.8.4"
+rand = "0.9.0"
 tokio = { workspace = true, features = ["full"] }
 serde_json.workspace = true
