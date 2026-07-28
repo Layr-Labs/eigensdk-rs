@@ -83,8 +83,8 @@ ark-ec = "0.5.0"
 ark-ff = "0.5.0"
 ark-serialize = "0.5.0"
 async-trait = "0.1.83"
-aws-config = "1.5.9"
-aws-sdk-kms = "1.49.0"
+aws-config = { version = "1.5.9", default-features = false, features = ["behavior-version-latest", "credentials-process", "default-https-client", "rt-tokio", "sso"] }
+aws-sdk-kms = { version = "1.49.0", default-features = false, features = ["default-https-client", "rt-tokio"] }
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
 eth-keystore = "0.5"
